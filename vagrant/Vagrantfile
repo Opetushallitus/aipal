@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  vmbox = "CentOS-6.4-x86_64-v20131103.box"
+  vmbox_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+
+  # Kehitystyön tietokantapalvelin
+  config.vm.define "aipal-db" do |db|
+    db.vm.box = vmbox
+    db.vm.box_url = vmbox_url
+
+    db.vm.synced_folder "../env", "/env"
+    if File.directory?("../../oph-konversio")
+      db.vm.synced_folder "../../oph-konversio", "/dumps"
+    end
+    db.vm.provision "shell", inline: "cd /env && ./dev-db.sh"
+
+    # local port 3456 -> vm port 5432
+    db.vm.network "forwarded_port", host: 3456, guest: 5432
+    db.vm.network "private_network", ip: "192.168.50.61"
+  end
+
+  # Kehitystyön sovelluspalvelin
+  config.vm.define "aipal-app" do |app|
+    app.vm.box = vmbox
+    app.vm.box_url = vmbox_url
+
+    app.vm.synced_folder "../env", "/env"
+    app.vm.provision "shell", inline: "cd /env && ./app-server.sh '192.168.50.61' 'http://192.168.50.62/aipal' ssh/dev_id_rsa.pub"
+
+    app.vm.network "private_network", ip: "192.168.50.62"
+  end
+end
