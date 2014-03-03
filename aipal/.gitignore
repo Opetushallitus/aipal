@@ -1,0 +1,17 @@
+.DS_Store
+.project
+.classpath
+/bin
+/target
+/classes
+/checkouts
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+node_modules
+bower_components
+compiled_css
+.tmp
