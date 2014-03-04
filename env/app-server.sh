@@ -41,7 +41,7 @@ chmod 755 /etc/init.d/$system
 cp app-server/$system.properties $install_dir
 mkdir "$install_dir/resources"
 chmod a+rx "$install_dir/resources"
-cp app-server/log4j.properties "$install_dir/resources"
+cp app-server/logback.xml "$install_dir/resources"
 mkdir "$install_dir/logs"
 chmod a+rwx "$install_dir/logs"
 sed -i -e "s|\\\$DB_HOST|$db_host|g" $install_dir/$system.properties
@@ -51,6 +51,13 @@ sed -i -e "s|\\\$BASE_URL|$base_url|g" $install_dir/$system.properties
 cp app-server/$system-db.properties $install_dir
 sed -i -e "s|\\\$DB_HOST|$db_host|g" $install_dir/$system-db.properties
 
+# Sallitaan asennusten pääsy ssh:lla
+mkdir /home/$admin_user/.ssh
+cat $id_rsa_pub >> /home/$admin_user/.ssh/authorized_keys
+
+chown -R $admin_user:$admin_user /home/$admin_user/.ssh
+chmod 700 /home/$admin_user/.ssh
+chmod 644 /home/$admin_user/.ssh/authorized_keys
 
 # Vagrant-isäntäkone
 iptables -I INPUT 1 -p tcp -s 192.168.50.1 --dport 80 -j ACCEPT
