@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     if File.directory?("../../oph-konversio")
       db.vm.synced_folder "../../oph-konversio", "/dumps"
     end
-    db.vm.provision "shell", inline: "cd /env && ./dev-db.sh"
+    db.vm.provision "shell", inline: "cd /env && ./db-server.sh local 192.168.50.62"
 
     # local port 3456 -> vm port 5432
     db.vm.network "forwarded_port", host: 3456, guest: 5432
@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
     app.vm.box_url = vmbox_url
 
     app.vm.synced_folder "../env", "/env"
-    app.vm.provision "shell", inline: "cd /env && ./app-server.sh '192.168.50.61' 'http://192.168.50.62/aipal' ssh/dev_id_rsa.pub"
+    app.vm.provision "shell", inline: "cd /env && ./app-server.sh local '192.168.50.61' local/ssh/dev_id_rsa.pub 'http://192.168.50.62/aipal'"
 
     app.vm.network "private_network", ip: "192.168.50.62"
   end

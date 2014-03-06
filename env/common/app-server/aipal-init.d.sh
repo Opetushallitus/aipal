@@ -2,7 +2,7 @@
 # description: Aipal Start Stop Restart
 # processname: aipal
 # chkconfig: 234 20 80
-aipal_home=/data00/aipal
+aipal_home=<APP_HOME>
 
 case $1 in
 start)
@@ -18,7 +18,7 @@ restart)
 ;;
 status)
   if [ -f $aipal_home/aipal.pid ] && ps -p `cat $aipal_home/aipal.pid` > /dev/null; then
-    echo "aipal (pid  `cat $aipal_home/aipal.pid`) is running..."
+    echo "aipal (pid `cat $aipal_home/aipal.pid`) is running..."
   else
     echo "aipal is stopped"
   fi

@@ -1,20 +1,23 @@
 #!/bin/bash
 set -eu
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
-    echo "$0 <sovelluspalvelimen-ip>"
+    echo "$0 <ympäristön-asetusten-polku> <sovelluspalvelimen-ip>"
     exit 1
 fi
 
-APP_HOST=$1
+env_dir=$1
+app_host=$2
 
 software/postgresql.sh
 
 # Sovelluspalvelin
-iptables -I INPUT 1 -p tcp -s $APP_HOST --dport 5432 -j ACCEPT
+iptables -I INPUT 1 -p tcp -s $app_host --dport 5432 -j ACCEPT
 
 service iptables save
 
 # alustetaan ttk tietokanta ilman tauluja
-su postgres -c 'psql --file=db/dev.sql'
+su postgres -c "psql --file=$env_dir/db-server/dev.sql"
+
+$env_dir/db-server/setup.sh
