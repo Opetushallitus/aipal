@@ -46,7 +46,7 @@ service=${AIPAL_SERVICE:-aipal}
 version_jarfile=$1
 version_dbjarfile=$2
 user_host=$3
-app_home=${app_home:-/data00/aipal}
+app_home=${AIPAL_HOME:-/data00/aipal}
 ssh_key=${AIPAL_SSH_KEY:-~/.ssh/id_rsa}
 
 set -x
