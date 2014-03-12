@@ -4,9 +4,13 @@
             [clojure.tools.namespace.repl :as nsr]
             [clj-http.client :as hc]
             clojure.core.cache
-            schema.core))
+            schema.core
+            stencil.loader))
 
 (schema.core/set-fn-validation! true)
+
+;; Templatejen kakutus pois päältä kehityksen aikana
+(stencil.loader/set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 
 (defonce ^:private palvelin (atom nil))
 

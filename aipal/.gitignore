@@ -14,4 +14,5 @@ pom.xml.asc
 node_modules
 bower_components
 compiled_css
+resources/public/app/
 .tmp

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="aipal">
+<head>
+  <!-- mustache
+  {{=[[ ]]=}}
+  <script>
+    var hakuBaseUrl = '[[base-url]]'
+  </script>
+  end mustache -->
+  <title></title>
+  <link rel="stylesheet" href="compiled_css/main.css">
+</head>
+<body ng-controller="AipalController">
+
+<kielen-vaihto></kielen-vaihto>
+{{i18n.yleiset.palvelun_otsikko}}
+<div ng-view></div>
+
+  <!-- build:js js/libs.js -->
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular-route/angular-route.min.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="bower_components/lodash/dist/lodash.min.js"></script>
+  <!-- endbuild -->
+  <!-- build:js js/app.js -->
+  <script src="js/aipal.js"></script>
+  <script src="js/yhteiset/palvelut/i18n.js"></script>
+  <!-- endbuild -->
+  <!--dev--><script src="//localhost:35729/livereload.js"></script><!--enddev-->
+</body>
+</html>

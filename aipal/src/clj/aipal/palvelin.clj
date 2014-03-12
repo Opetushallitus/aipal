@@ -1,6 +1,7 @@
 (ns aipal.palvelin
   (:gen-class)
-  (:require [clojure.tools.logging :as log]
+  (:require [cheshire.generate :as json-gen]
+            [clojure.tools.logging :as log]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
             [ring.middleware.json :refer [wrap-json-params]]
@@ -9,17 +10,19 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.util.response :as resp]
-            [cheshire.generate :as json-gen]
             schema.core
-            [aitu.infra.print-wrapper :refer [log-request-wrapper]]
-            [aipal.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus]]))
+            [stencil.core :as s]
+            [aipal.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus]]
+            aipal.rest-api.i18n
+            [aitu.infra.i18n :refer [wrap-locale]]
+            [aitu.infra.print-wrapper :refer [log-request-wrapper]]))
 
 (schema.core/set-fn-validation! true)
 
 (defn ^:private reitit [asetukset]
   (c/routes
-    (c/GET "/" [] (-> (resp/resource-response "index.html" {:root "public/app"})
-                    (resp/content-type "text/html; charset=utf-8")))))
+    (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
+    (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)))
 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
@@ -37,6 +40,9 @@
                                    wrap-json-params
                                    wrap-params
                                    (wrap-resource "public/app")
+                                   (wrap-locale
+                                     :ei-redirectia #"/api/.*"
+                                     :base-url (-> asetukset :server :base-url))
                                    wrap-content-type
                                    log-request-wrapper)
                                  {:port (-> asetukset :server :port Integer/parseInt)})]
