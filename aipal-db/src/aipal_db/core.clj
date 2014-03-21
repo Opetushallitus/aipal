@@ -75,21 +75,14 @@
       :postgre-uri (str "jdbc:" prefix "//" postfix)
       }))
 
-(defn alusta-flywaylla!
-  "Alustaa tietokannan Flywayn avulla."
-  [url options]
-  (let [flyway (Flyway.)
-        jdbc-creds (parse-uri url)
+(defn create-datasource!
+  "Palauttaa Flyway DataSourcen, jota voidaan käyttää myös JDBC:n kanssa"
+  [url]
+  (let [jdbc-creds (parse-uri url)
         datasource (DriverDataSource.
                      nil (:postgre-uri jdbc-creds) (:user jdbc-creds) (:passwd jdbc-creds)
-                     (into-array ["set session aipal.kayttaja='JARJESTELMA';"]))
-        kantaversio (:target-version options)
-        tyhjenna (:clear options)]
-    (.setDataSource flyway datasource)
-    (.setLocations flyway (into-array String ["/db/migration"]))
-    (when tyhjenna (.clean flyway))
-    (when kantaversio (.setTarget flyway kantaversio))
-    (.migrate flyway)))
+                     (into-array ["set session aipal.kayttaja='JARJESTELMA';"]))]
+    datasource))
 
 (def cli-options
   [[nil "--clear" "Tyhjennetään kanta ja luodaan skeema ja pohjadata uusiksi"
@@ -147,6 +140,7 @@
       (> (count arguments) 1) (exit 1 (ohje summary))
       errors (exit 1 (error-msg errors)))
     (let [jdbc-url (or (first arguments) (file->jdbc-url "aipal-db.properties"))
+          datasource (create-datasource! jdbc-url)
           migraatiopoikkeus (try
                               (alusta-flywaylla! jdbc-url options)
                               nil
@@ -154,7 +148,7 @@
                                 e))]
       ;; Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista
       ;; epäonnistuisi
-      (jdbc/with-connection jdbc-url
+      (jdbc/with-connection {:datasource datasource}
         (aseta-oikeudet-sovelluskayttajalle (:username options))
         (when (:clear options)
           (luo-kayttajat! (:uservariable options)))
