@@ -84,6 +84,18 @@
                      (into-array ["set session aipal.kayttaja='JARJESTELMA';"]))]
     datasource))
 
+(defn alusta-flywaylla!
+  "Alustaa tietokannan Flywayn avulla."
+  [datasource options]
+  (let [flyway (Flyway.)       
+        kantaversio (:target-version options)
+        tyhjenna (:clear options)]
+    (.setDataSource flyway datasource)
+    (.setLocations flyway (into-array String ["/db/migration"]))
+    (when tyhjenna (.clean flyway))
+    (when kantaversio (.setTarget flyway kantaversio))
+    (.migrate flyway)))
+
 (def cli-options
   [[nil "--clear" "Tyhjennetään kanta ja luodaan skeema ja pohjadata uusiksi"
     :default false]
@@ -142,7 +154,7 @@
     (let [jdbc-url (or (first arguments) (file->jdbc-url "aipal-db.properties"))
           datasource (create-datasource! jdbc-url)
           migraatiopoikkeus (try
-                              (alusta-flywaylla! jdbc-url options)
+                              (alusta-flywaylla! datasource options)
                               nil
                               (catch FlywayException e
                                 e))]
