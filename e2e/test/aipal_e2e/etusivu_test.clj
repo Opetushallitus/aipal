@@ -15,9 +15,10 @@
 (ns aipal-e2e.etusivu-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
+            [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer :all]))
+            [aitu-e2e.util :refer [with-webdriver]]))
 
 (use-fixtures :once tietokanta/muodosta-yhteys)
 
@@ -30,7 +31,8 @@
   (with-webdriver
     (testing
       "etusivu"
-      (avaa-aipal etusivu)
-      (testing
-        "sisältää järjestelmän nimen"
-        (is (true? (.contains (sivun-sisalto) "AIPAL")))))))
+      (with-data {}
+        (avaa-aipal etusivu)
+        (testing
+          "sisältää järjestelmän nimen"
+          (is (true? (.contains (sivun-sisalto) "AIPAL"))))))))
