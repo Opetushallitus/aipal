@@ -13,9 +13,15 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal-e2e.data-util
-  (:require [aipal-e2e.tietokanta.data]))
+  (:require [aipal-e2e.arkisto.kysely :as kysely]
+            [aipal-e2e.tietokanta.data]))
 
-(def ^:private entity-tiedot {})
+(def ^:private kysely-tiedot {:luo-fn kysely/lisaa!
+                              :poista-fn #(kysely/poista! (:kyselyid %))
+                              :default (for [i (iterate inc 1)]
+                                         {:kyselyid i})})
+
+(def ^:private entity-tiedot {:kyselyt kysely-tiedot})
 
 (defn ^:private luo
   [entityt luo-fn]
@@ -28,7 +34,7 @@
     (poista-fn entity)))
 
 (def ^:private taulut
-  [])
+  [:kyselyt])
 
 (defn ^:private taydenna-data
   [data]

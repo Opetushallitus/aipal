@@ -31,7 +31,8 @@
   (with-webdriver
     (testing
       "etusivu"
-      (with-data {}
+      (with-data {:kyselyt [{:kyselyid 1
+                             :nimi_fi "Kysely 1"}]}
         (avaa-aipal etusivu)
         (testing
           "sisältää järjestelmän nimen"

@@ -87,3 +87,4 @@ kertoo mitä käyttäjätunnusta yhteyteen käytetään, esim. :user ->
      ~@body))
 
 (defentity kayttaja)
+(defentity kysely)

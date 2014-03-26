@@ -19,7 +19,7 @@
 
 (def ^:private yllapitajarooli "YLLAPITAJA")
 
-(def ^:private taulut [])
+(def ^:private taulut ["kysely"])
 
 (defn tyhjenna-testidata!
   [oid]
