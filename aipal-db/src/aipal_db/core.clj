@@ -17,6 +17,8 @@
   (:import [com.googlecode.flyway.core Flyway]
            [com.googlecode.flyway.core.util.jdbc DriverDataSource]
            [javax.sql DataSource]
+           [java.net URLEncoder
+                     URLDecoder]
            com.googlecode.flyway.core.api.FlywayException)
   (:require [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
@@ -66,8 +68,8 @@
   [uri]
   (let [prefix (first (clojure.string/split uri #"//"))
         etc (second (clojure.string/split uri #"//"))
-        user (first (clojure.string/split etc #":"))
-        passwd (first (clojure.string/split (second (clojure.string/split etc #":")) #"@"))
+        user (URLDecoder/decode (first (clojure.string/split etc #":")))
+        passwd (URLDecoder/decode (first (clojure.string/split (second (clojure.string/split etc #":")) #"@")))
         postfix (second (clojure.string/split etc #"@"))]
      {:user user
       :passwd passwd
@@ -112,7 +114,7 @@
   (->> ["Käyttö: lein run [options] [jdbc-url]"
         ""
         "Käyttöönotettaessa uusi kanta on tyhjennettävä (--clear), jotta voidaan varmistua että kanta on"
-        "tyhjä eikä sisällä ylimääräisiä tauluja tai dataa."
+        "tyhjä eikä sisällä ylimääräisiä tauluja tai dataa. jdbc-url:ssa käyttäjä ja salasana tulee olla URL enkoodattu"
         ""
         "Ilman jdbc-url osoitetta yritetään lukea osoite aipal.properties tiedoston perusteella."
         ""
@@ -138,7 +140,7 @@
        schema-name (.getProperty props "db.name")
        schema-user-passwd (.getProperty props "db.password")
        port (.getProperty props "db.port")]
-   (str "postgresql://" schema-user ":" schema-user-passwd "@" host ":" port "/" schema-name)))
+   (str "postgresql://" (URLEncoder/encode schema-user) ":" (URLEncoder/encode schema-user-passwd) "@" host ":" port "/" schema-name)))
 
 (defn file->jdbc-url
   [polku]

@@ -1,32 +1,226 @@
-create table kayttajarooli (
+create table kayttajarooli
+(
     roolitunnus varchar(16) NOT NULL primary key,
     kuvaus varchar(200),
     muutettuaika timestamptz NOT NULL,
     luotuaika timestamptz NOT NULL
 );
 
+CREATE TABLE kayttaja
+  (
+    oid               VARCHAR (80) NOT NULL ,
+    uid               VARCHAR (80) ,
+    etunimi           VARCHAR (100) ,
+    sukunimi          VARCHAR (100) ,
+    rooli             VARCHAR (16) references kayttajarooli(roolitunnus),
+    organisaatio      VARCHAR (16) ,
+    voimassa          BOOLEAN DEFAULT false NOT NULL ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_PK PRIMARY KEY ( oid ) ;
 
-create table kayttaja(
-    oid varchar(80) NOT NULL primary key,
-    uid character varying(80),
-    etunimi varchar(100) not null,
-    sukunimi varchar(100) not null,
-    rooli varchar(16) NOT NULL references kayttajarooli(roolitunnus),
-    muutettu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
-    luotu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
-    muutettuaika timestamptz NOT NULL,
-    luotuaika timestamptz NOT NULL,
-    voimassa boolean not null default(true)
-);
+CREATE TABLE kysely
+  (
+    kyselyid        INTEGER NOT NULL ,
+    voimassa_alkaen DATE ,
+    lakkautettu     BOOLEAN ,
+    nimi_fi         VARCHAR (200) ,
+    nimi_sv         VARCHAR (200) ,
+    selite_fi TEXT ,
+    selite_sv TEXT ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kysely ADD CONSTRAINT kysely_PK PRIMARY KEY ( kyselyid ) ;
+
+CREATE TABLE kysely_kysymys
+  (
+    kyselyid          INTEGER NOT NULL ,
+    kysymysid         INTEGER NOT NULL ,
+    kysymysryhmaid    INTEGER NOT NULL ,
+    kyselypohjaid     INTEGER NOT NULL ,
+    poistettu         BOOLEAN DEFAULT false NOT NULL ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_PK PRIMARY KEY ( kysymysid, kyselyid ) ;
+
+CREATE TABLE kyselykerta
+  (
+    kyselykertaid       INTEGER NOT NULL ,
+    kyselyid            INTEGER NOT NULL ,
+    nimi_fi             VARCHAR (200) NOT NULL ,
+    nimi_sv             VARCHAR (200) ,
+    voimassa_alkaen     DATE NOT NULL ,
+    voimassaolo_paattyy DATE ,
+    selite_fi TEXT ,
+    selite_sv TEXT ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_PK PRIMARY KEY ( kyselykertaid ) ;
+
+CREATE TABLE kyselypohja
+  (
+    kyselypohjaid    INTEGER NOT NULL ,
+    valtakunnallinen BOOLEAN NOT NULL ,
+    voimassa_alkaen  DATE ,
+    poistettu        DATE ,
+    lakkautettu      DATE ,
+    nimi_fi          VARCHAR (200) ,
+    nimi_sv          VARCHAR (200) ,
+    selite_fi TEXT ,
+    selite_sv TEXT ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_PK PRIMARY KEY ( kyselypohjaid ) ;
+
+CREATE TABLE kysymys
+  (
+    kysymysid         INTEGER NOT NULL ,
+    pakollinen        BOOLEAN NOT NULL ,
+    vastaustyyppi     VARCHAR (20) NOT NULL ,
+    kysymysryhmaid    INTEGER NOT NULL ,
+    kysymys_fi        VARCHAR (500) NOT NULL ,
+    kysymys_sv        VARCHAR (500) ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kysymys ADD CONSTRAINT kysymys_PK PRIMARY KEY ( kysymysid ) ;
+
+CREATE TABLE kysymysryhma
+  (
+    kysymysryhmaid   INTEGER NOT NULL ,
+    voimassa_alkaen  DATE ,
+    lakkautettu      DATE ,
+    taustakysymykset BOOLEAN DEFAULT false NOT NULL ,
+    valtakunnallinen BOOLEAN DEFAULT false NOT NULL ,
+    nimi_fi          VARCHAR (200) NOT NULL ,
+    nimi_sv          VARCHAR (200) ,
+    selite_fi TEXT ,
+    selite_sv TEXT ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhmä_PK PRIMARY KEY ( kysymysryhmaid ) ;
+
+CREATE TABLE kysymysryhma_kyselypohja
+  (
+    kysymysryhmaid    INTEGER NOT NULL ,
+    kyselypohjaid     INTEGER NOT NULL ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kysymysryhma_kyselypohja_PK PRIMARY KEY ( kysymysryhmaid, kyselypohjaid ) ;
+
+CREATE TABLE vastaus
+  (
+    vastausid         INTEGER NOT NULL ,
+    kysymysid         INTEGER NOT NULL ,
+    vastaustunnusid   INTEGER NOT NULL ,
+    vastausaika       DATE ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_PK PRIMARY KEY ( vastausid ) ;
+
+CREATE TABLE vastaustunnus
+  (
+    vastaustunnusid   INTEGER NOT NULL ,
+    kyselykertaid     INTEGER NOT NULL ,
+    vastannut         BOOLEAN DEFAULT false NOT NULL ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_PK PRIMARY KEY ( vastaustunnusid ) ;
+
+ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kyselypohja_FK FOREIGN KEY ( kyselypohjaid ) REFERENCES kyselypohja ( kyselypohjaid ) ;
+
+ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kysymysryhma_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) ;
+
+ALTER TABLE kysely ADD CONSTRAINT kysely_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysely ADD CONSTRAINT kysely_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kysely_FK FOREIGN KEY ( kyselyid ) REFERENCES kysely ( kyselyid ) ;
+
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kyselypohja_FK FOREIGN KEY ( kyselypohjaid ) REFERENCES kyselypohja ( kyselypohjaid ) ;
+
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) ;
+
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kysymysryhma_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) ;
+
+ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_kysely_FK FOREIGN KEY ( kyselyid ) REFERENCES kysely ( kyselyid ) ;
+
+ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysymys ADD CONSTRAINT kysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysymys ADD CONSTRAINT kysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysymys ADD CONSTRAINT kysymys_kysymysryhmä_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) ;
+
+ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhma_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhma_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaustunnus_FK FOREIGN KEY ( vastaustunnusid ) REFERENCES vastaustunnus ( vastaustunnusid ) ;
+
+ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) ;
+
+ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kyselykerta_FK FOREIGN KEY ( kyselykertaid ) REFERENCES kyselykerta ( kyselykertaid ) ;
 
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
 values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
-
-
-insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
-values ('KAYTTAJA', 'Käyttäjäroolin oikeudet riippuvat kontekstisensitiivisistä roolioikeuksista.', current_timestamp, current_timestamp);
-
 
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
 values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
@@ -34,14 +228,90 @@ values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, 'YLLAPITAJA', c
 
 CREATE OR REPLACE function update_stamp() returns trigger as $$ begin new.muutettuaika := now(); return new; end; $$ language plpgsql;
 CREATE OR REPLACE function update_created() returns trigger as $$ begin new.luotuaika := now(); return new; end; $$ language plpgsql;
-create trigger kayttaja_update before update on kayttaja for each row execute procedure update_stamp() ;
-create trigger kayttajal_insert before insert on kayttaja for each row execute procedure update_created() ;
-create trigger kayttajam_insert before insert on kayttaja for each row execute procedure update_stamp() ;
+CREATE OR REPLACE function update_creator() returns trigger as $$ begin new.luotu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
+CREATE OR REPLACE function update_modifier() returns trigger as $$ begin new.muutettu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
+
+-- kayttajarooli
 create trigger kayttajarooli_update before update on kayttajarooli for each row execute procedure update_stamp() ;
 create trigger kayttajaroolil_insert before insert on kayttajarooli for each row execute procedure update_created() ;
 create trigger kayttajaroolim_insert before insert on kayttajarooli for each row execute procedure update_stamp() ;
-CREATE OR REPLACE function update_creator() returns trigger as $$ begin new.luotu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
-CREATE OR REPLACE function update_modifier() returns trigger as $$ begin new.muutettu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
+
+-- kayttaja
+create trigger kayttaja_update before update on kayttaja for each row execute procedure update_stamp() ;
+create trigger kayttajal_insert before insert on kayttaja for each row execute procedure update_created() ;
+create trigger kayttajam_insert before insert on kayttaja for each row execute procedure update_stamp() ;
 create trigger kayttaja_mu_update before update on kayttaja for each row execute procedure update_modifier() ;
 create trigger kayttaja_cu_insert before insert on kayttaja for each row execute procedure update_creator() ;
 create trigger kayttaja_mu_insert before insert on kayttaja for each row execute procedure update_modifier() ;
+
+-- kysely
+create trigger kysely_update before update on kysely for each row execute procedure update_stamp() ;
+create trigger kyselyl_insert before insert on kysely for each row execute procedure update_created() ;
+create trigger kyselym_insert before insert on kysely for each row execute procedure update_stamp() ;
+create trigger kysely_mu_update before update on kysely for each row execute procedure update_modifier() ;
+create trigger kysely_cu_insert before insert on kysely for each row execute procedure update_creator() ;
+create trigger kysely_mu_insert before insert on kysely for each row execute procedure update_modifier() ;
+
+-- kysely_kysymys
+create trigger kysely_kysymys_update before update on kysely_kysymys for each row execute procedure update_stamp() ;
+create trigger kysely_kysymysl_insert before insert on kysely_kysymys for each row execute procedure update_created() ;
+create trigger kysely_kysymysm_insert before insert on kysely_kysymys for each row execute procedure update_stamp() ;
+create trigger kysely_kysymys_mu_update before update on kysely_kysymys for each row execute procedure update_modifier() ;
+create trigger kysely_kysymys_cu_insert before insert on kysely_kysymys for each row execute procedure update_creator() ;
+create trigger kysely_kysymys_mu_insert before insert on kysely_kysymys for each row execute procedure update_modifier() ;
+
+-- kyselykerta
+create trigger kyselykerta_update before update on kyselykerta for each row execute procedure update_stamp() ;
+create trigger kyselykertal_insert before insert on kyselykerta for each row execute procedure update_created() ;
+create trigger kyselykertam_insert before insert on kyselykerta for each row execute procedure update_stamp() ;
+create trigger kyselykerta_mu_update before update on kyselykerta for each row execute procedure update_modifier() ;
+create trigger kyselykerta_cu_insert before insert on kyselykerta for each row execute procedure update_creator() ;
+create trigger kyselykerta_mu_insert before insert on kyselykerta for each row execute procedure update_modifier() ;
+
+-- kyselypohja
+create trigger kyselypohja_update before update on kyselypohja for each row execute procedure update_stamp() ;
+create trigger kyselypohjal_insert before insert on kyselypohja for each row execute procedure update_created() ;
+create trigger kyselypohjam_insert before insert on kyselypohja for each row execute procedure update_stamp() ;
+create trigger kyselypohja_mu_update before update on kyselypohja for each row execute procedure update_modifier() ;
+create trigger kyselypohja_cu_insert before insert on kyselypohja for each row execute procedure update_creator() ;
+create trigger kyselypohja_mu_insert before insert on kyselypohja for each row execute procedure update_modifier() ;
+
+-- kysymys
+create trigger kysymys_update before update on kysymys for each row execute procedure update_stamp() ;
+create trigger kysymysl_insert before insert on kysymys for each row execute procedure update_created() ;
+create trigger kysymysm_insert before insert on kysymys for each row execute procedure update_stamp() ;
+create trigger kysymys_mu_update before update on kysymys for each row execute procedure update_modifier() ;
+create trigger kysymys_cu_insert before insert on kysymys for each row execute procedure update_creator() ;
+create trigger kysymys_mu_insert before insert on kysymys for each row execute procedure update_modifier() ;
+
+-- kysymysryhma
+create trigger kysymysryhma_update before update on kysymysryhma for each row execute procedure update_stamp() ;
+create trigger kysymysryhmal_insert before insert on kysymysryhma for each row execute procedure update_created() ;
+create trigger kysymysryhmam_insert before insert on kysymysryhma for each row execute procedure update_stamp() ;
+create trigger kysymysryhma_mu_update before update on kysymysryhma for each row execute procedure update_modifier() ;
+create trigger kysymysryhma_cu_insert before insert on kysymysryhma for each row execute procedure update_creator() ;
+create trigger kysymysryhma_mu_insert before insert on kysymysryhma for each row execute procedure update_modifier() ;
+
+-- kysymysryhma_kyselypohja
+create trigger kysymysryhma_kyselypohja_update before update on kysymysryhma_kyselypohja for each row execute procedure update_stamp() ;
+create trigger kysymysryhma_kyselypohjal_insert before insert on kysymysryhma_kyselypohja for each row execute procedure update_created() ;
+create trigger kysymysryhma_kyselypohjam_insert before insert on kysymysryhma_kyselypohja for each row execute procedure update_stamp() ;
+create trigger kysymysryhma_kyselypohja_mu_update before update on kysymysryhma_kyselypohja for each row execute procedure update_modifier() ;
+create trigger kysymysryhma_kyselypohja_cu_insert before insert on kysymysryhma_kyselypohja for each row execute procedure update_creator() ;
+create trigger kysymysryhma_kyselypohja_mu_insert before insert on kysymysryhma_kyselypohja for each row execute procedure update_modifier() ;
+
+-- vastaus
+create trigger vastaus_update before update on vastaus for each row execute procedure update_stamp() ;
+create trigger vastausl_insert before insert on vastaus for each row execute procedure update_created() ;
+create trigger vastausm_insert before insert on vastaus for each row execute procedure update_stamp() ;
+create trigger vastaus_mu_update before update on vastaus for each row execute procedure update_modifier() ;
+create trigger vastaus_cu_insert before insert on vastaus for each row execute procedure update_creator() ;
+create trigger vastaus_mu_insert before insert on vastaus for each row execute procedure update_modifier() ;
+
+-- vastaustunnus
+create trigger vastaustunnus_update before update on vastaustunnus for each row execute procedure update_stamp() ;
+create trigger vastaustunnusl_insert before insert on vastaustunnus for each row execute procedure update_created() ;
+create trigger vastaustunnusm_insert before insert on vastaustunnus for each row execute procedure update_stamp() ;
+create trigger vastaustunnus_mu_update before update on vastaustunnus for each row execute procedure update_modifier() ;
+create trigger vastaustunnus_cu_insert before insert on vastaustunnus for each row execute procedure update_creator() ;
+create trigger vastaustunnus_mu_insert before insert on vastaustunnus for each row execute procedure update_modifier() ;
