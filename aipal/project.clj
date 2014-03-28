@@ -27,7 +27,7 @@
                  [com.cemerick/valip "0.3.2"]
                  [prismatic/schema "0.2.0"]
                  [korma "0.3.0-RC6"]
-                 [postgresql "9.1-901.jdbc4"]
+                 [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [stencil "0.3.2"]]
   :plugins [[test2junit "1.0.1"]]
   :profiles {:dev {:source-paths ["dev"]
