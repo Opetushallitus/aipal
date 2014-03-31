@@ -16,6 +16,7 @@
   (:gen-class)
   (:require [cheshire.generate :as json-gen]
             [clojure.tools.logging :as log]
+            [aitu.integraatio.sql.korma]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
             [ring.middleware.json :refer [wrap-json-params]]
@@ -26,7 +27,7 @@
             [ring.util.response :as resp]
             schema.core
             [stencil.core :as s]
-            [aipal.asetukset :refer [lue-asetukset oletusasetukset konfiguroi-lokitus]]
+            [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
             aipal.rest-api.i18n
             [aitu.infra.i18n :refer [wrap-locale]]
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]))
@@ -54,6 +55,8 @@
   (try
     (let [asetukset (lue-asetukset oletusasetukset)
           _ (konfiguroi-lokitus asetukset)
+          _ (log/info "Käynnistetään Aipal, versio " @build-id)
+          _ (aitu.integraatio.sql.korma/luo-db (:db asetukset))
           _ (json-gen/add-encoder org.joda.time.LocalDate
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))

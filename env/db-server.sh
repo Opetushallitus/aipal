@@ -17,7 +17,7 @@ iptables -I INPUT 1 -p tcp -s $app_host --dport 5432 -j ACCEPT
 
 service iptables save
 
-# alustetaan ttk tietokanta ilman tauluja
+# alustetaan aipal tietokanta ilman tauluja
 su postgres -c "psql --file=$env_dir/db-server/dev.sql"
 
-$env_dir/db-server/setup.sh
+# $env_dir/db-server/setup.sh

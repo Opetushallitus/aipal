@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.asetukset
-  (:require [clojure.java.io :refer [file]]
+  (:require [clojure.java.io :refer [file resource]]
             clojure.set
             [clojure.tools.logging :as log]
 
@@ -27,6 +27,13 @@
 (def oletusasetukset
   {:server {:port "8082"
             :base-url ""}
+   :db {:host "127.0.0.1"
+        :port "3456"
+        :name "aipal"
+        :user "aipal_user"
+        :password "aipal"
+        :maximum-pool-size "15"
+        :minimum-pool-size "3"}
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :logback {:properties-file "resources/logback.xml"}
    })
@@ -37,6 +44,10 @@
 (defn konvertoi-arvo
   [x]
   (get konversio-map x x))
+
+(def build-id (delay (if-let [r (resource "build-id.txt")]
+                       (.trim (slurp r))
+                       "dev")))
 
 (defn konfiguroi-lokitus
   "Konfiguroidaan logback asetukset tiedostosta."

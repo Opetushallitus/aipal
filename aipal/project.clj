@@ -26,8 +26,11 @@
                  [clj-time "0.6.0"]
                  [com.cemerick/valip "0.3.2"]
                  [prismatic/schema "0.2.0"]
+
                  [korma "0.3.0-RC6"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
+                 [com.jolbox/bonecp "0.8.0.RELEASE"]
+                 
                  [stencil "0.3.2"]]
   :plugins [[test2junit "1.0.1"]]
   :profiles {:dev {:source-paths ["dev"]
