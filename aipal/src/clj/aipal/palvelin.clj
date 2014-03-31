@@ -33,6 +33,15 @@
 
 (schema.core/set-fn-validation! true)
 
+(defn service-url [asetukset]
+  (let [base-url (-> asetukset :server :base-url)]
+    (cond
+      (empty? base-url) (str "http://localhost:"
+                             (-> asetukset :server :port Integer/parseInt)
+                             "/")
+      (.endsWith base-url "/") base-url
+      :else (str base-url "/"))))
+
 (defn ^:private reitit [asetukset]
   (c/routes
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
@@ -60,6 +69,7 @@
                                    wrap-content-type
                                    log-request-wrapper)
                                  {:port (-> asetukset :server :port Integer/parseInt)})]
+      (log/info "Palvelin käynnistetty:" (service-url asetukset))
       {:sammuta sammuta})
     (catch Throwable t
       (let [virheviesti "Palvelimen käynnistys epäonnistui"]
