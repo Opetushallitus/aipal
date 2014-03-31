@@ -40,6 +40,13 @@ Uuden bower kirjaston käyttöönotto:
 bower install <kirjaston-nimi> --save
 ```
 
+Uuden nodejs kirjaston asennus kehityskäyttöön:
+
+```
+npm install <kirjaston-nimi> --save-dev
+npm shrinkwrap --dev
+```
+
 Testien ajaminen:
 
 ```
