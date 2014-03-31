@@ -48,13 +48,3 @@
               total  (- finish start)]
           (log/info (str "Request " *requestid* " end. Status: " (:status response) " Duration: " total " ms. uri: " (:uri req)))
           response)))))
-
-
-; :remote-addr
-; :uri
-; :headers
-;   user-agent
-;   referer
-;   oid
-; :character-encoding
-; :scheme
