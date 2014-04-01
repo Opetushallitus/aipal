@@ -20,4 +20,5 @@ service iptables save
 # alustetaan aipal tietokanta ilman tauluja
 su postgres -c "psql --file=$env_dir/db-server/dev.sql"
 
-# $env_dir/db-server/setup.sh
+# ympäristökohtaisesta hakemistosta ajetaan alustusskripti
+$env_dir/db-server/setup.sh
