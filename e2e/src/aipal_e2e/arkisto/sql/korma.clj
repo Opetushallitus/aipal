@@ -21,17 +21,9 @@
             [clj-time.core :as time]))
 
 (defn korma-asetukset
-  "Muuttaa asetustiedoston db-avaimen arvon Korman odottamaan muotoon. Tunnus
-kertoo mitä käyttäjätunnusta yhteyteen käytetään, esim. :user ->
-\"db.account.user\", :admin -> \"db.account.admin\"."
+  "Muuttaa asetustiedoston db-avaimen arvon Korman odottamaan muotoon."
   [db-asetukset]
-  {:host (:host db-asetukset)
-   :port (Integer/parseInt (:port db-asetukset))
-   :db (:name db-asetukset)
-   :user (:user db-asetukset)
-   :password (:password db-asetukset)
-   :minimum-pool-size (Integer/parseInt (:minimum-pool-size db-asetukset))
-   :maximum-pool-size (Integer/parseInt (:maximum-pool-size db-asetukset))})
+  (clojure.set/rename-keys db-asetukset {:name :db}))
 
 (defn datasource
   [db-asetukset]

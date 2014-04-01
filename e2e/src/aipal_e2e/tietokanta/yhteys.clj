@@ -22,12 +22,12 @@
 
 (def ^:private tietokantaasetukset
   {:host (or (System/getenv "AIPAL_DB_HOST") "127.0.0.1")
-   :port (or (System/getenv "AIPAL_DB_PORT") "3456")
+   :port (Integer/parseInt (or (System/getenv "AIPAL_DB_PORT") "3456"))
    :name (or (System/getenv "AIPAL_DB_NAME") "aipal")
    :user (or (System/getenv "AIPAL_DB_USER") "aipal_user")
    :password (or (System/getenv "AIPAL_DB_PASSWORD") "aipal")
-   :maximum-pool-size "15"
-   :minimum-pool-size "3"})
+   :maximum-pool-size 15
+   :minimum-pool-size 3})
 
 (defn ^:private alusta-korma!
   []

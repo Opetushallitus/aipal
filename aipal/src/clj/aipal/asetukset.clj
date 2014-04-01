@@ -20,30 +20,50 @@
             [aitu.util :refer [pisteavaimet->puu
                                deep-merge
                                deep-update-vals
-                               paths]])
+                               paths]]
+            [schema.core :as s]
+            [schema.coerce :as sc])
   (:import [ch.qos.logback.classic.joran JoranConfigurator]
            [org.slf4j LoggerFactory]))
 
+(def Asetukset
+  {:server {:port s/Int
+            :base-url s/Str}
+   :db {:host s/Str
+        :port s/Int
+        :name s/Str
+        :user s/Str
+        :password s/Str
+        :maximum-pool-size s/Int
+        :minimum-pool-size s/Int}
+   :development-mode Boolean
+   :logback {:properties-file s/Str}})
+
+(defn string->boolean [x]
+  (case x
+    "true" true
+    "false" false
+    x))
+
+(defn string-coercion-matcher [schema]
+  (or (sc/string-coercion-matcher schema)
+      ({Boolean string->boolean} schema)))
+
+(defn coerce-asetukset [asetukset]
+  ((sc/coercer Asetukset string-coercion-matcher) asetukset))
+
 (def oletusasetukset
-  {:server {:port "8082"
+  {:server {:port 8082
             :base-url ""}
    :db {:host "127.0.0.1"
-        :port "3456"
+        :port 3456
         :name "aipal"
         :user "aipal_user"
         :password "aipal"
-        :maximum-pool-size "15"
-        :minimum-pool-size "3"}
+        :maximum-pool-size 15
+        :minimum-pool-size 3}
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
-   :logback {:properties-file "resources/logback.xml"}
-   })
-
-(def konversio-map
-  {"true" true})
-
-(defn konvertoi-arvo
-  [x]
-  (get konversio-map x x))
+   :logback {:properties-file "resources/logback.xml"}})
 
 (def build-id (delay (if-let [r (resource "build-id.txt")]
                        (.trim (slurp r))
@@ -72,20 +92,11 @@
       (log/info "Asetustiedostoa ei löydy. Käytetään oletusasetuksia")
       {})))
 
-(defn tarkista-avaimet
-  [m]
-  (let [vaarat-avaimet
-        (clojure.set/difference (paths m) (paths oletusasetukset))]
-    (assert (empty? vaarat-avaimet) (str "Viallisia avaimia asetuksissa: " vaarat-avaimet)))
-  m)
-
 (defn tulkitse-asetukset
   [property-map]
-  (tarkista-avaimet
-    (deep-update-vals konvertoi-arvo
-       (->> property-map
-          (into {})
-          pisteavaimet->puu))))
+  (->> property-map
+     (into {})
+     pisteavaimet->puu))
 
 (defn lue-asetukset
   ([oletukset] (lue-asetukset oletukset "aipal.properties"))
@@ -94,5 +105,4 @@
       (lue-asetukset-tiedostosta polku)
       (tulkitse-asetukset)
       (deep-merge oletukset)
-      (deep-update-vals konvertoi-arvo)
-      (tarkista-avaimet))))
+      (coerce-asetukset))))
