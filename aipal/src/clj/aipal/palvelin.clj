@@ -16,7 +16,6 @@
   (:gen-class)
   (:require [cheshire.generate :as json-gen]
             [clojure.tools.logging :as log]
-            [aitu.integraatio.sql.korma]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
             [ring.middleware.json :refer [wrap-json-params]]
@@ -27,10 +26,13 @@
             [ring.util.response :as resp]
             schema.core
             [stencil.core :as s]
+
             [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
             aipal.rest-api.i18n
+            aipal.rest-api.raportti.kyselykerta
             [aitu.infra.i18n :refer [wrap-locale]]
-            [aitu.infra.print-wrapper :refer [log-request-wrapper]]))
+            [aitu.infra.print-wrapper :refer [log-request-wrapper]]
+            [aitu.integraatio.sql.korma]))
 
 (schema.core/set-fn-validation! true)
 
@@ -45,7 +47,8 @@
 (defn ^:private reitit [asetukset]
   (c/routes
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
-    (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)))
+    (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
+    (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)))
 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))

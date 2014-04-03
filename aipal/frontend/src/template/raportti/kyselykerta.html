@@ -1,0 +1,11 @@
+Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
+
+<div ng-repeat="vastaus in tulos.raportti">
+  {{vastaus.kysymys_fi}}
+  <table>
+    <tr ng-repeat="alkio in vastaus.jakauma">
+      <td >{{alkio.vaihtoehto}}</td>
+      <td >{{alkio.lukumaara}}</td>
+    </tr>
+  </table>
+</div>
