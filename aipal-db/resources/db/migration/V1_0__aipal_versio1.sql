@@ -1,3 +1,18 @@
+CREATE TABLE jatkokysymys
+  (
+    jatkokysymysid    INTEGER NOT NULL ,
+    kylla_teksti_fi   VARCHAR (500) ,
+    kylla_teksti_sv   VARCHAR (500) ,
+    ei_teksti_fi      VARCHAR (500) ,
+    ei_teksti_sv      VARCHAR (500) ,
+    max_vastaus       INTEGER ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_PK PRIMARY KEY ( jatkokysymysid ) ;
+
 CREATE TABLE kayttaja
   (
     oid               VARCHAR (80) NOT NULL ,
@@ -53,6 +68,18 @@ CREATE TABLE kysely_kysymys
   ) ;
 ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_PK PRIMARY KEY ( kysymysid, kyselyid ) ;
 
+CREATE TABLE kysely_kysymysryhma
+  (
+    kyselyid          INTEGER NOT NULL ,
+    kysymysryhmaid    INTEGER NOT NULL ,
+    jarjestys         INTEGER ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kysymysryhma_PK PRIMARY KEY ( kyselyid, kysymysryhmaid ) ;
+
 CREATE TABLE kyselykerta
   (
     kyselykertaid       INTEGER NOT NULL ,
@@ -98,6 +125,7 @@ CREATE TABLE kysymys
     kysymys_fi        VARCHAR (500) NOT NULL ,
     kysymys_sv        VARCHAR (500) ,
     jarjestys         INTEGER ,
+    jatkokysymysid    INTEGER NOT NULL ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
@@ -128,12 +156,28 @@ CREATE TABLE kysymysryhma_kyselypohja
   (
     kysymysryhmaid    INTEGER NOT NULL ,
     kyselypohjaid     INTEGER NOT NULL ,
+    jarjestys         INTEGER NOT NULL ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
 ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kysymysryhma_kyselypohja_PK PRIMARY KEY ( kysymysryhmaid, kyselypohjaid ) ;
+
+CREATE TABLE monivalintavaihtoehto
+  (
+    monivalintavaihtoehtoid INTEGER NOT NULL ,
+    kysymysid               INTEGER NOT NULL ,
+    jarjestys               INTEGER DEFAULT 0 NOT NULL ,
+    teksti_fi               VARCHAR (200) NOT NULL ,
+    teksti_sv               VARCHAR (200) NOT NULL ,
+    luotu_kayttaja          VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja       VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT kysymys_lisatieto_PK PRIMARY KEY ( monivalintavaihtoehtoid ) ;
+ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_UN UNIQUE ( kysymysid , jarjestys ) ;
 
 CREATE TABLE vastaus
   (
@@ -160,6 +204,10 @@ CREATE TABLE vastaustunnus
   ) ;
 ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_PK PRIMARY KEY ( vastaustunnusid ) ;
 
+ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
 ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -174,9 +222,19 @@ ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kyselypohja_FK FOREIGN
 
 ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kysymysryhma_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) NOT DEFERRABLE ;
 
+ALTER TABLE kysely_kysymys ADD CONSTRAINT kys_kym_kysely_kysymysryhma_FK FOREIGN KEY ( kyselyid, kysymysryhmaid ) REFERENCES kysely_kysymysryhma ( kyselyid, kysymysryhmaid ) NOT DEFERRABLE ;
+
 ALTER TABLE kysely ADD CONSTRAINT kysely_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysely ADD CONSTRAINT kysely_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kysely_FK FOREIGN KEY ( kyselyid ) REFERENCES kysely ( kyselyid ) NOT DEFERRABLE ;
+
+ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kysymysryhma_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
@@ -188,8 +246,6 @@ ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kyselypohja_FK FOREIGN 
 
 ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
-ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kysymysryhma_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) NOT DEFERRABLE ;
-
 ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -200,6 +256,8 @@ ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_kayttaja_FK FOREIGN KEY ( luo
 
 ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
+ALTER TABLE kysymys ADD CONSTRAINT kysymys_jatkokysymys_FK FOREIGN KEY ( jatkokysymysid ) REFERENCES jatkokysymys ( jatkokysymysid ) NOT DEFERRABLE ;
+
 ALTER TABLE kysymys ADD CONSTRAINT kysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysymys ADD CONSTRAINT kysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -209,6 +267,12 @@ ALTER TABLE kysymys ADD CONSTRAINT kysymys_kysymysryhmä_FK FOREIGN KEY ( kysymy
 ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhma_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhma_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
