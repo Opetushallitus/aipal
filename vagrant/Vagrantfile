@@ -3,8 +3,8 @@
 
 Vagrant.configure("2") do |config|
 
-  vmbox = "CentOS-6.4-x86_64-v20131103.box"
-  vmbox_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
+  vmbox = "CentOS-6.5-x86_64-v20140311.box"
+  vmbox_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.5-x86_64-v20140311.box"
 
   # Kehitystyön tietokantapalvelin
   config.vm.define "aipal-db" do |db|
