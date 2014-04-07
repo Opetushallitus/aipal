@@ -125,7 +125,7 @@ CREATE TABLE kysymys
     kysymys_fi        VARCHAR (500) NOT NULL ,
     kysymys_sv        VARCHAR (500) ,
     jarjestys         INTEGER ,
-    jatkokysymysid    INTEGER NOT NULL ,
+    jatkokysymysid    INTEGER ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
