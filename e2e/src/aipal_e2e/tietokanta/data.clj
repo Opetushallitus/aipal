@@ -19,11 +19,19 @@
 
 (def ^:private yllapitajarooli "YLLAPITAJA")
 
-(def ^:private taulut ["kysely"])
+(def ^:private taulut ["kysely"
+                       "kyselykerta"
+                       "kysymysryhma"
+                       "kysymys"
+                       "kyselypohja"
+                       "kysely_kysymysryhma"
+                       "kysely_kysymys"
+                       "vastaustunnus"
+                       "vastaus"])
 
 (defn tyhjenna-testidata!
   [oid]
-  (doseq [taulu taulut]
+  (doseq [taulu (reverse taulut)]
     (sql/exec-raw (str "delete from " taulu " where luotu_kayttaja = '" oid "'"))))
 
 (defn luo-testikayttaja!

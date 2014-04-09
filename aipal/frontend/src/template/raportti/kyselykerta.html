@@ -1,9 +1,9 @@
 Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
 
-<div ng-repeat="vastaus in tulos.raportti">
-  {{vastaus.kysymys_fi}}
+<div ng-repeat="kysymys in tulos.raportti">
+  <span>{{kysymys.kysymys_fi}}</span>
   <table>
-    <tr ng-repeat="alkio in vastaus.jakauma">
+    <tr ng-repeat="alkio in kysymys.jakauma">
       <td >{{alkio.vaihtoehto}}</td>
       <td >{{alkio.lukumaara}}</td>
     </tr>

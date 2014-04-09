@@ -13,7 +13,16 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal-e2e.data-util
-  (:require [aipal-e2e.arkisto.kysely :as kysely]
+  (:require [clj-time.core :as time]
+            [aipal-e2e.arkisto.kysely :as kysely]
+            [aipal-e2e.arkisto.kysely-kysymys :as kysely-kysymys]
+            [aipal-e2e.arkisto.kysely-kysymysryhma :as kysely-kysymysryhma]
+            [aipal-e2e.arkisto.kyselykerta :as kyselykerta]
+            [aipal-e2e.arkisto.kyselypohja :as kyselypohja]
+            [aipal-e2e.arkisto.kysymys :as kysymys]
+            [aipal-e2e.arkisto.kysymysryhma :as kysymysryhma]
+            [aipal-e2e.arkisto.vastaustunnus :as vastaustunnus]
+            [aipal-e2e.arkisto.vastaus :as vastaus]
             [aipal-e2e.tietokanta.data]))
 
 (def ^:private kysely-tiedot {:luo-fn kysely/lisaa!
@@ -21,7 +30,69 @@
                               :default (for [i (iterate inc 1)]
                                          {:kyselyid i})})
 
-(def ^:private entity-tiedot {:kyselyt kysely-tiedot})
+(def ^:private kysely-kysymys-tiedot {:luo-fn kysely-kysymys/lisaa!
+                                      :poista-fn #(kysely-kysymys/poista! (:kyselyid %) (:kysymysid %))
+                                      :default (for [i (iterate inc 1)]
+                                                 {})})
+
+(def ^:private kysely-kysymysryhma-tiedot {:luo-fn kysely-kysymysryhma/lisaa!
+                                           :poista-fn #(kysely-kysymysryhma/poista! (:kyselyid %) (:kysymysryhmaid %))
+                                           :default (for [i (iterate inc 1)]
+                                                      {})})
+
+(def ^:private kyselykerta-tiedot {:luo-fn kyselykerta/lisaa!
+                                   :poista-fn #(kyselykerta/poista! (:kyselykertaid %))
+                                   :default (for [i (iterate inc 1)]
+                                              {:nimi_fi (str "Kyselykerta " i)
+                                               :voimassa_alkaen (time/today)})})
+
+(def ^:private kyselypohja-tiedot {:luo-fn kyselypohja/lisaa!
+                                   :poista-fn #(kyselypohja/poista! (:kyselypohjaid %))
+                                   :default (for [i (iterate inc 1)]
+                                              {:valtakunnallinen true})})
+
+(def ^:private kysymys-tiedot {:luo-fn kysymys/lisaa!
+                               :poista-fn #(kysymys/poista! (:kysymysid %))
+                               :default (for [i (iterate inc 1)]
+                                          {:pakollinen false
+                                           :poistettava true
+                                           :vastaustyyppi "vastaustyyppi"
+                                           :kysymys_fi (str "Kysymys " i)})})
+
+(def ^:private kysymysryhma-tiedot {:luo-fn kysymysryhma/lisaa!
+                                    :poista-fn #(kysymysryhma/poista! (:kysymysryhmaid %))
+                                    :default (for [i (iterate inc 1)]
+                                               {:nimi_fi (str "Kysymysryhma " i)})})
+
+(def ^:private vastaustunnus-tiedot {:luo-fn vastaustunnus/lisaa!
+                                     :poista-fn #(vastaustunnus/poista! (:vastaustunnusid %))
+                                     :default (for [i (iterate inc 1)]
+                                                {})})
+
+(def ^:private vastaus-tiedot {:luo-fn vastaus/lisaa!
+                                     :poista-fn #(vastaus/poista! (:vastausid %))
+                                     :default (for [i (iterate inc 1)]
+                                                {})})
+
+(def ^:private entity-tiedot {:kysely kysely-tiedot
+                              :kyselykerta kyselykerta-tiedot
+                              :kysymysryhma kysymysryhma-tiedot
+                              :kysymys kysymys-tiedot
+                              :kyselypohja kyselypohja-tiedot
+                              :kysely-kysymys kysely-kysymys-tiedot
+                              :kysely-kysymysryhma kysely-kysymysryhma-tiedot
+                              :vastaustunnus vastaustunnus-tiedot
+                              :vastaus vastaus-tiedot})
+
+(def ^:private taulut [:kysely
+                       :kyselykerta
+                       :kysymysryhma
+                       :kysymys
+                       :kyselypohja
+                       :kysely-kysymysryhma
+                       :kysely-kysymys
+                       :vastaustunnus
+                       :vastaus])
 
 (defn ^:private luo
   [entityt luo-fn]
@@ -32,9 +103,6 @@
   [entityt poista-fn]
   (doseq [entity entityt]
     (poista-fn entity)))
-
-(def ^:private taulut
-  [:kyselyt])
 
 (defn ^:private taydenna-data
   [data]

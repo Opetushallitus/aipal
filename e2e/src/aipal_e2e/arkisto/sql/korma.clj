@@ -80,3 +80,11 @@
 
 (defentity kayttaja)
 (defentity kysely)
+(defentity kyselykerta)
+(defentity kysymysryhma)
+(defentity kysymys)
+(defentity kyselypohja)
+(defentity kysely_kysymysryhma)
+(defentity kysely_kysymys)
+(defentity vastaustunnus)
+(defentity vastaus)

@@ -12,15 +12,14 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.rest-api.raportti.kyselykerta
-  (:require [compojure.core :as c]
-            [schema.core :as schema]
-            [aipal.rest-api.http-util :refer [json-response]]
-            [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]))
+(ns aipal-e2e.arkisto.vastaus
+  (:require [korma.core :as sql]
+            [aipal-e2e.arkisto.sql.korma :refer :all]))
 
-(c/defroutes reitit
-  (c/GET "/:kyselykertaid" [kyselykertaid]
-         (let [id (Integer/parseInt kyselykertaid)]
-           (json-response
-             {:kyselykerta {:kyselykertaid id}
-              :raportti (muodosta-raportti)}))))
+(defn lisaa! [tiedot]
+  (sql/insert vastaus
+    (sql/values tiedot)))
+
+(defn poista! [vastausid]
+  (sql/delete vastaus
+    (sql/where {:vastausid vastausid})))
