@@ -13,6 +13,15 @@ CREATE TABLE jatkokysymys
   ) ;
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_PK PRIMARY KEY ( jatkokysymysid ) ;
 
+CREATE TABLE jatkovastaus
+  (
+    jatkovastausid INTEGER NOT NULL ,
+    jatkokysymysid INTEGER NOT NULL ,
+    kylla_asteikko INTEGER ,
+    ei_vastausteksti TEXT
+  ) ;
+ALTER TABLE jatkovastaus ADD CONSTRAINT jatkovastaus_PK PRIMARY KEY ( jatkovastausid ) ;
+
 CREATE TABLE kayttaja
   (
     oid               VARCHAR (80) NOT NULL ,
@@ -181,14 +190,13 @@ ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_UN UNIQUE ( kysymysi
 
 CREATE TABLE vastaus
   (
-    vastausid         INTEGER NOT NULL ,
-    kysymysid         INTEGER NOT NULL ,
-    vastaustunnusid   INTEGER NOT NULL ,
-    vastausaika       DATE ,
-    luotu_kayttaja    VARCHAR (80) NOT NULL ,
-    muutettu_kayttaja VARCHAR (80) NOT NULL ,
-    luotuaika TIMESTAMPTZ NOT NULL ,
-    muutettuaika TIMESTAMPTZ NOT NULL
+    vastausid       INTEGER NOT NULL ,
+    kysymysid       INTEGER NOT NULL ,
+    vastaustunnusid INTEGER NOT NULL ,
+    vastausaika     DATE ,
+    vapaateksti TEXT ,
+    valinta        INTEGER ,
+    jatkovastausid INTEGER
   ) ;
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_PK PRIMARY KEY ( vastausid ) ;
 
@@ -207,6 +215,8 @@ ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_PK PRIMARY KEY ( vastaust
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE jatkovastaus ADD CONSTRAINT jatkovastaus_jatkokysymys_FK FOREIGN KEY ( jatkokysymysid ) REFERENCES jatkokysymys ( jatkokysymysid ) NOT DEFERRABLE ;
 
 ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
@@ -274,9 +284,7 @@ ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kayttaja_FKv1 FOREIGN KEY ( 
 
 ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
-ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
-
-ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_jatkovastaus_FK FOREIGN KEY ( jatkovastausid ) REFERENCES jatkovastaus ( jatkovastausid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
@@ -300,6 +308,14 @@ CREATE OR REPLACE function update_stamp() returns trigger as $$ begin new.muutet
 CREATE OR REPLACE function update_created() returns trigger as $$ begin new.luotuaika := now(); return new; end; $$ language plpgsql;
 CREATE OR REPLACE function update_creator() returns trigger as $$ begin new.luotu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
 CREATE OR REPLACE function update_modifier() returns trigger as $$ begin new.muutettu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
+
+-- jatkokysymys
+create trigger jatkokysymys_update before update on jatkokysymys for each row execute procedure update_stamp() ;
+create trigger jatkokysymysl_insert before insert on jatkokysymys for each row execute procedure update_created() ;
+create trigger jatkokysymysm_insert before insert on jatkokysymys for each row execute procedure update_stamp() ;
+create trigger jatkokysymys_mu_update before update on jatkokysymys for each row execute procedure update_modifier() ;
+create trigger jatkokysymys_cu_insert before insert on jatkokysymys for each row execute procedure update_creator() ;
+create trigger jatkokysymys_mu_insert before insert on jatkokysymys for each row execute procedure update_modifier() ;
 
 -- kayttajarooli
 create trigger kayttajarooli_update before update on kayttajarooli for each row execute procedure update_stamp() ;
@@ -329,6 +345,14 @@ create trigger kysely_kysymysm_insert before insert on kysely_kysymys for each r
 create trigger kysely_kysymys_mu_update before update on kysely_kysymys for each row execute procedure update_modifier() ;
 create trigger kysely_kysymys_cu_insert before insert on kysely_kysymys for each row execute procedure update_creator() ;
 create trigger kysely_kysymys_mu_insert before insert on kysely_kysymys for each row execute procedure update_modifier() ;
+
+-- kysely_kysymysryhma
+create trigger kysely_kysymysryhma_update before update on kysely_kysymysryhma for each row execute procedure update_stamp() ;
+create trigger kysely_kysymysryhmal_insert before insert on kysely_kysymysryhma for each row execute procedure update_created() ;
+create trigger kysely_kysymysryhmam_insert before insert on kysely_kysymysryhma for each row execute procedure update_stamp() ;
+create trigger kysely_kysymysryhma_mu_update before update on kysely_kysymysryhma for each row execute procedure update_modifier() ;
+create trigger kysely_kysymysryhma_cu_insert before insert on kysely_kysymysryhma for each row execute procedure update_creator() ;
+create trigger kysely_kysymysryhma_mu_insert before insert on kysely_kysymysryhma for each row execute procedure update_modifier() ;
 
 -- kyselykerta
 create trigger kyselykerta_update before update on kyselykerta for each row execute procedure update_stamp() ;
@@ -370,13 +394,13 @@ create trigger kysymysryhma_kyselypohja_mu_update before update on kysymysryhma_
 create trigger kysymysryhma_kyselypohja_cu_insert before insert on kysymysryhma_kyselypohja for each row execute procedure update_creator() ;
 create trigger kysymysryhma_kyselypohja_mu_insert before insert on kysymysryhma_kyselypohja for each row execute procedure update_modifier() ;
 
--- vastaus
-create trigger vastaus_update before update on vastaus for each row execute procedure update_stamp() ;
-create trigger vastausl_insert before insert on vastaus for each row execute procedure update_created() ;
-create trigger vastausm_insert before insert on vastaus for each row execute procedure update_stamp() ;
-create trigger vastaus_mu_update before update on vastaus for each row execute procedure update_modifier() ;
-create trigger vastaus_cu_insert before insert on vastaus for each row execute procedure update_creator() ;
-create trigger vastaus_mu_insert before insert on vastaus for each row execute procedure update_modifier() ;
+-- monivalintavaihtoehto
+create trigger monivalintavaihtoehto_update before update on monivalintavaihtoehto for each row execute procedure update_stamp() ;
+create trigger monivalintavaihtoehtol_insert before insert on monivalintavaihtoehto for each row execute procedure update_created() ;
+create trigger monivalintavaihtoehtom_insert before insert on monivalintavaihtoehto for each row execute procedure update_stamp() ;
+create trigger monivalintavaihtoehto_mu_update before update on monivalintavaihtoehto for each row execute procedure update_modifier() ;
+create trigger monivalintavaihtoehto_cu_insert before insert on monivalintavaihtoehto for each row execute procedure update_creator() ;
+create trigger monivalintavaihtoehto_mu_insert before insert on monivalintavaihtoehto for each row execute procedure update_modifier() ;
 
 -- vastaustunnus
 create trigger vastaustunnus_update before update on vastaustunnus for each row execute procedure update_stamp() ;
