@@ -11,7 +11,16 @@ CREATE TABLE jatkokysymys
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_PK PRIMARY KEY ( jatkokysymysid ) ;
+COMMENT ON COLUMN jatkokysymys.kylla_teksti_fi
+IS
+  'Kyllä vastauksen jatkokysymys (asteikko)' ;
+  COMMENT ON COLUMN jatkokysymys.ei_teksti_fi
+IS
+  'Ei vastauksen jatkokysymys (vapaateksti)' ;
+  COMMENT ON COLUMN jatkokysymys.max_vastaus
+IS
+  'Ei vastauksen maksimipituus' ;
+  ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_PK PRIMARY KEY ( jatkokysymysid ) ;
 
 CREATE TABLE jatkovastaus
   (
@@ -20,7 +29,13 @@ CREATE TABLE jatkovastaus
     kylla_asteikko INTEGER ,
     ei_vastausteksti TEXT
   ) ;
-ALTER TABLE jatkovastaus ADD CONSTRAINT jatkovastaus_PK PRIMARY KEY ( jatkovastausid ) ;
+COMMENT ON COLUMN jatkovastaus.kylla_asteikko
+IS
+  'Jatkokysymyksen kyllä-vastaus' ;
+  COMMENT ON COLUMN jatkovastaus.ei_vastausteksti
+IS
+  'Jatkokysymyksen ei-vastaus' ;
+  ALTER TABLE jatkovastaus ADD CONSTRAINT jatkovastaus_PK PRIMARY KEY ( jatkovastausid ) ;
 
 CREATE TABLE kayttaja
   (
@@ -51,7 +66,7 @@ CREATE TABLE kysely
   (
     kyselyid        INTEGER NOT NULL ,
     voimassa_alkaen DATE ,
-    lakkautettu     BOOLEAN ,
+    lakkautettu     DATE ,
     nimi_fi         VARCHAR (200) ,
     nimi_sv         VARCHAR (200) ,
     selite_fi TEXT ,
@@ -61,7 +76,13 @@ CREATE TABLE kysely
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kysely ADD CONSTRAINT kysely_PK PRIMARY KEY ( kyselyid ) ;
+COMMENT ON COLUMN kysely.voimassa_alkaen
+IS
+  'Kyselyn voimaantulopäivä' ;
+  COMMENT ON COLUMN kysely.lakkautettu
+IS
+  'Kyselyn lakkautuspäivä' ;
+  ALTER TABLE kysely ADD CONSTRAINT kysely_PK PRIMARY KEY ( kyselyid ) ;
 
 CREATE TABLE kysely_kysymys
   (
@@ -75,7 +96,10 @@ CREATE TABLE kysely_kysymys
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_PK PRIMARY KEY ( kysymysid, kyselyid ) ;
+COMMENT ON COLUMN kysely_kysymys.poistettu
+IS
+  'Onko kysymys poistettu kyselystä' ;
+  ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_PK PRIMARY KEY ( kysymysid, kyselyid ) ;
 
 CREATE TABLE kysely_kysymysryhma
   (
@@ -87,7 +111,10 @@ CREATE TABLE kysely_kysymysryhma
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kysymysryhma_PK PRIMARY KEY ( kyselyid, kysymysryhmaid ) ;
+COMMENT ON COLUMN kysely_kysymysryhma.jarjestys
+IS
+  'kysymysryhmän järjestys kyselyn sisällä' ;
+  ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kysymysryhma_PK PRIMARY KEY ( kyselyid, kysymysryhmaid ) ;
 
 CREATE TABLE kyselykerta
   (
@@ -104,7 +131,13 @@ CREATE TABLE kyselykerta
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_PK PRIMARY KEY ( kyselykertaid ) ;
+COMMENT ON COLUMN kyselykerta.voimassa_alkaen
+IS
+  'Kyselykerran voimaantulopäivä' ;
+  COMMENT ON COLUMN kyselykerta.voimassaolo_paattyy
+IS
+  'Kyselykerran voimassaolon päättyminen' ;
+  ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_PK PRIMARY KEY ( kyselykertaid ) ;
 
 CREATE TABLE kyselypohja
   (
@@ -122,7 +155,19 @@ CREATE TABLE kyselypohja
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_PK PRIMARY KEY ( kyselypohjaid ) ;
+COMMENT ON COLUMN kyselypohja.valtakunnallinen
+IS
+  'Onko kyselypohja valtakunnallinen' ;
+  COMMENT ON COLUMN kyselypohja.voimassa_alkaen
+IS
+  'Kyselypohjan voimaantuloaika' ;
+  COMMENT ON COLUMN kyselypohja.poistettu
+IS
+  'Kyselypohjan poistopäivä' ;
+  COMMENT ON COLUMN kyselypohja.lakkautettu
+IS
+  'Kyselypohjan lakkautuspäivä' ;
+  ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_PK PRIMARY KEY ( kyselypohjaid ) ;
 
 CREATE TABLE kysymys
   (
@@ -140,8 +185,20 @@ CREATE TABLE kysymys
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kysymys ADD CONSTRAINT kysymys_PK PRIMARY KEY ( kysymysid ) ;
-ALTER TABLE kysymys ADD CONSTRAINT kysymys_ryhma_jarjestys_UN UNIQUE ( kysymysryhmaid , jarjestys ) DEFERRABLE INITIALLY DEFERRED ;
+COMMENT ON COLUMN kysymys.pakollinen
+IS
+  'onko kysymykseen pakko vastata' ;
+  COMMENT ON COLUMN kysymys.poistettava
+IS
+  'Voidaanko kysymys poistaa kyselystä' ;
+  COMMENT ON COLUMN kysymys.vastaustyyppi
+IS
+  'Vastauksen tyyppi (kylla_ei_valinta, asteikko, monivalinta, vapaateksti)' ;
+  COMMENT ON COLUMN kysymys.jarjestys
+IS
+  'Kysymyksen järjestys kysymysryhmän sisällä' ;
+  ALTER TABLE kysymys ADD CONSTRAINT kysymys_PK PRIMARY KEY ( kysymysid ) ;
+  ALTER TABLE kysymys ADD CONSTRAINT kysymys_ryhma_jarjestys_UN UNIQUE ( kysymysryhmaid , jarjestys ) DEFERRABLE INITIALLY DEFERRED ;
 
 CREATE TABLE kysymysryhma
   (
@@ -159,7 +216,19 @@ CREATE TABLE kysymysryhma
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhmä_PK PRIMARY KEY ( kysymysryhmaid ) ;
+COMMENT ON COLUMN kysymysryhma.voimassa_alkaen
+IS
+  'Kysymysryhmän voimaantuloaika' ;
+  COMMENT ON COLUMN kysymysryhma.lakkautettu
+IS
+  'Kysymysryhmän lakkautusaika' ;
+  COMMENT ON COLUMN kysymysryhma.taustakysymykset
+IS
+  'Kuuluuko kysymysryhmä taustakysymyksiin' ;
+  COMMENT ON COLUMN kysymysryhma.valtakunnallinen
+IS
+  'Onko kysymysryhmä valtakunnallinen' ;
+  ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhmä_PK PRIMARY KEY ( kysymysryhmaid ) ;
 
 CREATE TABLE kysymysryhma_kyselypohja
   (
@@ -171,7 +240,10 @@ CREATE TABLE kysymysryhma_kyselypohja
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kysymysryhma_kyselypohja_PK PRIMARY KEY ( kysymysryhmaid, kyselypohjaid ) ;
+COMMENT ON COLUMN kysymysryhma_kyselypohja.jarjestys
+IS
+  'Kysymysryhmän järjestys kyselypohjan sisällä' ;
+  ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kysymysryhma_kyselypohja_PK PRIMARY KEY ( kysymysryhmaid, kyselypohjaid ) ;
 
 CREATE TABLE monivalintavaihtoehto
   (
@@ -185,8 +257,11 @@ CREATE TABLE monivalintavaihtoehto
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT kysymys_lisatieto_PK PRIMARY KEY ( monivalintavaihtoehtoid ) ;
-ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_UN UNIQUE ( kysymysid , jarjestys ) ;
+COMMENT ON COLUMN monivalintavaihtoehto.jarjestys
+IS
+  'Monivalintavaihtoehdon järjestys kysymyksessä' ;
+  ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT kysymys_lisatieto_PK PRIMARY KEY ( monivalintavaihtoehtoid ) ;
+  ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_UN UNIQUE ( kysymysid , jarjestys ) ;
 
 CREATE TABLE vastaus
   (
@@ -195,10 +270,24 @@ CREATE TABLE vastaus
     vastaustunnusid INTEGER NOT NULL ,
     vastausaika     DATE ,
     vapaateksti TEXT ,
-    valinta        INTEGER ,
+    numerovalinta  INTEGER ,
+    vaihtoehto     VARCHAR (10) ,
     jatkovastausid INTEGER
   ) ;
-ALTER TABLE vastaus ADD CONSTRAINT vastaus_PK PRIMARY KEY ( vastausid ) ;
+ALTER TABLE vastaus ADD CHECK ( vaihtoehto IN ('ei', 'kylla')) ;
+COMMENT ON COLUMN vastaus.vastausaika
+IS
+  'Vastausaika' ;
+  COMMENT ON COLUMN vastaus.vapaateksti
+IS
+  'vapaatekstivastaus' ;
+  COMMENT ON COLUMN vastaus.numerovalinta
+IS
+  'vastausvalinta (asteikko tai monivalinta)' ;
+  COMMENT ON COLUMN vastaus.vaihtoehto
+IS
+  'kyllä/ei vastausvaihtoehto' ;
+  ALTER TABLE vastaus ADD CONSTRAINT vastaus_PK PRIMARY KEY ( vastausid ) ;
 
 CREATE TABLE vastaustunnus
   (
@@ -210,7 +299,10 @@ CREATE TABLE vastaustunnus
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_PK PRIMARY KEY ( vastaustunnusid ) ;
+COMMENT ON COLUMN vastaustunnus.vastannut
+IS
+  'Onko vastaustunnuksella vastattu kyselyyn' ;
+  ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_PK PRIMARY KEY ( vastaustunnusid ) ;
 
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
