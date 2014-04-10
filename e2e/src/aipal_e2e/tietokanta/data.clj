@@ -30,15 +30,14 @@
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
   (when-not (first (sql/select kayttaja
                                (sql/where {:oid testikayttaja-oid})))
-    (db/transaction
-      (sql/insert kayttaja
-                  (sql/values
-                    {:uid testikayttaja-uid
-                     :oid testikayttaja-oid
-                     :rooli roolitunnus
-                     :etunimi "E2E"
-                     :sukunimi "AIPAL"
-                     :voimassa true})))))
+    (sql/insert kayttaja
+                (sql/values
+                  {:uid testikayttaja-uid
+                   :oid testikayttaja-oid
+                   :rooli roolitunnus
+                   :etunimi "E2E"
+                   :sukunimi "AIPAL"
+                   :voimassa true}))))
   ([testikayttaja-oid testikayttaja-uid]
     (luo-testikayttaja! testikayttaja-oid testikayttaja-uid yllapitajarooli)))
 
