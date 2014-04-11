@@ -47,7 +47,9 @@
 
 (defn luo-db [db-asetukset]
   (korma.db/default-connection
-    (korma.db/create-db {:make-pool? false :datasource (bonecp-datasource db-asetukset)})))
+    (korma.db/create-db {:make-pool? false
+                         :delimiters ""
+                         :datasource (bonecp-datasource db-asetukset)})))
 
 (defn convert-instances-of [c f m]
   (clojure.walk/postwalk #(if (instance? c %) (f %) %) m))
