@@ -32,7 +32,8 @@
             aipal.rest-api.raportti.kyselykerta
             [aitu.infra.i18n :refer [wrap-locale]]
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
-            [aitu.integraatio.sql.korma]))
+            [aitu.integraatio.sql.korma]
+            [oph.korma.korma-auth :as korma-auth]))
 
 (schema.core/set-fn-validation! true)
 
@@ -50,6 +51,14 @@
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)))
 
+(defn ^:private wrap-set-db-user
+  "Asettaa käyttäjän tietokantaistuntoon."
+  [ring-handler]
+  (fn [request]
+    (binding [korma-auth/*current-user-uid* korma-auth/jarjestelmakayttaja
+              korma-auth/*current-user-oid* (promise)]
+      (ring-handler request))))
+
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
@@ -64,6 +73,7 @@
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))
           sammuta (hs/run-server (->
                                    (reitit asetukset)
+                                   wrap-set-db-user
                                    wrap-keyword-params
                                    wrap-json-params
                                    wrap-params
