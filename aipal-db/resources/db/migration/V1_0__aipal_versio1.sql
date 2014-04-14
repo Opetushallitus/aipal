@@ -260,14 +260,18 @@ IS
 
 CREATE TABLE vastaus
   (
-    vastausid       INTEGER NOT NULL ,
-    kysymysid       INTEGER NOT NULL ,
-    vastaustunnusid INTEGER NOT NULL ,
-    vastausaika     DATE ,
-    vapaateksti TEXT ,
-    numerovalinta  INTEGER ,
-    vaihtoehto     VARCHAR (10) ,
-    jatkovastausid INTEGER
+    vastausid         INTEGER NOT NULL ,
+    kysymysid         INTEGER NOT NULL ,
+    vastaustunnusid   INTEGER NOT NULL ,
+    vastausaika       DATE ,
+    vapaateksti       TEXT ,
+    numerovalinta     INTEGER ,
+    vaihtoehto        VARCHAR (10) ,
+    jatkovastausid    INTEGER ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
 ALTER TABLE vastaus ADD CHECK ( vaihtoehto IN ('ei', 'kylla')) ;
 COMMENT ON COLUMN vastaus.vastausaika
@@ -374,6 +378,10 @@ ALTER TABLE vastaus ADD CONSTRAINT vastaus_jatkovastaus_FK FOREIGN KEY ( jatkova
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaustunnus_FK FOREIGN KEY ( vastaustunnusid ) REFERENCES vastaustunnus ( vastaustunnusid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
@@ -494,3 +502,11 @@ create trigger vastaustunnusm_insert before insert on vastaustunnus for each row
 create trigger vastaustunnus_mu_update before update on vastaustunnus for each row execute procedure update_modifier() ;
 create trigger vastaustunnus_cu_insert before insert on vastaustunnus for each row execute procedure update_creator() ;
 create trigger vastaustunnus_mu_insert before insert on vastaustunnus for each row execute procedure update_modifier() ;
+
+-- vastaus
+create trigger vastaus_update before update on vastaus for each row execute procedure update_stamp() ;
+create trigger vastausl_insert before insert on vastaus for each row execute procedure update_created() ;
+create trigger vastausm_insert before insert on vastaus for each row execute procedure update_stamp() ;
+create trigger vastaus_mu_update before update on vastaus for each row execute procedure update_modifier() ;
+create trigger vastaus_cu_insert before insert on vastaus for each row execute procedure update_creator() ;
+create trigger vastaus_mu_insert before insert on vastaus for each row execute procedure update_modifier() ;
