@@ -18,6 +18,11 @@ iptables -I INPUT 1 -p tcp -s $app_host --dport 5432 -j ACCEPT
 service iptables save
 
 # alustetaan aipal tietokanta ilman tauluja
+
+until service postgresql-9.2 status > /dev/null; do
+  echo "Waiting for postgresql...\n"
+  sleep 1
+done
 su postgres -c "psql --file=$env_dir/db-server/dev.sql"
 
 # ympäristökohtaisesta hakemistosta ajetaan alustusskripti
