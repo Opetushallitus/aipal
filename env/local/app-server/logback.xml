@@ -17,7 +17,7 @@
       <pattern>%d{ISO8601} %-5p %c: %m%n</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/aituhaku.log.%d{yyyy-MM-dd}</fileNamePattern>
+      <fileNamePattern>logs/aipal.log.%d{yyyy-MM-dd}</fileNamePattern>
     </rollingPolicy>
   </appender>
 
