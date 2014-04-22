@@ -13,7 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal-e2e.tietokanta.yhteys
-  (:require [aipal-e2e.arkisto.sql.korma]
+  (:require [korma.db :as db]
+            [aipal-e2e.arkisto.sql.korma]
             [aipal-e2e.tietokanta.data :as data]))
 
 (def ^:private jarjestelmakayttaja-oid "JARJESTELMA")
@@ -39,25 +40,33 @@
 
 (defn ^:private luo-testikayttaja!
   []
-  (aseta-kayttaja! jarjestelmakayttaja-oid)
-  (data/luo-testikayttaja! testikayttaja-oid testikayttaja-uid))
+  (db/transaction
+    (aseta-kayttaja! jarjestelmakayttaja-oid)
+    (data/luo-testikayttaja! testikayttaja-oid testikayttaja-uid)))
 
-(defn ^:private aseta-testikayttaja!
+(defn aseta-testikayttaja!
   []
   (aseta-kayttaja! testikayttaja-oid))
 
 (defn ^:private poista-testikayttaja!
   []
-  (data/poista-testikayttaja! testikayttaja-oid))
+  (db/transaction
+    (aseta-kayttaja! jarjestelmakayttaja-oid)
+    (data/poista-testikayttaja! testikayttaja-oid)))
+
+(defn ^:private poista-testidata!
+  []
+  (db/transaction
+    (aseta-kayttaja! jarjestelmakayttaja-oid)
+    (data/tyhjenna-testidata! testikayttaja-oid)))
 
 (defn muodosta-yhteys
   [f]
   (let [db (alusta-korma!)]
     (luo-testikayttaja!)
-    (aseta-testikayttaja!)
     (try
       (f)
       (finally
-        (data/tyhjenna-testidata! testikayttaja-oid)
+        (poista-testidata!)
         (poista-testikayttaja!)
         (-> db :pool :datasource .close)))))

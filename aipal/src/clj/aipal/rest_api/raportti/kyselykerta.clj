@@ -14,13 +14,15 @@
 
 (ns aipal.rest-api.raportti.kyselykerta
   (:require [compojure.core :as c]
+            [korma.db :as db]
             [schema.core :as schema]
             [aipal.rest-api.http-util :refer [json-response]]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]))
 
 (c/defroutes reitit
   (c/GET "/:kyselykertaid" [kyselykertaid]
-         (let [id (Integer/parseInt kyselykertaid)]
-           (json-response
-             {:kyselykerta {:kyselykertaid id}
-              :raportti (muodosta-raportti)}))))
+         (db/transaction
+           (let [id (Integer/parseInt kyselykertaid)]
+            (json-response
+              {:kyselykerta {:kyselykertaid id}
+               :raportti (muodosta-raportti)})))))

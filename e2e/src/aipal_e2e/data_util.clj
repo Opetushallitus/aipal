@@ -14,6 +14,7 @@
 
 (ns aipal-e2e.data-util
   (:require [clj-time.core :as time]
+            [korma.db :as db]
             [aipal-e2e.arkisto.kysely :as kysely]
             [aipal-e2e.arkisto.kysely-kysymys :as kysely-kysymys]
             [aipal-e2e.arkisto.kysely-kysymysryhma :as kysely-kysymysryhma]
@@ -23,7 +24,7 @@
             [aipal-e2e.arkisto.kysymysryhma :as kysymysryhma]
             [aipal-e2e.arkisto.vastaustunnus :as vastaustunnus]
             [aipal-e2e.arkisto.vastaus :as vastaus]
-            [aipal-e2e.tietokanta.data]))
+            [aipal-e2e.tietokanta.yhteys :as yhteys]))
 
 (def ^:private kysely-tiedot {:luo-fn kysely/lisaa!
                               :poista-fn #(kysely/poista! (:kyselyid %))
@@ -118,7 +119,9 @@
             :let [data (taydennetty-data taulu)
                   luo-fn (get-in entity-tiedot [taulu :luo-fn])]
             :when data]
-      (luo data luo-fn))
+      (db/transaction
+        (yhteys/aseta-testikayttaja!)
+        (luo data luo-fn)))
     (try
       (body-fn)
       (finally
@@ -126,7 +129,9 @@
                   :let [data (taydennetty-data taulu)
                         poista-fn (get-in entity-tiedot [taulu :poista-fn])]
                   :when data]
-            (poista data poista-fn))))))
+            (db/transaction
+              (yhteys/aseta-testikayttaja!)
+              (poista data poista-fn)))))))
 
 (defmacro with-data
   [data & body]
