@@ -337,6 +337,8 @@ ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kyselypohja_FK FOREIGN 
 
 ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kysymysryhma_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) NOT DEFERRABLE ;
 
+ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_jarjestys_UN UNIQUE (kyselyid, jarjestys) DEFERRABLE INITIALLY IMMEDIATE;
+
 ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
