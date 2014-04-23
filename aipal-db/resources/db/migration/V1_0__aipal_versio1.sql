@@ -65,8 +65,8 @@ ALTER TABLE kayttajarooli ADD CONSTRAINT kayttajarooli_PK PRIMARY KEY ( roolitun
 CREATE TABLE kysely
   (
     kyselyid        INTEGER NOT NULL ,
-    voimassa_alkaen DATE ,
-    lakkautettu     DATE ,
+    voimassa_alkupvm DATE ,
+    voimassa_loppupvm     DATE ,
     nimi_fi         VARCHAR (200) ,
     nimi_sv         VARCHAR (200) ,
     selite_fi TEXT ,
@@ -76,10 +76,10 @@ CREATE TABLE kysely
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-COMMENT ON COLUMN kysely.voimassa_alkaen
+COMMENT ON COLUMN kysely.voimassa_alkupvm
 IS
   'Kyselyn voimaantulopäivä' ;
-  COMMENT ON COLUMN kysely.lakkautettu
+  COMMENT ON COLUMN kysely.voimassa_loppupvm
 IS
   'Kyselyn lakkautuspäivä' ;
   ALTER TABLE kysely ADD CONSTRAINT kysely_PK PRIMARY KEY ( kyselyid ) ;
@@ -117,8 +117,8 @@ CREATE TABLE kyselykerta
     kyselyid            INTEGER NOT NULL ,
     nimi_fi             VARCHAR (200) NOT NULL ,
     nimi_sv             VARCHAR (200) ,
-    voimassa_alkaen     DATE NOT NULL ,
-    voimassaolo_paattyy DATE ,
+    voimassa_alkupvm     DATE NOT NULL ,
+    voimassa_loppupvm DATE ,
     selite_fi TEXT ,
     selite_sv TEXT ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
@@ -126,10 +126,10 @@ CREATE TABLE kyselykerta
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-COMMENT ON COLUMN kyselykerta.voimassa_alkaen
+COMMENT ON COLUMN kyselykerta.voimassa_alkupvm
 IS
   'Kyselykerran voimaantulopäivä' ;
-  COMMENT ON COLUMN kyselykerta.voimassaolo_paattyy
+  COMMENT ON COLUMN kyselykerta.voimassa_loppupvm
 IS
   'Kyselykerran voimassaolon päättyminen' ;
   ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_PK PRIMARY KEY ( kyselykertaid ) ;
@@ -138,9 +138,9 @@ CREATE TABLE kyselypohja
   (
     kyselypohjaid    INTEGER NOT NULL ,
     valtakunnallinen BOOLEAN NOT NULL ,
-    voimassa_alkaen  DATE ,
+    voimassa_alkupvm  DATE ,
     poistettu        DATE ,
-    lakkautettu      DATE ,
+    voimassa_loppupvm      DATE ,
     nimi_fi          VARCHAR (200) ,
     nimi_sv          VARCHAR (200) ,
     selite_fi TEXT ,
@@ -153,13 +153,13 @@ CREATE TABLE kyselypohja
 COMMENT ON COLUMN kyselypohja.valtakunnallinen
 IS
   'Onko kyselypohja valtakunnallinen' ;
-  COMMENT ON COLUMN kyselypohja.voimassa_alkaen
+  COMMENT ON COLUMN kyselypohja.voimassa_alkupvm
 IS
   'Kyselypohjan voimaantuloaika' ;
   COMMENT ON COLUMN kyselypohja.poistettu
 IS
   'Kyselypohjan poistopäivä' ;
-  COMMENT ON COLUMN kyselypohja.lakkautettu
+  COMMENT ON COLUMN kyselypohja.voimassa_loppupvm
 IS
   'Kyselypohjan lakkautuspäivä' ;
   ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_PK PRIMARY KEY ( kyselypohjaid ) ;
@@ -198,8 +198,8 @@ IS
 CREATE TABLE kysymysryhma
   (
     kysymysryhmaid   INTEGER NOT NULL ,
-    voimassa_alkaen  DATE ,
-    lakkautettu      DATE ,
+    voimassa_alkupvm  DATE ,
+    voimassa_loppupvm      DATE ,
     taustakysymykset BOOLEAN DEFAULT false NOT NULL ,
     valtakunnallinen BOOLEAN DEFAULT false NOT NULL ,
     nimi_fi          VARCHAR (200) NOT NULL ,
@@ -211,10 +211,10 @@ CREATE TABLE kysymysryhma
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-COMMENT ON COLUMN kysymysryhma.voimassa_alkaen
+COMMENT ON COLUMN kysymysryhma.voimassa_alkupvm
 IS
   'Kysymysryhmän voimaantuloaika' ;
-  COMMENT ON COLUMN kysymysryhma.lakkautettu
+  COMMENT ON COLUMN kysymysryhma.voimassa_loppupvm
 IS
   'Kysymysryhmän lakkautusaika' ;
   COMMENT ON COLUMN kysymysryhma.taustakysymykset
@@ -273,7 +273,7 @@ CREATE TABLE vastaus
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE vastaus ADD CHECK ( vaihtoehto IN ('ei', 'kylla')) ;
+ALTER TABLE vastaus ADD CHECK (vaihtoehto IN ('ei', 'kylla')) ;
 COMMENT ON COLUMN vastaus.vastausaika
 IS
   'Vastausaika' ;
