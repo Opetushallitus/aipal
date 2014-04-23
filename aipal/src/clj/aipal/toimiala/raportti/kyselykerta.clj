@@ -30,6 +30,7 @@
     (sql/join :inner {:table :kysely_kysymysryhma}
              (= :kysely.kyselyid
                 :kysely_kysymysryhma.kyselyid))
+    (sql/order :kysely_kysymysryhma.jarjestys :ASC)
 
     (sql/join :inner {:table :kysymysryhma}
              (= :kysely_kysymysryhma.kysymysryhmaid
@@ -40,6 +41,7 @@
              (= :kysymysryhma.kysymysryhmaid
                 :kysymys.kysymysryhmaid))
     (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi)
+    (sql/order :kysymys.jarjestys :ASC)
 
     sql/exec))
 

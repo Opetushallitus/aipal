@@ -126,12 +126,12 @@
       (body-fn)
       (finally
         (doseq [taulu (reverse taulut)
-                  :let [data (taydennetty-data taulu)
-                        poista-fn (get-in entity-tiedot [taulu :poista-fn])]
-                  :when data]
-            (db/transaction
-              (yhteys/aseta-testikayttaja!)
-              (poista data poista-fn)))))))
+                :let [data (taydennetty-data taulu)
+                      poista-fn (get-in entity-tiedot [taulu :poista-fn])]
+                :when data]
+          (db/transaction
+            (yhteys/aseta-testikayttaja!)
+            (poista data poista-fn)))))))
 
 (defmacro with-data
   [data & body]

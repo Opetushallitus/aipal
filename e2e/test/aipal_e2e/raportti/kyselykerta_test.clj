@@ -59,11 +59,15 @@
                   :kysymysryhma [{:kysymysryhmaid 1}]
                   :kysymys [{:kysymysid 1
                              :kysymysryhmaid 1
-                             :kysymys_fi "Kysymys 1"}
+                             :kysymys_fi "Kysymys 1"
+                             :jarjestys 1}
                             {:kysymysid 2
                              :kysymysryhmaid 1
-                             :kysymys_fi "Kysymys 2"}]
-                  :kysely-kysymysryhma [{:kyselyid 1 :kysymysryhmaid 1}]
+                             :kysymys_fi "Kysymys 2"
+                             :jarjestys 2}]
+                  :kysely-kysymysryhma [{:kyselyid 1
+                                         :kysymysryhmaid 1
+                                         :jarjestys 1}]
                   :kysely-kysymys [{:kyselyid 1 :kysymysid 1}
                                    {:kyselyid 1 :kysymysid 2}]
                   :vastaustunnus [{:vastaustunnusid 1
@@ -89,14 +93,14 @@
         (avaa-aipal kyselykertaraportti-sivu)
         (testing
           "sisältää kysymykset"
-          (is (= (kysymysten-tekstit) ["Kysymys 2" "Kysymys 1"])))
+          (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2"])))
         (testing
           "ensimmäisen kysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]
             (is (= (vaihtoehdot-kysymykselle kysymys) ["kyllä" "ei"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))
         (testing
           "toisen kysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 1)]
             (is (= (vaihtoehdot-kysymykselle kysymys) ["kyllä" "ei"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))))))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))))))))
