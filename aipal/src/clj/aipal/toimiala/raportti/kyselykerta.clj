@@ -40,6 +40,7 @@
     (sql/join :inner {:table :kysymys}
              (= :kysymysryhma.kysymysryhmaid
                 :kysymys.kysymysryhmaid))
+    (sql/where (= :kysymys.vastaustyyppi "kylla_ei_valinta"))
     (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi)
     (sql/order :kysymys.jarjestys :ASC)
 
