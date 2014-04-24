@@ -22,7 +22,7 @@
 
 (use-fixtures :once tietokanta/muodosta-yhteys)
 
-(def kyselykertaraportti-sivu "/fi/#/raportti/kyselykerta")
+(defn kyselykertaraportti-sivu [kyselykertaid] (str "/fi/#/raportti/kyselykerta/" kyselykertaid))
 
 (defn sivun-sisalto []
   (w/text (w/find-element {:css "body"})))
@@ -60,11 +60,13 @@
                   :kysymys [{:kysymysid 1
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 1"
-                             :jarjestys 1}
+                             :jarjestys 1
+                             :vastaustyyppi "kylla_ei_valinta"}
                             {:kysymysid 2
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 2"
-                             :jarjestys 2}]
+                             :jarjestys 2
+                             :vastaustyyppi "kylla_ei_valinta"}]
                   :kysely-kysymysryhma [{:kyselyid 1
                                          :kysymysryhmaid 1
                                          :jarjestys 1}]
@@ -90,7 +92,7 @@
                              :kysymysid 2
                              :vastaustunnusid 2
                              :vaihtoehto "ei"}]}
-        (avaa-aipal kyselykertaraportti-sivu)
+        (avaa-aipal (kyselykertaraportti-sivu 1))
         (testing
           "sisältää kysymykset"
           (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2"])))
