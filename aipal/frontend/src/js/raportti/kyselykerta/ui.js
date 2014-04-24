@@ -18,18 +18,16 @@ angular.module('raportti.kyselykerta.ui', ['raportti.kyselykerta.kyselykertarapo
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/raportti/kyselykerta', {
+      .when('/raportti/kyselykerta/:kyselykertaid', {
         controller: 'KyselykertaRaporttiController',
         templateUrl: 'template/raportti/kyselykerta.html'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
   }])
 
   .controller('KyselykertaRaporttiController', [
-    'KyselykertaRaportti', '$scope', function(KyselykertaRaportti, $scope) {
-      $scope.tulos = KyselykertaRaportti.hae(1);
+    'KyselykertaRaportti', '$routeParams', '$scope',
+    function(KyselykertaRaportti, $routeParams, $scope) {
+      $scope.tulos = KyselykertaRaportti.hae($routeParams.kyselykertaid);
     }
   ]);
 

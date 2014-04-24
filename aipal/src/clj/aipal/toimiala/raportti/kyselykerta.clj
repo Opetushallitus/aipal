@@ -17,11 +17,11 @@
 (ns aipal.toimiala.raportti.kyselykerta
   (:require [korma.core :as sql]))
 
-(defn ^:private hae-kysymykset []
+(defn ^:private hae-kysymykset [kyselykertaid]
   (->
     (sql/select* :kyselykerta)
     (sql/fields :kyselykerta.kyselykertaid)
-    (sql/where {:kyselykertaid 1})
+    (sql/where {:kyselykertaid kyselykertaid})
 
     (sql/join :inner {:table :kysely}
              (= :kyselykerta.kyselyid
@@ -45,11 +45,11 @@
 
     sql/exec))
 
-(defn ^:private hae-vastaukset []
+(defn ^:private hae-vastaukset [kyselykertaid]
   (->
     (sql/select* :kyselykerta)
     (sql/fields :kyselykerta.kyselykertaid)
-    (sql/where {:kyselykertaid 1})
+    (sql/where {:kyselykertaid kyselykertaid})
 
     (sql/join :inner {:table :vastaustunnus}
              (= :kyselykerta.kyselykertaid
@@ -97,6 +97,6 @@
   [raportti]
   (map #(select-keys % [:kysymys_fi :jakauma]) raportti))
 
-(defn muodosta-raportti []
+(defn muodosta-raportti [kyselykertaid]
   (suodata-raportin-kentat
-    (laske-vaihtoehtojen-jakauma (hae-kysymykset) (hae-vastaukset))))
+    (laske-vaihtoehtojen-jakauma (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))

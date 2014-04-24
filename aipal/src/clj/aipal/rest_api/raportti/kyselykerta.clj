@@ -25,4 +25,4 @@
            (let [id (Integer/parseInt kyselykertaid)]
             (json-response
               {:kyselykerta {:kyselykertaid id}
-               :raportti (muodosta-raportti)})))))
+               :raportti (muodosta-raportti id)})))))
