@@ -14,15 +14,30 @@
 
 'use strict';
 
-angular.module('raportti.kyselykerta.ui', ['raportti.kyselykerta.kyselykertaraportti', 'ngRoute'])
+angular.module('raportti.kyselykerta.ui', [
+    'raportti.kyselykerta.kyselykertaraportti',
+    'toimiala.kyselykerta',
+    'ngRoute'
+  ])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
+      .when('/raportti/kyselykerrat', {
+        controller: 'KyselykerratController',
+        templateUrl: 'template/raportti/kyselykerrat.html'
+      })
       .when('/raportti/kyselykerta/:kyselykertaid', {
         controller: 'KyselykertaRaporttiController',
         templateUrl: 'template/raportti/kyselykerta.html'
       });
   }])
+
+  .controller('KyselykerratController', [
+    'Kyselykerta', '$scope',
+    function(Kyselykerta, $scope) {
+      $scope.kyselykerrat = Kyselykerta.hae();
+    }
+  ])
 
   .controller('KyselykertaRaporttiController', [
     'KyselykertaRaportti', '$routeParams', '$scope',

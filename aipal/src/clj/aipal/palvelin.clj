@@ -29,6 +29,7 @@
 
             [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
             aipal.rest-api.i18n
+            aipal.rest-api.kyselykerta
             aipal.rest-api.raportti.kyselykerta
             [aitu.infra.i18n :refer [wrap-locale]]
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
@@ -49,6 +50,7 @@
   (c/routes
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
+    (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)))
 
 (defn ^:private wrap-set-db-user
