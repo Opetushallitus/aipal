@@ -55,13 +55,18 @@
       (deliver *current-user-oid* oid)
       (exec-sql c (str "set session " psql-varname " = '" oid "'")))
     (catch IllegalArgumentException e
-      (.printStackTrace e)))
+      (.printStackTrace e))
+    (catch Exception e
+      (log/error e "Odottamaton poikkeus")))
   (log/debug "con ok" (.hashCode c)))
-    
+
 (defn auth-onCheckIn
   [c]
   (log/debug "connection release ")
-  (exec-sql c (str "SET " psql-varname " TO DEFAULT"))
+  (try
+    (exec-sql c (str "SET " psql-varname " TO DEFAULT"))
+    (catch Exception e
+      (log/error e "Odottamaton poikkeus")))
   (log/debug "con release ok" (.hashCode c)))
 
 (defonce customizer-impl-bonecp
