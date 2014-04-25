@@ -12,8 +12,8 @@ Vagrant.configure("2") do |config|
     db.vm.box_url = vmbox_url
 
     db.vm.synced_folder "../env", "/env"
-    if File.directory?("../../oph-konversio")
-      db.vm.synced_folder "../../oph-konversio", "/dumps"
+    if File.directory?("../../aipal-konversio")
+      db.vm.synced_folder "../../aipal-konversio", "/dumps"
     end
     db.vm.provision "shell", inline: "cd /env && ./db-server.sh local 192.168.50.62"
 

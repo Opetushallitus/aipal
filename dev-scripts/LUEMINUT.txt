@@ -1,4 +1,6 @@
 dev-scripts/create-db-schema.sh: Alustaa Vagrant-virtuaalikoneen tietokannan rakenteen. Jättää kannan tyhjäksi.
+dev-scripts/load-db-dump.sh: Lataa Vagrant-virtuaalikoneeseen kannan dumpin (rakenne ja data). Huom! Tällä hetkellä e2e-testit eivät toimi dumpin kanssa (edellisen skriptin generoima testidata on OK).
+dev-scripts/create-db-dump.sh: Luo Vagrant-virtuaalikoneen kannasta kokonaisen dumpin (rakenne ja data).
 
 dev-scripts/deploy.sh: Tekee softasta (aipal-hakemistossa) uberjarin ja tekee deployn Vagrant-virtuaalikoneeseen.
 
