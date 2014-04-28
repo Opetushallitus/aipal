@@ -14,7 +14,16 @@
 
 'use strict';
 
-angular.module('aipal', ['raportti.kyselykerta.ui', 'yhteiset.palvelut.i18n'])
+angular.module('aipal', [
+    'etusivu.etusivuui',
+    'kysely.kyselyui',
+    'kyselypohja.kyselypohjaui',
+    'kysymysryhma.kysymysryhmaui',
+    'raportti.kyselykerta.kyselykertaui',
+    'yhteiset.palvelut.i18n',
+    'yhteiset.direktiivit.copyright',
+    'ngRoute'
+  ])
 
   .controller('AipalController', ['$scope', 'i18n', function($scope, i18n){
     $scope.i18n = i18n;

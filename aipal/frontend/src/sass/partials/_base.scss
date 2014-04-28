@@ -1,20 +1,26 @@
+$application-max-width: 1200px;
+
 html {
   background:#fff;
   -webkit-font-smoothing: antialiased;
+  /* Inflate text size on mobiles by full increments only */
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  height: 100%;
 }
 
-body {
-  padding: 0;
+body { display:table; width: 100%; height: 100%;
+  > div { display: table-row;}
+  footer {display: table-row; height: 100%;}
 }
 
-ul.kielen-vaihto {
-  @include clearfix;
-  float: right;
-  list-style: none;
-  li {
-    float: left;
-    &:first-child:after {content: '|'; margin-left: $marginS; margin-right: $marginS;}
-  }
+#content {
+  padding: 0 $marginS $baseline $marginS;
+  min-height: 400px;
+}
+
+.app-wrapper {
+  max-width: $application-max-width;
+  margin: 0 auto;
+  padding: 0 $marginS;
 }

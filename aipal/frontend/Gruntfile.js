@@ -150,7 +150,8 @@ module.exports = function (grunt) {
         src: ['index.html',
               'template/**/*.html',
               'img/**/*.{png,jpg,jpeg,gif,webp,svg}',
-              'font/**/*'],
+              'font/**/*',
+              'css/**/*'],
         dest: distDir,
         options : {
           noProcess: '**/*.{png,gif,jpg,ico,svg,woff}',

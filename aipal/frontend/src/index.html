@@ -8,17 +8,38 @@
   </script>
   end mustache -->
   <title></title>
+  <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="compiled_css/main.css">
 </head>
 <body ng-controller="AipalController">
-
-<kielen-vaihto></kielen-vaihto>
-{{i18n.yleiset.palvelun_otsikko}}
-<div ng-view></div>
+  <div>
+    <nav class="main-nav">
+      <div class="app-wrapper ">
+        <kielen-vaihto></kielen-vaihto>
+        <div id="current-user"><a href="">Raaka Arska</a></div>
+        <ul>
+          <li><a href="#/">{{i18n.yleiset.navigaatio.etusivu}}</a></li>
+          <li><a href="#/kyselyt">{{i18n.yleiset.navigaatio.kyselyt}}</a></li>
+          <li><a href="#/kyselypohjat">{{i18n.yleiset.navigaatio.kyselypohjat}}</a></li>
+          <li><a href="#/kysymysryhmat">{{i18n.yleiset.navigaatio.kysymysryhmat}}</a></li>
+          <li><a href="#/">{{i18n.yleiset.navigaatio.raportit}}</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div id="content" class="app-wrapper">
+      <div ng-view></div>
+    </div>
+  </div>
+  <footer class="copyright-footer">
+    <div class="app-wrapper"><span copyright></span></div>
+  </footer>
+  <footer class="dev-footer">
+    <div class="app-wrapper"><span class="build-id">Build: build-id-numero</span> <span class="separator">|</span> <a href="[[base-url]]/status">Status</a></div>
+  </footer>
 
   <!-- build:js js/libs.js -->
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.min.js"></script>
   <script src="bower_components/angular-resource/angular-resource.min.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
@@ -26,10 +47,16 @@
   <!-- endbuild -->
   <!-- build:js js/app.js -->
   <script src="js/aipal.js"></script>
+  <script src="js/yhteiset/direktiivit/copyright.js"></script>
+  <script src="js/etusivu/etusivuui.js"></script>
+  <script src="js/kysely/kyselyui.js"></script>
+  <script src="js/kyselypohja/kyselypohjaui.js"></script>
+  <script src="js/kysymysryhma/kysymysryhmaui.js"></script>
   <script src="js/raportti/kyselykerta/kyselykertaraportti.js"></script>
-  <script src="js/raportti/kyselykerta/ui.js"></script>
+  <script src="js/raportti/kyselykerta/kyselykertaui.js"></script>
   <script src="js/toimiala/kyselykerta.js"></script>
   <script src="js/yhteiset/palvelut/i18n.js"></script>
+
   <!-- endbuild -->
   <!--dev--><script src="//localhost:35729/livereload.js"></script><!--enddev-->
 </body>

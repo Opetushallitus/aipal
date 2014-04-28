@@ -1,0 +1,93 @@
+header {
+  color: black;
+  background: url('../img/AITU-background.png') no-repeat left top;
+  .no-svg & {background-image: url('../img/opetushallitus.gif')}
+  height: 160px;
+
+  &.app-wrapper {
+    padding: 0;
+  }
+
+  .vertical-aligner {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-left: $marginM;
+  }
+
+  h1 {
+    display: inline-block;
+    font-size: 4.2em;
+    font-weight: 800;
+    font-family: $font-heading-light;
+    margin: 0;
+    vertical-align: middle;
+  }
+  h2 {
+    display: inline-block;
+    font-size: 1.7em;
+    font-weight: 300;
+    font-family: $font-heading-light;
+    margin: 0;
+    vertical-align: middle;
+  }
+  .separator {
+    position: relative;
+    top: -5px;
+    font-size: 4.2em;
+    font-weight: 100;
+    vertical-align: middle;
+  }
+
+  .oph-logo {
+    display: inline-block;
+    height: 100%;
+    width: 271px;
+    float: right;
+    margin-right: $marginM;
+    background: transparent url('../img/opetushallitus.svg') 0 center no-repeat;
+    .no-svg & {background-image: url('../img/opetushallitus.gif')}
+  }
+}
+
+.main-nav {
+  $nav-height: 40px;
+  $separator-color: $lightest-primary;
+  $font-color: $primary-action-text;
+  background-color: $primary-color;
+  min-height: $nav-height;
+  font-size: 1em;
+  a {
+    display: inline-block;
+    padding-top: 8px;
+    text-decoration: none;
+    color: $font-color!important;
+    text-transform:uppercase;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    @include clearfix;
+    li {
+      border-right: 1px solid $separator-color;
+      padding: 0 $marginM;
+      float: left;
+      height: $nav-height;
+      &:hover {background-color: $darker-primary;}
+      &:first-child {border-left: 1px solid $separator-color;}
+      a {
+        text-transform:uppercase;
+      }
+      span {
+        padding-top: 8px;
+        display: inline-block;
+      }
+
+    }
+  }
+  #current-user {float: right; padding-right: 40px; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
+  .kielen-vaihto {
+    float: right;
+    li.valittu:hover {background-color: transparent;}
+  }
+}

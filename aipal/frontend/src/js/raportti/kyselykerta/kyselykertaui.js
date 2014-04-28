@@ -14,12 +14,9 @@
 
 'use strict';
 
-angular.module('raportti.kyselykerta.ui', [
-    'raportti.kyselykerta.kyselykertaraportti',
-    'toimiala.kyselykerta',
-    'ngRoute'
-  ])
-
+angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.kyselykertaraportti',
+                                                      'toimiala.kyselykerta',
+                                                      'ngRoute'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/raportti/kyselykerrat', {
