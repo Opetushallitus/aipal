@@ -40,8 +40,11 @@
     (sql/join :inner {:table :kysymys}
              (= :kysymysryhma.kysymysryhmaid
                 :kysymys.kysymysryhmaid))
-    (sql/where (= :kysymys.vastaustyyppi "kylla_ei_valinta"))
-    (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi)
+    (sql/where (or (= :kysymys.vastaustyyppi "kylla_ei_valinta")
+                   (= :kysymys.vastaustyyppi "vapaateksti")))
+    (sql/fields :kysymys.kysymysid
+                :kysymys.kysymys_fi
+                :kysymys.vastaustyyppi)
     (sql/order :kysymys.jarjestys :ASC)
 
     sql/exec))
@@ -62,7 +65,8 @@
                  :vastaus.vastaustunnusid))
     (sql/fields :vastaus.vastausid
                 :vastaus.kysymysid
-                :vastaus.vaihtoehto)
+                :vastaus.vaihtoehto
+                :vastaus.vapaateksti)
 
     sql/exec))
 
@@ -87,20 +91,36 @@
    {:vaihtoehto "ei"
     :lukumaara (:ei jakauma)}])
 
-(defn ^:private lisaa-kysymykseen-jakauma
+(defn ^:private lisaa-vaihtoehtojen-jakauma
   [kysymys vastaukset]
   (assoc kysymys :jakauma
          (muodosta-jakauman-esitys
-           (jaottele-vaihtoehdot (kysymyksen-vastaukset kysymys vastaukset)))))
+           (jaottele-vaihtoehdot vastaukset))))
 
-(defn ^:private laske-vaihtoehtojen-jakauma
+(defn ^:private lisaa-vastausten-vapaateksti
+  [kysymys vastaukset]
+  (assoc kysymys :vastaukset
+         (map :vapaateksti vastaukset)))
+
+(defn kysymyksen-kasittelija
+  [kysymys]
+  (cond
+    (= (:vastaustyyppi kysymys) "kylla_ei_valinta") lisaa-vaihtoehtojen-jakauma
+    (= (:vastaustyyppi kysymys) "vapaateksti") lisaa-vastausten-vapaateksti
+    :else (fn [kysymys vastaukset] kysymys)))
+
+(defn ^:private muodosta-raportti-vastauksista
   [kysymykset vastaukset]
-  (map #(lisaa-kysymykseen-jakauma % vastaukset) kysymykset))
+  (map (fn [kysymys]
+         ((kysymyksen-kasittelija kysymys) kysymys
+                                           (kysymyksen-vastaukset kysymys vastaukset)))
+       kysymykset))
 
 (defn ^:private suodata-raportin-kentat
   [raportti]
-  (map #(select-keys % [:kysymys_fi :jakauma]) raportti))
+  (map #(select-keys % [:kysymys_fi :jakauma :vastaukset :vastaustyyppi])
+       raportti))
 
 (defn muodosta-raportti [kyselykertaid]
   (suodata-raportin-kentat
-    (laske-vaihtoehtojen-jakauma (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))
+    (muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))

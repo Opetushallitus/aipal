@@ -43,6 +43,12 @@
                                 (.repeater "alkio in kysymys.jakauma")
                                 (.column sarake)))))
 
+(defn ^:private vapaatekstit-kysymykselle [kysymys-elementti]
+  (map w/text
+       (w/find-elements-under kysymys-elementti
+                              (-> *ng*
+                                (.repeater "vapaateksti in kysymys.vastaukset")))))
+
 (defn vaihtoehdot-kysymykselle [kysymys-elementti]
   (hae-jakauman-sarake-kysymykselle "alkio.vaihtoehto" kysymys-elementti))
 
@@ -66,12 +72,18 @@
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 2"
                              :jarjestys 2
-                             :vastaustyyppi "kylla_ei_valinta"}]
+                             :vastaustyyppi "kylla_ei_valinta"}
+                            {:kysymysid 3
+                             :kysymysryhmaid 1
+                             :kysymys_fi "Kysymys 3"
+                             :jarjestys 3
+                             :vastaustyyppi "vapaateksti"}]
                   :kysely-kysymysryhma [{:kyselyid 1
                                          :kysymysryhmaid 1
                                          :jarjestys 1}]
                   :kysely-kysymys [{:kyselyid 1 :kysymysid 1}
-                                   {:kyselyid 1 :kysymysid 2}]
+                                   {:kyselyid 1 :kysymysid 2}
+                                   {:kyselyid 1 :kysymysid 3}]
                   :vastaustunnus [{:vastaustunnusid 1
                                    :kyselykertaid 1}
                                   {:vastaustunnusid 2
@@ -91,18 +103,30 @@
                             {:vastausid 4
                              :kysymysid 2
                              :vastaustunnusid 2
-                             :vaihtoehto "ei"}]}
+                             :vaihtoehto "ei"}
+                            {:vastausid 5
+                             :kysymysid 3
+                             :vastaustunnusid 1
+                             :vapaateksti "Vapaa teksti 1"}
+                            {:vastausid 6
+                             :kysymysid 3
+                             :vastaustunnusid 2
+                             :vapaateksti "Vapaa teksti 2"}]}
         (avaa-aipal (kyselykertaraportti-sivu 1))
         (testing
           "sisältää kysymykset"
-          (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2"])))
+          (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2" "Kysymys 3"])))
         (testing
-          "ensimmäisen kysymyksen vastausten jakauma"
+          "ensimmäisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]
             (is (= (vaihtoehdot-kysymykselle kysymys) ["kyllä" "ei"]))
             (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))
         (testing
-          "toisen kysymyksen vastausten jakauma"
+          "toisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 1)]
             (is (= (vaihtoehdot-kysymykselle kysymys) ["kyllä" "ei"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))))))))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))))
+        (testing
+          "avoimen kysymyksen vastaukset"
+          (let [kysymys (nth (kysymykset) 2)]
+            (is (= (vapaatekstit-kysymykselle kysymys) ["Vapaa teksti 1" "Vapaa teksti 2"]))))))))
