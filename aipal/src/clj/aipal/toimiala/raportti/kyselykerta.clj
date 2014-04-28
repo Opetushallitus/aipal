@@ -71,9 +71,12 @@
   (filter (fn [vastaus] (= (:kysymysid vastaus) (:kysymysid kysymys)))
           vastaukset))
 
-(defn ^:private jaottele-vaihtoehdot
+(defn jaottele-vaihtoehdot
   [vastaukset]
-  (reduce (fn [jakauma vastaus] (update-in jakauma [(keyword (:vaihtoehto vastaus))] inc))
+  (reduce (fn [jakauma vastaus] (update-in jakauma [(keyword (:vaihtoehto vastaus))]
+                                           (fn [n] (if (number? n)
+                                                     (inc n)
+                                                     1))))
           {:kylla 0 :ei 0}
           vastaukset))
 
