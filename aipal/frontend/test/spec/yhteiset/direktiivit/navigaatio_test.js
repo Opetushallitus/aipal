@@ -25,7 +25,7 @@ describe('yhteiset.direktiivit,navigaatio', function() {
     expect(onkoAktiivinen('li2')).toEqual(false);
   });
 
-  it('Merkitsgee valitun osion oikein kun osio vaihtuu', function() {
+  it('Merkitsee valitun osion oikein kun osio vaihtuu', function() {
     $location.path('/osio2');
     $rootScope.$digest();
     expect(onkoAktiivinen('li1')).toEqual(false);
