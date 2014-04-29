@@ -43,4 +43,17 @@ angular.module('aipal', [
         scope.kieli = kieli;
       }
     };
+  }])
+
+  .directive('piilotaTekstienLatauksenAjaksi', ['i18n', function(i18n) {
+    return {
+      restrict: 'A',
+      link : function(scope, el) {
+        var element = $(el);
+        element.hide();
+        i18n.$promise.then(function(){
+          element.show();
+        });
+      }
+    };
   }]);
