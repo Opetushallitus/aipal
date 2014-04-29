@@ -73,7 +73,7 @@ header {
       padding: 0 $marginM;
       float: left;
       height: $nav-height;
-      &:hover {background-color: $darker-primary;}
+      &:hover, &.active {background-color: $darker-primary;}
       &:first-child {border-left: 1px solid $separator-color;}
       a {
         text-transform:uppercase;

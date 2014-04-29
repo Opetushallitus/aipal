@@ -22,6 +22,7 @@ angular.module('aipal', [
     'raportti.kyselykerta.kyselykertaui',
     'yhteiset.palvelut.i18n',
     'yhteiset.direktiivit.copyright',
+    'yhteiset.direktiivit.navigaatio',
     'ngRoute'
   ])
 
