@@ -3,7 +3,7 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
 <div ng-repeat="kysymys in tulos.raportti">
   <p>
     <span>{{kysymys.kysymys_fi}}</span>
-    <table ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta'">
+    <table ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'kylla_ei_valinta'">
       <tr ng-repeat="alkio in kysymys.jakauma">
         <td>{{alkio.vaihtoehto}}</td>
         <td>{{alkio.lukumaara}}</td>

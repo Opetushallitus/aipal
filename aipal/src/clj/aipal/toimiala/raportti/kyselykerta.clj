@@ -40,7 +40,8 @@
     (sql/join :inner {:table :kysymys}
              (= :kysymysryhma.kysymysryhmaid
                 :kysymys.kysymysryhmaid))
-    (sql/where (or (= :kysymys.vastaustyyppi "kylla_ei_valinta")
+    (sql/where (or (= :kysymys.vastaustyyppi "asteikko")
+                   (= :kysymys.vastaustyyppi "kylla_ei_valinta")
                    (= :kysymys.vastaustyyppi "vapaateksti")))
     (sql/fields :kysymys.kysymysid
                 :kysymys.kysymys_fi
@@ -65,6 +66,7 @@
                  :vastaus.vastaustunnusid))
     (sql/fields :vastaus.vastausid
                 :vastaus.kysymysid
+                :vastaus.numerovalinta
                 :vastaus.vaihtoehto
                 :vastaus.vapaateksti)
 
@@ -75,6 +77,11 @@
   (filter (fn [vastaus] (= (:kysymysid vastaus) (:kysymysid kysymys)))
           vastaukset))
 
+(defn jaottele-asteikko
+  [vastaukset]
+  (merge {1 0 2 0 3 0 4 0 5 0}
+         (frequencies (map :numerovalinta vastaukset))))
+
 (defn jaottele-vaihtoehdot
   [vastaukset]
   (reduce (fn [jakauma vastaus] (update-in jakauma [(keyword (:vaihtoehto vastaus))]
@@ -84,17 +91,36 @@
           {:kylla 0 :ei 0}
           vastaukset))
 
-(defn ^:private muodosta-jakauman-esitys
+(defn ^:private muodosta-asteikko-jakauman-esitys
+  [jakauma]
+  [{:vaihtoehto "En / ei lainkaan"
+    :lukumaara (jakauma 1)}
+   {:vaihtoehto "Hieman"
+    :lukumaara (jakauma 2)}
+   {:vaihtoehto "Jonkin verran"
+    :lukumaara (jakauma 3)}
+   {:vaihtoehto "Melko paljon"
+    :lukumaara (jakauma 4)}
+   {:vaihtoehto "Erittäin paljon"
+    :lukumaara (jakauma 5)}])
+
+(defn ^:private muodosta-kylla-ei-jakauman-esitys
   [jakauma]
   [{:vaihtoehto "kyllä"
     :lukumaara (:kylla jakauma)}
    {:vaihtoehto "ei"
     :lukumaara (:ei jakauma)}])
 
+(defn ^:private lisaa-asteikon-jakauma
+  [kysymys vastaukset]
+  (assoc kysymys :jakauma
+         (muodosta-asteikko-jakauman-esitys
+           (jaottele-asteikko vastaukset))))
+
 (defn ^:private lisaa-vaihtoehtojen-jakauma
   [kysymys vastaukset]
   (assoc kysymys :jakauma
-         (muodosta-jakauman-esitys
+         (muodosta-kylla-ei-jakauman-esitys
            (jaottele-vaihtoehdot vastaukset))))
 
 (defn ^:private lisaa-vastausten-vapaateksti
@@ -105,6 +131,7 @@
 (defn kysymyksen-kasittelija
   [kysymys]
   (cond
+    (= (:vastaustyyppi kysymys) "asteikko") lisaa-asteikon-jakauma
     (= (:vastaustyyppi kysymys) "kylla_ei_valinta") lisaa-vaihtoehtojen-jakauma
     (= (:vastaustyyppi kysymys) "vapaateksti") lisaa-vastausten-vapaateksti
     :else (fn [kysymys vastaukset] kysymys)))

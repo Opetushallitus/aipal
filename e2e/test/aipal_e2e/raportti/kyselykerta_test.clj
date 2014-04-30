@@ -77,13 +77,19 @@
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 3"
                              :jarjestys 3
-                             :vastaustyyppi "vapaateksti"}]
+                             :vastaustyyppi "vapaateksti"}
+                            {:kysymysid 4
+                             :kysymysryhmaid 1
+                             :kysymys_fi "Kysymys 4"
+                             :jarjestys 4
+                             :vastaustyyppi "asteikko"}]
                   :kysely-kysymysryhma [{:kyselyid 1
                                          :kysymysryhmaid 1
                                          :jarjestys 1}]
                   :kysely-kysymys [{:kyselyid 1 :kysymysid 1}
                                    {:kyselyid 1 :kysymysid 2}
-                                   {:kyselyid 1 :kysymysid 3}]
+                                   {:kyselyid 1 :kysymysid 3}
+                                   {:kyselyid 1 :kysymysid 4}]
                   :vastaustunnus [{:vastaustunnusid 1
                                    :kyselykertaid 1}
                                   {:vastaustunnusid 2
@@ -111,11 +117,19 @@
                             {:vastausid 6
                              :kysymysid 3
                              :vastaustunnusid 2
-                             :vapaateksti "Vapaa teksti 2"}]}
+                             :vapaateksti "Vapaa teksti 2"}
+                            {:vastausid 7
+                             :kysymysid 4
+                             :vastaustunnusid 1
+                             :numerovalinta 1}
+                            {:vastausid 8
+                             :kysymysid 4
+                             :vastaustunnusid 2
+                             :numerovalinta 2}]}
         (avaa-aipal (kyselykertaraportti-sivu 1))
         (testing
           "sisältää kysymykset"
-          (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2" "Kysymys 3"])))
+          (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2" "Kysymys 3" "Kysymys 4"])))
         (testing
           "ensimmäisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]
@@ -129,4 +143,8 @@
         (testing
           "avoimen kysymyksen vastaukset"
           (let [kysymys (nth (kysymykset) 2)]
-            (is (= (vapaatekstit-kysymykselle kysymys) ["Vapaa teksti 1" "Vapaa teksti 2"]))))))))
+            (is (= (vapaatekstit-kysymykselle kysymys) ["Vapaa teksti 1" "Vapaa teksti 2"]))))
+        (testing
+          "väittämän vastausten jakauma"
+          (let [kysymys (nth (kysymykset) 3)]
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1" "0" "0" "0"]))))))))
