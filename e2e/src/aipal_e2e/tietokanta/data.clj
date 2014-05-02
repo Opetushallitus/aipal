@@ -26,6 +26,7 @@
                        "kyselypohja"
                        "kysely_kysymysryhma"
                        "kysely_kysymys"
+                       "monivalintavaihtoehto"
                        "vastaustunnus"
                        "vastaus"])
 

@@ -82,14 +82,26 @@
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 4"
                              :jarjestys 4
-                             :vastaustyyppi "asteikko"}]
+                             :vastaustyyppi "asteikko"}
+                            {:kysymysid 5
+                             :kysymysryhmaid 1
+                             :kysymys_fi "Kysymys 5"
+                             :jarjestys 5
+                             :vastaustyyppi "monivalinta"}]
                   :kysely-kysymysryhma [{:kyselyid 1
                                          :kysymysryhmaid 1
                                          :jarjestys 1}]
                   :kysely-kysymys [{:kyselyid 1 :kysymysid 1}
                                    {:kyselyid 1 :kysymysid 2}
                                    {:kyselyid 1 :kysymysid 3}
-                                   {:kyselyid 1 :kysymysid 4}]
+                                   {:kyselyid 1 :kysymysid 4}
+                                   {:kyselyid 1 :kysymysid 5}]
+                  :monivalintavaihtoehto [{:kysymysid 5
+                                           :jarjestys 1
+                                           :teksti_fi "Jotain"}
+                                          {:kysymysid 5
+                                           :jarjestys 2
+                                           :teksti_fi "Muuta"}]
                   :vastaustunnus [{:vastaustunnusid 1
                                    :kyselykertaid 1}
                                   {:vastaustunnusid 2
@@ -125,11 +137,19 @@
                             {:vastausid 8
                              :kysymysid 4
                              :vastaustunnusid 2
+                             :numerovalinta 2}
+                            {:vastausid 9
+                             :kysymysid 5
+                             :vastaustunnusid 1
+                             :numerovalinta 1}
+                            {:vastausid 10
+                             :kysymysid 5
+                             :vastaustunnusid 2
                              :numerovalinta 2}]}
         (avaa-aipal (kyselykertaraportti-sivu 1))
         (testing
           "sisältää kysymykset"
-          (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2" "Kysymys 3" "Kysymys 4"])))
+          (is (= (kysymysten-tekstit) ["Kysymys 1" "Kysymys 2" "Kysymys 3" "Kysymys 4" "Kysymys 5"])))
         (testing
           "ensimmäisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]
@@ -147,4 +167,9 @@
         (testing
           "väittämän vastausten jakauma"
           (let [kysymys (nth (kysymykset) 3)]
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1" "0" "0" "0"]))))))))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1" "0" "0" "0"]))))
+        (testing
+          "monivalinnan vastausten jakauma"
+          (let [kysymys (nth (kysymykset) 4)]
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Jotain" "Muuta"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))))))

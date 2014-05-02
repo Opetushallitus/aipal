@@ -22,6 +22,7 @@
             [aipal-e2e.arkisto.kyselypohja :as kyselypohja]
             [aipal-e2e.arkisto.kysymys :as kysymys]
             [aipal-e2e.arkisto.kysymysryhma :as kysymysryhma]
+            [aipal-e2e.arkisto.monivalintavaihtoehto :as monivalintavaihtoehto]
             [aipal-e2e.arkisto.vastaustunnus :as vastaustunnus]
             [aipal-e2e.arkisto.vastaus :as vastaus]
             [aipal-e2e.tietokanta.yhteys :as yhteys]))
@@ -65,6 +66,13 @@
                                     :default (for [i (iterate inc 1)]
                                                {:nimi_fi (str "Kysymysryhma " i)})})
 
+(def ^:private monivalintavaihtoehto-tiedot {:luo-fn monivalintavaihtoehto/lisaa!
+                                    :poista-fn #(monivalintavaihtoehto/poista! (:monivalintavaihtoehtoid %))
+                                    :default (for [i (iterate inc 1)]
+                                               {:monivalintavaihtoehtoid i
+                                                :teksti_fi (str "monivalintavaihtoehto " i)
+                                                :teksti_sv (str "monivalintavaihtoehto (sv) " i)})})
+
 (def ^:private vastaustunnus-tiedot {:luo-fn vastaustunnus/lisaa!
                                      :poista-fn #(vastaustunnus/poista! (:vastaustunnusid %))
                                      :default (for [i (iterate inc 1)]
@@ -82,6 +90,7 @@
                               :kyselypohja kyselypohja-tiedot
                               :kysely-kysymys kysely-kysymys-tiedot
                               :kysely-kysymysryhma kysely-kysymysryhma-tiedot
+                              :monivalintavaihtoehto monivalintavaihtoehto-tiedot
                               :vastaustunnus vastaustunnus-tiedot
                               :vastaus vastaus-tiedot})
 
@@ -92,6 +101,7 @@
                        :kyselypohja
                        :kysely-kysymysryhma
                        :kysely-kysymys
+                       :monivalintavaihtoehto
                        :vastaustunnus
                        :vastaus])
 
