@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]))
 
 (defn hae-kaikki
-  "Hae kaikki kyselykerrat, joissa on kyllä/ei-valintakysymyksiä"
+  "Hae kaikki kyselykerrat, joissa on kysymyksiä"
   []
   (->
     (sql/select* :kyselykerta)
@@ -39,6 +39,5 @@
     (sql/join :inner {:table :kysymys}
              (= :kysymysryhma.kysymysryhmaid
                 :kysymys.kysymysryhmaid))
-    (sql/where (= :kysymys.vastaustyyppi "kylla_ei_valinta"))
 
     sql/exec))
