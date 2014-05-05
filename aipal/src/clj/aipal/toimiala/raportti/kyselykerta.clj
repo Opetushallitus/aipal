@@ -43,6 +43,13 @@
                 :kysymys.vastaustyyppi)
     (sql/order :kysymys.jarjestys :ASC)
 
+    ;; otetaan mukaan vain kyselyyn kuuluvat kysymykset
+    (sql/join :inner {:table :kysely_kysymys}
+              (and (= :kysely.kyselyid
+                      :kysely_kysymys.kyselyid)
+                   (= :kysymys.kysymysid
+                      :kysely_kysymys.kysymysid)))
+
     sql/exec))
 
 (defn ^:private hae-vastaukset [kyselykertaid]

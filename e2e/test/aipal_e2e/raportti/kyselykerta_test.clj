@@ -85,7 +85,12 @@
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 5"
                              :jarjestys 5
-                             :vastaustyyppi "monivalinta"}]
+                             :vastaustyyppi "monivalinta"}
+                            {:kysymysid 6
+                             :kysymysryhmaid 1
+                             :kysymys_fi "Kysymys 6: ei mukana kyselyssä"
+                             :jarjestys 6
+                             :vastaustyyppi "kylla_ei_valinta"}]
                   :kysely-kysymysryhma [{:kyselyid 1
                                          :kysymysryhmaid 1
                                          :jarjestys 1}]
@@ -173,4 +178,7 @@
           (let [kysymys (nth (kysymykset) 4)]
             (is (= (kysymyksen-teksti kysymys) "Kysymys 5"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Jotain" "Muuta"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))))))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))
+        (testing
+          "sisältää vain kyselyyn valitut kysymykset"
+          (is (= (count (kysymykset)) 5)))))))
