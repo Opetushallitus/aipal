@@ -1,11 +1,14 @@
 header {
   color: black;
-  background: url('../img/AITU-background.png') no-repeat left top;
-  .no-svg & {background-image: url('../img/opetushallitus.gif')}
+  background-color: #e1e1e1;
   height: 160px;
+  position: absolute;
+  width: 100%;
+  left: 0;
 
-  &.app-wrapper {
-    padding: 0;
+  .app-wrapper {
+    background: #e1e1e1 url('../img/AITU-background.png') no-repeat left top;
+    height: 100%;
   }
 
   .vertical-aligner {
@@ -63,6 +66,7 @@ header {
     text-decoration: none;
     color: $font-color!important;
     text-transform:uppercase;
+    font-weight: 600;
   }
   ul {
     margin: 0;
@@ -88,6 +92,9 @@ header {
   #current-user {float: right; padding-right: 40px; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
   .kielen-vaihto {
     float: right;
-    li.valittu:hover {background-color: transparent;}
+    li.valittu {
+      &:hover {background-color: transparent;}
+      span {color: $darkest-primary;}
+    }
   }
 }

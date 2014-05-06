@@ -67,27 +67,29 @@ a {color : $primary-color; text-decoration: none;
 
 @font-face {
   font-family: 'Open Sans';
-  font-style: normal;
   font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url('../font/opensans.woff') format('woff');
+  src: url('../font/opensans.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Open Sans';
-  font-style: normal;
+  font-weight: 600;
+  src: url('../font/opensans-semibold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
   font-weight: 700;
-  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../font/opensans-bold.woff') format('woff');
+  src: url('../font/opensans-bold.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Open Sans Condensed';
-  font-style: normal;
   font-weight: 300;
-  src: local('Open Sans Cond Light'), local('OpenSans-CondensedLight'), url('../font/opensans-condensed-light.woff') format('woff');
+  src: url('../font/opensans-condensed-light.woff') format('woff');
 }
 @font-face {
   font-family: 'Open Sans Condensed';
-  font-style: normal;
   font-weight: 700;
-  src: local('Open Sans Condensed Bold'), local('OpenSans-CondensedBold'), url('../font/opensans-condensed-bold.woff') format('woff');
+  src: url('../font/opensans-condensed-bold.woff') format('woff');
 }
