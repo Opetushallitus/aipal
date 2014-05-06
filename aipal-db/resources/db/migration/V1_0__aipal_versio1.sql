@@ -64,11 +64,11 @@ ALTER TABLE kayttajarooli ADD CONSTRAINT kayttajarooli_PK PRIMARY KEY ( roolitun
 
 CREATE TABLE kysely
   (
-    kyselyid        INTEGER NOT NULL ,
-    voimassa_alkupvm DATE ,
-    voimassa_loppupvm     DATE ,
-    nimi_fi         VARCHAR (200) ,
-    nimi_sv         VARCHAR (200) ,
+    kyselyid          INTEGER NOT NULL ,
+    voimassa_alkupvm  DATE ,
+    voimassa_loppupvm DATE ,
+    nimi_fi           VARCHAR (200) ,
+    nimi_sv           VARCHAR (200) ,
     selite_fi TEXT ,
     selite_sv TEXT ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
@@ -81,7 +81,7 @@ IS
   'Kyselyn voimaantulopäivä' ;
   COMMENT ON COLUMN kysely.voimassa_loppupvm
 IS
-  'Kyselyn lakkautuspäivä' ;
+  'Kyselyn voimassaolon päättymispäivä' ;
   ALTER TABLE kysely ADD CONSTRAINT kysely_PK PRIMARY KEY ( kyselyid ) ;
 
 CREATE TABLE kysely_kysymys
@@ -110,14 +110,15 @@ COMMENT ON COLUMN kysely_kysymysryhma.jarjestys
 IS
   'kysymysryhmän järjestys kyselyn sisällä' ;
   ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kysymysryhma_PK PRIMARY KEY ( kyselyid, kysymysryhmaid ) ;
+  ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_jarjestys_UN UNIQUE ( kyselyid , jarjestys ) DEFERRABLE ;
 
 CREATE TABLE kyselykerta
   (
-    kyselykertaid       INTEGER NOT NULL ,
-    kyselyid            INTEGER NOT NULL ,
-    nimi_fi             VARCHAR (200) NOT NULL ,
-    nimi_sv             VARCHAR (200) ,
-    voimassa_alkupvm     DATE NOT NULL ,
+    kyselykertaid     INTEGER NOT NULL ,
+    kyselyid          INTEGER NOT NULL ,
+    nimi_fi           VARCHAR (200) NOT NULL ,
+    nimi_sv           VARCHAR (200) ,
+    voimassa_alkupvm  DATE NOT NULL ,
     voimassa_loppupvm DATE ,
     selite_fi TEXT ,
     selite_sv TEXT ,
@@ -136,13 +137,13 @@ IS
 
 CREATE TABLE kyselypohja
   (
-    kyselypohjaid    INTEGER NOT NULL ,
-    valtakunnallinen BOOLEAN NOT NULL ,
+    kyselypohjaid     INTEGER NOT NULL ,
+    valtakunnallinen  BOOLEAN NOT NULL ,
     voimassa_alkupvm  DATE ,
-    poistettu        DATE ,
-    voimassa_loppupvm      DATE ,
-    nimi_fi          VARCHAR (200) ,
-    nimi_sv          VARCHAR (200) ,
+    poistettu         DATE ,
+    voimassa_loppupvm DATE ,
+    nimi_fi           VARCHAR (200) ,
+    nimi_sv           VARCHAR (200) ,
     selite_fi TEXT ,
     selite_sv TEXT ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
@@ -193,17 +194,17 @@ IS
 IS
   'Kysymyksen järjestys kysymysryhmän sisällä' ;
   ALTER TABLE kysymys ADD CONSTRAINT kysymys_PK PRIMARY KEY ( kysymysid ) ;
-  ALTER TABLE kysymys ADD CONSTRAINT kysymys_ryhma_jarjestys_UN UNIQUE ( kysymysryhmaid , jarjestys ) DEFERRABLE INITIALLY DEFERRED ;
+  ALTER TABLE kysymys ADD CONSTRAINT kysymys_ryhma_jarjestys_UN UNIQUE ( kysymysryhmaid , jarjestys ) DEFERRABLE ;
 
 CREATE TABLE kysymysryhma
   (
-    kysymysryhmaid   INTEGER NOT NULL ,
+    kysymysryhmaid    INTEGER NOT NULL ,
     voimassa_alkupvm  DATE ,
-    voimassa_loppupvm      DATE ,
-    taustakysymykset BOOLEAN DEFAULT false NOT NULL ,
-    valtakunnallinen BOOLEAN DEFAULT false NOT NULL ,
-    nimi_fi          VARCHAR (200) NOT NULL ,
-    nimi_sv          VARCHAR (200) ,
+    voimassa_loppupvm DATE ,
+    taustakysymykset  BOOLEAN DEFAULT false NOT NULL ,
+    valtakunnallinen  BOOLEAN DEFAULT false NOT NULL ,
+    nimi_fi           VARCHAR (200) NOT NULL ,
+    nimi_sv           VARCHAR (200) ,
     selite_fi TEXT ,
     selite_sv TEXT ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
@@ -258,13 +259,30 @@ IS
   ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT kysymys_lisatieto_PK PRIMARY KEY ( monivalintavaihtoehtoid ) ;
   ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_UN UNIQUE ( kysymysid , jarjestys ) ;
 
+CREATE TABLE vastaajatunnus
+  (
+    vastaajatunnusid  INTEGER NOT NULL ,
+    kyselykertaid     INTEGER NOT NULL ,
+    tunnus            VARCHAR (30) NOT NULL ,
+    tunnusten_lkm     INTEGER NOT NULL ,
+    lukittu           BOOLEAN DEFAULT false NOT NULL ,
+    voimassa_alkupvm  DATE ,
+    voimassa_loppupvm DATE ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_PK PRIMARY KEY ( vastaajatunnusid ) ;
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus__UN UNIQUE ( tunnus ) ;
+
 CREATE TABLE vastaus
   (
-    vastausid         INTEGER NOT NULL ,
-    kysymysid         INTEGER NOT NULL ,
-    vastaustunnusid   INTEGER NOT NULL ,
-    vastausaika       DATE ,
-    vapaateksti       TEXT ,
+    vastausid       INTEGER NOT NULL ,
+    kysymysid       INTEGER NOT NULL ,
+    vastaustunnusid INTEGER NOT NULL ,
+    vastausaika     DATE ,
+    vapaateksti TEXT ,
     numerovalinta     INTEGER ,
     vaihtoehto        VARCHAR (10) ,
     jatkovastausid    INTEGER ,
@@ -273,7 +291,7 @@ CREATE TABLE vastaus
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE vastaus ADD CHECK (vaihtoehto IN ('ei', 'kylla')) ;
+ALTER TABLE vastaus ADD CHECK ( vaihtoehto IN ('ei', 'kylla')) ;
 COMMENT ON COLUMN vastaus.vastausaika
 IS
   'Vastausaika' ;
@@ -292,6 +310,7 @@ CREATE TABLE vastaustunnus
   (
     vastaustunnusid   INTEGER NOT NULL ,
     kyselykertaid     INTEGER NOT NULL ,
+    vastaajatunnusid  INTEGER NOT NULL ,
     vastannut         BOOLEAN DEFAULT false NOT NULL ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
@@ -337,8 +356,6 @@ ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kyselypohja_FK FOREIGN 
 
 ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kysymysryhma_FK FOREIGN KEY ( kysymysryhmaid ) REFERENCES kysymysryhma ( kysymysryhmaid ) NOT DEFERRABLE ;
 
-ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_jarjestys_UN UNIQUE (kyselyid, jarjestys) DEFERRABLE INITIALLY IMMEDIATE;
-
 ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysely_kysymys ADD CONSTRAINT kysely_kysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -375,21 +392,29 @@ ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kayttaja_FKv1 FOREIGN KEY ( 
 
 ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kyselykerta_FK FOREIGN KEY ( kyselykertaid ) REFERENCES kyselykerta ( kyselykertaid ) NOT DEFERRABLE ;
+
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_jatkovastaus_FK FOREIGN KEY ( jatkovastausid ) REFERENCES jatkovastaus ( jatkovastausid ) NOT DEFERRABLE ;
-
-ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
-
-ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaustunnus_FK FOREIGN KEY ( vastaustunnusid ) REFERENCES vastaustunnus ( vastaustunnusid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaustunnus_FK FOREIGN KEY ( vastaustunnusid ) REFERENCES vastaustunnus ( vastaustunnusid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kyselykerta_FK FOREIGN KEY ( kyselykertaid ) REFERENCES kyselykerta ( kyselykertaid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_vjatunnus_FK FOREIGN KEY ( vastaajatunnusid ) REFERENCES vastaajatunnus ( vastaajatunnusid ) NOT DEFERRABLE ;
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
 values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
