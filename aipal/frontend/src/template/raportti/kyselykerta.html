@@ -10,8 +10,8 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
       </tr>
     </table>
     <table ng-if="kysymys.vastaustyyppi === 'vapaateksti'">
-      <tr ng-repeat="vapaateksti in kysymys.vastaukset">
-        <td>{{vapaateksti}}</td>
+      <tr ng-repeat="vastaus in kysymys.vastaukset">
+        <td>{{vastaus.teksti}}</td>
       </tr>
     </table>
   </p>

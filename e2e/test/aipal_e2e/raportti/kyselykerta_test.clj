@@ -45,7 +45,8 @@
   (map w/text
        (w/find-elements-under kysymys-elementti
                               (-> *ng*
-                                (.repeater "vapaateksti in kysymys.vastaukset")))))
+                                (.repeater "vastaus in kysymys.vastaukset")
+                                (.column "teksti")))))
 
 (defn vaihtoehdot-kysymykselle [kysymys-elementti]
   (hae-jakauman-sarake-kysymykselle "alkio.vaihtoehto" kysymys-elementti))

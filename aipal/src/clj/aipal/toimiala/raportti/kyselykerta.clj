@@ -160,7 +160,7 @@
 (defn ^:private lisaa-vastausten-vapaateksti
   [kysymys vastaukset]
   (assoc kysymys :vastaukset
-         (map :vapaateksti vastaukset)))
+         (map (fn [v] {:teksti (:vapaateksti v)}) vastaukset)))
 
 (defn kysymyksen-kasittelija
   [kysymys]
