@@ -12,6 +12,7 @@ table.report-table {
     background: $background-color;
 
     th {
+      border: 1px solid $border-color;
       font-weight: normal;
       padding: $marginM $marginM;
       vertical-align: center;
@@ -22,6 +23,7 @@ table.report-table {
     background: $background-color;
 
     td {
+      border: 1px solid $border-color;
       padding: $marginM $marginM;
       vertical-align: center;
     }

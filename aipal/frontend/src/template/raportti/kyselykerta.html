@@ -3,11 +3,16 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
 <div ng-repeat="kysymys in tulos.raportti">
   <p>
     <span><b>{{kysymys.kysymys_fi}}</b></span>
-    <table ng-if="kysymys.vastaustyyppi !== 'vapaateksti'">
-      <tr ng-repeat="alkio in kysymys.jakauma">
-        <td>{{alkio.vaihtoehto}}</td>
-        <td>{{alkio.lukumaara}}</td>
-      </tr>
+    <table class="report-table" ng-if="kysymys.vastaustyyppi !== 'vapaateksti'">
+      <thead>
+        <tr><th>&nbsp;</th><th>n</th></tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="alkio in kysymys.jakauma">
+          <td>{{alkio.vaihtoehto}}</td>
+          <td>{{alkio.lukumaara}}</td>
+        </tr>
+      </tbody>
     </table>
     <table class="report-table" ng-if="kysymys.vastaustyyppi === 'vapaateksti'">
       <thead>
