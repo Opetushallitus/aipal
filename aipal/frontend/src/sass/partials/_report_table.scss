@@ -1,0 +1,29 @@
+table.report-table {
+  $background-color: white;
+  $border-color: #999999;
+
+  background: white;
+  border: 1px solid $border-color;
+  border-collapse: collapse;
+  text-align: left;
+  width: 66%;
+
+  thead tr {
+    background: $background-color;
+
+    th {
+      font-weight: normal;
+      padding: $marginM $marginM;
+      vertical-align: center;
+    }
+  }
+
+  tbody tr {
+    background: $background-color;
+
+    td {
+      padding: $marginM $marginM;
+      vertical-align: center;
+    }
+  }
+}
