@@ -54,6 +54,9 @@
 (defn lukumaarat-kysymykselle [kysymys-elementti]
   (hae-jakauman-sarake-kysymykselle "alkio.lukumaara" kysymys-elementti))
 
+(defn ^:private hae-kaavio-kysymykselle [kysymys-elementti]
+  (filter w/exists? (w/find-elements-under kysymys-elementti {:class "jakauma-kaavio"})))
+
 (deftest kyselykertaraportti-test
   (with-webdriver
     (testing
@@ -183,7 +186,8 @@
           (let [kysymys (nth (kysymykset) 4)]
             (is (= (kysymyksen-teksti kysymys) "Kysymys 5"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Jotain" "Muuta"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
+            (is (= (count (hae-kaavio-kysymykselle kysymys)) 1))))
         (testing
           "sisältää vain kyselyyn valitut kysymykset"
           (is (= (count (kysymykset)) 5)))))))

@@ -2,7 +2,13 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
 
 <div ng-repeat="kysymys in tulos.raportti">
   <p>
-    <span><b>{{kysymys.kysymys_fi}}</b></span>
+    <h3>{{kysymys.kysymys_fi}}</h3>
+
+    <jakauma-kaavio
+      ng-if="kysymys.vastaustyyppi === 'monivalinta'"
+      jakauma="kysymys.jakauma">
+    </jakauma-kaavio>
+
     <table class="report-table" ng-if="kysymys.vastaustyyppi !== 'vapaateksti'">
       <thead>
         <tr><th>&nbsp;</th><th>n</th></tr>
@@ -14,6 +20,7 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
         </tr>
       </tbody>
     </table>
+
     <table class="report-table" ng-if="kysymys.vastaustyyppi === 'vapaateksti'">
       <thead>
         <tr><th>Vastaukset</th></tr>

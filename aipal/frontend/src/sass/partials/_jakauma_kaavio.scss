@@ -1,0 +1,17 @@
+.jakauma-kaavio {
+  fill: $darker-gray;
+  overflow: visible !important;
+
+  .jakauma-kaavio-viiva {
+    stroke: $lighter-gray;
+  }
+
+  .jakauma-kaavio-viivan-otsikko {
+    fill: $lighter-gray;
+    text-anchor: middle;
+  }
+
+  .jakauma-kaavio-otsikko {
+    text-anchor: end;
+  }
+}

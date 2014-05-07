@@ -14,7 +14,8 @@
 
 'use strict';
 
-angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.kyselykertaraportti',
+angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jakaumakaavio',
+                                                      'raportti.kyselykerta.kyselykertaraportti',
                                                       'toimiala.kyselykerta',
                                                       'ngRoute'])
   .config(['$routeProvider', function($routeProvider) {
