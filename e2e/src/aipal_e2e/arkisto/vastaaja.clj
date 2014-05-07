@@ -12,14 +12,14 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal-e2e.arkisto.vastaustunnus
+(ns aipal-e2e.arkisto.vastaaja
   (:require [korma.core :as sql]
             [aipal-e2e.arkisto.sql.korma :refer :all]))
 
 (defn lisaa! [tiedot]
-  (sql/insert vastaustunnus
+  (sql/insert vastaaja
     (sql/values tiedot)))
 
-(defn poista! [vastaustunnusid]
-  (sql/delete vastaustunnus
-    (sql/where {:vastaustunnusid vastaustunnusid})))
+(defn poista! [vastaajaid]
+  (sql/delete vastaaja
+    (sql/where {:vastaajaid vastaajaid})))

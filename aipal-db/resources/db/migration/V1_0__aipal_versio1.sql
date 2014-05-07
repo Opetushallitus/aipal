@@ -259,12 +259,28 @@ IS
   ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT kysymys_lisatieto_PK PRIMARY KEY ( monivalintavaihtoehtoid ) ;
   ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_UN UNIQUE ( kysymysid , jarjestys ) ;
 
+CREATE TABLE vastaaja
+  (
+    vastaajaid        INTEGER NOT NULL ,
+    kyselykertaid     INTEGER NOT NULL ,
+    vastaajatunnusid  INTEGER NOT NULL ,
+    vastannut         BOOLEAN DEFAULT false NOT NULL ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+COMMENT ON COLUMN vastaaja.vastannut
+IS
+  'Vastaaja on vastannut koko kyselyyn' ;
+  ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_PK PRIMARY KEY ( vastaajaid ) ;
+
 CREATE TABLE vastaajatunnus
   (
     vastaajatunnusid  INTEGER NOT NULL ,
     kyselykertaid     INTEGER NOT NULL ,
     tunnus            VARCHAR (30) NOT NULL ,
-    tunnusten_lkm     INTEGER NOT NULL ,
+    vastaajien_lkm    INTEGER NOT NULL ,
     lukittu           BOOLEAN DEFAULT false NOT NULL ,
     voimassa_alkupvm  DATE ,
     voimassa_loppupvm DATE ,
@@ -273,15 +289,24 @@ CREATE TABLE vastaajatunnus
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
-ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_PK PRIMARY KEY ( vastaajatunnusid ) ;
-ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus__UN UNIQUE ( tunnus ) ;
+COMMENT ON COLUMN vastaajatunnus.tunnus
+IS
+  'Generoitu tunnus vastaajille' ;
+  COMMENT ON COLUMN vastaajatunnus.vastaajien_lkm
+IS
+  'Maksimi vastaajien lukumäärä' ;
+  COMMENT ON COLUMN vastaajatunnus.lukittu
+IS
+  'Onko tunnukset lukittu suoraan tai tunnusten loppumisen takia' ;
+  ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_PK PRIMARY KEY ( vastaajatunnusid ) ;
+  ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus__UN UNIQUE ( tunnus ) ;
 
 CREATE TABLE vastaus
   (
-    vastausid       INTEGER NOT NULL ,
-    kysymysid       INTEGER NOT NULL ,
-    vastaustunnusid INTEGER NOT NULL ,
-    vastausaika     DATE ,
+    vastausid   INTEGER NOT NULL ,
+    kysymysid   INTEGER NOT NULL ,
+    vastaajaid  INTEGER NOT NULL ,
+    vastausaika DATE ,
     vapaateksti TEXT ,
     numerovalinta     INTEGER ,
     vaihtoehto        VARCHAR (10) ,
@@ -305,22 +330,6 @@ IS
 IS
   'kyllä/ei vastausvaihtoehto' ;
   ALTER TABLE vastaus ADD CONSTRAINT vastaus_PK PRIMARY KEY ( vastausid ) ;
-
-CREATE TABLE vastaustunnus
-  (
-    vastaustunnusid   INTEGER NOT NULL ,
-    kyselykertaid     INTEGER NOT NULL ,
-    vastaajatunnusid  INTEGER NOT NULL ,
-    vastannut         BOOLEAN DEFAULT false NOT NULL ,
-    luotu_kayttaja    VARCHAR (80) NOT NULL ,
-    muutettu_kayttaja VARCHAR (80) NOT NULL ,
-    luotuaika TIMESTAMPTZ NOT NULL ,
-    muutettuaika TIMESTAMPTZ NOT NULL
-  ) ;
-COMMENT ON COLUMN vastaustunnus.vastannut
-IS
-  'Onko vastaustunnuksella vastattu kyselyyn' ;
-  ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_PK PRIMARY KEY ( vastaustunnusid ) ;
 
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
@@ -392,6 +401,14 @@ ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kayttaja_FKv1 FOREIGN KEY ( 
 
 ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
+ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_kyselykerta_FK FOREIGN KEY ( kyselykertaid ) REFERENCES kyselykerta ( kyselykertaid ) NOT DEFERRABLE ;
+
+ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_vastaajatunnus_FK FOREIGN KEY ( vastaajatunnusid ) REFERENCES vastaajatunnus ( vastaajatunnusid ) NOT DEFERRABLE ;
+
 ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -406,15 +423,8 @@ ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FKv1 FOREIGN KEY ( muutettu_
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
-ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaustunnus_FK FOREIGN KEY ( vastaustunnusid ) REFERENCES vastaustunnus ( vastaustunnusid ) NOT DEFERRABLE ;
+ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaaja_FK FOREIGN KEY ( vastaajaid ) REFERENCES vastaaja ( vastaajaid ) NOT DEFERRABLE ;
 
-ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
-
-ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
-
-ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_kyselykerta_FK FOREIGN KEY ( kyselykertaid ) REFERENCES kyselykerta ( kyselykertaid ) NOT DEFERRABLE ;
-
-ALTER TABLE vastaustunnus ADD CONSTRAINT vastaustunnus_vjatunnus_FK FOREIGN KEY ( vastaajatunnusid ) REFERENCES vastaajatunnus ( vastaajatunnusid ) NOT DEFERRABLE ;
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
 values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
@@ -530,13 +540,13 @@ create trigger vastaajatunnus_mu_update before update on vastaajatunnus for each
 create trigger vastaajatunnus_cu_insert before insert on vastaajatunnus for each row execute procedure update_creator() ;
 create trigger vastaajatunnus_mu_insert before insert on vastaajatunnus for each row execute procedure update_modifier() ;
 
--- vastaustunnus
-create trigger vastaustunnus_update before update on vastaustunnus for each row execute procedure update_stamp() ;
-create trigger vastaustunnusl_insert before insert on vastaustunnus for each row execute procedure update_created() ;
-create trigger vastaustunnusm_insert before insert on vastaustunnus for each row execute procedure update_stamp() ;
-create trigger vastaustunnus_mu_update before update on vastaustunnus for each row execute procedure update_modifier() ;
-create trigger vastaustunnus_cu_insert before insert on vastaustunnus for each row execute procedure update_creator() ;
-create trigger vastaustunnus_mu_insert before insert on vastaustunnus for each row execute procedure update_modifier() ;
+-- vastaaja
+create trigger vastaaja_update before update on vastaaja for each row execute procedure update_stamp() ;
+create trigger vastaajal_insert before insert on vastaaja for each row execute procedure update_created() ;
+create trigger vastaajam_insert before insert on vastaaja for each row execute procedure update_stamp() ;
+create trigger vastaaja_mu_update before update on vastaaja for each row execute procedure update_modifier() ;
+create trigger vastaaja_cu_insert before insert on vastaaja for each row execute procedure update_creator() ;
+create trigger vastaaja_mu_insert before insert on vastaaja for each row execute procedure update_modifier() ;
 
 -- vastaus
 create trigger vastaus_update before update on vastaus for each row execute procedure update_stamp() ;

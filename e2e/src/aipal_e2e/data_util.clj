@@ -24,7 +24,7 @@
             [aipal-e2e.arkisto.kysymysryhma :as kysymysryhma]
             [aipal-e2e.arkisto.monivalintavaihtoehto :as monivalintavaihtoehto]
             [aipal-e2e.arkisto.vastaajatunnus :as vastaajatunnus]
-            [aipal-e2e.arkisto.vastaustunnus :as vastaustunnus]
+            [aipal-e2e.arkisto.vastaaja :as vastaaja]
             [aipal-e2e.arkisto.vastaus :as vastaus]
             [aipal-e2e.tietokanta.yhteys :as yhteys]))
 
@@ -78,18 +78,18 @@
                                       :poista-fn #(vastaajatunnus/poista! (:vastaajatunnusid %))
                                       :default (for [i (iterate inc 1)]
                                                  {:lukittu false
-                                                  :tunnusten_lkm 100
+                                                  :vastaajien_lkm 100
                                                   :tunnus (str "testitunnus" i)})})
 
-(def ^:private vastaustunnus-tiedot {:luo-fn vastaustunnus/lisaa!
-                                     :poista-fn #(vastaustunnus/poista! (:vastaustunnusid %))
-                                     :default (for [i (iterate inc 1)]
-                                                {})})
+(def ^:private vastaaja-tiedot {:luo-fn vastaaja/lisaa!
+                                :poista-fn #(vastaaja/poista! (:vastaajaid %))
+                                :default (for [i (iterate inc 1)]
+                                           {})})
 
 (def ^:private vastaus-tiedot {:luo-fn vastaus/lisaa!
-                                     :poista-fn #(vastaus/poista! (:vastausid %))
-                                     :default (for [i (iterate inc 1)]
-                                                {})})
+                               :poista-fn #(vastaus/poista! (:vastausid %))
+                               :default (for [i (iterate inc 1)]
+                                          {})})
 
 (def ^:private entity-tiedot {:kysely kysely-tiedot
                               :kyselykerta kyselykerta-tiedot
@@ -100,7 +100,7 @@
                               :kysely-kysymysryhma kysely-kysymysryhma-tiedot
                               :monivalintavaihtoehto monivalintavaihtoehto-tiedot
                               :vastaajatunnus vastaajatunnus-tiedot
-                              :vastaustunnus vastaustunnus-tiedot
+                              :vastaaja vastaaja-tiedot
                               :vastaus vastaus-tiedot})
 
 (def ^:private taulut [:kysely
@@ -112,7 +112,7 @@
                        :kysely-kysymys
                        :monivalintavaihtoehto
                        :vastaajatunnus
-                       :vastaustunnus
+                       :vastaaja
                        :vastaus])
 
 (defn ^:private luo

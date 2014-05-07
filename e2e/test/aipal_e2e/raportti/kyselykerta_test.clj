@@ -108,51 +108,51 @@
                                            :teksti_fi "Muuta"}]
                   :vastaajatunnus [{:vastaajatunnusid 1
                                     :kyselykertaid 1}]
-                  :vastaustunnus [{:vastaustunnusid 1
-                                   :vastaajatunnusid 1
-                                   :kyselykertaid 1}
-                                  {:vastaustunnusid 2
-                                   :vastaajatunnusid 1
-                                   :kyselykertaid 1}]
+                  :vastaaja [{:vastaajaid 1
+                              :vastaajatunnusid 1
+                              :kyselykertaid 1}
+                             {:vastaajaid 2
+                              :vastaajatunnusid 1
+                              :kyselykertaid 1}]
                   :vastaus [{:vastausid 1
                              :kysymysid 1
-                             :vastaustunnusid 1
+                             :vastaajaid 1
                              :vaihtoehto "kylla"}
                             {:vastausid 2
                              :kysymysid 1
-                             :vastaustunnusid 2
+                             :vastaajaid 2
                              :vaihtoehto "ei"}
                             {:vastausid 3
                              :kysymysid 2
-                             :vastaustunnusid 1
+                             :vastaajaid 1
                              :vaihtoehto "ei"}
                             {:vastausid 4
                              :kysymysid 2
-                             :vastaustunnusid 2
+                             :vastaajaid 2
                              :vaihtoehto "ei"}
                             {:vastausid 5
                              :kysymysid 3
-                             :vastaustunnusid 1
+                             :vastaajaid 1
                              :vapaateksti "Vapaa teksti 1"}
                             {:vastausid 6
                              :kysymysid 3
-                             :vastaustunnusid 2
+                             :vastaajaid 2
                              :vapaateksti "Vapaa teksti 2"}
                             {:vastausid 7
                              :kysymysid 4
-                             :vastaustunnusid 1
+                             :vastaajaid 1
                              :numerovalinta 1}
                             {:vastausid 8
                              :kysymysid 4
-                             :vastaustunnusid 2
+                             :vastaajaid 2
                              :numerovalinta 2}
                             {:vastausid 9
                              :kysymysid 5
-                             :vastaustunnusid 1
+                             :vastaajaid 1
                              :numerovalinta 1}
                             {:vastausid 10
                              :kysymysid 5
-                             :vastaustunnusid 2
+                             :vastaajaid 2
                              :numerovalinta 2}]}
         (avaa-aipal (kyselykertaraportti-sivu 1))
         (testing

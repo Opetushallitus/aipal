@@ -27,7 +27,8 @@
                        "kysely_kysymysryhma"
                        "kysely_kysymys"
                        "monivalintavaihtoehto"
-                       "vastaustunnus"
+                       "vastaajatunnus"
+                       "vastaaja"
                        "vastaus"])
 
 (defn tyhjenna-testidata!

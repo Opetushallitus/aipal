@@ -58,14 +58,14 @@
     (sql/fields :kyselykerta.kyselykertaid)
     (sql/where {:kyselykertaid kyselykertaid})
 
-    (sql/join :inner {:table :vastaustunnus}
+    (sql/join :inner {:table :vastaaja}
              (= :kyselykerta.kyselykertaid
-                :vastaustunnus.kyselykertaid))
-    (sql/fields :vastaustunnus.vastaustunnusid)
+                :vastaaja.kyselykertaid))
+    (sql/fields :vastaaja.vastaajaid)
 
     (sql/join :inner {:table :vastaus}
-              (= :vastaustunnus.vastaustunnusid
-                 :vastaus.vastaustunnusid))
+              (= :vastaaja.vastaajaid
+                 :vastaus.vastaajaid))
     (sql/fields :vastaus.vastausid
                 :vastaus.kysymysid
                 :vastaus.numerovalinta
