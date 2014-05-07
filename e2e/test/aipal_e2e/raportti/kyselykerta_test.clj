@@ -106,9 +106,13 @@
                                           {:kysymysid 5
                                            :jarjestys 2
                                            :teksti_fi "Muuta"}]
+                  :vastaajatunnus [{:vastaajatunnusid 1
+                                    :kyselykertaid 1}]
                   :vastaustunnus [{:vastaustunnusid 1
+                                   :vastaajatunnusid 1
                                    :kyselykertaid 1}
                                   {:vastaustunnusid 2
+                                   :vastaajatunnusid 1
                                    :kyselykertaid 1}]
                   :vastaus [{:vastausid 1
                              :kysymysid 1

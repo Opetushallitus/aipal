@@ -87,5 +87,6 @@
 (defentity kysely_kysymysryhma)
 (defentity kysely_kysymys)
 (defentity monivalintavaihtoehto)
+(defentity vastaajatunnus)
 (defentity vastaustunnus)
 (defentity vastaus)

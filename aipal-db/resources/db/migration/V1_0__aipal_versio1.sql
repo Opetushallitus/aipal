@@ -522,6 +522,14 @@ create trigger monivalintavaihtoehto_mu_update before update on monivalintavaiht
 create trigger monivalintavaihtoehto_cu_insert before insert on monivalintavaihtoehto for each row execute procedure update_creator() ;
 create trigger monivalintavaihtoehto_mu_insert before insert on monivalintavaihtoehto for each row execute procedure update_modifier() ;
 
+-- vastaajatunnus
+create trigger vastaajatunnus_update before update on vastaajatunnus for each row execute procedure update_stamp() ;
+create trigger vastaajatunnusl_insert before insert on vastaajatunnus for each row execute procedure update_created() ;
+create trigger vastaajatunnusm_insert before insert on vastaajatunnus for each row execute procedure update_stamp() ;
+create trigger vastaajatunnus_mu_update before update on vastaajatunnus for each row execute procedure update_modifier() ;
+create trigger vastaajatunnus_cu_insert before insert on vastaajatunnus for each row execute procedure update_creator() ;
+create trigger vastaajatunnus_mu_insert before insert on vastaajatunnus for each row execute procedure update_modifier() ;
+
 -- vastaustunnus
 create trigger vastaustunnus_update before update on vastaustunnus for each row execute procedure update_stamp() ;
 create trigger vastaustunnusl_insert before insert on vastaustunnus for each row execute procedure update_created() ;

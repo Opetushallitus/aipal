@@ -23,6 +23,7 @@
             [aipal-e2e.arkisto.kysymys :as kysymys]
             [aipal-e2e.arkisto.kysymysryhma :as kysymysryhma]
             [aipal-e2e.arkisto.monivalintavaihtoehto :as monivalintavaihtoehto]
+            [aipal-e2e.arkisto.vastaajatunnus :as vastaajatunnus]
             [aipal-e2e.arkisto.vastaustunnus :as vastaustunnus]
             [aipal-e2e.arkisto.vastaus :as vastaus]
             [aipal-e2e.tietokanta.yhteys :as yhteys]))
@@ -73,6 +74,13 @@
                                                 :teksti_fi (str "monivalintavaihtoehto " i)
                                                 :teksti_sv (str "monivalintavaihtoehto (sv) " i)})})
 
+(def ^:private vastaajatunnus-tiedot {:luo-fn vastaajatunnus/lisaa!
+                                      :poista-fn #(vastaajatunnus/poista! (:vastaajatunnusid %))
+                                      :default (for [i (iterate inc 1)]
+                                                 {:lukittu false
+                                                  :tunnusten_lkm 100
+                                                  :tunnus (str "testitunnus" i)})})
+
 (def ^:private vastaustunnus-tiedot {:luo-fn vastaustunnus/lisaa!
                                      :poista-fn #(vastaustunnus/poista! (:vastaustunnusid %))
                                      :default (for [i (iterate inc 1)]
@@ -91,6 +99,7 @@
                               :kysely-kysymys kysely-kysymys-tiedot
                               :kysely-kysymysryhma kysely-kysymysryhma-tiedot
                               :monivalintavaihtoehto monivalintavaihtoehto-tiedot
+                              :vastaajatunnus vastaajatunnus-tiedot
                               :vastaustunnus vastaustunnus-tiedot
                               :vastaus vastaus-tiedot})
 
@@ -102,6 +111,7 @@
                        :kysely-kysymysryhma
                        :kysely-kysymys
                        :monivalintavaihtoehto
+                       :vastaajatunnus
                        :vastaustunnus
                        :vastaus])
 
