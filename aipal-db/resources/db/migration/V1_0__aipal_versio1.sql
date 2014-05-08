@@ -259,6 +259,17 @@ IS
   ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT kysymys_lisatieto_PK PRIMARY KEY ( monivalintavaihtoehtoid ) ;
   ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_UN UNIQUE ( kysymysid , jarjestys ) ;
 
+CREATE TABLE rahoitusmuoto
+  (
+    rahoitusmuotoid   INTEGER NOT NULL ,
+    rahoitusmuoto     INTEGER ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE rahoitusmuoto ADD CONSTRAINT rahoitusmuoto_PK PRIMARY KEY ( rahoitusmuotoid ) ;
+
 CREATE TABLE vastaaja
   (
     vastaajaid        INTEGER NOT NULL ,
@@ -279,6 +290,7 @@ CREATE TABLE vastaajatunnus
   (
     vastaajatunnusid  INTEGER NOT NULL ,
     kyselykertaid     INTEGER NOT NULL ,
+    rahoitusmuotoid   INTEGER ,
     tunnus            VARCHAR (30) NOT NULL ,
     vastaajien_lkm    INTEGER NOT NULL ,
     lukittu           BOOLEAN DEFAULT false NOT NULL ,
@@ -401,6 +413,10 @@ ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kayttaja_FKv1 FOREIGN KEY ( 
 
 ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
+ALTER TABLE rahoitusmuoto ADD CONSTRAINT rahoitusmuoto_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE rahoitusmuoto ADD CONSTRAINT rahoitusmuoto_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
 ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -415,6 +431,8 @@ ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kayttaja_FKv1 FOREIGN K
 
 ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kyselykerta_FK FOREIGN KEY ( kyselykertaid ) REFERENCES kyselykerta ( kyselykertaid ) NOT DEFERRABLE ;
 
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_rahmuoto_FK FOREIGN KEY ( rahoitusmuotoid ) REFERENCES rahoitusmuoto ( rahoitusmuotoid ) NOT DEFERRABLE ;
+
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_jatkovastaus_FK FOREIGN KEY ( jatkovastausid ) REFERENCES jatkovastaus ( jatkovastausid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -424,7 +442,6 @@ ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FKv1 FOREIGN KEY ( muutettu_
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaaja_FK FOREIGN KEY ( vastaajaid ) REFERENCES vastaaja ( vastaajaid ) NOT DEFERRABLE ;
-
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
 values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
@@ -531,6 +548,14 @@ create trigger monivalintavaihtoehtom_insert before insert on monivalintavaihtoe
 create trigger monivalintavaihtoehto_mu_update before update on monivalintavaihtoehto for each row execute procedure update_modifier() ;
 create trigger monivalintavaihtoehto_cu_insert before insert on monivalintavaihtoehto for each row execute procedure update_creator() ;
 create trigger monivalintavaihtoehto_mu_insert before insert on monivalintavaihtoehto for each row execute procedure update_modifier() ;
+
+-- rahoitusmuoto
+create trigger rahoitusmuoto_update before update on rahoitusmuoto for each row execute procedure update_stamp() ;
+create trigger rahoitusmuotol_insert before insert on rahoitusmuoto for each row execute procedure update_created() ;
+create trigger rahoitusmuotom_insert before insert on rahoitusmuoto for each row execute procedure update_stamp() ;
+create trigger rahoitusmuoto_mu_update before update on rahoitusmuoto for each row execute procedure update_modifier() ;
+create trigger rahoitusmuoto_cu_insert before insert on rahoitusmuoto for each row execute procedure update_creator() ;
+create trigger rahoitusmuoto_mu_insert before insert on rahoitusmuoto for each row execute procedure update_modifier() ;
 
 -- vastaajatunnus
 create trigger vastaajatunnus_update before update on vastaajatunnus for each row execute procedure update_stamp() ;
