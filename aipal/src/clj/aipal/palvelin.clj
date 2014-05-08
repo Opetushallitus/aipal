@@ -29,6 +29,7 @@
 
             [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
             aipal.rest-api.i18n
+            aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.raportti.kyselykerta
             [aitu.infra.i18n :refer [wrap-locale]]
@@ -51,7 +52,8 @@
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
-    (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)))
+    (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
+    (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)))
 
 (defn ^:private wrap-set-db-user
   "Asettaa käyttäjän tietokantaistuntoon."

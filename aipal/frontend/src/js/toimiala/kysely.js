@@ -14,23 +14,20 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
+angular.module('toimiala.kysely', ['ngResource'])
+  .factory('Kysely', ['$resource', function($resource) {
+    var resource = $resource(null, null, {
+      haku: {
+        method: 'GET',
+        isArray: true,
+        url: 'api/kysely'
+      }
+    });
 
-  .config(['$routeProvider', function($routeProvider) {
-    $routeProvider
-      .when('/kyselyt', {
-        controller: 'KyselytController',
-        templateUrl: 'template/kysely/kyselyt.html'
-      });
-  }])
+    return {
+      hae: function(successCallback, errorCallback) {
+        return resource.haku({}, successCallback, errorCallback);
+      }
+    };
+  }]);
 
-  .controller('KyselytController', [
-    'Kysely', '$scope',
-    function(Kysely, $scope) {
-      $scope.kyselyt = Kysely.hae();
-    }
-  ])
-
-  .controller('KyselyController',
-    function() {}
-  );
