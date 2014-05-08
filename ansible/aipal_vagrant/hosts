@@ -1,0 +1,10 @@
+[oph_palvelu]
+192.168.50.62
+
+[oph_palvelu:vars]
+ansible_ssh_user = aipaladmin
+palvelu = aipal
+asennushakemisto = /data00/aipal
+sovelluksen_asetustiedosto = aipal.properties
+migraation_asetustiedosto = aipal-db.properties
+migraation_argumentit = --clear -t

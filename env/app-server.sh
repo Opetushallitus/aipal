@@ -32,7 +32,7 @@ useradd -r -s /bin/false tomcat
 
 # admin-käyttäjälle oikeudet ajaa rootina asennukseen tarvittavat komennot
 # ilman salasanaa
-echo "$admin_user ALL = NOPASSWD: /bin/cp * $install_dir, /bin/ln -sf * $install_jar, /bin/chown tomcat\:tomcat -R $install_dir, /sbin/service $system *" >> /etc/sudoers
+echo "$admin_user ALL = NOPASSWD: ALL" >> /etc/sudoers
 
 #init.d-skripti
 cp common/app-server/$system-init.d.sh /etc/init.d/$system

@@ -1,21 +1,21 @@
 #!/bin/bash
 set -eu
 
-REPO_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+if ! [[ $(ansible --version 2> /dev/null) == 'ansible 1.6' ]]
+then
+  echo 'Asenna Ansible 1.6: http://docs.ansible.com/intro_installation.html'
+  exit 1
+fi
+
+repo_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 set -x
 
-cd $REPO_PATH/aipal
+cd $repo_path/aipal
 ./build.sh
-aipal_jar=$REPO_PATH/aipal/target/aipal-standalone.jar
 
-cd $REPO_PATH/aipal-db
+cd $repo_path/aipal-db
 ./build.sh
-aipal_db_jar=$REPO_PATH/aipal-db/target/aipal-db-standalone.jar
 
-cd $REPO_PATH/aipal
-
-export AIPAL_DB_USER=aipal_user
-export AIPAL_SSH_KEY=$REPO_PATH/env/local/ssh/dev_id_rsa
-chmod go= $AIPAL_SSH_KEY
-./deploy.sh -c -t $aipal_jar $aipal_db_jar aipaladmin@192.168.50.62
+cd $repo_path/ansible
+ansible-playbook -v -i aipal_vagrant/hosts yhteiset/julkaise_paikallinen_versio.yml -e "sovellus_jar=\"$repo_path/aipal/target/aipal-standalone.jar\" migraatio_jar=\"$repo_path/aipal-db/target/aipal-db-standalone.jar\""
