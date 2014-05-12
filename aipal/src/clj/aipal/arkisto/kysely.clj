@@ -28,3 +28,14 @@
     (sql/order :kysely.kyselyid :ASC)
 
     sql/exec))
+
+(defn hae
+  "Hakee kyselyn tiedot pääavaimella"
+  [kyselyid]
+  (->
+    (sql/select* kysely)
+    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm :kysely.selite_fi :kysely.selite_sv)
+    (sql/where (= :kyselyid kyselyid))
+
+    sql/exec
+    first))

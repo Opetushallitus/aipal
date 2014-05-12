@@ -21,4 +21,7 @@
 
 (c/defroutes reitit
   (c/GET "/" [] (db/transaction
-                  (json-response (kysely/hae-kaikki)))))
+                  (json-response (kysely/hae-kaikki))))
+
+  (c/GET "/:kyselyid" [kyselyid] (db/transaction
+                                   (json-response (kysely/hae (Integer/parseInt kyselyid))))))

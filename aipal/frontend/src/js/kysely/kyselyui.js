@@ -21,6 +21,10 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
       .when('/kyselyt', {
         controller: 'KyselytController',
         templateUrl: 'template/kysely/kyselyt.html'
+      })
+      .when('/kysely/:kyselyid', {
+        controller: 'KyselyController',
+        templateUrl: 'template/kysely/kysely.html'
       });
   }])
 
@@ -31,6 +35,9 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
     }
   ])
 
-  .controller('KyselyController',
-    function() {}
-  );
+  .controller('KyselyController', [
+    'Kysely', '$routeParams', '$scope',
+    function(Kysely, $routeParams, $scope) {
+      $scope.kysely = Kysely.haeId($routeParams.kyselyid);
+    }
+  ]);
