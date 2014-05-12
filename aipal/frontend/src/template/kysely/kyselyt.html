@@ -7,5 +7,12 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
     <a ng-href="#/kysely/{{kysely.kyselyid}}">
       {{kysely.kyselyid}} {{kysely.nimi_fi}}
     </a>
+    <ul>
+      <li ng-repeat="kyselykerta in kysely.kyselykerta">
+        <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
+          Kyselykerta: {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
+        </a>
+      </li>
+    </ul>
   </li>
 </ul>

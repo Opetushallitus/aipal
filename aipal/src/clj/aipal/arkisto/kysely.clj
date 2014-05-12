@@ -13,18 +13,18 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kysely
-  (:require [korma.core :as sql]))
+  (:require [korma.core :as sql])
+  (:use [aitu.integraatio.sql.korma]))
 
 (defn hae-kaikki
-  "Hae kaikki kyselyt, joissa on kysymyksiä"
+  "Hae kaikki kyselyt"
   []
   (->
-    (sql/select* :kysely)
-    (sql/modifier "DISTINCT")
+    (sql/select* kysely)
     (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv)
-    (sql/order :kysely.kyselyid :ASC)
 
-    (sql/where (sql/sqlfn :exists (sql/subselect :kysely_kysymys (sql/fields (sql/raw "1"))
-                                    (sql/where (= :kysely.kyselyid :kysely_kysymys.kyselyid)))))
+    (sql/with kyselykerta
+       (sql/fields :kyselykertaid :nimi_fi :nimi_sv))
+    (sql/order :kysely.kyselyid :ASC)
 
     sql/exec))

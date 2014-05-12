@@ -104,3 +104,9 @@
   []
   (first
     (sql/select validationquery)))
+
+(defentity kyselykerta
+  (sql/pk :kyselykertaid))
+(defentity kysely
+  (sql/pk :kyselyid)
+  (sql/has-many kyselykerta {:fk :kyselykertaid}))
