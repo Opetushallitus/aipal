@@ -18,6 +18,7 @@
   "strict": true,
   "trailing": true,
   "smarttabs": true,
+  "jquery": true,
   "globals": {
     "after": false,
     "afterEach": false,
@@ -31,6 +32,9 @@
     "it": false,
     "jasmine": false,
     "spyOn": false
-  }
+  },
+  "predef": [
+    "_"
+  ]
 }
 
