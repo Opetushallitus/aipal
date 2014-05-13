@@ -21,10 +21,10 @@
   []
   (->
     (sql/select* kysely)
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv)
+    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm)
 
     (sql/with kyselykerta
-       (sql/fields :kyselykertaid :nimi_fi :nimi_sv))
+       (sql/fields :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm))
     (sql/order :kysely.kyselyid :ASC)
 
     sql/exec))
