@@ -8,6 +8,7 @@
 ansible_ssh_user = aipaladmin
 palvelu = aipal
 asennushakemisto = /data00/aipal
+lokituksen_asetustiedosto = logback.xml
 sovelluksen_asetustiedosto = aipal.properties
 migraation_asetustiedosto = aipal-db.properties
 migraation_argumentit = --clear -t
