@@ -15,7 +15,7 @@ tietokannan_paakayttajan_salasana = aipal-adm
 [oph_palvelu:vars]
 palvelu = aipal
 asennushakemisto = /data00/aipal
-lokituksen_asetustiedosto = ../oletusasetukset/logback.xml
-sovelluksen_asetustiedosto = ../oletusasetukset/aipal.properties
-migraation_asetustiedosto = ../oletusasetukset/aipal-db.properties
+lokituksen_asetustiedosto = logback.xml
+sovelluksen_asetustiedosto = aipal.properties
+migraation_asetustiedosto = aipal-db.properties
 migraation_argumentit = --clear -t
