@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
     if File.directory?("../../aipal-konversio")
       db.vm.synced_folder "../../aipal-konversio", "/dumps"
     end
-    db.vm.provision "shell", inline: "cd /env && ./db-server.sh local 192.168.50.62"
+    db.vm.provision "shell", inline: "cd /env && ./db-server.sh local 192.168.50.62 local/ssh/dev_id_rsa.pub"
 
     # local port 3456 -> vm port 5432
     db.vm.network "forwarded_port", host: 3456, guest: 5432

@@ -4,11 +4,18 @@
 [oph_palvelu]
 192.168.50.62
 
-[oph_palvelu:vars]
+[all:vars]
 ansible_ssh_user = aipaladmin
+tietokanta = aipal
+tietokannan_peruskayttaja = aipal_user
+tietokannan_peruskayttajan_salasana = aipal
+tietokannan_paakayttaja = aipal_adm
+tietokannan_paakayttajan_salasana = aipal-adm
+
+[oph_palvelu:vars]
 palvelu = aipal
 asennushakemisto = /data00/aipal
-lokituksen_asetustiedosto = logback.xml
-sovelluksen_asetustiedosto = aipal.properties
-migraation_asetustiedosto = aipal-db.properties
+lokituksen_asetustiedosto = ../oletusasetukset/logback.xml
+sovelluksen_asetustiedosto = ../oletusasetukset/aipal.properties
+migraation_asetustiedosto = ../oletusasetukset/aipal-db.properties
 migraation_argumentit = --clear -t
