@@ -55,6 +55,13 @@ describe('Palvelu: jakaumaKaavioApurit', function () {
 
   });
 
+  describe('lukumäärät yhteensä:', function() {
+    it('pitäisi laskea jakauman lukumäärien summa', function () {
+      var summa = jakaumaKaavioApurit.lukumaaratYhteensa([{lukumaara: 1}, {lukumaara: 2}]);
+      expect(summa).toBe(3);
+    });
+  });
+
   describe('palkinPituus:', function() {
     var palkinPituudeksi = function (kuvaus, lukumaara, jakauma, odotettuTulos) {
       it('pitäisi antaa ' + kuvaus, function () {

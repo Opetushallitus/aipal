@@ -9,14 +9,49 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
       jakauma="kysymys.jakauma">
     </jakauma-kaavio>
 
-    <table class="report-table" ng-if="kysymys.vastaustyyppi !== 'vapaateksti'">
+    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'asteikko'">
       <thead>
-        <tr><th>&nbsp;</th><th>n</th></tr>
+        <tr>
+          <th>&nbsp;</th>
+          <th class="report-table-amount-field">n</th>
+        </tr>
       </thead>
       <tbody>
         <tr ng-repeat="alkio in kysymys.jakauma">
           <td>{{alkio.vaihtoehto}}</td>
-          <td>{{alkio.lukumaara}}</td>
+          <td class="report-table-amount-field">{{alkio.lukumaara}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta'">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th class="report-table-amount-field">n</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="alkio in kysymys.jakauma">
+          <td>{{alkio.vaihtoehto}}</td>
+          <td class="report-table-amount-field">{{alkio.lukumaara}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'monivalinta'">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th class="report-table-percentage-field">Vast%</th>
+          <th class="report-table-amount-field">n</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="alkio in kysymys.jakauma">
+          <td>{{alkio.vaihtoehto}}</td>
+          <td class="report-table-percentage-field">{{alkio.osuus}}%</td>
+          <td class="report-table-amount-field">{{alkio.lukumaara}}</td>
         </tr>
       </tbody>
     </table>

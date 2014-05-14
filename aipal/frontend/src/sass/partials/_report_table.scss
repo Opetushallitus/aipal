@@ -6,7 +6,7 @@ table.report-table {
   border: 1px solid $border-color;
   border-collapse: collapse;
   text-align: left;
-  width: 66%;
+  width: 60%;
 
   thead tr {
     background: $background-color;
@@ -15,7 +15,18 @@ table.report-table {
       border: 1px solid $border-color;
       font-weight: normal;
       padding: $marginM $marginM;
+      text-align: center;
       vertical-align: center;
+    }
+
+    th:first-child {
+        max-width: 80%;
+        width: 80%;
+    }
+
+    th:not(:first-child) {
+        max-width: 10%;
+        width: 10%;
     }
   }
 
@@ -27,5 +38,16 @@ table.report-table {
       padding: $marginM $marginM;
       vertical-align: center;
     }
+  }
+
+  .report-table-percentage-field {
+      border-width: 1px 0px 1px 1px;
+      text-align: right;
+  }
+
+  .report-table-amount-field {
+      border-width: 1px 1px 1px 0px;
+      padding: $marginM $marginL $marginM $marginM;
+      text-align: right;
   }
 }

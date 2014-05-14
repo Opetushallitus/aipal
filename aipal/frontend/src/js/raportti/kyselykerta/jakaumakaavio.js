@@ -32,6 +32,11 @@ angular.module('raportti.kyselykerta.jakaumakaavio', [])
   .factory('jakaumaKaavioApurit', [function() {
     var varit = ['#43b1d5', '#ffad33', '#d633ad', '#6cc555'];
 
+    var lukumaaratYhteensa = function (jakauma) {
+      var lukumaarat = _.pluck(jakauma, 'lukumaara');
+      return _.reduce(lukumaarat, function (sum, n) {return sum + n;});
+    };
+
     return {
       maksimi: function (jakauma) {
         var lukumaarat = _.pluck(jakauma, 'lukumaara');
@@ -44,9 +49,10 @@ angular.module('raportti.kyselykerta.jakaumakaavio', [])
         return 300 * _.max(pituudet) / 40 + 10;
       },
 
+      lukumaaratYhteensa: lukumaaratYhteensa,
+
       palkinPituus: function (lukumaara, jakauma) {
-        var lukumaarat = _.pluck(jakauma, 'lukumaara');
-        var yhteensa = _.reduce(lukumaarat, function (sum, n) {return sum + n;});
+        var yhteensa = lukumaaratYhteensa(jakauma);
         if (Math.abs(yhteensa) > 0.01) {
           return 480 * (lukumaara / yhteensa);
         } else {

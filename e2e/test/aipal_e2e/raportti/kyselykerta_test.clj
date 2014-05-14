@@ -51,6 +51,9 @@
 (defn vaihtoehdot-kysymykselle [kysymys-elementti]
   (hae-jakauman-sarake-kysymykselle "alkio.vaihtoehto" kysymys-elementti))
 
+(defn osuudet-kysymykselle [kysymys-elementti]
+  (hae-jakauman-sarake-kysymykselle "alkio.osuus" kysymys-elementti))
+
 (defn lukumaarat-kysymykselle [kysymys-elementti]
   (hae-jakauman-sarake-kysymykselle "alkio.lukumaara" kysymys-elementti))
 
@@ -186,6 +189,7 @@
           (let [kysymys (nth (kysymykset) 4)]
             (is (= (kysymyksen-teksti kysymys) "Kysymys 5"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Jotain" "Muuta"]))
+            (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
             (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
             (is (= (count (hae-kaavio-kysymykselle kysymys)) 1))))
         (testing

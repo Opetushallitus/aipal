@@ -14,6 +14,11 @@
     ng-attr-y="{{40*jakauma.length + 20}}">
     {{otsikko.teksti}}
   </text>
+  <text class="jakauma-kaavio-viivan-otsikko"
+    ng-attr-x="{{otsikoilleTilaa(jakauma) +  513}}"
+    ng-attr-y="{{40*jakauma.length + 20}}">
+    ({{lukumaaratYhteensa(jakauma)}})
+  </text>
 
   <text ng-repeat-start="data in jakauma"
     class="jakauma-kaavio-otsikko"
@@ -30,7 +35,7 @@
   <text ng-repeat-end
     ng-attr-x="{{otsikoilleTilaa(jakauma) + palkinPituus(data.lukumaara, jakauma) + 10}}"
     ng-attr-y="{{40 * $index + 24}}">
-    ({{data.lukumaara}})
+    {{data.osuus}}% ({{data.lukumaara}})
   </text>
 </svg>
 

@@ -131,12 +131,23 @@
     (hae-monivalintavaihtoehdot (:kysymysid kysymys))
     (sort-by :jarjestys)))
 
+(defn prosentteina
+  [osuus]
+  (Math/round (double (* osuus 100))))
+
 (defn muodosta-monivalinta-jakauman-esitys
   [vaihtoehdot jakauma]
-  (map (fn [vaihtoehto] {:vaihtoehto (:teksti_fi vaihtoehto)
-                         :lukumaara (or (jakauma (:jarjestys vaihtoehto))
-                                        0)})
-       vaihtoehdot))
+  (let [yhteensa (reduce + (vals jakauma))]
+    (map (fn [vaihtoehto]
+           (let [lukumaara (or (jakauma (:jarjestys vaihtoehto))
+                               0)
+                 osuus (if (> yhteensa 0)
+                         (/ lukumaara yhteensa)
+                         0)]
+             {:vaihtoehto (:teksti_fi vaihtoehto)
+              :lukumaara lukumaara
+              :osuus (prosentteina osuus)}))
+         vaihtoehdot)))
 
 (defn ^:private lisaa-asteikon-jakauma
   [kysymys vastaukset]

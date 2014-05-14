@@ -48,24 +48,36 @@
         (testing
           "valitsee oikean funktion:"
           (are [kuvaus kysymys odotettu-tulos]
-               (is (= (kysymyksen-kasittelija kysymys) odotettu-tulos))
+               (is (= (kysymyksen-kasittelija kysymys) odotettu-tulos) kuvaus)
                "asteikko" {:vastaustyyppi "asteikko"} lisaa-asteikon-jakauma
                "kyllä/ei valinta" {:vastaustyyppi "kylla_ei_valinta"} lisaa-vaihtoehtojen-jakauma
                "monivalinta" {:vastaustyyppi "monivalinta"} lisaa-monivalinnan-jakauma
                "vapaateksti" {:vastaustyyppi "vapaateksti"} lisaa-vapaatekstit))))))
+
+(deftest prosentteina-test
+  (testing
+    "prosentteina:"
+    (are [kuvaus osuus odotettu-tulos]
+         (is (= (prosentteina osuus) odotettu-tulos) kuvaus)
+         "nolla" 0 0
+         "murtoluku" 1/3 33
+         "pyöristettävä alaspäin" 0.333 33
+         "puolet, pyöristettävä ylöspäin" 0.335 34
+         "pyöristettävä ylöspäin" 0.336 34
+         "yksi" 1 100)))
 
 (deftest muodosta-monivalinta-jakauman-esitys-test
   (testing
     "muodosta monivalintajakauman esitys:"
     (let [vaihtoehdot [{:jarjestys 1 :teksti_fi "vaihtoehto 1"}
                        {:jarjestys 2 :teksti_fi "vaihtoehto 2"}]
-          esitys (fn [lukumaara-1 lukumaara-2]
-                   [{:vaihtoehto "vaihtoehto 1" :lukumaara lukumaara-1}
-                    {:vaihtoehto "vaihtoehto 2" :lukumaara lukumaara-2}])]
+          esitys (fn [vaihtoehto-1 vaihtoehto-2]
+                   [(merge {:vaihtoehto "vaihtoehto 1"} vaihtoehto-1)
+                    (merge {:vaihtoehto "vaihtoehto 2"} vaihtoehto-2)])]
       (are [kuvaus jakauma odotettu-tulos]
-           (is (= (muodosta-monivalinta-jakauman-esitys vaihtoehdot jakauma) odotettu-tulos))
-           "ei vastauksia" {} (esitys 0 0)
-           "yksi vastaus, vaihtoehto 1" {1 1} (esitys 1 0)
-           "yksi vastaus, vaihtoehto 2" {2 1} (esitys 0 1)
-           "monta vastausta, sama vaihtoehto" {1 2} (esitys 2 0)
-           "monta vastausta, eri vaihtoehto" {1 1 2 1} (esitys 1 1)))))
+           (is (= (muodosta-monivalinta-jakauman-esitys vaihtoehdot jakauma) odotettu-tulos) kuvaus)
+           "ei vastauksia" {} (esitys {:lukumaara 0 :osuus 0} {:lukumaara 0 :osuus 0})
+           "yksi vastaus, vaihtoehto 1" {1 1} (esitys {:lukumaara 1 :osuus 100} {:lukumaara 0 :osuus 0})
+           "yksi vastaus, vaihtoehto 2" {2 1} (esitys {:lukumaara 0 :osuus 0} {:lukumaara 1 :osuus 100})
+           "monta vastausta, sama vaihtoehto" {1 2} (esitys {:lukumaara 2 :osuus 100} {:lukumaara 0 :osuus 0})
+           "monta vastausta, eri vaihtoehto" {1 1 2 1} (esitys {:lukumaara 1 :osuus 50} {:lukumaara 1 :osuus 50})))))
