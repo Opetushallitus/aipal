@@ -9,7 +9,10 @@ fi
 
 repo_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
-ansible-playbook -i $repo_path/ansible/aipal_vagrant/hosts $repo_path/ansible/yhteiset/konfiguroi_tietokanta.yml
+cd $repo_path/ansible
+chmod 600 yhteiset/dev_id_rsa
+ssh-add yhteiset/dev_id_rsa
+ansible-playbook -i aipal_vagrant/hosts yhteiset/konfiguroi_tietokanta.yml
 
 set -x
 
