@@ -4,11 +4,6 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
   <p>
     <h3>{{kysymys.kysymys_fi}}</h3>
 
-    <jakauma-kaavio
-      ng-if="kysymys.vastaustyyppi === 'monivalinta'"
-      jakauma="kysymys.jakauma">
-    </jakauma-kaavio>
-
     <table class="report-table" ng-if="kysymys.vastaustyyppi === 'asteikko'">
       <thead>
         <tr>
@@ -24,22 +19,17 @@ Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
       </tbody>
     </table>
 
-    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta'">
-      <thead>
-        <tr>
-          <th>&nbsp;</th>
-          <th class="report-table-amount-field">n</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="alkio in kysymys.jakauma">
-          <td>{{alkio.vaihtoehto}}</td>
-          <td class="report-table-amount-field">{{alkio.lukumaara}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <jakauma-kaavio
+      ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta'"
+      jakauma="kysymys.jakauma">
+    </jakauma-kaavio>
 
-    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'monivalinta'">
+    <jakauma-kaavio
+      ng-if="kysymys.vastaustyyppi === 'monivalinta'"
+      jakauma="kysymys.jakauma">
+    </jakauma-kaavio>
+
+    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'">
       <thead>
         <tr>
           <th>&nbsp;</th>

@@ -118,12 +118,27 @@
    {:vaihtoehto "Erittäin paljon"
     :lukumaara (jakauma 5)}])
 
-(defn ^:private muodosta-kylla-ei-jakauman-esitys
+(defn ^:private laske-osuus
+  [lukumaara yhteensa]
+  (if (> yhteensa 0)
+    (/ lukumaara yhteensa)
+    0))
+
+(defn prosentteina
+  [osuus]
+  (Math/round (double (* osuus 100))))
+
+(defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]
-  [{:vaihtoehto "kyllä"
-    :lukumaara (:kylla jakauma)}
-   {:vaihtoehto "ei"
-    :lukumaara (:ei jakauma)}])
+  (let [yhteensa (+ (:kylla jakauma) (:ei jakauma))]
+    [{:vaihtoehto "Kyllä"
+      :lukumaara (:kylla jakauma)
+      :osuus (prosentteina
+               (laske-osuus (:kylla jakauma) yhteensa))}
+     {:vaihtoehto "Ei"
+      :lukumaara (:ei jakauma)
+      :osuus (prosentteina
+               (laske-osuus (:ei jakauma) yhteensa))}]))
 
 (defn ^:private muodosta-monivalintavaihtoehdot
   [kysymys]
@@ -131,19 +146,13 @@
     (hae-monivalintavaihtoehdot (:kysymysid kysymys))
     (sort-by :jarjestys)))
 
-(defn prosentteina
-  [osuus]
-  (Math/round (double (* osuus 100))))
-
 (defn muodosta-monivalinta-jakauman-esitys
   [vaihtoehdot jakauma]
   (let [yhteensa (reduce + (vals jakauma))]
     (map (fn [vaihtoehto]
            (let [lukumaara (or (jakauma (:jarjestys vaihtoehto))
                                0)
-                 osuus (if (> yhteensa 0)
-                         (/ lukumaara yhteensa)
-                         0)]
+                 osuus (laske-osuus lukumaara yhteensa)]
              {:vaihtoehto (:teksti_fi vaihtoehto)
               :lukumaara lukumaara
               :osuus (prosentteina osuus)}))

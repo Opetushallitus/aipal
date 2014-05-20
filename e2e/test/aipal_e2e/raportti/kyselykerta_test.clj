@@ -165,14 +165,18 @@
           "ensimmäisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]
             (is (= (kysymyksen-teksti kysymys) "Kysymys 1"))
-            (is (= (vaihtoehdot-kysymykselle kysymys) ["kyllä" "ei"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))))
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
+            (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
+            (is (= (count (hae-kaavio-kysymykselle kysymys)) 1))))
         (testing
           "toisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 1)]
             (is (= (kysymyksen-teksti kysymys) "Kysymys 2"))
-            (is (= (vaihtoehdot-kysymykselle kysymys) ["kyllä" "ei"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))))
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
+            (is (= (osuudet-kysymykselle kysymys) ["0%" "100%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))
+            (is (= (count (hae-kaavio-kysymykselle kysymys)) 1))))
         (testing
           "avoimen kysymyksen vastaukset"
           (let [kysymys (nth (kysymykset) 2)]

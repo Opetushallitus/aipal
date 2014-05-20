@@ -66,18 +66,40 @@
          "pyöristettävä ylöspäin" 0.336 34
          "yksi" 1 100)))
 
+(deftest muodosta-kylla-ei-jakauman-esitys-test
+  (testing
+    "muodosta kyllä/ei jakauman esitys:"
+    (let [esitys (fn [kylla-lkm kylla-osuus ei-lkm ei-osuus]
+                   [{:vaihtoehto "Kyllä"
+                     :lukumaara kylla-lkm
+                     :osuus kylla-osuus}
+                    {:vaihtoehto "Ei"
+                     :lukumaara ei-lkm
+                     :osuus ei-osuus}])]
+      (are [kuvaus jakauma odotettu-tulos]
+           (is (= (muodosta-kylla-ei-jakauman-esitys jakauma) odotettu-tulos) kuvaus)
+           "ei vastauksia" {:kylla 0 :ei 0} (esitys 0 0 0 0)
+           "yksi vastaus: kyllä" {:kylla 1 :ei 0} (esitys 1 100 0 0)
+           "yksi vastaus: ei" {:kylla 0 :ei 1} (esitys 0 0 1 100)
+           "monta vastausta, sama vaihtoehto" {:kylla 2 :ei 0} (esitys 2 100 0 0)
+           "monta vastausta, eri vaihtoehto" {:kylla 1 :ei 1} (esitys 1 50 1 50)))))
+
 (deftest muodosta-monivalinta-jakauman-esitys-test
   (testing
     "muodosta monivalintajakauman esitys:"
     (let [vaihtoehdot [{:jarjestys 1 :teksti_fi "vaihtoehto 1"}
                        {:jarjestys 2 :teksti_fi "vaihtoehto 2"}]
-          esitys (fn [vaihtoehto-1 vaihtoehto-2]
-                   [(merge {:vaihtoehto "vaihtoehto 1"} vaihtoehto-1)
-                    (merge {:vaihtoehto "vaihtoehto 2"} vaihtoehto-2)])]
+          esitys (fn [lukumaara-1 osuus-1 lukumaara-2 osuus-2]
+                   [{:vaihtoehto "vaihtoehto 1"
+                     :lukumaara lukumaara-1
+                     :osuus osuus-1}
+                    {:vaihtoehto "vaihtoehto 2"
+                     :lukumaara lukumaara-2
+                     :osuus osuus-2}])]
       (are [kuvaus jakauma odotettu-tulos]
            (is (= (muodosta-monivalinta-jakauman-esitys vaihtoehdot jakauma) odotettu-tulos) kuvaus)
-           "ei vastauksia" {} (esitys {:lukumaara 0 :osuus 0} {:lukumaara 0 :osuus 0})
-           "yksi vastaus, vaihtoehto 1" {1 1} (esitys {:lukumaara 1 :osuus 100} {:lukumaara 0 :osuus 0})
-           "yksi vastaus, vaihtoehto 2" {2 1} (esitys {:lukumaara 0 :osuus 0} {:lukumaara 1 :osuus 100})
-           "monta vastausta, sama vaihtoehto" {1 2} (esitys {:lukumaara 2 :osuus 100} {:lukumaara 0 :osuus 0})
-           "monta vastausta, eri vaihtoehto" {1 1 2 1} (esitys {:lukumaara 1 :osuus 50} {:lukumaara 1 :osuus 50})))))
+           "ei vastauksia" {} (esitys 0 0 0 0)
+           "yksi vastaus, vaihtoehto 1" {1 1} (esitys 1 100 0 0)
+           "yksi vastaus, vaihtoehto 2" {2 1} (esitys 0 0 1 100)
+           "monta vastausta, sama vaihtoehto" {1 2} (esitys 2 100 0 0)
+           "monta vastausta, eri vaihtoehto" {1 1 2 1} (esitys 1 50 1 50)))))
