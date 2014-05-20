@@ -4,7 +4,8 @@
   <!-- mustache
   {{=[[ ]]=}}
   <script>
-    var hakuBaseUrl = '[[base-url]]'
+    var hakuBaseUrl = '[[base-url]]',
+      aipalLogoutUrl = '[[logout-url]]';
   </script>
   end mustache -->
   <title></title>
@@ -15,6 +16,7 @@
   <div>
     <nav class="main-nav">
       <div class="app-wrapper ">
+        <div id="logout" ng-click="varmistaLogout()"><span>X</span></div>
         <kielen-vaihto></kielen-vaihto>
         <div id="current-user"><a href="">Raaka Arska</a></div>
         <ul navigaatio>

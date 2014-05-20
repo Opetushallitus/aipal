@@ -26,9 +26,14 @@ angular.module('aipal', [
     'ngRoute'
   ])
 
-  .controller('AipalController', ['$scope', 'i18n', function($scope, i18n){
+  .controller('AipalController', ['$scope', '$window', 'i18n', function($scope, $window, i18n){
     $scope.i18n = i18n;
-    $scope.baseUrl = _.has(window, 'hakuBaseUrl') ?  window.hakuBaseUrl : '';
+    $scope.baseUrl = _.has($window, 'hakuBaseUrl') ?  $window.hakuBaseUrl : '';
+    $scope.varmistaLogout = function() {
+      if(!_.isEmpty($window.aipalLogoutUrl) && $window.confirm(i18n.yleiset['haluatko-kirjautua-ulos'])) {
+        $window.location = $window.aipalLogoutUrl;
+      }
+    };
   }])
 
   .constant('asetukset', {
