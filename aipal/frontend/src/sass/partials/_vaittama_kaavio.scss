@@ -1,0 +1,25 @@
+.vaittama-kaavio {
+  fill: $darker-gray;
+  overflow: visible !important;
+
+  .vaittama-kaavio-palkin-arvo {
+    text-anchor: middle;
+  }
+
+  .vaittama-kaavio-vaihtoehto {
+    text-anchor: middle;
+  }
+
+  .vaittama-kaavio-viiva {
+    stroke: $lighter-gray;
+  }
+
+  .vaittama-kaavio-viivan-otsikko {
+    fill: $lighter-gray;
+    text-anchor: end;
+  }
+
+  .vaittama-kaavio-yhteensa {
+    fill: $lighter-gray;
+  }
+}

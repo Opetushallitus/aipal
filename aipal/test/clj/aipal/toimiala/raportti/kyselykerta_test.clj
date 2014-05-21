@@ -66,6 +66,32 @@
          "pyöristettävä ylöspäin" 0.336 34
          "yksi" 1 100)))
 
+(deftest muodosta-asteikko-jakauman-esitys-test
+  (testing
+    "muodosta asteikko-jakauman esitys:"
+    (let [esitys (fn [lkm-1 osuus-1 lkm-2 osuus-2 lkm-3 osuus-3 lkm-4 osuus-4 lkm-5 osuus-5]
+                   [{:vaihtoehto "Ei / en lainkaan"
+                     :lukumaara lkm-1
+                     :osuus osuus-1}
+                    {:vaihtoehto "Hieman"
+                     :lukumaara lkm-2
+                     :osuus osuus-2}
+                    {:vaihtoehto "Jonkin verran"
+                     :lukumaara lkm-3
+                     :osuus osuus-3}
+                    {:vaihtoehto "Melko paljon"
+                     :lukumaara lkm-4
+                     :osuus osuus-4}
+                    {:vaihtoehto "Erittäin paljon"
+                     :lukumaara lkm-5
+                     :osuus osuus-5}])]
+      (are [kuvaus jakauma odotettu-tulos]
+           (is (= (muodosta-asteikko-jakauman-esitys jakauma) odotettu-tulos) kuvaus)
+           "ei vastauksia" {1 0 2 0 3 0 4 0 5 0} (esitys 0 0 0 0 0 0 0 0 0 0)
+           "yksi vastaus" {1 1 2 0 3 0 4 0 5 0} (esitys 1 100 0 0 0 0 0 0 0 0)
+           "monta vastausta, sama vaihtoehto" {1 2 2 0 3 0 4 0 5 0} (esitys 2 100 0 0 0 0 0 0 0 0)
+           "monta vastausta, eri vaihtoehto" {1 1 2 1 3 0 4 0 5 0} (esitys 1 50 1 50 0 0 0 0 0 0)))))
+
 (deftest muodosta-kylla-ei-jakauman-esitys-test
   (testing
     "muodosta kyllä/ei jakauman esitys:"

@@ -105,19 +105,6 @@
           {:kylla 0 :ei 0}
           vastaukset))
 
-(defn ^:private muodosta-asteikko-jakauman-esitys
-  [jakauma]
-  [{:vaihtoehto "En / ei lainkaan"
-    :lukumaara (jakauma 1)}
-   {:vaihtoehto "Hieman"
-    :lukumaara (jakauma 2)}
-   {:vaihtoehto "Jonkin verran"
-    :lukumaara (jakauma 3)}
-   {:vaihtoehto "Melko paljon"
-    :lukumaara (jakauma 4)}
-   {:vaihtoehto "Erittäin paljon"
-    :lukumaara (jakauma 5)}])
-
 (defn ^:private laske-osuus
   [lukumaara yhteensa]
   (if (> yhteensa 0)
@@ -127,6 +114,20 @@
 (defn prosentteina
   [osuus]
   (Math/round (double (* osuus 100))))
+
+(defn muodosta-asteikko-jakauman-esitys
+  [jakauma]
+  (let [yhteensa (reduce + (vals jakauma))
+        tiedot-vaihtoehdolle (fn [kuvaus lukumaara]
+                               {:vaihtoehto kuvaus
+                                :lukumaara lukumaara
+                                :osuus (prosentteina
+                                         (laske-osuus lukumaara yhteensa))})]
+    [(tiedot-vaihtoehdolle "Ei / en lainkaan" (jakauma 1))
+     (tiedot-vaihtoehdolle "Hieman" (jakauma 2))
+     (tiedot-vaihtoehdolle "Jonkin verran" (jakauma 3))
+     (tiedot-vaihtoehdolle "Melko paljon" (jakauma 4))
+     (tiedot-vaihtoehdolle "Erittäin paljon" (jakauma 5))]))
 
 (defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]

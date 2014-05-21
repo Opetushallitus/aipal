@@ -1,0 +1,50 @@
+<svg class="vaittama-kaavio"
+  width="900" height="360" viewBox="-50 -10 850 350">
+
+  <line ng-repeat="osa in [0, 0.2, 0.4, 0.6, 0.8, 1.0]"
+    class="vaittama-kaavio-viiva"
+    ng-attr-x1="{{0}}"
+    ng-attr-y1="{{300 * (1 - osa)}}"
+    ng-attr-x2="{{516}}"
+    ng-attr-y2="{{300 * (1 - osa)}}" />
+  <line class="vaittama-kaavio-viiva"
+    ng-attr-x1="{{0}}"
+    ng-attr-y1="{{0}}"
+    ng-attr-x2="{{0}}"
+    ng-attr-y2="{{300}}" />
+  <line class="vaittama-kaavio-viiva"
+    ng-attr-x1="{{516}}"
+    ng-attr-y1="{{0}}"
+    ng-attr-x2="{{516}}"
+    ng-attr-y2="{{300}}" />
+
+  <text ng-repeat="otsikko in otsikot"
+    class="vaittama-kaavio-viivan-otsikko"
+    ng-attr-x="{{-10}}"
+    ng-attr-y="{{300 * (1 - otsikko.x) + 5}}">
+    {{otsikko.teksti}}
+  </text>
+  <text class="vaittama-kaavio-yhteensa"
+    ng-attr-x="{{516 + 10}}"
+    ng-attr-y="{{5}}">
+    ({{lukumaaratYhteensa(jakauma)}})
+  </text>
+  <text ng-repeat-start="data in jakauma"
+    class="vaittama-kaavio-vaihtoehto"
+    ng-attr-x="{{(2.75*36 * $index + 42) + 0.5*36}}"
+    ng-attr-y="{{320}}">
+    {{data.vaihtoehto}}
+  </text>
+
+  <rect ng-attr-width="{{36}}"
+    ng-attr-height="{{palkinPituus(data.lukumaara, jakauma)}}"
+    ng-attr-x="{{(2.75*36 * $index + 42)}}"
+    ng-attr-y="{{300 - palkinPituus(data.lukumaara, jakauma)}}"
+    ng-attr-fill="{{palkinVari($index)}}" />
+  <text ng-repeat-end
+    class="vaittama-kaavio-palkin-arvo"
+    ng-attr-x="{{(2.75*36 * $index + 42) + 0.5*36}}"
+    ng-attr-y="{{(300 - palkinPituus(data.lukumaara, jakauma)) - 10}}">
+    {{data.osuus}}% ({{data.lukumaara}})
+  </text>
+</svg>

@@ -14,31 +14,31 @@
 
 'use strict';
 
-angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaavioapurit'])
-  .directive('jakaumaKaavio', ['kaavioApurit', function(kaavioApurit) {
+angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaavioapurit'])
+  .directive('vaittamaKaavio', ['kaavioApurit', function(kaavioApurit) {
     return {
       restrict: 'E',
       replace: true,
       scope: {
         jakauma: '='
       },
-      templateUrl: 'template/raportti/jakaumaKaavio.html',
+      templateUrl: 'template/raportti/vaittamakaavio.html',
       link: function(scope) {
         var asetukset = {
           maksimitilaOtsikolle: 300,
-          palkinMaksimiPituus: 480,
-          otsikoidenSisennys: 50,
-          tekstinMaksimiPituus: 80
+          palkinMaksimiPituus: 300,
+          otsikoidenSisennys: 10,
+          tekstinMaksimiPituus: 40
         };
 
-        _.assign(scope, _.pick(kaavioApurit, ['jaaTeksti', 'maksimi', 'lukumaaratYhteensa', 'palkinVari']));
-        scope.otsikoilleTilaa = _.partial(kaavioApurit.otsikoilleTilaa, asetukset);
+        _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
         scope.otsikot = [
           {x: 0, teksti: ''},
-          {x: 0.25, teksti: '25%'},
-          {x: 0.5, teksti: '50%'},
-          {x: 0.75, teksti: '75%'},
+          {x: 0.2, teksti: '20%'},
+          {x: 0.4, teksti: '40%'},
+          {x: 0.6, teksti: '60%'},
+          {x: 0.8, teksti: '80%'},
           {x: 1.0, teksti: '100%'}
         ];
       }
