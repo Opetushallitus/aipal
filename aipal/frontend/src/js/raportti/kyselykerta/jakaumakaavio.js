@@ -39,14 +39,14 @@ angular.module('raportti.kyselykerta.jakaumakaavio', [])
 
     return {
       jaaTeksti: function (teksti) {
-          var sanat = teksti.split(' ');
-          var sanojaPerRivi = Math.ceil(sanat.length / 2);
+        var sanat = teksti.split(' ');
+        var sanojaPerRivi = Math.ceil(sanat.length / 2);
 
-          var rivit = [];
-          while (sanat.length > 0) {
-              rivit.push(sanat.splice(0, sanojaPerRivi).join(' '));
-          }
-          return rivit;
+        var rivit = [];
+        while (sanat.length > 0) {
+          rivit.push(sanat.splice(0, sanojaPerRivi).join(' '));
+        }
+        return rivit;
       },
 
       maksimi: function (jakauma) {
