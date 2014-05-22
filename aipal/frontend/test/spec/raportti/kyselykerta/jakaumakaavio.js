@@ -38,17 +38,17 @@ describe('Palvelu: jakaumaKaavioApurit', function () {
     };
 
     var testitapaukset = [
-      ['vähän tilaa tyhjälle vaihtoehdolle', [{vaihtoehto: ''}], 10],
+      ['vähän tilaa tyhjälle vaihtoehdolle', [{vaihtoehto: ''}], 50],
       ['hieman enemmän tilaa keskipituiselle vaihtoehdolle', [{
         vaihtoehto: '12345678901234567890'
-      }], 160],
+      }], 125],
       ['paljon tilaa pitkälle vaihtoehdolle', [{
         vaihtoehto: '1234567890123456789012345678901234567890'
-      }], 310],
+      }], 200],
       ['tilaa pisimmäin vaihtoehdon mukaan', [
         {vaihtoehto: ''},
         {vaihtoehto: '12345678901234567890'}
-      ], 160]
+      ], 125]
     ];
 
     _.forEach(testitapaukset, function(tapaus) {otsikoilleTilaa.apply(null, tapaus);});
