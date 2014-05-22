@@ -1,5 +1,5 @@
 <svg class="jakauma-kaavio"
-  width="850"
+  width="1200"
   ng-attr-height="{{40*jakauma.length + 40}}">
 
   <line ng-repeat="osa in [0, 0.25, 0.5, 0.75, 1.0]"
@@ -23,8 +23,8 @@
   <text ng-repeat-start="data in jakauma"
     class="jakauma-kaavio-otsikko"
     ng-attr-x="{{otsikoilleTilaa(jakauma) - 10}}"
-    ng-attr-y="{{40 * $index + 24}}">
-    {{data.vaihtoehto}}
+    ng-attr-y="{{40 * $index + 18}}">
+    <tspan ng-attr-dy="{{ $first ? '0' : '1em'}}" ng-repeat="osa in jaaTeksti(data.vaihtoehto)" text-anchor="end" ng-attr-x="{{otsikoilleTilaa(jakauma) - 10}}">{{osa}}</tspan>
   </text>
   <rect ng-attr-width="{{palkinPituus(data.lukumaara, jakauma)}}"
     ng-attr-height="{{24}}"

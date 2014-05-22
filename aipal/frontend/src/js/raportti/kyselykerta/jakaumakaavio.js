@@ -38,6 +38,17 @@ angular.module('raportti.kyselykerta.jakaumakaavio', [])
     };
 
     return {
+      jaaTeksti: function (teksti) {
+          var sanat = teksti.split(' ');
+          var sanojaPerRivi = Math.ceil(sanat.length / 2);
+
+          var rivit = [];
+          while (sanat.length > 0) {
+              rivit.push(sanat.splice(0, sanojaPerRivi).join(' '));
+          }
+          return rivit;
+      },
+
       maksimi: function (jakauma) {
         var lukumaarat = _.pluck(jakauma, 'lukumaara');
         return _.max(lukumaarat);
@@ -45,8 +56,8 @@ angular.module('raportti.kyselykerta.jakaumakaavio', [])
 
       otsikoilleTilaa: function (jakauma) {
         var vaihtoehdot = _.pluck(jakauma, 'vaihtoehto');
-        var pituudet = _.map(vaihtoehdot, function (v) {return v.length;});
-        return 300 * _.max(pituudet) / 40 + 10;
+        var pituudet = _.map(vaihtoehdot, 'length');
+        return 300 * _.max(pituudet) / 80 + 50;
       },
 
       lukumaaratYhteensa: lukumaaratYhteensa,
