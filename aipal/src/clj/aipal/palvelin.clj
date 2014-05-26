@@ -34,6 +34,7 @@
             aipal.rest-api.raportti.kyselykerta
             [aitu.infra.i18n :refer [wrap-locale]]
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
+            [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.sql.korma]
             [oph.korma.korma-auth :as korma-auth]))
 
@@ -88,7 +89,8 @@
                                      :ei-redirectia #"/api/.*"
                                      :base-url (-> asetukset :server :base-url))
                                    wrap-content-type
-                                   log-request-wrapper)
+                                   log-request-wrapper
+                                   wrap-poikkeusten-logitus)
                                  {:port (get-in asetukset [:server :port])})]
       (log/info "Palvelin käynnistetty:" (service-url asetukset))
       {:sammuta sammuta})
