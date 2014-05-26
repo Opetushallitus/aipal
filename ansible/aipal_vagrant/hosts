@@ -12,6 +12,9 @@ tietokannan_peruskayttajan_salasana = aipal
 tietokannan_paakayttaja = aipal_adm
 tietokannan_paakayttajan_salasana = aipal-adm
 
+[oph_db:vars]
+salli_dumpin_lataus = yes
+
 [oph_palvelu:vars]
 palvelu = aipal
 asennushakemisto = /data00/aipal
