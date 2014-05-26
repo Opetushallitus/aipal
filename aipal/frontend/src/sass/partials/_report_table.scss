@@ -1,5 +1,4 @@
 table.report-table {
-  $background-color: white;
   $border-color: #999999;
 
   background: white;
@@ -9,45 +8,47 @@ table.report-table {
   width: 60%;
 
   thead tr {
-    background: $background-color;
-
     th {
+      background: rgb(239, 239, 239);
       border: 1px solid $border-color;
       font-weight: normal;
       padding: $marginM $marginM;
-      text-align: center;
-      vertical-align: center;
     }
 
     th:first-child {
-        max-width: 80%;
-        width: 80%;
+      max-width: 80%;
+      width: 80%;
     }
 
     th:not(:first-child) {
-        max-width: 10%;
-        width: 10%;
+      max-width: 10%;
+      width: 10%;
     }
   }
 
   tbody tr {
-    background: $background-color;
-
     td {
       border: 1px solid $border-color;
       padding: $marginM $marginM;
-      vertical-align: center;
     }
   }
 
   .report-table-percentage-field {
-      border-width: 1px 0px 1px 1px;
-      text-align: right;
+    border-width: 1px 0px 1px 1px;
+    text-align: right;
   }
 
-  .report-table-amount-field {
-      border-width: 1px 1px 1px 0px;
-      padding: $marginM $marginL $marginM $marginM;
-      text-align: right;
+  .report-table-question {
+    text-align: left;
+  }
+
+  .report-table-amount-field, .report-table-amount-header {
+    border-width: 1px 1px 1px 0px;
+    padding: $marginM $marginL $marginM $marginM;
+    text-align: right;
+  }
+
+  .report-table-amount-header {
+    padding: $marginM 1.25*$marginM $marginM $marginM;
   }
 }

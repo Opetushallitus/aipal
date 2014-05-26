@@ -34,6 +34,9 @@
                           (-> *ng*
                             (.binding "kysymys.kysymys_fi")))))
 
+(defn ^:private taulukon-kysymysteksti-kysymykselle [kysymys-elementti]
+  (w/text (w/find-element-under kysymys-elementti {:css ".report-table-question"})))
+
 (defn ^:private hae-jakauman-sarake-kysymykselle [sarake kysymys-elementti]
   (map w/text
        (w/find-elements-under kysymys-elementti
@@ -57,11 +60,14 @@
 (defn lukumaarat-kysymykselle [kysymys-elementti]
   (hae-jakauman-sarake-kysymykselle "alkio.lukumaara" kysymys-elementti))
 
+(defn ^:private lukumaarat-yhteensa-kysymykselle [kysymys-elementti]
+  (w/text (w/find-element-under kysymys-elementti {:css ".report-table-amount-header"})))
+
 (defn ^:private hae-jakaumakaavio-kysymykselle [kysymys-elementti]
-  (filter w/exists? (w/find-elements-under kysymys-elementti {:class "jakauma-kaavio"})))
+  (filter w/exists? (w/find-elements-under kysymys-elementti {:css ".jakauma-kaavio"})))
 
 (defn ^:private hae-vaittamakaavio-kysymykselle [kysymys-elementti]
-  (filter w/exists? (w/find-elements-under kysymys-elementti {:class "vaittama-kaavio"})))
+  (filter w/exists? (w/find-elements-under kysymys-elementti {:css ".vaittama-kaavio"})))
 
 (deftest kyselykertaraportti-test
   (with-webdriver
@@ -167,39 +173,47 @@
         (testing
           "ensimmäisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]
-            (is (= (kysymyksen-teksti kysymys) "Kysymys 1"))
+            (is (= (kysymyksen-teksti kysymys) "1. Kysymys 1"))
+            (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 1"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
             (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
             (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
           "toisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 1)]
-            (is (= (kysymyksen-teksti kysymys) "Kysymys 2"))
+            (is (= (kysymyksen-teksti kysymys) "2. Kysymys 2"))
+            (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 2"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
             (is (= (osuudet-kysymykselle kysymys) ["0%" "100%"]))
             (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
           "avoimen kysymyksen vastaukset"
           (let [kysymys (nth (kysymykset) 2)]
-            (is (= (kysymyksen-teksti kysymys) "Kysymys 3"))
+            (is (= (kysymyksen-teksti kysymys) "3. Kysymys 3"))
             (is (= (vapaatekstit-kysymykselle kysymys) ["Vapaa teksti 1" "Vapaa teksti 2"]))))
         (testing
           "väittämän vastausten jakauma"
           (let [kysymys (nth (kysymykset) 3)]
-            (is (= (kysymyksen-teksti kysymys) "Kysymys 4"))
+            (is (= (kysymyksen-teksti kysymys) "4. Kysymys 4"))
+            (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 4"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Ei / en lainkaan" "Hieman" "Jonkin verran" "Melko paljon" "Erittäin paljon"]))
             (is (= (osuudet-kysymykselle kysymys) ["50%" "50%" "0%" "0%" "0%"]))
             (is (= (lukumaarat-kysymykselle kysymys) ["1" "1" "0" "0" "0"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-vaittamakaavio-kysymykselle kysymys)) 1))))
         (testing
           "monivalinnan vastausten jakauma"
           (let [kysymys (nth (kysymykset) 4)]
-            (is (= (kysymyksen-teksti kysymys) "Kysymys 5"))
+            (is (= (kysymyksen-teksti kysymys) "5. Kysymys 5"))
+            (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 5"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Jotain" "Muuta"]))
             (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
             (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
           "sisältää vain kyselyyn valitut kysymykset"
