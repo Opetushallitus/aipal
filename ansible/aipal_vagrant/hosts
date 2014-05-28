@@ -10,6 +10,7 @@ ansible_ssh_user = aipaladmin
 tietokanta = aipal
 tietokannan_peruskayttaja = aipal_user
 tietokannan_paakayttaja = aipal_adm
+tietokantapalvelimen_yksityinen_nimi = 192.168.50.61
 
 # Käytetään tunnettuja salasanoja, koska dev-scripts/create-db-schema.sh ajaa
 # migraation suoraan (ilman asennusta tai ttk-db.properties-tiedostoa) ja
@@ -26,4 +27,5 @@ asennushakemisto = /data00/aipal
 lokituksen_asetustiedosto = logback.xml
 sovelluksen_asetustiedosto = aipal.properties
 migraation_asetustiedosto = aipal-db.properties
-migraation_argumentit = --clear -t
+migraation_argumentit_asennuksen_jalkeen = --clear -t
+migraation_argumentit_dumpin_jalkeen = -t
