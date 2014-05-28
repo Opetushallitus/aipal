@@ -14,25 +14,46 @@
 
 (ns aipal-e2e.raportti.kyselykerta-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
+            [clj-time.core :as time]
+            [clj-time.format :as time-format]
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
+            [aitu-e2e.data-util :refer [paivamaara-kayttoliittyman-muodossa]]
             [aitu-e2e.util :refer :all]))
 
 (use-fixtures :once tietokanta/muodosta-yhteys)
 
 (defn kyselykertaraportti-sivu [kyselykertaid] (str "/fi/#/raportti/kyselykerta/" kyselykertaid))
 
+(defn sisemman-elementin-kentan-teksti [ulompi-elementti kentta]
+  (w/text
+    (w/find-element-under ulompi-elementti
+                          (-> *ng*
+                            (.binding kentta)))))
+
+(defn kyselykerran-tietojen-kentta [kentta]
+  (sisemman-elementin-kentan-teksti {:css ".raportti-kyselykerta-tiedot"}
+                             (str "tulos.kyselykerta." kentta)))
+
+(defn raportin-luontipvm []
+  (sisemman-elementin-kentan-teksti {:css ".raportti-kyselykerta-tiedot"}
+                                    "tulos.luontipvm"))
+
+(defn paivamaara [paivamaara-iso-muodossa]
+  (time-format/parse-local-date (time-format/formatters :year-month-day)
+                                paivamaara-iso-muodossa))
+(def tanaan-pvm (time/today))
+(def tanaan-kayttoliittyman-muodossa (time-format/unparse-local-date (time-format/formatter "dd.MM.yyyy")
+                                                                      tanaan-pvm))
+
 (defn kysymykset []
   (w/find-elements (-> *ng*
                      (.repeater "kysymys in tulos.raportti"))))
 
 (defn kysymyksen-teksti [kysymys-elementti]
-  (w/text
-    (w/find-element-under kysymys-elementti
-                          (-> *ng*
-                            (.binding "kysymys.kysymys_fi")))))
+  (sisemman-elementin-kentan-teksti kysymys-elementti "kysymys.kysymys_fi"))
 
 (defn ^:private taulukon-kysymysteksti-kysymykselle [kysymys-elementti]
   (w/text (w/find-element-under kysymys-elementti {:css ".report-table-question"})))
@@ -75,7 +96,12 @@
       "etusivu:"
       (with-data {:kysely [{:kyselyid 1
                             :nimi_fi "Kysely 1"}]
-                  :kyselykerta [{:kyselykertaid 1 :kyselyid 1}]
+                  :kyselykerta [{:kyselykertaid 1
+                                 :kyselyid 1
+                                 :nimi_fi "Kyselykerta 1"
+                                 :selite_fi "Selite 1"
+                                 :voimassa_alkupvm (paivamaara "2014-05-28")
+                                 :voimassa_loppupvm (paivamaara "2014-05-29")}]
                   :kysymysryhma [{:kysymysryhmaid 1}]
                   :kysymys [{:kysymysid 1
                              :kysymysryhmaid 1
@@ -170,6 +196,16 @@
                              :vastaajaid 2
                              :numerovalinta 2}]}
         (avaa-aipal (kyselykertaraportti-sivu 1))
+        (testing
+          "kyselykerran tiedot"
+          (is (= (kyselykerran-tietojen-kentta "kyselykertaid") "1"))
+          (is (= (kyselykerran-tietojen-kentta "kyselyid") "1"))
+          (is (= (kyselykerran-tietojen-kentta "nimi_fi") "Kyselykerta 1"))
+          (is (= (kyselykerran-tietojen-kentta "selite_fi") "Selite 1"))
+          (is (= (kyselykerran-tietojen-kentta "voimassa_alkupvm") "28.05.2014 - 29.05.2014")))
+        (testing
+          "raportin luontipäivä"
+          (is (= (raportin-luontipvm) tanaan-kayttoliittyman-muodossa)))
         (testing
           "ensimmäisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]

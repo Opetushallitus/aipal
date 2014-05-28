@@ -24,5 +24,4 @@
          (db/transaction
            (let [id (Integer/parseInt kyselykertaid)]
             (json-response
-              {:kyselykerta {:kyselykertaid id}
-               :raportti (muodosta-raportti id)})))))
+              (muodosta-raportti id))))))

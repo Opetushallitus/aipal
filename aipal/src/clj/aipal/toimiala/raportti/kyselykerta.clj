@@ -13,7 +13,18 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.toimiala.raportti.kyselykerta
-  (:require [korma.core :as sql]))
+  (:require [clj-time.core :as time]
+            [korma.core :as sql]
+            [aitu.integraatio.sql.korma :refer [kyselykerta]]))
+
+(defn ^:private hae-kyselykerta [kyselykertaid]
+  (->
+    (sql/select* kyselykerta)
+    (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm)
+    (sql/where {:kyselykertaid kyselykertaid})
+
+    sql/exec
+    first))
 
 (defn ^:private hae-kysymykset [kyselykertaid]
   (->
@@ -204,6 +215,11 @@
   (map #(select-keys % [:kysymys_fi :jakauma :vastaukset :vastaustyyppi])
        raportti))
 
-(defn muodosta-raportti [kyselykertaid]
+(defn ^:private muodosta-raportti-kyselykerrasta [kyselykertaid]
   (suodata-raportin-kentat
     (muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))
+
+(defn muodosta-raportti [kyselykertaid]
+  {:kyselykerta (hae-kyselykerta kyselykertaid)
+   :luontipvm (time/today)
+   :raportti (muodosta-raportti-kyselykerrasta kyselykertaid)})

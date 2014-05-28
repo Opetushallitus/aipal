@@ -1,4 +1,24 @@
-Kyselykerta: {{tulos.kyselykerta.kyselykertaid}}
+<div class="raportti-kyselykerta-tiedot">
+  <div>
+    Kyselykerta: <span>{{tulos.kyselykerta.kyselykertaid}}</span>
+  </div>
+  <div>
+    Kysely: <span>{{tulos.kyselykerta.kyselyid}}</span>
+  </div>
+  <div>
+    Nimi: <span>{{tulos.kyselykerta.nimi_fi}}</span>
+  </div>
+  <div>
+    Selite: <span>{{tulos.kyselykerta.selite_fi}}</span>
+  </div>
+  <div>
+    Voimassa: <span>{{tulos.kyselykerta.voimassa_alkupvm | voimassaoloAika: tulos.kyselykerta.voimassa_loppupvm}}</span>
+  </div>
+  <hr>
+  <div>
+    Raportin luontipäivä: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
+  </div>
+</div>
 
 <div ng-repeat="kysymys in tulos.raportti">
   <p>
