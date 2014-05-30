@@ -1,5 +1,12 @@
 $application-max-width: 1200px;
 
+/* kaikkiin elementteihin luonnollinen koon lasku */
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 html {
   background:#fff;
   height: 100%;
