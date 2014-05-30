@@ -50,7 +50,8 @@
 
 (defn ^:private reitit [asetukset]
   (c/routes
-    (c/GET "/" [] (s/render-file "public/app/index.html" (merge {:base-url (-> asetukset :server :base-url)}
+    (c/GET "/" [] (s/render-file "public/app/index.html" (merge {:base-url (-> asetukset :server :base-url)
+                                                                 :build-id @build-id}
                                                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                                                   {:logout-url (str cas-url "/logout")}))))
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
