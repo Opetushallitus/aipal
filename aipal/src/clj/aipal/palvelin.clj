@@ -15,6 +15,7 @@
 (ns aipal.palvelin
   (:gen-class)
   (:require [cheshire.generate :as json-gen]
+            [clojure.pprint :refer [pprint]]
             [clojure.tools.logging :as log]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
@@ -54,6 +55,14 @@
                                                                  :build-id @build-id}
                                                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                                                   {:logout-url (str cas-url "/logout")}))))
+    (c/GET "/status" [] (s/render-file "public/app/status.html" {
+                                                                  :asetukset (with-out-str
+                                                                               (-> asetukset
+                                                                                   (assoc-in [:db :password] "*****")
+                                                                                   (assoc-in [:ldap-auth-server :password] "*****")
+                                                                                   pprint))
+                                                                  :build-id @build-id
+                                                                  }))
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)

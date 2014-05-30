@@ -72,6 +72,7 @@ module.exports = function (grunt) {
       livereload: {
         files: [
           'src/index.html',
+          'src/status.html',
           'src/template/**/*.html',
           'src/js/**/*.js',
           'src/img/**/*.{png,jpg,jpeg,gif,webp,svg}',
@@ -148,6 +149,7 @@ module.exports = function (grunt) {
         expand : true,
         cwd: 'src',
         src: ['index.html',
+              'status.html',
               'template/**/*.html',
               'img/**/*.{png,jpg,jpeg,gif,webp,svg}',
               'font/**/*',
