@@ -35,6 +35,7 @@
             aipal.rest-api.raportti.kyselykerta
             [aitu.infra.i18n :refer [wrap-locale]]
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
+            [aitu.infra.status :refer [status]]
             [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.sql.korma]
             [oph.korma.korma-auth :as korma-auth]))
@@ -55,14 +56,13 @@
                                                                  :build-id @build-id}
                                                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                                                   {:logout-url (str cas-url "/logout")}))))
-    (c/GET "/status" [] (s/render-file "public/app/status.html" {
+    (c/GET "/status" [] (s/render-file "public/app/status.html" (assoc (status)
                                                                   :asetukset (with-out-str
                                                                                (-> asetukset
                                                                                    (assoc-in [:db :password] "*****")
                                                                                    (assoc-in [:ldap-auth-server :password] "*****")
                                                                                    pprint))
-                                                                  :build-id @build-id
-                                                                  }))
+                                                                  :build-id @build-id)))
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
