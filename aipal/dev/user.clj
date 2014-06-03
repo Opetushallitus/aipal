@@ -33,9 +33,9 @@
 
 (defn kaanna-frontend []
   (with-sh-dir "frontend"
-               (doseq [komento frontend-kaannoskomennot]
-                 (println "$" komento)
-                 (println (:out (sh "bash" "-c" komento))))))
+    (doseq [komento frontend-kaannoskomennot]
+      (println "$" komento)
+      (println (:out (sh "bash" "-c" komento))))))
 
 (defonce ^:private palvelin (atom nil))
 
