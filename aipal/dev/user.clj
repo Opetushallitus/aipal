@@ -15,6 +15,7 @@
 (ns user
   (:require [clojure.repl :refer :all]
             [clojure.pprint :refer [pprint]]
+            [clojure.java.shell :refer [with-sh-dir sh]]
             [clojure.tools.namespace.repl :as nsr]
             [clj-http.client :as hc]
             clojure.core.cache
@@ -26,11 +27,22 @@
 ;; Templatejen kakutus pois päältä kehityksen aikana
 (stencil.loader/set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 
+(def frontend-kaannoskomennot ["npm install"
+                               "bower install"
+                               "grunt build"])
+
+(defn kaanna-frontend []
+  (with-sh-dir "frontend"
+               (doseq [komento frontend-kaannoskomennot]
+                 (println "$" komento)
+                 (println (:out (sh "bash" "-c" komento))))))
+
 (defonce ^:private palvelin (atom nil))
 
 (defn ^:private kaynnista! []
   {:pre [(not @palvelin)]
    :post [@palvelin]}
+  (kaanna-frontend)
   (require 'aipal.palvelin)
   (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!)
                      (assoc @(ns-resolve 'aipal.asetukset 'oletusasetukset)
