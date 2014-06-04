@@ -9,6 +9,7 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
         {{kysely.kyselyid}} {{kysely.nimi_fi}}
       </a>
       <br>Voimassa: {{kysely.voimassa_alkupvm}} - {{kysely.voimassa_loppupvm}}
+      <a href="" ng-click="uusiKyselykerta(kysely.kyselyid)">[uusi kyselykerta]</a>
     </div>
     <div ng-show="kysely.kyselykerta.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerta">
       <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
@@ -18,3 +19,7 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
     </div>
   </div>
 </div>
+
+<popup-ikkuna piilota-ikkuna="piilotaLuonti">
+  <kyselykerta-luonti kyselyid="valittuKyselyid"></kyselykerta-luonti>
+</popup-ikkuna>

@@ -31,7 +31,13 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
   .controller('KyselytController', [
     'Kysely', '$scope',
     function(Kysely, $scope) {
+      $scope.piilotaLuonti = true;
       $scope.kyselyt = Kysely.hae();
+
+      $scope.uusiKyselykerta = function(kyselyid) {
+        $scope.valittuKyselyid = kyselyid;
+        $scope.piilotaLuonti = false;
+      };
     }
   ])
 
@@ -40,4 +46,25 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
     function(Kysely, $routeParams, $scope) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
     }
-  ]);
+  ])
+
+  .directive('kyselykertaLuonti', ['Kysely', function(Kysely) {
+    return {
+      restrict: 'E',
+      scope: {
+        kyselyid : '='
+      },
+      templateUrl: 'template/kysely/kyselykerta_luonti.html',
+      link: function(scope) {
+        scope.$watch('kyselyid', function(value) {
+          if(_.isNumber(value)) {
+            scope.kysely = Kysely.haeId(value);
+          }
+        });
+        //scope.kysely = Kysely.haeId(scope.kyselyid);
+        scope.luo = function() {
+          console.log('kyselykerta luotu');
+        };
+      }
+    };
+  }]);

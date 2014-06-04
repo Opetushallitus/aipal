@@ -1,0 +1,26 @@
+.popup {
+  $popup-width: 700px;
+  $popup-height: 500px;
+
+  @include box-shadow;
+  z-index: 10;
+  position: absolute;
+  border: 2px solid $darker-gray;
+  background-color: white;
+  min-height: $popup-height;
+  padding: 5px 10px;
+  margin-left: -$popup-width / 2;
+  left: 50%;
+  top: 100px;
+  width: $popup-width;
+
+  button.sulje {
+    position: absolute;
+    right: 4px;
+    top: 0px;
+    z-index: 1000;
+  }
+  fieldset {
+    width: 100%;
+  }
+}

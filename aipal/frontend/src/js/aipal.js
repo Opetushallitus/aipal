@@ -23,6 +23,8 @@ angular.module('aipal', [
     'yhteiset.palvelut.i18n',
     'yhteiset.direktiivit.copyright',
     'yhteiset.direktiivit.navigaatio',
+    'yhteiset.direktiivit.popup-ikkuna',
+    'yhteiset.direktiivit.input',
     'ngRoute'
   ])
 
