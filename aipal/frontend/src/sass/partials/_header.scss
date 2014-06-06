@@ -62,7 +62,6 @@ header {
   font-size: 1em;
   a {
     display: inline-block;
-    padding-top: 8px;
     text-decoration: none;
     color: $font-color!important;
     text-transform:uppercase;
@@ -74,29 +73,42 @@ header {
     @include clearfix;
     li {
       border-right: 1px solid $separator-color;
-      padding: 0 $marginM;
       float: left;
       height: $nav-height;
+      display: table;
       &:hover, &.active {background-color: $darker-primary;}
       &:first-child {border-left: 1px solid $separator-color;}
-      a {
+      a,span {
+        display: table-cell;
+        vertical-align: middle;
         text-transform:uppercase;
+        padding: 0 $marginM;
       }
       span {
-        padding-top: 8px;
-        display: inline-block;
+        cursor: default;
       }
-
     }
   }
-  #current-user {float: right; padding-right: 40px; color: $font-color; @include icon-after(11px, 11px){@include user-icon;}; height: $nav-height;}
+  #current-user {
+    float: right;
+    padding-right: 40px;
+    color: $font-color;
+    @include icon-after(11px, 11px){@include user-icon;};
+    height: $nav-height;
+    display: table;
+    a {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
   #logout {
-    border-right: 1px solid $separator-color;
+    border-left: 1px solid $separator-color;
     padding: 0 15px;
     float: right;
     height: $nav-height;
     @include icon-after(-5px, 11px){@include logout-icon;};
     &:hover {background-color: $darker-primary;}
+    cursor: pointer;
   }
   .kielen-vaihto {
     float: right;
