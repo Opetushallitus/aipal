@@ -1,0 +1,20 @@
+# vim: ft=dosini
+[oph_db]
+192.168.50.51
+
+[oph_palvelu]
+192.168.50.52
+
+[all:vars]
+ansible_ssh_user = aituadmin
+
+[oph_db:vars]
+tietokanta = ttk
+skeema = aituhaku
+skeeman_peruskayttaja = aituhaku_user
+
+[oph_palvelu:vars]
+palvelu = aituhaku
+asennushakemisto = /data00/aituhaku
+sovelluksen_asetustiedosto = aituhaku.properties
+lokituksen_asetustiedosto = aituhaku.properties
