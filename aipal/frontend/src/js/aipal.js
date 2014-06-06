@@ -30,7 +30,7 @@ angular.module('aipal', [
     $scope.i18n = i18n;
     $scope.baseUrl = _.has($window, 'hakuBaseUrl') ?  $window.hakuBaseUrl : '';
     $scope.varmistaLogout = function() {
-      if(!_.isEmpty($window.aipalLogoutUrl) && $window.confirm(i18n.yleiset['haluatko_kirjautua_ulos'])) {
+      if(!_.isEmpty($window.aipalLogoutUrl) && $window.confirm(i18n.yleiset.haluatko_kirjautua_ulos)) {
         $window.location = $window.aipalLogoutUrl;
       }
     };
