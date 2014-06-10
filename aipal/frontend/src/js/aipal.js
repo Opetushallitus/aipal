@@ -25,6 +25,8 @@ angular.module('aipal', [
     'yhteiset.direktiivit.navigaatio',
     'yhteiset.direktiivit.popup-ikkuna',
     'yhteiset.direktiivit.input',
+    'yhteiset.direktiivit.pvm-valitsin',
+    'ui.bootstrap',
     'ngRoute'
   ])
 
@@ -40,6 +42,20 @@ angular.module('aipal', [
 
   .constant('asetukset', {
     requestTimeout : 120000 //2min timeout kaikille pyynnöille
+  })
+
+  .constant('datepickerConfig', {
+    dayFormat: 'd',
+    monthFormat: 'MMMM',
+    yearFormat: 'yyyy',
+    dayHeaderFormat: 'EEE',
+    dayTitleFormat: 'MMMM yyyy',
+    monthTitleFormat: 'yyyy',
+    showWeeks: false,
+    startingDay: 1,
+    yearRange: 20,
+    minDate: null,
+    maxDate: null
   })
 
   .directive('kielenVaihto', ['kieli', function(kieli){

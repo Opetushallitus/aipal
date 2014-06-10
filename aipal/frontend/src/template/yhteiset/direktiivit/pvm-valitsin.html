@@ -1,0 +1,16 @@
+<fieldset class="datepicker-field">
+  <label ng-if="otsikko" ng-class="{pakollinen : pakollinen}">{{otsikko}}</label>
+  <input
+    type="text"
+    datepicker-popup="dd.MM.yyyy"
+    formatteddate="valittuPvm"
+    ng-model="valittuPvm"
+    ng-required="pakollinen"
+    is-open="opened"
+    min="minPvm"
+    max="maxPvm"
+    show-button-bar="false"/>
+  <button
+    ng-click="open($event)"
+    class="open-datepicker icon calendar-icon">
+</fieldset>

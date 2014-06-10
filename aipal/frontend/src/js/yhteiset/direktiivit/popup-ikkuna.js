@@ -23,7 +23,7 @@ angular.module('yhteiset.direktiivit.popup-ikkuna', [])
       scope: {
         piilotaIkkuna : '='
       },
-      templateUrl: 'template/yhteiset/direktiivit/popup_ikkuna.html',
+      templateUrl: 'template/yhteiset/direktiivit/popup-ikkuna.html',
       link: function(scope) {
         scope.piilota = function() {
           scope.piilotaIkkuna = true;

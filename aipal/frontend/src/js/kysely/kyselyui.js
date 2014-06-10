@@ -54,15 +54,19 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
       scope: {
         kyselyid : '='
       },
-      templateUrl: 'template/kysely/kyselykerta_luonti.html',
-      link: function(scope) {
-        scope.$watch('kyselyid', function(value) {
-          if(_.isNumber(value)) {
-            scope.kysely = Kysely.haeId(value);
+      templateUrl: 'template/kysely/kyselykerta-luonti.html',
+      controller: function($scope) {
+        $scope.kysely = {};
+        $scope.kyselykerta = {};
+
+        $scope.$watch('kyselyid', function(kyselyid) {
+          if(_.isNumber(kyselyid)) {
+            Kysely.haeId(kyselyid, function(kysely) {
+              _.assign($scope.kysely, kysely);
+            });
           }
         });
-        //scope.kysely = Kysely.haeId(scope.kyselyid);
-        scope.luo = function() {
+        $scope.luo = function() {
           console.log('kyselykerta luotu');
         };
       }
