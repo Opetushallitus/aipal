@@ -10,7 +10,7 @@ ansible_ssh_user = aipaladmin
 
 [oph_db:vars]
 tietokanta = aipal
-skeema = aipal
+skeema = public
 skeeman_peruskayttaja = aipal_user
 
 [oph_palvelu:vars]
