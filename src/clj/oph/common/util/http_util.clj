@@ -16,4 +16,4 @@
 
 (defn json-response-nocache
   [data]
-  (assoc-in (json-response data) [:headers "Cache-control"] "max-age=0"))
+  (assoc-in (json-response data 0) [:headers "Cache-control"] "max-age=0"))

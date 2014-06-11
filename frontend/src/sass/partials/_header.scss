@@ -1,0 +1,56 @@
+.main-nav {
+  $nav-height: 40px;
+  $separator-color: $lightest-primary;
+  $font-color: $primary-action-text;
+  background-color: $primary-color;
+  min-height: $nav-height;
+  font-size: 1em;
+  a {
+    display: inline-block;
+    text-decoration: none;
+    color: $font-color!important;
+    text-transform:uppercase;
+    font-weight: 600;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    @include clearfix;
+    li {
+      border-right: 1px solid $separator-color;
+      float: left;
+      height: $nav-height;
+      display: table;
+      &:hover, &.active {background-color: $darker-primary;}
+      &:first-child {border-left: 1px solid $separator-color;}
+      a,span {
+        display: table-cell;
+        vertical-align: middle;
+        text-transform:uppercase;
+        padding: 0 $marginM;
+      }
+      span {
+        cursor: default;
+      }
+    }
+  }
+  .kielen-vaihto {
+    float: right;
+    li.valittu {
+      &:hover {background-color: transparent;}
+      span {color: $darkest-primary;}
+    }
+  }
+}
+
+h1.title{
+  margin: 0 0 0 10px;
+  border-left: 1px solid $lightest-primary;
+  line-height: 40px;
+  font-size: 14px;
+  font-family: "Open Sans", "arial";
+  a{
+    font-weight: 200;
+    padding-left: 15px;
+  }
+}
