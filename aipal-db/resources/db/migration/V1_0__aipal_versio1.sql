@@ -1,6 +1,6 @@
 CREATE TABLE jatkokysymys
   (
-    jatkokysymysid    INTEGER NOT NULL ,
+    jatkokysymysid    SERIAL NOT NULL ,
     kylla_teksti_fi   VARCHAR (500) ,
     kylla_teksti_sv   VARCHAR (500) ,
     ei_teksti_fi      VARCHAR (500) ,
@@ -24,7 +24,7 @@ IS
 
 CREATE TABLE jatkovastaus
   (
-    jatkovastausid INTEGER NOT NULL ,
+    jatkovastausid SERIAL NOT NULL ,
     jatkokysymysid INTEGER NOT NULL ,
     kylla_asteikko INTEGER ,
     ei_vastausteksti TEXT
@@ -64,7 +64,7 @@ ALTER TABLE kayttajarooli ADD CONSTRAINT kayttajarooli_PK PRIMARY KEY ( roolitun
 
 CREATE TABLE kysely
   (
-    kyselyid          INTEGER NOT NULL ,
+    kyselyid          SERIAL NOT NULL ,
     voimassa_alkupvm  DATE ,
     voimassa_loppupvm DATE ,
     nimi_fi           VARCHAR (200) ,
@@ -114,14 +114,12 @@ IS
 
 CREATE TABLE kyselykerta
   (
-    kyselykertaid     INTEGER NOT NULL ,
+    kyselykertaid     SERIAL NOT NULL ,
     kyselyid          INTEGER NOT NULL ,
     nimi_fi           VARCHAR (200) NOT NULL ,
     nimi_sv           VARCHAR (200) ,
     voimassa_alkupvm  DATE NOT NULL ,
     voimassa_loppupvm DATE ,
-    selite_fi TEXT ,
-    selite_sv TEXT ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
@@ -137,7 +135,7 @@ IS
 
 CREATE TABLE kyselypohja
   (
-    kyselypohjaid     INTEGER NOT NULL ,
+    kyselypohjaid     SERIAL NOT NULL ,
     valtakunnallinen  BOOLEAN NOT NULL ,
     voimassa_alkupvm  DATE ,
     poistettu         DATE ,
@@ -167,7 +165,7 @@ IS
 
 CREATE TABLE kysymys
   (
-    kysymysid         INTEGER NOT NULL ,
+    kysymysid         SERIAL NOT NULL ,
     pakollinen        BOOLEAN NOT NULL ,
     poistettava       BOOLEAN NOT NULL ,
     vastaustyyppi     VARCHAR (20) NOT NULL ,
@@ -198,7 +196,7 @@ IS
 
 CREATE TABLE kysymysryhma
   (
-    kysymysryhmaid    INTEGER NOT NULL ,
+    kysymysryhmaid    SERIAL NOT NULL ,
     voimassa_alkupvm  DATE ,
     voimassa_loppupvm DATE ,
     taustakysymykset  BOOLEAN DEFAULT false NOT NULL ,
@@ -243,7 +241,7 @@ IS
 
 CREATE TABLE monivalintavaihtoehto
   (
-    monivalintavaihtoehtoid INTEGER NOT NULL ,
+    monivalintavaihtoehtoid SERIAL NOT NULL ,
     kysymysid               INTEGER NOT NULL ,
     jarjestys               INTEGER DEFAULT 0 NOT NULL ,
     teksti_fi               VARCHAR (400) NOT NULL ,
@@ -261,7 +259,7 @@ IS
 
 CREATE TABLE rahoitusmuoto
   (
-    rahoitusmuotoid   INTEGER NOT NULL ,
+    rahoitusmuotoid   SERIAL NOT NULL ,
     rahoitusmuoto     INTEGER ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
@@ -272,7 +270,7 @@ ALTER TABLE rahoitusmuoto ADD CONSTRAINT rahoitusmuoto_PK PRIMARY KEY ( rahoitus
 
 CREATE TABLE vastaaja
   (
-    vastaajaid        INTEGER NOT NULL ,
+    vastaajaid        SERIAL NOT NULL ,
     kyselykertaid     INTEGER NOT NULL ,
     vastaajatunnusid  INTEGER NOT NULL ,
     vastannut         BOOLEAN DEFAULT false NOT NULL ,
@@ -288,7 +286,7 @@ IS
 
 CREATE TABLE vastaajatunnus
   (
-    vastaajatunnusid  INTEGER NOT NULL ,
+    vastaajatunnusid  SERIAL NOT NULL ,
     kyselykertaid     INTEGER NOT NULL ,
     rahoitusmuotoid   INTEGER ,
     tunnus            VARCHAR (30) NOT NULL ,
@@ -315,7 +313,7 @@ IS
 
 CREATE TABLE vastaus
   (
-    vastausid   INTEGER NOT NULL ,
+    vastausid   SERIAL NOT NULL ,
     kysymysid   INTEGER NOT NULL ,
     vastaajaid  INTEGER NOT NULL ,
     vastausaika DATE ,

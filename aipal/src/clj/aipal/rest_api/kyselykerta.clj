@@ -17,9 +17,17 @@
             [korma.db :as db]
             [schema.core :as schema]
             [aipal.arkisto.kyselykerta :as kyselykerta]
-            [aipal.rest-api.http-util :refer [json-response]]))
+            [aipal.rest-api.http-util :refer [json-response parse-iso-date]]))
+
+(defn paivita-arvot [m arvot f]
+  (reduce #(when % (update-in % [%2] f)) m arvot))
 
 (c/defroutes reitit
   (c/GET "/" []
          (db/transaction
-           (json-response (kyselykerta/hae-kaikki)))))
+           (json-response (kyselykerta/hae-kaikki))))
+
+  (c/POST "/:kyselyid" [kyselyid kyselykerta]
+    (let [kyselyid_int (Integer/parseInt kyselyid)
+          kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (json-response (kyselykerta/lisaa! kyselyid_int kyselykerta-parsittu)))))

@@ -21,12 +21,19 @@ angular.module('toimiala.kyselykerta', ['ngResource'])
         method: 'GET',
         isArray: true,
         url: 'api/kyselykerta'
+      },
+      tallennus: {
+        method: 'POST',
+        url: 'api/kyselykerta/:id'
       }
     });
 
     return {
       hae: function(successCallback, errorCallback) {
         return resource.haku({}, successCallback, errorCallback);
+      },
+      tallenna: function(id, kyselykerta, successCallback, errorCallback) {
+        return resource.tallennus({id: id}, {kyselykerta: kyselykerta}, successCallback, errorCallback);
       }
     };
   }]);

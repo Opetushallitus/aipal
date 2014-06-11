@@ -48,7 +48,7 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
     }
   ])
 
-  .directive('kyselykertaLuonti', ['Kysely', function(Kysely) {
+  .directive('kyselykertaLuonti', ['Kysely', 'Kyselykerta', function(Kysely, Kyselykerta) {
     return {
       restrict: 'E',
       scope: {
@@ -66,6 +66,9 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
             });
           }
         });
+        $scope.tallenna = function() {
+          Kyselykerta.tallenna($scope.kyselyid, $scope.kyselykerta);
+        };
         $scope.luo = function() {
           console.log('kyselykerta luotu');
         };

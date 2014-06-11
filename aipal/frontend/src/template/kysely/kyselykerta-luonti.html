@@ -1,4 +1,4 @@
-<form>
+<form ng-submit="tallenna()">
   <fieldset>
     <h3>Uusi kyselykerta</h3>
     <h4>Kysely: {{kysely.kyselyid}} {{kysely.nimi_fi}}</h4>
@@ -16,14 +16,15 @@
       oletus-pvm="kysely.voimassa_alkupvm"
       min-pvm="kysely.voimassa_alkupvm"
       max-pvm="kysely.voimassa_loppupvm"
-      valittu-pvm="kyselykerta.alkupvm">
+      valittu-pvm="kyselykerta.voimassa_alkupvm">
     </pvm-valitsin>
     -
     <pvm-valitsin
       oletus-pvm="kysely.voimassa_loppupvm"
       min-pvm="kysely.voimassa_alkupvm"
       max-pvm="kysely.voimassa_loppupvm"
-      valittu-pvm="kyselykerta.loppupvm">
+      valittu-pvm="kyselykerta.voimassa_loppupvm">
     </pvm-valitsin>
   </section>
+  <input type="submit" value="tallenna">
 </form>

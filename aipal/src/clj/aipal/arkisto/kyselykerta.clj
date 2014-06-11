@@ -25,19 +25,27 @@
     (sql/order :kyselykerta.kyselykertaid :ASC)
 
     (sql/join :inner {:table :kysely}
-             (= :kyselykerta.kyselyid
-                :kysely.kyselyid))
+              (= :kyselykerta.kyselyid
+                 :kysely.kyselyid))
 
     (sql/join :inner {:table :kysely_kysymysryhma}
-             (= :kysely.kyselyid
-                :kysely_kysymysryhma.kyselyid))
+              (= :kysely.kyselyid
+                 :kysely_kysymysryhma.kyselyid))
 
     (sql/join :inner {:table :kysymysryhma}
-             (= :kysely_kysymysryhma.kysymysryhmaid
-                :kysymysryhma.kysymysryhmaid))
+              (= :kysely_kysymysryhma.kysymysryhmaid
+                 :kysymysryhma.kysymysryhmaid))
 
     (sql/join :inner {:table :kysymys}
-             (= :kysymysryhma.kysymysryhmaid
-                :kysymys.kysymysryhmaid))
+              (= :kysymysryhma.kysymysryhmaid
+                 :kysymys.kysymysryhmaid))
 
     sql/exec))
+
+(defn lisaa!
+  [kyselyid kyselykerta]
+  (sql/insert :kyselykerta
+    (sql/values {:kyselyid kyselyid
+                 :nimi_fi (:nimi_fi kyselykerta)
+                 :voimassa_alkupvm (:voimassa_alkupvm kyselykerta)
+                 :voimassa_loppupvm (:voimassa_loppupvm kyselykerta)})))
