@@ -580,3 +580,17 @@ create trigger vastausm_insert before insert on vastaus for each row execute pro
 create trigger vastaus_mu_update before update on vastaus for each row execute procedure update_modifier() ;
 create trigger vastaus_cu_insert before insert on vastaus for each row execute procedure update_creator() ;
 create trigger vastaus_mu_insert before insert on vastaus for each row execute procedure update_modifier() ;
+
+
+alter table rahoitusmuoto drop column rahoitusmuoto;
+alter table rahoitusmuoto add column rahoitusmuoto varchar(80);
+update rahoitusmuoto set rahoitusmuoto = 'Valtionosuus' where rahoitusmuotoid = 1;
+update rahoitusmuoto set rahoitusmuoto = 'Oppisopimus' where rahoitusmuotoid = 2;
+update rahoitusmuoto set rahoitusmuoto = 'Työvoimapoliittinen' where rahoitusmuotoid = 3;
+update rahoitusmuoto set rahoitusmuoto = 'Henkilöstökoulutus' where rahoitusmuotoid = 4;
+update rahoitusmuoto set rahoitusmuoto = 'Ei rahoitusmuotoa' where rahoitusmuotoid = 5;
+alter table rahoitusmuoto alter column rahoitusmuoto set not null;
+ 
+
+
+
