@@ -13,48 +13,36 @@
 ;; European Union Public Licence for more details.
 
 (ns user
-(:require [clojure.repl :refer :all]
-[clojure.pprint :refer [pprint]]
-[clojure.java.shell :refer [with-sh-dir sh]]
-[clojure.tools.namespace.repl :as nsr]
-[clj-http.client :as hc]
-clojure.core.cache
-schema.core
-stencil.loader))
+  (:require [clojure.repl :refer :all]
+            [clojure.pprint :refer [pprint]]
+            [clojure.tools.namespace.repl :as nsr]
+            [clj-http.client :as hc]
+            clojure.core.cache
+            schema.core
+            stencil.loader))
 
 (schema.core/set-fn-validation! true)
 
 ;; Templatejen kakutus pois päältä kehityksen aikana
 (stencil.loader/set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 
-(def frontend-kaannoskomennot ["npm install"
-                              "bower install"
-                              "grunt build"])
-
-(defn kaanna-frontend []
-(with-sh-dir "frontend"
-(doseq [komento frontend-kaannoskomennot]
-(println "$" komento)
-(println (:out (sh "bash" "-c" komento))))))
-
 (defonce ^:private palvelin (atom nil))
 
 (defn ^:private kaynnista! []
-{:pre [(not @palvelin)]
-:post [@palvelin]}
-(kaanna-frontend)
-(require 'aipalvastaus.palvelin)
-(reset! palvelin ((ns-resolve 'aipalvastaus.palvelin 'kaynnista!)
-                 (assoc @(ns-resolve 'aipalvastaus.asetukset 'oletusasetukset)
-                 :development-mode true))))
+  {:pre [(not @palvelin)]
+   :post [@palvelin]}
+  (require 'aipalvastaus.palvelin)
+  (reset! palvelin ((ns-resolve 'aipalvastaus.palvelin 'kaynnista!)
+                     (assoc @(ns-resolve 'aipalvastaus.asetukset 'oletusasetukset)
+                            :development-mode true))))
 
 (defn ^:private sammuta! []
-{:pre [@palvelin]
-:post [(not @palvelin)]}
-((ns-resolve 'aipalvastaus.palvelin 'sammuta) @palvelin)
-(reset! palvelin nil))
+  {:pre [@palvelin]
+   :post [(not @palvelin)]}
+  ((ns-resolve 'aipalvastaus.palvelin 'sammuta) @palvelin)
+  (reset! palvelin nil))
 
 (defn uudelleenkaynnista! []
-(when @palvelin
-(sammuta!))
-(nsr/refresh :after 'user/kaynnista!))
+  (when @palvelin
+    (sammuta!))
+  (nsr/refresh :after 'user/kaynnista!))
