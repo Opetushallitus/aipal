@@ -20,7 +20,7 @@
 (defn ^:private hae-kyselykerta [kyselykertaid]
   (->
     (sql/select* kyselykerta)
-    (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm)
+    (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
     (sql/where {:kyselykertaid kyselykertaid})
 
     sql/exec

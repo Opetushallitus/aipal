@@ -38,6 +38,10 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
         $scope.valittuKyselyid = kyselyid;
         $scope.piilotaLuonti = false;
       };
+      $scope.suljePopup = function() {
+        $scope.piilotaLuonti = true;
+        $scope.kyselyt = Kysely.hae();
+      };
     }
   ])
 
@@ -52,25 +56,25 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
     return {
       restrict: 'E',
       scope: {
-        kyselyid : '='
+        kyselyid : '=',
+        ilmoitaTallennus: '&'
       },
       templateUrl: 'template/kysely/kyselykerta-luonti.html',
-      controller: function($scope) {
-        $scope.kysely = {};
-        $scope.kyselykerta = {};
+      link: function(scope, elem, attrs) {
+        scope.kysely = {};
+        scope.kyselykerta = {};
 
-        $scope.$watch('kyselyid', function(kyselyid) {
+        scope.$watch('kyselyid', function(kyselyid) {
           if(_.isNumber(kyselyid)) {
             Kysely.haeId(kyselyid, function(kysely) {
-              _.assign($scope.kysely, kysely);
+              _.assign(scope.kysely, kysely);
             });
           }
         });
-        $scope.tallenna = function() {
-          Kyselykerta.tallenna($scope.kyselyid, $scope.kyselykerta);
-        };
-        $scope.luo = function() {
-          console.log('kyselykerta luotu');
+        scope.tallenna = function() {
+          Kyselykerta.tallenna(scope.kyselyid, scope.kyselykerta, function() {
+            scope.ilmoitaTallennus();
+          });
         };
       }
     };
