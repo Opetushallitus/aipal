@@ -12,9 +12,19 @@
   <link rel="stylesheet" href="css/bootstrap-datepicker.css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="compiled_css/main.css">
+
+  <style>
+    .ng-hide {
+      display: none; !important
+    }
+  </style>
 </head>
-<body piilota-tekstien-latauksen-ajaksi ng-cloak ng-controller="AipalController">
-  <div>
+<body ng-cloak ng-controller="AipalController">
+  <div ng-hide="i18n.$resolved">
+    Aipalia ladataan...
+  </div>
+
+  <div ng-show="i18n.$resolved" class="ng-hide">
     <nav class="main-nav">
       <div class="app-wrapper ">
         <kielen-vaihto></kielen-vaihto>
@@ -33,10 +43,10 @@
       <div ng-view></div>
     </div>
   </div>
-  <footer class="copyright-footer">
+  <footer class="copyright-footer" ng-show="i18n.$resolved" class="ng-hide">
     <div class="app-wrapper"><span copyright></span></div>
   </footer>
-  <footer class="dev-footer">
+  <footer class="dev-footer" ng-show="i18n.$resolved" class="ng-hide">
     <div class="app-wrapper"><span class="build-id">Build: [[build-id]]</span> <span class="separator">|</span> <a href="[[base-url]]/status">Status</a></div>
   </footer>
 
