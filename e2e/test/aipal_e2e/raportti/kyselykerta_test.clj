@@ -99,7 +99,6 @@
                   :kyselykerta [{:kyselykertaid 1
                                  :kyselyid 1
                                  :nimi_fi "Kyselykerta 1"
-                                 :selite_fi "Selite 1"
                                  :voimassa_alkupvm (paivamaara "2014-05-28")
                                  :voimassa_loppupvm (paivamaara "2014-05-29")}]
                   :kysymysryhma [{:kysymysryhmaid 1}]
@@ -201,7 +200,6 @@
           (is (= (kyselykerran-tietojen-kentta "kyselykertaid") "1"))
           (is (= (kyselykerran-tietojen-kentta "kyselyid") "1"))
           (is (= (kyselykerran-tietojen-kentta "nimi_fi") "Kyselykerta 1"))
-          (is (= (kyselykerran-tietojen-kentta "selite_fi") "Selite 1"))
           (is (= (kyselykerran-tietojen-kentta "voimassa_alkupvm") "28.05.2014 - 29.05.2014")))
         (testing
           "raportin luontipäivä"

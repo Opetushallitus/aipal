@@ -32,8 +32,12 @@ angular.module('yhteiset.palvelut.i18n', ['ngResource'])
   .factory('$locale', ['kieli', 'i18n', function(kieli, i18n) {
     var PLURAL_CATEGORY = {ZERO: 'zero', ONE: 'one', TWO: 'two', FEW: 'few', MANY: 'many', OTHER: 'other'};
 
-    var paivat = i18n.kalenteri.paivat.split(',');
-    var kuukaudet = i18n.kalenteri.kuukaudet.split(',');
+    var paivat = [], kuukaudet = [];
+
+    i18n.$promise.then(function() {
+      paivat = i18n.kalenteri.paivat.split(',');
+      kuukaudet = i18n.kalenteri.kuukaudet.split(',');
+    });
 
     return {
       'DATETIME_FORMATS': {
