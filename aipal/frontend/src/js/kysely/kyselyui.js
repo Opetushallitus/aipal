@@ -60,7 +60,7 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
         ilmoitaTallennus: '&'
       },
       templateUrl: 'template/kysely/kyselykerta-luonti.html',
-      link: function(scope, elem, attrs) {
+      link: function(scope) {
         scope.kysely = {};
         scope.kyselykerta = {};
 

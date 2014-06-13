@@ -16,7 +16,7 @@
 
 angular.module('yhteiset.direktiivit.pvm-valitsin', ['yhteiset.palvelut.pvm'])
 
- .directive('pvmValitsin', ['pvm',  function(pvm) {
+ .directive('pvmValitsin', [function() {
     return {
       restrict: 'E',
       replace: true,
@@ -35,30 +35,6 @@ angular.module('yhteiset.direktiivit.pvm-valitsin', ['yhteiset.palvelut.pvm'])
             scope.valittuPvm = value;
           }
         });
-
-        //Bootstrap datepicker ei osaa parsia muotoa dd.MM.yyyy päivämäärästringejä.
-        //Muunnetaan string muotoiset päivämäärät dateiksi.
-        // scope.$watch('valittuPvm', function(value) {
-        //   if(value && !scope.valittuDate) {
-        //     scope.valittuDate = pvm.parsiPvm(value);
-        //   }
-        // });
-
-        // scope.$watch('valittuDate', function(value) {
-        //   scope.valittuPvm = pvm.dateToPvm(value);
-        // });
-
-        // scope.$watch('minPvm', function(value) {
-        //   if(value) {
-        //     scope.minDate = value;
-        //   }
-        // });
-
-        // scope.$watch('maxPvm', function(value) {
-        //   if(value) {
-        //     scope.maxDate = value;
-        //   }
-        // });
 
         scope.open = function($event) {
           $event.preventDefault();
