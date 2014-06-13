@@ -32,7 +32,8 @@
             [oph.common.infra.i18n :refer [wrap-locale]]
             [stencil.core :as s]
             [aipalvastaus.rest-api.i18n]
-            aipalvastaus.sql.korma))
+            aipalvastaus.sql.korma
+            [oph.korma.korma-auth :as korma-auth]))
 
 (schema.core/set-fn-validation! true)
 
@@ -44,6 +45,14 @@
   (c/routes
     (c/context "/api/i18n" [] aipalvastaus.rest-api.i18n/reitit)
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))))
+
+(defn ^:private wrap-set-db-user
+  "Asettaa käyttäjän tietokantaistuntoon."
+  [ring-handler]
+  (fn [request]
+    (binding [korma-auth/*current-user-uid* korma-auth/jarjestelmakayttaja
+              korma-auth/*current-user-oid* (promise)]
+      (ring-handler request))))
 
 (defn sammuta [palvelin]
   (log/info "Sammutetaan Aipal vastaussovellus")
@@ -63,6 +72,7 @@
           portti (get-in luetut-asetukset [:server :port])
           sammuta (hs/run-server (->
                                    (reitit luetut-asetukset)
+                                   wrap-set-db-user
                                    wrap-keyword-params
                                    wrap-json-params
                                    (wrap-resource "public/app")
