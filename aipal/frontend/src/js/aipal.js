@@ -67,4 +67,4 @@ angular.module('aipal', [
         scope.kieli = kieli;
       }
     };
-  }])
+  }]);
