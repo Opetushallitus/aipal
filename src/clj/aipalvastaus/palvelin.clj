@@ -31,7 +31,8 @@
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.i18n :refer [wrap-locale]]
             [stencil.core :as s]
-            aipalvastaus.rest-api.i18n))
+            [aipalvastaus.rest-api.i18n]
+            aipalvastaus.sql.korma))
 
 (schema.core/set-fn-validation! true)
 
@@ -55,7 +56,7 @@
     (let [luetut-asetukset (hae-asetukset)
           _ (deliver asetukset luetut-asetukset )
           _ (konfiguroi-lokitus luetut-asetukset)
-;          _ (aituhaku.arkisto.sql.korma/luo-db (:db luetut-asetukset))
+          _ (aipalvastaus.sql.korma/luo-db (:db luetut-asetukset))
           _ (json-gen/add-encoder org.joda.time.LocalDate
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))
