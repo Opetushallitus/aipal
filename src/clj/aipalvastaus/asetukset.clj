@@ -23,10 +23,10 @@
    :logback {:properties-file "resources/logback.xml"}
    :response-cache-max-age 0
    :db {:host "127.0.0.1"
-        :port 2345
+        :port 3456
         :name "aipal"
-        :user "aipalvastaus_user"
-        :password "aipalvastaus"
+        :user "aipal_user"
+        :password "aipal"
         :maximum-pool-size 15
         :minimum-pool-size 3}})
 
