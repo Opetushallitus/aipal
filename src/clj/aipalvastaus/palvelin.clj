@@ -33,7 +33,8 @@
             [stencil.core :as s]
             [aipalvastaus.rest-api.i18n]
             aipalvastaus.sql.korma
-            [oph.korma.korma-auth :as korma-auth]))
+            [oph.korma.korma-auth :as korma-auth]
+            aipalvastaus.rest-api.kyselykerta))
 
 (schema.core/set-fn-validation! true)
 
@@ -44,6 +45,7 @@
 (defn ^:private reitit [asetukset]
   (c/routes
     (c/context "/api/i18n" [] aipalvastaus.rest-api.i18n/reitit)
+    (c/context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))))
 
 (defn ^:private wrap-set-db-user
