@@ -21,12 +21,12 @@ angular.module('yhteiset.direktiivit.popup-ikkuna', [])
       restrict: 'E',
       transclude: true,
       scope: {
-        piilotaIkkuna : '='
+        naytaPopup : '='
       },
       templateUrl: 'template/yhteiset/direktiivit/popup-ikkuna.html',
       link: function(scope) {
         scope.piilota = function() {
-          scope.piilotaIkkuna = true;
+          scope.naytaPopup = false;
         };
       }
     };

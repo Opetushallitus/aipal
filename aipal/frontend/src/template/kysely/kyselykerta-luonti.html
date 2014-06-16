@@ -1,13 +1,9 @@
-<form ng-submit="tallenna()">
+<form>
   <fieldset>
     <h3>Uusi kyselykerta</h3>
     <h4>Kysely: {{kysely.kyselyid}} {{kysely.nimi_fi}}</h4>
     Kyselykerran nimi:
     <input type="text" placeholder="suomeksi" ng-model="kyselykerta.nimi_fi">
-  </fieldset>
-  <fieldset>
-    Vastaajien lukumäärä:
-    <input type="number" min="1" max="99" ng-model="kyselykerta.vastaajia">
   </fieldset>
   <section class="datepicker-vali">
     <h4>Vastausaika:</h4>
@@ -25,5 +21,5 @@
       valittu-pvm="kyselykerta.voimassa_loppupvm">
     </pvm-valitsin>
   </section>
-  <input type="submit" value="tallenna">
+  <button ng-click="tallenna()">Tallenna</button>
 </form>

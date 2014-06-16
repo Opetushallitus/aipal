@@ -29,15 +29,22 @@ angular.module('yhteiset.palvelut.i18n', ['ngResource'])
     return i18nResource.get({kieli : kieli});
   }])
 
-  .factory('$locale', ['kieli', 'i18n', function(kieli, i18n) {
+  .factory('$locale', ['kieli', function(kieli) {
     var PLURAL_CATEGORY = {ZERO: 'zero', ONE: 'one', TWO: 'two', FEW: 'few', MANY: 'many', OTHER: 'other'};
 
-    var paivat = [], kuukaudet = [];
+    var kalenteri = {
+      'paivat': {
+        'fi': 'su,ma,ti,ke,to,pe,la',
+        'sv': 'Sön,Mån,Tis,Ons,Tor,Fre,Lör'
+      },
+      'kuukaudet': {
+        'fi': 'Tammi,Helmi,Maalis,Huhti,Touko,Kesä,Heinä,Elo,Syys,Loka,Marras,Joulu',
+        'sv': 'Januari,Februari,Mars,April,Maj,Juni,Juli,Augusti,September,Oktober,November,December'
+      }
+    };
 
-    i18n.$promise.then(function() {
-      paivat = i18n.kalenteri.paivat.split(',');
-      kuukaudet = i18n.kalenteri.kuukaudet.split(',');
-    });
+    var paivat = kalenteri.paivat[kieli].split(',');
+    var kuukaudet = kalenteri.kuukaudet[kieli].split(',');
 
     return {
       'DATETIME_FORMATS': {

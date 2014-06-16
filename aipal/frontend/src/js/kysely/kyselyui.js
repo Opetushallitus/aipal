@@ -31,15 +31,15 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
   .controller('KyselytController', [
     'Kysely', '$scope',
     function(Kysely, $scope) {
-      $scope.piilotaLuonti = true;
+      $scope.naytaLuonti = false;
       $scope.kyselyt = Kysely.hae();
 
       $scope.uusiKyselykerta = function(kyselyid) {
         $scope.valittuKyselyid = kyselyid;
-        $scope.piilotaLuonti = false;
+        $scope.naytaLuonti = true;
       };
       $scope.suljePopup = function() {
-        $scope.piilotaLuonti = true;
+        $scope.naytaLuonti = false;
         $scope.kyselyt = Kysely.hae();
       };
     }
