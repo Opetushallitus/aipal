@@ -341,6 +341,57 @@ IS
   'kyllä/ei vastausvaihtoehto' ;
   ALTER TABLE vastaus ADD CONSTRAINT vastaus_PK PRIMARY KEY ( vastausid ) ;
 
+
+CREATE TABLE jarjestaja (
+  ytunnus VARCHAR(10) PRIMARY KEY,
+  nimi_fi VARCHAR(200) NOT NULL,
+  nimi_sv VARCHAR(200),
+  sahkoposti VARCHAR(100),
+  puhelin VARCHAR(100),
+  osoite VARCHAR(100),
+  postinumero VARCHAR(5),
+  postitoimipaikka VARCHAR(40),
+  www_osoite VARCHAR(200),
+  oid VARCHAR(40),
+  luotuaika TIMESTAMPTZ NOT NULL,
+  muutettuaika TIMESTAMPTZ NOT NULL,
+  luotu_kayttaja VARCHAR(80) NOT NULL,
+  muutettu_kayttaja VARCHAR(80) NOT NULL);
+
+CREATE TABLE oppilaitos (
+  oppilaitoskoodi VARCHAR(5) PRIMARY KEY,
+  jarjestaja VARCHAR(10) NOT NULL,
+  nimi_fi VARCHAR(200) NOT NULL,
+  nimi_sv VARCHAR(200),
+  sahkoposti VARCHAR(100),
+  puhelin VARCHAR(100),
+  osoite VARCHAR(100),
+  postinumero VARCHAR(5),
+  postitoimipaikka VARCHAR(40),
+  www_osoite VARCHAR(200),
+  oid VARCHAR(40),
+  luotuaika TIMESTAMPTZ NOT NULL,
+  muutettuaika TIMESTAMPTZ NOT NULL,
+  luotu_kayttaja VARCHAR(80) NOT NULL,
+  muutettu_kayttaja VARCHAR(80) NOT NULL);
+
+CREATE TABLE toimipaikka (
+  toimipaikkakoodi VARCHAR(7) PRIMARY KEY,
+  oppilaitos VARCHAR(5) NOT NULL,
+  nimi_fi VARCHAR(200) NOT NULL,
+  nimi_sv VARCHAR(200),
+  sahkoposti VARCHAR(100),
+  puhelin VARCHAR(100),
+  osoite VARCHAR(100),
+  postinumero VARCHAR(5),
+  postitoimipaikka VARCHAR(40),
+  www_osoite VARCHAR(200),
+  oid VARCHAR(40),
+  luotuaika TIMESTAMPTZ NOT NULL,
+  muutettuaika TIMESTAMPTZ NOT NULL,
+  luotu_kayttaja VARCHAR(80) NOT NULL,
+  muutettu_kayttaja VARCHAR(80) NOT NULL);
+
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -440,6 +491,22 @@ ALTER TABLE vastaus ADD CONSTRAINT vastaus_kayttaja_FKv1 FOREIGN KEY ( muutettu_
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) REFERENCES kysymys ( kysymysid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaaja_FK FOREIGN KEY ( vastaajaid ) REFERENCES vastaaja ( vastaajaid ) NOT DEFERRABLE ;
+
+ALTER TABLE jarjestaja ADD CONSTRAINT jarjestaja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE jarjestaja ADD CONSTRAINT jarjestaja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE oppilaitos ADD CONSTRAINT oppilaitos_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE oppilaitos ADD CONSTRAINT oppilaitos_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE oppilaitos ADD CONSTRAINT oppilaitos_jarjestaja_FK FOREIGN KEY ( jarjestaja ) REFERENCES jarjestaja ( ytunnus ) NOT DEFERRABLE ;
+
+ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_oppilaitos_FK FOREIGN KEY ( oppilaitos ) REFERENCES oppilaitos ( oppilaitoskoodi ) NOT DEFERRABLE ;
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
 values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
@@ -579,7 +646,26 @@ create trigger vastaus_mu_update before update on vastaus for each row execute p
 create trigger vastaus_cu_insert before insert on vastaus for each row execute procedure update_creator() ;
 create trigger vastaus_mu_insert before insert on vastaus for each row execute procedure update_modifier() ;
 
+-- jarjestaja
+create trigger jarjestaja_update before update on jarjestaja for each row execute procedure update_stamp() ;
+create trigger jarjestajal_insert before insert on jarjestaja for each row execute procedure update_created() ;
+create trigger jarjestajam_insert before insert on jarjestaja for each row execute procedure update_stamp() ;
+create trigger jarjestaja_mu_update before update on jarjestaja for each row execute procedure update_modifier() ;
+create trigger jarjestaja_cu_insert before insert on jarjestaja for each row execute procedure update_creator() ;
+create trigger jarjestaja_mu_insert before insert on jarjestaja for each row execute procedure update_modifier() ;
 
+-- oppilaitos
+create trigger oppilaitos_update before update on oppilaitos for each row execute procedure update_stamp() ;
+create trigger oppilaitosl_insert before insert on oppilaitos for each row execute procedure update_created() ;
+create trigger oppilaitosm_insert before insert on oppilaitos for each row execute procedure update_stamp() ;
+create trigger oppilaitos_mu_update before update on oppilaitos for each row execute procedure update_modifier() ;
+create trigger oppilaitos_cu_insert before insert on oppilaitos for each row execute procedure update_creator() ;
+create trigger oppilaitos_mu_insert before insert on oppilaitos for each row execute procedure update_modifier() ;
 
-
-
+-- toimipaikka
+create trigger toimipaikka_update before update on toimipaikka for each row execute procedure update_stamp() ;
+create trigger toimipaikkal_insert before insert on toimipaikka for each row execute procedure update_created() ;
+create trigger toimipaikkam_insert before insert on toimipaikka for each row execute procedure update_stamp() ;
+create trigger toimipaikka_mu_update before update on toimipaikka for each row execute procedure update_modifier() ;
+create trigger toimipaikka_cu_insert before insert on toimipaikka for each row execute procedure update_creator() ;
+create trigger toimipaikka_mu_insert before insert on toimipaikka for each row execute procedure update_modifier() ;
