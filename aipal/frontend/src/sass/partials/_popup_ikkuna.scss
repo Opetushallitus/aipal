@@ -4,14 +4,14 @@
 
   @include box-shadow;
   z-index: 10;
-  position: absolute;
+  position: fixed;
   border: 2px solid $darker-gray;
   background-color: white;
   min-height: $popup-height;
   padding: 5px 10px;
   margin-left: -$popup-width / 2;
   left: 50%;
-  top: 100px;
+  top: 20%;
   width: $popup-width;
 
   button.sulje {
