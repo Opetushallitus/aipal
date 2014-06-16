@@ -23,7 +23,7 @@ angular.module('yhteiset.palvelut.pvm', ['ngResource'])
           try {
             var parts = pvm.split('.');
             var parsittu = new Date(parts[2], parts[1] - 1, parts[0]);
-            if(parsittu.getDate() === parts[0] && parsittu.getMonth() === parts[1] -1 && parsittu.getFullYear() === parts[2]) {
+            if(parsittu.getDate().toString() === parts[0] && parsittu.getMonth() === parts[1] -1 && parsittu.getFullYear().toString() === parts[2]) {
               return parsittu;
             }
           } catch(e) {}

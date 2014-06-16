@@ -31,7 +31,7 @@ angular.module('yhteiset.direktiivit.pvm-valitsin', ['yhteiset.palvelut.pvm'])
       templateUrl : 'template/yhteiset/direktiivit/pvm-valitsin.html',
       link : function(scope) {
         scope.$watch('oletusPvm', function(value){
-          if(!scope.valittuPvm) {
+          if(value && !scope.valittuPvm) {
             scope.valittuPvm = value;
           }
         });
