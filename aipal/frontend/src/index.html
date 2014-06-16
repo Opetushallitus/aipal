@@ -20,8 +20,16 @@
   </style>
 </head>
 <body ng-cloak ng-controller="AipalController">
-  <div ng-hide="i18n.$resolved">
-    Aipalia ladataan...
+  <div ng-hide="i18n.$resolved" class="aipal-loading">
+    <header>
+      <div class="app-wrapper">
+          <span class="vertical-aligner"></span>
+          <h1>AIPAL</h1>
+          <span class="separator">|</span>
+          <h2><img src="img/loading.gif"></h2>
+          <div class="oph-logo"></div>
+      </div>
+    </header>
   </div>
 
   <div ng-show="i18n.$resolved" class="ng-hide">
