@@ -1,4 +1,8 @@
 (ns aipalvastaus.sql.korma
+  (:import java.sql.Date
+           java.sql.Timestamp
+           org.joda.time.DateTime
+           org.joda.time.LocalDate)
   (:require korma.db
             [korma.core :as sql]
             [oph.korma.korma-auth :as korma-auth]
