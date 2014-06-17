@@ -21,9 +21,7 @@
     (sql/join :kysely_kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
-                :kysymysryhma.nimi_sv
-                :kysymysryhma.taustakysymykset
-                :kysymysryhma.valtakunnallinen)
+                :kysymysryhma.nimi_sv)
     (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))
 
 (defn hae-kysymysryhmien-kysymykset [kyselyid]
