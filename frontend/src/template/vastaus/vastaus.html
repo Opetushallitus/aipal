@@ -1,0 +1,9 @@
+<h1>Kysely #{{kyselyid}}</h1>
+
+<div ng-repeat="kysymysryhma in data.kysymysryhmat">
+  <h2>{{ kysymysryhma.nimi_fi }}</h2>
+
+  <div ng-repeat="kysymys in kysymysryhma.kysymykset">
+    <h3>{{ kysymys.kysymys_fi }} </h3>
+  </div>
+</div>

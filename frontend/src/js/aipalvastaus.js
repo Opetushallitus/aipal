@@ -18,6 +18,7 @@ angular.module('aipalvastaus', [
     'lomake.lomakeui',
     'yhteiset.palvelut.i18n',
     'yhteiset.direktiivit.copyright',
+    'vastaus.vastausui',
     'ngRoute'
   ])
 
