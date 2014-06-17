@@ -33,6 +33,7 @@
     (sql/join :kysely_kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymys.kysymysryhmaid
                 :kysymys.kysymysid
+                :kysymys.vastaustyyppi
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv)
     (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))
