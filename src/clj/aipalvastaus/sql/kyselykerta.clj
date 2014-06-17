@@ -18,7 +18,6 @@
 
 (defn hae-kysymysryhmat [kyselyid]
   (sql/select :kysymysryhma
-    #_(sql/with kysymys)
     (sql/join :kysely_kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
