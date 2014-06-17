@@ -26,14 +26,13 @@
 
 (defn hae-kysymysryhmien-kysymykset [kyselyid]
   (sql/select :kysymys
-    (sql/join :kysymysryhma (= :kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
-    (sql/join :kysely_kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
+    (sql/join :kysely_kysymys (= :kysely_kysymys.kysymysid :kysymys.kysymysid))
     (sql/fields :kysymys.kysymysryhmaid
                 :kysymys.kysymysid
                 :kysymys.vastaustyyppi
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv)
-    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))
+    (sql/where {:kysely_kysymys.kyselyid kyselyid})))
 
 (defn ^:private filteroi-kysymysryhman-kysymykset [kysymykset kysymysryhmaid]
   (filter #(= kysymysryhmaid (:kysymysryhmaid %)) kysymykset))
