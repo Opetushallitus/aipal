@@ -22,7 +22,8 @@
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
                 :kysymysryhma.nimi_sv)
-    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))
+    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
+    (sql/order :kysely_kysymysryhma.jarjestys)))
 
 (defn hae-kysymysryhmien-kysymykset [kyselyid]
   (sql/select :kysymys
@@ -32,7 +33,8 @@
                 :kysymys.vastaustyyppi
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv)
-    (sql/where {:kysely_kysymys.kyselyid kyselyid})))
+    (sql/where {:kysely_kysymys.kyselyid kyselyid})
+    (sql/order :kysymys.jarjestys)))
 
 (defn ^:private filteroi-kysymysryhman-kysymykset [kysymykset kysymysryhmaid]
   (filter #(= kysymysryhmaid (:kysymysryhmaid %)) kysymykset))
