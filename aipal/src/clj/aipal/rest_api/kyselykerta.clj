@@ -19,8 +19,8 @@
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.rest-api.http-util :refer [json-response parse-iso-date]]))
 
-(defn paivita-arvot [m arvot f]
-  (reduce #(when % (update-in % [%2] f)) m arvot))
+(defn paivita-arvot [m avaimet f]
+  (reduce #(update-in % [%2] f) m avaimet))
 
 (c/defroutes reitit
   (c/GET "/" []
