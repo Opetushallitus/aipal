@@ -174,6 +174,7 @@ CREATE TABLE kysymys
     kysymys_sv        VARCHAR (500) ,
     jarjestys         INTEGER ,
     jatkokysymysid    INTEGER ,
+    monivalinta_max   INTEGER ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
@@ -191,6 +192,7 @@ IS
   COMMENT ON COLUMN kysymys.jarjestys
 IS
   'Kysymyksen järjestys kysymysryhmän sisällä' ;
+COMMENT ON COLUMN kysymys.monivalinta_max IS 'Monivalintakysymyksen vastausvalintojen maksimimäärä';
   ALTER TABLE kysymys ADD CONSTRAINT kysymys_PK PRIMARY KEY ( kysymysid ) ;
   ALTER TABLE kysymys ADD CONSTRAINT kysymys_ryhma_jarjestys_UN UNIQUE ( kysymysryhmaid , jarjestys ) DEFERRABLE ;
 
