@@ -5,5 +5,10 @@
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <h3>{{ kysymys.kysymys_fi }} </h3>
+
+    <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
+      <input type="radio" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto.monivalintavaihtoehtoid}}" />
+      {{vaihtoehto.teksti_fi}}
+    </label>
   </div>
 </div>
