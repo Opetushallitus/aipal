@@ -16,29 +16,12 @@
   (:require [korma.core :as sql]))
 
 (defn hae-kaikki
-  "Hae kaikki kyselykerrat, joissa on kysymyksiä"
+  "Hae kaikki kyselykerrat"
   []
   (->
     (sql/select* :kyselykerta)
-    (sql/modifier "DISTINCT")
-    (sql/fields :kyselykerta.kyselykertaid :kyselykerta.nimi_fi :kyselykerta.nimi_sv)
+    (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
     (sql/order :kyselykerta.kyselykertaid :ASC)
-
-    (sql/join :inner {:table :kysely}
-              (= :kyselykerta.kyselyid
-                 :kysely.kyselyid))
-
-    (sql/join :inner {:table :kysely_kysymysryhma}
-              (= :kysely.kyselyid
-                 :kysely_kysymysryhma.kyselyid))
-
-    (sql/join :inner {:table :kysymysryhma}
-              (= :kysely_kysymysryhma.kysymysryhmaid
-                 :kysymysryhma.kysymysryhmaid))
-
-    (sql/join :inner {:table :kysymys}
-              (= :kysymysryhma.kysymysryhmaid
-                 :kysymys.kysymysryhmaid))
 
     sql/exec))
 

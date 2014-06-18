@@ -13,21 +13,28 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kysely
-  (:require [korma.core :as sql])
+  (:require [korma.core :as sql]
+            [aipal.arkisto.kyselykerta :as kyselykerta])
   (:use [aitu.integraatio.sql.korma]))
 
-(defn hae-kaikki
+(defn hae-kyselyt
   "Hae kaikki kyselyt"
   []
   (->
-    (sql/select* kysely)
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm)
-
-    (sql/with kyselykerta
-       (sql/fields :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm))
-    (sql/order :kysely.kyselyid :ASC)
-
+    (sql/select* :kysely)
+    (sql/fields :kyselyid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
+    (sql/order :kyselyid :ASC)
     sql/exec))
+
+(defn ^:private yhdista-tietorakenteet [kyselyt kyselyid->kyselykerrat]
+  (for [kysely kyselyt]
+    (assoc kysely :kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely)))))
+
+(defn hae-kaikki []
+  (let [kyselyt (hae-kyselyt)
+        kyselykerrat (kyselykerta/hae-kaikki)
+        kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
+    (yhdista-tietorakenteet kyselyt kyselyid->kyselykerrat)))
 
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"

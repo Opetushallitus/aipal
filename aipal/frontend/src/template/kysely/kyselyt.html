@@ -11,7 +11,7 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
       <br>Voimassa: {{kysely.voimassa_alkupvm}} - {{kysely.voimassa_loppupvm}}
       <a href="" ng-click="uusiKyselykerta(kysely.kyselyid)">[uusi kyselykerta]</a>
     </div>
-    <div ng-show="kysely.kyselykerta.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerta">
+    <div ng-show="kysely.kyselykerrat.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerrat">
       <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
         Kyselykerta: {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
       </a>
