@@ -38,7 +38,7 @@
   (map w/text
        (w/find-elements-under kysely-elementti
                               (-> *ng*
-                                (.repeater "kyselykerta in kysely.kyselykerta")
+                                (.repeater "kyselykerta in kysely.kyselykerrat")
                                 (.column "kyselykerta.nimi_fi")))))
 
 (deftest kyselyt-sivu-test
