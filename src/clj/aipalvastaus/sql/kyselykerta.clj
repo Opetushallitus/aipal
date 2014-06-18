@@ -36,18 +36,37 @@
     (sql/where {:kysely_kysymys.kyselyid kyselyid})
     (sql/order :kysymys.jarjestys)))
 
+(defn hae-kysymysten-monivalintavaihtoehdot [kyselyid]
+  (sql/select :monivalintavaihtoehto
+    (sql/join :kysely_kysymys (= :kysely_kysymys.kysymysid :monivalintavaihtoehto.kysymysid))
+    (sql/fields :monivalintavaihtoehto.monivalintavaihtoehtoid
+                :monivalintavaihtoehto.kysymysid
+                :monivalintavaihtoehto.teksti_fi
+                :monivalintavaihtoehto.teksti_sv)
+    (sql/where {:kysely_kysymys.kyselyid kyselyid})
+    (sql/order :monivalintavaihtoehto.jarjestys)))
+
 (defn ^:private filteroi-kysymysryhman-kysymykset [kysymykset kysymysryhmaid]
   (filter #(= kysymysryhmaid (:kysymysryhmaid %)) kysymykset))
 
-(defn ^:private joinaa-tietorakenteet [kysymysryhmat kysymykset]
+(defn ^:private filteroi-kysymysten-monivalintavaihtoehdot [monivalintavaihtoehdot kysymysid]
+  (filter #(= kysymysid (:kysymysid %)) monivalintavaihtoehdot))
+
+(defn ^:private joinaa-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
+  (for [kysymys kysymykset
+        :let [monivalinnat (filteroi-kysymysten-monivalintavaihtoehdot monivalintavaihtoehdot (kysymys :kysymysid))]]
+    (assoc kysymys :monivalintavaihtoehdot monivalinnat)))
+
+(defn ^:private joinaa-tietorakenteet [kysymysryhmat kysymykset monivalintavaihtoehdot]
   (for [kysymysryhma kysymysryhmat
-        :let [kysymykset (filteroi-kysymysryhman-kysymykset kysymykset (:kysymysryhmaid kysymysryhma))]]
+        :let [kysymykset (joinaa-monivalintavaihtoehdot-kysymyksiin (filteroi-kysymysryhman-kysymykset kysymykset (:kysymysryhmaid kysymysryhma)) monivalintavaihtoehdot)]]
     (assoc kysymysryhma :kysymykset kysymykset)))
 
 (defn hae-kysymysryhmat-ja-kysymykset [kyselyid]
   (let [kysymysryhmat (hae-kysymysryhmat kyselyid)
-        kysymykset (hae-kysymysryhmien-kysymykset kyselyid)]
-    (joinaa-tietorakenteet kysymysryhmat kysymykset)))
+        kysymykset (hae-kysymysryhmien-kysymykset kyselyid)
+        monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot kyselyid)]
+    (joinaa-tietorakenteet kysymysryhmat kysymykset monivalintavaihtoehdot)))
 
 (defn hae
   "Hakee kyselykerran tiedot pääavaimella"
