@@ -21,7 +21,7 @@
   "Hae kaikki kyselyt"
   []
   (->
-    (sql/select* :kysely)
+    (sql/select* kysely)
     (sql/fields :kyselyid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
     (sql/order :kyselyid :ASC)
     sql/exec))
