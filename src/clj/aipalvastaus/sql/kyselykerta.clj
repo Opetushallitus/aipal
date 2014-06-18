@@ -46,21 +46,15 @@
     (sql/where {:kysely_kysymys.kyselyid kyselyid})
     (sql/order :monivalintavaihtoehto.jarjestys)))
 
-(defn ^:private filteroi-kysymysryhman-kysymykset [kysymykset kysymysryhmaid]
-  (filter #(= kysymysryhmaid (:kysymysryhmaid %)) kysymykset))
-
-(defn ^:private filteroi-kysymysten-monivalintavaihtoehdot [monivalintavaihtoehdot kysymysid]
-  (filter #(= kysymysid (:kysymysid %)) monivalintavaihtoehdot))
-
 (defn ^:private joinaa-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
   (for [kysymys kysymykset
-        :let [monivalinnat (filteroi-kysymysten-monivalintavaihtoehdot monivalintavaihtoehdot (kysymys :kysymysid))]]
-    (assoc kysymys :monivalintavaihtoehdot monivalinnat)))
+        :let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]]
+    (assoc kysymys :monivalintavaihtoehdot (kysymysid->monivalinnat (:kysymysid kysymys)))))
 
 (defn ^:private joinaa-tietorakenteet [kysymysryhmat kysymykset monivalintavaihtoehdot]
-  (for [kysymysryhma kysymysryhmat
-        :let [kysymykset (joinaa-monivalintavaihtoehdot-kysymyksiin (filteroi-kysymysryhman-kysymykset kysymykset (:kysymysryhmaid kysymysryhma)) monivalintavaihtoehdot)]]
-    (assoc kysymysryhma :kysymykset kysymykset)))
+  (let [kysymysryhmaid->kysymykset (group-by :kysymysryhmaid (joinaa-monivalintavaihtoehdot-kysymyksiin kysymykset monivalintavaihtoehdot))]
+    (for [kysymysryhma kysymysryhmat]
+      (assoc kysymysryhma :kysymykset (kysymysryhmaid->kysymykset (kysymysryhma :kysymysryhmaid))))))
 
 (defn hae-kysymysryhmat-ja-kysymykset [kyselyid]
   (let [kysymysryhmat (hae-kysymysryhmat kyselyid)
