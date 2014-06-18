@@ -21,14 +21,38 @@ angular.module('aipal', [
     'kysymysryhma.kysymysryhmaui',
     'raportti.kyselykerta.kyselykertaui',
     'yhteiset.palvelut.i18n',
+    'yhteiset.palvelut.apicallinterceptor',
     'yhteiset.direktiivit.copyright',
     'yhteiset.direktiivit.navigaatio',
     'yhteiset.direktiivit.popup-ikkuna',
     'yhteiset.direktiivit.input',
     'yhteiset.direktiivit.pvm-valitsin',
+    'yhteiset.direktiivit.latausindikaattori',
     'ui.bootstrap',
     'ngRoute'
   ])
+
+  .config(['$httpProvider', 'asetukset', function($httpProvider, asetukset) {
+    $httpProvider.interceptors.push(
+      function(apiCallInterceptor, $q){
+        return {
+          request : function(pyynto){
+            pyynto.timeout = asetukset.requestTimeout;
+            apiCallInterceptor.apiPyynto(pyynto);
+            return pyynto;
+          },
+          response : function(vastaus){
+            apiCallInterceptor.apiVastaus(vastaus, false);
+            return vastaus;
+          },
+          responseError : function(vastaus){
+            apiCallInterceptor.apiVastaus(vastaus, true);
+            return $q.reject(vastaus);
+          }
+        };
+      }
+    );
+  }])
 
   .controller('AipalController', ['$scope', '$window', 'i18n', function($scope, $window, i18n){
     $scope.i18n = i18n;

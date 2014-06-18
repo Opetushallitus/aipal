@@ -32,7 +32,11 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
     'Kysely', '$scope',
     function(Kysely, $scope) {
       $scope.naytaLuonti = false;
-      $scope.kyselyt = Kysely.hae();
+
+      $scope.haeKyselyt = function() {
+        $scope.kyselyt = Kysely.hae();
+      };
+      $scope.haeKyselyt();
 
       $scope.uusiKyselykerta = function(kyselyid) {
         $scope.valittuKyselyid = kyselyid;
@@ -40,7 +44,7 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
       };
       $scope.suljePopup = function() {
         $scope.naytaLuonti = false;
-        $scope.kyselyt = Kysely.hae();
+        $scope.haeKyselyt();
       };
     }
   ])

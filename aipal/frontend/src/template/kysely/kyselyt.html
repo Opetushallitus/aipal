@@ -2,8 +2,10 @@
 
 Haku: <input type="text" ng-model="hakuehto.teksti">
 
-<div class="accordion-container">
-  <div class="accordion" ng-repeat="kysely in kyselyt | filter:hakuehto.teksti | limitTo:50">
+<div class="accordion-container"
+  lataus-indikaattori metodi-idt="['kyselylistaus']"
+  viesti="{{i18n.yleiset.ladataan}}" virheviesti="{{i18n.yleiset.lataus_epaonnistui}}" yrita-uudelleen="haeKyselyt()">
+  <div ng-hide="latausKaynnissa" class="accordion" ng-repeat="kysely in kyselyt | filter:hakuehto.teksti | limitTo:50">
     <div class="accordion-header collapse">
       <a ng-href="#/kysely/{{kysely.kyselyid}}">
         {{kysely.kyselyid}} {{kysely.nimi_fi}}

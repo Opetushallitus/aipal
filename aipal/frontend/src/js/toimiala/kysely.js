@@ -20,7 +20,8 @@ angular.module('toimiala.kysely', ['ngResource'])
       haku: {
         method: 'GET',
         isArray: true,
-        url: 'api/kysely'
+        url: 'api/kysely',
+        id: 'kyselylistaus'
       },
       idHaku: {
         method: 'GET',
