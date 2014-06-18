@@ -220,4 +220,31 @@ fieldset.datepicker-field {
   h1{
     margin-bottom: 0px;
   }
+  section {
+    .kysymykset{
+      .kysymys{
+        padding: 10px 0;
+        border-bottom: 1px solid #cccbcb;
+        h4{
+          margin-bottom: 5px;
+        }
+      }
+      .kysymys:last-child{
+        border-bottom: 0;
+      }
+      .kysymys label{
+        display: block;
+        font-weight: 200;
+
+      }
+    }
+    h2{
+      margin: 20px 0;
+    }
+    header {
+      border-top: 1px solid #cccbcb;
+      border-bottom: 1px solid #cccbcb;
+    }
+  }
 }
+

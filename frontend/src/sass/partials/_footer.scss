@@ -2,10 +2,28 @@ footer .separator {margin: 0 10px;}
 
 footer.copyright-footer, footer.dev-footer {
   @include border-box;
+
   color: #ffffff;
   a {color:$lighter-primary;}
   .app-wrapper {
     @include border-box;
+  }
+}
+
+footer.disclaimer-footer{
+  $footer-height: 120px;
+  background-color: #333333;
+  .app-wrapper {
+    color: #ffffff;
+    h4{
+      margin: 0 0 10px 0;
+      font-weight: normal;
+    }
+    p{
+      font-size: .85em;
+    }
+    padding: 20px 10px 10px 10px;
+    height: $footer-height;
   }
 }
 
@@ -21,9 +39,9 @@ footer.copyright-footer {
 }
 
 footer.dev-footer { background-color: $darker-primary;
-  > div {min-height: 80px;}
+  > div {min-height: 40px;}
   .app-wrapper {
-    padding-top: 28px;
+    padding-top: 10px;
     color: $primary-action-text;
   }
 }

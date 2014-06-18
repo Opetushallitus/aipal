@@ -25,11 +25,21 @@
       <div ng-view></div>
     </div>
   </div>
+  <footer class="disclaimer-footer">
+    <div class="app-wrapper">
+        <h4>{{i18n.yleiset.palvelun_tarjoaa}}</h4>
+        <p>{{i18n.yleiset.palvelun_seloste}}<br>{{i18n.yleiset.palvelun_seloste_palaute}}</p>
+    </div>
+  </footer>
   <footer class="copyright-footer">
     <div class="app-wrapper"><span copyright></span></div>
   </footer>
   <footer class="dev-footer">
-    <div class="app-wrapper"><span class="build-id">Build: [[build-id]]</span> <span class="separator">|</span> <a href="[[base-url]]/status">Status</a></div>
+    <div class="app-wrapper">
+        <!--dev-->
+        <span class="build-id">Build: [[build-id]]</span> <span class="separator">|</span> <a href="[[base-url]]/status">Status</a>
+        <!--enddev-->
+    </div>
   </footer>
 
   <!-- build:js js/libs.js -->
