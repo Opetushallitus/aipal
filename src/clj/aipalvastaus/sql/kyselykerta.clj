@@ -47,13 +47,13 @@
     (sql/where {:kysely_kysymys.kyselyid kyselyid})
     (sql/order :monivalintavaihtoehto.jarjestys)))
 
-(defn ^:private joinaa-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
+(defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
   (for [kysymys kysymykset
         :let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]]
     (assoc kysymys :monivalintavaihtoehdot (kysymysid->monivalinnat (:kysymysid kysymys)))))
 
-(defn ^:private joinaa-tietorakenteet [kysymysryhmat kysymykset monivalintavaihtoehdot]
-  (let [kysymysryhmaid->kysymykset (group-by :kysymysryhmaid (joinaa-monivalintavaihtoehdot-kysymyksiin kysymykset monivalintavaihtoehdot))]
+(defn ^:private yhdista-tietorakenteet [kysymysryhmat kysymykset monivalintavaihtoehdot]
+  (let [kysymysryhmaid->kysymykset (group-by :kysymysryhmaid (yhdista-monivalintavaihtoehdot-kysymyksiin kysymykset monivalintavaihtoehdot))]
     (for [kysymysryhma kysymysryhmat]
       (assoc kysymysryhma :kysymykset (kysymysryhmaid->kysymykset (kysymysryhma :kysymysryhmaid))))))
 
@@ -61,7 +61,7 @@
   (let [kysymysryhmat (hae-kysymysryhmat kyselyid)
         kysymykset (hae-kysymysryhmien-kysymykset kyselyid)
         monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot kyselyid)]
-    (joinaa-tietorakenteet kysymysryhmat kysymykset monivalintavaihtoehdot)))
+    (yhdista-tietorakenteet kysymysryhmat kysymykset monivalintavaihtoehdot)))
 
 (defn hae
   "Hakee kyselykerran tiedot pääavaimella"
