@@ -64,6 +64,6 @@
     (yhdista-tietorakenteet kysymysryhmat kysymykset monivalintavaihtoehdot)))
 
 (defn hae
-  "Hakee kyselykerran tiedot pääavaimella"
+  "Hakee kyselyn tiedot pääavaimella"
   [kyselyid]
   {:kysymysryhmat (hae-kysymysryhmat-ja-kysymykset kyselyid)})
