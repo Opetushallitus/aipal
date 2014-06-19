@@ -48,9 +48,9 @@
     (sql/order :monivalintavaihtoehto.jarjestys)))
 
 (defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
-  (for [kysymys kysymykset
-        :let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]]
-    (assoc kysymys :monivalintavaihtoehdot (kysymysid->monivalinnat (:kysymysid kysymys)))))
+  (let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]
+    (for [kysymys kysymykset]
+      (assoc kysymys :monivalintavaihtoehdot (kysymysid->monivalinnat (:kysymysid kysymys))))))
 
 (defn ^:private yhdista-tietorakenteet [kysymysryhmat kysymykset monivalintavaihtoehdot]
   (let [kysymysryhmaid->kysymykset (group-by :kysymysryhmaid (yhdista-monivalintavaihtoehdot-kysymyksiin kysymykset monivalintavaihtoehdot))]
