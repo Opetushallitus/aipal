@@ -7,7 +7,12 @@
     <h3>{{ kysymys.kysymys_fi }} </h3>
 
     <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
-      <input type="radio" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto.monivalintavaihtoehtoid}}" />
+      <span ng-if="kysymys.monivalinta_max == 1">
+        <input type="radio" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto.monivalintavaihtoehtoid}}" />
+      </span>
+      <span ng-if="kysymys.monivalinta_max > 1">
+        <input type="checkbox" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto.monivalintavaihtoehtoid}}" />
+      </span>
       {{vaihtoehto.teksti_fi}}
     </label>
   </div>

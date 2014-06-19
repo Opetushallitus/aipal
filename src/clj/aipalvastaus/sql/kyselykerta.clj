@@ -31,6 +31,7 @@
     (sql/fields :kysymys.kysymysryhmaid
                 :kysymys.kysymysid
                 :kysymys.vastaustyyppi
+                :kysymys.monivalinta_max
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv)
     (sql/where {:kysely_kysymys.kyselyid kyselyid})
