@@ -23,6 +23,7 @@
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
             [cheshire.generate :as json-gen]
             schema.core
@@ -83,6 +84,7 @@
                                      :base-url (get-in luetut-asetukset [:server :base-url]))
                                    wrap-params
                                    wrap-content-type
+                                   (wrap-frame-options :deny)
                                    log-request-wrapper)
                                  {:port portti})
           _ (log/info "Palvelin käynnistetty porttiin " portti)]

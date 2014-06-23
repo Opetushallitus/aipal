@@ -19,6 +19,7 @@
                  [http-kit "2.1.10"]
                  [compojure "1.1.5"]
                  [ring/ring-json "0.2.0"]
+                 [ring/ring-headers "0.1.0"]
                  [cheshire "5.2.0"]
                  [stencil "0.3.3"]
                  [org.clojure/tools.logging "0.2.6"]
