@@ -24,6 +24,7 @@
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
             schema.core
             [stencil.core :as s]
@@ -98,6 +99,7 @@
                                      :ei-redirectia #"/api/.*"
                                      :base-url (-> asetukset :server :base-url))
                                    wrap-content-type
+                                   (wrap-frame-options :deny)
                                    log-request-wrapper
                                    wrap-poikkeusten-logitus)
                                  {:port (get-in asetukset [:server :port])})]
