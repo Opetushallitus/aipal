@@ -15,7 +15,6 @@
 'use strict';
 
 angular.module('aipal', [
-    'angular-loading-bar',
     'etusivu.etusivuui',
     'kysely.kyselyui',
     'kyselypohja.kyselypohjaui',
@@ -82,11 +81,6 @@ angular.module('aipal', [
     minDate: null,
     maxDate: null
   })
-
-  .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.latencyThreshold = 100;
-    cfpLoadingBarProvider.includeSpinner = false;
-  }])
 
   .directive('kielenVaihto', ['kieli', function(kieli){
     return {
