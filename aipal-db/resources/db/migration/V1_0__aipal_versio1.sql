@@ -291,6 +291,7 @@ CREATE TABLE vastaajatunnus
     vastaajatunnusid  SERIAL NOT NULL ,
     kyselykertaid     INTEGER NOT NULL ,
     rahoitusmuotoid   INTEGER ,
+    tutkintotunnus    VARCHAR (6) ,
     tunnus            VARCHAR (30) NOT NULL ,
     vastaajien_lkm    INTEGER NOT NULL ,
     lukittu           BOOLEAN DEFAULT false NOT NULL ,
@@ -394,6 +395,17 @@ CREATE TABLE toimipaikka (
   luotu_kayttaja VARCHAR(80) NOT NULL,
   muutettu_kayttaja VARCHAR(80) NOT NULL);
 
+CREATE TABLE tutkinto
+  (
+    tutkintotunnus    VARCHAR (6) NOT NULL PRIMARY KEY,
+    nimi_fi           VARCHAR (200) ,
+    nimi_sv           VARCHAR (200) ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -477,12 +489,10 @@ ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_kyselykerta_FK FOREIGN KEY ( kysely
 ALTER TABLE vastaaja ADD CONSTRAINT vastaaja_vastaajatunnus_FK FOREIGN KEY ( vastaajatunnusid ) REFERENCES vastaajatunnus ( vastaajatunnusid ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
-
 ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
-
 ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_kyselykerta_FK FOREIGN KEY ( kyselykertaid ) REFERENCES kyselykerta ( kyselykertaid ) NOT DEFERRABLE ;
-
 ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_rahmuoto_FK FOREIGN KEY ( rahoitusmuotoid ) REFERENCES rahoitusmuoto ( rahoitusmuotoid ) NOT DEFERRABLE ;
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_tutkinto_FK FOREIGN KEY ( tutkintotunnus ) REFERENCES tutkinto ( tutkintotunnus ) NOT DEFERRABLE ;
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_jatkovastaus_FK FOREIGN KEY ( jatkovastausid ) REFERENCES jatkovastaus ( jatkovastausid ) NOT DEFERRABLE ;
 
@@ -509,6 +519,10 @@ ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_kayttaja_FK FOREIGN KEY ( luo
 ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_oppilaitos_FK FOREIGN KEY ( oppilaitos ) REFERENCES oppilaitos ( oppilaitoskoodi ) NOT DEFERRABLE ;
+
+ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
 values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
@@ -671,3 +685,11 @@ create trigger toimipaikkam_insert before insert on toimipaikka for each row exe
 create trigger toimipaikka_mu_update before update on toimipaikka for each row execute procedure update_modifier() ;
 create trigger toimipaikka_cu_insert before insert on toimipaikka for each row execute procedure update_creator() ;
 create trigger toimipaikka_mu_insert before insert on toimipaikka for each row execute procedure update_modifier() ;
+
+-- tutkinto
+create trigger tutkinto_update before update on tutkinto for each row execute procedure update_stamp() ;
+create trigger tutkintol_insert before insert on tutkinto for each row execute procedure update_created() ;
+create trigger tutkintom_insert before insert on tutkinto for each row execute procedure update_stamp() ;
+create trigger tutkinto_mu_update before update on tutkinto for each row execute procedure update_modifier() ;
+create trigger tutkinto_cu_insert before insert on tutkinto for each row execute procedure update_creator() ;
+create trigger tutkinto_mu_insert before insert on tutkinto for each row execute procedure update_modifier() ;
