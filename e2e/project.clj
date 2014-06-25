@@ -16,7 +16,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [korma "0.3.0-RC6"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
-                 [solita/opetushallitus-aitu-e2e "0.3.0"]]
+                 [solita/opetushallitus-aitu-e2e "1.8.0"]]
   :plugins [[test2junit "1.0.1"]]
 
   :test-selectors {:ie (complement :no-ie)
