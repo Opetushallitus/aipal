@@ -73,6 +73,7 @@
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))
           portti (get-in luetut-asetukset [:server :port])
+          _ (log/info "Käynnistetään palvelin porttiin" portti)
           sammuta (hs/run-server (->
                                    (reitit luetut-asetukset)
                                    wrap-set-db-user
@@ -87,7 +88,7 @@
                                    (wrap-frame-options :deny)
                                    log-request-wrapper)
                                  {:port portti})
-          _ (log/info "Palvelin käynnistetty porttiin " portti)]
+          _ (log/info "Palvelin käynnistetty")]
       {:sammuta sammuta})
     (catch Throwable t
       (let [virheviesti "Palvelimen käynnistys epäonnistui"]
