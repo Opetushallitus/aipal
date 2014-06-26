@@ -124,12 +124,12 @@
                                    wrap-set-db-user
                                    wrap-keyword-params
                                    wrap-json-params
-                                   (auth-middleware asetukset)
-                                   wrap-params
-                                   (wrap-resource "public/app")
                                    (wrap-locale
                                      :ei-redirectia #"/api/.*"
                                      :base-url (-> asetukset :server :base-url))
+                                   (auth-middleware asetukset)
+                                   wrap-params
+                                   (wrap-resource "public/app")
                                    wrap-content-type
                                    (wrap-frame-options :deny)
                                    (wrap-session {:store session-store
