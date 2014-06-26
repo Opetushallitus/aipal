@@ -29,6 +29,7 @@ angular.module('aipal', [
     'yhteiset.direktiivit.input',
     'yhteiset.direktiivit.pvm-valitsin',
     'yhteiset.direktiivit.latausindikaattori',
+    'yhteiset.direktiivit.pakollisia-kenttia',
     'yhteiset.direktiivit.tallenna',
     'ui.bootstrap',
     'ngRoute'

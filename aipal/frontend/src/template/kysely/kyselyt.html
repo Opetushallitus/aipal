@@ -11,11 +11,11 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
         {{kysely.kyselyid}} {{kysely.nimi_fi}}
       </a>
       <br>Voimassa: {{kysely.voimassa_alkupvm}} - {{kysely.voimassa_loppupvm}}
-      <a href="" ng-click="uusiKyselykerta(kysely.kyselyid)">[uusi kyselykerta]</a>
+      <a href="" ng-click="uusiKyselykerta(kysely.kyselyid)">[{{i18n.kyselykerta.uusi_kyselykerta}}]</a>
     </div>
     <div ng-show="kysely.kyselykerrat.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerrat">
       <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
-        Kyselykerta: {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
+        {{i18n.yleiset.kyselykerta}}: {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
       </a>
       <br>Voimassa: {{kyselykerta.voimassa_alkupvm}} - {{kyselykerta.voimassa_loppupvm}}
     </div>
