@@ -39,14 +39,23 @@
 
 (defonce ^:private palvelin (atom nil))
 
+(defn ^:private repl-asetukset
+  "Muutetaan oletusasetuksia siten että saadaan järkevät asetukset kehitystyötä varten"
+  []
+  (->
+    @(ns-resolve 'aipal.asetukset 'oletusasetukset)
+    (assoc :development-mode true
+           :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
+                             :unsafe-https true
+                             :enabled true})
+    (assoc-in [:server :base-url] "http://192.168.50.1:8082")))
+
 (defn ^:private kaynnista! []
   {:pre [(not @palvelin)]
    :post [@palvelin]}
   (kaanna-frontend)
   (require 'aipal.palvelin)
-  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!)
-                     (assoc @(ns-resolve 'aipal.asetukset 'oletusasetukset)
-                            :development-mode true))))
+  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) (repl-asetukset))))
 
 (defn ^:private sammuta! []
   {:pre [@palvelin]
