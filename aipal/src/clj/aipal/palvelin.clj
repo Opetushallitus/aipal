@@ -25,6 +25,7 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
+            [ring.middleware.session :refer [wrap-session]]
             [ring.util.response :as resp]
             schema.core
             [stencil.core :as s]
@@ -79,6 +80,11 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
+(defn wrap-asdf [handler]
+  (fn [request]
+    (assoc (handler request)
+           :session {:lol "apua"})))
+
 (defn kaynnista! [oletusasetukset]
   (try
     (let [asetukset (lue-asetukset oletusasetukset)
@@ -101,7 +107,9 @@
                                    wrap-content-type
                                    (wrap-frame-options :deny)
                                    log-request-wrapper
-                                   wrap-poikkeusten-logitus)
+                                   wrap-poikkeusten-logitus
+                                   wrap-asdf
+                                   wrap-session)
                                  {:port (get-in asetukset [:server :port])})]
       (log/info "Palvelin käynnistetty:" (service-url asetukset))
       {:sammuta sammuta})

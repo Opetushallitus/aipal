@@ -23,6 +23,7 @@ angular.module('aipal', [
     'raportti.kyselykerta.kyselykertaui',
     'yhteiset.palvelut.i18n',
     'yhteiset.palvelut.apicallinterceptor',
+    'yhteiset.palvelut.virheLogitus',
     'yhteiset.direktiivit.copyright',
     'yhteiset.direktiivit.navigaatio',
     'yhteiset.direktiivit.popup-ikkuna',
@@ -99,4 +100,8 @@ angular.module('aipal', [
         scope.kieli = kieli;
       }
     };
+  }])
+
+  .factory('$exceptionHandler', ['virheLogitus', function(virheLogitus) {
+    return virheLogitus;
   }]);
