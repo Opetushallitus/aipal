@@ -36,6 +36,9 @@
         :password s/Str
         :maximum-pool-size s/Int
         :minimum-pool-size s/Int}
+   :cas-auth-server {:url s/Str
+                     :unsafe-https Boolean
+                     :enabled Boolean}
    :development-mode Boolean
    :logback {:properties-file s/Str}})
 
@@ -62,12 +65,19 @@
         :password "aipal"
         :maximum-pool-size 15
         :minimum-pool-size 3}
+   :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
+                     :unsafe-https false
+                     :enabled true}
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :logback {:properties-file "resources/logback.xml"}})
 
 (def build-id (delay (if-let [r (resource "build-id.txt")]
                        (.trim (slurp r))
                        "dev")))
+
+(defn kehitysmoodi?
+  [asetukset]
+  (true? (:development-mode asetukset)))
 
 (defn konfiguroi-lokitus
   "Konfiguroidaan logback asetukset tiedostosta."
