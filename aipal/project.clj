@@ -21,6 +21,9 @@
                  [ring/ring-json "0.2.0"]
                  [ring/ring-headers "0.1.0"]
                  [cheshire "5.2.0"]
+                 [org.clojars.noidi/clj-cas-client
+                  "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1"
+                  :exclusions [ring]]
                  [org.clojure/tools.logging "0.2.6"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-api "1.7.5"]
@@ -42,6 +45,7 @@
              :uberjar {:main aipal.palvelin
                        :aot :all}}
   :source-paths ["src/clj"]
+  :java-source-paths ["src/java"]
   :test-paths ["test/clj"]
   :jar-name "aipal.jar"
   :uberjar-name "aipal-standalone.jar"

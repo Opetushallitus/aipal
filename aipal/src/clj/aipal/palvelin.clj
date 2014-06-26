@@ -29,8 +29,10 @@
             schema.core
             [stencil.core :as s]
 
-            [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
+            [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id kehitysmoodi? konfiguroi-lokitus]]
             aipal.rest-api.i18n
+            [clj-cas-client.core :refer [cas]]
+            [aitu.infra.anon-auth :as anon-auth]
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.raportti.kyselykerta
@@ -43,6 +45,9 @@
 
 (schema.core/set-fn-validation! true)
 
+(defn cas-server-url [asetukset]
+  (:url (:cas-auth-server asetukset)))
+
 (defn service-url [asetukset]
   (let [base-url (get-in asetukset [:server :base-url])
         port (get-in asetukset [:server :port])]
@@ -50,6 +55,25 @@
       (empty? base-url) (str "http://localhost:" port "/")
       (.endsWith base-url "/") base-url
       :else (str base-url "/"))))
+
+(defn ajax-request? [request]
+  (get-in request [:headers "angular-ajax-request"]))
+
+(defn auth-middleware
+  [handler asetukset]
+  (when (and (kehitysmoodi? asetukset)
+             (:unsafe-https (:cas-auth-server asetukset))
+             (:enabled (:cas-auth-server asetukset)))
+    (anon-auth/enable-development-mode!))
+  (if (and (kehitysmoodi? asetukset)
+           (not (:enabled (:cas-auth-server asetukset))))
+    (anon-auth/auth-cas-user handler)
+    (fn [request]
+      (let [auth-handler (if (and (kehitysmoodi? asetukset)
+                                  ((:headers request) "uid"))
+                           (anon-auth/auth-cas-user handler)
+                           (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
+        (auth-handler request)))))
 
 (defn ^:private reitit [asetukset]
   (c/routes
@@ -93,6 +117,7 @@
                                    wrap-set-db-user
                                    wrap-keyword-params
                                    wrap-json-params
+                                   (auth-middleware asetukset)
                                    wrap-params
                                    (wrap-resource "public/app")
                                    (wrap-locale
