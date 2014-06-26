@@ -24,7 +24,8 @@ angular.module('toimiala.kyselykerta', ['ngResource'])
       },
       tallennus: {
         method: 'POST',
-        url: 'api/kyselykerta/:id'
+        url: 'api/kyselykerta/:id',
+        id: 'tallenna-kyselykerta'
       }
     });
 

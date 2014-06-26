@@ -1,9 +1,9 @@
-<form>
+<form name="kyselykertaForm">
   <fieldset>
     <h3>Uusi kyselykerta</h3>
     <h4>Kysely: {{kysely.kyselyid}} {{kysely.nimi_fi}}</h4>
     Kyselykerran nimi:
-    <input type="text" placeholder="suomeksi" ng-model="kyselykerta.nimi_fi">
+    <input type="text" placeholder="suomeksi" ng-model="kyselykerta.nimi_fi" ng-required="true">
   </fieldset>
   <section class="datepicker-vali">
     <h4>Vastausaika:</h4>
@@ -11,7 +11,8 @@
       oletus-pvm="kysely.voimassa_alkupvm"
       min-pvm="kysely.voimassa_alkupvm"
       max-pvm="kysely.voimassa_loppupvm"
-      valittu-pvm="kyselykerta.voimassa_alkupvm">
+      valittu-pvm="kyselykerta.voimassa_alkupvm"
+      pakollinen="true">
     </pvm-valitsin>
     -
     <pvm-valitsin
@@ -21,5 +22,5 @@
       valittu-pvm="kyselykerta.voimassa_loppupvm">
     </pvm-valitsin>
   </section>
-  <button ng-click="tallenna()">Tallenna</button>
+  <tallenna formi-validi="kyselykertaForm.$valid" disabloi-pyyntojen-ajaksi="['tallenna-kyselykerta']" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
 </form>

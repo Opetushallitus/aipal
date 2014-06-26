@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
+angular.module('kysely.kyselyui', ['toimiala.kysely', 'yhteiset.palvelut.i18n', 'ngRoute'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -56,7 +56,7 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
     }
   ])
 
-  .directive('kyselykertaLuonti', ['Kysely', 'Kyselykerta', function(Kysely, Kyselykerta) {
+  .directive('kyselykertaLuonti', ['Kysely', 'Kyselykerta', 'i18n', function(Kysely, Kyselykerta, i18n) {
     return {
       restrict: 'E',
       scope: {
@@ -65,6 +65,7 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'ngRoute'])
       },
       templateUrl: 'template/kysely/kyselykerta-luonti.html',
       link: function(scope) {
+        scope.i18n = i18n;
         scope.kysely = {};
         scope.kyselykerta = {};
 
