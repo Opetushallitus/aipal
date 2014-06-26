@@ -23,6 +23,8 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.resource :refer [wrap-resource]]
+            [ring.middleware.session :refer [wrap-session]]
+            [ring.middleware.session.memory :refer [memory-store]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
@@ -55,6 +57,10 @@
       (empty? base-url) (str "http://localhost:" port "/")
       (.endsWith base-url "/") base-url
       :else (str base-url "/"))))
+
+(defn service-path [base-url]
+  (let [path (drop 3 (clojure.string/split base-url #"/"))]
+    (str "/" (clojure.string/join "/" path))))
 
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
@@ -112,6 +118,7 @@
           _ (json-gen/add-encoder org.joda.time.LocalDate
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))
+          session-store (memory-store)
           sammuta (hs/run-server (->
                                    (reitit asetukset)
                                    wrap-set-db-user
@@ -125,6 +132,10 @@
                                      :base-url (-> asetukset :server :base-url))
                                    wrap-content-type
                                    (wrap-frame-options :deny)
+                                   (wrap-session {:store session-store
+                                                  :cookie-attrs {:http-only true
+                                                                 :path (service-path(get-in asetukset [:server :base-url]))
+                                                                 :secure (not (:development-mode asetukset))}})
                                    log-request-wrapper
                                    wrap-poikkeusten-logitus)
                                  {:port (get-in asetukset [:server :port])})]
