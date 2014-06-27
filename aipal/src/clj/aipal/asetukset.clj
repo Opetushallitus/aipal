@@ -75,10 +75,6 @@
                        (.trim (slurp r))
                        "dev")))
 
-(defn kehitysmoodi?
-  [asetukset]
-  (true? (:development-mode asetukset)))
-
 (defn konfiguroi-lokitus
   "Konfiguroidaan logback asetukset tiedostosta."
   [asetukset]

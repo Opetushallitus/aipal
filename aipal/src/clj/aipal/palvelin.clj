@@ -31,7 +31,7 @@
             schema.core
             [stencil.core :as s]
 
-            [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id kehitysmoodi? konfiguroi-lokitus]]
+            [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
             aipal.rest-api.i18n
             [clj-cas-client.core :refer [cas]]
             [aitu.infra.anon-auth :as anon-auth]
@@ -67,15 +67,15 @@
 
 (defn auth-middleware
   [handler asetukset]
-  (when (and (kehitysmoodi? asetukset)
+  (when (and (:development-mode asetukset)
              (:unsafe-https (:cas-auth-server asetukset))
              (:enabled (:cas-auth-server asetukset)))
     (anon-auth/enable-development-mode!))
-  (if (and (kehitysmoodi? asetukset)
+  (if (and (:development-mode asetukset)
            (not (:enabled (:cas-auth-server asetukset))))
     (anon-auth/auth-cas-user handler)
     (fn [request]
-      (let [auth-handler (if (and (kehitysmoodi? asetukset)
+      (let [auth-handler (if (and (:development-mode asetukset)
                                   ((:headers request) "uid"))
                            (anon-auth/auth-cas-user handler)
                            (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
