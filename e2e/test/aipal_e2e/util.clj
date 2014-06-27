@@ -17,7 +17,7 @@
 
 (defn aipal-url [polku]
   (str (or (System/getenv "AIPAL_URL")
-           "http://localhost:8082")
+           "http://192.168.50.1:8082")
        polku))
 
 (defn avaa-aipal
