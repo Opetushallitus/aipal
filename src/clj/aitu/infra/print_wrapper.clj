@@ -30,8 +30,9 @@
 (defn http-method->str [keyword-or-str]
   (str/upper-case (name keyword-or-str)))
 
-(defn log-request-wrapper [ring-handler & custom-paths-vseq]
+(defn log-request-wrapper
   "Logitus requestille. Perustiedot + kestoaika ja uniikki id per request"
+  [ring-handler & custom-paths-vseq]
   (fn [req]
     (binding [*requestid* (swap! requestid inc)]
       (let [start (System/currentTimeMillis)]
