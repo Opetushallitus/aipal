@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns oph.common.infra.asetukset 
+(ns oph.common.infra.asetukset
   (:require [clojure.java.io :refer [file]]
             clojure.set
             [clojure.tools.logging :as log]
@@ -71,5 +71,5 @@
 (defn lue-asetukset
   [oletukset tyypit asetustiedosto-polku]
   (let [asetus-map (tulkitse-asetukset (lue-asetukset-tiedostosta asetustiedosto-polku))
-        korjattu-map (deep-merge asetus-map oletukset)]
+        korjattu-map (deep-merge oletukset asetus-map)]
       (coerce-asetukset korjattu-map tyypit)))
