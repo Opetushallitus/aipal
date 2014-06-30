@@ -14,14 +14,12 @@
 
 (ns oph.common.infra.asetukset
   (:require [clojure.java.io :refer [file]]
-            clojure.set
             [clojure.tools.logging :as log]
 
             [oph.common.util.util :refer [pisteavaimet->puu
                                           deep-merge
                                           deep-update-vals
                                           paths]]
-            [schema.core :as s]
             [schema.coerce :as sc])
   (:import [ch.qos.logback.classic.joran JoranConfigurator]
            [org.slf4j LoggerFactory]))

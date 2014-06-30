@@ -15,7 +15,6 @@
 (ns aipalvastaus.rest-api.kyselykerta
   (:require [compojure.core :as c]
             [korma.db :as db]
-            [schema.core :as schema]
             [oph.common.util.http-util :refer [json-response-nocache]]
             [aipalvastaus.sql.kyselykerta :as kysely]))
 

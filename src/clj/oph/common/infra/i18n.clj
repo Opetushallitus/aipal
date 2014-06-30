@@ -17,8 +17,7 @@
   (:import (java.util Locale
                       ResourceBundle))
   (:require [clojure.string :as s]
-            [ring.util.response :refer [redirect]]
-            [compojure.core :as c]))
+            [ring.util.response :refer [redirect]]))
 
 (def ^:dynamic *locale*)
 

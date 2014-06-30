@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus.sql.kyselykerta
-  (:require [korma.core :as sql]
-            [aipalvastaus.sql.korma :refer :all]))
+  (:require [korma.core :as sql]))
 
 (defn hae-kysymysryhmat [kyselyid]
   (sql/select :kysymysryhma

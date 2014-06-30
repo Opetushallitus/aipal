@@ -24,7 +24,6 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
-            [ring.util.response :as resp]
             [cheshire.generate :as json-gen]
             schema.core
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
