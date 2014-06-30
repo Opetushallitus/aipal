@@ -1,5 +1,5 @@
 (ns aipalvastaus.asetukset
-  (:require 
+  (:require
     [schema.core :as s]
     [oph.common.infra.asetukset :refer [lue-asetukset]]))
 
@@ -30,7 +30,5 @@
         :maximum-pool-size 15
         :minimum-pool-size 3}})
 
-(def asetukset (promise))
-
-(defn hae-asetukset [] 
+(defn hae-asetukset []
   (lue-asetukset oletusasetukset Asetukset "aipalvastaus.properties"))

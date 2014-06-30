@@ -28,7 +28,7 @@
             [cheshire.generate :as json-gen]
             schema.core
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
-            [aipalvastaus.asetukset :refer [oletusasetukset asetukset hae-asetukset]]
+            [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.i18n :refer [wrap-locale]]
             [stencil.core :as s]
@@ -66,7 +66,6 @@
   (try
     (log/info "Käynnistetään Aipal vastaussovellus, versio" @build-id)
     (let [luetut-asetukset (hae-asetukset)
-          _ (deliver asetukset luetut-asetukset )
           _ (konfiguroi-lokitus luetut-asetukset)
           _ (aipalvastaus.sql.korma/luo-db (:db luetut-asetukset))
           _ (json-gen/add-encoder org.joda.time.LocalDate
