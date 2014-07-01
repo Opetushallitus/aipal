@@ -17,9 +17,9 @@
 
 (defn hae-kysymysryhmat [tunnus]
   (sql/select :kysymysryhma
-    (sql/join :kysely_kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
-    (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymysryhma.kyselyid))
-    (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
+    (sql/join :inner :kysely_kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
+    (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymysryhma.kyselyid))
+    (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
                 :kysymysryhma.nimi_sv)
@@ -28,9 +28,9 @@
 
 (defn hae-kysymysryhmien-kysymykset [tunnus]
   (sql/select :kysymys
-    (sql/join :kysely_kysymys (= :kysely_kysymys.kysymysid :kysymys.kysymysid))
-    (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
-    (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
+    (sql/join :inner :kysely_kysymys (= :kysely_kysymys.kysymysid :kysymys.kysymysid))
+    (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
+    (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
       (sql/fields :kysymys.kysymysryhmaid
                   :kysymys.kysymysid
                   :kysymys.vastaustyyppi
@@ -42,9 +42,9 @@
 
 (defn hae-kysymysten-monivalintavaihtoehdot [tunnus]
   (sql/select :monivalintavaihtoehto
-    (sql/join :kysely_kysymys (= :kysely_kysymys.kysymysid :monivalintavaihtoehto.kysymysid))
-    (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
-    (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
+    (sql/join :inner :kysely_kysymys (= :kysely_kysymys.kysymysid :monivalintavaihtoehto.kysymysid))
+    (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
+    (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/fields :monivalintavaihtoehto.monivalintavaihtoehtoid
                 :monivalintavaihtoehto.kysymysid
                 :monivalintavaihtoehto.teksti_fi
@@ -55,8 +55,8 @@
 (defn hae-kyselyn-tiedot [tunnus]
   (first
     (sql/select :kysely
-      (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely.kyselyid))
-      (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
+      (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely.kyselyid))
+      (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
       (sql/fields :kysely.nimi_fi
                   :kysely.nimi_sv
                   :kysely.selite_fi
