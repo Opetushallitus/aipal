@@ -19,5 +19,5 @@
             [aipalvastaus.sql.kyselykerta :as kysely]))
 
 (c/defroutes reitit
-  (c/GET "/:kyselyid" [kyselyid] (db/transaction
-                                   (json-response-nocache (kysely/hae (Integer/parseInt kyselyid))))))
+  (c/GET "/:tunnus" [tunnus] (db/transaction
+                                   (json-response-nocache (kysely/hae tunnus)))))

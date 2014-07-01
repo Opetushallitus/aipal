@@ -4,17 +4,17 @@ angular.module('vastaus.vastausui', ['ngRoute'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/vastaus/:kyselyid', {
+      .when('/vastaus/:tunnus', {
         controller: 'VastausController',
         templateUrl: 'template/vastaus/vastaus.html'
       });
   }])
 
   .controller('VastausController', ['$http', '$routeParams', '$scope', function($http, $routeParams, $scope) {
-    $scope.kyselyid = $routeParams.kyselyid;
+    $scope.tunnus = $routeParams.tunnus;
     $scope.answers = {};
 
-    $http.get('/api/kyselykerta/' + $routeParams.kyselyid).success(function(data) {
+    $http.get('/api/kyselykerta/' + $routeParams.tunnus).success(function(data) {
       $scope.data = data;
     });
   }]);

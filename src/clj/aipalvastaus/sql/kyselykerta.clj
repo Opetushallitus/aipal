@@ -15,45 +15,53 @@
 (ns aipalvastaus.sql.kyselykerta
   (:require [korma.core :as sql]))
 
-(defn hae-kysymysryhmat [kyselyid]
+(defn hae-kysymysryhmat [tunnus]
   (sql/select :kysymysryhma
     (sql/join :kysely_kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
+    (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymysryhma.kyselyid))
+    (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
                 :kysymysryhma.nimi_sv)
-    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
+    (sql/where {:vastaajatunnus.tunnus tunnus})
     (sql/order :kysely_kysymysryhma.jarjestys)))
 
-(defn hae-kysymysryhmien-kysymykset [kyselyid]
+(defn hae-kysymysryhmien-kysymykset [tunnus]
   (sql/select :kysymys
     (sql/join :kysely_kysymys (= :kysely_kysymys.kysymysid :kysymys.kysymysid))
-    (sql/fields :kysymys.kysymysryhmaid
-                :kysymys.kysymysid
-                :kysymys.vastaustyyppi
-                :kysymys.monivalinta_max
-                :kysymys.kysymys_fi
-                :kysymys.kysymys_sv)
-    (sql/where {:kysely_kysymys.kyselyid kyselyid})
+    (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
+    (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
+      (sql/fields :kysymys.kysymysryhmaid
+                  :kysymys.kysymysid
+                  :kysymys.vastaustyyppi
+                  :kysymys.monivalinta_max
+                  :kysymys.kysymys_fi
+                  :kysymys.kysymys_sv)
+    (sql/where {:vastaajatunnus.tunnus tunnus})
     (sql/order :kysymys.jarjestys)))
 
-(defn hae-kysymysten-monivalintavaihtoehdot [kyselyid]
+(defn hae-kysymysten-monivalintavaihtoehdot [tunnus]
   (sql/select :monivalintavaihtoehto
     (sql/join :kysely_kysymys (= :kysely_kysymys.kysymysid :monivalintavaihtoehto.kysymysid))
+    (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
+    (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/fields :monivalintavaihtoehto.monivalintavaihtoehtoid
                 :monivalintavaihtoehto.kysymysid
                 :monivalintavaihtoehto.teksti_fi
                 :monivalintavaihtoehto.teksti_sv)
-    (sql/where {:kysely_kysymys.kyselyid kyselyid})
+    (sql/where {:vastaajatunnus.tunnus tunnus})
     (sql/order :monivalintavaihtoehto.jarjestys)))
 
-(defn hae-kyselyn-tiedot [kyselyid]
+(defn hae-kyselyn-tiedot [tunnus]
   (first
     (sql/select :kysely
-      (sql/fields :nimi_fi
-                  :nimi_sv
-                  :selite_fi
-                  :selite_sv)
-      (sql/where {:kyselyid kyselyid}))))
+      (sql/join :kyselykerta (= :kyselykerta.kyselyid :kysely.kyselyid))
+      (sql/join :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
+      (sql/fields :kysely.nimi_fi
+                  :kysely.nimi_sv
+                  :kysely.selite_fi
+                  :kysely.selite_sv)
+      (sql/where {:vastaajatunnus.tunnus tunnus}))))
 
 (defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
   (let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]
@@ -65,14 +73,14 @@
     (for [kysymysryhma kysymysryhmat]
       (assoc kysymysryhma :kysymykset (kysymysryhmaid->kysymykset (kysymysryhma :kysymysryhmaid))))))
 
-(defn hae-kysymysryhmat-ja-kysymykset [kyselyid]
-  (let [kysymysryhmat (hae-kysymysryhmat kyselyid)
-        kysymykset (hae-kysymysryhmien-kysymykset kyselyid)
-        monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot kyselyid)]
+(defn hae-kysymysryhmat-ja-kysymykset [tunnus]
+  (let [kysymysryhmat (hae-kysymysryhmat tunnus)
+        kysymykset (hae-kysymysryhmien-kysymykset tunnus)
+        monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot tunnus)]
     (yhdista-tietorakenteet kysymysryhmat kysymykset monivalintavaihtoehdot)))
 
 (defn hae
-  "Hakee kyselyn tiedot pääavaimella"
-  [kyselyid]
-  (merge (hae-kyselyn-tiedot kyselyid)
-         {:kysymysryhmat (hae-kysymysryhmat-ja-kysymykset kyselyid)}))
+  "Hakee kyselyn tiedot tunnuksella"
+  [tunnus]
+  (merge (hae-kyselyn-tiedot tunnus)
+         {:kysymysryhmat (hae-kysymysryhmat-ja-kysymykset tunnus)}))
