@@ -20,4 +20,4 @@
 
 (c/defroutes reitit
   (c/GET "/:tunnus" [tunnus] (db/transaction
-                                   (json-response-nocache (kysely/hae tunnus)))))
+                               (json-response-nocache (kysely/hae tunnus)))))
