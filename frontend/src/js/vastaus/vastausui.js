@@ -12,6 +12,7 @@ angular.module('vastaus.vastausui', ['ngRoute'])
 
   .controller('VastausController', ['$http', '$routeParams', '$scope', function($http, $routeParams, $scope) {
     $scope.kyselyid = $routeParams.kyselyid;
+    $scope.answers = {};
 
     $http.get('/api/kyselykerta/' + $routeParams.kyselyid).success(function(data) {
       $scope.data = data;
