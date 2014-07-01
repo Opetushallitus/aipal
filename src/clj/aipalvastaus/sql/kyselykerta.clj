@@ -46,6 +46,15 @@
     (sql/where {:kysely_kysymys.kyselyid kyselyid})
     (sql/order :monivalintavaihtoehto.jarjestys)))
 
+(defn hae-kyselyn-tiedot [kyselyid]
+  (first
+    (sql/select :kysely
+      (sql/fields :nimi_fi
+                  :nimi_sv
+                  :selite_fi
+                  :selite_sv)
+      (sql/where {:kyselyid kyselyid}))))
+
 (defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
   (let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]
     (for [kysymys kysymykset]
@@ -65,4 +74,5 @@
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"
   [kyselyid]
-  {:kysymysryhmat (hae-kysymysryhmat-ja-kysymykset kyselyid)})
+  (merge (hae-kyselyn-tiedot kyselyid)
+         {:kysymysryhmat (hae-kysymysryhmat-ja-kysymykset kyselyid)}))
