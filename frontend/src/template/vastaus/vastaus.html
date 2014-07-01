@@ -1,4 +1,5 @@
 <h1>{{data.nimi_fi}}</h1>
+<p ng-if="data.tutkintotunnus">{{data.tutkintotunnus}} {{data.tutkinto_nimi_fi}}</p>
 <p>{{data.selite_fi}}</p>
 
 <div ng-repeat="kysymysryhma in data.kysymysryhmat">

@@ -57,10 +57,14 @@
     (sql/select :kysely
       (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely.kyselyid))
       (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
+      (sql/join :left :tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
       (sql/fields :kysely.nimi_fi
                   :kysely.nimi_sv
                   :kysely.selite_fi
-                  :kysely.selite_sv)
+                  :kysely.selite_sv
+                  :tutkinto.tutkintotunnus
+                  [:tutkinto.nimi_fi :tutkinto_nimi_fi]
+                  [:tutkinto.nimi_sv :tutkinto_nimi_sv])
       (sql/where {:vastaajatunnus.tunnus tunnus}))))
 
 (defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
