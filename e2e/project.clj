@@ -14,14 +14,15 @@
 
 (defproject aipal-e2e "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [korma "0.3.0-RC6"]
+                 [korma "0.3.2"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
-                 [solita/opetushallitus-aitu-e2e "1.8.0"]]
+                 [solita/opetushallitus-aitu-e2e "1.9.0"]]
   :plugins [[test2junit "1.0.1"]]
 
-  :test-selectors {:ie (complement :no-ie)
+  :test-selectors {:ie (fn [m] (not (or (:no-ie m) (:vastaus m))))
                    :no-ie :no-ie
-                   :default (constantly true)})
+                   :vastaus :vastaus
+                   :default (complement :vastaus)})
 
 (require '[robert.hooke :refer [add-hook]])
 (require 'leiningen.test)
