@@ -25,6 +25,7 @@
 (defn vastaus-sivu [tunnus] (str "/fi/#/vastaus/" tunnus))
 (defn kyselyn-otsikko [] (w/text {:css "#content h1"}))
 (defn kyselyn-selite [] (w/text {:css "p.selite"}))
+(defn kyselyn-tutkinto [] (w/text {:css "p.tutkinto"}))
 
 (deftest ^:vastaus vastaussivu-test
   (testing "Vastaussivulla on kyselyn perustiedot"
@@ -34,9 +35,13 @@
                             :selite_fi "Selite 1"}]
                   :kyselykerta [{:kyselykertaid 1
                                  :kyselyid 1}]
+                  :tutkinto [{:tutkintotunnus "1"
+                              :nimi_fi "Tutkinto yksi"}]
                   :vastaajatunnus [{:vastaajatunnusid 1
                                     :kyselykertaid 1
-                                    :tunnus "tunnus1"}]}
+                                    :tunnus "tunnus1"
+                                    :tutkintotunnus "1"}]}
         (avaa-vastaus (vastaus-sivu "tunnus1"))
-        (is (= "Kysely 1" (kyselyn-otsikko)))
-        (is (= "Selite 1" (kyselyn-selite)))))))
+        (is (= (clojure.string/upper-case "Kysely 1") (kyselyn-otsikko)))
+        (is (= "Selite 1" (kyselyn-selite)))
+        (is (= "1 Tutkinto yksi" (kyselyn-tutkinto)))))))

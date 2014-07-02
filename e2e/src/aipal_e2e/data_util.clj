@@ -23,6 +23,7 @@
             [aipal-e2e.arkisto.kysymys :as kysymys]
             [aipal-e2e.arkisto.kysymysryhma :as kysymysryhma]
             [aipal-e2e.arkisto.monivalintavaihtoehto :as monivalintavaihtoehto]
+            [aipal-e2e.arkisto.tutkinto :as tutkinto]
             [aipal-e2e.arkisto.vastaajatunnus :as vastaajatunnus]
             [aipal-e2e.arkisto.vastaaja :as vastaaja]
             [aipal-e2e.arkisto.vastaus :as vastaus]
@@ -74,6 +75,13 @@
                                                 :teksti_fi (str "monivalintavaihtoehto " i)
                                                 :teksti_sv (str "monivalintavaihtoehto (sv) " i)})})
 
+(def ^:private tutkinto-tiedot {:luo-fn tutkinto/lisaa!
+                                :poista-fn #(tutkinto/poista! (:tutkintotunnus %))
+                                :default (for [i (iterate inc 1)]
+                                           {:tutkintotunnus (str i)
+                                            :nimi_fi (str "tutkinto " i)
+                                            :nimi_sv (str "tutkinti (sv) " i)})})
+
 (def ^:private vastaajatunnus-tiedot {:luo-fn vastaajatunnus/lisaa!
                                       :poista-fn #(vastaajatunnus/poista! (:vastaajatunnusid %))
                                       :default (for [i (iterate inc 1)]
@@ -99,6 +107,7 @@
                               :kysely-kysymys kysely-kysymys-tiedot
                               :kysely-kysymysryhma kysely-kysymysryhma-tiedot
                               :monivalintavaihtoehto monivalintavaihtoehto-tiedot
+                              :tutkinto tutkinto-tiedot
                               :vastaajatunnus vastaajatunnus-tiedot
                               :vastaaja vastaaja-tiedot
                               :vastaus vastaus-tiedot})
@@ -111,6 +120,7 @@
                        :kysely-kysymysryhma
                        :kysely-kysymys
                        :monivalintavaihtoehto
+                       :tutkinto
                        :vastaajatunnus
                        :vastaaja
                        :vastaus])
