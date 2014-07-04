@@ -27,7 +27,15 @@
             [aipal-e2e.arkisto.vastaajatunnus :as vastaajatunnus]
             [aipal-e2e.arkisto.vastaaja :as vastaaja]
             [aipal-e2e.arkisto.vastaus :as vastaus]
+            [aipal-e2e.arkisto.koulutustoimija :as koulutustoimija]
             [aipal-e2e.tietokanta.yhteys :as yhteys]))
+
+
+(def ^:private koulutustoimija-tiedot {:luo-fn koulutustoimija/lisaa!
+                                       :poista-fn #(koulutustoimija/poista! (:ytunnus %))
+                                       :default (for [i (iterate inc 1)]
+                                                  {:nimi_fi (str "Koulutustoimija " i)
+                                                   :ytunnus (str i)})})
 
 (def ^:private kysely-tiedot {:luo-fn kysely/lisaa!
                               :poista-fn #(kysely/poista! (:kyselyid %))
@@ -99,7 +107,8 @@
                                :default (for [i (iterate inc 1)]
                                           {})})
 
-(def ^:private entity-tiedot {:kysely kysely-tiedot
+(def ^:private entity-tiedot {:koulutustoimija koulutustoimija-tiedot
+                              :kysely kysely-tiedot
                               :kyselykerta kyselykerta-tiedot
                               :kysymysryhma kysymysryhma-tiedot
                               :kysymys kysymys-tiedot
@@ -112,7 +121,8 @@
                               :vastaaja vastaaja-tiedot
                               :vastaus vastaus-tiedot})
 
-(def ^:private taulut [:kysely
+(def ^:private taulut [:koulutustoimija
+                       :kysely
                        :kyselykerta
                        :kysymysryhma
                        :kysymys

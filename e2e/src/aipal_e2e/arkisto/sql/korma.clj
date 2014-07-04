@@ -90,3 +90,4 @@
 (defentity vastaajatunnus)
 (defentity vastaaja)
 (defentity vastaus)
+(defentity koulutustoimija)

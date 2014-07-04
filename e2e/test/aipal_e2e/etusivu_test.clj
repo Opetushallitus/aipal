@@ -31,9 +31,7 @@
   (with-webdriver
     (testing
       "etusivu"
-      (with-data {:kyselyt [{:kyselyid 1
-                             :nimi_fi "Kysely 1"}]}
-        (avaa etusivu)
-        (testing
-          "sisältää järjestelmän nimen"
-          (is (true? (.contains (sivun-sisalto) "AIPAL"))))))))
+      (avaa etusivu)
+      (testing
+        "sisältää järjestelmän nimen"
+        (is (true? (.contains (sivun-sisalto) "AIPAL")))))))

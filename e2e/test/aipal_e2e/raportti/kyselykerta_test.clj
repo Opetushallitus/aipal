@@ -94,8 +94,10 @@
   (with-webdriver
     (testing
       "etusivu:"
-      (with-data {:kysely [{:kyselyid 1
-                            :nimi_fi "Kysely 1"}]
+      (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
+                  :kysely [{:kyselyid 1
+                            :nimi_fi "Kysely 1"
+                            :koulutustoimija "0000000-0"}]
                   :kyselykerta [{:kyselykertaid 1
                                  :kyselyid 1
                                  :nimi_fi "Kyselykerta 1"
