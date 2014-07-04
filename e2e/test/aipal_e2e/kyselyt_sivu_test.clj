@@ -56,7 +56,7 @@
                               {:kyselykertaid 3
                                :kyselyid 2
                                :nimi_fi "Kyselykerta 2-3"}]}
-      (avaa-aipal kyselyt-sivu)
+      (avaa kyselyt-sivu)
       (testing
         "ensimmäisellä kyselyllä on kaksi kyselykertaa"
         (let [kysely (nth (kyselyt) 0)]

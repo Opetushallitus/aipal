@@ -14,13 +14,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus-e2e.util
-  (:require [aitu-e2e.util :refer [avaa]]))
+  (:require [aitu-e2e.util :refer [avaa-url]]))
 
 (defn vastaus-url [polku]
   (str (or (System/getenv "VASTAUS_URL")
            "http://localhost:8083")
        polku))
 
-(defn avaa-vastaus
-  [polku]
-  (aitu-e2e.util/avaa vastaus-url polku))
+(defn avaa [polku]
+  (avaa-url (vastaus-url polku)))

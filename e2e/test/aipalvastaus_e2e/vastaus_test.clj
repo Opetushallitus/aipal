@@ -16,7 +16,7 @@
   (:require [clojure.test :refer [deftest testing is use-fixtures]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
-            [aipalvastaus-e2e.util :refer [avaa-vastaus]]
+            [aipalvastaus-e2e.util :refer :all]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]))
 
@@ -41,7 +41,7 @@
                                     :kyselykertaid 1
                                     :tunnus "tunnus1"
                                     :tutkintotunnus "1"}]}
-        (avaa-vastaus (vastaus-sivu "tunnus1"))
+        (avaa (vastaus-sivu "tunnus1"))
         (is (= (clojure.string/upper-case "Kysely 1") (kyselyn-otsikko)))
         (is (= "Selite 1" (kyselyn-selite)))
         (is (= "1 Tutkinto yksi" (kyselyn-tutkinto)))))))

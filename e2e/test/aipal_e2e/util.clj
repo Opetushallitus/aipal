@@ -13,13 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal-e2e.util
-  (:require [aitu-e2e.util :refer [avaa]]))
+  (:require [aitu-e2e.util :refer [avaa-url]]))
 
 (defn aipal-url [polku]
   (str (or (System/getenv "AIPAL_URL")
            "http://192.168.50.1:8082")
        polku))
 
-(defn avaa-aipal
-  [polku]
-  (aitu-e2e.util/avaa aipal-url polku))
+(defn avaa [polku]
+  (avaa-url (aipal-url polku)))

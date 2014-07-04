@@ -194,7 +194,7 @@
                              :kysymysid 5
                              :vastaajaid 2
                              :numerovalinta 2}]}
-        (avaa-aipal (kyselykertaraportti-sivu 1))
+        (avaa (kyselykertaraportti-sivu 1))
         (testing
           "kyselykerran tiedot"
           (is (= (kyselykerran-tietojen-kentta "kyselykertaid") "1"))

@@ -33,7 +33,7 @@
       "etusivu"
       (with-data {:kyselyt [{:kyselyid 1
                              :nimi_fi "Kysely 1"}]}
-        (avaa-aipal etusivu)
+        (avaa etusivu)
         (testing
           "sisältää järjestelmän nimen"
           (is (true? (.contains (sivun-sisalto) "AIPAL"))))))))
