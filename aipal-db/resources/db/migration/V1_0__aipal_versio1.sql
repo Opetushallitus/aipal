@@ -71,6 +71,9 @@ CREATE TABLE kysely
     nimi_sv           VARCHAR (200) ,
     selite_fi TEXT ,
     selite_sv TEXT ,
+    koulutustoimija VARCHAR(10),
+    oppilaitos VARCHAR(5),
+    toimipaikka VARCHAR(7),
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
@@ -429,6 +432,12 @@ ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kysymysryhma_FK FOREIG
 ALTER TABLE kysely ADD CONSTRAINT kysely_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysely ADD CONSTRAINT kysely_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE kysely ADD CONSTRAINT kysely_koulutustoimija_FK FOREIGN KEY ( koulutustoimija ) REFERENCES koulutustoimija ( ytunnus ) NOT DEFERRABLE ;
+ALTER TABLE kysely ADD CONSTRAINT kysely_oppilaitos_FK FOREIGN KEY ( oppilaitos ) REFERENCES oppilaitos ( oppilaitoskoodi ) NOT DEFERRABLE ;
+ALTER TABLE kysely ADD CONSTRAINT kysely_toimipaikka_FK FOREIGN KEY ( toimipaikka ) REFERENCES toimipaikka ( toimipaikkakoodi ) NOT DEFERRABLE ;
+
+ALTER TABLE kysely ADD CONSTRAINT kysely_organisaatio_check CHECK (koulutustoimija IS NOT NULL OR oppilaitos IS NOT NULL OR toimipaikka IS NOT NULL) NOT DEFERRABLE ;
 
 ALTER TABLE kysely_kysymysryhma ADD CONSTRAINT kysely_kr_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
