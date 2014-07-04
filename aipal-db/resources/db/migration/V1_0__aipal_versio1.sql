@@ -345,7 +345,7 @@ IS
   ALTER TABLE vastaus ADD CONSTRAINT vastaus_PK PRIMARY KEY ( vastausid ) ;
 
 
-CREATE TABLE jarjestaja (
+CREATE TABLE koulutustoimija (
   ytunnus VARCHAR(10) PRIMARY KEY,
   nimi_fi VARCHAR(200) NOT NULL,
   nimi_sv VARCHAR(200),
@@ -363,7 +363,7 @@ CREATE TABLE jarjestaja (
 
 CREATE TABLE oppilaitos (
   oppilaitoskoodi VARCHAR(5) PRIMARY KEY,
-  jarjestaja VARCHAR(10) NOT NULL,
+  koulutustoimija VARCHAR(10) NOT NULL,
   nimi_fi VARCHAR(200) NOT NULL,
   nimi_sv VARCHAR(200),
   sahkoposti VARCHAR(100),
@@ -504,15 +504,15 @@ ALTER TABLE vastaus ADD CONSTRAINT vastaus_kysymys_FK FOREIGN KEY ( kysymysid ) 
 
 ALTER TABLE vastaus ADD CONSTRAINT vastaus_vastaaja_FK FOREIGN KEY ( vastaajaid ) REFERENCES vastaaja ( vastaajaid ) NOT DEFERRABLE ;
 
-ALTER TABLE jarjestaja ADD CONSTRAINT jarjestaja_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE koulutustoimija ADD CONSTRAINT koulutustoimija_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
-ALTER TABLE jarjestaja ADD CONSTRAINT jarjestaja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE koulutustoimija ADD CONSTRAINT koulutustoimija_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE oppilaitos ADD CONSTRAINT oppilaitos_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE oppilaitos ADD CONSTRAINT oppilaitos_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
-ALTER TABLE oppilaitos ADD CONSTRAINT oppilaitos_jarjestaja_FK FOREIGN KEY ( jarjestaja ) REFERENCES jarjestaja ( ytunnus ) NOT DEFERRABLE ;
+ALTER TABLE oppilaitos ADD CONSTRAINT oppilaitos_koulutustoimija_FK FOREIGN KEY ( koulutustoimija ) REFERENCES koulutustoimija ( ytunnus ) NOT DEFERRABLE ;
 
 ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
@@ -662,13 +662,13 @@ create trigger vastaus_mu_update before update on vastaus for each row execute p
 create trigger vastaus_cu_insert before insert on vastaus for each row execute procedure update_creator() ;
 create trigger vastaus_mu_insert before insert on vastaus for each row execute procedure update_modifier() ;
 
--- jarjestaja
-create trigger jarjestaja_update before update on jarjestaja for each row execute procedure update_stamp() ;
-create trigger jarjestajal_insert before insert on jarjestaja for each row execute procedure update_created() ;
-create trigger jarjestajam_insert before insert on jarjestaja for each row execute procedure update_stamp() ;
-create trigger jarjestaja_mu_update before update on jarjestaja for each row execute procedure update_modifier() ;
-create trigger jarjestaja_cu_insert before insert on jarjestaja for each row execute procedure update_creator() ;
-create trigger jarjestaja_mu_insert before insert on jarjestaja for each row execute procedure update_modifier() ;
+-- koulutustoimija
+create trigger koulutustoimija_update before update on koulutustoimija for each row execute procedure update_stamp() ;
+create trigger koulutustoimijal_insert before insert on koulutustoimija for each row execute procedure update_created() ;
+create trigger koulutustoimijam_insert before insert on koulutustoimija for each row execute procedure update_stamp() ;
+create trigger koulutustoimija_mu_update before update on koulutustoimija for each row execute procedure update_modifier() ;
+create trigger koulutustoimija_cu_insert before insert on koulutustoimija for each row execute procedure update_creator() ;
+create trigger koulutustoimija_mu_insert before insert on koulutustoimija for each row execute procedure update_modifier() ;
 
 -- oppilaitos
 create trigger oppilaitos_update before update on oppilaitos for each row execute procedure update_stamp() ;
