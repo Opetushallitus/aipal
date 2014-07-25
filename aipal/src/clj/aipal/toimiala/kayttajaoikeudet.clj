@@ -4,5 +4,13 @@
     [aipal.toimiala.kayttajaroolit :refer :all]))
 
 (def ^:dynamic *current-user-authmap*)
-(def ^:dynamic *impersonoitu-oid* nil)
- 
+
+(defn aipal-kayttaja? 
+  ([x] (aipal-kayttaja?))
+  ([]
+    true))
+
+(def kayttajatoiminnot
+  `{:logitus aipal-kayttaja?})
+
+(def toiminnot kayttajatoiminnot)

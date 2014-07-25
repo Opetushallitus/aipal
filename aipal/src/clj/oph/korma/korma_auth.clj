@@ -21,9 +21,11 @@
 (def default-test-user-oid "OID.T-1001")
 (def default-test-user-uid "T-1001")
 (def ^:private psql-varname "aipal.kayttaja")
+
 (def ^:dynamic *current-user-uid*)
 (def ^:dynamic *current-user-oid*)
-
+(def ^:dynamic *impersonoitu-oid* nil)
+ 
 (defn validate-user
   [con uid]
   {:pre [(string? uid)]}
