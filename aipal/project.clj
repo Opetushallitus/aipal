@@ -17,10 +17,15 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [ring/ring-core "1.2.1"]
                  [http-kit "2.1.10"]
+
                  [compojure "1.1.5"]
                  [ring/ring-json "0.2.0"]
                  [ring/ring-headers "0.1.0"]
+                 [ring/ring-session-timeout "0.1.0"]
                  [cheshire "5.2.0"]
+                 [metosin/compojure-api "0.8.2"]
+                 [metosin/ring-swagger-ui "2.0.10-1"]
+
                  [org.clojars.noidi/clj-cas-client
                   "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1"
                   :exclusions [ring]]
@@ -34,6 +39,8 @@
                  [korma "0.3.0-RC6"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
+                 
+                 [robert/hooke "1.3.0"]
                  
                  [stencil "0.3.2"]]
   :plugins [[test2junit "1.0.1"]]
