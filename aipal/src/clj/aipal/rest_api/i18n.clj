@@ -16,6 +16,7 @@
   (:import (java.util Locale
                       ResourceBundle))
   (:require [compojure.core :as c]
+            [aipal.compojure-util :as cu]
             [schema.core :as schema]
             [aitu.rest-api.http-util :refer [json-response]]
             [aitu.util :refer [pisteavaimet->puu]]))
@@ -32,6 +33,6 @@
          pisteavaimet->puu)))
 
 (c/defroutes reitit
-  (c/GET "/:kieli" [kieli :as req]
+  (cu/defapi :kieli nil :get "/:kieli" [kieli :as req]
     (schema/validate (validoi-kieli) kieli)
     (json-response (hae-tekstit kieli))))

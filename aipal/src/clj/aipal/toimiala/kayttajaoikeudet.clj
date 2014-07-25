@@ -11,6 +11,8 @@
     true))
 
 (def kayttajatoiminnot
-  `{:logitus aipal-kayttaja?})
+  `{:logitus aipal-kayttaja?
+    :kieli aipal-kayttaja?
+    })
 
 (def toiminnot kayttajatoiminnot)
