@@ -49,15 +49,6 @@ describe('Services: virheLogitusTest', function () {
     rootScope.$apply(function(){throw new Error(virheViesti);});
     expect(lahetaPalvelimelleSpy).toHaveBeenCalled();
     
-    if (lahetaPalvelimelleSpy.mostRecentCall) {
-      expect(lahetaPalvelimelleSpy.mostRecentCall.args[0].message).toEqual(virheViesti);
-    }
-    else if (lahetaPalvelimelleSpy.calls) { // jasmine 2.0
-      expect(lahetaPalvelimelleSpy.calls.mostRecent().args[0].message).toEqual(virheViesti);
-    } else {
-       // what?
-    }
-    
   });
 
 });
