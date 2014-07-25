@@ -43,7 +43,7 @@ CREATE TABLE kayttaja
     "uid"             VARCHAR (80) ,
     etunimi           VARCHAR (100) ,
     sukunimi          VARCHAR (100) ,
-    rooli             VARCHAR (16) NOT NULL ,
+    rooli             VARCHAR (32) NOT NULL ,
     organisaatio      VARCHAR (16) ,
     voimassa          BOOLEAN DEFAULT false NOT NULL ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
@@ -55,7 +55,7 @@ ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_PK PRIMARY KEY ( oid ) ;
 
 CREATE TABLE kayttajarooli
   (
-    roolitunnus VARCHAR (16) NOT NULL ,
+    roolitunnus VARCHAR (32) NOT NULL ,
     kuvaus      VARCHAR (200) ,
     luotuaika TIMESTAMPTZ NOT NULL ,
     muutettuaika TIMESTAMPTZ NOT NULL
@@ -534,12 +534,24 @@ ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FKv1 FOREIGN KEY ( muutett
 
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
-values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
-
+    values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('OPH-KATSELIJA', 'Opetushallituksen katselija', current_timestamp, current_timestamp);
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('OPL-VASTUUKAYTTAJA', 'Oppilaitoksen pääkäyttäjä', current_timestamp, current_timestamp);
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('OPL-KATSELIJA', 'Oppilaitoksen katselija', current_timestamp, current_timestamp);
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('OPL-KAYTTAJA', 'Oppilaitoksen normaali käyttäjä (opettaja)', current_timestamp, current_timestamp);
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('TTK-KATSELIJA', 'Toimikunnan raportointirooli', current_timestamp, current_timestamp);
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('KATSELIJA', 'Yleinen katselijarooli erityistarpeita varten', current_timestamp, current_timestamp);
+ 
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
-values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
+  values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
-values ('KONVERSIO', 'KONVERSIO', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
+  values ('KONVERSIO', 'KONVERSIO', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 
 CREATE OR REPLACE function update_stamp() returns trigger as $$ begin new.muutettuaika := now(); return new; end; $$ language plpgsql;
 CREATE OR REPLACE function update_created() returns trigger as $$ begin new.luotuaika := now(); return new; end; $$ language plpgsql;
