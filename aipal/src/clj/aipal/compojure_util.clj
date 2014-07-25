@@ -7,5 +7,4 @@
   "Esittelee rajapinta-funktion sisältäen käyttöoikeuksien tarkastamisen ja tietokanta-transaktion hallinnan."
   [toiminto konteksti-arg http-method path args & body]
   (let [auth-map ko/toiminnot]
-    (println "mappi " auth-map)
     `(oph-cjure/defapi  ~auth-map ~toiminto ~konteksti-arg ~http-method ~path ~args ~@body)))

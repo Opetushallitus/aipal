@@ -30,7 +30,7 @@
             [ring.util.response :as resp]
             schema.core
             [stencil.core :as s]
-
+ 
             [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
             aipal.rest-api.i18n
             [clj-cas-client.core :refer [cas]]
@@ -38,6 +38,8 @@
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.raportti.kyselykerta
+            oph.rest_api.js-log
+            
             [aitu.infra.i18n :refer [wrap-locale]]
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
             [aitu.infra.status :refer [status]]
@@ -93,6 +95,8 @@
                                                                    (assoc-in [:db :password] "*****")
                                                                    pprint))
                                                   :build-id @build-id)))
+    (c/context "/api/jslog" [] oph.rest_api.js-log/reitit)
+    
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
