@@ -162,12 +162,14 @@
                                 e))]
       ;; Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista
       ;; epäonnistuisi
-      (jdbc/with-connection {:datasource datasource}
-        (aseta-oikeudet-sovelluskayttajalle (:username options))
-        (when (:clear options)
-          (luo-kayttajat! (:uservariable options)))
-        (when (:testikayttajat options)
-          (luo-testikayttajat! (:uservariable options))))
-      (when migraatiopoikkeus
-        (.printStackTrace migraatiopoikkeus System/out)
-        (System/exit 1)))))
+      (try 
+        (jdbc/with-connection {:datasource datasource}
+          (aseta-oikeudet-sovelluskayttajalle (:username options))
+          (when (:clear options)
+            (luo-kayttajat! (:uservariable options)))
+          (when (:testikayttajat options)
+            (luo-testikayttajat! (:uservariable options))))
+        (finally
+          (when migraatiopoikkeus
+            (.printStackTrace migraatiopoikkeus System/out)
+            (System/exit 1)))))))
