@@ -66,6 +66,13 @@
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
 
+(defn auth-removeticket
+  [handler asetukset]
+  (fn [request]
+    (if (get-in request [:query-params "ticket"])
+      (resp/redirect (service-url asetukset))
+      (handler request))))
+
 (defn auth-middleware
   [handler asetukset]
   (when (and (:development-mode asetukset)
@@ -128,6 +135,7 @@
                                    wrap-keyword-params
                                    wrap-json-params
                                    (wrap-resource "public/app")
+                                   (auth-removeticket asetukset)
                                    (auth-middleware asetukset)
                                    wrap-params
                                    wrap-content-type
