@@ -40,7 +40,6 @@
             aipal.rest-api.raportti.kyselykerta
             oph.rest_api.js-log
             
-            [aitu.infra.i18n :refer [wrap-locale]]
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
             [aitu.infra.status :refer [status]]
             [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
@@ -129,9 +128,6 @@
                                    wrap-keyword-params
                                    wrap-json-params
                                    (wrap-resource "public/app")
-                                   (wrap-locale
-                                     :ei-redirectia #"/api/.*"
-                                     :base-url (-> asetukset :server :base-url))
                                    (auth-middleware asetukset)
                                    wrap-params
                                    wrap-content-type
