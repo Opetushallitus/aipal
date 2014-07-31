@@ -22,7 +22,7 @@
 
 (use-fixtures :once tietokanta/muodosta-yhteys)
 
-(def etusivu "/fi/#/")
+(def etusivu "/#/")
 
 (defn sivun-sisalto []
   (w/text (w/find-element {:css "body"})))

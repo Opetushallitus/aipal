@@ -25,7 +25,7 @@
 
 (use-fixtures :once tietokanta/muodosta-yhteys)
 
-(defn kyselykertaraportti-sivu [kyselykertaid] (str "/fi/#/raportti/kyselykerta/" kyselykertaid))
+(defn kyselykertaraportti-sivu [kyselykertaid] (str "/#/raportti/kyselykerta/" kyselykertaid))
 
 (defn sisemman-elementin-kentan-teksti [ulompi-elementti kentta]
   (w/text
