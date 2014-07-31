@@ -34,6 +34,7 @@ module.exports = function(config) {
       'src/bower_components/lodash/dist/lodash.js',
       'src/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'src/bower_components/angular-loading-bar/src/loading-bar.js',
+      'src/bower_components/stacktrace/stacktrace.js',
       'src/js/*.js',
       'src/js/**/*.js',
       'src/bower_components/angular-mocks/angular-mocks.js',

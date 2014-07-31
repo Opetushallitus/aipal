@@ -30,7 +30,7 @@ rm -rf src/bower_components
 bower install
 grunt build
 if [ "$run_tests" = yes ]; then
-    grunt test  --no-color
+    grunt test_ff  --no-color
 fi
 
 cd "$repo_path"
