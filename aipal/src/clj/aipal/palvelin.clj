@@ -42,7 +42,7 @@
             aipal.rest-api.raportti.kyselykerta
             oph.rest_api.js-log
             
-            [aitu.infra.i18n :refer [wrap-locale]]
+            [oph.common.infra.i18n :refer [wrap-locale]]
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [aitu.infra.status :refer [status]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]

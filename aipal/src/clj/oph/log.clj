@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns oph.log
-  (:require aitu.infra.print-wrapper
+  (:require oph.common.infra.print-wrapper
             oph.korma.korma-auth
             [clojure.tools.logging]
             [robert.hooke :refer [add-hook]]))
@@ -25,8 +25,8 @@
   (let [uid (if (bound? #'oph.korma.korma-auth/*current-user-uid*)
               oph.korma.korma-auth/*current-user-uid*
               "-")
-        requestid (if (bound? #'aitu.infra.print-wrapper/*requestid*)
-                    aitu.infra.print-wrapper/*requestid*
+        requestid (if (bound? #'oph.common.infra.print-wrapper/*requestid*)
+                    oph.common.infra.print-wrapper/*requestid*
                     "-")
         message-with-id (str "[User: " uid ", request: " requestid "] " message)]
     (if *lisaa-uid-ja-request-id?*

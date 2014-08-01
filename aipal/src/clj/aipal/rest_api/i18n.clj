@@ -18,11 +18,12 @@
   (:require [compojure.core :as c]
             [aipal.compojure-util :as cu]
             [schema.core :as schema]
-            [aitu.rest-api.http-util :refer [json-response]]
-            [aitu.util :refer [pisteavaimet->puu]]))
+            [oph.common.util.http-util :refer [json-response]]
+            [oph.common.util.util :refer [pisteavaimet->puu]]))
 
 (defn validoi-kieli []
   (schema/pred (fn[k] (or (= k "fi")(= k "sv")))))
+
 
 (defn hae-tekstit [kieli]
   (ResourceBundle/clearCache)
