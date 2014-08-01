@@ -15,7 +15,7 @@
 (ns aipal.toimiala.raportti.kyselykerta
   (:require [clj-time.core :as time]
             [korma.core :as sql]
-            [aitu.integraatio.sql.korma :refer [kyselykerta]]))
+            [aipal.integraatio.sql.korma :refer [kyselykerta]]))
 
 (defn ^:private hae-kyselykerta [kyselykertaid]
   (->

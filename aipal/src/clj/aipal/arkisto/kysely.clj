@@ -15,7 +15,7 @@
 (ns aipal.arkisto.kysely
   (:require [korma.core :as sql]
             [aipal.arkisto.kyselykerta :as kyselykerta])
-  (:use [aitu.integraatio.sql.korma]))
+  (:use [aipal.integraatio.sql.korma]))
 
 (defn hae-kyselyt
   "Hae kaikki kyselyt"
