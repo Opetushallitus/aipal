@@ -16,7 +16,6 @@
   (:import java.sql.Date
            org.joda.time.LocalDate)
   (:require  korma.db
-             [aitu.infra.i18n :as i18n]
              [korma.core :as sql]
              [oph.korma.korma-auth :as korma-auth]
              [clj-time.coerce :as time-coerce]

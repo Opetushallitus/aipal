@@ -22,7 +22,7 @@
 
 (use-fixtures :once tietokanta/muodosta-yhteys)
 
-(def kyselyt-sivu "/fi/#/kyselyt")
+(def kyselyt-sivu "/#/kyselyt")
 
 (defn kyselyt []
   (w/find-elements (-> *ng*

@@ -22,7 +22,7 @@
 
 (use-fixtures :once tietokanta/muodosta-yhteys)
 
-(defn vastaus-sivu [tunnus] (str "/fi/#/vastaus/" tunnus))
+(defn vastaus-sivu [tunnus] (str "/#/vastaus/" tunnus))
 (defn kyselyn-otsikko [] (w/text {:css "#content h1"}))
 (defn kyselyn-selite [] (w/text {:css "p.selite"}))
 (defn kyselyn-tutkinto [] (w/text {:css "p.tutkinto"}))

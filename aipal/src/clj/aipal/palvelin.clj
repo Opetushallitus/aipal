@@ -71,6 +71,12 @@
 (def ^:private build-id (delay (if-let [resource (io/resource "build-id.txt")]
                                  (.trim (slurp resource))
                                  "dev")))
+(defn auth-removeticket
+  [handler asetukset]
+  (fn [request]
+    (if (get-in request [:query-params "ticket"])
+      (resp/redirect (service-url asetukset))
+      (handler request))))
 
 (defn auth-middleware
   [handler asetukset]
@@ -134,9 +140,7 @@
                                    wrap-keyword-params
                                    wrap-json-params
                                    (wrap-resource "public/app")
-                                   (wrap-locale
-                                     :ei-redirectia #"/api/.*"
-                                     :base-url (-> asetukset :server :base-url))
+                                   (auth-removeticket asetukset)
                                    (auth-middleware asetukset)
                                    wrap-params
                                    wrap-content-type
