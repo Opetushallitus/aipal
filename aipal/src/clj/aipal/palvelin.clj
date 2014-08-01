@@ -31,7 +31,8 @@
             schema.core
             [stencil.core :as s]
  
-            [aipal.asetukset :refer [lue-asetukset oletusasetukset build-id konfiguroi-lokitus]]
+            [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset]]
+            [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             aipal.rest-api.i18n
             [clj-cas-client.core :refer [cas]]
             [aitu.infra.anon-auth :as anon-auth]
@@ -41,7 +42,7 @@
             oph.rest_api.js-log
             
             [aitu.infra.i18n :refer [wrap-locale]]
-            [aitu.infra.print-wrapper :refer [log-request-wrapper]]
+            [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [aitu.infra.status :refer [status]]
             [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.sql.korma]
@@ -66,6 +67,10 @@
 
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
+
+(def ^:private build-id (delay (if-let [resource (io/resource "build-id.txt")]
+                                 (.trim (slurp resource))
+                                 "dev")))
 
 (defn auth-middleware
   [handler asetukset]

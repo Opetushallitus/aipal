@@ -13,18 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.asetukset
-  (:require [clojure.java.io :refer [file resource]]
-            clojure.set
-            [clojure.tools.logging :as log]
-
-            [aitu.util :refer [pisteavaimet->puu
-                               deep-merge
-                               deep-update-vals
-                               paths]]
-            [schema.core :as s]
-            [schema.coerce :as sc])
-  (:import [ch.qos.logback.classic.joran JoranConfigurator]
-           [org.slf4j LoggerFactory]))
+  (:require
+    [schema.core :as s]
+    [oph.common.infra.asetukset :refer [lue-asetukset]]))
 
 (def Asetukset
   {:server {:port s/Int
@@ -41,20 +32,7 @@
                      :enabled Boolean}
    :development-mode Boolean
    :logback {:properties-file s/Str}})
-
-(defn string->boolean [x]
-  (case x
-    "true" true
-    "false" false
-    x))
-
-(defn string-coercion-matcher [schema]
-  (or (sc/string-coercion-matcher schema)
-      ({Boolean string->boolean} schema)))
-
-(defn coerce-asetukset [asetukset]
-  ((sc/coercer Asetukset string-coercion-matcher) asetukset))
-
+ 
 (def oletusasetukset
   {:server {:port 8082
             :base-url ""}
@@ -71,44 +49,5 @@
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :logback {:properties-file "resources/logback.xml"}})
 
-(def build-id (delay (if-let [r (resource "build-id.txt")]
-                       (.trim (slurp r))
-                       "dev")))
-
-(defn konfiguroi-lokitus
-  "Konfiguroidaan logback asetukset tiedostosta."
-  [asetukset]
-  (let [filepath (-> asetukset :logback :properties-file)
-        config-file (file filepath)
-        config-file-path (.getAbsolutePath config-file)
-        configurator (JoranConfigurator.)
-        context (LoggerFactory/getILoggerFactory)]
-    (log/info "logback configuration reset: " config-file-path)
-    (.setContext configurator context)
-    (.reset context)
-    (.doConfigure configurator config-file-path)))
-
-(defn lue-asetukset-tiedostosta
-  [polku]
-  (try
-    (with-open [reader (clojure.java.io/reader polku)]
-      (doto (java.util.Properties.)
-        (.load reader)))
-    (catch java.io.FileNotFoundException _
-      (log/info "Asetustiedostoa ei löydy. Käytetään oletusasetuksia")
-      {})))
-
-(defn tulkitse-asetukset
-  [property-map]
-  (->> property-map
-     (into {})
-     pisteavaimet->puu))
-
-(defn lue-asetukset
-  ([oletukset] (lue-asetukset oletukset "aipal.properties"))
-  ([oletukset polku]
-    (->>
-      (lue-asetukset-tiedostosta polku)
-      (tulkitse-asetukset)
-      (deep-merge oletukset)
-      (coerce-asetukset))))
+(defn hae-asetukset []
+  (lue-asetukset oletusasetukset Asetukset "aipalvastaus.properties"))

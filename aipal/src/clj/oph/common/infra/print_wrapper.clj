@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.infra.print-wrapper
+(ns oph.common.infra.print-wrapper
   "Logitus HTTP pyynnöille Ringiin. Vastaavia yleiskäyttöisiäkin on, mutta niissä on toivomisen varaa ainakin tällä hetkellä."
   (:require [clojure.tools.logging :as log]
             [clojure.string :as str]))
@@ -30,8 +30,9 @@
 (defn http-method->str [keyword-or-str]
   (str/upper-case (name keyword-or-str)))
 
-(defn log-request-wrapper [ring-handler & custom-paths-vseq]
+(defn log-request-wrapper
   "Logitus requestille. Perustiedot + kestoaika ja uniikki id per request"
+  [ring-handler & custom-paths-vseq]
   (fn [req]
     (binding [*requestid* (swap! requestid inc)]
       (let [start (System/currentTimeMillis)]
@@ -46,8 +47,15 @@
         (let [response (ring-handler req)
               finish (System/currentTimeMillis)
               total  (- finish start)]
-          (if (or (= response nil)
-                  (= (:status response) 404))
-            (log/warn (str "Response nil or status 404, uri: " (:uri req) ", query-string: " (:query-string req))))
           (log/info (str "Request " *requestid* " end. Status: " (:status response) " Duration: " total " ms. uri: " (:uri req)))
           response)))))
+
+
+; :remote-addr
+; :uri
+; :headers
+;   user-agent
+;   referer
+;   oid
+; :character-encoding
+; :scheme
