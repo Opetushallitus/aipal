@@ -1,3 +1,4 @@
+
 ;; Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
 ;;
 ;; This program is free software:  Licensed under the EUPL, Version 1.1 or - as
@@ -12,7 +13,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.util
+(ns oph.common.util.util 
   "Yleisiä apufunktioita."
   (:require [cheshire.core :as cheshire]
             [clj-time.core :as time]

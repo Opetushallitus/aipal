@@ -49,5 +49,7 @@
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :logback {:properties-file "resources/logback.xml"}})
 
-(defn hae-asetukset []
-  (lue-asetukset oletusasetukset Asetukset "aipalvastaus.properties"))
+(defn hae-asetukset 
+  ([asetukset] (lue-asetukset  asetukset Asetukset "aipalvastaus.properties"))
+  ([] (hae-asetukset oletusasetukset)))
+                 

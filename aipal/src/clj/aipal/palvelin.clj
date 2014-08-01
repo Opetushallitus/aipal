@@ -17,6 +17,7 @@
   (:require [cheshire.generate :as json-gen]
             [clojure.pprint :refer [pprint]]
             [clojure.tools.logging :as log]
+             [clojure.java.io :as io]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
             [ring.middleware.json :refer [wrap-json-params]]
@@ -31,7 +32,7 @@
             schema.core
             [stencil.core :as s]
  
-            [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset]]
+            [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             aipal.rest-api.i18n
             [clj-cas-client.core :refer [cas]]
@@ -44,7 +45,7 @@
             [aitu.infra.i18n :refer [wrap-locale]]
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [aitu.infra.status :refer [status]]
-            [aitu.poikkeus :refer [wrap-poikkeusten-logitus]]
+            [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [aitu.integraatio.sql.korma]
             [oph.korma.korma-auth :as korma-auth]))
 
@@ -124,11 +125,11 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
-(defn kaynnista! [oletusasetukset]
+(defn kaynnista! [asetukset]
   (try
-    (let [asetukset (lue-asetukset oletusasetukset)
+    (log/info "Käynnistetään Aipal, versio " @build-id)
+    (let [asetukset (hae-asetukset asetukset)
           _ (konfiguroi-lokitus asetukset)
-          _ (log/info "Käynnistetään Aipal, versio " @build-id)
           _ (aitu.integraatio.sql.korma/luo-db (:db asetukset))
           _ (json-gen/add-encoder org.joda.time.LocalDate
               (fn [c json-generator]

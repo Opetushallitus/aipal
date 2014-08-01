@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.poikkeus
+(ns oph.common.util.poikkeus 
   "Funktioita poikkeusten käsittelyyn."
   (:import (java.io StringWriter
                     PrintWriter))
