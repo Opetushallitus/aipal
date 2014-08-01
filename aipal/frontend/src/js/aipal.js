@@ -99,7 +99,7 @@ angular.module('aipal', [
       link: function(scope) {
         scope.kieli = kieli;
         scope.asetaKieli = function(kieli) {
-          localStorage['kieli'] = kieli;
+          localStorage.setItem('kieli', kieli);
           document.location.reload();
         };
       }

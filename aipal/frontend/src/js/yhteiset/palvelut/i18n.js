@@ -19,7 +19,7 @@ angular.module('yhteiset.palvelut.i18n', ['ngResource'])
   .factory('kieli', [function() {
     var kieli = 'fi';
     if ('kieli' in localStorage) {
-      kieli = localStorage['kieli'];
+      kieli = localStorage.getItem('kieli');
     }
     return kieli;
   }])
