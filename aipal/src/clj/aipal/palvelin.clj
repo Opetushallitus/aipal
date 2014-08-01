@@ -46,7 +46,7 @@
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [aitu.infra.status :refer [status]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
-            [aitu.integraatio.sql.korma]
+            [oph.korma.korma]
             [oph.korma.korma-auth :as korma-auth]))
 
 (schema.core/set-fn-validation! true)
@@ -130,7 +130,7 @@
     (log/info "Käynnistetään Aipal, versio " @build-id)
     (let [asetukset (hae-asetukset asetukset)
           _ (konfiguroi-lokitus asetukset)
-          _ (aitu.integraatio.sql.korma/luo-db (:db asetukset))
+          _ (oph.korma.korma/luo-db (:db asetukset))
           _ (json-gen/add-encoder org.joda.time.LocalDate
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))

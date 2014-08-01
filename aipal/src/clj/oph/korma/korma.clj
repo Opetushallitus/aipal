@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aitu.integraatio.sql.korma
+(ns oph.korma.korma
   (:import java.sql.Date
            org.joda.time.LocalDate)
   (:require  korma.db

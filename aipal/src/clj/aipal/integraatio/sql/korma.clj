@@ -1,7 +1,7 @@
 (ns aipal.integraatio.sql.korma
   (:require 
     [korma.core :as sql]
-    [aitu.integraatio.sql.korma  :refer [defentity]]))
+    [oph.korma.korma  :refer [defentity]]))
 
 (defentity kyselykerta
   (sql/pk :kyselykertaid))
