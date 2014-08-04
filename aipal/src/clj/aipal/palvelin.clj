@@ -30,21 +30,14 @@
             [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
             schema.core
-            [stencil.core :as s]
- 
+            
             [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
-            aipal.rest-api.i18n
+            [aipal.reitit :refer [build-id]]
             [clj-cas-client.core :refer [cas]]
             [oph.common.infra.anon-auth :as anon-auth]
-            aipal.rest-api.kysely
-            aipal.rest-api.kyselykerta
-            aipal.rest-api.raportti.kyselykerta
-            aipal.rest_api.js-log
             
-            [oph.common.infra.i18n :refer [wrap-locale]]
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
-            [aitu.infra.status :refer [status]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.korma]
             [oph.korma.korma-auth :as korma-auth]))
@@ -69,9 +62,6 @@
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
 
-(def ^:private build-id (delay (if-let [resource (io/resource "build-id.txt")]
-                                 (.trim (slurp resource))
-                                 "dev")))
 (defn auth-removeticket
   [handler asetukset]
   (fn [request]
@@ -95,25 +85,6 @@
                            (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
         (auth-handler request)))))
 
-(defn ^:private reitit [asetukset]
-  (c/routes
-    (c/GET "/" [] (s/render-file "public/app/index.html" (merge {:base-url (-> asetukset :server :base-url)
-                                                                 :build-id @build-id}
-                                                                (when-let [cas-url (-> asetukset :cas-auth-server :url)]
-                                                                  {:logout-url (str cas-url "/logout")}))))
-    (c/GET "/status" [] (s/render-file "status" (assoc (status)
-                                                  :asetukset (with-out-str
-                                                               (-> asetukset
-                                                                   (assoc-in [:db :password] "*****")
-                                                                   pprint))
-                                                  :build-id @build-id)))
-    (c/context "/api/jslog" [] aipal.rest_api.js-log/reitit)
-    
-    (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
-    (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
-    (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
-    (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)))
-
 (defn ^:private wrap-set-db-user
   "Asettaa käyttäjän tietokantaistuntoon."
   [ring-handler]
@@ -125,33 +96,40 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
+(defn app
+  "Ring-wrapperit ja compojure-reitit ilman HTTP-palvelinta"
+  [asetukset]
+  (require 'aipal.reitit)
+  (let [session-store (memory-store)
+        reitit ((eval 'aipal.reitit/reitit) asetukset)
+          _ (json-gen/add-encoder org.joda.time.LocalDate
+              (fn [c json-generator]
+                (.writeString json-generator (.toString c "yyyy-MM-dd"))))]
+    (-> reitit 
+      wrap-set-db-user
+      wrap-keyword-params
+      wrap-json-params
+      (wrap-resource "public/app")
+      (auth-removeticket asetukset)
+      (auth-middleware asetukset)
+      wrap-params
+      wrap-content-type
+      (wrap-frame-options :deny)
+      (wrap-session {:store session-store
+                     :cookie-attrs {:http-only true
+                                    :path (service-path(get-in asetukset [:server :base-url]))
+                                    :secure (not (:development-mode asetukset))}})
+      log-request-wrapper
+      wrap-poikkeusten-logitus)))
+    
+  
 (defn kaynnista! [alkuasetukset]
   (try
     (log/info "Käynnistetään Aipal, versio " @build-id)
     (let [asetukset (hae-asetukset alkuasetukset)
           _ (konfiguroi-lokitus asetukset)
           _ (oph.korma.korma/luo-db (:db asetukset))
-          _ (json-gen/add-encoder org.joda.time.LocalDate
-              (fn [c json-generator]
-                (.writeString json-generator (.toString c "yyyy-MM-dd"))))
-          session-store (memory-store)
-          sammuta (hs/run-server (->
-                                   (reitit asetukset)
-                                   wrap-set-db-user
-                                   wrap-keyword-params
-                                   wrap-json-params
-                                   (wrap-resource "public/app")
-                                   (auth-removeticket asetukset)
-                                   (auth-middleware asetukset)
-                                   wrap-params
-                                   wrap-content-type
-                                   (wrap-frame-options :deny)
-                                   (wrap-session {:store session-store
-                                                  :cookie-attrs {:http-only true
-                                                                 :path (service-path(get-in asetukset [:server :base-url]))
-                                                                 :secure (not (:development-mode asetukset))}})
-                                   log-request-wrapper
-                                   wrap-poikkeusten-logitus)
+          sammuta (hs/run-server (app asetukset)
                                  {:port (get-in asetukset [:server :port])})]
       (log/info "Palvelin käynnistetty:" (service-url asetukset))
       {:sammuta sammuta})
