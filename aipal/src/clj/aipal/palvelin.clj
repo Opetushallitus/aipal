@@ -36,7 +36,7 @@
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             aipal.rest-api.i18n
             [clj-cas-client.core :refer [cas]]
-            [aitu.infra.anon-auth :as anon-auth]
+            [oph.common.infra.anon-auth :as anon-auth]
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.raportti.kyselykerta

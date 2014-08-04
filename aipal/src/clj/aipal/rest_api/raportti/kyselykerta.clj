@@ -16,7 +16,7 @@
   (:require [compojure.core :as c]
             [korma.db :as db]
             [schema.core :as schema]
-            [aipal.rest-api.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [json-response]]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]))
 
 (c/defroutes reitit

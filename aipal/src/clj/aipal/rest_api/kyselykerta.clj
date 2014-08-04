@@ -17,7 +17,7 @@
             [korma.db :as db]
             [schema.core :as schema]
             [aipal.arkisto.kyselykerta :as kyselykerta]
-            [aipal.rest-api.http-util :refer [json-response parse-iso-date]]))
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
 (defn paivita-arvot [m avaimet f]
   (reduce #(update-in % [%2] f) m avaimet))
