@@ -307,7 +307,7 @@ CREATE TABLE vastaajatunnus
   ) ;
 COMMENT ON COLUMN vastaajatunnus.tunnus
 IS
-  'Generoitu tunnus vastaajille' ;
+  'Generoitu tunnus vastaajille. Määrittelee samalla URL:n jossa kyselyyn voi vastata.' ;
   COMMENT ON COLUMN vastaajatunnus.vastaajien_lkm
 IS
   'Maksimi vastaajien lukumäärä' ;
