@@ -12,3 +12,6 @@
 
 (defentity vastaajatunnus
   (sql/pk :vastaajatunnusid))
+
+(defentity kayttaja
+  (sql/pk :oid))
