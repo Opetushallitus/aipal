@@ -55,6 +55,9 @@
   :source-paths ["src/clj"]
   :java-source-paths ["src/java"]
   :test-paths ["test/clj"]
+  :test-selectors {:kaikki (constantly true)
+                   :default (complement :integraatio)
+                   :integraatio :integraatio}
   :jar-name "aipal.jar"
   :uberjar-name "aipal-standalone.jar"
   :main aipal.palvelin
