@@ -1,7 +1,30 @@
 <h2>Kysely</h2>
 
-<h3>Nimi</h3>
-{{kysely.nimi_fi}}
+<div class="questionnaire-actions">
+  <a ng-click="">Tallenna kysely</a>
+  <a ng-click="">Julkaise kysely</a>
+</div>
 
-<h3>Selite</h3>
-{{kysely.selite_fi}}
+<h3>Kyselyn nimi (näkyy vastaajalle)</h3>
+<input type="text" value="{{kysely.nimi_fi}}" />
+
+<h3>Kyselyn kuvaus (näkyy vastaajalle)</h3>
+<input type="text" value="{{kysely.selite_fi}}" />
+
+<h3>Voimassa</h3>
+
+<pvm-valitsin
+        otsikko="{{i18n.yleiset.alkaen}}"
+        oletus-pvm="kysely.voimassa_alkupvm"
+        valittu-pvm="kysely.voimassa_alkupvm"
+        pakollinen="true">
+</pvm-valitsin>
+<pvm-valitsin
+        otsikko="{{i18n.yleiset.asti}}"
+        oletus-pvm="kysely.voimassa_loppupvm"
+        valittu-pvm="kysely.voimassa_loppupvm"
+        pakollinen="false">
+</pvm-valitsin>
+
+<a ng-click="">Lisää kyselypohja</a>
+<a ng-click="">Lisää kysymysryhmä</a>
