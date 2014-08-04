@@ -7,5 +7,3 @@
 (c/defroutes reitit
   (cu/defapi :vastaajatunnus nil :get "/" []
     (json-response (vastaajatunnus/hae-kaikki))))
-
-
