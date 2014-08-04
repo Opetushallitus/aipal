@@ -32,15 +32,15 @@
       (str/replace "\r" "!")
       (.substring 0 ln))))
 
-(c/defroutes reitit
-  (cu/defapi :logitus nil :post "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
-    (let [rivinvaihto "\n"]
-      (log/info (str rivinvaihto
-                     "--- Javascript virhe ---" rivinvaihto
-                     "Virheen url: " (sanitize virheenUrl) rivinvaihto
-                     "User agent string: " (sanitize userAgent) rivinvaihto
-                     "Virheviesti: " (sanitize virheviesti) rivinvaihto
-                     "Stacktrace: " (sanitize stackTrace) rivinvaihto
-                     "Aiheuttaja: " (sanitize cause) rivinvaihto
-                     "------------------------")))
-    {:status 200}))
+(defn logita [virheenUrl userAgent virheviesti stackTrace cause]
+  "Tarkoitus on wrapata tämä sopivaan compojure-reittiin"
+  (let [rivinvaihto "\n"]
+    (log/info (str rivinvaihto
+                "--- Javascript virhe ---" rivinvaihto
+                "Virheen url: " (sanitize virheenUrl) rivinvaihto
+                "User agent string: " (sanitize userAgent) rivinvaihto
+                "Virheviesti: " (sanitize virheviesti) rivinvaihto
+                "Stacktrace: " (sanitize stackTrace) rivinvaihto
+                "Aiheuttaja: " (sanitize cause) rivinvaihto
+                "------------------------")))
+  {:status 200})

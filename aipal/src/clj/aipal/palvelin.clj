@@ -40,7 +40,7 @@
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.raportti.kyselykerta
-            oph.rest_api.js-log
+            aipal.rest_api.js-log
             
             [oph.common.infra.i18n :refer [wrap-locale]]
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
@@ -107,7 +107,7 @@
                                                                    (assoc-in [:db :password] "*****")
                                                                    pprint))
                                                   :build-id @build-id)))
-    (c/context "/api/jslog" [] oph.rest_api.js-log/reitit)
+    (c/context "/api/jslog" [] aipal.rest_api.js-log/reitit)
     
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
