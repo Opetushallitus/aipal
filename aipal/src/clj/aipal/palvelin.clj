@@ -125,10 +125,10 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
-(defn kaynnista! [asetukset]
+(defn kaynnista! [alkuasetukset]
   (try
     (log/info "Käynnistetään Aipal, versio " @build-id)
-    (let [asetukset (hae-asetukset asetukset)
+    (let [asetukset (hae-asetukset alkuasetukset)
           _ (konfiguroi-lokitus asetukset)
           _ (oph.korma.korma/luo-db (:db asetukset))
           _ (json-gen/add-encoder org.joda.time.LocalDate

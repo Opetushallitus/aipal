@@ -50,6 +50,6 @@
    :logback {:properties-file "resources/logback.xml"}})
 
 (defn hae-asetukset 
-  ([asetukset] (lue-asetukset  asetukset Asetukset "aipalvastaus.properties"))
+  ([alkuasetukset] (lue-asetukset alkuasetukset Asetukset "aipal.properties"))
   ([] (hae-asetukset oletusasetukset)))
                  
