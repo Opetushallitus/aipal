@@ -29,9 +29,15 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'yhteiset.palvelut.i18n', 
   }])
 
   .controller('KyselytController', [
-    'Kysely', '$scope',
-    function(Kysely, $scope) {
+    '$location', '$scope', 'Kysely',
+    function($location, $scope, Kysely) {
       $scope.naytaLuonti = false;
+
+      $scope.luoUusiKysely = function() {
+        Kysely.luoUusi(function(data) {
+          $location.url('/kysely/' + data.id);
+        });
+      };
 
       $scope.haeKyselyt = function() {
         $scope.kyselyt = Kysely.hae();

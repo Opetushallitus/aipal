@@ -27,6 +27,10 @@ angular.module('toimiala.kysely', ['ngResource'])
         method: 'GET',
         url: 'api/kysely/:id'
       },
+      luoUusi: {
+        method: 'POST',
+        url: 'api/kysely'
+      },
       tallenna: {
         method: 'POST',
         url: 'api/kysely/:id'
@@ -39,6 +43,9 @@ angular.module('toimiala.kysely', ['ngResource'])
       },
       haeId: function(id, successCallback, errorCallback) {
         return resource.idHaku({id: id}, successCallback, errorCallback);
+      },
+      luoUusi: function(successCallback, errorCallback) {
+        return resource.luoUusi({}, {}, successCallback, errorCallback);
       },
       tallenna: function(data, successCallback, errorCallback) {
         return resource.tallenna({id: data.kyselyid}, data, successCallback, errorCallback);
