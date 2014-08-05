@@ -17,11 +17,16 @@
             [korma.db :as db]
             [schema.core :as schema]
             [aipal.arkisto.kysely :as kysely]
-            [oph.common.util.http-util :refer [json-response]]))
+            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
 (c/defroutes reitit
   (c/GET "/" [] (db/transaction
                   (json-response (kysely/hae-kaikki))))
 
   (c/GET "/:kyselyid" [kyselyid] (db/transaction
-                                   (json-response (kysely/hae (Integer/parseInt kyselyid))))))
+                                   (json-response (kysely/hae (Integer/parseInt kyselyid)))))
+  (c/POST "/:kyselyid" [kyselyid & kysely]
+          (db/transaction
+            (json-response
+              (kysely/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))))
