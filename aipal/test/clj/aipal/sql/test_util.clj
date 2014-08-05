@@ -41,8 +41,8 @@
   ([asetukset] 
     (let [db-asetukset (merge-with #(or %2 %1)
                          (:db asetukset)
-                         {:host (System/getenv "AMTU_DB_HOST")
-                          :port (System/getenv "AMTU_DB_PORT")})]
+                         {:host (System/getenv "AIPAL_DB_HOST")
+                          :port (System/getenv "AIPAL_DB_PORT")})]
       (oph.korma.korma/luo-db db-asetukset)))
     ([]
     (let [dev-asetukset (assoc oletusasetukset :development-mode true)

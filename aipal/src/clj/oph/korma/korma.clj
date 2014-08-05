@@ -40,7 +40,7 @@
                      (.setMaxConnectionsPerPartition 10)
                      (.setMinConnectionsPerPartition 5)
                      (.setPartitionCount 1)
-                     (.setConnectionHook korma-auth/customizer-impl-bonecp)
+                     (.setConnectionHook (korma-auth/customizer-impl-bonecp (:psql-session-var db-asetukset)))
                      )]
   bonecp-ds))
 

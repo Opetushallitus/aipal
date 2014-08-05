@@ -26,7 +26,8 @@
         :user s/Str
         :password s/Str
         :maximum-pool-size s/Int
-        :minimum-pool-size s/Int}
+        :minimum-pool-size s/Int
+        :psql-session-var s/Str}
    :cas-auth-server {:url s/Str
                      :unsafe-https Boolean
                      :enabled Boolean}
@@ -42,7 +43,8 @@
         :user "aipal_user"
         :password "aipal"
         :maximum-pool-size 15
-        :minimum-pool-size 3}
+        :minimum-pool-size 3
+        :psql-session-var "aipal.kayttaja"}
    :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
                      :unsafe-https false
                      :enabled true}

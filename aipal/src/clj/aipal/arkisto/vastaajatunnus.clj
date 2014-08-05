@@ -28,4 +28,18 @@
     (first (drop-while #(contains? luodut-tunnukset %)
       (take 10000 (repeatedly #(luo-tunnus pituus)))))))
 
+(defn lisaa!
+  "Lisää uuden vastaajatunnuksen tietokantaan"
+  [kyselykertaid rahoitusmuotoid tutkintotunnus voimassa_alkupvm voimassa_loppupvm]
+  (let [t (luo-tunnus 6)]
+    (sql/insert vastaajatunnus
+      (sql/values {:kyselykertaid kyselykertaid
+                   :rahoitusmuotoid rahoitusmuotoid
+                   :tutkintotunnus tutkintotunnus
+                   :voimassa_alkupvm voimassa_alkupvm
+                   :voimassa_loppupvm voimassa_loppupvm
+                   :lukittu false
+                   :vastaajien_lkm 1
+                   :tunnus t}))))
+
 

@@ -5,7 +5,7 @@
     [aipal.palvelin :as palvelin]
     [peridot.core :as peridot]
     [oph.korma.korma-auth :as ka]
-    [oph.korma.korma-auth :as auth]
+    [aipal.integraatio.sql.korma-auth :as auth]
     [oph.common.infra.i18n :as i18n]
     [aipal.integraatio.sql.korma :as korma]
     [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]

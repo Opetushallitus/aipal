@@ -18,9 +18,6 @@
 
 (def jarjestelmakayttaja "JARJESTELMA")
 (def integraatiokayttaja "INTEGRAATIO")
-(def default-test-user-oid "OID.T-1001")
-(def default-test-user-uid "T-1001")
-(def ^:private psql-varname "aipal.kayttaja")
 
 (def ^:dynamic *current-user-uid*)
 (def ^:dynamic *current-user-oid*)
@@ -50,7 +47,7 @@
     (.execute stm sql)))
 
 (defn auth-onCheckOut
-  [c]
+  [c psql-varname]
   (log/debug "auth user " *current-user-uid*)
   (try
     (let [oid (validate-user c *current-user-uid*)]
@@ -63,7 +60,7 @@
   (log/debug "con ok" (.hashCode c)))
 
 (defn auth-onCheckIn
-  [c]
+  [c psql-varname]
   (log/debug "connection release ")
   (try
     (exec-sql c (str "SET " psql-varname " TO DEFAULT"))
@@ -71,9 +68,11 @@
       (log/error e "Odottamaton poikkeus")))
   (log/debug "con release ok" (.hashCode c)))
 
-(defonce customizer-impl-bonecp
+(defn customizer-impl-bonecp
+  "Luo uuden BoneCP kantayhteys-räätälöijän, joka asettaa Postgrelle sisään kirjautuneen käyttäjän sessiota varten"
+  [psql-varname]
   (proxy [com.jolbox.bonecp.hooks.AbstractConnectionHook] []
     (onCheckIn [c]
-      (auth-onCheckIn c))
+      (auth-onCheckIn c psql-varname))
     (onCheckOut [c]
-      (auth-onCheckOut c))))
+      (auth-onCheckOut c psql-varname))))
