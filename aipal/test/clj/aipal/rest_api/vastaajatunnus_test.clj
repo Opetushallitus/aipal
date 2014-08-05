@@ -1,17 +1,24 @@
 (ns aipal.rest-api.vastaajatunnus-test  
   (:require 
-    [aipal.sql.test-util :refer :all]
-    [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
-    [aipal.palvelin :as palvelin]
     [peridot.core :as peridot]
+    [clj-time.core :as time]
+ 
     [oph.korma.korma-auth :as ka]
-    [aipal.integraatio.sql.korma-auth :as auth]
     [oph.common.infra.i18n :as i18n]
+    [aipal.integraatio.sql.korma-auth :as auth]
+    [aipal.palvelin :as palvelin]
+    [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
     [aipal.integraatio.sql.korma :as korma]
     [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
     [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
+
+    [aipal.sql.test-util :refer :all]
+    [aipal.sql.test-data-util :refer :all]
+    [aipal.arkisto.vastaajatunnus :as vastaajatunnus-arkisto]
     )
   (:use clojure.test))
+
+(use-fixtures :each tietokanta-fixture)
 
 (defn with-auth-user [f]
   (let [olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid auth/default-test-user-oid, :uid auth/default-test-user-uid }]
@@ -41,3 +48,17 @@
                      (mock-request "/api/vastaajatunnus"  :get {}))]
       ;(println response)
       (is (= (:status (:response response)) 200)))))
+
+(deftest ^:integraatio tunnuksen-luonti
+  (testing "Haku palauttaa lisää-kutsulla luodun vastaajatunnuksen"
+    (let [tutkinto (lisaa-tutkinto!)
+          rahoitusmuotoid 1 ; koodistodata
+          kyselykerta (lisaa-kyselykerta!)
+          vastaajatunnus (vastaajatunnus-arkisto/lisaa! (:kyselykertaid kyselykerta)
+                           rahoitusmuotoid (:tutkintotunnus tutkinto)
+                           (time/now)
+                           nil
+                           )
+          viimeksi-lisatty (first (vastaajatunnus-arkisto/hae-kaikki))]
+      (is (= (:kyselykertaid viimeksi-lisatty) (:kyselykertaid vastaajatunnus)))
+      (is (= (:tutkintotunnus viimeksi-lisatty) (:tutkintotunnus vastaajatunnus))))))

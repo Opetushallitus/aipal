@@ -21,31 +21,20 @@
 
 (def taulut 
   "Taulut vierasavainriippuvuuksien mukaisessa järjestyksessä, ensin taulu josta viitataan myöhemmin nimettyyn."
-  ["jarjestamissuunnitelma"
-   "sopimus_ja_tutkinto_ja_osaamisala"
-   "sopimuksen_liite"
-   "jarjestamissuunnitelma"
-   "sopimus_ja_tutkinto"
-   "jarjestamissopimus"
-   "toimipaikka"
-   "oppilaitos"
+  ["kysymys"
+   "kysely_kysymysryhma"
+   "kysely_kysymys"   
+   "kysymysryhma"
+   "kyselypohja"
+   "monivalintavaihtoehto"
+   "vastaus"
+   "vastaaja"
+   "vastaajatunnus"
+   "kyselykerta"
+   "kysely"
+   "tutkinto"
    "koulutustoimija"
-   "jasenyys"
-   "toimikunta_ja_tutkinto"
-   "tutkinnonosa"
-   "tutkintoversio"
-   "nayttotutkinto"
-   "peruste"
-   "osaamisala"
-   "opintoala"
-   "koulutusala"
-   "tutkintotyyppi"
-   "henkilo"
-   "tutkintotoimikunta"
-   "toimikausi"
-   "ohje"
-   "kayttaja"
-   "tiedote"])
+   ])
 
 (defn tyhjenna-testidata!
   [oid]
@@ -69,7 +58,7 @@
                        :uid testikayttaja-uid
                        :oid testikayttaja-oid}))))))
   ([testikayttaja-oid testikayttaja-uid]
-    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid (:yllapitaja kayttajaroolit))))
+    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid (:paakayttaja kayttajaroolit))))
 
 (defn poista-testikayttaja!
   [testikayttaja-oid]

@@ -46,3 +46,9 @@
 
     sql/exec
     first))
+
+(defn lisaa!
+  "Lisää uuden kyselyn"
+  [tiedot]
+  (sql/insert kysely
+    (sql/values tiedot)))
