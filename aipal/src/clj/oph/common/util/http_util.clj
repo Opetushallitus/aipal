@@ -33,11 +33,12 @@
 
 (defn parse-iso-date
   [d]
-  (or
-    (try-parse-local-date "yyyy-MM-dd'T'HH:mm:ss.sssZ" d)
-    (try-parse-local-date "yyyy-MM-dd" d)
-    (try-parse-local-date "dd.MM.yyyy" d)
-    (throw (IllegalArgumentException. "Virheellinen pvm formaatti"))))
+  (when d
+    (or
+      (try-parse-local-date "yyyy-MM-dd'T'HH:mm:ss.sssZ" d)
+      (try-parse-local-date "yyyy-MM-dd" d)
+      (try-parse-local-date "dd.MM.yyyy" d)
+      (throw (IllegalArgumentException. "Virheellinen pvm formaatti")))))
 
 (defn get-cache-headers
   [last-modified]
