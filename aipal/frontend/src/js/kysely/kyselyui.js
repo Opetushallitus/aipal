@@ -53,6 +53,10 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'yhteiset.palvelut.i18n', 
     'Kysely', '$routeParams', '$scope',
     function(Kysely, $routeParams, $scope) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
+
+      $scope.tallenna = function(kysely) {
+        Kysely.tallenna(kysely);
+      };
     }
   ])
 

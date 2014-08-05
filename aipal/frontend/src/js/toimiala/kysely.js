@@ -26,6 +26,10 @@ angular.module('toimiala.kysely', ['ngResource'])
       idHaku: {
         method: 'GET',
         url: 'api/kysely/:id'
+      },
+      tallenna: {
+        method: 'POST',
+        url: 'api/kysely/:id'
       }
     });
 
@@ -35,6 +39,9 @@ angular.module('toimiala.kysely', ['ngResource'])
       },
       haeId: function(id, successCallback, errorCallback) {
         return resource.idHaku({id: id}, successCallback, errorCallback);
+      },
+      tallenna: function(data, successCallback, errorCallback) {
+        return resource.tallenna({id: data.kyselyid}, data, successCallback, errorCallback);
       }
     };
   }]);
