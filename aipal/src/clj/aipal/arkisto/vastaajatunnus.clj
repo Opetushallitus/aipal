@@ -3,6 +3,11 @@
     [clojure.string :as st])
   (:use [aipal.integraatio.sql.korma]))
 
+(def sallitut-url-merkit 
+  "Merkit, joista vastaajatunnus muodostetaan. Ei erikoismerkkejä, koska näistä tulee samalla URL-osoite vastaajan selainta varten."
+  "01234567890abcdefghjlkmnopqrstuwvxyzABCDEFGHJLMNOPQRSTUWVXYZ")
+
+
 (defn hae-kaikki
   "Hae kaikki vastaajatunnukset"
   []
@@ -13,15 +18,14 @@
     sql/exec))
 
 (defn luo-tunnus 
-  "Luo yksilöllisen tunnuksen. Ei erikoismerkkejä. Tunnus toimii samalla URL-osoitteen parametrina."
+  "Luo yksilöllisen tunnuksen. "
   ([pituus]
   {:post [(and 
             (string? %)
             (= pituus (.length %)))]}
-  (apply str (take pituus (repeatedly #(rand-nth "01234567890abcdefghjlkmnopqrstuwvxyzABCDEFGHJLMNOPQRSTUWVXYZ")))))
+  (apply str (take pituus (repeatedly #(rand-nth sallitut-url-merkit)))))
   ([pituus luodut-tunnukset]
     (first (drop-while #(contains? luodut-tunnukset %)
-      (repeatedly #(luo-tunnus pituus))))))
-  
+      (take 10000 (repeatedly #(luo-tunnus pituus)))))))
 
 
