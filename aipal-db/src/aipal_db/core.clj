@@ -56,6 +56,10 @@
   [kayttaja-param]
   (run-sql (sql-resurssista "sql/testikayttajat.sql") kayttaja-param))
 
+(defn luo-koodistodata!
+  [kayttaja-param]
+  (run-sql (sql-resurssista "sql/koodistot.sql") kayttaja-param))
+  
 (defn aseta-oikeudet-sovelluskayttajalle
   [username]
   (jdbc-do
@@ -160,16 +164,20 @@
                               nil
                               (catch FlywayException e
                                 e))]
-      ;; Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista
-      ;; epäonnistuisi
       (try 
         (jdbc/with-connection {:datasource datasource}
+          (println "Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista epäonnistuisi.")
           (aseta-oikeudet-sovelluskayttajalle (:username options))
+          (println "Luodaan koodistodata")
+          (luo-koodistodata! (:uservariable options))
           (when (:clear options)
+            (println "luodaan käyttäjät")
             (luo-kayttajat! (:uservariable options)))
           (when (:testikayttajat options)
+            (println "luodaan testikäyttäjät")
             (luo-testikayttajat! (:uservariable options))))
         (finally
           (when migraatiopoikkeus
+            (println "!!!! TAPAHTUI VIRHE !!!")
             (.printStackTrace migraatiopoikkeus System/out)
             (System/exit 1)))))))
