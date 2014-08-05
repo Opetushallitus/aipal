@@ -14,14 +14,15 @@
 
 (ns oph.common.infra.anon-auth
   "Testitarkoituksia varten anonyymi-autentikaatiofiltteri, joka emuloi CAS-autentikaatiota"
-  (:require [oph.korma.korma-auth :as ka]
-            [clojure.tools.logging :as log]))
+  (:require [clojure.tools.logging :as log]))
+
+(def default-test-user-uid "T-1001")
 
 (defn auth-cas-user [ring-handler]
   (log/info "!! Anon auth enabled")
   (fn [request]
     (let [req (assoc request :username
-                     (get (:headers request) "uid" ka/default-test-user-uid))
+                     (get (:headers request) "uid" default-test-user-uid))
           _ (log/debug "authorized user " (:username req))]
       (ring-handler req))))
 
