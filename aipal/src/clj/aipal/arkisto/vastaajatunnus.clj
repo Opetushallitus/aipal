@@ -31,6 +31,16 @@
     (sql/order :kyselykertaid :DESC)
     sql/exec))
 
+(defn hae-kyselykerralla
+  "Hae kyselykerran vastaajatunnukset"
+  [kyselykertaid]
+  (->
+    (sql/select* vastaajatunnus)
+    (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :voimassa_alkupvm :voimassa_loppupvm)
+    (sql/where (= :kyselykertaid kyselykertaid))
+    (sql/order :kyselykertaid :DESC)
+    sql/exec))
+
 (defn luo-tunnus 
   "Luo yksilöllisen tunnuksen. "
   ([pituus]

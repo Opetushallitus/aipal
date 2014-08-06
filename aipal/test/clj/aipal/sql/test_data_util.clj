@@ -16,6 +16,7 @@
   (:require [aipal.arkisto.vastaajatunnus]
     [aipal.arkisto.kysely]
     [aipal.arkisto.kyselykerta]
+    [aipal.arkisto.koulutustoimija]
     [clj-time.core :as time]
     [clj-time.core :as ctime]
     [korma.core :as sql]
@@ -60,9 +61,16 @@
       ))
   ([] lisaa-koulutustoimija! default-koulutustoimija))
 
+(defn anna-koulutustoimija!
+  "Palauttaa koulutustoimijan kannasta tai lisää uuden"
+  []
+  (let [k (aipal.arkisto.koulutustoimija/hae-kaikki)]
+    (or (first k)
+      (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
+
 (defn lisaa-kysely!
   []
-  (let [koulutustoimija (lisaa-koulutustoimija! default-koulutustoimija)]
+  (let [koulutustoimija (anna-koulutustoimija!)]
     (aipal.arkisto.kysely/lisaa! {:nimi_fi "oletuskysely, testi"
                                   :koulutustoimija (:ytunnus koulutustoimija)
                                   })))

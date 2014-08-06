@@ -32,3 +32,6 @@
 
 (defentity tutkinto
   (sql/pk :tutkintotunnus))
+
+(defentity koulutustoimija
+  (sql/pk :ytunnus))
