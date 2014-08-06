@@ -13,6 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kyselypohja
+  (:import java.sql.Date)
   (:require [korma.core :as sql]))
 
 (defn hae-kaikki
@@ -20,6 +21,8 @@
   (->
     (sql/select* :kyselypohja)
     (sql/fields :kyselypohjaid :nimi_fi :nimi_sv)
-    ; TODO filteröinti voimassa_alkupvm - voimassa_loppupvm
+    (sql/where (and
+                 (< :voimassa_alkupvm (sql/sqlfn :now))
+                 (< (sql/sqlfn :now) (sql/sqlfn :coalesce :voimassa_loppupvm (java.sql.Date. 2900 1 1)))))
     (sql/order :kyselypohjaid :ASC)
     (sql/exec)))
