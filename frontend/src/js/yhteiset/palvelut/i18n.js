@@ -17,8 +17,10 @@
 angular.module('yhteiset.palvelut.i18n', ['ngResource'])
 
   .factory('kieli', ['$location', function($location) {
-    var url = $location.absUrl();
-    var kieli = url.match(/\/sv\//) ? 'sv' : 'fi';
+    var kieli = 'fi';
+    if ('kieli' in localStorage) {
+      kieli = localStorage.getItem('kieli');
+    }
     return kieli;
   }])
 

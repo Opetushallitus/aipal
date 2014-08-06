@@ -29,7 +29,6 @@
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
             [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
-            [oph.common.infra.i18n :refer [wrap-locale]]
             [stencil.core :as s]
             [aipalvastaus.rest-api.i18n]
             aipalvastaus.sql.korma
@@ -78,9 +77,6 @@
                                    wrap-keyword-params
                                    wrap-json-params
                                    (wrap-resource "public/app")
-                                   (wrap-locale
-                                     :ei-redirectia #"/api/.*"
-                                     :base-url (get-in luetut-asetukset [:server :base-url]))
                                    wrap-params
                                    wrap-content-type
                                    (wrap-frame-options :deny)
