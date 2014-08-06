@@ -52,3 +52,10 @@
   [tiedot]
   (sql/insert kysely
     (sql/values tiedot)))
+
+(defn muokkaa-kyselya [kyselydata]
+  (->
+    (sql/update* kysely)
+    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm]))
+    (sql/where {:kyselyid (:kyselyid kyselydata)})
+    (sql/update)))
