@@ -20,4 +20,7 @@
 
 (c/defroutes reitit
   (cu/defapi :vastaajatunnus nil :get "/" []
-    (json-response (vastaajatunnus/hae-kaikki))))
+    (json-response (vastaajatunnus/hae-kaikki)))
+
+  (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid" [kyselykertaid]
+    (json-response (vastaajatunnus/hae-kyselykerralla (java.lang.Integer/parseInt kyselykertaid)))))

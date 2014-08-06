@@ -43,6 +43,6 @@
        crout (palvelin/app asetukset)]
     
     (let [response (->  (peridot/session  crout)
-                     (mock-request "/api/vastaajatunnus"  :get {}))]
+                     (mock-request url method params))]
       response)))
 
