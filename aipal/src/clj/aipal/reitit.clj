@@ -9,6 +9,7 @@
           [clj-cas-client.core :refer [cas]]
           aipal.rest-api.kysely
           aipal.rest-api.kyselykerta
+          aipal.rest-api.kyselypohja
           aipal.rest-api.raportti.kyselykerta
           aipal.rest_api.js-log
           aipal.rest_api.vastaajatunnus
@@ -38,6 +39,7 @@
     
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
+    (c/context "/api/kyselypohja" [] aipal.rest-api.kyselypohja/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
     (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)
     (c/context "/api/vastaajatunnus" [] aipal.rest-api.vastaajatunnus/reitit)))
