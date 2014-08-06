@@ -27,4 +27,14 @@
         pakollinen="false">
 </pvm-valitsin>
 
-<a ng-click="">{{i18n.kysely.lisaa_kyselypohja}}</a>
+<popup-ikkuna nayta-popup="naytaLisaaKyselyPohjaPopup">
+  <h2>Kyselypohjan valinta</h2>
+
+  <p>Valitse lisättävä kyselypohja tai luo uusi pohja</p>
+
+  {{ kyselypohjat | json }}
+
+  TODO: dropdown
+</popup-ikkuna>
+
+<a ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</a>
