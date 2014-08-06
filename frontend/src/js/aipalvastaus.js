@@ -38,6 +38,10 @@ angular.module('aipalvastaus', [
       replace: true,
       link: function(scope) {
         scope.kieli = kieli;
+        scope.asetaKieli = function(kieli) {
+          localStorage.setItem('kieli', kieli);
+          document.location.reload();
+        };
       }
     };
   }])

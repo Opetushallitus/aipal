@@ -21,17 +21,6 @@ module.exports = function (grunt) {
 
   var distDir = '../resources/public/app';
 
-  function wrapLocale(req, res, next) {
-    var localePattern = /^\/fi|^\/sv/;
-    if(!req.url.match(localePattern)) {
-      res.writeHead(302, { 'Location': '/fi/' });
-      res.end();
-    } else {
-      req.url = req.url.replace(localePattern, '');
-      next();
-    }
-  }
-
   grunt.initConfig({
     connect: {
       server: {
@@ -44,8 +33,7 @@ module.exports = function (grunt) {
               options.base = [options.base];
             }
 
-            var middlewares = [wrapLocale,
-                               require('grunt-connect-proxy/lib/utils').proxyRequest];
+            var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
 
             options.base.forEach(function(base) {
               middlewares.push(connect.static(base));
