@@ -21,7 +21,12 @@
         {{ i18n.yleiset.ei }}
       </label>
     </span>
-    <span ng-if="kysymys.vastaustyyppi == 'monivalinta'">
+    <span ng-if="kysymys.vastaustyyppi == 'asteikko'">
+      <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
+        <input type="radio" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto}}" />
+        {{ i18n.yleiset.asteikko[vaihtoehto] }}
+      </label>
+    </span>    <span ng-if="kysymys.vastaustyyppi == 'monivalinta'">
       <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
         <span ng-if="kysymys.monivalinta_max == 1">
           <input type="radio" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto.monivalintavaihtoehtoid}}" />
