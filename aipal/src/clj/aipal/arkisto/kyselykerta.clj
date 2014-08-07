@@ -27,9 +27,9 @@
     sql/exec))
 
 (defn lisaa!
-  [kyselyid kyselykerta]
-  (sql/insert :kyselykerta
+  [kyselyid kyselykerta-data]
+  (sql/insert kyselykerta
     (sql/values {:kyselyid kyselyid
-                 :nimi_fi (:nimi_fi kyselykerta)
-                 :voimassa_alkupvm (:voimassa_alkupvm kyselykerta)
-                 :voimassa_loppupvm (:voimassa_loppupvm kyselykerta)})))
+                 :nimi_fi (:nimi_fi kyselykerta-data)
+                 :voimassa_alkupvm (:voimassa_alkupvm kyselykerta-data)
+                 :voimassa_loppupvm (:voimassa_loppupvm kyselykerta-data)})))
