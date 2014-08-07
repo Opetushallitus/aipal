@@ -14,8 +14,23 @@
 
 'use strict';
 
-angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute'])
+angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'ngResource'])
+  .factory('VastaajatunnusFactory', ['$resource', function($resource) {
+    var resource = $resource(null, null, {
+      haku: {
+        method: 'GET',
+        url: 'api/vastaajatunnus/:kyselykertaid',
+        isArray: true
+      }
+    });
 
+    return {
+      hae: function(kyselykertaid, successCallback, errorCallback) {
+        return resource.haku({kyselykertaid: kyselykertaid}, successCallback, errorCallback);
+      }
+    };
+  }])
+  
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/vastaajatunnus/:kyselykertaid', {
@@ -24,6 +39,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       });
   }])
 
-  .controller('VastaajatunnusController',
-		  function() {}
+  .controller('VastaajatunnusController', ['VastaajatunnusFactory', '$routeParams', '$scope',
+     function(VastaajatunnusFactory, $routeParams, $scope) {
+	    $scope.tulos = VastaajatunnusFactory.hae($routeParams.kyselykertaid);
+    }]
   );

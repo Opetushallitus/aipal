@@ -1,4 +1,12 @@
 <h2>{{i18n.yleiset.vastaajatunnus}}</h2>
 
+{{i18n.vastaajatunnus.lista}}
+<br>
+
+<div ng-repeat="tunnus in tulos">
+    Tunnus: {{tunnus.tunnus}}, voimassa: {{tunnus.voimassa_alkupvm}} - {{ tunnus.voimassa_loppupvm }}
+    <br>
+</div>
+<hr>
  
-        {{i18n.vastaajatunnus.luonti}}
+ {{tulos|json}}
