@@ -11,6 +11,16 @@
     <span ng-if="kysymys.vastaustyyppi == 'vapaateksti'">
       <textarea ng-model="answers[kysymys.kysymysid]"></textarea>
     </span>
+    <span ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'">
+      <label style="display: block">
+        <input type="radio" ng-model="answers[kysymys.kysymysid]" value="kylla">
+        {{ i18n.yleiset.kylla }}
+      </label>
+      <label style="display: block">
+        <input type="radio" ng-model="answers[kysymys.kysymysid]" value="ei">
+        {{ i18n.yleiset.ei }}
+      </label>
+    </span>
     <span ng-if="kysymys.vastaustyyppi == 'monivalinta'">
       <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
         <span ng-if="kysymys.monivalinta_max == 1">
