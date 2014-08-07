@@ -17,7 +17,7 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
     </div>
     <div ng-show="kysely.kyselykerrat.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerrat">
       <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
-        {{i18n.yleiset.kyselykerta}}: {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
+        {{i18n.yleiset.kyselykerta}}: {{kyselykerta.nimi_fi}}
       </a>
       <br>
       <a ng-href="#/vastaajatunnus/{{kyselykerta.kyselykertaid}}">
