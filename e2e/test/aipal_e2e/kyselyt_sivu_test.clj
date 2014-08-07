@@ -41,6 +41,9 @@
                                 (.repeater "kyselykerta in kysely.kyselykerrat")
                                 (.column "kyselykerta.nimi_fi")))))
 
+(defn uusi-kyselykerta-kyselylle [kysely-elementti]
+  (w/find-element-under kysely-elementti {:css "a[ng-click=\"uusiKyselykerta(kysely.kyselyid)\"]"}))
+
 (deftest kyselyt-sivu-test
   (with-webdriver
     (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
@@ -64,9 +67,38 @@
         "ensimmäisellä kyselyllä on kaksi kyselykertaa"
         (let [kysely (nth (kyselyt) 0)]
           (is (= (kyselyn-nimi kysely) "1 Kysely 1"))
-          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: 1 Kyselykerta 1-1" "Kyselykerta: 2 Kyselykerta 1-2"]))))
+          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 1-1" "Kyselykerta: Kyselykerta 1-2"]))))
       (testing
         "toisella kyselyllä on yksi kyselykerta"
         (let [kysely (nth (kyselyt) 1)]
           (is (= (kyselyn-nimi kysely) "2 Kysely 2"))
-          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: 3 Kyselykerta 2-3"])))))))
+          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"])))))))
+
+(deftest kyselyt-sivu-kyselykerran-luonti-test
+  (with-webdriver
+    (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
+                :kysely [{:kyselyid 1
+                          :nimi_fi "Kysely 1"
+                          :koulutustoimija "0000000-0"}
+                         {:kyselyid 2
+                          :nimi_fi "Kysely 2"
+                          :koulutustoimija "0000000-0"}]}
+      (avaa kyselyt-sivu)
+      (testing
+        "Kyselykerran luonti onnistuu ensimmäiselle kyselylle"
+        (let [kysely (nth (kyselyt) 0)]
+          (w/click (uusi-kyselykerta-kyselylle kysely))
+          (syota-kenttaan "kyselykerta.nimi_fi" "Ensimmäinen kyselykerta")
+          (syota-pvm "kyselykerta.voimassa_alkupvm" "1.8.2014")
+          (tallenna))
+        (let [kysely (nth (kyselyt) 0)]
+          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Ensimmäinen kyselykerta"]))))
+      (testing
+        "Kyselykerran luonti onnistuu toiselle kyselylle"
+        (let [kysely (nth (kyselyt) 1)]
+          (w/click (uusi-kyselykerta-kyselylle kysely))
+          (syota-kenttaan "kyselykerta.nimi_fi" "Toinen kyselykerta")
+          (syota-pvm "kyselykerta.voimassa_alkupvm" "1.8.2014")
+          (tallenna))
+        (let [kysely (nth (kyselyt) 1)]
+          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Toinen kyselykerta"])))))))

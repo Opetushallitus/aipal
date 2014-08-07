@@ -28,7 +28,8 @@
             [aipal-e2e.arkisto.vastaaja :as vastaaja]
             [aipal-e2e.arkisto.vastaus :as vastaus]
             [aipal-e2e.arkisto.koulutustoimija :as koulutustoimija]
-            [aipal-e2e.tietokanta.yhteys :as yhteys]))
+            [aipal-e2e.tietokanta.yhteys :as yhteys]
+            [aipal-e2e.tietokanta.data :refer [tyhjenna-testidata!]]))
 
 
 (def ^:private koulutustoimija-tiedot {:luo-fn koulutustoimija/lisaa!
@@ -165,6 +166,7 @@
     (try
       (body-fn)
       (finally
+        (tyhjenna-testidata! "JARJESTELMA")
         (doseq [taulu (reverse taulut)
                 :let [data (taydennetty-data taulu)
                       poista-fn (get-in entity-tiedot [taulu :poista-fn])]

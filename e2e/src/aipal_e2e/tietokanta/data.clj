@@ -19,7 +19,8 @@
 
 (def ^:private yllapitajarooli "YLLAPITAJA")
 
-(def ^:private taulut ["kysely"
+(def ^:private taulut ["koulutustoimija"
+                       "kysely"
                        "kyselykerta"
                        "kysymysryhma"
                        "kysymys"
@@ -27,6 +28,7 @@
                        "kysely_kysymysryhma"
                        "kysely_kysymys"
                        "monivalintavaihtoehto"
+                       "tutkinto"
                        "vastaajatunnus"
                        "vastaaja"
                        "vastaus"])
