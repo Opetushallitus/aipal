@@ -32,7 +32,7 @@
 
   <p>Valitse lisättävä kyselypohja tai luo uusi pohja</p>
 
-  {{ kyselypohjat | json }}
+  <select ng-model="kyselypohja" ng-options="pohja.nimi_fi for pohja in kyselypohjat track by pohja.kyselypohjaid"></select>
 
   TODO: dropdown
 </popup-ikkuna>
