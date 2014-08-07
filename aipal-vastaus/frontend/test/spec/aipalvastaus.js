@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
+// Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
 //
 // This program is free software:  Licensed under the EUPL, Version 1.1 or - as
 // soon as they will be approved by the European Commission - subsequent versions
@@ -14,19 +14,19 @@
 
 'use strict';
 
-angular.module('yhteiset.palvelut.i18n', ['ngResource'])
+describe('Module: aipalvastaus', function() {
 
-  .factory('kieli', [function() {
-    var kieli = 'fi';
-    if ('kieli' in localStorage) {
-      kieli = localStorage.getItem('kieli');
-    }
-    return kieli;
-  }])
+  beforeEach(module('aipalvastaus'));
 
-  .factory('i18n', ['$resource', 'kieli', function($resource, kieli) {
+  describe('asetukset', function(){
+    var asetukset;
 
-    var i18nResource = $resource('api/i18n/:kieli');
+    beforeEach(inject(function(_asetukset_) {
+      asetukset = _asetukset_;
+    }));
 
-    return i18nResource.get({kieli : kieli});
-  }]);
+    it('requestTimeout asetetaan', function(){
+      expect(asetukset.requestTimeout).toBeDefined();
+    });
+  });
+});
