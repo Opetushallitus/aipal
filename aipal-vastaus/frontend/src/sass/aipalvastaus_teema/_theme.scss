@@ -1,0 +1,15 @@
+$gray-color: rgb(128,128,128);
+$lighter-gray: lighten($gray-color, 20%);
+$lightest-gray: lighten($gray-color, 40%);
+$darker-gray: darken($gray-color, 20%);
+$darkest-gray: darken($gray-color, 40%);
+
+
+$primary-color: #cc0099;
+$lighter-primary: #e066c2;
+$lightest-primary: #F17AA9;
+$darker-primary: #7a005c;
+$darkest-primary: #29001f;
+$disabled-primary-color: #a1d8ea;
+
+$primary-action-text: white;
