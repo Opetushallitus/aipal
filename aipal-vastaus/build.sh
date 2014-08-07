@@ -24,14 +24,14 @@ repo_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -x
 
-#cd $repo_path/frontend
-#npm install
-#rm -rf src/bower_components
-#bower install
-#grunt build
-#if [ "$run_tests" = yes ]; then
-#    grunt test_ff --no-color
-#fi
+cd $repo_path/frontend
+npm install
+rm -rf src/bower_components
+bower install
+grunt build
+if [ "$run_tests" = yes ]; then
+   grunt test_ff --no-color
+fi
 
 cd $repo_path
 if [ "$run_tests" = yes ]; then
