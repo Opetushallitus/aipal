@@ -4,7 +4,10 @@
 <br>
 
 <div ng-repeat="tunnus in tulos">
-    Tunnus: {{tunnus.tunnus}}, voimassa: {{tunnus.voimassa_alkupvm}} - {{ tunnus.voimassa_loppupvm }}
+    Tunnus: <span>{{tunnus.tunnus}}</span>, 
+    Voimassa: </span>{{tunnus.voimassa_alkupvm}} - {{ tunnus.voimassa_loppupvm }}</span>, 
+    Vastattu: </span>{{tunnus.vastaajien_lkm}}</span>
+    Rahoitusmuoto: </span>{{tunnus.rahoitusmuotoid}}</span>
     <br>
 </div>
 <hr>
