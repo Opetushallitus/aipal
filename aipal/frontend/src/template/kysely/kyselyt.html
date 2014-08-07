@@ -19,6 +19,10 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
       <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
         {{i18n.yleiset.kyselykerta}}: {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
       </a>
+      <br>
+      <a ng-href="#/vastaajatunnus/{{kyselykerta.kyselykertaid}}">
+        {{i18n.vastaajatunnus.luonti}}
+       </a>
       <br>Voimassa: {{kyselykerta.voimassa_alkupvm}} - {{kyselykerta.voimassa_loppupvm}}
     </div>
   </div>
