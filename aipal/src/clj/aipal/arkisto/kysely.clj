@@ -59,3 +59,9 @@
     (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm]))
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
+
+(defn lisaa-kyselypohja [kyselyid kyselypohjaid]
+  (sql/exec-raw [(str "INSERT INTO kysely_kysymysryhma(kyselyid, kysymysryhmaid, kyselypohjaid) "
+                  "SELECT ?, kysymysryhmaid, kyselypohjaid "
+                  "FROM kysymysryhma_kyselypohja "
+                  "WHERE kyselypohjaid = ?") [kyselyid kyselypohjaid]] true))
