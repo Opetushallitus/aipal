@@ -74,7 +74,7 @@
           (is (= (kyselyn-nimi kysely) "2 Kysely 2"))
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"])))))))
 
-(deftest kyselyt-sivu-kyselykerran-luonti-test
+(deftest ^:no-ie kyselyt-sivu-kyselykerran-luonti-test
   (with-webdriver
     (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
                 :kysely [{:kyselyid 1
