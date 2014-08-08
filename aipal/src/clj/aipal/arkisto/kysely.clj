@@ -69,6 +69,8 @@
 (defn hae-kysymysryhmat [kyselyid]
   (->
     (sql/select* kysymysryhma)
+    (sql/with kysymys
+      (sql/order :kysymys.jarjestys))
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
     (sql/join kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
     (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
