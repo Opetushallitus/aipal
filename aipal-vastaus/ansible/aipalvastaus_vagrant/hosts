@@ -16,5 +16,5 @@ skeeman_peruskayttaja = aipal_user
 [oph_palvelu:vars]
 palvelu = aipalvastaus
 asennushakemisto = /data00/aipalvastaus
+lokituksen_asetustiedosto = logback.xml
 sovelluksen_asetustiedosto = aipalvastaus.properties
-lokituksen_asetustiedosto = aipalvastaus.properties
