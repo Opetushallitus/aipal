@@ -61,7 +61,7 @@
     (sql/update)))
 
 (defn lisaa-kyselypohja [kyselyid kyselypohjaid]
-  (sql/exec-raw [(str "INSERT INTO kysely_kysymysryhma(kyselyid, kysymysryhmaid, kyselypohjaid) "
+  (first (sql/exec-raw [(str "INSERT INTO kysely_kysymysryhma(kyselyid, kysymysryhmaid, kyselypohjaid) "
                   "SELECT ?, kysymysryhmaid, kyselypohjaid "
                   "FROM kysymysryhma_kyselypohja "
-                  "WHERE kyselypohjaid = ?") [kyselyid kyselypohjaid]] true))
+                  "WHERE kyselypohjaid = ?") [kyselyid kyselypohjaid]] true)))
