@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Kääntää ja paketoi Aituhaun version.
+# Kääntää ja paketoi Aipalvastauksen version.
 #
 # Käyttö:
 #
