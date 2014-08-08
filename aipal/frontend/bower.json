@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "angular": "1.2.12",
+    "angular-cookies": "1.2.12",
     "angular-mocks": "1.2.12",
     "angular-route": "1.2.12",
     "angular-resource": "1.2.12",
