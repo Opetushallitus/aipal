@@ -72,4 +72,5 @@
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
     (sql/join kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
     (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
+    (sql/order :kysely_kysymysryhma.jarjestys)
     sql/exec))
