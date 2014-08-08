@@ -21,6 +21,9 @@ angular.module('toimiala.kysely', ['ngResource'])
         method: 'GET',
         isArray: true,
         url: 'api/kysely',
+        params: {
+          nocache: function() {return Date.now();}
+        },
         id: 'kyselylistaus'
       },
       idHaku: {
