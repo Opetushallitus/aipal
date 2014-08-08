@@ -32,9 +32,9 @@
 
   <p>Valitse lisättävä kyselypohja tai luo uusi pohja</p>
 
-  <select ng-model="kyselypohja" ng-options="pohja.nimi_fi for pohja in kyselypohjat track by pohja.kyselypohjaid"></select>
+  <select ng-model="kyselypohjaId" ng-options="pohja.kyselypohjaid as pohja.nimi_fi for pohja in kyselypohjat"></select>
 
-  TODO: dropdown
+  <button ng-click="lisaaKyselypohja(kyselypohjaId)">Lisää valittu</button>
 </popup-ikkuna>
 
 <a ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</a>

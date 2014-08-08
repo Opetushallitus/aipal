@@ -72,6 +72,11 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
       $scope.lisaaKyselyPohjaDialog = function() {
         $scope.naytaLisaaKyselyPohjaPopup = true;
       };
+
+      $scope.lisaaKyselypohja = function(kyselypohjaId) {
+        $scope.naytaLisaaKyselyPohjaPopup = false;
+        Kysely.lisaaKyselypohja($scope.kysely.kyselyid, kyselypohjaId);
+      };
     }
   ])
 
