@@ -32,6 +32,10 @@
           (db/transaction
             (json-response (kysely/lisaa-kyselypohja (Integer/parseInt kyselyid) (Integer/parseInt kyselypohjaid)))))
 
+  (c/GET "/:kyselyid/kysymysryhmat" [kyselyid]
+         (db/transaction
+           (json-response (kysely/hae-kysymysryhmat (Integer/parseInt kyselyid)))))
+
   (cu/defapi :kysely nil :post "/:kyselyid" [kyselyid & kysely]
     (json-response
       (kysely/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)))))

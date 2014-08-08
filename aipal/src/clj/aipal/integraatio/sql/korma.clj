@@ -24,6 +24,11 @@
   (sql/pk :kyselyid)
   (sql/has-many kyselykerta {:fk :kyselyid}))
 
+(defentity kysymysryhma
+  (sql/pk :kysymysryhmaid))
+
+(defentity kysely_kysymysryhma)
+
 (defentity vastaajatunnus
   (sql/pk :vastaajatunnusid))
 

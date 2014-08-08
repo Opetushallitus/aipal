@@ -65,3 +65,11 @@
                   "SELECT ?, kysymysryhmaid, kyselypohjaid "
                   "FROM kysymysryhma_kyselypohja "
                   "WHERE kyselypohjaid = ?") [kyselyid kyselypohjaid]] true)))
+
+(defn hae-kysymysryhmat [kyselyid]
+  (->
+    (sql/select* kysymysryhma)
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
+    (sql/join kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
+    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
+    sql/exec))
