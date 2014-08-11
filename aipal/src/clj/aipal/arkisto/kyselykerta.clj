@@ -33,3 +33,13 @@
                  :nimi_fi (:nimi_fi kyselykerta-data)
                  :voimassa_alkupvm (:voimassa_alkupvm kyselykerta-data)
                  :voimassa_loppupvm (:voimassa_loppupvm kyselykerta-data)})))
+
+(defn hae-yksi
+  "Hae kyselykerta tunnuksella"
+  [kyselykertaid]
+  (->
+    (sql/select* kyselykerta)
+    (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
+    (sql/where (= :kyselykertaid kyselykertaid))
+    (sql/order :kyselykerta.kyselykertaid :ASC)
+    sql/exec))

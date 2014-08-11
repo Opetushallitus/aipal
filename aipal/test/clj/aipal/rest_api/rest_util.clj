@@ -1,7 +1,8 @@
 (ns aipal.rest-api.rest-util  (:require 
     [peridot.core :as peridot]
     [clj-time.core :as time]
- 
+    [cheshire.core :as cheshire]
+    
     [oph.korma.korma-auth :as ka]
     [oph.common.infra.i18n :as i18n]
     [aipal.integraatio.sql.korma-auth :as auth]
@@ -46,3 +47,9 @@
                      (mock-request url method params))]
       response)))
 
+(defn json-find
+  "Etsii haluttua avain-arvo paria vastaavaa osumaa json-rakenteesta. JSON-rakenne on joko map tai lista mappeja."
+  [json-str avain arvo]
+  (let [s (cheshire/parse-string json-str true)]   
+    (or (and (map? s) (= (get s avain) arvo))
+      (some #(= arvo (get % avain)) s))))

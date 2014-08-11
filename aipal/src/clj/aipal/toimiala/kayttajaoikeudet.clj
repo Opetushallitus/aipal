@@ -14,6 +14,7 @@
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
+    :kysely aipal-kayttaja?
     })
 
 (def toiminnot kayttajatoiminnot)

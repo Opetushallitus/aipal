@@ -1,12 +1,11 @@
 (ns aipal.rest-api.vastaajatunnus-test  
   (:require 
-    [cheshire.core :as cheshire]
     [clj-time.core :as time]    
 
     [aipal.sql.test-util :refer :all]
     [aipal.sql.test-data-util :refer :all]
     [aipal.arkisto.vastaajatunnus :as vastaajatunnus-arkisto]
-    [aipal.rest-api.rest-util :refer [rest-kutsu]]
+    [aipal.rest-api.rest-util :refer [rest-kutsu json-find]]
     )
   (:use clojure.test))
 
@@ -16,12 +15,6 @@
   (testing "vastaajatunnusten hakurajapinta vastaa"
     (let [response (rest-kutsu "/api/vastaajatunnus" :get {})]
       (is (= (:status (:response response)) 200)))))
-
-(defn json-find
-  "Etsii haluttua avain-arvo paria vastaavaa osumaa json-rakenteesta"
-  [json-str avain arvo]
-  (let [s (cheshire/parse-string json-str true)]
-    (some #(= arvo (get % avain)) s))) 
 
 (deftest ^:integraatio vastaajatunnusten-haku-kyselykerralla
   (testing "vastaajatunnusten hakurajapinta suodattaa kyselykerralla"

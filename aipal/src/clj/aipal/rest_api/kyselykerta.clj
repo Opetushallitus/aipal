@@ -16,6 +16,7 @@
   (:require [compojure.core :as c]
             [korma.db :as db]
             [schema.core :as schema]
+            [aipal.compojure-util :as cu]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
@@ -23,11 +24,13 @@
   (reduce #(update-in % [%2] f) m avaimet))
 
 (c/defroutes reitit
-  (c/GET "/" []
-         (db/transaction
-           (json-response (kyselykerta/hae-kaikki))))
+  (cu/defapi :kysely nil :get "/" []
+    (json-response (kyselykerta/hae-kaikki)))
 
-  (c/POST "/:kyselyid" [kyselyid kyselykerta]
+  (cu/defapi :kysely nil :get "/:kyselykertaid" [kyselykertaid] 
+    (json-response (kyselykerta/hae-yksi (java.lang.Integer/parseInt kyselykertaid))))
+  
+  (cu/defapi :kysely nil :post "/:kyselyid" [kyselyid kyselykerta] 
     (let [kyselyid_int (Integer/parseInt kyselyid)
           kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
       (json-response (kyselykerta/lisaa! kyselyid_int kyselykerta-parsittu)))))
