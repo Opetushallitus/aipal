@@ -34,7 +34,7 @@ angular.module('toimiala.kyselykerta', ['ngResource'])
         return resource.haku({}, successCallback, errorCallback);
       },
       haeYksi: function(id, successCallback, errorCallback) {
-        return resource.haku({id: id}, successCallback, errorCallback);;
+        return resource.haku({id: id}, successCallback, errorCallback);
       },
       tallenna: function(id, kyselykerta, successCallback, errorCallback) {
         return resource.tallennus({id: id}, {kyselykerta: kyselykerta}, successCallback, errorCallback);
