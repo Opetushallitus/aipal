@@ -38,3 +38,11 @@
 </popup-ikkuna>
 
 <a ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</a>
+
+<div ng-repeat="kysymysryhma in kysely.kysymysryhmat">
+  <h1>{{kysymysryhma.nimi_fi}}</h1>
+
+  <div ng-repeat="kysymys in kysymysryhma.kysymys">
+    <h2>{{kysymys.kysymys_fi}} [<a ng-click="" ng-if="!kysymys.poistettu">Poista</a><a ng-click="" ng-if="kysymys.poistettu">Palauta</a>]</h2>
+  </div>
+</div>
