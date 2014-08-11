@@ -1,0 +1,28 @@
+<form name="vastaajatunnusForm">
+  <fieldset>
+    <h3>{{i18n.vastaajatunnus.uusi_vastaajatunnus}}</h3>
+    <br>
+    <label class="pakollinen" ng-bind="i18n.vastaajatunnus.vastaajia"></label>
+    <input type="text" placeholder="{{i18n.kyselykerta.kyselykerran_nimi}}" ng-model="kyselykerta.nimi_fi" ng-required="true">
+  </fieldset>
+  <section class="datepicker-vali">
+    <h4>{{i18n.vastaajatunnus.vastausaika}}</h4>
+    <pvm-valitsin
+      otsikko="{{i18n.yleiset.alkaen}}"
+      oletus-pvm="kysely.voimassa_alkupvm"
+      min-pvm="kysely.voimassa_alkupvm"
+      max-pvm="kysely.voimassa_loppupvm"
+      valittu-pvm="kyselykerta.voimassa_alkupvm"
+      pakollinen="true">
+    </pvm-valitsin>
+    <pvm-valitsin
+      otsikko="{{i18n.yleiset.asti}}"
+      oletus-pvm="kysely.voimassa_loppupvm"
+      min-pvm="kysely.voimassa_alkupvm"
+      max-pvm="kysely.voimassa_loppupvm"
+      valittu-pvm="kyselykerta.voimassa_loppupvm">
+    </pvm-valitsin>
+  </section>
+  <pakollisia-kenttia></pakollisia-kenttia>
+  <tallenna formi-validi="vastaajatunnusForm.$valid" disabloi-pyyntojen-ajaksi="['tallenna-vastaajatunnus']" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
+</form>

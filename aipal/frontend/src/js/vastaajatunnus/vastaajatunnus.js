@@ -14,33 +14,30 @@
 
 'use strict';
 
-angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'ngResource'])
-  .factory('VastaajatunnusFactory', ['$resource', function($resource) {
-    var resource = $resource(null, null, {
-      haku: {
-        method: 'GET',
-        url: 'api/vastaajatunnus/:kyselykertaid',
-        isArray: true
-      }
-    });
-
-    return {
-      hae: function(kyselykertaid, successCallback, errorCallback) {
-        return resource.haku({kyselykertaid: kyselykertaid}, successCallback, errorCallback);
-      }
-    };
-  }])
+angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'toimiala.vastaajatunnus'])
   
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/vastaajatunnus/:kyselykertaid', {
         controller: 'VastaajatunnusController',
         templateUrl: 'template/vastaajatunnus/vastaajatunnus.html'
+      })
+      
+      .when('/vastaajatunnus/luonti/:kyselykertaid', {
+    	  controller: 'VastaajatunnusLuontiController',
+    	  templateUrl: 'template/vastaajatunnus/vastaajatunnus-luonti.html'
       });
   }])
 
   .controller('VastaajatunnusController', ['VastaajatunnusFactory', '$routeParams', '$scope',
      function(VastaajatunnusFactory, $routeParams, $scope) {
 	    $scope.tulos = VastaajatunnusFactory.hae($routeParams.kyselykertaid);
+    }]
+  )
+  
+  .controller('VastaajatunnusLuontiController', ['VastaajatunnusFactory', '$routeParams', '$scope',
+     function(VastaajatunnusFactory, $routeParams, $scope) {
+	    $scope.tulos = VastaajatunnusFactory.hae($routeParams.kyselykertaid);
+	    $scope.tallenna = VastaajatunnusFactory.tallenna($routeParams.kyselykertaid);
     }]
   );
