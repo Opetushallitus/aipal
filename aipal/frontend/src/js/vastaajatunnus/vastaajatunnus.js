@@ -24,8 +24,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       })
       
       .when('/vastaajatunnus/luonti/:kyselykertaid', {
-    	  controller: 'VastaajatunnusLuontiController',
-    	  templateUrl: 'template/vastaajatunnus/vastaajatunnus-luonti.html'
+        controller: 'VastaajatunnusLuontiController',
+        templateUrl: 'template/vastaajatunnus/vastaajatunnus-luonti.html'
       });
   }])
 

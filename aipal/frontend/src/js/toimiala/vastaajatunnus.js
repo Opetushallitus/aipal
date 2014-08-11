@@ -25,15 +25,15 @@ angular.module('toimiala.vastaajatunnus', ['ngResource'])
       tallennus: {
           method: 'POST',
           url: 'api/vastaajatunnus/:kyselykertaid'
-      }
-    });
+        }
+      });
 
     return {
       hae: function(kyselykertaid, successCallback, errorCallback) {
         return resource.haku({kyselykertaid: kyselykertaid}, successCallback, errorCallback);
       },
       tallenna: function(kyselykertaid, vastaajatunnus, successCallback, errorCallback) {
-    	  resource.tallennus(kyselykertaid, {vastaajatunnus: vastaajatunnus}, successCallback, errorCallback);
-      }
+          resource.tallennus(kyselykertaid, {vastaajatunnus: vastaajatunnus}, successCallback, errorCallback);
+        }
     };
   }]);
