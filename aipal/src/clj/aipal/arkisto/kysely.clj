@@ -66,10 +66,21 @@
                   "FROM kysymysryhma_kyselypohja "
                   "WHERE kyselypohjaid = ?") [kyselyid kyselypohjaid]] true)))
 
+
+; -- Kyselyn kautta, tieto poistetuista kysely_kysymys -taulusta
+; SELECT kysymys.kysymysid,kysymys.poistettava,kysymys.kysymys_fi,kysely_kysymys.kysymysid IS NULL AS poistettu
+; FROM kysely_kysymysryhma INNER JOIN kysymys ON kysely_kysymysryhma.kysymysryhmaid = kysymys.kysymysryhmaid LEFT JOIN kysely_kysymys ON kysymys.kysymysid = kysely_kysymys.kysymysid AND kysely_kysymys.kyselyid = 275
+; WHERE kysely_kysymysryhma.kyselyid = 275
+; AND kysely_kysymysryhma.kysymysryhmaid = 4;
+
 (defn hae-kysymysryhmat [kyselyid]
   (->
     (sql/select* kysymysryhma)
     (sql/with kysymys
+      (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
+      (sql/join :inner kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+      (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid) (= :kysely_kysymys.kyselyid kyselyid)))
+      (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
       (sql/order :kysymys.jarjestys))
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
     (sql/join kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
