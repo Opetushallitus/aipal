@@ -13,7 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal-e2e.util
-  (:require [aitu-e2e.util :refer [avaa-url]]))
+  (:require [aitu-e2e.util :refer [avaa-url]]
+    [aipal-e2e.tietokanta.yhteys :as yhteys]))
 
 (defn aipal-url [polku]
   (str (or (System/getenv "AIPAL_URL")
@@ -21,4 +22,4 @@
        polku))
 
 (defn avaa [polku]
-  (avaa-url (aipal-url polku)))
+  (avaa-url (aipal-url polku) yhteys/testikayttaja-uid))

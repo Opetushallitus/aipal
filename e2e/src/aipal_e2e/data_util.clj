@@ -155,25 +155,23 @@
 
 (defn with-data*
   [data body-fn]
-  (let [taydennetty-data (taydenna-data data)]
-    (doseq [taulu taulut
-            :let [data (taydennetty-data taulu)
-                  luo-fn (get-in entity-tiedot [taulu :luo-fn])]
-            :when data]
-      (db/transaction
-        (yhteys/aseta-testikayttaja!)
-        (luo data luo-fn)))
-    (try
-      (body-fn)
-      (finally
-        (tyhjenna-testidata! "JARJESTELMA")
-        (doseq [taulu (reverse taulut)
-                :let [data (taydennetty-data taulu)
-                      poista-fn (get-in entity-tiedot [taulu :poista-fn])]
-                :when data]
+  (let [pool (yhteys/alusta-korma!)]
+    (let [taydennetty-data (taydenna-data data)]
+      (doseq [taulu taulut
+              :let [data (taydennetty-data taulu)
+                    luo-fn (get-in entity-tiedot [taulu :luo-fn])]
+              :when data]
+        (db/transaction
+          (yhteys/luo-testikayttaja!)
+          (yhteys/aseta-testikayttaja!)
+          (luo data luo-fn)))
+      (try
+        (body-fn)
+        (finally
           (db/transaction
-            (yhteys/aseta-testikayttaja!)
-            (poista data poista-fn)))))))
+            (tyhjenna-testidata! yhteys/testikayttaja-oid)
+            (yhteys/poista-testikayttaja!))))
+      (-> pool :pool :datasource .close))))
 
 (defmacro with-data
   [data & body]

@@ -19,9 +19,7 @@
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
             [aitu-e2e.util :refer :all]))
-
-(use-fixtures :once tietokanta/muodosta-yhteys)
-
+ 
 (def kyselyt-sivu "/#/kyselyt")
 
 (defn kyselyt []

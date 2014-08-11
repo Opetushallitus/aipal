@@ -18,8 +18,8 @@
             [aipal-e2e.tietokanta.data :as data]))
 
 (def ^:private jarjestelmakayttaja-oid "JARJESTELMA")
-(def ^:private testikayttaja-uid "AIPAL-E2E")
-(def ^:private testikayttaja-oid "OID.AIPAL-E2E")
+(def  testikayttaja-uid "AIPAL-E2E")
+(def testikayttaja-oid "OID.AIPAL-E2E")
 
 (def ^:private tietokantaasetukset
   {:host (or (System/getenv "AIPAL_DB_HOST") "127.0.0.1")
@@ -30,15 +30,15 @@
    :maximum-pool-size 15
    :minimum-pool-size 3})
 
-(defn ^:private alusta-korma!
+(defn  alusta-korma!
   []
   (aipal-e2e.arkisto.sql.korma/luo-db tietokantaasetukset))
 
-(defn ^:private aseta-kayttaja!
+(defn  aseta-kayttaja!
   [oid]
   (aipal-e2e.arkisto.sql.korma/aseta-kayttaja oid))
 
-(defn ^:private luo-testikayttaja!
+(defn   luo-testikayttaja!
   []
   (db/transaction
     (aseta-kayttaja! jarjestelmakayttaja-oid)
@@ -48,25 +48,10 @@
   []
   (aseta-kayttaja! testikayttaja-oid))
 
-(defn ^:private poista-testikayttaja!
+(defn poista-testikayttaja!
   []
-  (db/transaction
-    (aseta-kayttaja! jarjestelmakayttaja-oid)
-    (data/poista-testikayttaja! testikayttaja-oid)))
+  (data/poista-testikayttaja! testikayttaja-oid))
 
-(defn ^:private poista-testidata!
+(defn  poista-testidata!
   []
-  (db/transaction
-    (aseta-kayttaja! jarjestelmakayttaja-oid)
-    (data/tyhjenna-testidata! testikayttaja-oid)))
-
-(defn muodosta-yhteys
-  [f]
-  (let [db (alusta-korma!)]
-    (luo-testikayttaja!)
-    (try
-      (f)
-      (finally
-        (poista-testidata!)
-        (poista-testikayttaja!)
-        (-> db :pool :datasource .close)))))
+  (data/tyhjenna-testidata! testikayttaja-oid))

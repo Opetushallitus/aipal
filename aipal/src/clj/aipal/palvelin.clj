@@ -31,16 +31,19 @@
             [ring.util.response :as resp]
             schema.core
             
-            [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
-            [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
-            [aipal.reitit :refer [build-id]]
             [clj-cas-client.core :refer [cas]]
+            [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.anon-auth :as anon-auth]
             
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.korma]
-            [oph.korma.korma-auth :as korma-auth]))
+            [oph.korma.korma-auth :as korma-auth]
+            
+            [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
+            [aipal.reitit :refer [build-id]]
+            [aipal.infra.auth-wrapper :as auth]
+            ))
 
 (schema.core/set-fn-validation! true)
 
@@ -85,14 +88,6 @@
                            (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
         (auth-handler request)))))
 
-(defn ^:private wrap-set-db-user
-  "Asettaa käyttäjän tietokantaistuntoon."
-  [ring-handler]
-  (fn [request]
-    (binding [korma-auth/*current-user-uid* korma-auth/jarjestelmakayttaja
-              korma-auth/*current-user-oid* (promise)]
-      (ring-handler request))))
-
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
@@ -105,21 +100,23 @@
           _ (json-gen/add-encoder org.joda.time.LocalDate
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))]
-    (-> reitit 
-      wrap-set-db-user
+    (-> reitit
       wrap-keyword-params
       wrap-json-params
       (wrap-resource "public/app")
       (auth-removeticket asetukset)
-      (auth-middleware asetukset)
       wrap-params
       wrap-content-type
+
+      auth/wrap-sessionuser
+      log-request-wrapper
+      (auth-middleware asetukset)
+
       (wrap-frame-options :deny)
       (wrap-session {:store session-store
                      :cookie-attrs {:http-only true
                                     :path (service-path(get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
-      log-request-wrapper
       wrap-poikkeusten-logitus)))
     
   

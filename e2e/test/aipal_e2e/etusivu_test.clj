@@ -19,9 +19,7 @@
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
             [aitu-e2e.util :refer [with-webdriver]]))
-
-(use-fixtures :once tietokanta/muodosta-yhteys)
-
+ 
 (def etusivu "/#/")
 
 (defn sivun-sisalto []
