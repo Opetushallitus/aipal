@@ -714,3 +714,19 @@ create trigger tutkintom_insert before insert on tutkinto for each row execute p
 create trigger tutkinto_mu_update before update on tutkinto for each row execute procedure update_modifier() ;
 create trigger tutkinto_cu_insert before insert on tutkinto for each row execute procedure update_creator() ;
 create trigger tutkinto_mu_insert before insert on tutkinto for each row execute procedure update_modifier() ;
+
+
+ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_organisaatio_FK FOREIGN KEY ( organisaatio ) REFERENCES koulutustoimija ( ytunnus ) NOT DEFERRABLE ;
+
+CREATE TABLE rooli_organisaatio
+  (
+    organisaatio varchar(9) references koulutustoimija(ytunnus),
+    rooli  varchar(32) references kayttajarooli(roolitunnus),
+    kayttaja varchar(80) references kayttaja(oid),
+    voimassa BOOLEAN DEFAULT false NOT NULL
+    );
+ALTER TABLE rooli_organisaatio ADD CONSTRAINT rooli_organisaatio_PK PRIMARY KEY (organisaatio,rooli,kayttaja);
+  
+COMMENT ON TABLE rooli_organisaatio IS 'Kytkee käyttäjän, käyttöoikeusroolin ja tietyn organisaation yhteen.';
+COMMENT ON TABLE kayttajarooli IS 'AIPAL-käyttäjäroolit. Organisaatiokohtaiset oikeudet erillisen liitostaulun kautta.'
+
