@@ -547,11 +547,15 @@ insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('TTK-KATSELIJA', 'Toimikunnan raportointirooli', current_timestamp, current_timestamp);
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('KATSELIJA', 'Yleinen katselijarooli erityistarpeita varten', current_timestamp, current_timestamp);
- 
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('AIPAL-VASTAAJA', 'Vastaajasovelluksen käyttäjän rooli', current_timestamp, current_timestamp);
+
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
   values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
   values ('KONVERSIO', 'KONVERSIO', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
+insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
+  values ('VASTAAJA', 'VASTAAJA', 'Aipal-vastaus', '', true, 'AIPAL-VASTAAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 
 CREATE OR REPLACE function update_stamp() returns trigger as $$ begin new.muutettuaika := now(); return new; end; $$ language plpgsql;
 CREATE OR REPLACE function update_created() returns trigger as $$ begin new.luotuaika := now(); return new; end; $$ language plpgsql;

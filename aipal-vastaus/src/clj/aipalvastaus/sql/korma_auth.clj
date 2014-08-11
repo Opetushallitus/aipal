@@ -12,33 +12,12 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns oph.korma.korma-auth
-  "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän. BoneCP pool."
+(ns aipalvastaus.sql.korma-auth
+  "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen vastaajakäyttäjän. BoneCP pool."
   (:require [clojure.tools.logging :as log]))
 
-(def jarjestelmakayttaja "JARJESTELMA")
-(def default-test-user-oid "OID.T-1001")
-(def default-test-user-uid "T-1001")
+(def vastaajakayttaja "VASTAAJA")
 (def ^:private psql-varname "aipal.kayttaja")
-(def ^:dynamic *current-user-uid*)
-(def ^:dynamic *current-user-oid*)
-
-(defn validate-user
-  [con uid]
-  {:pre [(string? uid)]}
-  (log/debug "tarkistetaan käyttäjä " uid)
-  (with-open [pstmt (doto
-                      (.prepareStatement con "select * from kayttaja where uid = ?")
-                      (.setString 1 uid))
-              rs (.executeQuery pstmt)]
-    (let [valid (.next rs)]
-      (when-not valid (throw (IllegalArgumentException. (str "Käyttäjä " uid " puuttuu tietokannasta"))))
-     (let [voimassa (.getBoolean rs "voimassa")
-           rooli (.getString rs "rooli")
-           oid (.getString rs "oid")]
-       (when-not voimassa (throw (IllegalArgumentException. (str "Käyttäjätunnus " uid " ei ole voimassa."))))
-       (log/debug (str "user " uid " ok. Rooli " rooli ))
-       oid))))
 
 (defn exec-sql
   "execute sql and close statement."
@@ -48,11 +27,9 @@
 
 (defn auth-onCheckOut
   [c]
-  (log/debug "auth user " *current-user-uid*)
+  (log/debug "auth user " vastaajakayttaja)
   (try
-    (let [oid (validate-user c *current-user-uid*)]
-      (deliver *current-user-oid* oid)
-      (exec-sql c (str "set session " psql-varname " = '" oid "'")))
+    (exec-sql c (str "set session " psql-varname " = '" vastaajakayttaja "'"))
     (catch IllegalArgumentException e
       (.printStackTrace e))
     (catch Exception e
