@@ -1,3 +1,5 @@
+set session aipal.kayttaja='JARJESTELMA';
+
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli)
 values ('OID.E2E', 'E2E', 'Test', 'End-to-End', true, 'YLLAPITAJA');
 

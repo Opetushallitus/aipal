@@ -1,3 +1,33 @@
+CREATE OR REPLACE function update_stamp() returns trigger as $$ begin new.muutettuaika := now(); return new; end; $$ language plpgsql;
+CREATE OR REPLACE function update_created() returns trigger as $$ begin new.luotuaika := now(); return new; end; $$ language plpgsql;
+CREATE OR REPLACE function update_creator() returns trigger as $$ begin new.luotu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
+CREATE OR REPLACE function update_modifier() returns trigger as $$ begin new.muutettu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
+
+CREATE TABLE kayttaja
+  (
+    oid               VARCHAR (80) NOT NULL ,
+    "uid"             VARCHAR (80) ,
+    etunimi           VARCHAR (100) ,
+    sukunimi          VARCHAR (100) ,
+    rooli             VARCHAR (32) NOT NULL ,
+    organisaatio      VARCHAR (16) ,
+    voimassa          BOOLEAN DEFAULT false NOT NULL ,
+    luotu_kayttaja    VARCHAR (80) NOT NULL ,
+    muutettu_kayttaja VARCHAR (80) NOT NULL ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_PK PRIMARY KEY ( oid ) ;
+
+CREATE TABLE kayttajarooli
+  (
+    roolitunnus VARCHAR (32) NOT NULL ,
+    kuvaus      VARCHAR (200) ,
+    luotuaika TIMESTAMPTZ NOT NULL ,
+    muutettuaika TIMESTAMPTZ NOT NULL
+  ) ;
+ALTER TABLE kayttajarooli ADD CONSTRAINT kayttajarooli_PK PRIMARY KEY ( roolitunnus ) ;
+
 CREATE TABLE jatkokysymys
   (
     jatkokysymysid    SERIAL NOT NULL ,
@@ -27,8 +57,21 @@ CREATE TABLE jatkovastaus
     jatkovastausid SERIAL NOT NULL ,
     jatkokysymysid INTEGER NOT NULL ,
     kylla_asteikko INTEGER ,
-    ei_vastausteksti TEXT
+    ei_vastausteksti TEXT,
+    muutettu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
+    luotu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
+    muutettuaika timestamptz NOT NULL,
+    luotuaika timestamptz NOT NULL
   ) ;
+  
+create trigger jatkovastaus_update before update on jatkovastaus for each row execute procedure update_stamp() ;
+create trigger jatkovastausl_insert before insert on jatkovastaus for each row execute procedure update_created() ;
+create trigger jatkovastausm_insert before insert on jatkovastaus for each row execute procedure update_stamp() ;
+create trigger jatkovastaus_mu_update before update on jatkovastaus for each row execute procedure update_modifier() ;
+create trigger jatkovastaus_mu_insert before insert on jatkovastaus for each row execute procedure update_modifier() ;
+create trigger jatkovastaus_cu_insert before insert on jatkovastaus for each row execute procedure update_creator() ;
+
+  
 COMMENT ON COLUMN jatkovastaus.kylla_asteikko
 IS
   'Jatkokysymyksen kyllä-vastaus' ;
@@ -36,31 +79,6 @@ IS
 IS
   'Jatkokysymyksen ei-vastaus' ;
   ALTER TABLE jatkovastaus ADD CONSTRAINT jatkovastaus_PK PRIMARY KEY ( jatkovastausid ) ;
-
-CREATE TABLE kayttaja
-  (
-    oid               VARCHAR (80) NOT NULL ,
-    "uid"             VARCHAR (80) ,
-    etunimi           VARCHAR (100) ,
-    sukunimi          VARCHAR (100) ,
-    rooli             VARCHAR (32) NOT NULL ,
-    organisaatio      VARCHAR (16) ,
-    voimassa          BOOLEAN DEFAULT false NOT NULL ,
-    luotu_kayttaja    VARCHAR (80) NOT NULL ,
-    muutettu_kayttaja VARCHAR (80) NOT NULL ,
-    luotuaika TIMESTAMPTZ NOT NULL ,
-    muutettuaika TIMESTAMPTZ NOT NULL
-  ) ;
-ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_PK PRIMARY KEY ( oid ) ;
-
-CREATE TABLE kayttajarooli
-  (
-    roolitunnus VARCHAR (32) NOT NULL ,
-    kuvaus      VARCHAR (200) ,
-    luotuaika TIMESTAMPTZ NOT NULL ,
-    muutettuaika TIMESTAMPTZ NOT NULL
-  ) ;
-ALTER TABLE kayttajarooli ADD CONSTRAINT kayttajarooli_PK PRIMARY KEY ( roolitunnus ) ;
 
 CREATE TABLE kysely
   (
@@ -557,10 +575,6 @@ insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika,
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
   values ('VASTAAJA', 'VASTAAJA', 'Aipal-vastaus', '', true, 'AIPAL-VASTAAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 
-CREATE OR REPLACE function update_stamp() returns trigger as $$ begin new.muutettuaika := now(); return new; end; $$ language plpgsql;
-CREATE OR REPLACE function update_created() returns trigger as $$ begin new.luotuaika := now(); return new; end; $$ language plpgsql;
-CREATE OR REPLACE function update_creator() returns trigger as $$ begin new.luotu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
-CREATE OR REPLACE function update_modifier() returns trigger as $$ begin new.muutettu_kayttaja := current_setting('aipal.kayttaja'); return new; end; $$ language plpgsql;
 
 -- jatkokysymys
 create trigger jatkokysymys_update before update on jatkokysymys for each row execute procedure update_stamp() ;
@@ -724,10 +738,20 @@ CREATE TABLE rooli_organisaatio
     organisaatio varchar(9) references koulutustoimija(ytunnus),
     rooli  varchar(32) references kayttajarooli(roolitunnus),
     kayttaja varchar(80) references kayttaja(oid),
-    voimassa BOOLEAN DEFAULT false NOT NULL
+    voimassa BOOLEAN DEFAULT false NOT NULL,
+    muutettu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
+    luotu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
+    muutettuaika timestamptz NOT NULL,
+    luotuaika timestamptz NOT NULL
     );
 ALTER TABLE rooli_organisaatio ADD CONSTRAINT rooli_organisaatio_PK PRIMARY KEY (organisaatio,rooli,kayttaja);
 
+create trigger rooli_organisaatio_update before update on rooli_organisaatio for each row execute procedure update_stamp() ;
+create trigger rooli_organisaatiol_insert before insert on rooli_organisaatio for each row execute procedure update_created() ;
+create trigger rooli_organisaatiom_insert before insert on rooli_organisaatio for each row execute procedure update_stamp() ;
+create trigger rooli_organisaatio_mu_update before update on rooli_organisaatio for each row execute procedure update_modifier() ;
+create trigger rooli_organisaatio_mu_insert before insert on rooli_organisaatio for each row execute procedure update_modifier() ;
+create trigger rooli_organisaatio_cu_insert before insert on rooli_organisaatio for each row execute procedure update_creator() ;
+
 COMMENT ON TABLE rooli_organisaatio IS 'Kytkee käyttäjän, käyttöoikeusroolin ja tietyn organisaation yhteen.';
 COMMENT ON TABLE kayttajarooli IS 'AIPAL-käyttäjäroolit. Organisaatiokohtaiset oikeudet erillisen liitostaulun kautta.'
-
