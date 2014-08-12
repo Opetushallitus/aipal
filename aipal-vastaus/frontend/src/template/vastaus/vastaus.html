@@ -2,40 +2,45 @@
 <p class="tutkinto" ng-if="data.tutkintotunnus">{{data.tutkintotunnus}} {{data.tutkinto_nimi_fi}}</p>
 <p class="selite">{{data.selite_fi}}</p>
 
-<div ng-repeat="kysymysryhma in data.kysymysryhmat">
-  <h2>{{ kysymysryhma.nimi_fi }}</h2>
+<form ng-submit="tallenna()">
+  <div ng-repeat="kysymysryhma in data.kysymysryhmat">
+    <h2>{{ kysymysryhma.nimi_fi }}</h2>
 
-  <div ng-repeat="kysymys in kysymysryhma.kysymykset">
-    <h3>{{ kysymys.kysymys_fi }} </h3>
+    <div ng-repeat="kysymys in kysymysryhma.kysymykset">
+      <h3>{{ kysymys.kysymys_fi }} </h3>
 
-    <span ng-if="kysymys.vastaustyyppi == 'vapaateksti'">
-      <textarea ng-model="answers[kysymys.kysymysid]"></textarea>
-    </span>
-    <span ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'">
-      <label style="display: block">
-        <input type="radio" ng-model="answers[kysymys.kysymysid]" value="kylla">
-        {{ i18n.yleiset.kylla }}
-      </label>
-      <label style="display: block">
-        <input type="radio" ng-model="answers[kysymys.kysymysid]" value="ei">
-        {{ i18n.yleiset.ei }}
-      </label>
-    </span>
-    <span ng-if="kysymys.vastaustyyppi == 'asteikko'">
-      <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
-        <input type="radio" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto}}" />
-        {{ i18n.yleiset.asteikko[vaihtoehto] }}
-      </label>
-    </span>    <span ng-if="kysymys.vastaustyyppi == 'monivalinta'">
-      <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
-        <span ng-if="kysymys.monivalinta_max == 1">
-          <input type="radio" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto.monivalintavaihtoehtoid}}" />
-        </span>
-        <span ng-if="kysymys.monivalinta_max > 1">
-          <input type="checkbox" ng-model="answers[kysymys.kysymysid]" value="{{vaihtoehto.monivalintavaihtoehtoid}}" />
-        </span>
-        {{vaihtoehto.teksti_fi}}
-      </label>
-    </span>
+      <span ng-if="kysymys.vastaustyyppi == 'vapaateksti'">
+        <textarea ng-model="kysymys.vastaus"></textarea>
+      </span>
+      <span ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'">
+        <label style="display: block">
+          <input type="radio" ng-model="kysymys.vastaus" value="kylla">
+          {{ i18n.yleiset.kylla }}
+        </label>
+        <label style="display: block">
+          <input type="radio" ng-model="kysymys.vastaus" value="ei">
+          {{ i18n.yleiset.ei }}
+        </label>
+      </span>
+      <span ng-if="kysymys.vastaustyyppi == 'asteikko'">
+        <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
+          <input type="radio" ng-model="kysymys.vastaus" value="{{vaihtoehto}}" >
+          {{ i18n.yleiset.asteikko[vaihtoehto] }}
+        </label>
+      </span>
+      <span ng-if="kysymys.vastaustyyppi == 'monivalinta'">
+        <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
+          <span ng-if="kysymys.monivalinta_max == 1">
+            <input type="radio" ng-model="kysymys.vastaus" value="{{vaihtoehto.monivalintavaihtoehtoid}}" >
+          </span>
+          <span ng-if="kysymys.monivalinta_max > 1">
+            <input type="checkbox" ng-model="vaihtoehto.valittu" ng-change="vaihdaMonivalinta(vaihtoehto, kysymys.kysymysid)"
+              ng-disabled="monivalinta[kysymys.kysymysid] === kysymys.monivalinta_max && !vaihtoehto.valittu">
+          </span>
+          {{vaihtoehto.teksti_fi}}
+        </label>
+      </span>
+    </div>
   </div>
-</div>
+  <input type="submit" id="submit" value="Lähetä vastaukset">
+</form>
