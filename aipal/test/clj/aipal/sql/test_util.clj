@@ -37,18 +37,21 @@
   []
   (testdata/poista-testikayttaja! testikayttaja-oid))
 
-(defn alusta-korma! 
-  ([asetukset] 
+(defn alusta-korma!
+  ([asetukset]
     (let [db-asetukset (merge-with #(or %2 %1)
                          (:db asetukset)
                          {:host (System/getenv "AIPAL_DB_HOST")
-                          :port (System/getenv "AIPAL_DB_PORT")})]
+                          :port (System/getenv "AIPAL_DB_PORT")
+                          :name (System/getenv "AIPAL_DB_NAME")
+                          :user (System/getenv "AIPAL_DB_USER")
+                          :password (System/getenv "AIPAL_DB_PASSWORD")})]
       (oph.korma.korma/luo-db db-asetukset)))
     ([]
     (let [dev-asetukset (assoc oletusasetukset :development-mode true)
           asetukset (hae-asetukset dev-asetukset)]
       (alusta-korma! asetukset))))
- 
+
 (defn tietokanta-fixture-oid
   "Annettu käyttäjätunnus sidotaan Kormalle testifunktion ajaksi."
   [f oid uid]
