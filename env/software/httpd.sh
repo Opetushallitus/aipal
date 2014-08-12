@@ -4,6 +4,8 @@ set -eu
 yum -y install httpd
 
 cp httpd/aipal.conf /etc/httpd/conf.d/
+cp httpd/aipalvastaus.conf /etc/httpd/conf.d/
+
 service httpd restart
 
 # SELinux estää oletuksena mod_proxy:n käytön
