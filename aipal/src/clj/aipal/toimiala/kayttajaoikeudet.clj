@@ -15,6 +15,9 @@
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
     :kysely aipal-kayttaja?
+    :impersonointi aipal-kayttaja?
+    :kayttajan_tiedot aipal-kayttaja?
+    :omat_tiedot aipal-kayttaja?
     })
 
 (def toiminnot kayttajatoiminnot)

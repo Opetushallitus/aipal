@@ -12,7 +12,9 @@
           aipal.rest-api.raportti.kyselykerta
           aipal.rest_api.js-log
           aipal.rest_api.vastaajatunnus
-            
+          [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
+
+          
           [aitu.infra.status :refer [status]]))
 
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
@@ -22,6 +24,7 @@
 (defn reitit [asetukset]
   (c/routes
     (c/GET "/" [] (s/render-file "public/app/index.html" (merge {:base-url (-> asetukset :server :base-url)
+                                                                 :current-user (:kayttajan_nimi *current-user-authmap*)
                                                                  :build-id @build-id}
                                                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                                                   {:logout-url (str cas-url "/logout")}))))
