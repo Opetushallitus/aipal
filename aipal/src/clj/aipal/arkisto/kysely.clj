@@ -89,8 +89,6 @@
     (sql/order :kysely_kysymysryhma.jarjestys)
     (sql/with kysymys
               (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
-              (sql/join :inner kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
               (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid) (= :kysely_kysymys.kyselyid kyselyid)))
-              (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
               (sql/order :kysymys.jarjestys))
     sql/exec))
