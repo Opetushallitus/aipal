@@ -56,8 +56,8 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
   ])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', '$routeParams', '$scope',
-    function(Kysely, Kyselypohja, $routeParams, $scope) {
+    'Kysely', 'Kyselypohja', '$routeParams', '$route', '$scope',
+    function(Kysely, Kyselypohja, $routeParams, $route, $scope) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function(kysely) {
@@ -75,7 +75,9 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
 
       $scope.lisaaKyselypohja = function(kyselypohjaId) {
         $scope.naytaLisaaKyselyPohjaPopup = false;
-        Kysely.lisaaKyselypohja($scope.kysely.kyselyid, kyselypohjaId);
+        Kysely.lisaaKyselypohja($scope.kysely.kyselyid, kyselypohjaId, function() {
+          $route.reload();
+        });
       };
     }
   ])
