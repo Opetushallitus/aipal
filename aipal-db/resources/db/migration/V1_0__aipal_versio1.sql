@@ -64,14 +64,6 @@ CREATE TABLE jatkovastaus
     luotuaika timestamptz NOT NULL
   ) ;
   
-create trigger jatkovastaus_update before update on jatkovastaus for each row execute procedure update_stamp() ;
-create trigger jatkovastausl_insert before insert on jatkovastaus for each row execute procedure update_created() ;
-create trigger jatkovastausm_insert before insert on jatkovastaus for each row execute procedure update_stamp() ;
-create trigger jatkovastaus_mu_update before update on jatkovastaus for each row execute procedure update_modifier() ;
-create trigger jatkovastaus_mu_insert before insert on jatkovastaus for each row execute procedure update_modifier() ;
-create trigger jatkovastaus_cu_insert before insert on jatkovastaus for each row execute procedure update_creator() ;
-
-  
 COMMENT ON COLUMN jatkovastaus.kylla_asteikko
 IS
   'Jatkokysymyksen kyllä-vastaus' ;
@@ -165,6 +157,9 @@ CREATE TABLE kyselypohja
     nimi_sv           VARCHAR (200) ,
     selite_fi TEXT ,
     selite_sv TEXT ,
+    koulutustoimija   VARCHAR(10),
+    oppilaitos        VARCHAR(5),
+    toimipaikka       VARCHAR(7),
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
@@ -485,6 +480,8 @@ ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_kayttaja_FK FOREIGN KEY ( luo
 
 ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
+ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_organisaatio_check CHECK (koulutustoimija IS NOT NULL OR oppilaitos IS NOT NULL OR toimipaikka IS NOT NULL OR valtakunnallinen) NOT DEFERRABLE ;
+
 ALTER TABLE kysymys ADD CONSTRAINT kysymys_jatkokysymys_FK FOREIGN KEY ( jatkokysymysid ) REFERENCES jatkokysymys ( jatkokysymysid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysymys ADD CONSTRAINT kysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -732,6 +729,14 @@ create trigger tutkintom_insert before insert on tutkinto for each row execute p
 create trigger tutkinto_mu_update before update on tutkinto for each row execute procedure update_modifier() ;
 create trigger tutkinto_cu_insert before insert on tutkinto for each row execute procedure update_creator() ;
 create trigger tutkinto_mu_insert before insert on tutkinto for each row execute procedure update_modifier() ;
+
+-- jatkovastaus
+create trigger jatkovastaus_update before update on jatkovastaus for each row execute procedure update_stamp() ;
+create trigger jatkovastausl_insert before insert on jatkovastaus for each row execute procedure update_created() ;
+create trigger jatkovastausm_insert before insert on jatkovastaus for each row execute procedure update_stamp() ;
+create trigger jatkovastaus_mu_update before update on jatkovastaus for each row execute procedure update_modifier() ;
+create trigger jatkovastaus_mu_insert before insert on jatkovastaus for each row execute procedure update_modifier() ;
+create trigger jatkovastaus_cu_insert before insert on jatkovastaus for each row execute procedure update_creator() ;
 
 CREATE TABLE rooli_organisaatio
   (
