@@ -28,13 +28,13 @@
 </pvm-valitsin>
 
 <popup-ikkuna nayta-popup="naytaLisaaKyselyPohjaPopup">
-  <h2>Kyselypohjan valinta</h2>
+  <h2>{{i18n.kyselypohja.valinta}}</h2>
 
-  <p>Valitse lisättävä kyselypohja tai luo uusi pohja</p>
+  <p>{{i18n.kyselypohja.valinta_ohjeistus}}</p>
 
   <select ng-model="kyselypohjaId" ng-options="pohja.kyselypohjaid as pohja.nimi_fi for pohja in kyselypohjat"></select>
 
-  <button ng-click="lisaaKyselypohja(kyselypohjaId)">Lisää valittu</button>
+  <button ng-click="lisaaKyselypohja(kyselypohjaId)">{{i18n.kyselypohja.lisaa_valittu}}</button>
 </popup-ikkuna>
 
 <a ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</a>
