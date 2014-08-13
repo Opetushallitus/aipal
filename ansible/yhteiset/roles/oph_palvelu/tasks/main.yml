@@ -35,12 +35,12 @@
     chdir={{ asennushakemisto }}
 
 - name: Kopioi lokituksen asetustiedosto palvelimelle
-  copy: src="{{ inventory_dir }}/{{ lokituksen_asetustiedosto }}" dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644 force=no
-  when: lokituksen_asetustiedosto is defined
+  copy: src="{{ inventory_dir }}/{{ lokituksen_asetustiedosto }}" dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644
+  when: asenna_asetustiedostot|bool and lokituksen_asetustiedosto is defined
 
 - name: Kopioi sovelluksen asetustiedosto palvelimelle
-  template: src="{{ inventory_dir }}/{{ sovelluksen_asetustiedosto }}" dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644 force=no
-  when: sovelluksen_asetustiedosto is defined
+  template: src="{{ inventory_dir }}/{{ sovelluksen_asetustiedosto }}" dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644
+  when: asenna_asetustiedostot|bool and sovelluksen_asetustiedosto is defined
 
 - name: Aseta tietokantakäyttäjä sovelluksen asetustiedostoon
   replace:

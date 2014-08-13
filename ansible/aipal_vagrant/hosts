@@ -24,6 +24,7 @@ salli_dumpin_lataus = yes
 [oph_palvelu:vars]
 palvelu = aipal
 asennushakemisto = /data00/aipal
+asenna_asetustiedostot = yes
 lokituksen_asetustiedosto = logback.xml
 sovelluksen_asetustiedosto = aipal.properties
 migraation_asetustiedosto = aipal-db.properties
