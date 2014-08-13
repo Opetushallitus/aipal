@@ -22,7 +22,7 @@
             [aipal-e2e.util :refer :all]
             [aitu-e2e.data-util :refer [paivamaara-kayttoliittyman-muodossa]]
             [aitu-e2e.util :refer :all]))
- 
+
 (defn kyselykertaraportti-sivu [kyselykertaid] (str "/#/raportti/kyselykerta/" kyselykertaid))
 
 (defn sisemman-elementin-kentan-teksti [ulompi-elementti kentta]
@@ -101,7 +101,8 @@
                                  :nimi_fi "Kyselykerta 1"
                                  :voimassa_alkupvm (paivamaara "2014-05-28")
                                  :voimassa_loppupvm (paivamaara "2014-05-29")}]
-                  :kysymysryhma [{:kysymysryhmaid 1}]
+                  :kysymysryhma [{:kysymysryhmaid 1
+                                  :koulutustoimija "0000000-0"}]
                   :kysymys [{:kysymysid 1
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 1"
