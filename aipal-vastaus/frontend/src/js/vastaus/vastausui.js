@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vastaus.vastausui', ['ngRoute'])
+angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -10,7 +10,7 @@ angular.module('vastaus.vastausui', ['ngRoute'])
       });
   }])
 
-  .controller('VastausController', ['$http', '$routeParams', '$scope', function($http, $routeParams, $scope) {
+  .controller('VastausController', ['$http', '$routeParams', '$scope', '$location', 'Vastaus', function($http, $routeParams, $scope, $location, Vastaus) {
     $scope.tunnus = $routeParams.tunnus;
     $scope.monivalinta = {};
 
@@ -42,8 +42,10 @@ angular.module('vastaus.vastausui', ['ngRoute'])
     }
 
     $scope.tallenna = function() {
-      keraaVastausdata($scope.data);
-      // TODO: vastausdatan käsittely ja lähetys
+      Vastaus.tallenna($scope.tunnus, keraaVastausdata($scope.data), function() {
+        // TODO: siirtyminen "kiitos vastauksesta" -sivulle
+        $location.url('/');
+      });
     };
 
     $scope.vaihdaMonivalinta = function(vaihtoehto, kysymysid) {
