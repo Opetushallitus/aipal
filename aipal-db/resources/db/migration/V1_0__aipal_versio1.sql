@@ -223,6 +223,9 @@ CREATE TABLE kysymysryhma
     nimi_sv           VARCHAR (200) ,
     selite_fi TEXT ,
     selite_sv TEXT ,
+    koulutustoimija   VARCHAR(10),
+    oppilaitos        VARCHAR(5),
+    toimipaikka       VARCHAR(7),
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
@@ -493,6 +496,8 @@ ALTER TABLE kysymys ADD CONSTRAINT kysymys_kysymysryhmä_FK FOREIGN KEY ( kysymy
 ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhma_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhma_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+
+ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhma_organisaatio_check CHECK (koulutustoimija IS NOT NULL OR oppilaitos IS NOT NULL OR toimipaikka IS NOT NULL OR valtakunnallinen) NOT DEFERRABLE ;
 
 ALTER TABLE monivalintavaihtoehto ADD CONSTRAINT mv_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
