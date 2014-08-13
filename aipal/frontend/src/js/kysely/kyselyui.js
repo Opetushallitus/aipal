@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'yhteiset.palvelut.i18n', 'ngRoute'])
+angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngRoute'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -56,12 +56,28 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'yhteiset.palvelut.i18n', 
   ])
 
   .controller('KyselyController', [
-    'Kysely', '$routeParams', '$scope',
-    function(Kysely, $routeParams, $scope) {
+    'Kysely', 'Kyselypohja', '$routeParams', '$route', '$scope',
+    function(Kysely, Kyselypohja, $routeParams, $route, $scope) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function(kysely) {
         Kysely.tallenna(kysely);
+      };
+
+      Kyselypohja.hae(function(data) {
+        $scope.kyselypohjat = data;
+      });
+
+      $scope.naytaLisaaKyselyPohjaPopup = false;
+      $scope.lisaaKyselyPohjaDialog = function() {
+        $scope.naytaLisaaKyselyPohjaPopup = true;
+      };
+
+      $scope.lisaaKyselypohja = function(kyselypohjaId) {
+        $scope.naytaLisaaKyselyPohjaPopup = false;
+        Kysely.lisaaKyselypohja($scope.kysely.kyselyid, kyselypohjaId, function() {
+          $route.reload();
+        });
       };
     }
   ])

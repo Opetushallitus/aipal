@@ -17,12 +17,24 @@
     [korma.core :as sql]
     [oph.korma.korma  :refer [defentity]]))
 
+(declare kysymys)
+
 (defentity kyselykerta
   (sql/pk :kyselykertaid))
 
 (defentity kysely
   (sql/pk :kyselyid)
   (sql/has-many kyselykerta {:fk :kyselyid}))
+
+(defentity kysymysryhma
+  (sql/pk :kysymysryhmaid)
+  (sql/has-many kysymys {:fk :kysymysryhmaid}))
+
+(defentity kysely_kysymysryhma)
+
+(defentity kysymys
+  (sql/pk :kysymysid)
+  (sql/belongs-to kysymysryhma {:fk :kysymysryhmaid}))
 
 (defentity vastaajatunnus
   (sql/pk :vastaajatunnusid))

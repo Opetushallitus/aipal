@@ -37,6 +37,10 @@ angular.module('toimiala.kysely', ['ngResource'])
       tallenna: {
         method: 'POST',
         url: 'api/kysely/:id'
+      },
+      lisaaKyselypohja: {
+        method: 'POST',
+        url: 'api/kysely/:kyselyId/lisaa-kyselypohja/:kyselypohjaId'
       }
     });
 
@@ -52,6 +56,9 @@ angular.module('toimiala.kysely', ['ngResource'])
       },
       tallenna: function(data, successCallback, errorCallback) {
         return resource.tallenna({id: data.kyselyid}, data, successCallback, errorCallback);
+      },
+      lisaaKyselypohja: function(kyselyId, kyselypohjaId, successCallback, errorCallback) {
+        return resource.lisaaKyselypohja({kyselyId: kyselyId, kyselypohjaId: kyselypohjaId}, {}, successCallback, errorCallback);
       }
     };
   }]);
