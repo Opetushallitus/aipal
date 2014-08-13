@@ -14,7 +14,35 @@ angular.module('vastaus.vastausui', ['ngRoute'])
     $scope.tunnus = $routeParams.tunnus;
     $scope.monivalinta = {};
 
+    function keraaVastausdata(data) {
+      var vastaukset = [];
+
+      for (var ryhma in data.kysymysryhmat) {
+        for (var kysymys in data.kysymysryhmat[ryhma].kysymykset) {
+          var kysymysdata = data.kysymysryhmat[ryhma].kysymykset[kysymys];
+          var vastaus = {
+            kysymysid: kysymysdata.kysymysid
+          };
+          if (kysymysdata.vastaustyyppi === 'monivalinta' && kysymysdata.monivalinta_max > 1) {
+            vastaus.vastaus = [];
+            for (var vaihtoehto in kysymysdata.monivalintavaihtoehdot) {
+              if (kysymysdata.monivalintavaihtoehdot[vaihtoehto].valittu) {
+                vastaus.vastaus.push(kysymysdata.monivalintavaihtoehdot[vaihtoehto].monivalintavaihtoehtoid);
+              }
+            }
+          }
+          else {
+            vastaus.vastaus = kysymysdata.vastaus;
+          }
+          if (!_.isUndefined(vastaus.vastaus) && !_.isEmpty(vastaus.vastaus)) {
+            vastaukset.push(vastaus);
+          }
+        }
+      }
+    }
+
     $scope.tallenna = function() {
+      keraaVastausdata($scope.data);
       // TODO: vastausdatan käsittely ja lähetys
     };
 
