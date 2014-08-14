@@ -24,6 +24,7 @@ angular.module('aipal', [
     'raportti.kyselykerta.kyselykertaui',
     'yhteiset.palvelut.i18n',
     'yhteiset.palvelut.apicallinterceptor',
+    'yhteiset.palvelut.lokalisointi',
     'yhteiset.palvelut.virheLogitus',
     'yhteiset.direktiivit.copyright',
     'yhteiset.direktiivit.navigaatio',
