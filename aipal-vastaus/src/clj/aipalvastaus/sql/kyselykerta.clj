@@ -84,6 +84,11 @@
         monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot tunnus)]
     (yhdista-tietorakenteet kysymysryhmat kysymykset monivalintavaihtoehdot)))
 
+(defn hae-kysymykset [tunnus]
+  (let [kysymykset (hae-kysymysryhmien-kysymykset tunnus)
+        monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot tunnus)]
+    (yhdista-monivalintavaihtoehdot-kysymyksiin kysymykset monivalintavaihtoehdot)))
+
 (defn hae
   "Hakee kyselyn tiedot tunnuksella"
   [tunnus]
