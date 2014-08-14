@@ -32,7 +32,7 @@
 
   <p>{{i18n.kyselypohja.valinta_ohjeistus}}</p>
 
-  <select ng-model="kyselypohjaId" ng-options="pohja.kyselypohjaid as pohja.nimi_fi for pohja in kyselypohjat"></select>
+  <select ng-model="kyselypohjaId" ng-options="pohja.kyselypohjaid as (pohja | lokalisoiKentta:'nimi') for pohja in kyselypohjat"></select>
 
   <button ng-click="lisaaKyselypohja(kyselypohjaId)">{{i18n.kyselypohja.lisaa_valittu}}</button>
 </popup-ikkuna>
@@ -40,9 +40,9 @@
 <a ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</a>
 
 <div ng-repeat="kysymysryhma in kysely.kysymysryhmat">
-  <h1>{{kysymysryhma.nimi_fi}}</h1>
+  <h1>{{kysymysryhma | lokalisoiKentta:'nimi' }}</h1>
 
   <div ng-repeat="kysymys in kysymysryhma.kysymys">
-    <h2>{{kysymys.kysymys_fi}} [<a ng-click="" ng-if="!kysymys.poistettu">Poista</a><a ng-click="" ng-if="kysymys.poistettu">Palauta</a>]</h2>
+    <h2>{{kysymys | lokalisoiKentta:'kysymys'}} [<a ng-click="" ng-if="!kysymys.poistettu">Poista</a><a ng-click="" ng-if="kysymys.poistettu">Palauta</a>]</h2>
   </div>
 </div>
