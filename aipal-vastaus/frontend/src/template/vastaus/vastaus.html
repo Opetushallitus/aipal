@@ -31,7 +31,7 @@
       <span ng-if="kysymys.vastaustyyppi == 'monivalinta'">
         <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
           <span ng-if="kysymys.monivalinta_max == 1">
-            <input type="radio" ng-model="kysymys.vastaus" value="{{vaihtoehto.monivalintavaihtoehtoid}}" >
+            <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto.jarjestys" >
           </span>
           <span ng-if="kysymys.monivalinta_max > 1">
             <input type="checkbox" ng-model="vaihtoehto.valittu" ng-change="vaihdaMonivalinta(vaihtoehto, kysymys.kysymysid)"

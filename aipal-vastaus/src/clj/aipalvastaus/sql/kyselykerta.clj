@@ -46,6 +46,7 @@
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
     (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/fields :monivalintavaihtoehto.monivalintavaihtoehtoid
+                :monivalintavaihtoehto.jarjestys
                 :monivalintavaihtoehto.kysymysid
                 :monivalintavaihtoehto.teksti_fi
                 :monivalintavaihtoehto.teksti_sv)

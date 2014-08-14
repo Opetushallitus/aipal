@@ -27,7 +27,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
             vastaus.vastaus = [];
             for (var vaihtoehto in kysymysdata.monivalintavaihtoehdot) {
               if (kysymysdata.monivalintavaihtoehdot[vaihtoehto].valittu) {
-                vastaus.vastaus.push(kysymysdata.monivalintavaihtoehdot[vaihtoehto].monivalintavaihtoehtoid);
+                vastaus.vastaus.push(kysymysdata.monivalintavaihtoehdot[vaihtoehto].jarjestys);
               }
             }
           }
