@@ -34,11 +34,12 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
           else {
             vastaus.vastaus = kysymysdata.vastaus;
           }
-          if (!_.isUndefined(vastaus.vastaus) && !_.isEmpty(vastaus.vastaus)) {
+          if (!_.isUndefined(vastaus.vastaus) && (_.isNumber(vastaus.vastaus) || !_.isEmpty(vastaus.vastaus))) {
             vastaukset.push(vastaus);
           }
         }
       }
+      return {vastaukset: vastaukset};
     }
 
     $scope.tallenna = function() {

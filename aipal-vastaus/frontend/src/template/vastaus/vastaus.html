@@ -24,7 +24,7 @@
       </span>
       <span ng-if="kysymys.vastaustyyppi == 'asteikko'">
         <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
-          <input type="radio" ng-model="kysymys.vastaus" value="{{vaihtoehto}}" >
+          <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" >
           {{ i18n.yleiset.asteikko[vaihtoehto] }}
         </label>
       </span>
