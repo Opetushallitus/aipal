@@ -32,6 +32,8 @@
 
 (defentity kysely_kysymysryhma)
 
+(defentity kysely_kysymys)
+
 (defentity kysymys
   (sql/pk :kysymysid)
   (sql/belongs-to kysymysryhma {:fk :kysymysryhmaid}))

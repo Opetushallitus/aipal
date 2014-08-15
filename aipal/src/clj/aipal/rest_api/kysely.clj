@@ -42,6 +42,14 @@
          (db/transaction
            (json-response (kysely/hae-kysymysryhmat (Integer/parseInt kyselyid)))))
 
+  (cu/defapi :kysely nil :delete "/:kyselyid/poista-kysymys/:kysymysid" [kyselyid kysymysid]
+    (json-response
+      (kysely/poista-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
+
+  (cu/defapi :kysely nil :post "/:kyselyid/palauta-kysymys/:kysymysid" [kyselyid kysymysid]
+    (json-response
+      (kysely/palauta-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
+
   (cu/defapi :kysely nil :post "/:kyselyid" [kyselyid & kysely]
     (json-response
       (kysely/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)))))
