@@ -23,8 +23,10 @@
 
 (defn validoi-vastaukset
   [vastaukset kysymykset]
-  ;; TODO validointi
-  vastaukset)
+  (when (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
+                        (for [vastaus vastaukset]
+                          (when (kysymysid->kysymys (:kysymysid vastaus)) true))))
+    vastaukset))
 
 (defn muodosta-tallennettavat-vastaukset
   [vastaukset kysymykset]
@@ -54,7 +56,8 @@
   (-> vastaukset
     (validoi-vastaukset kysymykset)
     (muodosta-tallennettavat-vastaukset kysymykset)
-    tallenna-vastaukset!))
+    tallenna-vastaukset!
+    (when "OK")))
 
 (c/defroutes reitit
   (c/POST "/:vastaustunnus" [vastaustunnus vastaukset]
