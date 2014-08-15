@@ -79,6 +79,17 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
           $route.reload();
         });
       };
+
+      $scope.poistaKysymys = function(kysymys) {
+        Kysely.poistaKysymys($scope.kysely.kyselyid, kysymys.kysymysid, function() {
+          kysymys.poistettu = true;
+        });
+      };
+      $scope.palautaKysymys = function(kysymys) {
+        Kysely.palautaKysymys($scope.kysely.kyselyid, kysymys.kysymysid, function() {
+          kysymys.poistettu = false;
+        });
+      };
     }
   ])
 

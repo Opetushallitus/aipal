@@ -43,6 +43,6 @@
   <h1>{{kysymysryhma | lokalisoiKentta:'nimi' }}</h1>
 
   <div ng-repeat="kysymys in kysymysryhma.kysymys">
-    <h2>{{kysymys | lokalisoiKentta:'kysymys'}} [<a ng-click="" ng-if="!kysymys.poistettu">Poista</a><a ng-click="" ng-if="kysymys.poistettu">Palauta</a>]</h2>
+    <h2>{{kysymys | lokalisoiKentta:'kysymys'}} [<a ng-click="poistaKysymys(kysymys)" ng-if="!kysymys.poistettu">Poista</a><a ng-click="palautaKysymys(kysymys)" ng-if="kysymys.poistettu">Palauta</a>]</h2>
   </div>
 </div>
