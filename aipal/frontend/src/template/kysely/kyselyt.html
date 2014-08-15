@@ -9,14 +9,14 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
   viesti="{{i18n.yleiset.ladataan}}" virheviesti="{{i18n.yleiset.lataus_epaonnistui}}" yrita-uudelleen="haeKyselyt()">
   <div ng-hide="latausKaynnissa" class="accordion" ng-repeat="kysely in kyselyt | filter:hakuehto.teksti | limitTo:50">
     <div class="accordion-header collapse">
-      <a ng-href="#/kysely/{{kysely.kyselyid}}">
+      <a ng-href="#/kysely/{{kysely.kyselyid}}" class="kysely-nimi">
         {{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}
       </a>
       <br>Voimassa: {{kysely.voimassa_alkupvm}} - {{kysely.voimassa_loppupvm}}
       <a href="" ng-click="uusiKyselykerta(kysely.kyselyid)">[{{i18n.kyselykerta.uusi_kyselykerta}}]</a>
     </div>
     <div ng-show="kysely.kyselykerrat.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerrat">
-      <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
+      <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}" class="kyselykerta-nimi">
         {{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}
       </a>
       <br>

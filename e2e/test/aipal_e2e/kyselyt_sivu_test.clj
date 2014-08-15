@@ -29,15 +29,15 @@
 (defn kyselyn-nimi [kysely-elementti]
   (w/text
     (w/find-element-under kysely-elementti
-                          (-> *ng*
-                            (.binding "kysely.nimi_fi")))))
+                          {:css ".kysely-nimi"})))
 
 (defn ^:private kyselykerrat-kyselylle [kysely-elementti]
-  (map w/text
-       (w/find-elements-under kysely-elementti
-                              (-> *ng*
-                                (.repeater "kyselykerta in kysely.kyselykerrat")
-                                (.column "kyselykerta.nimi_fi")))))
+  (let [kyselykerrat (w/find-elements-under kysely-elementti
+                                            (-> *ng*
+                                                (.repeater "kyselykerta in kysely.kyselykerrat")))]
+    (->> kyselykerrat
+        (map #(w/find-element-under % {:css ".kyselykerta-nimi"}))
+        (map w/text))))
 
 (defn uusi-kyselykerta-kyselylle [kysely-elementti]
   (w/find-element-under kysely-elementti {:css "a[ng-click=\"uusiKyselykerta(kysely.kyselyid)\"]"}))
