@@ -36,28 +36,26 @@
                          vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
                          vastaus-arvot (if (vector? (:vastaus vastaus))
                                          (:vastaus vastaus)
-                                         (vector (:vastaus vastaus)))]
-                   :when vastauksen-kysymys]
+                                         [(:vastaus vastaus)])]]
                (for [arvo vastaus-arvot]
                  {:kysymysid (:kysymysid vastaus)
                   :vastaajaid 3679
                   :vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
-                  :numerovalinta (when (or (= "monivalinta" vastaustyyppi) (= "asteikko" vastaustyyppi)) arvo)
+                  :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
                   :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
                   :vaihtoehto (when (= "kylla_ei_valinta" vastaustyyppi) arvo)})))))
 
 (defn tallenna-vastaukset!
   [vastaukset]
-  (for [v vastaukset]
-    (vastaus/tallenna! v)))
+  (doall (map vastaus/tallenna! vastaukset)))
 
 (defn validoi-ja-tallenna-vastaukset
   [vastaukset kysymykset]
-  (-> vastaukset
-    (validoi-vastaukset kysymykset)
-    (muodosta-tallennettavat-vastaukset kysymykset)
-    tallenna-vastaukset!
-    (when "OK")))
+  (when (some-> vastaukset
+          (validoi-vastaukset kysymykset)
+          (muodosta-tallennettavat-vastaukset kysymykset)
+          tallenna-vastaukset!)
+    "OK"))
 
 (c/defroutes reitit
   (c/POST "/:vastaustunnus" [vastaustunnus vastaukset]
