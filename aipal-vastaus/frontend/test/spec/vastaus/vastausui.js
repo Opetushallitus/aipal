@@ -57,6 +57,25 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
       };
       expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
     });
+    it('Kahdesta kysymyksestä, joista molempiin vastattu saadaan molemmat vastaukset', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaus: 1
+              },
+              {
+                kysymysid: 3,
+                vastaus: 'vapaateksti'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]},{kysymysid:3,vastaus:['vapaateksti']}]});
+    });
     it('Monivalintakysymys, jossa maksimi vastausten lukumäärä 1. Tuloksena valittu vastaus', function() {
       var vastausdata = {
         kysymysryhmat: [
