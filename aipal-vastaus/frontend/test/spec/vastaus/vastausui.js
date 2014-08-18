@@ -37,7 +37,7 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
           }
         ]
       };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:1}]});
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
     });
     it('Kahdesta kysymyksestä, joista vain toiseen vastattu saadaan yksi vastaus', function() {
       var vastausdata = {
@@ -55,7 +55,7 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
           }
         ]
       };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:1}]});
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
     });
     it('Monivalintakysymys, jossa maksimi vastausten lukumäärä 1. Tuloksena valittu vastaus', function() {
       var vastausdata = {
@@ -76,7 +76,7 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
           }
         ]
       };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:2}]});
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[2]}]});
     });
     it('Monivalintakysymys, jossa molemmat vaihtoehdot valittu. Tuloksena vastaus, jossa valitut vaihtoehdot', function() {
       var vastausdata = {
@@ -139,7 +139,7 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
           }
         ]
       };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:1},{kysymysid:3,vastaus:'kylla'}]});
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]},{kysymysid:3,vastaus:['kylla']}]});
     });
   });
 });

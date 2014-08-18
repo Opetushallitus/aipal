@@ -34,9 +34,7 @@
              (for [vastaus vastaukset
                    :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
                          vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
-                         vastaus-arvot (if (vector? (:vastaus vastaus))
-                                         (:vastaus vastaus)
-                                         [(:vastaus vastaus)])]]
+                         vastaus-arvot (:vastaus vastaus)]]
                (for [arvo vastaus-arvot]
                  {:kysymysid (:kysymysid vastaus)
                   :vastaajaid 3679

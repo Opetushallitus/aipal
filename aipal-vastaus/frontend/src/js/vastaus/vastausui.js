@@ -20,18 +20,18 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
           var vastaus = {
             kysymysid: kysymysdata.kysymysid
           };
+          vastaus.vastaus = [];
           if (kysymysdata.vastaustyyppi === 'monivalinta' && kysymysdata.monivalinta_max > 1) {
-            vastaus.vastaus = [];
             for (var vaihtoehto in kysymysdata.monivalintavaihtoehdot) {
               if (kysymysdata.monivalintavaihtoehdot[vaihtoehto].valittu) {
                 vastaus.vastaus.push(kysymysdata.monivalintavaihtoehdot[vaihtoehto].jarjestys);
               }
             }
           }
-          else {
-            vastaus.vastaus = kysymysdata.vastaus;
+          else if (!_.isUndefined(kysymysdata.vastaus)) {
+            vastaus.vastaus.push(kysymysdata.vastaus);
           }
-          if (!_.isUndefined(vastaus.vastaus) && (_.isNumber(vastaus.vastaus) || !_.isEmpty(vastaus.vastaus))) {
+          if (!_.isEmpty(vastaus.vastaus)) {
             vastaukset.push(vastaus);
           }
         }
