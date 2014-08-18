@@ -10,10 +10,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       });
   }])
 
-  .controller('VastausController', ['$http', '$routeParams', '$scope', '$location', 'Vastaus', function($http, $routeParams, $scope, $location, Vastaus) {
-    $scope.tunnus = $routeParams.tunnus;
-    $scope.monivalinta = {};
-
+  .factory('VastausControllerFunktiot', [function() {
     function keraaVastausdata(data) {
       var vastaukset = [];
 
@@ -42,26 +39,39 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       return {vastaukset: vastaukset};
     }
 
-    $scope.tallenna = function() {
-      Vastaus.tallenna($scope.tunnus, keraaVastausdata($scope.data), function() {
-        // TODO: siirtyminen "kiitos vastauksesta" -sivulle
-        $location.url('/');
+    return {
+      keraaVastausdata: keraaVastausdata
+    };
+  }])
+
+  .controller('VastausController', [
+    '$http', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot',
+    function($http, $routeParams, $scope, $location, Vastaus, f) {
+
+      $scope.tunnus = $routeParams.tunnus;
+      $scope.monivalinta = {};
+
+      $scope.tallenna = function() {
+        Vastaus.tallenna($scope.tunnus, f.keraaVastausdata($scope.data), function() {
+          // TODO: siirtyminen "kiitos vastauksesta" -sivulle
+          $location.url('/');
+        });
+      };
+
+      $scope.vaihdaMonivalinta = function(vaihtoehto, kysymysid) {
+        if (_.isUndefined($scope.monivalinta[kysymysid])) {
+          $scope.monivalinta[kysymysid] = 0;
+        }
+        if(vaihtoehto.valittu) {
+          $scope.monivalinta[kysymysid]++;
+        }
+        else {
+          $scope.monivalinta[kysymysid]--;
+        }
+      };
+
+      $http.get('/api/kyselykerta/' + $routeParams.tunnus).success(function(data) {
+        $scope.data = data;
       });
-    };
-
-    $scope.vaihdaMonivalinta = function(vaihtoehto, kysymysid) {
-      if (_.isUndefined($scope.monivalinta[kysymysid])) {
-        $scope.monivalinta[kysymysid] = 0;
-      }
-      if(vaihtoehto.valittu) {
-        $scope.monivalinta[kysymysid]++;
-      }
-      else {
-        $scope.monivalinta[kysymysid]--;
-      }
-    };
-
-    $http.get('/api/kyselykerta/' + $routeParams.tunnus).success(function(data) {
-      $scope.data = data;
-    });
-  }]);
+    }
+  ]);
