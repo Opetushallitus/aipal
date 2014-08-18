@@ -19,6 +19,7 @@
             [oph.common.util.http-util :refer [json-response-nocache]]
             [aipalvastaus.sql.vastaus :as vastaus]
             [aipalvastaus.sql.kyselykerta :as kysely]
+            [aipalvastaus.toimiala.skeema :refer [KayttajanVastaus]]
             [oph.common.util.util :refer [map-by]]))
 
 (defn validoi-vastaukset
@@ -57,6 +58,7 @@
 
 (c/defroutes reitit
   (c/POST "/:vastaustunnus" [vastaustunnus vastaukset]
-          (db/transaction
-            (json-response-nocache
-              (validoi-ja-tallenna-vastaukset vastaukset (kysely/hae-kysymykset vastaustunnus))))))
+    (db/transaction
+      (schema/validate [KayttajanVastaus] vastaukset)
+      (json-response-nocache
+        (validoi-ja-tallenna-vastaukset vastaukset (kysely/hae-kysymykset vastaustunnus))))))
