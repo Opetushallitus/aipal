@@ -57,6 +57,27 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
       };
       expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:1}]});
     });
+    it('Monivalintakysymys, jossa maksimi vastausten lukumäärä 1. Tuloksena valittu vastaus', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'monivalinta',
+                monivalinta_max: 1,
+                vastaus: 2,
+                monivalintavaihtoehdot: [
+                  { jarjestys: 1 },
+                  { jarjestys: 2 }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:2}]});
+    });
     it('Monivalintakysymys, jossa molemmat vaihtoehdot valittu. Tuloksena vastaus, jossa valitut vaihtoehdot', function() {
       var vastausdata = {
         kysymysryhmat: [
@@ -96,6 +117,29 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
         ]
       };
       expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
+    });
+    it('Eri kysymysryhmien vastatuista kysymyksistä saadaan vastaukset', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaus: 1
+              }
+            ]
+          },
+          {
+            kysymykset: [
+              {
+                kysymysid: 3,
+                vastaus: 'kylla'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:1},{kysymysid:3,vastaus:'kylla'}]});
     });
   });
 });
