@@ -34,62 +34,62 @@
   (testing "Yksi valinta tuottaa yhden vastauksen"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
           vastaukset [{:kysymysid 1 :vastaus [1]} ]]
-      (is (= (list {:kysymysid 1
-                    :vastaajaid vastaajaid
-                    :vastaustyyppi "monivalinta"
-                    :numerovalinta 1
-                    :vapaateksti nil
-                    :vaihtoehto nil})
+      (is (= [{:kysymysid 1
+              :vastaajaid vastaajaid
+              :vastaustyyppi "monivalinta"
+              :numerovalinta 1
+              :vapaateksti nil
+              :vaihtoehto nil}]
              (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset)))))
   (testing "kaksi valintaa tuottaa kaksi vastausta samalle kysymykselle"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
           vastaukset [{:kysymysid 1 :vastaus [1 2]} ]]
-      (is (= (list {:kysymysid 1
-                    :vastaajaid vastaajaid
-                    :vastaustyyppi "monivalinta"
-                    :numerovalinta 1
-                    :vapaateksti nil
-                    :vaihtoehto nil}
-                   {:kysymysid 1
-                    :vastaajaid vastaajaid
-                    :vastaustyyppi "monivalinta"
-                    :numerovalinta 2
-                    :vapaateksti nil
-                    :vaihtoehto nil})
+      (is (= [{:kysymysid 1
+               :vastaajaid vastaajaid
+               :vastaustyyppi "monivalinta"
+               :numerovalinta 1
+               :vapaateksti nil
+               :vaihtoehto nil}
+              {:kysymysid 1
+               :vastaajaid vastaajaid
+               :vastaustyyppi "monivalinta"
+               :numerovalinta 2
+               :vapaateksti nil
+               :vaihtoehto nil}]
              (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
 
 (deftest kylla-ei-vastaus
   (testing "Valinta tuottaa saman vastauksen"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta"}]
           vastaukset [{:kysymysid 1 :vastaus ["kylla"]} ]]
-      (is (= (list {:kysymysid 1
-                    :vastaajaid vastaajaid
-                    :vastaustyyppi "kylla_ei_valinta"
-                    :numerovalinta nil
-                    :vapaateksti nil
-                    :vaihtoehto "kylla"})
+      (is (= [{:kysymysid 1
+               :vastaajaid vastaajaid
+               :vastaustyyppi "kylla_ei_valinta"
+               :numerovalinta nil
+               :vapaateksti nil
+               :vaihtoehto "kylla"}]
              (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
 
 (deftest vapaateksti-vastaus
   (testing "Vastaus tallentuu vapaateksti kentään"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "vapaateksti"}]
           vastaukset [{:kysymysid 1 :vastaus ["vapaateksti"]} ]]
-      (is (= (list {:kysymysid 1
-                    :vastaajaid vastaajaid
-                    :vastaustyyppi "vapaateksti"
-                    :numerovalinta nil
-                    :vapaateksti "vapaateksti"
-                    :vaihtoehto nil})
+      (is (= [{:kysymysid 1
+               :vastaajaid vastaajaid
+               :vastaustyyppi "vapaateksti"
+               :numerovalinta nil
+               :vapaateksti "vapaateksti"
+               :vaihtoehto nil}]
              (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
 
 (deftest asteikko-vastaus
   (testing "vastaus tallentuu numerovalinta kenttään"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "asteikko"}]
           vastaukset [{:kysymysid 1 :vastaus [2]} ]]
-      (is (= (list {:kysymysid 1
-                    :vastaajaid vastaajaid
-                    :vastaustyyppi "asteikko"
-                    :numerovalinta 2
-                    :vapaateksti nil
-                    :vaihtoehto nil})
+      (is (= [{:kysymysid 1
+               :vastaajaid vastaajaid
+               :vastaustyyppi "asteikko"
+               :numerovalinta 2
+               :vapaateksti nil
+               :vaihtoehto nil}]
              (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
