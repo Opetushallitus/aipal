@@ -41,6 +41,14 @@ angular.module('toimiala.kysely', ['ngResource'])
       lisaaKyselypohja: {
         method: 'POST',
         url: 'api/kysely/:kyselyId/lisaa-kyselypohja/:kyselypohjaId'
+      },
+      poistaKysymys: {
+        method: 'DELETE',
+        url: 'api/kysely/:kyselyId/poista-kysymys/:kysymysId'
+      },
+      palautaKysymys: {
+        method: 'POST',
+        url: 'api/kysely/:kyselyId/palauta-kysymys/:kysymysId'
       }
     });
 
@@ -59,6 +67,12 @@ angular.module('toimiala.kysely', ['ngResource'])
       },
       lisaaKyselypohja: function(kyselyId, kyselypohjaId, successCallback, errorCallback) {
         return resource.lisaaKyselypohja({kyselyId: kyselyId, kyselypohjaId: kyselypohjaId}, {}, successCallback, errorCallback);
+      },
+      poistaKysymys: function(kyselyId, kysymysId, successCallback, errorCallback) {
+        return resource.poistaKysymys({kyselyId: kyselyId, kysymysId: kysymysId}, {}, successCallback, errorCallback);
+      },
+      palautaKysymys: function(kyselyId, kysymysId, successCallback, errorCallback) {
+        return resource.palautaKysymys({kyselyId: kyselyId, kysymysId: kysymysId}, {}, successCallback, errorCallback);
       }
     };
   }]);

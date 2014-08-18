@@ -92,3 +92,16 @@
               (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid) (= :kysely_kysymys.kyselyid kyselyid)))
               (sql/order :kysymys.jarjestys))
     sql/exec))
+
+(defn poista-kysymys [kyselyid kysymysid]
+  (->
+    (sql/delete* kysely_kysymys)
+    (sql/where {:kyselyid kyselyid
+                :kysymysid kysymysid})
+    sql/exec))
+
+(defn palauta-kysymys [kyselyid kysymysid]
+  (->
+    (sql/insert* kysely_kysymys)
+    (sql/values {:kyselyid kyselyid :kysymysid kysymysid})
+    sql/exec))
