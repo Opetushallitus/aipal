@@ -19,6 +19,7 @@
             [oph.common.util.http-util :refer [json-response-nocache]]
             [aipalvastaus.sql.vastaus :as vastaus]
             [aipalvastaus.sql.kyselykerta :as kysely]
+            [aipalvastaus.sql.vastaaja :as vastaaja]
             [aipalvastaus.toimiala.skeema :refer [KayttajanVastaus]]
             [oph.common.util.util :refer [map-by]]))
 
@@ -30,15 +31,16 @@
     vastaukset))
 
 (defn muodosta-tallennettavat-vastaukset
-  [vastaukset kysymykset]
-  (flatten (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
+  [vastaukset vastaustunnus kysymykset]
+  (flatten (let [kysymysid->kysymys (map-by :kysymysid kysymykset)
+                 vastaajaid (vastaaja/luo-vastaaja! vastaustunnus)]
              (for [vastaus vastaukset
                    :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
                          vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
                          vastaus-arvot (:vastaus vastaus)]]
                (for [arvo vastaus-arvot]
                  {:kysymysid (:kysymysid vastaus)
-                  :vastaajaid 3679
+                  :vastaajaid vastaajaid
                   :vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
                   :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
                   :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
@@ -49,10 +51,10 @@
   (doall (map vastaus/tallenna! vastaukset)))
 
 (defn validoi-ja-tallenna-vastaukset
-  [vastaukset kysymykset]
+  [vastaustunnus vastaukset kysymykset]
   (when (some-> vastaukset
           (validoi-vastaukset kysymykset)
-          (muodosta-tallennettavat-vastaukset kysymykset)
+          (muodosta-tallennettavat-vastaukset vastaustunnus kysymykset)
           tallenna-vastaukset!)
     "OK"))
 
@@ -61,4 +63,4 @@
     (db/transaction
       (schema/validate [KayttajanVastaus] vastaukset)
       (json-response-nocache
-        (validoi-ja-tallenna-vastaukset vastaukset (kysely/hae-kysymykset vastaustunnus))))))
+        (validoi-ja-tallenna-vastaukset vastaustunnus vastaukset (kysely/hae-kysymykset vastaustunnus))))))

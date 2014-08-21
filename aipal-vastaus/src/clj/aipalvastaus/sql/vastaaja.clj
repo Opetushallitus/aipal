@@ -16,7 +16,12 @@
   (:require [korma.core :as sql]))
 
 (defn luo-vastaaja!
-  [kyselykertaid vastaajatunnusid]
-  (sql/insert :vastaaja
-    (sql/values {:kyselykertaid kyselykertaid
-                 :vastaajatunnusid vastaajatunnusid})))
+  [vastaustunnus]
+  (->
+    (sql/exec-raw [(str "INSERT INTO vastaaja(kyselykertaid, vastaajatunnusid, vastannut)"
+                      " SELECT kyselykertaid, vastaajatunnusid, true"
+                      " FROM vastaajatunnus"
+                      " WHERE tunnus = ?"
+                      " RETURNING vastaajaid") [vastaustunnus]] :results)
+    first
+    :vastaajaid))
