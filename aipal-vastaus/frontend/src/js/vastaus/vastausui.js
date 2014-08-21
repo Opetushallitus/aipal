@@ -51,6 +51,10 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
 
+      Vastaus.luoVastaaja($scope.tunnus, function(data) {
+        $scope.vastaajaid = data.vastaajaid;
+      });
+
       $scope.tallenna = function() {
         Vastaus.tallenna($scope.tunnus, f.keraaVastausdata($scope.data), function() {
           // TODO: siirtyminen "kiitos vastauksesta" -sivulle
