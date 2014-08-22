@@ -51,13 +51,19 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
 
-      Vastaus.luoVastaaja($scope.tunnus, function(data) {
-        $scope.vastaajaid = data.vastaajaid;
-      });
+      if (sessionStorage.getItem('vastaajaid') == null) {
+        Vastaus.luoVastaaja($scope.tunnus, function(data) {
+          sessionStorage.setItem('vastaajaid', data.vastaajaid);
+          $scope.vastaajaid = data.vastaajaid;
+        });
+      } else {
+        $scope.vastaajaid = sessionStorage.getItem('vastaajaid');
+      }
 
       $scope.tallenna = function() {
         Vastaus.tallenna($scope.tunnus, $scope.vastaajaid, f.keraaVastausdata($scope.data), function() {
           // TODO: siirtyminen "kiitos vastauksesta" -sivulle
+          sessionStorage.removeItem('vastaajaid');
           $location.url('/');
         });
       };
