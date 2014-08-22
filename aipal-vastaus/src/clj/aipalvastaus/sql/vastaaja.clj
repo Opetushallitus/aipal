@@ -32,3 +32,16 @@
     (sql/set-fields {:vastannut true})
     (sql/where {:vastaajaid vastaajaid})
     sql/exec))
+
+(defn validoi-vastaajaid
+  [vastaustunnus vastaajaid]
+  (->
+    (sql/select* :vastaaja)
+    (sql/fields :vastannut)
+    (sql/join :vastaajatunnus (= :vastaajatunnus.vastaajatunnusid :vastaajatunnusid))
+    (sql/where {:vastaajaid vastaajaid
+                :vastaajatunnus.tunnus vastaustunnus})
+    sql/exec
+    first
+    :vastannut
+    (= false)))

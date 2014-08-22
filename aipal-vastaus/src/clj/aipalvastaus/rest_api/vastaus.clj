@@ -62,5 +62,7 @@
   (c/POST "/:vastaustunnus" [vastaustunnus vastaajaid vastaukset]
     (db/transaction
       (schema/validate [KayttajanVastaus] vastaukset)
-      (json-response-nocache
-        (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely/hae-kysymykset vastaustunnus))))))
+      (if (vastaaja/validoi-vastaajaid vastaustunnus vastaajaid)
+        (json-response-nocache
+          (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely/hae-kysymykset vastaustunnus)))
+        {:status 403}))))
