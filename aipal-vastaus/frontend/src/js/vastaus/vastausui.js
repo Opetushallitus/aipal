@@ -51,9 +51,10 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
 
-      if (sessionStorage.getItem('vastaajaid') == null) {
+      if (sessionStorage.getItem('vastaajaid') == null || sessionStorage.getItem('tunnus') != $routeParams.tunnus) {
         Vastaus.luoVastaaja($scope.tunnus, function(data) {
           sessionStorage.setItem('vastaajaid', data.vastaajaid);
+          sessionStorage.setItem('tunnus', $routeParams.tunnus);
           $scope.vastaajaid = data.vastaajaid;
         });
       } else {
@@ -63,6 +64,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       $scope.tallenna = function() {
         Vastaus.tallenna($scope.tunnus, $scope.vastaajaid, f.keraaVastausdata($scope.data), function() {
           // TODO: siirtyminen "kiitos vastauksesta" -sivulle
+          sessionStorage.removeItem('tunnus');
           sessionStorage.removeItem('vastaajaid');
           $location.url('/');
         });
