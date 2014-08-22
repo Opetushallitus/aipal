@@ -56,7 +56,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       });
 
       $scope.tallenna = function() {
-        Vastaus.tallenna($scope.tunnus, f.keraaVastausdata($scope.data), function() {
+        Vastaus.tallenna($scope.tunnus, $scope.vastaajaid, f.keraaVastausdata($scope.data), function() {
           // TODO: siirtyminen "kiitos vastauksesta" -sivulle
           $location.url('/');
         });

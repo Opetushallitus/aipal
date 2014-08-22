@@ -31,9 +31,8 @@
     vastaukset))
 
 (defn muodosta-tallennettavat-vastaukset
-  [vastaukset vastaustunnus kysymykset]
-  (flatten (let [kysymysid->kysymys (map-by :kysymysid kysymykset)
-                 vastaajaid (vastaaja/luo-vastaaja! vastaustunnus)]
+  [vastaukset vastaajaid kysymykset]
+  (flatten (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
              (for [vastaus vastaukset
                    :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
                          vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
@@ -51,16 +50,17 @@
   (doall (map vastaus/tallenna! vastaukset)))
 
 (defn validoi-ja-tallenna-vastaukset
-  [vastaustunnus vastaukset kysymykset]
+  [vastaajaid vastaukset kysymykset]
   (when (some-> vastaukset
           (validoi-vastaukset kysymykset)
-          (muodosta-tallennettavat-vastaukset vastaustunnus kysymykset)
+          (muodosta-tallennettavat-vastaukset vastaajaid kysymykset)
           tallenna-vastaukset!)
+    (vastaaja/paivata-vastaaja! vastaajaid)
     "OK"))
 
 (c/defroutes reitit
-  (c/POST "/:vastaustunnus" [vastaustunnus vastaukset]
+  (c/POST "/:vastaustunnus" [vastaustunnus vastaajaid vastaukset]
     (db/transaction
       (schema/validate [KayttajanVastaus] vastaukset)
       (json-response-nocache
-        (validoi-ja-tallenna-vastaukset vastaustunnus vastaukset (kysely/hae-kysymykset vastaustunnus))))))
+        (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely/hae-kysymykset vastaustunnus))))))

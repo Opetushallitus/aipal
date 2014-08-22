@@ -18,10 +18,17 @@
 (defn luo-vastaaja!
   [vastaustunnus]
   (->
-    (sql/exec-raw [(str "INSERT INTO vastaaja(kyselykertaid, vastaajatunnusid, vastannut)"
-                      " SELECT kyselykertaid, vastaajatunnusid, true"
+    (sql/exec-raw [(str "INSERT INTO vastaaja(kyselykertaid, vastaajatunnusid)"
+                      " SELECT kyselykertaid, vastaajatunnusid"
                       " FROM vastaajatunnus"
                       " WHERE tunnus = ?"
                       " RETURNING vastaajaid") [vastaustunnus]] :results)
     first
     :vastaajaid))
+
+(defn paivata-vastaaja! [vastaajaid]
+  (->
+    (sql/update* :vastaaja)
+    (sql/set-fields {:vastannut true})
+    (sql/where {:vastaajaid vastaajaid})
+    sql/exec))
