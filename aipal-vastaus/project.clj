@@ -32,7 +32,7 @@
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]]
   :plugins [[test2junit "1.0.1"]]
-  :profiles {:dev {:source-paths ["dev"]
+  :profiles {:dev {:source-paths ["dev", "../aipal/test/clj", "../aipal/src/clj"]
                    :dependencies [[org.clojure/tools.namespace "0.2.4"]
                                   [clj-webdriver "0.6.1"]
                                   [clj-http "0.9.2"]
