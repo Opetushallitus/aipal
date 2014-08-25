@@ -19,10 +19,10 @@
   [vastaustunnus]
   (->
     (sql/exec-raw [(str "INSERT INTO vastaaja(kyselykertaid, vastaajatunnusid)"
-                      " SELECT kyselykertaid, vastaajatunnusid"
-                      " FROM vastaajatunnus"
-                      " WHERE tunnus = ?"
-                      " RETURNING vastaajaid") [vastaustunnus]] :results)
+                        " SELECT kyselykertaid, vastaajatunnusid"
+                        " FROM vastaajatunnus"
+                        " WHERE tunnus = ?"
+                        " RETURNING vastaajaid") [vastaustunnus]] :results)
     first
     :vastaajaid))
 
