@@ -51,7 +51,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
 
-      if (sessionStorage.getItem('vastaajaid') == null || sessionStorage.getItem('tunnus') != $routeParams.tunnus) {
+      if (sessionStorage.getItem('vastaajaid') === null || sessionStorage.getItem('tunnus') !== $routeParams.tunnus) {
         Vastaus.luoVastaaja($scope.tunnus, function(data) {
           sessionStorage.setItem('vastaajaid', data.vastaajaid);
           sessionStorage.setItem('tunnus', $routeParams.tunnus);
