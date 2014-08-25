@@ -40,7 +40,7 @@
               :numerovalinta 1
               :vapaateksti nil
               :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset)))))
+             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset)))))
   (testing "kaksi valintaa tuottaa kaksi vastausta samalle kysymykselle"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
           vastaukset [{:kysymysid 1 :vastaus [1 2]} ]]
@@ -56,7 +56,7 @@
                :numerovalinta 2
                :vapaateksti nil
                :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
+             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
 
 (deftest kylla-ei-vastaus
   (testing "Valinta tuottaa saman vastauksen"
@@ -68,7 +68,7 @@
                :numerovalinta nil
                :vapaateksti nil
                :vaihtoehto "kylla"}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
+             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
 
 (deftest vapaateksti-vastaus
   (testing "Vastaus tallentuu vapaateksti kentään"
@@ -80,7 +80,7 @@
                :numerovalinta nil
                :vapaateksti "vapaateksti"
                :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
+             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
 
 (deftest asteikko-vastaus
   (testing "vastaus tallentuu numerovalinta kenttään"
@@ -92,4 +92,4 @@
                :numerovalinta 2
                :vapaateksti nil
                :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset kysymykset))))))
+             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
