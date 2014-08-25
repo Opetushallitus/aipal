@@ -51,6 +51,8 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
 
+      // Jos käyttäjä vaihtaa vastaajatunnusta vastaajaid:n tallentamisen jälkeen (kahden eri kyselyn avaus peräkkäin)
+      // niin vastaajaid pitää luoda uudestaan
       if (sessionStorage.getItem('vastaajaid') === null || sessionStorage.getItem('tunnus') !== $routeParams.tunnus) {
         Vastaus.luoVastaaja($scope.tunnus, function(data) {
           sessionStorage.setItem('vastaajaid', data.vastaajaid);
