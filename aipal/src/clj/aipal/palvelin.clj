@@ -30,19 +30,21 @@
             [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
             schema.core
-            
+
             [clj-cas-client.core :refer [cas]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.anon-auth :as anon-auth]
-            
+
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.korma]
             [oph.korma.korma-auth :as korma-auth]
-            
+
             [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
             [aipal.reitit :refer [build-id]]
             [aipal.infra.auth-wrapper :as auth]
+            [aipal.integraatio.kayttooikeuspalvelu :as kop]
+            [aipal.infra.eraajo :as eraajo]
             ))
 
 (schema.core/set-fn-validation! true)
@@ -118,8 +120,11 @@
                                     :path (service-path(get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
       wrap-poikkeusten-logitus)))
-    
-  
+
+(defn kaynnista-eraajon-ajastimet! [asetukset]
+  (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
+    (eraajo/kaynnista-ajastimet! kop)))
+
 (defn kaynnista! [alkuasetukset]
   (try
     (log/info "Käynnistetään Aipal, versio " @build-id)
@@ -128,6 +133,9 @@
           _ (oph.korma.korma/luo-db (:db asetukset))
           sammuta (hs/run-server (app asetukset)
                                  {:port (get-in asetukset [:server :port])})]
+      (when (or (not (:development-mode asetukset))
+                (:eraajo asetukset))
+        (kaynnista-eraajon-ajastimet! asetukset))
       (log/info "Palvelin käynnistetty:" (service-url asetukset))
       {:sammuta sammuta})
     (catch Throwable t
