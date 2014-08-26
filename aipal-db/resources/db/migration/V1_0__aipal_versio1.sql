@@ -62,7 +62,7 @@ CREATE TABLE jatkovastaus
     muutettuaika timestamptz NOT NULL,
     luotuaika timestamptz NOT NULL
   ) ;
-  
+
 COMMENT ON COLUMN jatkovastaus.kylla_asteikko
 IS
   'Jatkokysymyksen kyllä-vastaus' ;
@@ -565,11 +565,17 @@ insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('KATSELIJA', 'Yleinen katselijarooli erityistarpeita varten', current_timestamp, current_timestamp);
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('OPL-PAAKAYTTAJA', 'Oppilaitoksen pääkäyttäjä', current_timestamp, current_timestamp);
+insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
+    values ('AIPAL-VASTAAJA', 'Vastaajasovelluksen käyttäjän rooli', current_timestamp, current_timestamp);
 
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
   values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
   values ('KONVERSIO', 'KONVERSIO', 'Järjestelmä', '', true, current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
+insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
+  values ('INTEGRAATIO', 'INTEGRAATIO', 'Järjestelmä', '', true, current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
+insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
+  values ('VASTAAJA', 'VASTAAJA', 'Aipal-vastaus', '', true, current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 
 -- jatkokysymys
 create trigger jatkokysymys_update before update on jatkokysymys for each row execute procedure update_stamp() ;
@@ -748,11 +754,14 @@ CREATE TABLE rooli_organisaatio
     muutettuaika timestamptz NOT NULL,
     luotuaika timestamptz NOT NULL
     );
-ALTER TABLE rooli_organisaatio ADD CONSTRAINT rooli_organisaatio_null CHECK (rooli IN ('YLLAPITAJA', 'OPH-KATSELIJA', 'TTK-KATSELIJA', 'KATSELIJA') OR organisaatio is not null);
+ALTER TABLE rooli_organisaatio ADD CONSTRAINT rooli_organisaatio_null
+  CHECK (rooli IN ('YLLAPITAJA', 'OPH-KATSELIJA', 'TTK-KATSELIJA', 'KATSELIJA', 'AIPAL-VASTAAJA') OR organisaatio is not null);
 
-INSERT INTO rooli_organisaatio (kayttaja, rooli, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja) values 
-('JARJESTELMA', 'YLLAPITAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA'), 
-('KONVERSIO', 'YLLAPITAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
+INSERT INTO rooli_organisaatio (kayttaja, rooli, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja) values
+('JARJESTELMA', 'YLLAPITAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA'),
+('KONVERSIO', 'YLLAPITAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA'),
+('INTEGRAATIO', 'YLLAPITAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA'),
+('VASTAAJA', 'AIPAL-VASTAAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 
 create trigger rooli_organisaatio_update before update on rooli_organisaatio for each row execute procedure update_stamp() ;
 create trigger rooli_organisaatiol_insert before insert on rooli_organisaatio for each row execute procedure update_created() ;
