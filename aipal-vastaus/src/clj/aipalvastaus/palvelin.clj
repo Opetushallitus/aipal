@@ -33,6 +33,7 @@
             [aipalvastaus.rest-api.i18n]
             aipalvastaus.sql.korma
             aipalvastaus.rest-api.kyselykerta
+            aipalvastaus.rest-api.vastaaja
             aipalvastaus.rest-api.vastaus))
 
 (schema.core/set-fn-validation! true)
@@ -46,6 +47,7 @@
     (c/context "/api/i18n" [] aipalvastaus.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
     (c/context "/api/vastaus" [] aipalvastaus.rest-api.vastaus/reitit)
+    (c/context "/api/vastaaja" [] aipalvastaus.rest-api.vastaaja/reitit)
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))))
 
 (defn sammuta [palvelin]

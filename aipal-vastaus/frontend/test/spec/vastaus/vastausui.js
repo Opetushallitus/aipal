@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
+// Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
 //
 // This program is free software:  Licensed under the EUPL, Version 1.1 or - as
 // soon as they will be approved by the European Commission - subsequent versions
@@ -14,151 +14,70 @@
 
 'use strict';
 
-describe('vastaus.vastausui.VastausControllerFunktiot', function() {
-  var f;
+describe('vastaus.vastausui.VastausController', function() {
+  var $controller;
+  var $httpBackend;
+  var $scope;
 
   beforeEach(module('vastaus.vastausui'));
 
-  beforeEach(inject(function(VastausControllerFunktiot){
-    f = VastausControllerFunktiot;
+  beforeEach(inject(function(_$controller_, _$httpBackend_, _$rootScope_) {
+    $controller = _$controller_;
+    $httpBackend = _$httpBackend_;
+    $scope = _$rootScope_.$new();
+
+    sessionStorage.clear();
+
+    $httpBackend.whenGET(/api\/kyselykerta\/.*/).respond({});
   }));
 
-  describe('kerätään kaikki vastaukset', function() {
-    it('Vastatusta kysymyksestä saadaan vastaus', function() {
-      var vastausdata = {
-        kysymysryhmat: [
-          {
-            kysymykset: [
-              {
-                kysymysid: 2,
-                vastaus: 1
-              }
-            ]
-          }
-        ]
-      };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
-    });
-    it('Kahdesta kysymyksestä, joista vain toiseen vastattu saadaan yksi vastaus', function() {
-      var vastausdata = {
-        kysymysryhmat: [
-          {
-            kysymykset: [
-              {
-                kysymysid: 2,
-                vastaus: 1
-              },
-              {
-                kysymysid: 3
-              }
-            ]
-          }
-        ]
-      };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
-    });
-    it('Kahdesta kysymyksestä, joista molempiin vastattu saadaan molemmat vastaukset', function() {
-      var vastausdata = {
-        kysymysryhmat: [
-          {
-            kysymykset: [
-              {
-                kysymysid: 2,
-                vastaus: 1
-              },
-              {
-                kysymysid: 3,
-                vastaus: 'vapaateksti'
-              }
-            ]
-          }
-        ]
-      };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]},{kysymysid:3,vastaus:['vapaateksti']}]});
-    });
-    it('Monivalintakysymys, jossa maksimi vastausten lukumäärä 1. Tuloksena valittu vastaus', function() {
-      var vastausdata = {
-        kysymysryhmat: [
-          {
-            kysymykset: [
-              {
-                kysymysid: 2,
-                vastaustyyppi: 'monivalinta',
-                monivalinta_max: 1,
-                vastaus: 2,
-                monivalintavaihtoehdot: [
-                  { jarjestys: 1 },
-                  { jarjestys: 2 }
-                ]
-              }
-            ]
-          }
-        ]
-      };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[2]}]});
-    });
-    it('Monivalintakysymys, jossa molemmat vaihtoehdot valittu. Tuloksena vastaus, jossa valitut vaihtoehdot', function() {
-      var vastausdata = {
-        kysymysryhmat: [
-          {
-            kysymykset: [
-              {
-                kysymysid: 2,
-                vastaustyyppi: 'monivalinta',
-                monivalinta_max: 3,
-                monivalintavaihtoehdot: [
-                  { jarjestys: 1, valittu: true },
-                  { jarjestys: 2, valittu: true }
-                ]
-              }
-            ]
-          }
-        ]
-      };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1,2]}]});
-    });
-    it('Monivalintakysymys, jossa valittu yksi vaihtoehto. Tuloksena vastaus, jossa valittu vaihtoehto', function() {
-      var vastausdata = {
-        kysymysryhmat: [
-          {
-            kysymykset: [
-              {
-                kysymysid: 2,
-                vastaustyyppi: 'monivalinta',
-                monivalinta_max: 3,
-                monivalintavaihtoehdot: [
-                  { jarjestys: 1, valittu: true },
-                  { jarjestys: 2, valittu: false }
-                ]
-              }
-            ]
-          }
-        ]
-      };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
-    });
-    it('Eri kysymysryhmien vastatuista kysymyksistä saadaan vastaukset', function() {
-      var vastausdata = {
-        kysymysryhmat: [
-          {
-            kysymykset: [
-              {
-                kysymysid: 2,
-                vastaus: 1
-              }
-            ]
-          },
-          {
-            kysymykset: [
-              {
-                kysymysid: 3,
-                vastaus: 'kylla'
-              }
-            ]
-          }
-        ]
-      };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]},{kysymysid:3,vastaus:['kylla']}]});
-    });
+  function alustaController(tunnus) {
+    if (tunnus === undefined) { tunnus = 'abc'; }
+    $controller('VastausController', {$scope: $scope, $routeParams: {'tunnus': tunnus}});
+  }
+
+  it('Uusi vastaajaid haetaan $scopeen', function() {
+    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
+    alustaController();
+    $httpBackend.flush();
+
+    expect($scope.vastaajaid).toEqual(123456);
+  });
+
+  it('Uusi vastaajaid haetaan jos tunnus vaihtuu', function() {
+    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
+    alustaController('abc');
+    $httpBackend.flush();
+
+    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 23456 });
+    alustaController('def');
+    $httpBackend.flush();
+
+    expect($scope.vastaajaid).toEqual(23456);
+  });
+
+  it('Uusi vastaajaid haetaan vain kerran', function() {
+    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
+    alustaController();
+    $httpBackend.flush();
+
+    alustaController();
+    $httpBackend.flush(); // Hajoaa jos POST api/vastaaja/luo tehdään toisen kerran
+  });
+
+  it('Uusi vastaajaid haetaan tallennuksen jälkeisellä sivulatauksella', function() {
+    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
+    alustaController();
+    $httpBackend.flush();
+
+    $scope.data = {};
+    $httpBackend.whenPOST(/api\/vastaus\/.*/).respond({});
+    $scope.tallenna();
+    $httpBackend.flush();
+
+    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 23456 });
+    alustaController();
+    $httpBackend.flush();
+    expect($scope.vastaajaid).toEqual(23456);
   });
 });

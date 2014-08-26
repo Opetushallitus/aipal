@@ -17,6 +17,7 @@
     [aipal.arkisto.kysely]
     [aipal.arkisto.kyselykerta]
     [aipal.arkisto.koulutustoimija]
+    [aipal.arkisto.vastaajatunnus]
     [clj-time.core :as time]
     [clj-time.core :as ctime]
     [korma.core :as sql]
@@ -83,3 +84,8 @@
                                                           :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
                                                           :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))
                                                           })))
+
+(defn lisaa-vastaajatunnus!
+  []
+  (let [kyselykerta (lisaa-kyselykerta!)]
+    (aipal.arkisto.vastaajatunnus/lisaa! (:kyselykertaid kyselykerta) nil nil nil nil)))

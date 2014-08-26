@@ -19,6 +19,7 @@
             [oph.common.util.http-util :refer [json-response-nocache]]
             [aipalvastaus.sql.vastaus :as vastaus]
             [aipalvastaus.sql.kyselykerta :as kysely]
+            [aipalvastaus.sql.vastaaja :as vastaaja]
             [aipalvastaus.toimiala.skeema :refer [KayttajanVastaus]]
             [oph.common.util.util :refer [map-by]]))
 
@@ -30,7 +31,7 @@
     vastaukset))
 
 (defn muodosta-tallennettavat-vastaukset
-  [vastaukset kysymykset]
+  [vastaukset vastaajaid kysymykset]
   (flatten (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
              (for [vastaus vastaukset
                    :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
@@ -38,7 +39,7 @@
                          vastaus-arvot (:vastaus vastaus)]]
                (for [arvo vastaus-arvot]
                  {:kysymysid (:kysymysid vastaus)
-                  :vastaajaid 3679
+                  :vastaajaid vastaajaid
                   :vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
                   :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
                   :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
@@ -49,16 +50,19 @@
   (doall (map vastaus/tallenna! vastaukset)))
 
 (defn validoi-ja-tallenna-vastaukset
-  [vastaukset kysymykset]
+  [vastaajaid vastaukset kysymykset]
   (when (some-> vastaukset
           (validoi-vastaukset kysymykset)
-          (muodosta-tallennettavat-vastaukset kysymykset)
+          (muodosta-tallennettavat-vastaukset vastaajaid kysymykset)
           tallenna-vastaukset!)
+    (vastaaja/paivata-vastaaja! vastaajaid)
     "OK"))
 
 (c/defroutes reitit
-  (c/POST "/:vastaustunnus" [vastaustunnus vastaukset]
+  (c/POST "/:vastaustunnus" [vastaustunnus vastaajaid vastaukset]
     (db/transaction
       (schema/validate [KayttajanVastaus] vastaukset)
-      (json-response-nocache
-        (validoi-ja-tallenna-vastaukset vastaukset (kysely/hae-kysymykset vastaustunnus))))))
+      (if (vastaaja/validoi-vastaajaid vastaustunnus vastaajaid)
+        (json-response-nocache
+          (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely/hae-kysymykset vastaustunnus)))
+        {:status 403}))))

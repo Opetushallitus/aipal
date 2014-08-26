@@ -16,7 +16,32 @@
   (:require [korma.core :as sql]))
 
 (defn luo-vastaaja!
-  [kyselykertaid vastaajatunnusid]
-  (sql/insert :vastaaja
-    (sql/values {:kyselykertaid kyselykertaid
-                 :vastaajatunnusid vastaajatunnusid})))
+  [vastaustunnus]
+  (->
+    (sql/exec-raw [(str "INSERT INTO vastaaja(kyselykertaid, vastaajatunnusid)"
+                        " SELECT kyselykertaid, vastaajatunnusid"
+                        " FROM vastaajatunnus"
+                        " WHERE tunnus = ?"
+                        " RETURNING vastaajaid") [vastaustunnus]] :results)
+    first
+    :vastaajaid))
+
+(defn paivata-vastaaja! [vastaajaid]
+  (->
+    (sql/update* :vastaaja)
+    (sql/set-fields {:vastannut true})
+    (sql/where {:vastaajaid vastaajaid})
+    sql/exec))
+
+(defn validoi-vastaajaid
+  [vastaustunnus vastaajaid]
+  (->
+    (sql/select* :vastaaja)
+    (sql/fields :vastannut)
+    (sql/join :vastaajatunnus (= :vastaajatunnus.vastaajatunnusid :vastaajatunnusid))
+    (sql/where {:vastaajaid vastaajaid
+                :vastaajatunnus.tunnus vastaustunnus})
+    sql/exec
+    first
+    :vastannut
+    (= false)))
