@@ -60,7 +60,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
           $scope.vastaajaid = data.vastaajaid;
         });
       } else {
-        $scope.vastaajaid = sessionStorage.getItem('vastaajaid');
+        $scope.vastaajaid = parseInt(sessionStorage.getItem('vastaajaid'), 10);
       }
 
       $scope.tallenna = function() {
