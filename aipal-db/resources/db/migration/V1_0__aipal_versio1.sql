@@ -414,16 +414,40 @@ CREATE TABLE toimipaikka (
   luotu_kayttaja VARCHAR(80) NOT NULL,
   muutettu_kayttaja VARCHAR(80) NOT NULL);
 
-CREATE TABLE tutkinto
-  (
-    tutkintotunnus    VARCHAR (6) NOT NULL PRIMARY KEY,
-    nimi_fi           VARCHAR (200) ,
-    nimi_sv           VARCHAR (200) ,
-    luotu_kayttaja    VARCHAR (80) NOT NULL ,
-    muutettu_kayttaja VARCHAR (80) NOT NULL ,
-    luotuaika TIMESTAMPTZ NOT NULL ,
-    muutettuaika TIMESTAMPTZ NOT NULL
-  ) ;
+CREATE TABLE koulutusala (
+  koulutusalatunnus VARCHAR(3) NOT NULL PRIMARY KEY,
+  nimi_fi VARCHAR(200),
+  nimi_sv VARCHAR(200),
+  voimassa_alkupvm  DATE,
+  voimassa_loppupvm DATE,
+  luotu_kayttaja    VARCHAR (80) NOT NULL ,
+  muutettu_kayttaja VARCHAR (80) NOT NULL ,
+  luotuaika TIMESTAMPTZ NOT NULL ,
+  muutettuaika TIMESTAMPTZ NOT NULL);
+
+CREATE TABLE opintoala (
+  opintoalatunnus VARCHAR(3) NOT NULL PRIMARY KEY,
+  koulutusala VARCHAR(3) NOT NULL REFERENCES koulutusala(koulutusalatunnus),
+  nimi_fi VARCHAR(200),
+  nimi_sv VARCHAR(200),
+  voimassa_alkupvm  DATE,
+  voimassa_loppupvm DATE,
+  luotu_kayttaja    VARCHAR (80) NOT NULL ,
+  muutettu_kayttaja VARCHAR (80) NOT NULL ,
+  luotuaika TIMESTAMPTZ NOT NULL ,
+  muutettuaika TIMESTAMPTZ NOT NULL);
+
+CREATE TABLE tutkinto (
+  tutkintotunnus    VARCHAR (6) NOT NULL PRIMARY KEY,
+  opintoala         VARCHAR (3) NOT NULL REFERENCES opintoala(opintoalatunnus),
+  nimi_fi           VARCHAR (200) ,
+  nimi_sv           VARCHAR (200) ,
+  voimassa_alkupvm  DATE,
+  voimassa_loppupvm DATE,
+  luotu_kayttaja    VARCHAR (80) NOT NULL ,
+  muutettu_kayttaja VARCHAR (80) NOT NULL ,
+  luotuaika TIMESTAMPTZ NOT NULL ,
+  muutettuaika TIMESTAMPTZ NOT NULL);
 
 ALTER TABLE jatkokysymys ADD CONSTRAINT jatkokysymys_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
@@ -726,15 +750,7 @@ create trigger toimipaikkam_insert before insert on toimipaikka for each row exe
 create trigger toimipaikka_mu_update before update on toimipaikka for each row execute procedure update_modifier() ;
 create trigger toimipaikka_cu_insert before insert on toimipaikka for each row execute procedure update_creator() ;
 create trigger toimipaikka_mu_insert before insert on toimipaikka for each row execute procedure update_modifier() ;
-
--- tutkinto
-create trigger tutkinto_update before update on tutkinto for each row execute procedure update_stamp() ;
-create trigger tutkintol_insert before insert on tutkinto for each row execute procedure update_created() ;
-create trigger tutkintom_insert before insert on tutkinto for each row execute procedure update_stamp() ;
-create trigger tutkinto_mu_update before update on tutkinto for each row execute procedure update_modifier() ;
-create trigger tutkinto_cu_insert before insert on tutkinto for each row execute procedure update_creator() ;
-create trigger tutkinto_mu_insert before insert on tutkinto for each row execute procedure update_modifier() ;
-
+  
 -- jatkovastaus
 create trigger jatkovastaus_update before update on jatkovastaus for each row execute procedure update_stamp() ;
 create trigger jatkovastausl_insert before insert on jatkovastaus for each row execute procedure update_created() ;
@@ -742,6 +758,30 @@ create trigger jatkovastausm_insert before insert on jatkovastaus for each row e
 create trigger jatkovastaus_mu_update before update on jatkovastaus for each row execute procedure update_modifier() ;
 create trigger jatkovastaus_mu_insert before insert on jatkovastaus for each row execute procedure update_modifier() ;
 create trigger jatkovastaus_cu_insert before insert on jatkovastaus for each row execute procedure update_creator() ;
+
+-- tutkinto
+create trigger tutkinto_update before update on tutkinto for each row execute procedure update_stamp() ;
+create trigger tutkintol_insert before insert on tutkinto for each row execute procedure update_created() ;
+create trigger tutkintom_insert before insert on tutkinto for each row execute procedure update_stamp() ;
+create trigger tutkinto_mu_update before update on tutkinto for each row execute procedure update_modifier() ;
+create trigger tutkinto_mu_insert before insert on tutkinto for each row execute procedure update_modifier() ;
+create trigger tutkinto_cu_insert before insert on tutkinto for each row execute procedure update_creator() ;
+
+-- opintoala
+create trigger opintoala_update before update on opintoala for each row execute procedure update_stamp() ;
+create trigger opintoalal_insert before insert on opintoala for each row execute procedure update_created() ;
+create trigger opintoalam_insert before insert on opintoala for each row execute procedure update_stamp() ;
+create trigger opintoala_mu_update before update on opintoala for each row execute procedure update_modifier() ;
+create trigger opintoala_mu_insert before insert on opintoala for each row execute procedure update_modifier() ;
+create trigger opintoala_cu_insert before insert on opintoala for each row execute procedure update_creator() ;
+
+-- koulutusala
+create trigger koulutusala_update before update on koulutusala for each row execute procedure update_stamp() ;
+create trigger koulutusalal_insert before insert on koulutusala for each row execute procedure update_created() ;
+create trigger koulutusalam_insert before insert on koulutusala for each row execute procedure update_stamp() ;
+create trigger koulutusala_mu_update before update on koulutusala for each row execute procedure update_modifier() ;
+create trigger koulutusala_mu_insert before insert on koulutusala for each row execute procedure update_modifier() ;
+create trigger koulutusala_cu_insert before insert on koulutusala for each row execute procedure update_creator() ;
 
 CREATE TABLE rooli_organisaatio
   (
