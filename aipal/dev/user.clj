@@ -50,12 +50,6 @@
                              :enabled true})
     (assoc-in [:server :base-url] "http://192.168.50.1:8082")))
 
-(defmacro with-testikayttaja [& body]
-  `(binding [oph.korma.korma-auth/*current-user-oid* (promise)
-             oph.korma.korma-auth/*current-user-uid* aipal.integraatio.sql.korma-auth/default-test-user-uid]
-     (deliver oph.korma.korma-auth/*current-user-oid* aipal.integraatio.sql.korma-auth/default-test-user-oid)
-     ~@body))
-
 (defn ^:private kaynnista! []
   {:pre [(not @palvelin)]
    :post [@palvelin]}
