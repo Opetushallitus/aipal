@@ -9,8 +9,6 @@ CREATE TABLE kayttaja
     "uid"             VARCHAR (80) ,
     etunimi           VARCHAR (100) ,
     sukunimi          VARCHAR (100) ,
-    rooli             VARCHAR (32) NOT NULL ,
-    organisaatio      VARCHAR (16) ,
     voimassa          BOOLEAN DEFAULT false NOT NULL ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
@@ -18,6 +16,7 @@ CREATE TABLE kayttaja
     muutettuaika TIMESTAMPTZ NOT NULL
   ) ;
 ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_PK PRIMARY KEY ( oid ) ;
+ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_uid_unique UNIQUE ( "uid" );
 
 CREATE TABLE kayttajarooli
   (
@@ -435,8 +434,6 @@ ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttaja_FK FOREIGN KEY ( luotu_kay
 
 ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
-ALTER TABLE kayttaja ADD CONSTRAINT kayttaja_kayttajarooli_FK FOREIGN KEY ( rooli ) REFERENCES kayttajarooli ( roolitunnus ) NOT DEFERRABLE ;
-
 ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 ALTER TABLE kysymysryhma_kyselypohja ADD CONSTRAINT kr_kp_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -552,13 +549,12 @@ ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_oppilaitos_FK FOREIGN KEY ( o
 ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
-
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('OPH-KATSELIJA', 'Opetushallituksen katselija', current_timestamp, current_timestamp);
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
-    values ('OPL-VASTUUKAYTTAJA', 'Oppilaitoksen pääkäyttäjä', current_timestamp, current_timestamp);
+    values ('OPL-VASTUUKAYTTAJA', 'Oppilaitoksen vastuukayttaja', current_timestamp, current_timestamp);
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('OPL-KATSELIJA', 'Oppilaitoksen katselija', current_timestamp, current_timestamp);
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
@@ -568,15 +564,12 @@ insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('KATSELIJA', 'Yleinen katselijarooli erityistarpeita varten', current_timestamp, current_timestamp);
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
-    values ('AIPAL-VASTAAJA', 'Vastaajasovelluksen käyttäjän rooli', current_timestamp, current_timestamp);
+    values ('OPL-PAAKAYTTAJA', 'Oppilaitoksen pääkäyttäjä', current_timestamp, current_timestamp);
 
-insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
-  values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
-insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
-  values ('KONVERSIO', 'KONVERSIO', 'Järjestelmä', '', true, 'YLLAPITAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
-insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, rooli, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
-  values ('VASTAAJA', 'VASTAAJA', 'Aipal-vastaus', '', true, 'AIPAL-VASTAAJA', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
-
+insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
+  values ('JARJESTELMA', 'JARJESTELMA', 'Järjestelmä', '', true, current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
+insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja)
+  values ('KONVERSIO', 'KONVERSIO', 'Järjestelmä', '', true, current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 
 -- jatkokysymys
 create trigger jatkokysymys_update before update on jatkokysymys for each row execute procedure update_stamp() ;
@@ -745,16 +738,21 @@ create trigger jatkovastaus_cu_insert before insert on jatkovastaus for each row
 
 CREATE TABLE rooli_organisaatio
   (
+    rooli_organisaatio_id serial PRIMARY KEY,
     organisaatio varchar(9) references koulutustoimija(ytunnus),
-    rooli  varchar(32) references kayttajarooli(roolitunnus),
-    kayttaja varchar(80) references kayttaja(oid),
+    rooli varchar(32) references kayttajarooli(roolitunnus) NOT NULL,
+    kayttaja varchar(80) references kayttaja(oid) NOT NULL,
     voimassa BOOLEAN DEFAULT false NOT NULL,
     muutettu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
     luotu_kayttaja varchar(80) NOT NULL references kayttaja(oid),
     muutettuaika timestamptz NOT NULL,
     luotuaika timestamptz NOT NULL
     );
-ALTER TABLE rooli_organisaatio ADD CONSTRAINT rooli_organisaatio_PK PRIMARY KEY (organisaatio,rooli,kayttaja);
+ALTER TABLE rooli_organisaatio ADD CONSTRAINT rooli_organisaatio_null CHECK (rooli IN ('YLLAPITAJA', 'OPH-KATSELIJA', 'TTK-KATSELIJA', 'KATSELIJA') OR organisaatio is not null);
+
+INSERT INTO rooli_organisaatio (kayttaja, rooli, voimassa, muutettuaika, luotuaika, luotu_kayttaja, muutettu_kayttaja) values 
+('JARJESTELMA', 'YLLAPITAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA'), 
+('KONVERSIO', 'YLLAPITAJA', 'true', current_timestamp, current_timestamp, 'JARJESTELMA', 'JARJESTELMA');
 
 create trigger rooli_organisaatio_update before update on rooli_organisaatio for each row execute procedure update_stamp() ;
 create trigger rooli_organisaatiol_insert before insert on rooli_organisaatio for each row execute procedure update_created() ;
