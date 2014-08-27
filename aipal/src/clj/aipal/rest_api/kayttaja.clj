@@ -16,6 +16,7 @@
   (:require [compojure.core :as c]
             [oph.korma.korma-auth :as ka]
             [aipal.arkisto.kayttaja :as arkisto]
+            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.http-util :refer [json-response]]
             [aipal.toimiala.kayttajaoikeudet :as ko]
@@ -30,9 +31,9 @@
   (cu/defapi :impersonointi nil :post "/lopeta-impersonointi" {session :session}
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
- 
-  (cu/defapi :kayttajan_tiedot nil :get "/" []
-    true)
 
-  (cu/defapi :omat_tiedot oid :get "/:oid" [oid]
+  (cu/defapi :omat_tiedot nil :get "/" []
+    (json-response (kayttajaoikeus-arkisto/hae-oikeudet)))
+
+  (cu/defapi :kayttajan_tiedot oid :get "/:oid" [oid]
    true))

@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.integraatio.sql.korma
-  (:require 
+  (:require
     [korma.core :as sql]
     [oph.korma.korma  :refer [defentity]]))
 
@@ -40,6 +40,9 @@
 
 (defentity vastaajatunnus
   (sql/pk :vastaajatunnusid))
+
+(defentity rooli-organisaatio
+  (sql/table :rooli_organisaatio))
 
 (defentity kayttaja
   (sql/pk :oid))

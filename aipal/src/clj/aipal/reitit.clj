@@ -4,7 +4,7 @@
           [clojure.java.io :as io]
           [compojure.core :as c]
           [stencil.core :as s]
- 
+
           aipal.rest-api.i18n
           [clj-cas-client.core :refer [cas]]
           aipal.rest-api.kysely
@@ -15,7 +15,7 @@
           aipal.rest_api.vastaajatunnus
           [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
 
-          
+
           [aitu.infra.status :refer [status]]))
 
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
@@ -36,10 +36,11 @@
                                                                    pprint))
                                                   :build-id @build-id)))
     (c/context "/api/jslog" [] aipal.rest_api.js-log/reitit)
-    
+
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
     (c/context "/api/kyselypohja" [] aipal.rest-api.kyselypohja/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
     (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)
-    (c/context "/api/vastaajatunnus" [] aipal.rest-api.vastaajatunnus/reitit)))
+    (c/context "/api/vastaajatunnus" [] aipal.rest-api.vastaajatunnus/reitit)
+    (c/context "/api/kayttaja" [] aipal.rest-api.kayttaja/reitit)))
