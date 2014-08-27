@@ -22,7 +22,6 @@
                      :oppilaitos-vastuukayttaja "OPL-VASTUUKAYTTAJA"
                      :oppilaitos-katselija "OPL-KATSELIJA"
                      :oppilaitos-kayttaja "OPL-KAYTTAJA"
-                     :toimikuntakatselija "TOIMIKUNTA-KATSELIJA"
+                     :toimikuntakatselija "TTK-KATSELIJA"
                      :katselija "KATSELIJA" ; yleinen katselija
                      })
-                                         

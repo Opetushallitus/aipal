@@ -30,7 +30,7 @@
    (:oppilaitos-kayttaja kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ_UPDATE")]
    (:oph-katselija kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ")]
    (:oppilaitos-katselija kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ")]
-   (:toimikunta-katselija kayttajaroolit) [(aipal-ryhma-cn toimikunnat-organisaatio "READ")]
+   (:toimikuntakatselija kayttajaroolit) [(aipal-ryhma-cn toimikunnat-organisaatio "READ")]
    (:katselija kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ")]})
 
 
