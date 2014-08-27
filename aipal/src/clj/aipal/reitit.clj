@@ -12,7 +12,8 @@
           aipal.rest-api.kyselypohja
           aipal.rest-api.raportti.kyselykerta
           aipal.rest_api.js-log
-          aipal.rest_api.vastaajatunnus
+          aipal.rest-api.vastaajatunnus
+          aipal.rest-api.kayttaja
           [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
 
 
