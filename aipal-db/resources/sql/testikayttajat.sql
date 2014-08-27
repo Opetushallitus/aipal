@@ -1,10 +1,10 @@
 set session aipal.kayttaja='JARJESTELMA';
 
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
-values ('OID.E2E', 'E2E', 'Test', 'End-to-End', true);
+values ('OID.AIPAL-E2E', 'AIPAL-E2E', 'Test', 'End-to-End', true);
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'YLLAPITAJA', 'OID.E2E', 'true');
+values (null, 'YLLAPITAJA', 'OID.AIPAL-E2E', 'true');
 
 -- manuaaliseen testaukseen tarkoitetut testikäyttäjät
 

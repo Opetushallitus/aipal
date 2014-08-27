@@ -22,7 +22,7 @@
 (def ^:dynamic *current-user-uid*)
 (def ^:dynamic *current-user-oid*)
 (def ^:dynamic *impersonoitu-oid* nil)
- 
+
 (defn validate-user
   [con uid]
   {:pre [(string? uid)]}
@@ -34,10 +34,9 @@
     (let [valid (.next rs)]
       (when-not valid (throw (IllegalArgumentException. (str "Käyttäjä " uid " puuttuu tietokannasta"))))
      (let [voimassa (.getBoolean rs "voimassa")
-           rooli (.getString rs "rooli")
            oid (.getString rs "oid")]
        (when-not voimassa (throw (IllegalArgumentException. (str "Käyttäjätunnus " uid " ei ole voimassa."))))
-       (log/debug (str "user " uid " ok. Rooli " rooli ))
+       (log/debug (str "user " uid " ok"))
        oid))))
 
 (defn exec-sql

@@ -46,13 +46,18 @@
                 (sql/values
                   {:uid testikayttaja-uid
                    :oid testikayttaja-oid
-                   :rooli roolitunnus
                    :etunimi "E2E"
                    :sukunimi "AIPAL"
+                   :voimassa true}))
+    (sql/insert rooli_organisaatio
+                (sql/values
+                  {:kayttaja testikayttaja-oid
+                   :rooli roolitunnus
                    :voimassa true}))))
   ([testikayttaja-oid testikayttaja-uid]
     (luo-testikayttaja! testikayttaja-oid testikayttaja-uid yllapitajarooli)))
 
 (defn poista-testikayttaja!
   [testikayttaja-oid]
+  (sql/exec-raw (str "delete from rooli_organisaatio where kayttaja = '" testikayttaja-oid "'"))
   (sql/exec-raw (str "delete from kayttaja where oid = '" testikayttaja-oid "'")))

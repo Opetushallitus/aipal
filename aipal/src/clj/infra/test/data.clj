@@ -16,14 +16,14 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [oph.korma.korma-auth :as ka]
-            [aipal.integraatio.sql.korma :refer [kayttaja]]
+            [aipal.integraatio.sql.korma :refer [kayttaja rooli-organisaatio]]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
-(def taulut 
+(def taulut
   "Taulut vierasavainriippuvuuksien mukaisessa järjestyksessä, ensin taulu josta viitataan myöhemmin nimettyyn."
   ["kysymys"
    "kysely_kysymysryhma"
-   "kysely_kysymys"   
+   "kysely_kysymys"
    "kysymysryhma"
    "kyselypohja"
    "monivalintavaihtoehto"
@@ -54,12 +54,17 @@
                       {:voimassa true
                        :sukunimi "Leiningen"
                        :etunimi "Testi"
-                       :rooli roolitunnus
                        :uid testikayttaja-uid
-                       :oid testikayttaja-oid}))))))
+                       :oid testikayttaja-oid}))
+        (sql/insert rooli-organisaatio
+                    (sql/values
+                      {:voimassa true
+                       :kayttaja testikayttaja-oid
+                       :rooli roolitunnus}))))))
   ([testikayttaja-oid testikayttaja-uid]
     (luo-testikayttaja! testikayttaja-oid testikayttaja-uid (:paakayttaja kayttajaroolit))))
 
 (defn poista-testikayttaja!
   [testikayttaja-oid]
+  (sql/exec-raw (str "delete from rooli_organisaatio where kayttaja = '" testikayttaja-oid "'"))
   (sql/exec-raw (str "delete from kayttaja where oid = '" testikayttaja-oid "'")))
