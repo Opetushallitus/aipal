@@ -22,8 +22,8 @@
             [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
 (c/defroutes reitit
-   (cu/defapi :kysely nil :get "/" []
-     (json-response (kysely/hae-kaikki)))
+  (cu/defapi :kysely nil :get "/" []
+    (json-response (kysely/hae-kaikki)))
 
   (cu/defapi :kysely nil :get "/:kyselyid" [kyselyid] 
     (json-response (let [kysely (kysely/hae (Integer/parseInt kyselyid))]
