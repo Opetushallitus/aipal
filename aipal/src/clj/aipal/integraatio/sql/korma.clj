@@ -52,3 +52,5 @@
 
 (defentity koulutustoimija
   (sql/pk :ytunnus))
+
+(defentity rooli_organisaatio)

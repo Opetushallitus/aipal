@@ -26,3 +26,14 @@
   [uid]
   (first (sql/select kayttaja (sql/where {:uid uid}))))
 
+(defn hae-organisaatio
+  "Hakee käyttäjän organisaation"
+  [oid]
+  (when-let [organisaatio (->
+                            (sql/select* kayttaja)
+                            (sql/join rooli_organisaatio (= :rooli_organisaatio.kayttaja :oid))
+                            (sql/where {:oid oid})
+                            (sql/fields :rooli_organisaatio.organisaatio)
+                            sql/exec
+                            first)]
+    (:organisaatio organisaatio)))
