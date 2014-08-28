@@ -39,10 +39,13 @@
                  [korma "0.3.0-RC6"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
-                 
+
+                 [clojurewerkz/quartzite "1.3.0"]
+                 [org.clojars.pntblnk/clj-ldap "0.0.9"]
+
                  [robert/hooke "1.3.0"]
                  [peridot "0.3.0"]
-                 
+
                  [stencil "0.3.2"]]
   :plugins [[test2junit "1.0.1"]]
   :profiles {:dev {:source-paths ["dev"]

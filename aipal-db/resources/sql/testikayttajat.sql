@@ -10,7 +10,7 @@ values (null, 'YLLAPITAJA', 'OID.AIPAL-E2E', 'true');
 
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
 values ('OID.T-1001', 'T-1001', 'Yrjö', 'Ylläpitäjä', true);
- 
+
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
 values ('OID.T-800', 'T-800', 'Arska', 'Katselija', true);
 
@@ -24,24 +24,23 @@ insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values (null, 'YLLAPITAJA', 'OID.T-1001', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'OPH-KATSELIJA', 'OID.T-1001', 'true');
+values (null, 'OPH-KATSELIJA', 'OID.T-800', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'TTK-KATSELIJA', 'OID.T-1001', 'true');
+values (null, 'TTK-KATSELIJA', 'OID.T-850', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'KATSELIJA', 'OID.T-1001', 'true');
-
+values (null, 'KATSELIJA', 'OID.T-700', 'true');
 
 
 -- testiorganisaatiot käyttöoikeuksia varten
 insert into koulutustoimija (ytunnus, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite )
   values ('2345678-0', 'Ruikonperän opistoaste', 'ruikonpera@solita.fi', '+35850505050', 'Perämäkkylän ohitustie 2', '00310', 'Ylijyrmylä', 'http://www.solita.fi'   );
-  
+
 insert into oppilaitos (oppilaitoskoodi, koulutustoimija, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite )
-  values ('12345', '2345678-0', 'Ruikonperän multakurkkuopisto', 'ruikonpera@solita.fi', '+35850505050', 'Perämäkkylän ohitustie 2', '00310', 'Ylijyrmylä', 'http://www.solita.fi'  ); 
- 
- 
+  values ('12345', '2345678-0', 'Ruikonperän multakurkkuopisto', 'ruikonpera@solita.fi', '+35850505050', 'Perämäkkylän ohitustie 2', '00310', 'Ylijyrmylä', 'http://www.solita.fi'  );
+
+
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
 values ('OID.T-X', 'T-X', 'Krista', 'Vastuukäyttäjä', true);
 
@@ -64,10 +63,10 @@ values ('2345678-0', 'OPL-KAYTTAJA', 'OID.T-H', true);
 
 insert into koulutustoimija (ytunnus, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite )
   values ('7654321-2', 'Viuluhiomo Viola', 'viuluhiomo@solita.fi', '+35850505050', 'Van Helsingin katu 24', '00310', 'Helsinki', 'http://www.solita.fi' );
-  
+
 insert into oppilaitos (oppilaitoskoodi, koulutustoimija, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite )
-  values ('54321', '7654321-2', 'Kallion viuluhiomo', 'viuluhiomo@solita.fi', '+35850505050', 'Van Helsingin katu 24', '00310', 'Helsinki', 'http://www.solita.fi' ); 
-  
+  values ('54321', '7654321-2', 'Kallion viuluhiomo', 'viuluhiomo@solita.fi', '+35850505050', 'Van Helsingin katu 24', '00310', 'Helsinki', 'http://www.solita.fi' );
+
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
 values ('OID.8086', '8086', 'Pertti', 'Kompura', true );
 

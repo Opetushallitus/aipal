@@ -31,9 +31,14 @@
    :cas-auth-server {:url s/Str
                      :unsafe-https Boolean
                      :enabled Boolean}
+   :ldap-auth-server {:host s/Str
+                      :port s/Int
+                      :user (s/maybe s/Str)
+                      :password (s/maybe s/Str)}
+   :eraajo Boolean
    :development-mode Boolean
    :logback {:properties-file s/Str}})
- 
+
 (def oletusasetukset
   {:server {:port 8082
             :base-url ""}
@@ -48,10 +53,14 @@
    :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
                      :unsafe-https false
                      :enabled true}
+   :ldap-auth-server {:host "localhost"
+                      :port 10389
+                      :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
+                      :password "salasana"}
+   :eraajo false
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :logback {:properties-file "resources/logback.xml"}})
 
-(defn hae-asetukset 
+(defn hae-asetukset
   ([alkuasetukset] (lue-asetukset alkuasetukset Asetukset "aipal.properties"))
   ([] (hae-asetukset oletusasetukset)))
-                 
