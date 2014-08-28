@@ -24,13 +24,13 @@ insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values (null, 'YLLAPITAJA', 'OID.T-1001', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'OPH-KATSELIJA', 'OID.T-1001', 'true');
+values (null, 'OPH-KATSELIJA', 'OID.T-800', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'TTK-KATSELIJA', 'OID.T-1001', 'true');
+values (null, 'TTK-KATSELIJA', 'OID.T-850', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'KATSELIJA', 'OID.T-1001', 'true');
+values (null, 'KATSELIJA', 'OID.T-700', 'true');
 
 
 -- testiorganisaatiot käyttöoikeuksia varten
