@@ -58,8 +58,7 @@
                             {:oid (:employeeNumber kayttaja)
                              :uid (:uid kayttaja)
                              :etunimi etunimi
-                             :sukunimi (or sukunimi "")
-                             :rooli rooli})))
+                             :sukunimi (or sukunimi "")})))
                       (log/warn "Roolin" rooli "ryhmää" roolin-ryhma-dn
                                 "ei löytynyt, ei lueta roolin käyttäjiä"))))))
 
