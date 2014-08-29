@@ -26,5 +26,4 @@
         (is (= (:status (:response response)) 200))
         (is (true? (json-find  (:body (:response response)) :kyselykertaid (:kyselykertaid kyselykerta))))
         ))))
-
-
+ 

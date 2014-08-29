@@ -33,6 +33,14 @@
       :cookies { "XSRF-TOKEN" {:value "token"}}
       :params params)))
 
+(defn mock-request-uid [app url method uid params]
+  (peridot/request app url
+    :request-method method
+    :headers { "x-xsrf-token" "token" 
+              "uid" uid}
+    :cookies { "XSRF-TOKEN" {:value "token"}}
+    :params params))
+
 (defn rest-kutsu
   "Tekee yksinkertaisen simuloidun rest-kutsun. Peridot-sessio suljetaan lopuksi. Soveltuu yksinkertaisiin testitapauksiin. "
   [url method params]
@@ -44,7 +52,7 @@
        crout (palvelin/app asetukset)]
     
     (let [response (->  (peridot/session  crout)
-                     (mock-request url method params))]
+                     (mock-request-uid url method "T-1001" params ))]
       response)))
 
 (defn json-find

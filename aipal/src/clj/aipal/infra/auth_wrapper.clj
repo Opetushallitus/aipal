@@ -19,6 +19,7 @@
             [oph.korma.korma-auth :as ka]
             [aipal.toimiala.kayttajaoikeudet :as ko]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
+            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [clojure.tools.logging :as log]))
 
 (defn get-userid-from-request
@@ -36,7 +37,9 @@
                 ka/*current-user-oid* (promise)
                 ka/*impersonoitu-oid* impersonoitu-oid]
         (let [kayttaja (kayttaja-arkisto/hae-uid userid)
-              kayttajatiedot {:kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))}]
-          (log/info "käyttäjä autentikoitu " kayttajatiedot (when ka/*impersonoitu-oid* (str ": impersonoija=" ka/*current-user-uid*)))
-          (binding [ko/*current-user-authmap* kayttajatiedot]
+              oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:oid kayttaja))
+              kayttajatiedot {:kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))}
+              auth-map (assoc kayttajatiedot :roolit (:roolit oikeudet))]
+          (log/info "käyttäjä autentikoitu " auth-map (when ka/*impersonoitu-oid* (str ": impersonoija=" ka/*current-user-uid*)))
+          (binding [ko/*current-user-authmap* auth-map]
             (ring-handler request)))))))
