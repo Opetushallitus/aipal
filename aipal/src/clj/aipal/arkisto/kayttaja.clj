@@ -32,7 +32,8 @@
   (when-let [organisaatio (->
                             (sql/select* kayttaja)
                             (sql/join rooli_organisaatio (= :rooli_organisaatio.kayttaja :oid))
-                            (sql/where {:oid oid})
+                            (sql/where {:oid oid
+                                        :rooli_organisaatio.organisaatio [not= nil]})
                             (sql/fields :rooli_organisaatio.organisaatio)
                             sql/exec
                             first)]
