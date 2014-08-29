@@ -157,13 +157,13 @@
   [data body-fn]
   (let [pool (yhteys/alusta-korma!)]
     (let [taydennetty-data (taydenna-data data)]
-      (doseq [taulu taulut
-              :let [data (taydennetty-data taulu)
-                    luo-fn (get-in entity-tiedot [taulu :luo-fn])]
-              :when data]
-        (db/transaction
-          (yhteys/luo-testikayttaja!)
-          (yhteys/aseta-testikayttaja!)
+      (db/transaction
+        (yhteys/luo-testikayttaja!)
+        (yhteys/aseta-testikayttaja!)
+        (doseq [taulu taulut
+                :let [data (taydennetty-data taulu)
+                      luo-fn (get-in entity-tiedot [taulu :luo-fn])]
+                :when data]
           (luo data luo-fn)))
       (try
         (body-fn)
