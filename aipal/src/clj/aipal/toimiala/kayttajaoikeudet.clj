@@ -10,14 +10,18 @@
   ([]
     true))
 
+(defn yllapitaja?
+  []
+  (some #(= (:rooli %) "YLLAPITAJA") (:roolit *current-user-authmap*)))
+ 
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
     :kysely aipal-kayttaja?
-    :impersonointi aipal-kayttaja?
+    :impersonointi yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
     :omat_tiedot aipal-kayttaja?
     })
-
+ 
 (def toiminnot kayttajatoiminnot)
