@@ -17,13 +17,19 @@
             [korma.db :as db]
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
+            [aipal.arkisto.kayttaja :as kayttaja]
             [aipal.arkisto.kysely :as kysely]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]))
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.korma.korma-auth :refer [*current-user-oid*]]))
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
     (json-response (kysely/hae-kaikki)))
+
+  (cu/defapi :kysely nil :post "/" []
+    (json-response (kysely/lisaa! {:nimi_fi "Uusi kysely"
+                                   :koulutustoimija (kayttaja/hae-organisaatio @*current-user-oid*)})))
 
   (cu/defapi :kysely nil :get "/:kyselyid" [kyselyid] 
     (json-response (let [kysely (kysely/hae (Integer/parseInt kyselyid))]

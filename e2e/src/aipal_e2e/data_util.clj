@@ -14,6 +14,7 @@
 
 (ns aipal-e2e.data-util
   (:require [clj-time.core :as time]
+            [korma.core :as sql]
             [korma.db :as db]
             [aipal-e2e.arkisto.kysely :as kysely]
             [aipal-e2e.arkisto.kysely-kysymys :as kysely-kysymys]
@@ -108,6 +109,9 @@
                                :default (for [i (iterate inc 1)]
                                           {})})
 
+(def ^:private rooli_organisaatio-tiedot {:luo-fn #(sql/insert :rooli_organisaatio (sql/values %))
+                                         :default (repeat {})})
+
 (def ^:private entity-tiedot {:koulutustoimija koulutustoimija-tiedot
                               :kysely kysely-tiedot
                               :kyselykerta kyselykerta-tiedot
@@ -120,7 +124,8 @@
                               :tutkinto tutkinto-tiedot
                               :vastaajatunnus vastaajatunnus-tiedot
                               :vastaaja vastaaja-tiedot
-                              :vastaus vastaus-tiedot})
+                              :vastaus vastaus-tiedot
+                              :rooli_organisaatio rooli_organisaatio-tiedot})
 
 (def ^:private taulut [:koulutustoimija
                        :kysely
@@ -131,6 +136,7 @@
                        :kysely-kysymysryhma
                        :kysely-kysymys
                        :monivalintavaihtoehto
+                       :rooli_organisaatio
                        :tutkinto
                        :vastaajatunnus
                        :vastaaja
@@ -157,13 +163,13 @@
   [data body-fn]
   (let [pool (yhteys/alusta-korma!)]
     (let [taydennetty-data (taydenna-data data)]
-      (doseq [taulu taulut
-              :let [data (taydennetty-data taulu)
-                    luo-fn (get-in entity-tiedot [taulu :luo-fn])]
-              :when data]
-        (db/transaction
-          (yhteys/luo-testikayttaja!)
-          (yhteys/aseta-testikayttaja!)
+      (db/transaction
+        (yhteys/luo-testikayttaja!)
+        (yhteys/aseta-testikayttaja!)
+        (doseq [taulu taulut
+                :let [data (taydennetty-data taulu)
+                      luo-fn (get-in entity-tiedot [taulu :luo-fn])]
+                :when data]
           (luo data luo-fn)))
       (try
         (body-fn)

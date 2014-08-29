@@ -42,6 +42,9 @@
 (defn uusi-kyselykerta-kyselylle [kysely-elementti]
   (w/find-element-under kysely-elementti {:css "a[ng-click=\"uusiKyselykerta(kysely.kyselyid)\"]"}))
 
+(defn uusi-kysely []
+  (w/find-element {:css "a[ng-click=\"luoUusiKysely()\"]"}))
+
 (deftest kyselyt-sivu-test
   (with-webdriver
     (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
@@ -71,6 +74,20 @@
         (let [kysely (nth (kyselyt) 1)]
           (is (= (kyselyn-nimi kysely) "2 Kysely 2"))
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"])))))))
+
+(deftest luo-kysely-test
+  (with-webdriver
+    (with-data {:koulutustoimija [{:ytunnus "ABC"
+                                   :nimi_fi "Testi"}]
+                :rooli_organisaatio [{:organisaatio "ABC"
+                                      :rooli "OPL-VASTUUKAYTTAJA"
+                                      :kayttaja "OID.AIPAL-E2E"
+                                      :voimassa true}]}
+      (avaa kyselyt-sivu)
+      (testing
+        "Luo uusi kysely ohjaa kyselyn muokkaukseen"
+        (w/click (uusi-kysely))
+        (w/wait-until #(re-matches #"http://192.168.50.1:8082/#/kysely/[0-9]+" (w/current-url)) 5000)))))
 
 (deftest ^:no-ie kyselyt-sivu-kyselykerran-luonti-test
   (with-webdriver

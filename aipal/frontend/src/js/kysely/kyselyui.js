@@ -35,7 +35,7 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
 
       $scope.luoUusiKysely = function() {
         Kysely.luoUusi(function(data) {
-          $location.url('/kysely/' + data.id);
+          $location.url('/kysely/' + data.kyselyid);
         });
       };
 
