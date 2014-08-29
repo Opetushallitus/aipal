@@ -14,6 +14,6 @@
     "jquery-placeholder": "2.0.7",
     "angular-loading-bar": "~0.4.3",
     "stacktrace" : "~0.6.0",
-    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.5"
+    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.4"
   }
 }
