@@ -28,6 +28,7 @@
                        "kysely_kysymysryhma"
                        "kysely_kysymys"
                        "monivalintavaihtoehto"
+                       "rooli_organisaatio"
                        "tutkinto"
                        "vastaajatunnus"
                        "vastaaja"
