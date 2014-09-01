@@ -18,7 +18,7 @@
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
                                           integraatiokayttaja]]
-            [aipal.arkisto.kayttaja :as kayttaja-arkisto]
+            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
@@ -34,10 +34,10 @@
             ;; promisen. Koska tätä funktiota ei kutsuta HTTP-pyynnön
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
-    (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
-    (kayttaja-arkisto/paivita!
-      (apply concat (for [rooli roolit-jarjestyksessa]
-                      (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli)))))))
+    (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
+    (kayttajaoikeus-arkisto/paivita-kaikki!
+      (apply concat (for [[_ rooli] kayttajaroolit]
+                      (kop/kayttajat kayttooikeuspalvelu rooli))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
