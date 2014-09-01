@@ -87,7 +87,7 @@
       (testing
         "Luo uusi kysely ohjaa kyselyn muokkaukseen"
         (w/click (uusi-kysely))
-        (w/wait-until #(re-matches #"http://192.168.50.1:8082/#/kysely/[0-9]+" (w/current-url)) 5000)))))
+        (is (re-matches #"http://192.168.50.1:8082/#/kysely/[0-9]+" (w/current-url)))))))
 
 (deftest ^:no-ie kyselyt-sivu-kyselykerran-luonti-test
   (with-webdriver
