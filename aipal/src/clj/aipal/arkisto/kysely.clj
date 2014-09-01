@@ -23,7 +23,7 @@
   (->
     (sql/select* kysely)
     (sql/fields :kyselyid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
-    (sql/order :kyselyid :ASC)
+    (sql/order :luotuaika :DESC :kyselyid :ASC)
     sql/exec))
 
 (defn ^:private yhdista-tietorakenteet [kyselyt kyselyid->kyselykerrat]
