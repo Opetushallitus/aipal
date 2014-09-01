@@ -16,12 +16,17 @@
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
   )
 
+(def organisaatio-roolit {:oppilaitos-vastuukayttaja "OPL-VASTUUKAYTTAJA"
+                          :oppilaitos-paakayttaja "OPL-PAAKAYTTAJA"
+                          :oppilaitos-kayttaja "OPL-KAYTTAJA"
+                          :oppilaitos-katselija "OPL-KATSELIJA"})
+
+(def toimikunta-roolit {:toimikuntakatselija "TTK-KATSELIJA"})
+
 ;; kayttajarooli-taulun arvot
-(def kayttajaroolit {:paakayttaja "YLLAPITAJA"       ; oph pääkäyttäjä
-                     :oph-katselija "OPH-KATSELIJA"
-                     :oppilaitos-vastuukayttaja "OPL-VASTUUKAYTTAJA"
-                     :oppilaitos-katselija "OPL-KATSELIJA"
-                     :oppilaitos-kayttaja "OPL-KAYTTAJA"
-                     :toimikuntakatselija "TTK-KATSELIJA"
-                     :katselija "KATSELIJA" ; yleinen katselija
-                     })
+(def kayttajaroolit (merge organisaatio-roolit
+                           toimikunta-roolit
+                           {:paakayttaja "YLLAPITAJA"       ; oph pääkäyttäjä
+                            :oph-katselija "OPH-KATSELIJA"
+                            :katselija "KATSELIJA" ; yleinen katselija
+                            }))
