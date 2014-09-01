@@ -22,11 +22,6 @@
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
-;; Roolit siinä järjestyksessä missä ne pitää hakea käyttöoikeuspalvelusta.
-;; Jos käyttäjällä on useampi rooli, viimeisimpänä määritelty jää voimaan.
-(def roolit-jarjestyksessa [:katselija :toimikuntakatselija :oppilaitos-katselija :oph-katselija :oppilaitos-kayttaja :oppilaitos-vastuukayttaja :paakayttaja])
-(assert (= (set roolit-jarjestyksessa) (set (keys kayttajaroolit))))
-
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
   (binding [*current-user-uid* integraatiokayttaja
             ;; Tietokantayhteyden avaus asettaa *current-user-oid*-promisen

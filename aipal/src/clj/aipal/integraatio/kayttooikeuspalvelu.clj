@@ -16,39 +16,36 @@
   (:require [clojure.string :as s]
             [clojure.tools.logging :as log]
             [clj-ldap.client :as ldap]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
+            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit
+                                                   organisaatio-roolit]]))
 
-(def aipal-organisaatio "1.2.246.562.10.2013121312395140176502")
-(def toimikunnat-organisaatio "1.2.246.562.10.59113820717")
+(defn aipal-ryhma-cn-filter [rooli]
+  (str "cn=APP_AIPAL_" rooli "*"))
 
-(defn aipal-ryhma-cn [organisaatio nimi]
-  (str "APP_AIPAL_" nimi "_" organisaatio))
+(def roolin-ryhma-cn-filterit
+  {(:paakayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "CRUD")]
+   (:oppilaitos-paakayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-PAAKAYTTAJA")]
+   (:oppilaitos-vastuukayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-VASTUUKAYTTAJA")]
+   (:oppilaitos-kayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-KAYTTAJA")]
+   (:oph-katselija kayttajaroolit) [(aipal-ryhma-cn-filter "READ")]
+   (:oppilaitos-katselija kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-KATSELIJA")]
+   (:toimikuntakatselija kayttajaroolit) [(aipal-ryhma-cn-filter "TTK-KATSELIJA")]
+   (:katselija kayttajaroolit) [(aipal-ryhma-cn-filter "READ")]})
 
-(def roolin-ryhma-cnt
-  {(:paakayttaja kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "CRUD")]
-   (:oppilaitos-vastuukayttaja kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ_UPDATE")]
-   (:oppilaitos-kayttaja kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ_UPDATE")]
-   (:oph-katselija kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ")]
-   (:oppilaitos-katselija kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ")]
-   (:toimikuntakatselija kayttajaroolit) [(aipal-ryhma-cn toimikunnat-organisaatio "READ")]
-   (:katselija kayttajaroolit) [(aipal-ryhma-cn aipal-organisaatio "READ")]})
-
-
-(defn ryhma-dn [ryhma-cn]
-  (str "cn=" ryhma-cn ",ou=Groups,dc=opintopolku,dc=fi"))
+(def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
 
 (defn kayttajat [kayttooikeuspalvelu rooli]
-  {:pre [(contains? roolin-ryhma-cnt rooli)]}
+  {:pre [(contains? roolin-ryhma-cn-filterit rooli)]}
   (with-open [yhteys (kayttooikeuspalvelu)]
-    (apply concat (for [cn (roolin-ryhma-cnt rooli)
-                        :let [roolin-ryhma-dn (ryhma-dn cn)]]
-                    (if-let [ryhma (ldap/get yhteys roolin-ryhma-dn)]
+    (apply concat (for [cn-filter (roolin-ryhma-cn-filterit rooli)]
+                    (if-let [ryhma (ldap/search yhteys ryhma-base cn-filter)]
                       (let [kayttaja-dnt (:uniqueMember ryhma)
                             ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
                             ;; palauttaa arvon (stringin) eikä vektoria arvoista.
                             kayttaja-dnt (if (string? kayttaja-dnt)
                                            [kayttaja-dnt]
-                                           kayttaja-dnt)]
+                                           kayttaja-dnt)
+                            :when [(not (contains? (set (vals organisaatio-roolit)) rooli))]]
                         (doall
                           (for [kayttaja-dn kayttaja-dnt
                                 :let [kayttaja (ldap/get yhteys kayttaja-dn)
@@ -58,8 +55,9 @@
                             {:oid (:employeeNumber kayttaja)
                              :uid (:uid kayttaja)
                              :etunimi etunimi
-                             :sukunimi (or sukunimi "")})))
-                      (log/warn "Roolin" rooli "ryhmää" roolin-ryhma-dn
+                             :sukunimi (or sukunimi "")
+                             :rooli rooli})))
+                      (log/warn "Roolin" rooli "ryhmiä" cn-filter
                                 "ei löytynyt, ei lueta roolin käyttäjiä"))))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
