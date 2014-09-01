@@ -20,7 +20,7 @@
                                                    organisaatio-roolit]]))
 
 (defn aipal-ryhma-cn-filter [rooli]
-  (str "cn=APP_AIPAL_" rooli "*"))
+  {:filter (str "cn=APP_AIPAL_" rooli "*")})
 
 (def roolin-ryhma-cn-filterit
   {(:paakayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "CRUD")]
