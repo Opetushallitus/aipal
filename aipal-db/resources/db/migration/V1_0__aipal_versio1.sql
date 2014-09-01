@@ -771,4 +771,34 @@ create trigger rooli_organisaatio_mu_insert before insert on rooli_organisaatio 
 create trigger rooli_organisaatio_cu_insert before insert on rooli_organisaatio for each row execute procedure update_creator() ;
 
 COMMENT ON TABLE rooli_organisaatio IS 'Kytkee käyttäjän, käyttöoikeusroolin ja tietyn organisaation yhteen.';
-COMMENT ON TABLE kayttajarooli IS 'AIPAL-käyttäjäroolit. Organisaatiokohtaiset oikeudet erillisen liitostaulun kautta.'
+COMMENT ON TABLE kayttajarooli IS 'AIPAL-käyttäjäroolit. Organisaatiokohtaiset oikeudet erillisen liitostaulun kautta.';
+
+
+create or replace view kysely_omistaja_view as
+
+select  
+ k.ytunnus, k.nimi_fi, k.oid, ro.organisaatio, ro.rooli, ro.kayttaja, ro.voimassa, ky.kyselyid, ky.oppilaitos, ky.toimipaikka
+ from koulutustoimija k 
+  inner join rooli_organisaatio ro on ro.organisaatio = k.ytunnus
+  inner join oppilaitos o on o.koulutustoimija = k.ytunnus
+  inner join toimipaikka t on t.oppilaitos = o.oppilaitoskoodi
+  inner join kysely ky on ky.toimipaikka = t.toimipaikkakoodi
+
+union all
+  select  
+ k.ytunnus, k.nimi_fi, k.oid, ro.organisaatio, ro.rooli, ro.kayttaja, ro.voimassa, ky.kyselyid, ky.oppilaitos, ky.toimipaikka
+ from koulutustoimija k 
+  inner join rooli_organisaatio ro on ro.organisaatio = k.ytunnus
+  inner join oppilaitos o on o.koulutustoimija = k.ytunnus
+  inner join kysely ky on ky.oppilaitos = o.oppilaitoskoodi
+
+ union all
+ 
+  select  
+ k.ytunnus, k.nimi_fi, k.oid, ro.organisaatio, ro.rooli, ro.kayttaja, ro.voimassa, ky.kyselyid, ky.oppilaitos, ky.toimipaikka
+ from koulutustoimija k 
+  inner join rooli_organisaatio ro on ro.organisaatio = k.ytunnus
+  inner join kysely ky on ky.koulutustoimija = k.ytunnus;
+
+COMMENT ON VIEW kysely_omistaja_view is 'Kyselyiden omistaja-organisaatio ja käyttäjät. Näkymästä voi helposti tarkastaa käyttäjien käyttöoikeudet kyselyihin.';
+
