@@ -29,6 +29,7 @@ module.exports = function(config) {
     files: [
       'src/bower_components/jquery/dist/jquery.js',
       'src/bower_components/angular/angular.js',
+      'src/bower_components/angular-cookies/angular-cookies.min.js',
       'src/bower_components/angular-route/angular-route.js',
       'src/bower_components/angular-resource/angular-resource.js',
       'src/bower_components/lodash/dist/lodash.js',
