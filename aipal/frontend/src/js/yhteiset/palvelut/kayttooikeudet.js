@@ -37,5 +37,5 @@ angular.module('kayttooikeudet', ['ngResource'])
         return yllapitaja;
       },
       paivita: paivitaOikeudet
-    }
+    };
   }]);
