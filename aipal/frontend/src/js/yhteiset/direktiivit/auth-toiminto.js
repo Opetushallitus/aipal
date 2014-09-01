@@ -53,7 +53,7 @@ angular.module('yhteiset.direktiivit.auth-toiminto', [])
             try {
               return _.contains(sallitutRoolit, kayttooikeudet.roolitunnus) ||
                 _(kayttooikeudet[konteksti]).filter(function (value) {
-                  return value.tunniste == entityId
+                  return value.tunniste === entityId;
                 }).pluck('oikeudet').flatten().contains(vaadittuOikeus);
             } catch (e) {
             }

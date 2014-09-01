@@ -78,13 +78,13 @@ angular.module('aipal', [
     };
     $scope.impersonoi = function() {
       impersonaatioResource.impersonoi({oid: $scope.impersonoitava.oid}, function() {
-        $window.location = ophBaseUrl;
+        $window.location = $scope.baseUrl;
         $scope.impersonoitu = true;
       });
     };
     $scope.lopetaImpersonointi = function() {
       impersonaatioResource.lopeta(null, function() {
-        $window.location = ophBaseUrl;
+        $window.location = $scope.baseUrl;
         $scope.impersonoitu = false;
       });
     };
@@ -92,7 +92,7 @@ angular.module('aipal', [
     // Set current user and if yllapitaja
     kayttooikeudet.hae().then(function(data){
       $scope.kayttooikeudet = data;
-      $scope.currentuser = $scope.kayttooikeudet.etunimi + " " + $scope.kayttooikeudet.sukunimi;
+      $scope.currentuser = $scope.kayttooikeudet.etunimi + ' ' + $scope.kayttooikeudet.sukunimi;
       $scope.yllapitaja = kayttooikeudet.isYllapitaja();
     });
   }])
@@ -140,12 +140,12 @@ angular.module('aipal', [
       impersonoi: {
         method: 'POST',
         url: 'api/kayttaja/impersonoi',
-        id:"impersonoi"
+        id: 'impersonoi'
       },
       lopeta: {
         method: 'POST',
         url: 'api/kayttaja/lopeta-impersonointi',
-        id:"impersonoi-lopetus"
+        id: 'impersonoi-lopetus'
       }
     });
   }])
