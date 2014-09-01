@@ -22,43 +22,45 @@
 (defn aipal-ryhma-cn-filter [rooli]
   {:filter (str "cn=APP_AIPAL_" rooli "*")})
 
-(def roolin-ryhma-cn-filterit
-  {(:paakayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "CRUD")]
-   (:oppilaitos-paakayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-PAAKAYTTAJA")]
-   (:oppilaitos-vastuukayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-VASTUUKAYTTAJA")]
-   (:oppilaitos-kayttaja kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-KAYTTAJA")]
-   (:oph-katselija kayttajaroolit) [(aipal-ryhma-cn-filter "READ")]
-   (:oppilaitos-katselija kayttajaroolit) [(aipal-ryhma-cn-filter "OPL-KATSELIJA")]
-   (:toimikuntakatselija kayttajaroolit) [(aipal-ryhma-cn-filter "TTK-KATSELIJA")]
-   (:katselija kayttajaroolit) [(aipal-ryhma-cn-filter "READ")]})
+(def roolin-ryhma-cn-filter
+  {(:paakayttaja kayttajaroolit) (aipal-ryhma-cn-filter "CRUD")
+   (:oppilaitos-paakayttaja kayttajaroolit) (aipal-ryhma-cn-filter "OPLPAAKAYTTAJA")
+   (:oppilaitos-vastuukayttaja kayttajaroolit) (aipal-ryhma-cn-filter "OPLVASTUUKAYTTAJA")
+   (:oppilaitos-kayttaja kayttajaroolit) (aipal-ryhma-cn-filter "OPLKAYTTAJA")
+   (:oph-katselija kayttajaroolit) (aipal-ryhma-cn-filter "READ")
+   (:oppilaitos-katselija kayttajaroolit) (aipal-ryhma-cn-filter "OPLKATSELIJA")
+   (:toimikuntakatselija kayttajaroolit) (aipal-ryhma-cn-filter "TTKKATSELIJA")
+   (:katselija kayttajaroolit) (aipal-ryhma-cn-filter "READ")})
 
 (def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
 
 (defn kayttajat [kayttooikeuspalvelu rooli]
-  {:pre [(contains? roolin-ryhma-cn-filterit rooli)]}
+  {:pre [(contains? roolin-ryhma-cn-filter rooli)]}
   (with-open [yhteys (kayttooikeuspalvelu)]
-    (apply concat (for [cn-filter (roolin-ryhma-cn-filterit rooli)]
-                    (if-let [ryhma (ldap/search yhteys ryhma-base cn-filter)]
-                      (let [kayttaja-dnt (:uniqueMember ryhma)
-                            ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
-                            ;; palauttaa arvon (stringin) eikä vektoria arvoista.
-                            kayttaja-dnt (if (string? kayttaja-dnt)
-                                           [kayttaja-dnt]
-                                           kayttaja-dnt)
-                            :when [(not (contains? (set (vals organisaatio-roolit)) rooli))]]
-                        (doall
-                          (for [kayttaja-dn kayttaja-dnt
-                                :let [kayttaja (ldap/get yhteys kayttaja-dn)
-                                      _ (assert kayttaja)
-                                      [etunimi toinennimi] (s/split (:cn kayttaja) #" ")
-                                      sukunimi (:sn kayttaja)]]
-                            {:oid (:employeeNumber kayttaja)
-                             :uid (:uid kayttaja)
-                             :etunimi etunimi
-                             :sukunimi (or sukunimi "")
-                             :rooli rooli})))
-                      (log/warn "Roolin" rooli "ryhmiä" cn-filter
-                                "ei löytynyt, ei lueta roolin käyttäjiä"))))))
+    (apply concat (let [cn-filter (roolin-ryhma-cn-filter rooli)]
+                    (if-let [ryhmat (ldap/search yhteys ryhma-base cn-filter)]
+                      (for [ryhma ryhmat
+                            :let [organisaatio-oid (last (s/split (:cn ryhma) #"_"))]
+                            :when [(or (not= rooli organisaatio-oid)
+                                       (not (contains? (set (vals organisaatio-roolit)) rooli)))]]
+                        (let [kayttaja-dnt (:uniqueMember ryhma)
+                              ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
+                              ;; palauttaa arvon (stringin) eikä vektoria arvoista.
+                              kayttaja-dnt (if (string? kayttaja-dnt)
+                                             [kayttaja-dnt]
+                                             kayttaja-dnt)]
+                          (doall
+                            (for [kayttaja-dn kayttaja-dnt
+                                  :let [kayttaja (ldap/get yhteys kayttaja-dn)
+                                        _ (assert kayttaja)
+                                        [etunimi toinennimi] (s/split (:cn kayttaja) #" ")
+                                        sukunimi (:sn kayttaja)]]
+                              {:oid (:employeeNumber kayttaja)
+                               :uid (:uid kayttaja)
+                               :etunimi etunimi
+                               :sukunimi (or sukunimi "")
+                               :rooli rooli}))))
+                      (log/warn "Roolin" rooli "ryhmää ei löytynyt, ei lueta roolin käyttäjiä"))))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []
