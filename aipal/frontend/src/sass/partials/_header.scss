@@ -76,7 +76,6 @@ header {
       float: left;
       height: $nav-height;
       display: table;
-      &:hover, &.active {background-color: $darker-primary;}
       &:first-child {border-left: 1px solid $separator-color;}
       a,span {
         display: table-cell;
@@ -89,18 +88,60 @@ header {
       }
     }
   }
+
   #current-user {
     float: right;
-    padding-right: 40px;
     color: $font-color;
-    @include icon-after(11px, 11px){@include user-icon;};
+    position:relative;
+    @include icon-right(11px, 11px){@include user-icon;};
     height: $nav-height;
-    display: table;
-    a {
-      display: table-cell;
-      vertical-align: middle;
+    &:hover {background-color: $darker-primary;}
+    li {
+      z-index: 2;
+      position: relative;
+      border: 0;
+      padding-right: 30px;
+      padding-left: $marginM;
+      &:hover {
+        ul {
+          background-color: $primary-color;
+          left: 0px;
+          padding: 0;
+          width: auto;
+          top: $nav-height;
+          &:hover {
+            background-color: $darker-primary;
+          }
+          li {
+            padding: 0;
+            a {
+              text-transform: none;
+              &:hover {
+                cursor: pointer;
+              }
+            }
+            &:hover {
+              background: $darker-primary;
+            }
+          }
+        }
+      }
+    }
+    ul {
+      position:absolute;
+      left:-9999px;
+      width:100%;
+      z-index: 10;
+      a {
+        white-space: nowrap;
+      }
     }
   }
+
+  .impersonoitu {
+    background-color: red;
+  }
+
   #logout {
     border-left: 1px solid $separator-color;
     padding: 0 15px;

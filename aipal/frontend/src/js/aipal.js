@@ -35,7 +35,8 @@ angular.module('aipal', [
     'yhteiset.direktiivit.pakollisia-kenttia',
     'yhteiset.direktiivit.tallenna',
     'ui.bootstrap',
-    'ngRoute'
+    'ngRoute',
+    'kayttooikeudet'
   ])
 
   .config(['$httpProvider', 'asetukset', function($httpProvider, asetukset) {
@@ -60,14 +61,40 @@ angular.module('aipal', [
     );
   }])
 
-  .controller('AipalController', ['$scope', '$window', 'i18n', function($scope, $window, i18n){
+  .controller('AipalController', ['$scope', '$window', 'i18n', 'impersonaatioResource', 'kayttooikeudet', function($scope, $window, i18n, impersonaatioResource, kayttooikeudet){
     $scope.i18n = i18n;
     $scope.baseUrl = _.has($window, 'ophBaseUrl') ?  $window.ophBaseUrl : '';
+    $scope.impersonoitava = {};
     $scope.varmistaLogout = function() {
       if(!_.isEmpty($window.aipalLogoutUrl) && $window.confirm(i18n.yleiset.haluatko_kirjautua_ulos)) {
         $window.location = $window.aipalLogoutUrl;
       }
     };
+    $scope.valitse = function() {
+      $scope.valitseHenkilo = true;
+    };
+    $scope.piilota = function() {
+      $scope.valitseHenkilo = false;
+    };
+    $scope.impersonoi = function() {
+      impersonaatioResource.impersonoi({oid: $scope.impersonoitava.oid}, function() {
+        $window.location = ophBaseUrl;
+        $scope.impersonoitu = true;
+      });
+    };
+    $scope.lopetaImpersonointi = function() {
+      impersonaatioResource.lopeta(null, function() {
+        $window.location = ophBaseUrl;
+        $scope.impersonoitu = false;
+      });
+    };
+
+    // Set current user and if yllapitaja
+    kayttooikeudet.hae().then(function(data){
+      $scope.kayttooikeudet = data;
+      $scope.currentuser = $scope.kayttooikeudet.etunimi + " " + $scope.kayttooikeudet.sukunimi;
+      $scope.yllapitaja = kayttooikeudet.isYllapitaja();
+    });
   }])
 
   .constant('asetukset', {
@@ -106,6 +133,21 @@ angular.module('aipal', [
         };
       }
     };
+  }])
+
+  .factory('impersonaatioResource', ['$resource', function($resource) {
+    return $resource(null, null, {
+      impersonoi: {
+        method: 'POST',
+        url: 'api/kayttaja/impersonoi',
+        id:"impersonoi"
+      },
+      lopeta: {
+        method: 'POST',
+        url: 'api/kayttaja/lopeta-impersonointi',
+        id:"impersonoi-lopetus"
+      }
+    });
   }])
 
   .factory('$exceptionHandler', ['virheLogitus', function(virheLogitus) {

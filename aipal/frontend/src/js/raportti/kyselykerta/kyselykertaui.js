@@ -20,7 +20,9 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
                                                       'raportti.kyselykerta.vaittamakaavio',
                                                       'toimiala.kyselykerta',
                                                       'yhteiset.suodattimet.voimassaoloaika',
-                                                      'ngRoute'])
+                                                      'yhteiset.direktiivit.auth-toiminto',
+                                                      'ngRoute',
+                                                      'ngResource'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/raportti/kyselykerrat', {
