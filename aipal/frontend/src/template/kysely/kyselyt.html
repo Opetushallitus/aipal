@@ -12,7 +12,7 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
       <a ng-href="#/kysely/{{kysely.kyselyid}}" class="kysely-nimi">
         {{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}
       </a>
-      <br>Voimassa: {{kysely.voimassa_alkupvm}} - {{kysely.voimassa_loppupvm}}
+      <br>Voimassa: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}} 
       <a href="" ng-click="uusiKyselykerta(kysely.kyselyid)">[{{i18n.kyselykerta.uusi_kyselykerta}}]</a>
     </div>
     <div ng-show="kysely.kyselykerrat.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerrat">
@@ -23,7 +23,7 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
       <a ng-href="#/vastaajatunnus/{{kyselykerta.kyselykertaid}}">
         {{i18n.vastaajatunnus.luonti}}
        </a>
-      <br>Voimassa: {{kyselykerta.voimassa_alkupvm}} - {{kyselykerta.voimassa_loppupvm}}
+      <br>Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}
     </div>
   </div>
 </div>
