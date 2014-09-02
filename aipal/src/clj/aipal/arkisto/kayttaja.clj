@@ -102,7 +102,7 @@
     (do
       (log/debug "Käyttäjä on jo olemassa, päivitetään tiedot")
       (sql/update taulut/kayttaja
-                  (sql/set-fields (assoc k :voimassa true))
+                  (sql/set-fields k)
                   (sql/where {:oid [= (:oid k)]})))
     ;; Lisätään uusi käyttäjä
     (do

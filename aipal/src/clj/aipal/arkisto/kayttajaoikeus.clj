@@ -49,7 +49,7 @@
                 :organisaatio organisaatio})))
 
 (defn olemassa? [k]
-  (boolean (hae-rooli (:rooli k) (:oid k) (:organisaatio k))))
+  (boolean (hae-rooli (:rooli k) (:kayttaja k) (:organisaatio k))))
 
 (defn ^:integration-api tyhjaa-kayttooikeudet!
   "Merkitään olemassaolevat käyttäjät ja roolit ei-voimassaoleviksi"
@@ -65,19 +65,19 @@
 
 (defn ^:integration-api paivita-rooli!
   "Päivittää tai lisää käyttäjän roolin"
-  [k]
-  (log/debug "Päivitetään rooli" (pr-str k))
-  (if (olemassa? k)
+  [r]
+  (log/debug "Päivitetään rooli" (pr-str r))
+  (if (olemassa? r)
     ;; Päivitetään olemassaoleva rooli merkiten voimassaolevaksi
     (do
       (log/debug "Rooli on jo olemassa, päivitetään tiedot")
       (sql/update rooli-organisaatio
-                  (sql/set-fields (assoc k :voimassa true))
-                  (sql/where {:kayttaja [= (:kayttaja k)]})))
+                  (sql/set-fields r)
+                  (sql/where {:kayttaja [= (:kayttaja r)]})))
     ;; Lisätään uusi käyttäjä
     (do
       (log/debug "Luodaan uusi rooli")
-      (sql/insert rooli-organisaatio (sql/values k)))))
+      (sql/insert rooli-organisaatio (sql/values r)))))
 
 (defn ^:integration-api paivita-kaikki!
   "Päivittää käyttäjätaulun uusilla käyttäjillä kt."
@@ -86,9 +86,8 @@
   (db/transaction
     ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
     (tyhjaa-kayttooikeudet!)
-    (doseq [[_ k] (group-by :oid kt)
-            :let [kayttaja (dissoc (first k) :rooli :organisaatio)]]
-      (kayttaja-arkisto/paivita-kayttaja! kayttaja))
-    (doseq [k kt
-            :let [rooli (clojure.set/rename-keys (select-keys k [:rooli :oid :organisaatio]) {:oid :kayttaja})]]
-      (paivita-rooli! rooli))))
+    (doseq [k kt]
+      (let [rooli (clojure.set/rename-keys (select-keys k [:rooli :oid :organisaatio :voimassa]) {:oid :kayttaja})
+            kayttaja (dissoc k :rooli :organisaatio)]
+        (kayttaja-arkisto/paivita-kayttaja! kayttaja)
+        (paivita-rooli! rooli)))))
