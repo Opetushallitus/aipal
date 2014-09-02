@@ -93,7 +93,17 @@
               (sql/order :kysymys.jarjestys))
     sql/exec))
 
+(defn poistettava-kysymys? [kysymysid]
+  (->
+    (sql/select* kysymys)
+    (sql/fields :poistettava)
+    (sql/where {:kysymysid kysymysid})
+    sql/exec
+    first
+    :poistettava))
+
 (defn poista-kysymys [kyselyid kysymysid]
+  (assert (poistettava-kysymys? kysymysid))
   (->
     (sql/delete* kysely_kysymys)
     (sql/where {:kyselyid kyselyid
