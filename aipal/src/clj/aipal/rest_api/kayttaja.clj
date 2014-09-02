@@ -15,7 +15,7 @@
 (ns aipal.rest-api.kayttaja
   (:require [compojure.core :as c]
             [oph.korma.korma-auth :as ka]
-            [aipal.arkisto.kayttaja :as arkisto]
+            [aipal.infra.kayttaja-arkisto :as arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.http-util :refer [json-response]]
@@ -31,6 +31,9 @@
   (cu/defapi :impersonointi nil :post "/lopeta-impersonointi" {session :session}
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
+
+  (cu/defapi :impersonointi nil :get "/impersonoitava" [termi]
+    (json-response (arkisto/hae-impersonoitava-termilla termi)))
 
   (cu/defapi :omat_tiedot nil :get "/" []
     (json-response (kayttajaoikeus-arkisto/hae-oikeudet)))

@@ -54,3 +54,12 @@
         (do
           (log/debug "Luodaan uusi käyttäjä")
           (sql/insert taulut/kayttaja (sql/values k)))))))
+
+(defn hae-impersonoitava-termilla
+  "Hakee impersonoitavia käyttäjiä termillä"
+  [termi]
+  (for [kayttaja (sql/select taulut/kayttaja
+                   (sql/fields :oid :uid :etunimi :sukunimi))
+        :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
+    {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
+     :oid (:oid kayttaja)}))
