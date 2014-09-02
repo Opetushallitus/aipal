@@ -19,6 +19,7 @@
                                           *current-user-oid*
                                           integraatiokayttaja]]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
+            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 
@@ -29,10 +30,11 @@
             ;; promisen. Koska tätä funktiota ei kutsuta HTTP-pyynnön
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
-    (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
-    (kayttajaoikeus-arkisto/paivita-kaikki!
-      (apply concat (for [[_ rooli] kayttajaroolit]
-                      (kop/kayttajat kayttooikeuspalvelu rooli))))))
+    (let [oid->ytunnus (group-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
+      (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
+      (kayttajaoikeus-arkisto/paivita-kaikki!
+        (apply concat (for [[_ rooli] kayttajaroolit]
+                        (kop/kayttajat kayttooikeuspalvelu rooli oid->ytunnus)))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.

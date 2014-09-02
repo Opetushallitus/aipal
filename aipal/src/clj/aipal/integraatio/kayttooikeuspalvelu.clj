@@ -34,14 +34,15 @@
 
 (def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
 
-(defn kayttajat [kayttooikeuspalvelu rooli]
+(defn kayttajat [kayttooikeuspalvelu rooli oid->ytunnus]
   {:pre [(contains? roolin-ryhma-cn-filter rooli)]}
   (with-open [yhteys (kayttooikeuspalvelu)]
     (apply concat (let [cn-filter (roolin-ryhma-cn-filter rooli)]
                     (if-let [ryhmat (ldap/search yhteys ryhma-base cn-filter)]
                       (for [ryhma ryhmat
-                            :let [organisaatio-oid (last (s/split (:cn ryhma) #"_"))]
-                            :when [(or (not= rooli organisaatio-oid)
+                            :let [organisaatio-oid (last (s/split (:cn ryhma) #"_"))
+                                  organisaatio (first (oid->ytunnus organisaatio-oid))]
+                            :when [(or organisaatio
                                        (not (contains? (set (vals organisaatio-roolit)) rooli)))]]
                         (let [kayttaja-dnt (:uniqueMember ryhma)
                               ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
@@ -59,7 +60,8 @@
                                :uid (:uid kayttaja)
                                :etunimi etunimi
                                :sukunimi (or sukunimi "")
-                               :rooli rooli}))))
+                               :rooli rooli
+                               :organisaatio (:ytunnus organisaatio)}))))
                       (log/warn "Roolin" rooli "ryhmää ei löytynyt, ei lueta roolin käyttäjiä"))))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]

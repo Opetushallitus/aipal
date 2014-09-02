@@ -33,3 +33,9 @@
     (sql/select* koulutustoimija)
     (sql/order :ytunnus :DESC)
     sql/exec))
+
+(defn hae-kaikki-joissa-oid
+  []
+  (sql/select koulutustoimija
+    (sql/fields :oid :ytunnus)
+    (sql/where (not= :oid nil))))

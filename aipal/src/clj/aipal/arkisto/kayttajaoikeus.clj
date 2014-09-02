@@ -87,8 +87,8 @@
     ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
     (tyhjaa-kayttooikeudet!)
     (doseq [[_ k] (group-by :oid kt)
-            :let [ei-roolia (dissoc (first k) :rooli)]]
-      (kayttaja-arkisto/paivita-kayttaja! ei-roolia))
+            :let [kayttaja (dissoc (first k) :rooli :organisaatio)]]
+      (kayttaja-arkisto/paivita-kayttaja! kayttaja))
     (doseq [k kt
-            :let [vain-rooli (clojure.set/rename-keys (select-keys k [:rooli :oid]) {:oid :kayttaja})]]
-      (paivita-rooli! vain-rooli))))
+            :let [rooli (clojure.set/rename-keys (select-keys k [:rooli :oid :organisaatio]) {:oid :kayttaja})]]
+      (paivita-rooli! rooli))))
