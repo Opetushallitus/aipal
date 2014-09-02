@@ -1,6 +1,6 @@
 (ns aipal.toimiala.kayttajaoikeudet
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
-  (:require 
+  (:require
     [aipal.toimiala.kayttajaroolit :refer :all]
     [oph.korma.korma-auth :as ka]
     [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
@@ -8,13 +8,13 @@
 
 (def ^:dynamic *current-user-authmap*)
 
-(defn c->int 
+(defn c->int
   "merkkijono numeroksi tai numero sellaisenaan"
-  [str-or-int] 
+  [str-or-int]
   {:post [(or (nil? %) (integer? %))]}
   (or (and (string? str-or-int) (Integer/parseInt str-or-int)) str-or-int))
-  
-(defn aipal-kayttaja? 
+
+(defn aipal-kayttaja?
   ([x] (aipal-kayttaja?))
   ([]
     true))
@@ -59,9 +59,9 @@
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
     :kyselykerta-luku kyselykerta-luku?
+    :kysymysryhma-luku aipal-kayttaja?
     :impersonointi yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
-    :omat_tiedot aipal-kayttaja?
-    })
- 
+    :omat_tiedot aipal-kayttaja?})
+
 (def toiminnot kayttajatoiminnot)

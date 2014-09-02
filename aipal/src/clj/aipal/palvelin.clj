@@ -17,7 +17,7 @@
   (:require [cheshire.generate :as json-gen]
             [clojure.pprint :refer [pprint]]
             [clojure.tools.logging :as log]
-             [clojure.java.io :as io]
+            [clojure.java.io :as io]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
             [ring.middleware.json :refer [wrap-json-params]]
@@ -44,8 +44,7 @@
             [aipal.reitit :refer [build-id]]
             [aipal.infra.auth-wrapper :as auth]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
-            [aipal.infra.eraajo :as eraajo]
-            ))
+            [aipal.infra.eraajo :as eraajo]))
 
 (schema.core/set-fn-validation! true)
 
