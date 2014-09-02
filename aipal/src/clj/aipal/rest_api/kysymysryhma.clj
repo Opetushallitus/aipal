@@ -1,10 +1,9 @@
 (ns aipal.rest-api.kysymysryhma
   (:require [compojure.core :as c]
+            [oph.common.util.http-util :refer [json-response]]
             [aipal.compojure-util :as cu]
-            [oph.common.util.http-util :refer [json-response]]))
+            [aipal.arkisto.kysymysryhma :as arkisto]))
 
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-luku nil :get "/" []
-    (json-response [{:nimi "foo"}
-                    {:nimi "bar"}
-                    {:nimi "baz"}])))
+    (json-response (arkisto/hae-kysymysryhmat))))

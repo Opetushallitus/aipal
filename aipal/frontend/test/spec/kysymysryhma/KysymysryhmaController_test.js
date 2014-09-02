@@ -32,10 +32,10 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
   }
 
   it('hakee kysymysryhmät REST APIa käyttäen', function(){
-    $httpBackend.whenGET(/api\/kysymysryhma\?nocache=.*/).respond([{nimi: "foo"}]);
+    $httpBackend.whenGET(/api\/kysymysryhma\?nocache=.*/).respond([{nimi_fi: "foo"}]);
     alustaController();
     $httpBackend.flush();
-    expect($scope.kysymysryhmat).toEqual([{nimi: "foo"}]);
+    expect($scope.kysymysryhmat).toEqual([{nimi_fi: "foo"}]);
   });
 
   it('kertoo templatelle kun lataus on kesken', function(){
