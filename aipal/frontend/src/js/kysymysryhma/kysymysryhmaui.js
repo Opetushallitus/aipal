@@ -31,4 +31,4 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
       $scope.kysymysryhmat = kysymysryhmat;
       $scope.latausValmis = true;
     });
-}]);
+  }]);
