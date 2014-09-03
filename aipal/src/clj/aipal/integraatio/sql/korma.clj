@@ -17,7 +17,7 @@
     [korma.core :as sql]
     [oph.korma.korma  :refer [defentity]]))
 
-(declare kysymys)
+(declare kysymys koulutustoimija oppilaitos toimipaikka)
 
 (defentity kyselykerta
   (sql/pk :kyselykertaid))
@@ -50,9 +50,6 @@
 (defentity tutkinto
   (sql/pk :tutkintotunnus))
 
-(defentity koulutustoimija
-  (sql/pk :ytunnus))
-
 (defentity rooli_organisaatio)
 
 (defentity kysely_omistaja_view
@@ -60,4 +57,15 @@
   (sql/has-one koulutustoimija {:fk :ytunnus})
   (sql/has-one kayttaja {:fk :kayttaja}))
 
-    
+(defentity koulutustoimija
+  (sql/pk :ytunnus)
+  (sql/has-many oppilaitos {:fk :koulutustoimija}))
+
+(defentity oppilaitos
+  (sql/pk :oppilaitoskoodi)
+  (sql/belongs-to koulutustoimija {:fk :koulutustoimija})
+  (sql/has-many toimipaikka {:fk :oppilaitos}))
+
+(defentity toimipaikka
+  (sql/pk :toimipaikkakoodi)
+  (sql/belongs-to oppilaitos {:fk :oppilaitos}))
