@@ -14,21 +14,12 @@
 
 'use strict';
 
-angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma'])
-
-  .config(['$routeProvider', function($routeProvider) {
-    $routeProvider
-      .when('/kysymysryhmat', {
-        controller: 'KysymysryhmatController',
-        templateUrl: 'template/kysymysryhma/kysymysryhmat.html'
-      });
-  }])
-
-  .controller('KysymysryhmatController', ['$scope', 'Kysymysryhma',
-                                          function($scope, Kysymysryhma) {
-    $scope.latausValmis = false;
-    Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
-      $scope.kysymysryhmat = kysymysryhmat;
-      $scope.latausValmis = true;
-    });
+angular.module('toimiala.kysymysryhma', ['ngResource'])
+  .factory('Kysymysryhma', ['$http', function($http){
+    return {
+      haeKaikki: function() {
+        return $http.get('api/kysymysryhma',
+                         {params: {nocache: Date.now()}});
+      }
+    };
   }]);

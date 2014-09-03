@@ -10,12 +10,12 @@
           aipal.rest-api.kysely
           aipal.rest-api.kyselykerta
           aipal.rest-api.kyselypohja
+          aipal.rest-api.kysymysryhma
           aipal.rest-api.raportti.kyselykerta
           aipal.rest_api.js-log
           aipal.rest-api.vastaajatunnus
           aipal.rest-api.kayttaja
           [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
-
 
           [aitu.infra.status :refer [status]]))
 
@@ -43,5 +43,6 @@
     (c/context "/api/kyselypohja" [] aipal.rest-api.kyselypohja/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
     (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)
+    (c/context "/api/kysymysryhma" [] aipal.rest-api.kysymysryhma/reitit)
     (c/context "/api/vastaajatunnus" [] aipal.rest-api.vastaajatunnus/reitit)
     (c/context "/api/kayttaja" [] aipal.rest-api.kayttaja/reitit)))
