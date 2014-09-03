@@ -17,7 +17,7 @@
             [korma.db :as db]
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
-            [aipal.arkisto.kayttaja :as kayttaja]
+            [aipal.infra.kayttaja-arkisto :as kayttaja]
             [aipal.arkisto.kysely :as kysely]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]

@@ -28,6 +28,11 @@
   [oid]
   (first (sql/select taulut/kayttaja (sql/where {:oid oid}))))
 
+(defn hae-uid
+  "Hakee käyttäjätunnuksen perusteella."
+  [uid]
+  (first (sql/select taulut/kayttaja (sql/where {:uid uid}))))
+
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
 
@@ -63,3 +68,16 @@
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
+
+(defn hae-organisaatio
+  "Hakee käyttäjän organisaation"
+  [oid]
+  (when-let [organisaatio (->
+                            (sql/select* taulut/kayttaja)
+                            (sql/join taulut/rooli_organisaatio (= :rooli_organisaatio.kayttaja :oid))
+                            (sql/where {:oid oid
+                                        :rooli_organisaatio.organisaatio [not= nil]})
+                            (sql/fields :rooli_organisaatio.organisaatio)
+                            sql/exec
+                            first)]
+    (:organisaatio organisaatio)))

@@ -15,7 +15,7 @@
 (ns aipal.arkisto.kayttajaoikeus
   (:require [korma.core :as sql]
             [korma.db :as db]
-            [aipal.arkisto.kayttaja :as kayttaja-arkisto]
+            [aipal.infra.kayttaja-arkisto :as kayttaja-arkisto]
             oph.korma.korma-auth)
   (:use [aipal.integraatio.sql.korma]))
 
