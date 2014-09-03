@@ -16,20 +16,36 @@
   []
   (some #(= (:rooli %) "YLLAPITAJA") (:roolit *current-user-authmap*)))
 
+(defn kyselyn-luonti?
+  []
+  (some #(contains? #{"YLLAPITAJA", "OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA"} (:rooli %)) (:roolit *current-user-authmap*)))
+
 (defn kysely-muokkaus-sallittu?
   [kysely-oikeudet]
-  (some #(contains? (set '("OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA")) %) (map :rooli kysely-oikeudet)))
+  (some #(contains? #{"OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA"} (:rooli %)) kysely-oikeudet))
+
+(defn kysely-luku-sallittu?
+  [kysely-oikeudet]
+  (some #(contains? #{"OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA", "OPL-KATSELIJA"} (:rooli %)) kysely-oikeudet))
 
 (defn kysely-muokkaus?
   [kyselyid]
-  (kysely-muokkaus-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla kyselyid @ka/*current-user-oid*)))
+  (or (yllapitaja?)
+    (kysely-muokkaus-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (Integer/parseInt kyselyid) @ka/*current-user-oid*))))
+
+(defn kysely-luku?
+  [kyselyid]
+  (or (yllapitaja?)
+    (kysely-luku-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (Integer/parseInt kyselyid) @ka/*current-user-oid*))))
 
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
-    :kysely aipal-kayttaja?
-    :kysely-muokkaus #(or (yllapitaja?) (kysely-muokkaus? (Integer/parseInt %)))
+    :kysely yllapitaja?
+    :kysely-luonti kyselyn-luonti?
+    :kysely-luku kysely-luku?
+    :kysely-muokkaus kysely-muokkaus?
     :impersonointi yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
     :omat_tiedot aipal-kayttaja?

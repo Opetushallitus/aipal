@@ -27,11 +27,11 @@
   (cu/defapi :kysely nil :get "/" []
     (json-response (kysely/hae-kaikki)))
 
-  (cu/defapi :kysely nil :post "/" []
+  (cu/defapi :kysely-luonti nil :post "/" []
     (json-response (kysely/lisaa! {:nimi_fi "Uusi kysely"
                                    :koulutustoimija (kayttaja/hae-organisaatio @*current-user-oid*)})))
 
-  (cu/defapi :kysely nil :get "/:kyselyid" [kyselyid] 
+  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid] 
     (json-response (let [kysely (kysely/hae (Integer/parseInt kyselyid))]
                      (assoc kysely :kysymysryhmat (kysely/hae-kysymysryhmat (Integer/parseInt kyselyid))))))
 
@@ -39,20 +39,20 @@
     (json-response
       (kysely/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))
 
-  (cu/defapi :kysely nil :post "/:kyselyid/lisaa-kyselypohja/:kyselypohjaid" [kyselyid kyselypohjaid] 
+  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid/lisaa-kyselypohja/:kyselypohjaid" [kyselyid kyselypohjaid] 
     (json-response (kysely/lisaa-kyselypohja (Integer/parseInt kyselyid) (Integer/parseInt kyselypohjaid))))
 
-  (cu/defapi :kysely nil :get "/:kyselyid/kysymysryhmat" [kyselyid]
+  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/kysymysryhmat" [kyselyid]
     (json-response (kysely/hae-kysymysryhmat (Integer/parseInt kyselyid))))
 
-  (cu/defapi :kysely nil :delete "/:kyselyid/poista-kysymys/:kysymysid" [kyselyid kysymysid]
+  (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid/poista-kysymys/:kysymysid" [kyselyid kysymysid]
     (json-response
       (kysely/poista-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
 
-  (cu/defapi :kysely nil :post "/:kyselyid/palauta-kysymys/:kysymysid" [kyselyid kysymysid]
+  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid/palauta-kysymys/:kysymysid" [kyselyid kysymysid]
     (json-response
       (kysely/palauta-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
 
-  (cu/defapi :kysely nil :post "/:kyselyid" [kyselyid & kysely]
+  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
     (json-response
       (kysely/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)))))

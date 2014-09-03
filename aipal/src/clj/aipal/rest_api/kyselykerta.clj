@@ -27,10 +27,11 @@
   (cu/defapi :kysely nil :get "/" []
     (json-response (kyselykerta/hae-kaikki)))
 
-  (cu/defapi :kysely nil :get "/:kyselykertaid" [kyselykertaid] 
-    (json-response (kyselykerta/hae-yksi (java.lang.Integer/parseInt kyselykertaid))))
+  ; TODO: kyselyid -> käyttöoikeudet
+  (cu/defapi :kysely nil :get "/:kyselykertaid" [kyselykertaid]
+    (json-response (kyselykerta/hae-yksi (Integer/parseInt kyselykertaid))))
   
-  (cu/defapi :kysely nil :post "/:kyselyid" [kyselyid kyselykerta] 
+  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid kyselykerta] 
     (let [kyselyid_int (Integer/parseInt kyselyid)
           kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
       (json-response (kyselykerta/lisaa! kyselyid_int kyselykerta-parsittu)))))

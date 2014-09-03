@@ -20,4 +20,4 @@
 
 (c/defroutes reitit
   (c/GET "/" []
-         (db/transaction (json-response (kyselypohja/hae-kaikki)))))
+    (db/transaction (json-response (kyselypohja/hae-kaikki)))))
