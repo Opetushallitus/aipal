@@ -33,12 +33,12 @@
 
 (def kysely-kayttajat
   "Testikäyttäjät, uid, tietokannassa"
-  {"T-X" [true nil nil true true]  ; luonti + oman organisaation luku/muokkaus
-   "T-101" [nil nil nil true nil] ; oman organisaation luku
-   "T-H" [true nil nil true true] ; luonti + oman organisaation luku/muokkaus
-   "8086" [true true true nil nil] ; luonti + oman organisaation luku/muokkaus
-   "6502" [nil true nil nil nil] ; oman organisaation luku
-   "68000" [true true true nil nil] ; luonti + oman organisaation luku/muokkaus
+  {"T-X" [true false false true true]  ; luonti + oman organisaation luku/muokkaus
+   "T-101" [false false false true false] ; oman organisaation luku
+   "T-H" [true false false true true] ; luonti + oman organisaation luku/muokkaus
+   "8086" [true true true false false] ; luonti + oman organisaation luku/muokkaus
+   "6502" [false true false false false] ; oman organisaation luku
+   "68000" [true true true false false] ; luonti + oman organisaation luku/muokkaus
   })
 
 (deftest ^:integraatio kyselyn-logiikka
