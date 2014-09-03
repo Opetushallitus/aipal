@@ -18,7 +18,7 @@
             [compojure.core :as c]
             [oph.korma.korma-auth :as ka]
             [aipal.toimiala.kayttajaoikeudet :as ko]
-            [aipal.infra.kayttaja-arkisto :as kayttaja-arkisto]
+            [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [clojure.tools.logging :as log]))
 

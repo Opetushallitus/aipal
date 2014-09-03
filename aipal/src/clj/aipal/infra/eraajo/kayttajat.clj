@@ -18,7 +18,7 @@
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
                                           integraatiokayttaja]]
-            [aipal.infra.kayttaja-arkisto :as kayttaja-arkisto]
+            [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
 

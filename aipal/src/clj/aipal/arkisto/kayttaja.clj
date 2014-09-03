@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.infra.kayttaja-arkisto
+(ns aipal.arkisto.kayttaja
   (:require [korma.core :as sql]
             [korma.db :as db]
             [clojure.tools.logging :as log]
