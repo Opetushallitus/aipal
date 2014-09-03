@@ -27,8 +27,7 @@
   (cu/defapi :kysely nil :get "/" []
     (json-response (kyselykerta/hae-kaikki)))
 
-  ; TODO: kyselyid -> käyttöoikeudet
-  (cu/defapi :kysely nil :get "/:kyselykertaid" [kyselykertaid]
+  (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (json-response (kyselykerta/hae-yksi (Integer/parseInt kyselykertaid))))
   
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid kyselykerta] 

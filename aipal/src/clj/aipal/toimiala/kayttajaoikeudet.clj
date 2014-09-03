@@ -3,10 +3,17 @@
   (:require 
     [aipal.toimiala.kayttajaroolit :refer :all]
     [oph.korma.korma-auth :as ka]
-    [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]))
+    [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
+    [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]))
 
 (def ^:dynamic *current-user-authmap*)
 
+(defn c->int 
+  "merkkijono numeroksi tai numero sellaisenaan"
+  [str-or-int] 
+  {:post [(or (nil? %) (integer? %))]}
+  (or (and (string? str-or-int) (Integer/parseInt str-or-int)) str-or-int))
+  
 (defn aipal-kayttaja? 
   ([x] (aipal-kayttaja?))
   ([]
@@ -31,12 +38,17 @@
 (defn kysely-muokkaus?
   [kyselyid]
   (or (yllapitaja?)
-    (kysely-muokkaus-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (Integer/parseInt kyselyid) @ka/*current-user-oid*))))
+    (kysely-muokkaus-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (c->int kyselyid) @ka/*current-user-oid*))))
 
 (defn kysely-luku?
   [kyselyid]
   (or (yllapitaja?)
-    (kysely-luku-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (Integer/parseInt kyselyid) @ka/*current-user-oid*))))
+    (kysely-luku-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (c->int kyselyid) @ka/*current-user-oid*))))
+
+(defn kyselykerta-luku?
+  [kyselykertaid]
+  (let [kyselykerta (kyselykerta-arkisto/hae-yksi (c->int kyselykertaid))]
+    (kysely-luku? (:kyselyid kyselykerta))))
 
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
@@ -46,6 +58,7 @@
     :kysely-luonti kyselyn-luonti?
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
+    :kyselykerta-luku kyselykerta-luku?
     :impersonointi yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
     :omat_tiedot aipal-kayttaja?
