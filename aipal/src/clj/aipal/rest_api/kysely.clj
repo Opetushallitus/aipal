@@ -19,13 +19,16 @@
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kayttaja :as kayttaja]
             [aipal.arkisto.kysely :as kysely]
+            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [oph.korma.korma-auth :refer [*current-user-oid*]]))
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
-    (json-response (kysely/hae-kaikki)))
+    (let [kyselyt (or (and (yllapitaja?) (kysely/hae-kaikki))
+                    (kysely/hae-kaikki @*current-user-oid*))]
+      (json-response kyselyt)))
 
   (cu/defapi :kysely-luonti nil :post "/" []
     (json-response (kysely/lisaa! {:nimi_fi "Uusi kysely"

@@ -27,6 +27,11 @@
   []
   (boolean (some #(contains? #{"YLLAPITAJA", "OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA"} (:rooli %)) (:roolit *current-user-authmap*))))
 
+(defn kyselyiden-listaaminen?
+  []
+  "onko kyselyiden listaaminen sallittua yleisesti toimintona."
+  (boolean (some #(contains? #{"YLLAPITAJA", "OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA", "OPL-KATSELIJA"} (:rooli %)) (:roolit *current-user-authmap*))))
+
 (defn kysely-muokkaus-sallittu?
   [kysely-oikeudet]
   (boolean (some #(contains? #{"OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA"} (:rooli %)) kysely-oikeudet)))
@@ -54,7 +59,7 @@
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
-    :kysely yllapitaja?
+    :kysely kyselyiden-listaaminen?
     :kysely-luonti kyselyn-luonti?
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?

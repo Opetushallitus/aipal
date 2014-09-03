@@ -18,23 +18,33 @@
   (:use [aipal.integraatio.sql.korma]))
 
 (defn hae-kyselyt
-  "Hae kaikki kyselyt"
-  []
-  (->
-    (sql/select* kysely)
-    (sql/fields :kyselyid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
-    (sql/order :luotuaika :DESC :kyselyid :ASC)
-    sql/exec))
+  "Hae kyselyt"
+  ([oid]
+    (let [organisaatio-suodatus (fn [query]
+                                  (if (nil? oid) query
+                                    (-> query
+                                      (sql/join kysely_omistaja_view (= :kysely_omistaja_view.kyselyid :kyselyid))
+                                      (sql/where {:kysely_omistaja_view.kayttaja oid}))))]
+      (->
+        (sql/select* kysely)
+        (organisaatio-suodatus)
+        (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm)
+        (sql/order :luotuaika :DESC :kyselyid :ASC)
+        sql/exec)))
+  ([] (hae-kyselyt nil)))
+  
 
 (defn ^:private yhdista-tietorakenteet [kyselyt kyselyid->kyselykerrat]
   (for [kysely kyselyt]
     (assoc kysely :kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely)))))
 
-(defn hae-kaikki []
-  (let [kyselyt (hae-kyselyt)
-        kyselykerrat (kyselykerta/hae-kaikki)
-        kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
-    (yhdista-tietorakenteet kyselyt kyselyid->kyselykerrat)))
+(defn hae-kaikki 
+  ([oid]
+    (let [kyselyt (hae-kyselyt oid)
+          kyselykerrat (kyselykerta/hae-kaikki)
+          kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
+      (yhdista-tietorakenteet kyselyt kyselyid->kyselykerrat)))
+  ([] (hae-kaikki nil)))
 
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"
