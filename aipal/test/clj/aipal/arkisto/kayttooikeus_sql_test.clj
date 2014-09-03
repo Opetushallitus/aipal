@@ -33,25 +33,24 @@
 
 (def kysely-kayttajat
   "Testikäyttäjät, uid, tietokannassa"
-  {"T-X" [true false false true true]  ; luonti + oman organisaation luku/muokkaus
-   "T-101" [false false false true false] ; oman organisaation luku
-   "T-H" [true false false true true] ; luonti + oman organisaation luku/muokkaus
-   "8086" [true true true false false] ; luonti + oman organisaation luku/muokkaus
+  {"8086" [true true true false false] ; luonti + oman organisaation luku/muokkaus
    "6502" [false true false false false] ; oman organisaation luku
    "68000" [true true true false false] ; luonti + oman organisaation luku/muokkaus
   })
 
 (deftest ^:integraatio kyselyn-logiikka
   (testing "Kyselyihin liittyvien oikeuksien logiikka"
-    (let [kysely (kysely-arkisto/lisaa! {:nimi_fi "oletuskysely, testi"
-                                         :koulutustoimija "7654321-2"})
-          toisen-kysely (kysely-arkisto/lisaa! {:nimi_fi "testi"
-                                                :koulutustoimija "2345678-0"})]
+    (let [vastuukayttaja "8086"
+          oman-organisaation-kysely (kysely-arkisto/lisaa! {:nimi_fi "oletuskysely, testi"
+                                                            :koulutustoimija "7654321-2"})
+          muun-organisaation-kysely (kysely-arkisto/lisaa! {:nimi_fi "testi"
+                                                            :koulutustoimija "2345678-0"})]
       (doseq [uid (keys kysely-kayttajat)]
         (with-user uid
           #(let [tulos [(kayttajaoikeudet/kyselyn-luonti?)
-                        (kayttajaoikeudet/kysely-luku? (:kyselyid kysely))
-                        (kayttajaoikeudet/kysely-muokkaus? (:kyselyid kysely))
-                        (kayttajaoikeudet/kysely-luku? (:kyselyid toisen-kysely))
-                        (kayttajaoikeudet/kysely-muokkaus? (:kyselyid toisen-kysely))]]
+                        (kayttajaoikeudet/kysely-luku? (:kyselyid oman-organisaation-kysely))
+                        (kayttajaoikeudet/kysely-muokkaus? (:kyselyid oman-organisaation-kysely))
+                        (kayttajaoikeudet/kysely-luku? (:kyselyid muun-organisaation-kysely))
+                        (kayttajaoikeudet/kysely-muokkaus? (:kyselyid muun-organisaation-kysely))]]
              (is (= tulos (get kysely-kayttajat uid)))))))))
+
