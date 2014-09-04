@@ -17,9 +17,12 @@
 angular.module('toimiala.kysymysryhma', ['ngResource'])
   .factory('Kysymysryhma', ['$http', function($http){
     return {
-      haeKaikki: function() {
+      haeKaikki: function(){
         return $http.get('api/kysymysryhma',
                          {params: {nocache: Date.now()}});
+      },
+      luoUusi: function(kysely){
+        return $http.post('api/kysymysryhma', kysely);
       }
     };
   }]);

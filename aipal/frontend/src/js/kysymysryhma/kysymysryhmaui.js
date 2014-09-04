@@ -37,9 +37,14 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
     });
   }])
 
-  .controller('UusiKysymysryhmaController', ['$scope', '$window',
-                                             function($scope, $window){
+  .controller('UusiKysymysryhmaController', ['$scope', '$window', 'Kysymysryhma',
+                                             function($scope, $window, Kysymysryhma){
+    $scope.kysely = {};
     $scope.peruuta = function(){
-      $window.location.hash = "/kysymysryhmat";
-    }
-}]);
+      $window.location.hash = '/kysymysryhmat';
+    };
+    $scope.luoUusi = function(){
+      Kysymysryhma.luoUusi($scope.kysely);
+      $window.location.hash = '/kysymysryhmat';
+    };
+  }]);
