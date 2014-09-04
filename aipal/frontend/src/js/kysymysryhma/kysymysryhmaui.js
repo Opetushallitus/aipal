@@ -21,6 +21,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
       .when('/kysymysryhmat', {
         controller: 'KysymysryhmatController',
         templateUrl: 'template/kysymysryhma/kysymysryhmat.html'
+      })
+      .when('/kysymysryhma/uusi', {
+        controller: 'UusiKysymysryhmaController',
+        templateUrl: 'template/kysymysryhma/uusi.html'
       });
   }])
 
@@ -31,4 +35,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
       $scope.kysymysryhmat = kysymysryhmat;
       $scope.latausValmis = true;
     });
-  }]);
+  }])
+
+  .controller('UusiKysymysryhmaController', [function(){
+}]);
