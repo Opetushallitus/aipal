@@ -14,7 +14,7 @@
 
 'use strict';
 
-describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
+describe('kysymysryhma.kysymysryhmaui.KysymysryhmatController', function(){
 
   var $scope;
   var $httpBackend;
