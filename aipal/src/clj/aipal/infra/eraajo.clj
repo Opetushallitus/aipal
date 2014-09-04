@@ -19,7 +19,8 @@
             [clojurewerkz.quartzite.triggers :as t]
             [clojurewerkz.quartzite.schedule.daily-interval :as s]
             [clojure.tools.logging :as log]
-            aipal.infra.eraajo.kayttajat)
+            aipal.infra.eraajo.kayttajat
+            aipal.infra.eraajo.organisaatiot)
   (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob))
 
