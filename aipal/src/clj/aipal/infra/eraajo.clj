@@ -20,9 +20,10 @@
             [clojurewerkz.quartzite.schedule.daily-interval :as s]
             [clojure.tools.logging :as log]
             aipal.infra.eraajo.kayttajat)
-  (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob))
+  (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
+           aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob))
 
-(defn kaynnista-ajastimet! [kayttooikeuspalvelu]
+(defn kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
   (qs/initialize)
   (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")
@@ -37,5 +38,15 @@
                             (t/with-identity "5-min-valein")
                             (t/start-now)
                             (t/with-schedule (s/schedule
-                                               (s/with-interval-in-minutes 5))))]
-    (qs/schedule ldap-job ldap-trigger-5min)))
+                                               (s/with-interval-in-minutes 5))))
+        org-job (j/build
+                  (j/of-type PaivitaOrganisaatiotJob)
+                  (j/with-identity "paivita-organisaatiot")
+                  (j/using-job-data {"asetukset" organisaatiopalvelu-asetukset}))
+        org-trigger-daily (t/build
+                            (t/with-identity "daily3")
+                            (t/start-now)
+                            #_(t/with-schedule (cron/schedule
+                                                (cron/cron-schedule "0 0 3 * * ?"))))]
+    (qs/schedule ldap-job ldap-trigger-5min)
+    (qs/schedule org-job org-trigger-daily)))

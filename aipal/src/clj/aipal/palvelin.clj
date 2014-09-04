@@ -122,7 +122,7 @@
 
 (defn kaynnista-eraajon-ajastimet! [asetukset]
   (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
-    (eraajo/kaynnista-ajastimet! kop)))
+    (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset))))
 
 (defn kaynnista! [alkuasetukset]
   (try

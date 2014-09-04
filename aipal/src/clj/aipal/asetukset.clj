@@ -35,6 +35,7 @@
                       :port s/Int
                       :user (s/maybe s/Str)
                       :password (s/maybe s/Str)}
+   :organisaatiopalvelu {:url s/Str}
    :eraajo Boolean
    :development-mode Boolean
    :logback {:properties-file s/Str}})
@@ -57,6 +58,7 @@
                       :port 10389
                       :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
                       :password "salasana"}
+   :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :eraajo false
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :logback {:properties-file "resources/logback.xml"}})

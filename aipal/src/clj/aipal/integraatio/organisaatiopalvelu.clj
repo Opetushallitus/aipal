@@ -18,7 +18,8 @@
             [aipal.arkisto.toimipaikka :as toimipaikka-arkisto]
             [clj-time.core :as time]
             [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value]]
-            [clojure.tools.logging :as log]))
+            [clojure.tools.logging :as log]
+            oph.korma.korma-auth))
 
 (defn hae-kaikki [url]
   (let [oids (get-json-from-url url)]
