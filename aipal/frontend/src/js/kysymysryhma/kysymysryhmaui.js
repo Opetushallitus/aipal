@@ -37,5 +37,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
     });
   }])
 
-  .controller('UusiKysymysryhmaController', [function(){
+  .controller('UusiKysymysryhmaController', ['$scope', '$window',
+                                             function($scope, $window){
+    $scope.peruuta = function(){
+      $window.location.hash = "/kysymysryhmat";
+    }
 }]);
