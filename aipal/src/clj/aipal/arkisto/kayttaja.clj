@@ -64,7 +64,14 @@
   "Hakee impersonoitavia käyttäjiä termillä"
   [termi]
   (for [kayttaja (sql/select taulut/kayttaja
-                   (sql/fields :oid :uid :etunimi :sukunimi))
+                   (sql/fields :oid :uid :etunimi :sukunimi)
+                   (sql/where (and
+                                (sql/sqlfn "not exists"
+                                  (sql/subselect taulut/rooli_organisaatio
+                                    (sql/fields :rooli_organisaatio_id)
+                                    (sql/where {:rooli (:paakayttaja kayttajaroolit)
+                                                :kayttaja :kayttaja.oid})))
+                                {:oid [not-in ["JARJESTELMA", "KONVERSIO"]]})))
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
