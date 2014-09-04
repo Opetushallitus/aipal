@@ -18,4 +18,6 @@
 
 (defn hae-kysymysryhmat []
   (sql/select kysymysryhma
-    (sql/fields :nimi_fi :nimi_sv :selite_fi :selite_sv)))
+    (sql/fields :nimi_fi :nimi_sv :selite_fi :selite_sv)
+    (sql/order :muutettuaika :desc)
+    (sql/order :kysymysryhmaid :desc)))
