@@ -8,11 +8,15 @@
 
 (def ^:dynamic *current-user-authmap*)
 
-(defn c->int
-  "merkkijono numeroksi tai numero sellaisenaan"
+(defn ->int
+  "Merkkijono numeroksi tai numero sellaisenaan."
   [str-or-int]
-  {:post [(or (nil? %) (integer? %))]}
-  (or (and (string? str-or-int) (Integer/parseInt str-or-int)) str-or-int))
+  {:pre [(or (integer? str-or-int)
+             (string? str-or-int))]
+   :post [(integer? %)]}
+  (if (string? str-or-int)
+    (Integer/parseInt str-or-int)
+    str-or-int))
 
 (defn aipal-kayttaja?
   ([x] (aipal-kayttaja?))
@@ -27,7 +31,7 @@
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (sisaltaa-jonkin-rooleista? roolit
-                              (kayttajaoikeus-arkisto/hae-kyselylla (c->int kyselyid)
+                              (kayttajaoikeus-arkisto/hae-kyselylla (->int kyselyid)
                                                                     @ka/*current-user-oid*)))
 
 (defn yllapitaja? []
@@ -69,7 +73,7 @@
         kyselyid)))
 
 (defn kyselykerta-luku? [kyselykertaid]
-  (let [kyselykerta (kyselykerta-arkisto/hae-yksi (c->int kyselykertaid))]
+  (let [kyselykerta (kyselykerta-arkisto/hae-yksi (->int kyselykertaid))]
     (kysely-luku? (:kyselyid kyselykerta))))
 
 (def kayttajatoiminnot
