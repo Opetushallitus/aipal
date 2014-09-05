@@ -27,10 +27,10 @@
    (:oppilaitos-paakayttaja kayttajaroolit) (aipal-ryhma-cn-filter "OPLPAAKAYTTAJA")
    (:oppilaitos-vastuukayttaja kayttajaroolit) (aipal-ryhma-cn-filter "OPLVASTUUKAYTTAJA")
    (:oppilaitos-kayttaja kayttajaroolit) (aipal-ryhma-cn-filter "OPLKAYTTAJA")
-   (:oph-katselija kayttajaroolit) (aipal-ryhma-cn-filter "READ")
+   (:oph-katselija kayttajaroolit) (aipal-ryhma-cn-filter "OPHKATSELIJA")
    (:oppilaitos-katselija kayttajaroolit) (aipal-ryhma-cn-filter "OPLKATSELIJA")
    (:toimikuntakatselija kayttajaroolit) (aipal-ryhma-cn-filter "TTKKATSELIJA")
-   (:katselija kayttajaroolit) (aipal-ryhma-cn-filter "READ")})
+   (:katselija kayttajaroolit) (aipal-ryhma-cn-filter "KATSELIJA")})
 
 (def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
 
