@@ -38,9 +38,12 @@
 
 (defn hae-kyselylla
   [kyselyid kayttaja-oid]
-  (sql/exec-raw [(str "select  ytunnus, oid, organisaatio, rooli, kayttaja, voimassa, kyselyid, oppilaitos, toimipaikka from kysely_omistaja_view "
-                   "where kyselyid = ? and kayttaja=?") [kyselyid kayttaja-oid]]
-             :results))
+  (sql/exec-raw [(str "select ytunnus, oid, organisaatio, rooli, kayttaja, "
+                      "voimassa, kyselyid, oppilaitos, toimipaikka "
+                      "from kysely_omistaja_view "
+                      "where kyselyid = ? and kayttaja=?")
+                 [kyselyid kayttaja-oid]]
+                :results))
 
 (defn hae-rooli [rooli kayttaja organisaatio]
   (sql/select rooli-organisaatio

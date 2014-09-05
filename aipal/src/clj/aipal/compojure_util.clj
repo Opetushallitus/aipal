@@ -1,7 +1,6 @@
 (ns aipal.compojure-util
   (:require [oph.compojure-util :as oph-cjure]
-    [aipal.toimiala.kayttajaoikeudet :as ko]
-    ))
+            [aipal.toimiala.kayttajaoikeudet :as ko]))
 
 (defmacro defapi
   "Esittelee rajapinta-funktion sisältäen käyttöoikeuksien tarkastamisen ja tietokanta-transaktion hallinnan."

@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.toimiala.kayttajaroolit
-  "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
-  )
+  "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330")
 
 ;; roolit joilla on koulutustoimijaorganisaatio
 (def organisaatio-roolit {:oppilaitos-vastuukayttaja "OPL-VASTUUKAYTTAJA"
@@ -27,7 +26,7 @@
 ;; kayttajarooli-taulun arvot
 (def kayttajaroolit (merge organisaatio-roolit
                            toimikunta-roolit
-                           {:paakayttaja "YLLAPITAJA"       ; oph pääkäyttäjä
+                           {:paakayttaja "YLLAPITAJA"      ; oph pääkäyttäjä
                             :oph-katselija "OPH-KATSELIJA"
-                            :katselija "KATSELIJA" ; yleinen katselija
+                            :katselija "KATSELIJA"         ; yleinen katselija
                             }))

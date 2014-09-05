@@ -19,12 +19,11 @@
             [oph.common.util.util :refer [retrying]]
             [compojure.api.sweet :as c]))
 
-(def http-compojure {
-  :get 'compojure.core/GET
-  :post 'compojure.core/POST
-  :delete 'compojure.core/DELETE
-  :put 'compojure.core/PUT
-  :update 'compojure.core/UPDATE})
+(def http-compojure {:get 'compojure.core/GET
+                     :post 'compojure.core/POST
+                     :delete 'compojure.core/DELETE
+                     :put 'compojure.core/PUT
+                     :update 'compojure.core/UPDATE})
 
 (defmacro autorisoi
   "Tarkastaa käyttöoikeudet"

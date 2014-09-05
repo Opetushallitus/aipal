@@ -19,32 +19,32 @@
 
 (defn hae-kyselyt
   "Hae kyselyt"
+  ([]
+    (hae-kyselyt nil))
   ([oid]
     (let [organisaatio-suodatus (fn [query]
-                                  (if (nil? oid) query
+                                  (if oid
                                     (-> query
                                       (sql/join kysely_omistaja_view (= :kysely_omistaja_view.kyselyid :kyselyid))
-                                      (sql/where {:kysely_omistaja_view.kayttaja oid}))))]
-      (->
-        (sql/select* kysely)
+                                      (sql/where {:kysely_omistaja_view.kayttaja oid}))
+                                    query))]
+      (sql/select kysely
         (organisaatio-suodatus)
         (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm)
-        (sql/order :luotuaika :DESC :kyselyid :ASC)
-        sql/exec)))
-  ([] (hae-kyselyt nil)))
-  
+        (sql/order :luotuaika :desc, :kyselyid :asc)))))
 
 (defn ^:private yhdista-tietorakenteet [kyselyt kyselyid->kyselykerrat]
   (for [kysely kyselyt]
     (assoc kysely :kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely)))))
 
-(defn hae-kaikki 
+(defn hae-kaikki
+  ([]
+    (hae-kaikki nil))
   ([oid]
     (let [kyselyt (hae-kyselyt oid)
           kyselykerrat (kyselykerta/hae-kaikki)
           kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
-      (yhdista-tietorakenteet kyselyt kyselyid->kyselykerrat)))
-  ([] (hae-kaikki nil)))
+      (yhdista-tietorakenteet kyselyt kyselyid->kyselykerrat))))
 
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"

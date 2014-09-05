@@ -18,9 +18,8 @@
             [clojure.string :as str]
             [clojure.tools.logging :as log]))
 
-;   "max length of message strings from the client side"
-(def
-  maxlength 1000)
+;; max length of message strings from the client side
+(def maxlength 1000)
 
 (defn sanitize
   "replaces linefeeds with blanks and limits the length"
@@ -32,15 +31,14 @@
       (str/replace "\r" "!")
       (.substring 0 ln))))
 
-(defn logita [virheenUrl userAgent virheviesti stackTrace cause]
+(defn logita
   "Tarkoitus on wrapata tämä sopivaan compojure-reittiin"
-  (let [rivinvaihto "\n"]
-    (log/info (str rivinvaihto
-                "--- Javascript virhe ---" rivinvaihto
-                "Virheen url: " (sanitize virheenUrl) rivinvaihto
-                "User agent string: " (sanitize userAgent) rivinvaihto
-                "Virheviesti: " (sanitize virheviesti) rivinvaihto
-                "Stacktrace: " (sanitize stackTrace) rivinvaihto
-                "Aiheuttaja: " (sanitize cause) rivinvaihto
-                "------------------------")))
+  [virheenUrl userAgent virheviesti stackTrace cause]
+  (log/info (str "\n--- Javascript virhe ---\n"
+                 "Virheen url: " (sanitize virheenUrl) "\n"
+                 "User agent string: " (sanitize userAgent) "\n"
+                 "Virheviesti: " (sanitize virheviesti) "\n"
+                 "Stacktrace: " (sanitize stackTrace) "\n"
+                 "Aiheuttaja: " (sanitize cause) "\n"
+                 "------------------------"))
   {:status 200})
