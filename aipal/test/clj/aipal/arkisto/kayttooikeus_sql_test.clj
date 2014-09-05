@@ -38,6 +38,7 @@
    "68000" [true true true false false] ; luonti + oman organisaation luku/muokkaus
   })
 
+;; Testaa ennen kaikkea, että näkymän muodostava SQL on oikein.
 (deftest ^:integraatio kyselyn-logiikka
   (testing "Kyselyihin liittyvien oikeuksien logiikka"
     (let [oman-organisaation-kysely (kysely-arkisto/lisaa! {:nimi_fi "oletuskysely, testi"
