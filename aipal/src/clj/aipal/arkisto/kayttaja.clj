@@ -23,6 +23,7 @@
                                           *current-user-oid*
                                           integraatiokayttaja]]))
 
+
 (defn hae
   "Hakee käyttäjätunnuksen perusteella."
   [oid]
@@ -88,3 +89,22 @@
                             sql/exec
                             first)]
     (:organisaatio organisaatio)))
+
+(defn olemassa? [k]
+  (boolean (hae (:oid k))))
+
+(defn ^:integration-api paivita-kayttaja!
+  "Päivittää tai lisää käyttäjän"
+  [k]
+  (log/debug "Päivitetään käyttäjä" (pr-str k))
+  (if (olemassa? k)
+    ;; Päivitetään olemassaoleva käyttäjä merkiten voimassaolevaksi
+    (do
+      (log/debug "Käyttäjä on jo olemassa, päivitetään tiedot")
+      (sql/update taulut/kayttaja
+                  (sql/set-fields k)
+                  (sql/where {:oid [= (:oid k)]})))
+    ;; Lisätään uusi käyttäjä
+    (do
+      (log/debug "Luodaan uusi käyttäjä")
+      (sql/insert taulut/kayttaja (sql/values k)))))

@@ -18,14 +18,10 @@
             [oph.korma.korma-auth :refer [*current-user-uid*
                                           *current-user-oid*
                                           integraatiokayttaja]]
-            [aipal.arkisto.kayttaja :as kayttaja-arkisto]
+            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
+            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
-
-;; Roolit siinä järjestyksessä missä ne pitää hakea käyttöoikeuspalvelusta.
-;; Jos käyttäjällä on useampi rooli, viimeisimpänä määritelty jää voimaan.
-(def roolit-jarjestyksessa [:katselija :toimikuntakatselija :oppilaitos-katselija :oph-katselija :oppilaitos-kayttaja :oppilaitos-vastuukayttaja :paakayttaja])
-(assert (= (set roolit-jarjestyksessa) (set (keys kayttajaroolit))))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
   (binding [*current-user-uid* integraatiokayttaja
@@ -34,10 +30,11 @@
             ;; promisen. Koska tätä funktiota ei kutsuta HTTP-pyynnön
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
-    (log/info "Päivitetään käyttäjät käyttöoikeuspalvelun LDAP:sta")
-    (kayttaja-arkisto/paivita!
-      (apply concat (for [rooli roolit-jarjestyksessa]
-                      (kop/kayttajat kayttooikeuspalvelu (get kayttajaroolit rooli)))))))
+    (let [oid->ytunnus (group-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
+      (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
+      (kayttajaoikeus-arkisto/paivita-kaikki!
+        (apply concat (for [[_ rooli] kayttajaroolit]
+                        (kop/kayttajat kayttooikeuspalvelu rooli oid->ytunnus)))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
