@@ -13,16 +13,23 @@ angular.module('kayttooikeudet', ['ngResource'])
     });
 
     var oikeudet,
-        yllapitaja;
+        yllapitaja,
+        impersonoitu;
 
     function paivitaOikeudet() {
       oikeudet = resource.get().$promise;
 
-      // Is the user yllapitaja?
+      // Is the user yllapitaja,impersonoitu?
       oikeudet.then(function(data){
         yllapitaja = false;
+        impersonoitu = false;
+
         if(_.where(data.roolit, {rooli: 'YLLAPITAJA'}).length > 0){
           yllapitaja = true;
+        }
+
+        if(data.impersonoitu_kayttaja.trim().length > 0){
+          impersonoitu = true;
         }
       });
 
@@ -35,6 +42,9 @@ angular.module('kayttooikeudet', ['ngResource'])
       },
       isYllapitaja: function (){
         return yllapitaja;
+      },
+      isImpersonoitu: function(){
+        return impersonoitu;
       },
       paivita: paivitaOikeudet
     };
