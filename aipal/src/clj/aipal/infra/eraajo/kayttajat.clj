@@ -21,7 +21,8 @@
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]))
+            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
+            [oph.common.util.util :refer [map-by]]))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
   (binding [*current-user-uid* integraatiokayttaja
@@ -30,11 +31,10 @@
             ;; promisen. Koska tätä funktiota ei kutsuta HTTP-pyynnön
             ;; käsittelijästä, meidän täytyy luoda promise itse.
             *current-user-oid* (promise)]
-    (let [oid->ytunnus (group-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
+    (let [oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
       (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
       (kayttajaoikeus-arkisto/paivita-kaikki!
-        (apply concat (for [[_ rooli] kayttajaroolit]
-                        (kop/kayttajat kayttooikeuspalvelu rooli oid->ytunnus)))))))
+        (mapcat #(kop/kayttajat kayttooikeuspalvelu % oid->ytunnus) (vals kayttajaroolit))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.

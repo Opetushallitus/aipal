@@ -16,6 +16,7 @@
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
   )
 
+;; roolit joilla on koulutustoimijaorganisaatio
 (def organisaatio-roolit {:oppilaitos-vastuukayttaja "OPL-VASTUUKAYTTAJA"
                           :oppilaitos-paakayttaja "OPL-PAAKAYTTAJA"
                           :oppilaitos-kayttaja "OPL-KAYTTAJA"

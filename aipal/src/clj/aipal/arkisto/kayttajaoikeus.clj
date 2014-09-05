@@ -68,13 +68,11 @@
   [r]
   (log/debug "Päivitetään rooli" (pr-str r))
   (if (olemassa? r)
-    ;; Päivitetään olemassaoleva rooli merkiten voimassaolevaksi
     (do
       (log/debug "Rooli on jo olemassa, päivitetään tiedot")
       (sql/update rooli-organisaatio
                   (sql/set-fields r)
                   (sql/where {:kayttaja [= (:kayttaja r)]})))
-    ;; Lisätään uusi käyttäjä
     (do
       (log/debug "Luodaan uusi rooli")
       (sql/insert rooli-organisaatio (sql/values r)))))
@@ -87,7 +85,8 @@
     ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
     (tyhjaa-kayttooikeudet!)
     (doseq [k kt]
-      (let [rooli (clojure.set/rename-keys (select-keys k [:rooli :oid :organisaatio :voimassa]) {:oid :kayttaja})
+      (let [rooli (clojure.set/rename-keys (select-keys k [:rooli :oid :organisaatio :voimassa])
+                                           {:oid :kayttaja})
             kayttaja (dissoc k :rooli :organisaatio)]
         (kayttaja-arkisto/paivita-kayttaja! kayttaja)
         (paivita-rooli! rooli)))))
