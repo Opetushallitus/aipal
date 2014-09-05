@@ -34,9 +34,11 @@ angular.module('aipal', [
     'yhteiset.direktiivit.latausindikaattori',
     'yhteiset.direktiivit.pakollisia-kenttia',
     'yhteiset.direktiivit.tallenna',
+    'yhteiset.direktiivit.hakuvalitsin',
     'ui.bootstrap',
     'ngRoute',
-    'kayttooikeudet'
+    'kayttooikeudet',
+    'ui.select2'
   ])
 
   .config(['$httpProvider', 'asetukset', function($httpProvider, asetukset) {
