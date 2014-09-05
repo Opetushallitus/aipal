@@ -19,39 +19,56 @@
   ([]
     true))
 
-(defn yllapitaja?
-  []
-  (some #(= (:rooli %) "YLLAPITAJA") (:roolit *current-user-authmap*)))
+(defn sisaltaa-jonkin-rooleista? [roolit roolirivit]
+  (not (empty? (clojure.set/select roolit (set (map :rooli roolirivit))))))
 
-(defn kyselyn-luonti?
-  []
-  (boolean (some #(contains? #{"YLLAPITAJA", "OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA"} (:rooli %)) (:roolit *current-user-authmap*))))
+(defn kayttajalla-on-jokin-rooleista? [roolit]
+  (sisaltaa-jonkin-rooleista? roolit (:roolit *current-user-authmap*)))
+
+(defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
+  (sisaltaa-jonkin-rooleista? roolit
+                              (kayttajaoikeus-arkisto/hae-kyselylla (c->int kyselyid)
+                                                                    @ka/*current-user-oid*)))
+
+(defn yllapitaja? []
+  (kayttajalla-on-jokin-rooleista?
+    #{"YLLAPITAJA"}))
 
 (defn kyselyiden-listaaminen?
+  "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"
   []
-  "onko kyselyiden listaaminen sallittua yleisesti toimintona."
-  (boolean (some #(contains? #{"YLLAPITAJA", "OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA", "OPL-KATSELIJA"} (:rooli %)) (:roolit *current-user-authmap*))))
+  (kayttajalla-on-jokin-rooleista?
+    #{"YLLAPITAJA"
+      "OPL-PAAKAYTTAJA"
+      "OPL-VASTUUKAYTTAJA"
+      "OPL-KAYTTAJA"
+      "OPL-KATSELIJA"}))
 
-(defn kysely-muokkaus-sallittu?
-  [kysely-oikeudet]
-  (boolean (some #(contains? #{"OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA"} (:rooli %)) kysely-oikeudet)))
+(defn kysely-luonti? []
+  (kayttajalla-on-jokin-rooleista?
+    #{"YLLAPITAJA"
+      "OPL-PAAKAYTTAJA"
+      "OPL-VASTUUKAYTTAJA"
+      "OPL-KAYTTAJA"}))
 
-(defn kysely-luku-sallittu?
-  [kysely-oikeudet]
-  (boolean (some #(contains? #{"OPL-PAAKAYTTAJA", "OPL-VASTUUKAYTTAJA", "OPL-KAYTTAJA", "OPL-KATSELIJA"} (:rooli %)) kysely-oikeudet)))
-
-(defn kysely-muokkaus?
-  [kyselyid]
+(defn kysely-muokkaus? [kyselyid]
   (or (yllapitaja?)
-    (kysely-muokkaus-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (c->int kyselyid) @ka/*current-user-oid*))))
+      (kayttajalla-on-jokin-rooleista-kyselyssa?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"
+          "OPL-KAYTTAJA"}
+        kyselyid)))
 
-(defn kysely-luku?
-  [kyselyid]
+(defn kysely-luku? [kyselyid]
   (or (yllapitaja?)
-    (kysely-luku-sallittu? (kayttajaoikeus-arkisto/hae-kyselylla (c->int kyselyid) @ka/*current-user-oid*))))
+      (kayttajalla-on-jokin-rooleista-kyselyssa?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"
+          "OPL-KAYTTAJA"
+          "OPL-KATSELIJA"}
+        kyselyid)))
 
-(defn kyselykerta-luku?
-  [kyselykertaid]
+(defn kyselykerta-luku? [kyselykertaid]
   (let [kyselykerta (kyselykerta-arkisto/hae-yksi (c->int kyselykertaid))]
     (kysely-luku? (:kyselyid kyselykerta))))
 
@@ -60,7 +77,7 @@
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
     :kysely kyselyiden-listaaminen?
-    :kysely-luonti kyselyn-luonti?
+    :kysely-luonti kysely-luonti?
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
     :kyselykerta-luku kyselykerta-luku?
