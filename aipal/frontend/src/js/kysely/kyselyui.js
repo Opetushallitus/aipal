@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngRoute'])
+angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'toaster'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -29,8 +29,8 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
   }])
 
   .controller('KyselytController', [
-    '$location', '$scope', 'Kysely',
-    function($location, $scope, Kysely) {
+    '$location', '$scope', 'toaster', 'Kysely',
+    function($location, $scope, toaster, Kysely) {
       $scope.naytaLuonti = false;
 
       $scope.luoUusiKysely = function() {
