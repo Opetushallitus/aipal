@@ -126,6 +126,7 @@ module.exports = function (grunt) {
         dest: distDir,
         flow : {
           steps: {
+            'css': ['concat'],
             'js': ['concat']
           },
           post: {}
