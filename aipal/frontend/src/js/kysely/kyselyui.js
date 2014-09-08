@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngRoute'])
+angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'toaster'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -29,13 +29,15 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
   }])
 
   .controller('KyselytController', [
-    '$location', '$scope', 'Kysely',
-    function($location, $scope, Kysely) {
+    '$location', '$scope', 'toaster', 'Kysely', 'i18n',
+    function($location, $scope, toaster, Kysely, i18n) {
       $scope.naytaLuonti = false;
 
       $scope.luoUusiKysely = function() {
         Kysely.luoUusi(function(data) {
           $location.url('/kysely/' + data.kyselyid);
+        }, function() {
+          toaster.pop('error', null, i18n.kysely.uuden_luonti_epaonnistui);
         });
       };
 
@@ -56,12 +58,16 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
   ])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', '$routeParams', '$route', '$scope',
-    function(Kysely, Kyselypohja, $routeParams, $route, $scope) {
+    'Kysely', 'Kyselypohja', 'i18n', '$routeParams', '$route', '$scope', 'toaster',
+    function(Kysely, Kyselypohja, i18n, $routeParams, $route, $scope, toaster) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function(kysely) {
-        Kysely.tallenna(kysely);
+        Kysely.tallenna(kysely, function() {
+          toaster.pop('success', null, i18n.kysely.tallennus_onnistui);
+        }, function() {
+          toaster.pop('error', null, i18n.kysely.tallennus_epaonnistui);
+        });
       };
 
       Kyselypohja.hae(function(data) {
