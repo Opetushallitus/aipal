@@ -766,6 +766,22 @@ create trigger tutkinto_mu_update before update on tutkinto for each row execute
 create trigger tutkinto_cu_insert before insert on tutkinto for each row execute procedure update_creator() ;
 create trigger tutkinto_mu_insert before insert on tutkinto for each row execute procedure update_modifier() ;
 
+-- opintoala
+create trigger opintoala_update before update on opintoala for each row execute procedure update_stamp() ;
+create trigger opintoalal_insert before insert on opintoala for each row execute procedure update_created() ;
+create trigger opintoalam_insert before insert on opintoala for each row execute procedure update_stamp() ;
+create trigger opintoala_mu_update before update on opintoala for each row execute procedure update_modifier() ;
+create trigger opintoala_cu_insert before insert on opintoala for each row execute procedure update_creator() ;
+create trigger opintoala_mu_insert before insert on opintoala for each row execute procedure update_modifier() ;
+
+-- koulutusala
+create trigger koulutusala_update before update on koulutusala for each row execute procedure update_stamp() ;
+create trigger koulutusalal_insert before insert on koulutusala for each row execute procedure update_created() ;
+create trigger koulutusalam_insert before insert on koulutusala for each row execute procedure update_stamp() ;
+create trigger koulutusala_mu_update before update on koulutusala for each row execute procedure update_modifier() ;
+create trigger koulutusala_cu_insert before insert on koulutusala for each row execute procedure update_creator() ;
+create trigger koulutusala_mu_insert before insert on koulutusala for each row execute procedure update_modifier() ;
+
 -- jatkovastaus
 create trigger jatkovastaus_update before update on jatkovastaus for each row execute procedure update_stamp() ;
 create trigger jatkovastausl_insert before insert on jatkovastaus for each row execute procedure update_created() ;

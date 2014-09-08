@@ -18,7 +18,9 @@
            [aipal.arkisto.koulutusala :as koulutusala-arkisto]
            [aipal.arkisto.opintoala :as opintoala-arkisto]
            [clojure.set :refer [intersection difference rename-keys]]
-           [oph.common.util.util :refer :all]))
+           [oph.common.util.util :refer :all]
+           [clojure.tools.logging :as log]
+           [korma.db :as db]))
 
 ;; Tässä nimiavaruudessa viitataan "koodi"-sanalla koodistopalvelun palauttamaan tietorakenteeseen.
 ;; Jos koodi on muutettu Aipalin käyttämään muotoon, siihen viitataan ko. käsitteen nimellä, esim. "osatutkinto".
@@ -69,13 +71,13 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn koodiston-uusin-versio
   [asetukset koodisto]
-  (loop [versio nil]
-    (when-let [json (get-json-from-url (str (:url asetukset)
-                                            koodisto
-                                            (when versio (str "?koodistoVersio=" versio))))]
-      (if (= "HYVAKSYTTY" (:tila json))
-        (:versio json)
-        (recur (dec (:versio json)))))))
+  1 #_(loop [versio nil]
+        (when-let [json (get-json-from-url (str (:url asetukset)
+                                                koodisto
+                                                (when versio (str "?koodistoVersio=" versio))))]
+          (if (= "HYVAKSYTTY" (:tila json))
+            (:versio json)
+            (recur (dec (:versio json)))))))
 
 (defn ^:private lisaa-opintoalaan-koulutusala
   [asetukset opintoala]
@@ -86,16 +88,14 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn ^:private hae-alakoodit
   [asetukset koodi] (get-json-from-url (str (:url asetukset) "relaatio/sisaltyy-alakoodit/" (:koodiUri koodi))))
 
-(defn lisaa-opintoala-koulutusala-tyyppi
+(defn lisaa-opintoala-ja-tyyppi
   [asetukset tutkinto]
   (let [alakoodit (hae-alakoodit asetukset tutkinto)
         opintoala (some-value opintoala-koodi? alakoodit)
-        koulutusala (some-value koulutusala-koodi? alakoodit)
         tyyppi (some-value tutkintotyyppi-koodi? alakoodit)]
-    (merge tutkinto
-           {:opintoala (:koodiArvo opintoala)
-            :koulutusala (:koodiArvo koulutusala)
-            :tyyppi (:koodiArvo tyyppi)})))
+    (assoc tutkinto
+           :opintoala (:koodiArvo opintoala)
+           :tyyppi (:koodiArvo tyyppi))))
 
 (defn hae-koodisto
   [asetukset koodisto versio]
@@ -121,34 +121,6 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
       (map (partial lisaa-opintoalaan-koulutusala asetukset))
       (map #(dissoc % :kuvaus_fi :kuvaus_sv)))))
 
-(defn tutkintorakenne
-  "Lukee koko tutkintorakenteen koodistosta. Suoritus kestää n. 8 minuuttia ja aiheuttaa
-tuhansia http-pyyntöjä koodistopalveluun.
-
-Palautuva tutkintorakenne on lista koulutusaloista, joista jokainen
-sisältää listan siihen kuuluvista opintoaloista, joista jokainen
-sisältää listan siihen kuuluvista tutkinnoista, joista jokainen
-sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
-   [asetukset]
-   (let [oa-tunnus->tutkinnot (group-by :opintoala
-                                        (for [tutkinto (hae-tutkinnot asetukset)]
-                                          (lisaa-opintoala-koulutusala-tyyppi asetukset tutkinto)))
-         ;; Muodostetaan map opintoalatunnuksesta koulutusalatunnukseen.
-         ;; Koulutusalatunnus saadaan mistä tahansa kyseisen opintoalan tutkinnosta.
-         ;; Koodistopalvelussa ei ole relaatiota opintoala->koulutusala.
-         oa-tunnus->ka-tunnus (into {} (for [[oa-tunnus tutkinnot] oa-tunnus->tutkinnot]
-                                         {oa-tunnus (:koulutusala (first tutkinnot))}))
-         ka-tunnus->opintoalat (group-by :koulutusala
-                                         (for [opintoala (hae-opintoalat asetukset)
-                                               :let [oa-tunnus (:opintoalatunnus opintoala)]]
-                                           (assoc opintoala
-                                                  :tutkinnot (oa-tunnus->tutkinnot oa-tunnus [])
-                                                  :koulutusala (oa-tunnus->ka-tunnus oa-tunnus))))]
-     (for [koulutusala (hae-koulutusalat asetukset)
-           :let [ka-tunnus (:koulutusalatunnus koulutusala)]]
-       (assoc koulutusala
-              :opintoalat (ka-tunnus->opintoalat ka-tunnus [])))))
-
 (defn muutokset
   [uusi vanha]
   (into {}
@@ -165,7 +137,7 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
   (let [vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
                           [(:tutkintotunnus tutkinto) (select-keys tutkinto [:nimi_fi :nimi_sv :tutkintotunnus])]))
         uudet (->> (hae-tutkinnot asetukset)
-                (map (partial lisaa-opintoala-koulutusala-tyyppi asetukset))
+                (map (partial lisaa-opintoala-ja-tyyppi asetukset))
                 (filter #(#{"02" "03"} (:tyyppi %)))
                 (map #(dissoc % :koodiUri :tyyppi))
                 (map-by :tutkintotunnus))]
@@ -175,7 +147,7 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
   [asetukset]
   (let [vanhat (into {} (for [koulutusala (koulutusala-arkisto/hae-kaikki)]
                           [(:koulutusalatunnus koulutusala) (select-keys koulutusala [:nimi_fi :nimi_sv :koulutusalatunnus])]))
-        uudet (map-by :opintoalatunnus
+        uudet (map-by :koulutusalatunnus
                       (map #(dissoc % :koodiUri) (hae-koulutusalat asetukset)))]
     (muutokset uudet vanhat)))
 
@@ -186,3 +158,100 @@ sisältää listat siihen kuuluvista osaamisaloista ja tutkinnonosista."
         uudet (map-by :opintoalatunnus
                       (map #(dissoc % :koodiUri) (hae-opintoalat asetukset)))]
     (muutokset uudet vanhat)))
+
+
+(defn uusi [[tutkintotunnus muutos]]
+  "Jos muutos on uuden tiedon lisääminen, palauttaa uudet tiedot, muuten nil"
+  (when (vector? muutos)
+    (assoc (first muutos) :tutkintotunnus tutkintotunnus)))
+
+(defn uudet-arvot [muutos]
+  (into {}
+        (for [[k v] muutos
+             :when v]
+         [k (first v)])))
+
+(defn muuttunut [[tutkintotunnus muutos]]
+  "Jos muutos on tietojen muuttuminen, palauttaa muuttuneet tiedot, muuten nil"
+  (when (and (map? muutos)
+             (not-every? nil? (vals muutos)))
+    (merge {:tutkintotunnus tutkintotunnus}
+          (uudet-arvot muutos))))
+
+(defn tallenna-uudet-koulutusalat! [koulutusalat]
+  (doseq [ala koulutusalat]
+    (log/info "Lisätään koulutusala " (:koulutusalatunnus ala))
+    (koulutusala-arkisto/lisaa! ala)))
+
+(defn tallenna-muuttuneet-koulutusalat! [koulutusalat]
+  (doseq [ala koulutusalat
+          :let [tunnus (:koulutusalatunnus ala)
+                ala (dissoc ala :koulutusalatunnus)]]
+    (log/info "Päivitetään koulutusala " tunnus ", muutokset: " ala)
+    (koulutusala-arkisto/paivita! tunnus ala)))
+
+(defn tallenna-koulutusalat! [koulutusalat]
+  (let [uudet (for [[alakoodi ala] koulutusalat
+                    :when (and (vector? ala) (first ala))]
+                (first ala))
+        muuttuneet (for [[alakoodi ala] koulutusalat
+                         :when (map? ala)]
+                     (uudet-arvot ala))]
+    (tallenna-uudet-koulutusalat! uudet)
+    (tallenna-muuttuneet-koulutusalat! muuttuneet)))
+
+(defn tallenna-uudet-opintoalat! [opintoalat]
+  (doseq [ala opintoalat]
+    (log/info "Lisätään opintoala " (:opintoalatunnus ala))
+    (opintoala-arkisto/lisaa! ala)))
+
+(defn tallenna-muuttuneet-opintoalat! [opintoalat]
+  (doseq [ala opintoalat
+          :let [tunnus (:opintoalatunnus ala)
+                ala (dissoc ala :opintoalatunnus)]]
+    (log/info "Päivitetään opintoala " tunnus ", muutokset: " ala)
+    (opintoala-arkisto/paivita! tunnus ala)))
+
+(defn tallenna-opintoalat! [opintoalat]
+  (let [uudet (for [[alakoodi ala] opintoalat
+                    :when (and (vector? ala) (first ala))]
+                (first ala))
+        muuttuneet (for [[alakoodi ala] opintoalat
+                         :when (map? ala)]
+                     (uudet-arvot ala))]
+    (tallenna-uudet-opintoalat! (filter :koulutusala uudet))
+    (tallenna-muuttuneet-opintoalat! (filter :koulutusala muuttuneet))))
+
+(defn tallenna-uudet-tutkinnot! [tutkinnot]
+  (doseq [tutkinto tutkinnot]
+    (log/info "Lisätään tutkinto " (:tutkintotunnus tutkinto))
+    (tutkinto-arkisto/lisaa! tutkinto)))
+
+(defn tallenna-muuttuneet-tutkinnot! [tutkinnot]
+  (doseq [tutkinto tutkinnot
+          :let [tunnus (:tutkintotunnus tutkinto)
+                tutkintotunnus (dissoc tutkinto :tutkintotunnus)]]
+    (log/info "Päivitetään tutkinto " tunnus ", muutokset: " tutkinto)
+    (tutkinto-arkisto/paivita! tunnus tutkinto)))
+
+(defn tallenna-tutkinnot! [tutkinnot]
+  (let [uudet (for [[tunnus tutkinto] tutkinnot
+                    :when (and (vector? tutkinto) (first tutkinto))]
+                (first tutkinto))
+        muuttuneet (for [[tunnus tutkinto] tutkinnot
+                         :when (map? tutkinto)]
+                     (uudet-arvot tutkinto))]
+    (tallenna-uudet-tutkinnot! (filter :opintoala uudet))
+    (tallenna-muuttuneet-tutkinnot! (filter :opintoala muuttuneet))))
+
+(defn paivita-tutkinnot! [asetukset]
+  (try
+    (db/transaction
+      (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")
+      (tallenna-koulutusalat! (hae-koulutusala-muutokset asetukset))
+      (tallenna-opintoalat! (hae-opintoala-muutokset asetukset))
+      (tallenna-tutkinnot! (hae-tutkinto-muutokset asetukset))
+      (log/info "Tutkintojen päivitys koodistopalvelusta valmis"))
+    (catch org.postgresql.util.PSQLException e
+      (log/error e "Tutkintojen päivitys koodistopalvelusta epäonnistui"))))
+
