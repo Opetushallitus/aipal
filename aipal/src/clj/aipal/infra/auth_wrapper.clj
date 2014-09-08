@@ -30,19 +30,19 @@
 
 (defn with-user [userid impersonoitu-oid f]
   (binding [ka/*current-user-uid* userid
-            ka/*current-user-oid* (promise)
-            ka/*impersonoitu-oid* impersonoitu-oid]
-    (let [kayttaja (kayttaja-arkisto/hae-uid userid)
-          impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
-          oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:oid kayttaja))
-          kayttajatiedot {:kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))}
-          auth-map (assoc kayttajatiedot 
-                     :roolit (:roolit oikeudet)
-                     :impersonoitu_kayttaja (str (:etunimi impersonoitu-kayttaja) " " (:sukunimi impersonoitu-kayttaja)))]
-      (log/info "käyttäjä autentikoitu " auth-map (when ka/*impersonoitu-oid* (str ": impersonoija=" ka/*current-user-uid*)))
+            ka/*current-user-oid* (promise)]
+    (let [kayttaja (kayttaja-arkisto/hae-uid userid)]
+      (binding [ka/*effective-user-oid* (or impersonoitu-oid (:oid kayttaja))]
+        (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
+              oikeudet (kayttajaoikeus-arkisto/hae-oikeudet ka/*effective-user-oid*)
+              kayttajatiedot {:kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))}
+              auth-map (assoc kayttajatiedot 
+                         :roolit (:roolit oikeudet)
+                         :impersonoitu_kayttaja (str (:etunimi impersonoitu-kayttaja) " " (:sukunimi impersonoitu-kayttaja)))]
+      (log/info "käyttäjä autentikoitu " auth-map )
       (binding [ko/*current-user-authmap* auth-map]
         (deliver ka/*current-user-oid* (:oid kayttaja))
-        (f)))))
+        (f)))))))
 
 (defn wrap-sessionuser [ring-handler]
   (fn [request]

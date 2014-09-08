@@ -28,7 +28,7 @@
     {:status 200
      :session (assoc session :impersonoitu-oid oid)})
 
-  (cu/defapi :impersonointi nil :post "/lopeta-impersonointi" {session :session}
+  (cu/defapi :impersonointi-lopetus nil :post "/lopeta-impersonointi" {session :session}
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
 
@@ -36,9 +36,11 @@
     (json-response (arkisto/hae-impersonoitava-termilla termi)))
 
   (cu/defapi :omat_tiedot nil :get "/" []
-    (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet)
+    (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet ka/*effective-user-oid*)
           impersonoitu (:impersonoitu_kayttaja ko/*current-user-authmap*)]
-      (json-response ( assoc oikeudet :impersonoitu_kayttaja impersonoitu))))
+      (json-response (assoc oikeudet 
+                       :impersonoitu_kayttaja impersonoitu
+                       ))))
 
   (cu/defapi :kayttajan_tiedot oid :get "/:oid" [oid]
    true))

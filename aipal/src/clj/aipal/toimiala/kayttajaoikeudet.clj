@@ -31,11 +31,14 @@
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (sisaltaa-jonkin-rooleista? roolit
                               (kayttajaoikeus-arkisto/hae-kyselylla (->int kyselyid)
-                                                                    @ka/*current-user-oid*)))
+                                                                     ka/*effective-user-oid*)))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
     #{"YLLAPITAJA"}))
+
+(defn impersonoiva-yllapitaja? []
+  (not= @ka/*current-user-oid* ka/*effective-user-oid*))
 
 (defn kyselyiden-listaaminen?
   "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"
@@ -86,6 +89,7 @@
     :kyselykerta-luku kyselykerta-luku?
     :kysymysryhma-luku aipal-kayttaja?
     :impersonointi yllapitaja?
+    :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
     :omat_tiedot aipal-kayttaja?})
 

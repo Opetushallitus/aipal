@@ -22,17 +22,17 @@
             [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
-            [oph.korma.korma-auth :refer [*current-user-oid*]]))
+            [oph.korma.korma-auth :refer [*effective-user-oid*]]))
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
     (json-response (if (yllapitaja?)
                      (kysely/hae-kaikki)
-                     (kysely/hae-kaikki @*current-user-oid*))))
+                     (kysely/hae-kaikki *effective-user-oid*))))
 
   (cu/defapi :kysely-luonti nil :post "/" []
     (json-response (kysely/lisaa! {:nimi_fi "Uusi kysely"
-                                   :koulutustoimija (kayttaja/hae-organisaatio @*current-user-oid*)})))
+                                   :koulutustoimija (kayttaja/hae-organisaatio *effective-user-oid*)})))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (let [kysely (kysely/hae (Integer/parseInt kyselyid))]
