@@ -1,4 +1,4 @@
-;; Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
+;; Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
 ;;
 ;; This program is free software:  Licensed under the EUPL, Version 1.1 or - as
 ;; soon as they will be approved by the European Commission - subsequent versions
@@ -158,6 +158,8 @@
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
     (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
+            ;; Poistetaan oppilaitokset joille ei löydy koulutustoimijaa
+            ;; Oppilaitoksella on oltava koulutustoimija
             :when (oid->ytunnus (:parentOid koodi))
             :let [oppilaitoskoodi (:oppilaitosKoodi koodi)
                   koulutustoimija (oid->ytunnus (:parentOid koodi))
@@ -173,14 +175,17 @@
                                                   (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos))))))
 
 
-(defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit]
+(defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
   (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
                                          [(:oid o) (:oppilaitosKoodi o)]))
+        oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
         toimipaikat (->> (toimipaikka-arkisto/hae-kaikki)
                       (map-by :toimipaikkakoodi))]
     (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
-            :when (and (contains? oid->oppilaitostunnus (:parentOid koodi))
-                       (not= (:toimipistekoodi koodi) "9999901"))
+            ;; Poistetaan toimipaikat joille ei löydy oppilaitosta tai koulutustoimijaa
+            ;; Oppilaitoksella on oltava koulutustoimija, toimipaikalla on oltava oppilaitos
+            :when (and (oid->oppilaitostunnus (:parentOid koodi))
+                       (oid->ytunnus (:parentOid koodi)))
             :let [toimipaikkakoodi (:toimipistekoodi koodi)
                   oppilaitos (oid->oppilaitostunnus (:parentOid koodi))
                   vanha-toimipaikka (toimipaikan-kentat (get toimipaikat toimipaikkakoodi))
