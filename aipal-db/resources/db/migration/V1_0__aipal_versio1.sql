@@ -413,11 +413,35 @@ CREATE TABLE toimipaikka (
   luotu_kayttaja VARCHAR(80) NOT NULL,
   muutettu_kayttaja VARCHAR(80) NOT NULL);
 
+CREATE TABLE koulutusala (
+  koulutusalatunnus VARCHAR(1) PRIMARY KEY,
+  nimi_fi VARCHAR(200) NOT NULL,
+  nimi_sv VARCHAR(200),
+  luotu_kayttaja    VARCHAR (80) NOT NULL ,
+  muutettu_kayttaja VARCHAR (80) NOT NULL ,
+  luotuaika TIMESTAMPTZ NOT NULL ,
+  muutettuaika TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE opintoala (
+  opintoalatunnus VARCHAR(3) PRIMARY KEY,
+  koulutusala VARCHAR(1) NOT NULL,
+  nimi_fi VARCHAR(200) NOT NULL,
+  nimi_sv VARCHAR(200),
+  luotu_kayttaja    VARCHAR (80) NOT NULL ,
+  muutettu_kayttaja VARCHAR (80) NOT NULL ,
+  luotuaika TIMESTAMPTZ NOT NULL ,
+  muutettuaika TIMESTAMPTZ NOT NULL
+);
+
 CREATE TABLE tutkinto
   (
     tutkintotunnus    VARCHAR (6) NOT NULL PRIMARY KEY,
-    nimi_fi           VARCHAR (200) ,
+    opintoala         VARCHAR (3) NOT NULL,
+    nimi_fi           VARCHAR (200) NOT NULL,
     nimi_sv           VARCHAR (200) ,
+    voimassa_alkupvm  DATE,
+    voimassa_loppupvm DATE,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
@@ -548,6 +572,14 @@ ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_oppilaitos_FK FOREIGN KEY ( o
 
 ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_opintoala_FK FOREIGN KEY ( opintoala ) REFERENCES opintoala ( opintoalatunnus ) NOT DEFERRABLE ;  
+
+ALTER TABLE opintoala ADD CONSTRAINT opintoala_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE opintoala ADD CONSTRAINT opintoala_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE opintoala ADD CONSTRAINT opintoala_koulutusala_FK FOREIGN KEY ( koulutusala ) REFERENCES koulutusala ( koulutusalatunnus ) NOT DEFERRABLE ;
+
+ALTER TABLE koulutusala ADD CONSTRAINT koulutusala_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
+ALTER TABLE koulutusala ADD CONSTRAINT koulutusala_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 
 insert into kayttajarooli(roolitunnus, kuvaus, muutettuaika, luotuaika)
     values ('YLLAPITAJA', 'Ylläpitäjäroolilla on kaikki oikeudet', current_timestamp, current_timestamp);
