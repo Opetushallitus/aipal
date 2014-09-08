@@ -72,6 +72,9 @@ header {
     padding: 0;
     @include clearfix;
     li {
+      &:hover {
+        background-color: $darker-primary;
+      }
       border-right: 1px solid $separator-color;
       float: left;
       height: $nav-height;
@@ -96,6 +99,7 @@ header {
     @include icon-right(11px, 11px){@include user-icon;};
     height: $nav-height;
     &:hover {background-color: $darker-primary;}
+
     li {
       z-index: 2;
       position: relative;
