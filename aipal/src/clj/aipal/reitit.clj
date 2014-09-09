@@ -27,7 +27,8 @@
   (c/routes
     (c/GET "/" [] (s/render-file "public/app/index.html" (merge {:base-url (-> asetukset :server :base-url)
                                                                  :current-user (:kayttajan_nimi *current-user-authmap*)
-                                                                 :build-id @build-id}
+                                                                 :build-id @build-id
+                                                                 :development-mode (pr-str (:development-mode asetukset))}
                                                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                                                   {:logout-url (str cas-url "/logout")}))))
     (c/GET "/status" [] (s/render-file "status" (assoc (status)
