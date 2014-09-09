@@ -15,7 +15,7 @@
 'use strict';
 
 angular.module('toimiala.vastaajatunnus', ['ngResource'])
-  .factory('VastaajatunnusFactory', ['$resource', function($resource) {
+  .factory('Vastaajatunnus', ['$resource', function($resource) {
     var resource = $resource(null, null, {
       haku: {
         method: 'GET',

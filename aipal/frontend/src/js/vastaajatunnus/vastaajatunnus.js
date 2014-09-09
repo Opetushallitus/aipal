@@ -29,15 +29,15 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       });
   }])
 
-  .controller('VastaajatunnusController', ['VastaajatunnusFactory', '$routeParams', '$scope',
-     function(VastaajatunnusFactory, $routeParams, $scope) {
-	    $scope.tulos = VastaajatunnusFactory.hae($routeParams.kyselykertaid);
+  .controller('VastaajatunnusController', ['Vastaajatunnus', '$routeParams', '$scope',
+     function(Vastaajatunnus, $routeParams, $scope) {
+	    $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
     }]
   )
   
-  .controller('VastaajatunnusLuontiController', ['VastaajatunnusFactory', 'Kyselykerta', '$routeParams', '$scope',
-     function(VastaajatunnusFactory, Kyselykerta, $routeParams, $scope) {
+  .controller('VastaajatunnusLuontiController', ['Vastaajatunnus', 'Kyselykerta', '$routeParams', '$scope',
+     function(Vastaajatunnus, Kyselykerta, $routeParams, $scope) {
        // $scope.kyselykerta = Kyselykerta.haeYksi($routeParams.kyselykertaid);
-	    $scope.tallenna = VastaajatunnusFactory.tallenna($routeParams.kyselykertaid);
+	    $scope.tallenna = Vastaajatunnus.tallenna($routeParams.kyselykertaid);
     }]
   );
