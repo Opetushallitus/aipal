@@ -14,7 +14,8 @@
 
 'use strict';
 
-angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma'])
+angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma',
+                                               'yhteiset.palvelut.i18n'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -37,14 +38,19 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
     });
   }])
 
-  .controller('UusiKysymysryhmaController', ['$scope', '$window', 'Kysymysryhma',
-                                             function($scope, $window, Kysymysryhma){
+  .controller('UusiKysymysryhmaController', ['$scope', '$window', 'Kysymysryhma', 'i18n',
+                                             function($scope, $window, Kysymysryhma, i18n){
     $scope.kysely = {};
     $scope.peruuta = function(){
       $window.location.hash = '/kysymysryhmat';
     };
     $scope.luoUusi = function(){
-      Kysymysryhma.luoUusi($scope.kysely);
-      $window.location.hash = '/kysymysryhmat';
+      Kysymysryhma.luoUusi($scope.kysely)
+      .success(function(){
+        $window.location.hash = '/kysymysryhmat';
+      })
+      .error(function(){
+        $window.alert(i18n.hae('kysymysryhma.luonti_epaonnistui'));
+      });
     };
   }]);

@@ -25,7 +25,9 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
 
   beforeEach(module(function($provide){
     $window = {location: {}};
+    $window.alert = jasmine.createSpy('alert');
     $provide.value('$window', $window);
+    $provide.value('i18n', {hae: function(){return '';}});
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
@@ -58,6 +60,30 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $scope.luoUusi();
     $httpBackend.flush();
     expect($window.location.hash).toEqual('/kysymysryhmat');
+  });
+
+  it('ei näytä virheilmoitusta, jos luonti onnistuu', function(){
+    alustaController();
+    $httpBackend.whenPOST('api/kysymysryhma').respond(201);
+    $scope.luoUusi();
+    $httpBackend.flush();
+    expect($window.alert).not.toHaveBeenCalled();
+  });
+
+  it('ei siirrä käyttäjää, jos luonti epäonnistuu', function(){
+    alustaController();
+    $httpBackend.whenPOST('api/kysymysryhma').respond(500);
+    $scope.luoUusi();
+    $httpBackend.flush();
+    expect($window.location.hash).toBe(undefined);
+  });
+
+  it('näyttää virheilmoituksen, jos luonti epäonnistuu', function(){
+    alustaController();
+    $httpBackend.whenPOST('api/kysymysryhma').respond(500);
+    $scope.luoUusi();
+    $httpBackend.flush();
+    expect($window.alert).toHaveBeenCalled();
   });
 
 });
