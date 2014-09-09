@@ -24,11 +24,19 @@ angular.module('yhteiset.palvelut.i18n', ['ngResource'])
     return kieli;
   }])
 
-  .factory('i18n', ['$resource', 'kieli', function($resource, kieli) {
+  .constant('i18nHae', function(avain){
+    return _.reduce(avain.split('.'), function(arvot, avain){
+      if (arvot) {
+        return arvot[avain];
+      }
+    }, this);
+  })
 
+  .factory('i18n', ['$resource', 'kieli', 'i18nHae', function($resource, kieli, i18nHae) {
     var i18nResource = $resource('api/i18n/:kieli');
-
-    return i18nResource.get({kieli : kieli});
+    var i18n = i18nResource.get({kieli : kieli});
+    i18n.hae = i18nHae;
+    return i18n;
   }])
 
   .factory('$locale', ['kieli', function(kieli) {
