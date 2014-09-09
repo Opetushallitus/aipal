@@ -17,3 +17,4 @@ bower_components
 compiled_css
 resources/public/app/
 .tmp
+aipal.properties
