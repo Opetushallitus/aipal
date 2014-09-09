@@ -35,7 +35,7 @@ angular.module('yhteiset.palvelut.i18n', ['ngResource'])
         $window.alert('Tuntematon käännösavain: ' + avain);
       }
       return tulos;
-    }
+    };
   }])
 
   .factory('i18n', ['$resource', 'kieli', 'i18nHae', function($resource, kieli, i18nHae) {
