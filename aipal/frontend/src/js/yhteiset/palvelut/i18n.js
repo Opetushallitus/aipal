@@ -24,13 +24,19 @@ angular.module('yhteiset.palvelut.i18n', ['ngResource'])
     return kieli;
   }])
 
-  .constant('i18nHae', function(avain){
-    return _.reduce(avain.split('.'), function(arvot, avain){
-      if (arvot) {
-        return arvot[avain];
+  .factory('i18nHae', ['$window', function($window){
+    return function(avain){
+      var tulos = _.reduce(avain.split('.'), function(arvot, avain){
+        if (arvot) {
+          return arvot[avain];
+        }
+      }, this);
+      if ($window.developmentMode && tulos === undefined) {
+        $window.alert('Tuntematon käännösavain: ' + avain);
       }
-    }, this);
-  })
+      return tulos;
+    }
+  }])
 
   .factory('i18n', ['$resource', 'kieli', 'i18nHae', function($resource, kieli, i18nHae) {
     var i18nResource = $resource('api/i18n/:kieli');

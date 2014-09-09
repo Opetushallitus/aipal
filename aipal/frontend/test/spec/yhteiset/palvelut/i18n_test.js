@@ -16,9 +16,16 @@
 
 describe('yhteiset.palvelut.i18n', function(){
 
+  var $window;
   var i18nHae;
 
   beforeEach(module('yhteiset.palvelut.i18n'));
+
+  beforeEach(module(function($provide){
+    $window = {location: {}};
+    $window.alert = jasmine.createSpy('alert');
+    $provide.value('$window', $window);
+  }));
 
   beforeEach(inject(function(_i18nHae_){
     i18nHae = _i18nHae_;
@@ -43,6 +50,26 @@ describe('yhteiset.palvelut.i18n', function(){
     it('palauttaa undefined tuntemattomille väliavaimille', function(){
       var i18n = {foo: {bar: {baz: 'xyz'}}, hae: i18nHae};
       expect(i18n.hae('foo.asdf.baz')).toBe(undefined);
+    });
+
+    it('näyttää kehitysmoodissa alertin, jos avainta ei löydy', function(){
+      $window.developmentMode = true;
+      var i18n = {foo: 'bar', hae: i18nHae};
+      i18n.hae('baz.blah');
+      expect($window.alert.calls.mostRecent().args[0]).toMatch(/baz\.blah/);
+    });
+
+    it('ei näytä kehitysmoodissa alertia, jos avain löytyy', function(){
+      $window.developmentMode = true;
+      var i18n = {foo: 'bar', hae: i18nHae};
+      i18n.hae('foo');
+      expect($window.alert).not.toHaveBeenCalled();
+    });
+
+    it('ei näytä alertia tuotantomoodissa', function(){
+      var i18n = {foo: 'bar', hae: i18nHae};
+      i18n.hae('baz');
+      expect($window.alert).not.toHaveBeenCalled();
     });
   });
 
