@@ -21,41 +21,61 @@
     [clj-time.core :as time]
     [clj-time.core :as ctime]
     [korma.core :as sql]
-    [oph.korma.korma :refer [joda-datetime->sql-timestamp]]
-  ))
+    [oph.korma.korma :refer [joda-datetime->sql-timestamp]]))
 
-(def  default-tutkinto 
+(def default-koulutusala
+  {:koulutusalatunnus "1"
+   :nimi_fi "Koulutusala"})
+
+(def default-opintoala
+  {:opintoalatunnus "123"
+   :koulutusala "1"
+   :nimi_fi "Opintoala"})
+
+(def  default-tutkinto
   {:tutkintotunnus "123456"
-   :nimi_fi "Autoalan perustutkinto"})
+   :nimi_fi "Autoalan perustutkinto"
+   :opintoala "123"})
 
 (def default-koulutustoimija
   {:ytunnus "1234567-8"
    :nimi_fi "Pörsänmäen opistokeskittymä"})
 
-(defn lisaa-tutkinto! 
+(defn lisaa-koulutusala!
+  ([koulutusala]
+    (let [k (merge default-koulutusala koulutusala)]
+      (sql/insert :koulutusala
+        (sql/values k))))
+  ([]
+    (lisaa-koulutusala! default-koulutusala)))
+
+(defn lisaa-opintoala!
+  ([opintoala]
+    (let [o (merge default-opintoala opintoala)]
+      (sql/insert :opintoala
+        (sql/values o))))
+  ([]
+    (lisaa-koulutusala!)
+    (lisaa-opintoala! default-opintoala)))
+
+(defn lisaa-tutkinto!
   ([tutkinto]
     (let [t (merge default-tutkinto tutkinto)]
-      (sql/exec-raw [(str "insert into tutkinto("
-                     "tutkintotunnus,"
-                     "nimi_fi " 
-                     ")values("
-                     "?,"
-                     "? " 
-                     ")")
-                    (map t [:tutkintotunnus :nimi_fi])])
-      t
-      ))
-  ([] (lisaa-tutkinto! default-tutkinto)))
+      (sql/insert :tutkinto
+        (sql/values t))))
+  ([]
+    (lisaa-opintoala!)
+    (lisaa-tutkinto! default-tutkinto)))
 
-(defn lisaa-koulutustoimija! 
+(defn lisaa-koulutustoimija!
   ([koulutustoimija]
     (let [t (merge default-koulutustoimija koulutustoimija)]
       (sql/exec-raw [(str "insert into koulutustoimija("
                      "ytunnus,"
-                     "nimi_fi " 
+                     "nimi_fi "
                      ")values("
                      "?,"
-                     "? " 
+                     "? "
                      ")")
                     (map t [:ytunnus :nimi_fi])])
       t

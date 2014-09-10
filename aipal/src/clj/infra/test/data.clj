@@ -33,6 +33,8 @@
    "kyselykerta"
    "kysely"
    "tutkinto"
+   "opintoala"
+   "koulutusala"
    "koulutustoimija"
    ])
 
