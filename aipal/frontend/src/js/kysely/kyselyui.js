@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus'])
+angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'toimiala.vastaajatunnus', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -53,6 +53,11 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
       $scope.suljePopup = function() {
         $scope.naytaLuonti = false;
         $scope.haeKyselyt();
+      };
+
+      $scope.luoTunnuksiaDialogi = function(kyselykertaId) {
+        $scope.naytaLuoTunnuksia = true;
+        $scope.valittuKyselykertaId = kyselykertaId;
       };
     }
   ])
@@ -126,4 +131,25 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
         };
       }
     };
-  }]);
+  }])
+
+  .directive('tunnustenLuonti', ['Vastaajatunnus', function(Vastaajatunnus) {
+    return {
+      restrict: 'E',
+      scope: {
+        kyselykertaid: '='
+      },
+      templateUrl: 'template/kysely/tunnusten-luonti.html',
+      link: function(scope) {
+        scope.vastaajatunnus = {
+          vastaajien_lkm: 1
+        };
+        scope.luoTunnuksia = function(vastaajatunnus) {
+          scope.naytaLuoTunnuksia = false;
+          Vastaajatunnus.luoUusi(scope.kyselykertaid, vastaajatunnus);
+        };
+      }
+    };
+  }])
+
+;

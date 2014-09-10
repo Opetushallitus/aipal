@@ -1,0 +1,12 @@
+<form name="tunnustenLuontiForm">
+  <h3>Vastaajatunnusten luonti</h3>
+
+  <div>Vastaajien määrä <input type="number" ng-model="vastaajatunnus.vastaajien_lkm" ng-required="true"></div>
+
+  <div>Vastausaika</div>
+  <div><pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_alkupvm"></pvm-valitsin> - <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_loppupvm"></pvm-valitsin></div>
+
+  <button ng-click="luoTunnuksia(vastaajatunnus)">Lisää vastaustunnuksia</button>
+
+  <div>{{ vastaajatunnus | json }}</div>
+</form>

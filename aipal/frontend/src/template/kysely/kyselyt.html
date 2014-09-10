@@ -23,6 +23,9 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
       <a ng-href="#/vastaajatunnus/{{kyselykerta.kyselykertaid}}">
         {{i18n.vastaajatunnus.hallitse}}
        </a>
+      <a ng-click="luoTunnuksiaDialogi(kyselykerta.kyselykertaid)">
+        {{i18n.vastaajatunnus.luonti}}
+      </a>
       <br>Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}
     </div>
   </div>
@@ -30,4 +33,8 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
 
 <popup-ikkuna nayta-popup="naytaLuonti">
   <kyselykerta-luonti kyselyid="valittuKyselyid" ilmoita-tallennus="suljePopup()"></kyselykerta-luonti>
+</popup-ikkuna>
+
+<popup-ikkuna nayta-popup="naytaLuoTunnuksia">
+  <tunnusten-luonti kyselykertaid="valittuKyselykertaId"></tunnusten-luonti>
 </popup-ikkuna>
