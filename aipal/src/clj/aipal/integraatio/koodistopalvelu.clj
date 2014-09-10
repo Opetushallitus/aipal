@@ -71,6 +71,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn koodiston-uusin-versio
   [asetukset koodisto]
+  ;; Koodistopalvelussa ei ole vielä hyväksyttyjä versioita
   1 #_(loop [versio nil]
         (when-let [json (get-json-from-url (str (:url asetukset)
                                                 koodisto
@@ -134,29 +135,32 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-tutkinto-muutokset
   [asetukset]
-  (let [vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
-                          [(:tutkintotunnus tutkinto) (select-keys tutkinto [:nimi_fi :nimi_sv :tutkintotunnus])]))
+  (let [tutkinto-kentat [:nimi_fi :nimi_sv :tutkintotunnus :opintoala]
+        vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
+                          [(:tutkintotunnus tutkinto) (select-keys tutkinto tutkinto-kentat)]))
         uudet (->> (hae-tutkinnot asetukset)
                 (map (partial lisaa-opintoala-ja-tyyppi asetukset))
-                (filter #(#{"02" "03"} (:tyyppi %)))
-                (map #(dissoc % :koodiUri :tyyppi))
+                (filter (comp #{"02" "03"} :tyyppi))
+                (map #(select-keys % tutkinto-kentat))
                 (map-by :tutkintotunnus))]
     (muutokset uudet vanhat)))
 
 (defn hae-koulutusala-muutokset
   [asetukset]
-  (let [vanhat (into {} (for [koulutusala (koulutusala-arkisto/hae-kaikki)]
-                          [(:koulutusalatunnus koulutusala) (select-keys koulutusala [:nimi_fi :nimi_sv :koulutusalatunnus])]))
+  (let [koulutusala-kentat [:nimi_fi :nimi_sv :koulutusalatunnus]
+        vanhat (into {} (for [koulutusala (koulutusala-arkisto/hae-kaikki)]
+                          [(:koulutusalatunnus koulutusala) (select-keys koulutusala koulutusala-kentat)]))
         uudet (map-by :koulutusalatunnus
-                      (map #(dissoc % :koodiUri) (hae-koulutusalat asetukset)))]
+                      (map #(select-keys % koulutusala-kentat) (hae-koulutusalat asetukset)))]
     (muutokset uudet vanhat)))
 
 (defn hae-opintoala-muutokset
   [asetukset]
-  (let [vanhat (into {} (for [opintoala (opintoala-arkisto/hae-kaikki)]
-                          [(:opintoalatunnus opintoala) (select-keys opintoala [:nimi_fi :nimi_sv :opintoalatunnus])]))
+  (let [opintoala-kentat [:nimi_fi :nimi_sv :opintoalatunnus]
+        vanhat (into {} (for [opintoala (opintoala-arkisto/hae-kaikki)]
+                          [(:opintoalatunnus opintoala) (select-keys opintoala opintoala-kentat)]))
         uudet (map-by :opintoalatunnus
-                      (map #(dissoc % :koodiUri) (hae-opintoalat asetukset)))]
+                      (map #(select-keys % opintoala-kentat) (hae-opintoalat asetukset)))]
     (muutokset uudet vanhat)))
 
 
