@@ -1,23 +1,22 @@
 (ns aipal.reitit
-  (:require
-          [clojure.pprint :refer [pprint]]
-          [clojure.java.io :as io]
-          [compojure.core :as c]
-          [stencil.core :as s]
+  (:require [clojure.pprint :refer [pprint]]
+            [clojure.java.io :as io]
+            [compojure.core :as c]
+            [stencil.core :as s]
 
-          aipal.rest-api.i18n
-          [clj-cas-client.core :refer [cas]]
-          aipal.rest-api.kysely
-          aipal.rest-api.kyselykerta
-          aipal.rest-api.kyselypohja
-          aipal.rest-api.kysymysryhma
-          aipal.rest-api.raportti.kyselykerta
-          aipal.rest_api.js-log
-          aipal.rest-api.vastaajatunnus
-          aipal.rest-api.kayttaja
-          [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
+            aipal.rest-api.i18n
+            [clj-cas-client.core :refer [cas]]
+            aipal.rest-api.kysely
+            aipal.rest-api.kyselykerta
+            aipal.rest-api.kyselypohja
+            aipal.rest-api.kysymysryhma
+            aipal.rest-api.raportti.kyselykerta
+            aipal.rest_api.js-log
+            aipal.rest-api.vastaajatunnus
+            aipal.rest-api.kayttaja
+            [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
 
-          [aitu.infra.status :refer [status]]))
+            [aitu.infra.status :refer [status]]))
 
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
                        (.trim (slurp resource))

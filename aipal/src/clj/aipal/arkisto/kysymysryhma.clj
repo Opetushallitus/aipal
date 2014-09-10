@@ -21,3 +21,7 @@
     (sql/fields :nimi_fi :nimi_sv :selite_fi :selite_sv)
     (sql/order :muutettuaika :desc)
     (sql/order :kysymysryhmaid :desc)))
+
+(defn lisaa-kysymysryhma! [k]
+  (sql/insert kysymysryhma
+    (sql/values (assoc k :valtakunnallinen true))))

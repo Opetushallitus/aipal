@@ -78,6 +78,20 @@
   (let [kyselykerta (kyselykerta-arkisto/hae-yksi (->int kyselykertaid))]
     (kysely-luku? (:kyselyid kyselykerta))))
 
+(defn kysymysryhma-listaaminen? []
+  (or (yllapitaja?)
+      (kayttajalla-on-jokin-rooleista?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"
+          "OPL-KAYTTAJA"
+          "OPL-KATSELIJA"})))
+
+(defn kysymysryhma-luonti? []
+  (or (yllapitaja?)
+      (kayttajalla-on-jokin-rooleista?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"})))
+
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
@@ -87,7 +101,8 @@
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
     :kyselykerta-luku kyselykerta-luku?
-    :kysymysryhma-luku aipal-kayttaja?
+    :kysymysryhma-listaaminen kysymysryhma-listaaminen?
+    :kysymysryhma-luonti kysymysryhma-luonti?
     :impersonointi yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
