@@ -41,6 +41,14 @@
     (sql/order :kyselykertaid :DESC)
     sql/exec))
 
+(defn lisaa-vastaajatunnus
+  [kyselykertaid kentat]
+  (->
+    (sql/insert* vastaajatunnus)
+    (sql/values (merge kentat {:kyselykertaid kyselykertaid
+                               :tunnus (luo-tunnus 13)}))
+    sql/exec))
+
 (defn luo-tunnus 
   "Luo yksilöllisen tunnuksen. "
   ([pituus]

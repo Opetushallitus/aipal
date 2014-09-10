@@ -22,5 +22,8 @@
   (cu/defapi :vastaajatunnus nil :get "/" []
     (json-response (vastaajatunnus/hae-kaikki)))
 
+  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
+    (json-response (vastaajatunnus/lisaa-vastaajatunnus (Integer/parseInt kyselykertaid) vastaajatunnus)))
+
   (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid" [kyselykertaid]
     (json-response (vastaajatunnus/hae-kyselykerralla (java.lang.Integer/parseInt kyselykertaid)))))
