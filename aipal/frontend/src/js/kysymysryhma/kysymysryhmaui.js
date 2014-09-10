@@ -38,8 +38,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
     });
   }])
 
-  .controller('UusiKysymysryhmaController', ['$scope', '$window', 'Kysymysryhma', 'i18n',
-                                             function($scope, $window, Kysymysryhma, i18n){
+  .controller('UusiKysymysryhmaController', ['$scope', '$window', 'Kysymysryhma',
+                                             'i18n', 'toaster',
+                                             function($scope, $window,
+                                                 Kysymysryhma, i18n, toaster){
     $scope.kysely = {};
     $scope.peruuta = function(){
       $window.location.hash = '/kysymysryhmat';
@@ -50,7 +52,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
         $window.location.hash = '/kysymysryhmat';
       })
       .error(function(){
-        $window.alert(i18n.hae('kysymysryhma.luonti_epaonnistui'));
+        toaster.pop('error', null, i18n.hae('kysymysryhma.luonti_epaonnistui'));
       });
     };
   }]);

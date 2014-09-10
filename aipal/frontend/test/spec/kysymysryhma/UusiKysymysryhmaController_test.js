@@ -20,14 +20,18 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   var $httpBackend;
   var $controller;
   var $window;
+  var toaster;
 
   beforeEach(module('kysymysryhma.kysymysryhmaui'));
 
   beforeEach(module(function($provide){
     $window = {location: {}};
-    $window.alert = jasmine.createSpy('alert');
     $provide.value('$window', $window);
+
     $provide.value('i18n', {hae: function(){return '';}});
+
+    toaster = {pop: jasmine.createSpy('pop')};
+    $provide.value('toaster', toaster);
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
@@ -67,7 +71,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(201);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect($window.alert).not.toHaveBeenCalled();
+    expect(toaster.pop).not.toHaveBeenCalled();
   });
 
   it('ei siirrä käyttäjää, jos luonti epäonnistuu', function(){
@@ -83,7 +87,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(500);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect($window.alert).toHaveBeenCalled();
+    expect(toaster.pop).toHaveBeenCalledWith('error', null, jasmine.any(String));
   });
 
 });
