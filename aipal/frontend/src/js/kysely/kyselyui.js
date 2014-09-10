@@ -59,6 +59,9 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 't
         $scope.naytaLuoTunnuksia = true;
         $scope.valittuKyselykertaId = kyselykertaId;
       };
+      $scope.suljeLuoTunnuksiaDialogi = function() {
+        $scope.naytaLuoTunnuksia = false;
+      };
     }
   ])
 
@@ -137,7 +140,8 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 't
     return {
       restrict: 'E',
       scope: {
-        kyselykertaid: '='
+        kyselykertaid: '=',
+        ilmoitaLuonti: '&'
       },
       templateUrl: 'template/kysely/tunnusten-luonti.html',
       link: function(scope) {
@@ -145,7 +149,7 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 't
           vastaajien_lkm: 1
         };
         scope.luoTunnuksia = function(vastaajatunnus) {
-          scope.naytaLuoTunnuksia = false;
+          scope.ilmoitaLuonti();
           Vastaajatunnus.luoUusi(scope.kyselykertaid, vastaajatunnus);
         };
       }
