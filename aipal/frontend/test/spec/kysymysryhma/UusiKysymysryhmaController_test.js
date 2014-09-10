@@ -49,7 +49,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.expectPOST('api/kysymysryhma', {nimi_fi: 'foo',
                                                  nimi_sv: 'fåå',
                                                  selite_fi: 'bar',
-                                                 selite_sv: 'bår'}).respond(201);
+                                                 selite_sv: 'bår'}).respond(200);
     $scope.kysely.nimi_fi = 'foo';
     $scope.kysely.nimi_sv = 'fåå';
     $scope.kysely.selite_fi = 'bar';
@@ -60,7 +60,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
 
   it('siirtää käyttäjän kysymysryhmien listausnäytölle luonnin jälkeen, jos luonti onnistuu', function(){
     alustaController();
-    $httpBackend.whenPOST('api/kysymysryhma').respond(201);
+    $httpBackend.whenPOST('api/kysymysryhma').respond(200);
     $scope.luoUusi();
     $httpBackend.flush();
     expect($window.location.hash).toEqual('/kysymysryhmat');
@@ -68,7 +68,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
 
   it('ei näytä virheilmoitusta, jos luonti onnistuu', function(){
     alustaController();
-    $httpBackend.whenPOST('api/kysymysryhma').respond(201);
+    $httpBackend.whenPOST('api/kysymysryhma').respond(200);
     $scope.luoUusi();
     $httpBackend.flush();
     expect(toaster.pop).not.toHaveBeenCalled();
