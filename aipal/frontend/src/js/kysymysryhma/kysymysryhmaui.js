@@ -50,6 +50,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
       Kysymysryhma.luoUusi($scope.kysely)
       .success(function(){
         $window.location.hash = '/kysymysryhmat';
+        toaster.pop('success', null, i18n.hae('kysymysryhma.luonti_onnistui'));
       })
       .error(function(){
         toaster.pop('error', null, i18n.hae('kysymysryhma.luonti_epaonnistui'));

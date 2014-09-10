@@ -71,7 +71,15 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(200);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect(toaster.pop).not.toHaveBeenCalled();
+    expect(toaster.pop).not.toHaveBeenCalledWith('error', null, jasmine.any(String));
+  });
+
+  it('näyttää ilmoituksen, jos luonti onnistuu', function(){
+    alustaController();
+    $httpBackend.whenPOST('api/kysymysryhma').respond(200);
+    $scope.luoUusi();
+    $httpBackend.flush();
+    expect(toaster.pop).toHaveBeenCalledWith('success', null, jasmine.any(String));
   });
 
   it('ei siirrä käyttäjää, jos luonti epäonnistuu', function(){
