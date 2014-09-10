@@ -14,5 +14,5 @@
 
 <div>
   <button ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
-  <button ng-click="luoUusi()">{{i18n.kysymysryhma.luo_uusi}}</button>
+  <button ng-click="luoUusi()" ng-disabled="!kysely.nimi_fi">{{i18n.kysymysryhma.luo_uusi}}</button>
 </div>
