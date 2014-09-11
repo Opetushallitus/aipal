@@ -136,24 +136,4 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 't
     };
   }])
 
-  .directive('tunnustenLuonti', ['Vastaajatunnus', function(Vastaajatunnus) {
-    return {
-      restrict: 'E',
-      scope: {
-        kyselykertaid: '=',
-        ilmoitaLuonti: '&'
-      },
-      templateUrl: 'template/kysely/tunnusten-luonti.html',
-      link: function(scope) {
-        scope.vastaajatunnus = {
-          vastaajien_lkm: 1
-        };
-        scope.luoTunnuksia = function(vastaajatunnus) {
-          scope.ilmoitaLuonti();
-          Vastaajatunnus.luoUusi(scope.kyselykertaid, vastaajatunnus);
-        };
-      }
-    };
-  }])
-
 ;

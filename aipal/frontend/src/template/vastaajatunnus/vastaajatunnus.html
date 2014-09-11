@@ -1,7 +1,10 @@
 <h2>{{i18n.yleiset.vastaajatunnus}}</h2>
 
-{{i18n.vastaajatunnus.lista}}
-<br>
+<a ng-click="luoTunnuksiaDialogi(kyselykerta.kyselykertaid)">
+  {{i18n.vastaajatunnus.luonti}}
+</a>
+
+<h3>{{i18n.vastaajatunnus.lista}}</h3>
 
 <div ng-repeat="tunnus in tulos">
     Tunnus: <span>{{tunnus.tunnus}}</span>, 
@@ -11,11 +14,6 @@
     <br>
 </div>
 
-<hr>
-<a ng-href="#/vastaajatunnus/luonti/{{kyselykerta.kyselykertaid}}">
-  {{i18n.vastaajatunnus.lisaa}}
-</a>
-
-<hr>
-debug-juttu, poistetaan lopullisesta versiosta 
- {{tulos|json}}
+<popup-ikkuna nayta-popup="naytaLuoTunnuksia">
+  <tunnusten-luonti kyselykertaid="valittuKyselykertaId" ilmoita-luonti="suljeLuoTunnuksiaDialogi()"></tunnusten-luonti>
+</popup-ikkuna>
