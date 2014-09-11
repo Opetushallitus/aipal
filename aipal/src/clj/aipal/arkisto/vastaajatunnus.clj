@@ -41,15 +41,7 @@
     (sql/order :kyselykertaid :DESC)
     sql/exec))
 
-(defn lisaa-vastaajatunnus
-  [kyselykertaid kentat]
-  (->
-    (sql/insert* vastaajatunnus)
-    (sql/values (merge kentat {:kyselykertaid kyselykertaid
-                               :tunnus (luo-tunnus 13)}))
-    sql/exec))
-
-(defn luo-tunnus 
+(defn luo-tunnus
   "Luo yksilöllisen tunnuksen. "
   ([pituus]
   {:post [(and 
@@ -59,6 +51,14 @@
   ([pituus luodut-tunnukset]
     (first (drop-while #(contains? luodut-tunnukset %)
       (take 10000 (repeatedly #(luo-tunnus pituus)))))))
+
+(defn lisaa-vastaajatunnus
+  [kyselykertaid kentat]
+  (->
+    (sql/insert* vastaajatunnus)
+    (sql/values (merge kentat {:kyselykertaid kyselykertaid
+                               :tunnus (luo-tunnus 13)}))
+    sql/exec))
 
 (defn lisaa!
   "Lisää uuden vastaajatunnuksen tietokantaan"
