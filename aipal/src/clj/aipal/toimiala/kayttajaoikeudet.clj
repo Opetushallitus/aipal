@@ -106,6 +106,7 @@
     :impersonointi yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
+    :rahoitusmuoto aipal-kayttaja?
     :omat_tiedot aipal-kayttaja?})
 
 (def toiminnot kayttajatoiminnot)

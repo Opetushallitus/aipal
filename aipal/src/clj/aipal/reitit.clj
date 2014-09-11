@@ -10,6 +10,7 @@
             aipal.rest-api.kyselykerta
             aipal.rest-api.kyselypohja
             aipal.rest-api.kysymysryhma
+            aipal.rest-api.rahoitusmuoto
             aipal.rest-api.raportti.kyselykerta
             aipal.rest_api.js-log
             aipal.rest-api.vastaajatunnus
@@ -41,6 +42,7 @@
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
     (c/context "/api/kyselypohja" [] aipal.rest-api.kyselypohja/reitit)
+    (c/context "/api/rahoitusmuoto" [] aipal.rest-api.rahoitusmuoto/reitit)
     (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
     (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)
     (c/context "/api/kysymysryhma" [] aipal.rest-api.kysymysryhma/reitit)
