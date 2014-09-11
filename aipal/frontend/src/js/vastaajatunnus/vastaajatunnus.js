@@ -22,11 +22,6 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
         controller: 'VastaajatunnusController',
         templateUrl: 'template/vastaajatunnus/vastaajatunnus.html'
       })
-      
-      .when('/vastaajatunnus/luonti/:kyselykertaid', {
-        controller: 'VastaajatunnusLuontiController',
-        templateUrl: 'template/vastaajatunnus/vastaajatunnus-luonti.html'
-      });
   }])
 
   .controller('VastaajatunnusController', ['Vastaajatunnus', '$routeParams', '$scope',
@@ -43,13 +38,6 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
     }]
   )
   
-  .controller('VastaajatunnusLuontiController', ['Vastaajatunnus', 'Kyselykerta', '$routeParams', '$scope',
-     function(Vastaajatunnus, Kyselykerta, $routeParams, $scope) {
-       // $scope.kyselykerta = Kyselykerta.haeYksi($routeParams.kyselykertaid);
-	    $scope.tallenna = Vastaajatunnus.tallenna($routeParams.kyselykertaid);
-    }]
-  )
-
   .directive('tunnustenLuonti', ['Vastaajatunnus', function(Vastaajatunnus) {
     return {
       restrict: 'E',
