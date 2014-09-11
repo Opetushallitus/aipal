@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'toimiala.vastaajatunnus', 'toimiala.kyselykerta'])
+angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'toimiala.rahoitusmuoto', 'toimiala.vastaajatunnus', 'toimiala.kyselykerta'])
   
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -37,8 +37,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
     }]
   )
-  
-  .directive('tunnustenLuonti', ['Vastaajatunnus', function(Vastaajatunnus) {
+
+  .directive('tunnustenLuonti', ['Rahoitusmuoto', 'Vastaajatunnus', function(Rahoitusmuoto, Vastaajatunnus) {
     return {
       restrict: 'E',
       scope: {
@@ -54,6 +54,7 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
           scope.ilmoitaLuonti();
           Vastaajatunnus.luoUusi(scope.kyselykertaid, vastaajatunnus);
         };
+        scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki();
       }
     };
   }])
