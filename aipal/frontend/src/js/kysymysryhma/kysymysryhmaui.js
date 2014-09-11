@@ -15,7 +15,8 @@
 'use strict';
 
 angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma',
-                                               'yhteiset.palvelut.i18n'])
+                                               'yhteiset.palvelut.i18n',
+                                               'yhteiset.palvelut.ilmoitus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -39,9 +40,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
   }])
 
   .controller('UusiKysymysryhmaController', ['$scope', '$window', 'Kysymysryhma',
-                                             'i18n', 'toaster',
+                                             'i18n', 'ilmoitus',
                                              function($scope, $window,
-                                                 Kysymysryhma, i18n, toaster){
+                                                 Kysymysryhma, i18n, ilmoitus){
     $scope.kysely = {};
     $scope.peruuta = function(){
       $window.location.hash = '/kysymysryhmat';
@@ -50,10 +51,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma
       Kysymysryhma.luoUusi($scope.kysely)
       .success(function(){
         $window.location.hash = '/kysymysryhmat';
-        toaster.pop('success', null, i18n.hae('kysymysryhma.luonti_onnistui'));
+        ilmoitus.onnistuminen(i18n.hae('kysymysryhma.luonti_onnistui'));
       })
       .error(function(){
-        toaster.pop('error', null, i18n.hae('kysymysryhma.luonti_epaonnistui'));
+        ilmoitus.virhe(i18n.hae('kysymysryhma.luonti_epaonnistui'));
       });
     };
   }]);

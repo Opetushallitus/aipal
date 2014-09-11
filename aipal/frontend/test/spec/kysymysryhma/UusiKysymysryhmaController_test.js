@@ -20,7 +20,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   var $httpBackend;
   var $controller;
   var $window;
-  var toaster;
+  var ilmoitus;
 
   beforeEach(module('kysymysryhma.kysymysryhmaui'));
 
@@ -30,8 +30,9 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
 
     $provide.value('i18n', {hae: function(){return '';}});
 
-    toaster = {pop: jasmine.createSpy('pop')};
-    $provide.value('toaster', toaster);
+    ilmoitus = {onnistuminen: jasmine.createSpy('onnistuminen'),
+                virhe: jasmine.createSpy('virhe')};
+    $provide.value('ilmoitus', ilmoitus);
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
@@ -71,7 +72,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(200);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect(toaster.pop).not.toHaveBeenCalledWith('error', null, jasmine.any(String));
+    expect(ilmoitus.virhe).not.toHaveBeenCalled();
   });
 
   it('näyttää ilmoituksen, jos luonti onnistuu', function(){
@@ -79,7 +80,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(200);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect(toaster.pop).toHaveBeenCalledWith('success', null, jasmine.any(String));
+    expect(ilmoitus.onnistuminen).toHaveBeenCalled();
   });
 
   it('ei siirrä käyttäjää, jos luonti epäonnistuu', function(){
@@ -95,7 +96,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(500);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect(toaster.pop).toHaveBeenCalledWith('error', null, jasmine.any(String));
+    expect(ilmoitus.virhe).toHaveBeenCalled();
   });
 
 });

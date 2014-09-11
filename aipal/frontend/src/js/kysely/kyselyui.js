@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'toaster'])
+angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -29,15 +29,15 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
   }])
 
   .controller('KyselytController', [
-    '$location', '$scope', 'toaster', 'Kysely', 'i18n',
-    function($location, $scope, toaster, Kysely, i18n) {
+    '$location', '$scope', 'ilmoitus', 'Kysely', 'i18n',
+    function($location, $scope, ilmoitus, Kysely, i18n) {
       $scope.naytaLuonti = false;
 
       $scope.luoUusiKysely = function() {
         Kysely.luoUusi(function(data) {
           $location.url('/kysely/' + data.kyselyid);
         }, function() {
-          toaster.pop('error', null, i18n.kysely.uuden_luonti_epaonnistui);
+          ilmoitus.virhe(i18n.kysely.uuden_luonti_epaonnistui);
         });
       };
 
@@ -58,15 +58,15 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
   ])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'i18n', '$routeParams', '$route', '$scope', 'toaster',
-    function(Kysely, Kyselypohja, i18n, $routeParams, $route, $scope, toaster) {
+    'Kysely', 'Kyselypohja', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus',
+    function(Kysely, Kyselypohja, i18n, $routeParams, $route, $scope, ilmoitus) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function(kysely) {
         Kysely.tallenna(kysely, function() {
-          toaster.pop('success', null, i18n.kysely.tallennus_onnistui);
+          ilmoitus.onnistuminen(i18n.kysely.tallennus_onnistui);
         }, function() {
-          toaster.pop('error', null, i18n.kysely.tallennus_epaonnistui);
+          ilmoitus.virhe(i18n.kysely.tallennus_epaonnistui);
         });
       };
 
