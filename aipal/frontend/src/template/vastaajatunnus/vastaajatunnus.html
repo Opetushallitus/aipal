@@ -7,7 +7,7 @@
 <h3>{{i18n.vastaajatunnus.lista}}</h3>
 
 <div ng-repeat="tunnus in tulos">
-    Tunnus: <span>{{tunnus.tunnus}}</span>, 
+    Tunnus: <span>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</span>,
     Voimassa: <span>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</span>,
     Vastattu: <span>{{tunnus.vastaajien_lkm}}</span>
     Rahoitusmuoto: <span>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto}}</span>
