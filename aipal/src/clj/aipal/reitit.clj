@@ -2,6 +2,7 @@
   (:require [clojure.pprint :refer [pprint]]
             [clojure.java.io :as io]
             [compojure.core :as c]
+            [compojure.route :as r]
             [stencil.core :as s]
 
             aipal.rest-api.i18n
@@ -45,4 +46,5 @@
     (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)
     (c/context "/api/kysymysryhma" [] aipal.rest-api.kysymysryhma/reitit)
     (c/context "/api/vastaajatunnus" [] aipal.rest-api.vastaajatunnus/reitit)
-    (c/context "/api/kayttaja" [] aipal.rest-api.kayttaja/reitit)))
+    (c/context "/api/kayttaja" [] aipal.rest-api.kayttaja/reitit)
+    (r/not-found "Not found")))
