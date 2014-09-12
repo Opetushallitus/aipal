@@ -34,8 +34,8 @@ values (null, 'KATSELIJA', 'OID.T-700', 'true');
 
 
 -- testiorganisaatiot käyttöoikeuksia varten
-insert into koulutustoimija (ytunnus, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite )
-  values ('2345678-0', 'Ruikonperän opistoaste', 'ruikonpera@solita.fi', '+35850505050', 'Perämäkkylän ohitustie 2', '00310', 'Ylijyrmylä', 'http://www.solita.fi'   );
+insert into koulutustoimija (ytunnus, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite, oid )
+  values ('2345678-0', 'Ruikonperän opistoaste', 'ruikonpera@solita.fi', '+35850505050', 'Perämäkkylän ohitustie 2', '00310', 'Ylijyrmylä', 'http://www.solita.fi', '1.2.246.777.888.9999999999');
 
 insert into oppilaitos (oppilaitoskoodi, koulutustoimija, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite )
   values ('12345', '2345678-0', 'Ruikonperän multakurkkuopisto', 'ruikonpera@solita.fi', '+35850505050', 'Perämäkkylän ohitustie 2', '00310', 'Ylijyrmylä', 'http://www.solita.fi'  );
