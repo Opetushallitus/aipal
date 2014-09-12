@@ -32,6 +32,8 @@
             schema.core
 
             [clj-cas-client.core :refer [cas]]
+            [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
+            
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.anon-auth :as anon-auth]
 
@@ -118,6 +120,7 @@
                      :cookie-attrs {:http-only true
                                     :path (service-path(get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
+      (wrap-cas-single-sign-out session-store)
       wrap-poikkeusten-logitus)))
 
 (defn kaynnista-eraajon-ajastimet! [asetukset]

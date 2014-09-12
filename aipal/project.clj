@@ -29,6 +29,9 @@
                  [org.clojars.noidi/clj-cas-client
                   "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1"
                   :exclusions [ring]]
+                 [cas-single-sign-out "0.1.2"
+                  :exclusions [clj-cas-client]]
+                 
                  [org.clojure/tools.logging "0.2.6"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-api "1.7.5"]

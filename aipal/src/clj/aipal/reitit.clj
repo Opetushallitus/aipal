@@ -6,7 +6,6 @@
             [stencil.core :as s]
 
             aipal.rest-api.i18n
-            [clj-cas-client.core :refer [cas]]
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.kyselypohja
