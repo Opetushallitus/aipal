@@ -32,7 +32,9 @@
   (binding [ka/*current-user-uid* userid
             ka/*current-user-oid* (promise)]
     (let [kayttaja (kayttaja-arkisto/hae-uid userid)]
-      (kayttajaoikeus-arkisto/varmista-autentikointi!)
+      ; ensimmäinen tietokantaoperaatio (hae-uid tässä tapauksessa) asettaa arvon promiseen jos käyttäjä tunnistetaan.
+      ; tunnistaminen tapahtuu tietokantayhteden avaamisen yhteydessä, josta ei voi heittää poikkeusta.
+      (kayttajaoikeus-arkisto/varmista-autentikointi!) ; varmistetaan että käyttäjä on tunnistettu
       (binding [ka/*effective-user-oid* (or impersonoitu-oid (:oid kayttaja))]
         (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
               oikeudet (kayttajaoikeus-arkisto/hae-oikeudet ka/*effective-user-oid*)
