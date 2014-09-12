@@ -26,6 +26,7 @@
 (defn reitit [asetukset]
   (c/routes
     (c/GET "/" [] (s/render-file "public/app/index.html" (merge {:base-url (-> asetukset :server :base-url)
+                                                                 :vastaus-base-url (-> asetukset :vastaus-base-url)
                                                                  :current-user (:kayttajan_nimi *current-user-authmap*)
                                                                  :build-id @build-id
                                                                  :development-mode (pr-str (:development-mode asetukset))}
