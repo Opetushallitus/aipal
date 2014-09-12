@@ -32,6 +32,7 @@
   (binding [ka/*current-user-uid* userid
             ka/*current-user-oid* (promise)]
     (let [kayttaja (kayttaja-arkisto/hae-uid userid)]
+      (kayttajaoikeus-arkisto/varmista-autentikointi!)
       (binding [ka/*effective-user-oid* (or impersonoitu-oid (:oid kayttaja))]
         (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
               oikeudet (kayttajaoikeus-arkisto/hae-oikeudet ka/*effective-user-oid*)
