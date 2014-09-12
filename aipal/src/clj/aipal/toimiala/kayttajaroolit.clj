@@ -15,6 +15,11 @@
 (ns aipal.toimiala.kayttajaroolit
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330")
 
+(def ldap-roolit {:paakayttaja "CRUD"
+                  :vastuukayttaja "CRUD2"
+                  :katselija "READ"
+                  :kayttaja "RU"})
+
 ;; roolit joilla on koulutustoimijaorganisaatio
 (def organisaatio-roolit {:oppilaitos-vastuukayttaja "OPL-VASTUUKAYTTAJA"
                           :oppilaitos-paakayttaja "OPL-PAAKAYTTAJA"
