@@ -18,6 +18,7 @@
             [clojurewerkz.quartzite.jobs :as j]
             [clojurewerkz.quartzite.triggers :as t]
             [clojurewerkz.quartzite.schedule.daily-interval :as s]
+            [clojurewerkz.quartzite.schedule.cron :as cron]
             [clojure.tools.logging :as log]
             aipal.infra.eraajo.kayttajat
             aipal.infra.eraajo.organisaatiot)
@@ -35,11 +36,11 @@
                    (j/of-type PaivitaKayttajatLdapistaJob)
                    (j/with-identity "paivita-kayttajat-ldapista")
                    (j/using-job-data {"kayttooikeuspalvelu" kayttooikeuspalvelu}))
-        ldap-trigger-5min (t/build
-                            (t/with-identity "5-min-valein")
-                            (t/start-now)
-                            (t/with-schedule (s/schedule
-                                               (s/with-interval-in-minutes 5))))
+        ldap-trigger-daily (t/build
+                             (t/with-identity "daily0330")
+                             (t/start-now)
+                             (t/with-schedule (cron/schedule
+                                               (cron/cron-schedule "0 30 3 * * ?"))))
         org-job (j/build
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
@@ -47,7 +48,7 @@
         org-trigger-daily (t/build
                             (t/with-identity "daily3")
                             (t/start-now)
-                            #_(t/with-schedule (cron/schedule
-                                                (cron/cron-schedule "0 0 3 * * ?"))))]
-    (qs/schedule ldap-job ldap-trigger-5min)
+                            (t/with-schedule (cron/schedule
+                                              (cron/cron-schedule "0 0 3 * * ?"))))]
+    (qs/schedule ldap-job ldap-trigger-daily)
     (qs/schedule org-job org-trigger-daily)))
