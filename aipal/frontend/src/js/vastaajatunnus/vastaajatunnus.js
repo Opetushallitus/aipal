@@ -24,8 +24,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       })
   }])
 
-  .controller('VastaajatunnusController', ['Vastaajatunnus', '$routeParams', '$scope',
-    function(Vastaajatunnus, $routeParams, $scope) {
+  .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$routeParams', '$scope',
+    function(Rahoitusmuoto, Vastaajatunnus, $routeParams, $scope) {
       $scope.luoTunnuksiaDialogi = function(kyselykertaId) {
         $scope.naytaLuoTunnuksia = true;
         $scope.valittuKyselykertaId = kyselykertaId;
@@ -34,6 +34,9 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
         $scope.naytaLuoTunnuksia = false;
       };
       $scope.kyselykertaid = $routeParams.kyselykertaid;
+      $scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki(function(data) {
+        $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
+      });
 
       $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
     }]
@@ -44,7 +47,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       restrict: 'E',
       scope: {
         kyselykertaid: '=',
-        ilmoitaLuonti: '&'
+        ilmoitaLuonti: '&',
+        rahoitusmuodot: '='
       },
       templateUrl: 'template/kysely/tunnusten-luonti.html',
       link: function(scope) {
@@ -55,7 +59,6 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
           scope.ilmoitaLuonti();
           Vastaajatunnus.luoUusi(scope.kyselykertaid, vastaajatunnus);
         };
-        scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki();
       }
     };
   }])

@@ -10,10 +10,10 @@
     Tunnus: <span>{{tunnus.tunnus}}</span>, 
     Voimassa: <span>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</span>,
     Vastattu: <span>{{tunnus.vastaajien_lkm}}</span>
-    Rahoitusmuoto: <span>{{tunnus.rahoitusmuotoid}}</span>
+    Rahoitusmuoto: <span>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto}}</span>
     <br>
 </div>
 
 <popup-ikkuna nayta-popup="naytaLuoTunnuksia">
-  <tunnusten-luonti kyselykertaid="kyselykertaid" ilmoita-luonti="suljeLuoTunnuksiaDialogi()"></tunnusten-luonti>
+  <tunnusten-luonti kyselykertaid="kyselykertaid" ilmoita-luonti="suljeLuoTunnuksiaDialogi()" rahoitusmuodot="rahoitusmuodot"></tunnusten-luonti>
 </popup-ikkuna>
