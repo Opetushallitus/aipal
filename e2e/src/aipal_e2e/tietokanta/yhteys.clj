@@ -38,19 +38,9 @@
   [oid]
   (aipal-e2e.arkisto.sql.korma/aseta-kayttaja oid))
 
-(defn   luo-testikayttaja!
-  []
-  (db/transaction
-    (aseta-kayttaja! jarjestelmakayttaja-oid)
-    (data/luo-testikayttaja! testikayttaja-oid testikayttaja-uid)))
-
 (defn aseta-testikayttaja!
   []
   (aseta-kayttaja! testikayttaja-oid))
-
-(defn poista-testikayttaja!
-  []
-  (data/poista-testikayttaja! testikayttaja-oid))
 
 (defn  poista-testidata!
   []

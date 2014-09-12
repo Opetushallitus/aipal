@@ -17,8 +17,6 @@
             [korma.db :as db]
             [aipal-e2e.arkisto.sql.korma :refer :all]))
 
-(def ^:private yllapitajarooli "YLLAPITAJA")
-
 (def ^:private taulut ["koulutustoimija"
                        "kysely"
                        "kyselykerta"
@@ -39,26 +37,3 @@
   (doseq [taulu (reverse taulut)]
     (sql/exec-raw (str "delete from " taulu " where luotu_kayttaja = '" oid "'"))))
 
-(defn luo-testikayttaja!
-  ([testikayttaja-oid testikayttaja-uid roolitunnus]
-  (when-not (first (sql/select kayttaja
-                               (sql/where {:oid testikayttaja-oid})))
-    (sql/insert kayttaja
-                (sql/values
-                  {:uid testikayttaja-uid
-                   :oid testikayttaja-oid
-                   :etunimi "E2E"
-                   :sukunimi "AIPAL"
-                   :voimassa true}))
-    (sql/insert rooli_organisaatio
-                (sql/values
-                  {:kayttaja testikayttaja-oid
-                   :rooli roolitunnus
-                   :voimassa true}))))
-  ([testikayttaja-oid testikayttaja-uid]
-    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid yllapitajarooli)))
-
-(defn poista-testikayttaja!
-  [testikayttaja-oid]
-  (sql/exec-raw (str "delete from rooli_organisaatio where kayttaja = '" testikayttaja-oid "'"))
-  (sql/exec-raw (str "delete from kayttaja where oid = '" testikayttaja-oid "'")))

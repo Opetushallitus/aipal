@@ -164,7 +164,6 @@
   (let [pool (yhteys/alusta-korma!)]
     (let [taydennetty-data (taydenna-data data)]
       (db/transaction
-        (yhteys/luo-testikayttaja!)
         (yhteys/aseta-testikayttaja!)
         (doseq [taulu taulut
                 :let [data (taydennetty-data taulu)
@@ -175,8 +174,7 @@
         (body-fn)
         (finally
           (db/transaction
-            (tyhjenna-testidata! yhteys/testikayttaja-oid)
-            (yhteys/poista-testikayttaja!))))
+            (tyhjenna-testidata! yhteys/testikayttaja-oid))))
       (-> pool :pool :datasource .close))))
 
 (defmacro with-data
