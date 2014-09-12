@@ -33,6 +33,7 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       $scope.suljeLuoTunnuksiaDialogi = function() {
         $scope.naytaLuoTunnuksia = false;
       };
+      $scope.kyselykertaid = $routeParams.kyselykertaid;
 
       $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
     }]
