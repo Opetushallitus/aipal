@@ -17,6 +17,7 @@
   (:require [clojure.java.io :as io]
             [clojure.tools.logging :as log]
             [compojure.core :as c]
+            [compojure.route :as r]
             [org.httpkit.server :as hs]
             [ring.middleware.json :refer [wrap-json-params]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
@@ -48,7 +49,8 @@
     (c/context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
     (c/context "/api/vastaus" [] aipalvastaus.rest-api.vastaus/reitit)
     (c/context "/api/vastaaja" [] aipalvastaus.rest-api.vastaaja/reitit)
-    (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))))
+    (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
+    (r/not-found "Not found")))
 
 (defn sammuta [palvelin]
   (log/info "Sammutetaan Aipal vastaussovellus")
