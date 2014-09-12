@@ -72,7 +72,7 @@
                                     (sql/fields :rooli_organisaatio_id)
                                     (sql/where {:rooli (:paakayttaja kayttajaroolit)
                                                 :kayttaja :kayttaja.oid})))
-                                {:oid [not-in ["JARJESTELMA", "KONVERSIO", "INTEGRAATIO"]]})))
+                                {:oid [not-in ["JARJESTELMA", "KONVERSIO", "INTEGRAATIO", "VASTAAJA"]]})))
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
