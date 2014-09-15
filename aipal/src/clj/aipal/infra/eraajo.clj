@@ -37,10 +37,10 @@
                    (j/with-identity "paivita-kayttajat-ldapista")
                    (j/using-job-data {"kayttooikeuspalvelu" kayttooikeuspalvelu}))
         ldap-trigger-daily (t/build
-                             (t/with-identity "daily0330")
+                             (t/with-identity "daily4")
                              (t/start-now)
                              (t/with-schedule (cron/schedule
-                                               (cron/cron-schedule "0 30 3 * * ?"))))
+                                               (cron/cron-schedule "0 0 4 * * ?"))))
         org-job (j/build
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
