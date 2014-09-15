@@ -22,10 +22,6 @@
                                           integraatiokayttaja]])
   (:use [aipal.integraatio.sql.korma]))
 
-(defn varmista-autentikointi! []
-  (assert (realized? oph.korma.korma-auth/*current-user-oid*) 
-    (str "Ongelma sisäänkirjautumisessa. Käyttäjätunnuksella " oph.korma.korma-auth/*current-user-uid* " ei ole käyttöoikeuksia. (uid -> oid epäonnistui).")))
-      
 (defn hae-oikeudet
   ([oid]
     (db/transaction
@@ -37,6 +33,7 @@
         (assoc kayttaja :roolit roolit))))
   ([]
     (let [userid oph.korma.korma-auth/*current-user-uid*]
+      (assert (realized? oph.korma.korma-auth/*current-user-oid*) (str "Ongelma sisäänkirjautumisessa. Käyttäjätunnuksella " userid " ei ole käyttöoikeuksia. (uid -> oid epäonnistui)."))
       (hae-oikeudet @oph.korma.korma-auth/*current-user-oid*))))
 
 (defn hae-kyselylla
