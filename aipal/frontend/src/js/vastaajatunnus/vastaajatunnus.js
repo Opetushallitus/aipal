@@ -32,7 +32,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       };
       $scope.luoTunnuksiaCallback = function(uusiTunnus) {
         $scope.naytaLuoTunnuksia = false;
-        $scope.tulos.push(uusiTunnus);
+        uusiTunnus.new = true;
+        $scope.tulos.unshift(uusiTunnus);
       };
       $scope.kyselykertaid = $routeParams.kyselykertaid;
       $scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki(function(data) {
