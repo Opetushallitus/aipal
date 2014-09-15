@@ -21,7 +21,7 @@
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
+            [aipal.toimiala.kayttajaroolit :refer [ldap-roolit]]
             [oph.common.util.util :refer [map-by]]))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
@@ -34,7 +34,7 @@
     (let [oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
       (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
       (kayttajaoikeus-arkisto/paivita-kaikki!
-        (mapcat #(kop/kayttajat kayttooikeuspalvelu % oid->ytunnus) (vals kayttajaroolit))))))
+        (mapcat #(kop/kayttajat kayttooikeuspalvelu % oid->ytunnus) (vals ldap-roolit))))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
