@@ -43,12 +43,12 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
                                              'i18n', 'ilmoitus',
                                              function($scope, $window,
                                                  Kysymysryhma, i18n, ilmoitus){
-    $scope.kysely = {};
+    $scope.kysymysryhma = {};
     $scope.peruuta = function(){
       $window.location.hash = '/kysymysryhmat';
     };
     $scope.luoUusi = function(){
-      Kysymysryhma.luoUusi($scope.kysely)
+      Kysymysryhma.luoUusi($scope.kysymysryhma)
       .success(function(){
         $window.location.hash = '/kysymysryhmat';
         ilmoitus.onnistuminen(i18n.hae('kysymysryhma.luonti_onnistui'));

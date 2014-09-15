@@ -1,18 +1,20 @@
 <h1>{{i18n.kysymysryhma.uusi}}</h1>
 
 <h3>{{i18n.kysymysryhma.nimi_fi}} *</h3>
-<input type="text" ng-model="kysely.nimi_fi" size="80" maxlength="200" autofocus />
+<input type="text" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
 
 <h3>{{i18n.kysymysryhma.nimi_sv}}</h3>
-<input type="text" ng-model="kysely.nimi_sv" size="80" maxlength="200" />
+<input type="text" ng-model="kysymysryhma.nimi_sv" size="80" maxlength="200" />
 
 <h3>{{i18n.kysymysryhma.selite_fi}}</h3>
-<textarea ng-model="kysely.selite_fi" rows="5" cols="80"></textarea>
+<textarea ng-model="kysymysryhma.selite_fi" rows="5" cols="80"></textarea>
 
 <h3>{{i18n.kysymysryhma.selite_sv}}</h3>
-<textarea ng-model="kysely.selite_sv" rows="5" cols="80"></textarea>
+<textarea ng-model="kysymysryhma.selite_sv" rows="5" cols="80"></textarea>
+
+
 
 <div>
   <button ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
-  <button ng-click="luoUusi()" ng-disabled="!kysely.nimi_fi">{{i18n.kysymysryhma.luo_uusi}}</button>
+  <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi">{{i18n.kysymysryhma.luo_uusi}}</button>
 </div>
