@@ -28,6 +28,6 @@ angular.module('toimiala.rahoitusmuoto', [])
       haeKaikki: function(successCallback, errorCallback) {
         return resource.haeKaikki({}, successCallback, errorCallback);
       }
-    }
+    };
   }])
 ;

@@ -21,7 +21,7 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       .when('/vastaajatunnus/:kyselykertaid', {
         controller: 'VastaajatunnusController',
         templateUrl: 'template/vastaajatunnus/vastaajatunnus.html'
-      })
+      });
   }])
 
   .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$routeParams', '$scope',
