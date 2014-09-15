@@ -38,7 +38,7 @@
     (sql/select* vastaajatunnus)
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :voimassa_alkupvm :voimassa_loppupvm)
     (sql/where (= :kyselykertaid kyselykertaid))
-    (sql/order :kyselykertaid :DESC)
+    (sql/order :muutettuaika :DESC)
     sql/exec))
 
 (defn luo-tunnus
