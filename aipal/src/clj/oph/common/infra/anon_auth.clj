@@ -14,9 +14,8 @@
 
 (ns oph.common.infra.anon-auth
   "Testitarkoituksia varten anonyymi-autentikaatiofiltteri, joka emuloi CAS-autentikaatiota"
-  (:require [clojure.tools.logging :as log]))
-
-(def default-test-user-uid "T-1001")
+  (:require [clojure.tools.logging :as log]
+            [oph.korma.korma-auth :refer [default-test-user-uid]]))
 
 (defn auth-cas-user [ring-handler]
   (log/info "!! Anon auth enabled")
