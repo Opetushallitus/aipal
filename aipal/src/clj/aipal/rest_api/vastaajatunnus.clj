@@ -22,9 +22,10 @@
   (cu/defapi :vastaajatunnus nil :get "/" []
     (json-response (vastaajatunnus/hae-kaikki)))
 
-  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
-    (json-response (vastaajatunnus/lisaa-vastaajatunnus
+  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid henkilokohtainen & vastaajatunnus]
+    (json-response (vastaajatunnus/lisaa-vastaajatunnuksia
                      (Integer/parseInt kyselykertaid)
+                     henkilokohtainen
                      (merge vastaajatunnus {:voimassa_loppupvm (parse-iso-date (:voimassa_loppupvm vastaajatunnus))
                                             :voimassa_alkupvm (parse-iso-date (:voimassa_alkupvm vastaajatunnus))}))))
 

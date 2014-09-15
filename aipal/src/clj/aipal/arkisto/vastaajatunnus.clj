@@ -60,6 +60,13 @@
                                :tunnus (luo-tunnus 13)}))
     sql/exec))
 
+(defn lisaa-vastaajatunnuksia
+  [kyselykertaid henkilokohtainen kentat]
+  (if henkilokohtainen
+    (for [x (range (:vastaajien_lkm kentat))]
+      (lisaa-vastaajatunnus kyselykertaid (assoc kentat :vastaajien_lkm 1)))
+    [(lisaa-vastaajatunnus kyselykertaid kentat)]))
+
 (defn lisaa!
   "Lisää uuden vastaajatunnuksen tietokantaan"
   [kyselykertaid rahoitusmuotoid tutkintotunnus voimassa_alkupvm voimassa_loppupvm]
