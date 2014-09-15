@@ -22,6 +22,7 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
 @mixin icon-right($right: 0, $top: 0) {
   &:after {
     @content;
+    content: "";
     position: absolute;
     top: $top;
     right: $right;
@@ -97,6 +98,14 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   background-position: 0 -750px;
 }
 
+@mixin edit-icon-white {
+  @include icon-images;
+  @include icon-hover(-800px);
+  width: 22px;
+  height: 22px;
+  background-position: 0 -1950px;
+}
+
 @mixin delete-icon {
   @include icon-images;
   @include icon-hover(-1300px);
@@ -117,7 +126,7 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   @include icon-images;
   width: 20px;
   height: 20px;
-  background-position: 0 -100px;
+  background-position: 0 -449px;
 }
 
 @mixin calendar-icon {
@@ -147,6 +156,20 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   width: 20px;
   height: 14px;
   background-position: 0 -550px;
+}
+
+@mixin expand-icon {
+  @include icon-images;
+  width: 30px;
+  height: 30px;
+  background-position: 0 -1850px;
+}
+
+@mixin contract-icon {
+  @include icon-images;
+  width: 30px;
+  height: 30px;
+  background-position: 0 -1900px;
 }
 
 @mixin small-expand-icon {
@@ -205,11 +228,18 @@ Esim: @include icon-after(11px, 11px){@include user-icon;}; */
   background-position: 0 -1600px;
 }
 
+@mixin search-icon-input {
+  @include icon-images;
+  background-position: 6px -1745px;
+  background-repeat: no-repeat;
+  padding-left: 30px;
+}
+
 @mixin logout-icon {
   @include icon-images;
   width: 17px;
   height: 16px;
-  background-position: 0 -1650px;
+  background-position: 0 -1800px;
 }
 
 /* Näitä luokkia voidaan käyttää kun halutaan ikoni erilliseen dom-elementtiinsä.
@@ -242,13 +272,30 @@ Esim: <div class="icon user-icon"></div> */
   &.collapse-icon-small {
     @include small-collapse-icon;
   }
+  &.search-icon-input {
+    @include search-icon-input;
+  }
+  &.expand-icon {
+    @include expand-icon;
+  }
+  &.contract-icon {
+    @include contract-icon;
+  }
 }
 
 /* Nappi jossa ikoni oikeassa reunassa */
-button.button-with-icon {
-  padding-right: 50px;
+button.button-with-icon,
+a.button.button-with-icon{
+  padding-right: 40px;
+  position: relative;
   &.add-user-icon {
     @include icon-after(10px, 2px){@include add-user-icon;};
+  }
+  &.add-icon-white {
+    @include icon-after(10px, 2px){@include add-icon-white;};
+  }
+  &.edit-icon-white {
+    @include icon-right(5px, 3px){@include edit-icon-white}
   }
 }
 

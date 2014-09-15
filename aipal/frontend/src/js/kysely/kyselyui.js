@@ -33,6 +33,12 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 't
     function($location, $scope, ilmoitus, Kysely, i18n) {
       $scope.naytaLuonti = false;
 
+      $scope.status = {};
+
+      $scope.setActiveGroup = function(id){
+        $location.hash(id);
+      };
+
       $scope.luoUusiKysely = function() {
         Kysely.luoUusi(function(data) {
           $location.url('/kysely/' + data.kyselyid);

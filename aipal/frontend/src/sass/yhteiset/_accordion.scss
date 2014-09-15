@@ -4,14 +4,13 @@
 }
 
 .accordion-header {
-  @include icon-before(-31px, 5px){@include arrow-down-icon;};
+  @include icon-before(-31px, 5px){@include expand-icon;};
   padding: 5px 0;
   color: #000000;
   font-size: 1.1em;
   padding-left: 40px;
-  cursor: pointer;
   &.collapse {
-    @include icon-before(-31px, 5px){@include arrow-up-icon;};
+    @include icon-before(-40px, 5px){@include contract-icon;};
   }
 }
 .accordion-body {
@@ -22,3 +21,4 @@
   &.collapse {display: block;}
 }
 .accordion-container {margin-bottom: $marginM;}
+

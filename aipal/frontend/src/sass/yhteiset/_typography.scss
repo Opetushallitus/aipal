@@ -16,6 +16,10 @@ p {
   line-height: $baseline;
 }
 
+.text-muted {
+  font-size: 0.8em;
+}
+
 h1 {
   font-family: $font-heading;
   font-weight: 700;
@@ -31,7 +35,6 @@ h2 {
   font-weight: 300;
   font-size: 1.7em;
   text-transform:uppercase;
-  color: $gray-color;
 }
 
 h3 {

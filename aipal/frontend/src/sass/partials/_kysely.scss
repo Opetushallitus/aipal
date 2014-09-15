@@ -2,3 +2,68 @@
   text-decoration: line-through;
   color: #808080;
 }
+
+fieldset.luo-uusi-kysely{
+  width: 100%;
+  input{
+    min-width: 200px;
+    width: 40%;
+  }
+  button{
+    margin: 0;
+  }
+}
+
+accordion.kyselyt {
+  h4.panel-title a i{
+    margin-right: 10px;
+
+  }
+  h4.panel-title a{
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+
+  }
+  h4.panel-title a h3{
+    font-size: 1.125em;
+    margin: 0.5em 0;
+  }
+  .panel{
+    border: 0px;
+    border-bottom: 2px solid black;
+    box-shadow: none;
+    border-radius: 0 !important;
+  }
+  .panel-body {
+    border: 0px !important;
+    margin-left: 40px;
+  }
+  .panel-heading{
+    background-color: #ffffff;
+    border: 0px;
+    &:hover{
+      background-color: $lightest-gray;
+    }
+  }
+  .panel+.panel {
+    margin-top: 0px;
+  }
+  div.panel-tools-content {
+    margin-top: -18px;
+    clear: both;
+    overflow: auto;
+    border-bottom: 1px solid #b3b3b3;
+    margin-left: -55px;
+    padding-left: 55px;
+    margin-right: -15px;
+  }
+  div.kyselykerrat-container {
+    /*border-top: 1px solid $lighter-gray;*/
+    padding-left: 15px;
+  }
+  .group-active .panel-heading,
+  .group-active .panel-tools-content {
+    background-color: #FFEDF8;
+  }
+}

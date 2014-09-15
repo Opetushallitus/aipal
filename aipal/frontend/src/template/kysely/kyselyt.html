@@ -1,32 +1,41 @@
-<h2>Kyselyt</h2>
+<h2>Organisaatiosi kyselyt</h2>
 
-<div class="luo-uusi-kysely"><a ng-click="luoUusiKysely()">{{i18n.yleiset.luo_uusi_kysely}}</a></div>
+<fieldset class="luo-uusi-kysely" >
+    <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="Etsi kyselyjä">
+    <button ng-show="!yllapitaja" class="button button-with-icon add-icon-white right ng-scope" ng-click="luoUusiKysely()">{{i18n.yleiset.luo_uusi_kysely}}</button>
+</fieldset>
 
-Haku: <input type="text" ng-model="hakuehto.teksti">
+<div lataus-indikaattori metodi-idt="['kyselylistaus']"
+     viesti="{{i18n.yleiset.ladataan}}" virheviesti="{{i18n.yleiset.lataus_epaonnistui}}" yrita-uudelleen="haeKyselyt()"></div>
 
-<div class="accordion-container"
-  lataus-indikaattori metodi-idt="['kyselylistaus']"
-  viesti="{{i18n.yleiset.ladataan}}" virheviesti="{{i18n.yleiset.lataus_epaonnistui}}" yrita-uudelleen="haeKyselyt()">
-  <div ng-hide="latausKaynnissa" class="accordion" ng-repeat="kysely in kyselyt | filter:hakuehto.teksti | limitTo:50">
-    <div class="accordion-header collapse">
-      <a ng-href="#/kysely/{{kysely.kyselyid}}" class="kysely-nimi">
-        {{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}
-      </a>
-      <br>Voimassa: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}} 
-      <a href="" ng-click="uusiKyselykerta(kysely.kyselyid)">[{{i18n.kyselykerta.uusi_kyselykerta}}]</a>
-    </div>
-    <div ng-show="kysely.kyselykerrat.length > 0" class="accordion-body collapse" ng-repeat="kyselykerta in kysely.kyselykerrat">
-      <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}" class="kyselykerta-nimi">
-        {{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}
-      </a>
-      <br>
-      <a ng-href="#/vastaajatunnus/{{kyselykerta.kyselykertaid}}">
-        {{i18n.vastaajatunnus.hallitse}}
-       </a>
-      <br>Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}
-    </div>
-  </div>
-</div>
+<accordion close-others="true" class="kyselyt">
+    <accordion-group ng-repeat="kysely in kyselyt | filter:hakuehto.teksti | limitTo:50" is-open="group.open" ng-class="{'group-active': group.open}">
+
+        <accordion-heading>
+            <i class="pull-left icon" ng-class="{'contract-icon': group.open, 'expand-icon': !group.open}"></i>
+            <h3>{{kysely | lokalisoiKentta:'nimi'}}</h3>
+            <span class="text-muted">Voimassa: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}</span>
+        </accordion-heading>
+
+        <div class="panel-tools-content">
+            <a ng-href="#/kysely/{{kysely.kyselyid}}" class="button left button-with-icon edit-icon-white kysely-nimi" title="{{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}">
+                Muokkaa kyselyä
+            </a>
+            <button class="button left button-with-icon add-icon-white" ng-click="uusiKyselykerta(kysely.kyselyid)">{{i18n.kyselykerta.uusi_kyselykerta}}</button>
+        </div>
+
+        <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
+            <h3>{{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
+            <span class="text-muted">Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span><br />
+            <a ng-href="#/vastaajatunnus/{{kyselykerta.kyselykertaid}}" class="">
+                {{i18n.vastaajatunnus.hallitse}}
+            </a> <br />
+            <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}" class="">
+                Näytä raportti
+            </a>
+        </div>
+    </accordion-group>
+</accordion>
 
 <popup-ikkuna nayta-popup="naytaLuonti">
   <kyselykerta-luonti kyselyid="valittuKyselyid" ilmoita-tallennus="suljePopup()"></kyselykerta-luonti>
