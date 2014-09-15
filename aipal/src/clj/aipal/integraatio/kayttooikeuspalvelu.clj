@@ -47,15 +47,15 @@
           (for [ryhma ryhmat
                 :let [organisaatio-oid (last (s/split (:cn ryhma) #"_"))
                       organisaatio (oid->ytunnus organisaatio-oid)
-                      rooli (ldap-rooli->rooli ldap-rooli)
+                      rooli (ldap-rooli->rooli ldap-rooli organisaatio-oid)
                       kayttaja-dnt (:uniqueMember ryhma)
                       ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
                       ;; palauttaa arvon (stringin) eikä vektoria arvoista.
                       kayttaja-dnt (if (string? kayttaja-dnt)
                                      [kayttaja-dnt]
                                      kayttaja-dnt)]
-                :when [(or organisaatio
-                           (not (get organisaatio-roolit rooli)))]
+                :when (or organisaatio
+                          (not (get organisaatio-roolit rooli)))
                 kayttaja-dn kayttaja-dnt
                 :let [kayttaja (ldap/get yhteys kayttaja-dn)
                       _ (assert kayttaja)
