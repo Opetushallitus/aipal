@@ -3,6 +3,8 @@
 
   <div>Vastaajien määrä <input type="number" min="1" ng-model="vastaajatunnus.vastaajien_lkm" ng-required="true"></div>
 
+  <div><label><input type="checkbox" ng-model="vastaajatunnus.henkilokohtainen"> Henkilökohtainen</label></div>
+
   <div>Vastausaika</div>
   <div><pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_alkupvm"></pvm-valitsin> - <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_loppupvm"></pvm-valitsin></div>
 

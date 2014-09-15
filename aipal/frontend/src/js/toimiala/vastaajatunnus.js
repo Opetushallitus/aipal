@@ -22,9 +22,10 @@ angular.module('toimiala.vastaajatunnus', ['ngResource'])
         url: 'api/vastaajatunnus/:kyselykertaid',
         isArray: true
       },
-      luoUusi: {
+      luoUusia: {
         method: 'POST',
-        url: 'api/vastaajatunnus/:kyselykertaid'
+        url: 'api/vastaajatunnus/:kyselykertaid',
+        isArray: true
       }
     });
 
@@ -32,8 +33,8 @@ angular.module('toimiala.vastaajatunnus', ['ngResource'])
       hae: function(kyselykertaid, successCallback, errorCallback) {
         return resource.haku({kyselykertaid: kyselykertaid}, successCallback, errorCallback);
       },
-      luoUusi: function(kyselykertaid, vastaajatunnus, successCallback, errorCallback) {
-        return resource.luoUusi({kyselykertaid: kyselykertaid}, vastaajatunnus, successCallback, errorCallback);
+      luoUusia: function(kyselykertaid, vastaajatunnus, successCallback, errorCallback) {
+        return resource.luoUusia({kyselykertaid: kyselykertaid}, vastaajatunnus, successCallback, errorCallback);
       }
     };
   }]);

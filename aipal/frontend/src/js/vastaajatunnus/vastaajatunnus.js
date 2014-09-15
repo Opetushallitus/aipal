@@ -30,10 +30,12 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
         $scope.naytaLuoTunnuksia = true;
         $scope.valittuKyselykertaId = kyselykertaId;
       };
-      $scope.luoTunnuksiaCallback = function(uusiTunnus) {
+      $scope.luoTunnuksiaCallback = function(uudetTunnukset) {
         $scope.naytaLuoTunnuksia = false;
-        uusiTunnus.new = true;
-        $scope.tulos.unshift(uusiTunnus);
+        _.forEach(uudetTunnukset, function(tunnus) {
+          tunnus.new = true;
+          $scope.tulos.unshift(tunnus);
+        });
       };
       $scope.kyselykertaid = $routeParams.kyselykertaid;
       $scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki(function(data) {
@@ -58,7 +60,7 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
           vastaajien_lkm: 1
         };
         scope.luoTunnuksia = function(vastaajatunnus) {
-          Vastaajatunnus.luoUusi(scope.kyselykertaid, vastaajatunnus, function(uusiTunnus) {
+          Vastaajatunnus.luoUusia(scope.kyselykertaid, vastaajatunnus, function(uusiTunnus) {
             scope.ilmoitaLuonti({uusiTunnus: uusiTunnus});
           });
         };
