@@ -5,7 +5,6 @@
 
             [oph.korma.korma-auth :as ka]
             [oph.common.infra.i18n :as i18n]
-            [aipal.integraatio.sql.korma-auth :as auth]
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
@@ -16,7 +15,7 @@
             [aipal.sql.test-data-util :refer :all]))
 
 (defn with-auth-user [f]
-  (let [olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid auth/default-test-user-oid, :uid auth/default-test-user-uid }]
+  (let [olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid ka/default-test-user-oid, :uid ka/default-test-user-uid }]
     (binding [ka/*current-user-uid* (:uid olemassaoleva-kayttaja)
               ka/*current-user-oid* (promise)
               i18n/*locale* testi-locale

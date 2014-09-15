@@ -18,17 +18,19 @@
 
 (def jarjestelmakayttaja "JARJESTELMA")
 (def integraatiokayttaja "INTEGRAATIO")
+(def default-test-user-oid "OID.T-1001")
+(def default-test-user-uid "T-1001")
 
-(def ^:dynamic *current-user-uid* 
+(def ^:dynamic *current-user-uid*
   "Sisään kirjautuneen käyttäjän uid")
 
-(def ^:dynamic *current-user-oid* 
+(def ^:dynamic *current-user-oid*
   "Sisään kirjautuneen käyttäjän oid - pitää hoitaa promisen avulla.")
- 
-(def ^:dynamic  *effective-user-oid* 
-  "Oikeustarkastelun perusteena olevan käyttäjän oid. Eri kuin sisään kirjautuneen käyttäjän oid mikäli impersonaatio on käytössä." 
+
+(def ^:dynamic  *effective-user-oid*
+  "Oikeustarkastelun perusteena olevan käyttäjän oid. Eri kuin sisään kirjautuneen käyttäjän oid mikäli impersonaatio on käytössä."
   nil)
- 
+
 (defn validate-user
   [con uid]
   {:pre [(string? uid)]}
