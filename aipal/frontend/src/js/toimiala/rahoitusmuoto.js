@@ -14,26 +14,20 @@
 
 'use strict';
 
-angular.module('toimiala.vastaajatunnus', ['ngResource'])
-  .factory('Vastaajatunnus', ['$resource', function($resource) {
+angular.module('toimiala.rahoitusmuoto', [])
+  .factory('Rahoitusmuoto', ['$resource', function($resource) {
     var resource = $resource(null, null, {
-      haku: {
+      haeKaikki: {
         method: 'GET',
-        url: 'api/vastaajatunnus/:kyselykertaid',
+        url: 'api/rahoitusmuoto',
         isArray: true
-      },
-      luoUusi: {
-        method: 'POST',
-        url: 'api/vastaajatunnus/:kyselykertaid'
       }
     });
 
     return {
-      hae: function(kyselykertaid, successCallback, errorCallback) {
-        return resource.haku({kyselykertaid: kyselykertaid}, successCallback, errorCallback);
-      },
-      luoUusi: function(kyselykertaid, vastaajatunnus, successCallback, errorCallback) {
-        return resource.luoUusi({kyselykertaid: kyselykertaid}, vastaajatunnus, successCallback, errorCallback);
+      haeKaikki: function(successCallback, errorCallback) {
+        return resource.haeKaikki({}, successCallback, errorCallback);
       }
-    };
-  }]);
+    }
+  }])
+;

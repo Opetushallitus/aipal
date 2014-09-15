@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus'])
+angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'toimiala.vastaajatunnus', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -53,6 +53,14 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
       $scope.suljePopup = function() {
         $scope.naytaLuonti = false;
         $scope.haeKyselyt();
+      };
+
+      $scope.luoTunnuksiaDialogi = function(kyselykertaId) {
+        $scope.naytaLuoTunnuksia = true;
+        $scope.valittuKyselykertaId = kyselykertaId;
+      };
+      $scope.suljeLuoTunnuksiaDialogi = function() {
+        $scope.naytaLuoTunnuksia = false;
       };
     }
   ])
@@ -126,4 +134,6 @@ angular.module('kysely.kyselyui', ['toimiala.kysely', 'toimiala.kyselypohja', 'y
         };
       }
     };
-  }]);
+  }])
+
+;

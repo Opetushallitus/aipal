@@ -35,6 +35,7 @@
                       :port s/Int
                       :user (s/maybe s/Str)
                       :password (s/maybe s/Str)}
+   :vastaus-base-url s/Str
    :organisaatiopalvelu {:url s/Str}
    :eraajo Boolean
    :development-mode Boolean
@@ -58,6 +59,7 @@
                       :port 10389
                       :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
                       :password "salasana"}
+   :vastaus-base-url "http://192.168.50.1:8083"
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :eraajo false
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.

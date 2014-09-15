@@ -66,6 +66,7 @@ angular.module('aipal', [
   .controller('AipalController', ['$scope', '$window', '$location', 'i18n', 'impersonaatioResource', 'kayttooikeudet', function ($scope, $window, $location, i18n, impersonaatioResource, kayttooikeudet) {
     $scope.i18n = i18n;
     $scope.baseUrl = _.has($window, 'ophBaseUrl') ? $window.ophBaseUrl : '';
+    $scope.vastausBaseUrl = _.has($window, 'vastausBaseUrl') ? $window.vastausBaseUrl : 'http://192.168.50.1:8083';
     $scope.impersonoitava = {};
     $scope.varmistaLogout = function () {
       if (!_.isEmpty($window.aipalLogoutUrl) && $window.confirm(i18n.yleiset.haluatko_kirjautua_ulos)) {

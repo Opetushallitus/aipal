@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'toimiala.vastaajatunnus', 'toimiala.kyselykerta'])
+angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'toimiala.rahoitusmuoto', 'toimiala.vastaajatunnus', 'toimiala.kyselykerta'])
   
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -22,22 +22,48 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
         controller: 'VastaajatunnusController',
         templateUrl: 'template/vastaajatunnus/vastaajatunnus.html'
       })
-      
-      .when('/vastaajatunnus/luonti/:kyselykertaid', {
-        controller: 'VastaajatunnusLuontiController',
-        templateUrl: 'template/vastaajatunnus/vastaajatunnus-luonti.html'
-      });
   }])
 
-  .controller('VastaajatunnusController', ['Vastaajatunnus', '$routeParams', '$scope',
-     function(Vastaajatunnus, $routeParams, $scope) {
-	    $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
+  .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$routeParams', '$scope',
+    function(Rahoitusmuoto, Vastaajatunnus, $routeParams, $scope) {
+      $scope.luoTunnuksiaDialogi = function(kyselykertaId) {
+        $scope.naytaLuoTunnuksia = true;
+        $scope.valittuKyselykertaId = kyselykertaId;
+      };
+      $scope.luoTunnuksiaCallback = function(uusiTunnus) {
+        $scope.naytaLuoTunnuksia = false;
+        uusiTunnus.new = true;
+        $scope.tulos.unshift(uusiTunnus);
+      };
+      $scope.kyselykertaid = $routeParams.kyselykertaid;
+      $scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki(function(data) {
+        $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
+      });
+
+      $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
     }]
   )
-  
-  .controller('VastaajatunnusLuontiController', ['Vastaajatunnus', 'Kyselykerta', '$routeParams', '$scope',
-     function(Vastaajatunnus, Kyselykerta, $routeParams, $scope) {
-       // $scope.kyselykerta = Kyselykerta.haeYksi($routeParams.kyselykertaid);
-	    $scope.tallenna = Vastaajatunnus.tallenna($routeParams.kyselykertaid);
-    }]
-  );
+
+  .directive('tunnustenLuonti', ['Rahoitusmuoto', 'Vastaajatunnus', function(Rahoitusmuoto, Vastaajatunnus) {
+    return {
+      restrict: 'E',
+      scope: {
+        kyselykertaid: '=',
+        ilmoitaLuonti: '&',
+        rahoitusmuodot: '='
+      },
+      templateUrl: 'template/kysely/tunnusten-luonti.html',
+      link: function(scope) {
+        scope.vastaajatunnus = {
+          vastaajien_lkm: 1
+        };
+        scope.luoTunnuksia = function(vastaajatunnus) {
+          Vastaajatunnus.luoUusi(scope.kyselykertaid, vastaajatunnus, function(uusiTunnus) {
+            scope.ilmoitaLuonti({uusiTunnus: uusiTunnus});
+          });
+        };
+      }
+    };
+  }])
+
+;

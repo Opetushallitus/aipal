@@ -41,6 +41,9 @@
 (defentity vastaajatunnus
   (sql/pk :vastaajatunnusid))
 
+(defentity rahoitusmuoto
+  (sql/pk :rahoitusmuotoid))
+
 (defentity rooli-organisaatio
   (sql/table :rooli_organisaatio))
 

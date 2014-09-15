@@ -15,12 +15,18 @@
 (ns aipal.rest-api.vastaajatunnus
   (:require [compojure.core :as c]
     [aipal.compojure-util :as cu]
-    [oph.common.util.http-util :refer [json-response]]
+    [oph.common.util.http-util :refer [json-response parse-iso-date]]
     [aipal.arkisto.vastaajatunnus :as vastaajatunnus]))
 
 (c/defroutes reitit
   (cu/defapi :vastaajatunnus nil :get "/" []
     (json-response (vastaajatunnus/hae-kaikki)))
+
+  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
+    (json-response (vastaajatunnus/lisaa-vastaajatunnus
+                     (Integer/parseInt kyselykertaid)
+                     (merge vastaajatunnus {:voimassa_loppupvm (parse-iso-date (:voimassa_loppupvm vastaajatunnus))
+                                            :voimassa_alkupvm (parse-iso-date (:voimassa_alkupvm vastaajatunnus))}))))
 
   (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid" [kyselykertaid]
     (json-response (vastaajatunnus/hae-kyselykerralla (java.lang.Integer/parseInt kyselykertaid)))))
