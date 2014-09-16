@@ -39,10 +39,10 @@
                    (clojure.java.jdbc/with-connection (korma.db/get-connection @korma.db/_default)
                      (kayttaja/validate-user (clojure.java.jdbc/find-connection) userid)
                      (kayttaja-arkisto/hae-uid userid)))]
-    (binding [*kayttaja* kayttaja
-              ka/*effective-user-oid* (or impersonoitu-oid (:oid kayttaja))]
+    (binding [*kayttaja* (assoc kayttaja
+                                :effective-oid (or impersonoitu-oid (:oid kayttaja)))]
       (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
-            oikeudet (kayttajaoikeus-arkisto/hae-oikeudet ka/*effective-user-oid*)
+            oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:effective-oid *kayttaja*))
             kayttajatiedot {:kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))}
             auth-map (assoc kayttajatiedot
                             :roolit (:roolit oikeudet)

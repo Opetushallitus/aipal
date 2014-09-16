@@ -21,7 +21,8 @@
             [oph.common.util.http-util :refer [json-response]]
             [aipal.toimiala.kayttajaoikeudet :as ko]
             [aipal.compojure-util :as cu]
-            [korma.db :as db]))
+            [korma.db :as db]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (c/defroutes reitit
   (cu/defapi :impersonointi nil :post "/impersonoi" [:as {session :session}, oid]
@@ -36,11 +37,9 @@
     (json-response (arkisto/hae-impersonoitava-termilla termi)))
 
   (cu/defapi :omat_tiedot nil :get "/" []
-    (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet ka/*effective-user-oid*)
+    (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:effective-oid *kayttaja*))
           impersonoitu (:impersonoitu_kayttaja ko/*current-user-authmap*)]
-      (json-response (assoc oikeudet 
-                       :impersonoitu_kayttaja impersonoitu
-                       ))))
+      (json-response (assoc oikeudet :impersonoitu_kayttaja impersonoitu))))
 
   (cu/defapi :kayttajan_tiedot oid :get "/:oid" [oid]
-   true))
+    true))

@@ -22,10 +22,6 @@
 (def default-test-user-oid "OID.T-1001")
 (def default-test-user-uid "T-1001")
 
-(def ^:dynamic  *effective-user-oid*
-  "Oikeustarkastelun perusteena olevan käyttäjän oid. Eri kuin sisään kirjautuneen käyttäjän oid mikäli impersonaatio on käytössä."
-  nil)
-
 (defn exec-sql
   "execute sql and close statement."
   [c sql]
