@@ -14,30 +14,19 @@
 
 'use strict';
 
-angular.module('toimiala.kyselykerta', ['ngResource'])
-  .factory('Kyselykerta', ['$resource', function($resource) {
+angular.module('rest.kyselypohja', ['ngResource'])
+  .factory('Kyselypohja', ['$resource', function($resource) {
     var resource = $resource(null, null, {
       haku: {
         method: 'GET',
         isArray: true,
-        url: 'api/kyselykerta/:id'
-      },
-      tallennus: {
-        method: 'POST',
-        url: 'api/kyselykerta/:id',
-        id: 'tallenna-kyselykerta'
+        url: 'api/kyselypohja'
       }
     });
 
     return {
       hae: function(successCallback, errorCallback) {
         return resource.haku({}, successCallback, errorCallback);
-      },
-      haeYksi: function(id, successCallback, errorCallback) {
-        return resource.haku({id: id}, successCallback, errorCallback);
-      },
-      tallenna: function(id, kyselykerta, successCallback, errorCallback) {
-        return resource.tallennus({id: id}, {kyselykerta: kyselykerta}, successCallback, errorCallback);
       }
     };
   }]);

@@ -18,7 +18,7 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
                                                       'raportti.kyselykerta.kaavioapurit',
                                                       'raportti.kyselykerta.kyselykertaraportti',
                                                       'raportti.kyselykerta.vaittamakaavio',
-                                                      'toimiala.kyselykerta',
+                                                      'rest.kyselykerta',
                                                       'yhteiset.suodattimet.voimassaoloaika',
                                                       'yhteiset.direktiivit.auth-toiminto',
                                                       'ngRoute',

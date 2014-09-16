@@ -14,20 +14,20 @@
 
 'use strict';
 
-angular.module('toimiala.kyselypohja', ['ngResource'])
-  .factory('Kyselypohja', ['$resource', function($resource) {
+angular.module('rest.rahoitusmuoto', [])
+  .factory('Rahoitusmuoto', ['$resource', function($resource) {
     var resource = $resource(null, null, {
-      haku: {
+      haeKaikki: {
         method: 'GET',
-        isArray: true,
-        url: 'api/kyselypohja'
+        url: 'api/rahoitusmuoto',
+        isArray: true
       }
     });
 
     return {
-      hae: function(successCallback, errorCallback) {
-        return resource.haku({}, successCallback, errorCallback);
+      haeKaikki: function(successCallback, errorCallback) {
+        return resource.haeKaikki({}, successCallback, errorCallback);
       }
     };
-  }]);
-
+  }])
+;

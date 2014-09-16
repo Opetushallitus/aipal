@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('toimiala.kysymysryhma', ['ngResource'])
+angular.module('rest.kysymysryhma', ['ngResource'])
   .factory('Kysymysryhma', ['$http', function($http){
     return {
       haeKaikki: function(){

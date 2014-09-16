@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('toimiala.kysely', ['ngResource'])
+angular.module('rest.kysely', ['ngResource'])
   .factory('Kysely', ['$resource', function($resource) {
     var resource = $resource(null, null, {
       haku: {

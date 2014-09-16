@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'toimiala.kysymysryhma',
+angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
                                                'yhteiset.palvelut.i18n',
                                                'yhteiset.palvelut.ilmoitus'])
 

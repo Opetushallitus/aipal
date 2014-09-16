@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'toimiala.rahoitusmuoto', 'toimiala.vastaajatunnus', 'toimiala.kyselykerta'])
+angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta'])
   
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
