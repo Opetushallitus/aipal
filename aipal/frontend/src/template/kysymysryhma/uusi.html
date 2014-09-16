@@ -17,20 +17,45 @@
     <h3>{{i18n.kysymysryhma.kysymykset}}</h3>
   </div>
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
-    {{kysymys.jarjestys}} {{kysymys.kysymys_fi}}
+    <div ng-show="!kysymys.muokattava">
+      {{kysymys.jarjestys}} {{kysymys.kysymys_fi}}
+    </div>
+    <div ng-show="kysymys.muokattava">
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.vastaustapa}}</label>
+          <select ng-model="kysymys.vastaustyyppi" ng-options="tyyppi.arvo as tyyppi.nimi for tyyppi in vastaustyypit">
+          </select>
+        </fieldset>
+        <fieldset>
+          <input type="checkbox" ng-model="kysymys.pakollinen">{{i18n.kysymys.vastaus_pakollinen}}<br>
+          <input type="checkbox" ng-model="kysymys.poistettava">{{i18n.kysymys.poistettava}}
+        </fieldset>
+      </section>
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
+          <input type="text" ng-model="kysymys.kysymys_fi" size="80" maxlength="200"/>
+        </fieldset>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_ruotsiksi}}</label>
+          <input type="text" ng-model="kysymys.kysymys_sv" size="80" maxlength="200"/>
+        </fieldset>
+      </section>
+      <div ng-if="kysymys.vastaustyyppi === 'vapaateksti'" ng-include="'template/kysymysryhma/vapaateksti_kysymys.html'"></div>
+      <div>
+        <button ng-click="tallenna(kysymys)" ng-disabled="!kysymys.kysymys_fi">{{i18n.yleiset.tallenna}}</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<div ng-show="!lisaystila">
+<div ng-show="!muokkaustila">
   <button ng-click="lisaaKysymys()">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
 </div>
-<div ng-show="lisaystila">
-  <div>
-    <button ng-click="tallenna()">{{i18n.yleiset.tallenna}}</button>
-  </div>
-</div>
+
 
 <div>
-  <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || lisaystila">{{i18n.kysymysryhma.luo_uusi}}</button>
+  <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.kysymysryhma.luo_uusi}}</button>
   <button ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
 </div>

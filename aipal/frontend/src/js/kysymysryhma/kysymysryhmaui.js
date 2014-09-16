@@ -41,14 +41,15 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
 
   .factory('kysymysApurit', [function() {
     return {
-      teeKysymys: function(kysymykset) {
+      uusiKysymys: function() {
         return {
           kysymys_fi: '',
           kysymys_sv: '',
           pakollinen: true,
           poistettava: false,
           vastaustyyppi: 'vapaateksti',
-          jarjestys: kysymykset.length + 1
+          max_vastaus: 500,
+          muokattava: true
         };
       }
     };
@@ -59,15 +60,18 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.kysymysryhma = {
       kysymykset: []
     };
-    $scope.lisaystila = false;
+    $scope.muokkaustila = false;
+    $scope.vastaustyypit = [
+      {nimi: 'Vapaateksti', arvo: 'vapaateksti'}
+    ];
 
     $scope.lisaaKysymys = function() {
-      $scope.muokattava = apu.teeKysymys($scope.kysymysryhma.kysymykset);
-      $scope.kysymysryhma.kysymykset.push($scope.muokattava);
-      $scope.lisaystila = true;
+      $scope.kysymysryhma.kysymykset.push(apu.uusiKysymys());
+      $scope.muokkaustila = true;
     };
-    $scope.tallenna = function() {
-      $scope.lisaystila = false;
+    $scope.tallenna = function(kysymys) {
+      kysymys.muokattava = false;
+      $scope.muokkaustila = false;
     };
 
     $scope.peruuta = function(){
