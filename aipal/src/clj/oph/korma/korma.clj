@@ -30,19 +30,18 @@
   "BoneCP based connection pool"
   [db-asetukset]
   (let [korma-postgres (korma.db/postgres (korma-asetukset db-asetukset))
-        bonecp-ds  (doto (com.jolbox.bonecp.BoneCPDataSource.)
-                     (.setJdbcUrl (str "jdbc:" (:subprotocol korma-postgres) ":" (:subname korma-postgres)))
-                     (.setUsername (:user korma-postgres))
-                     (.setPassword (:password korma-postgres))
-                     (.setConnectionTestStatement "select 42")
-                     (.setConnectionTimeoutInMs 2000)
-                     (.setDefaultAutoCommit false)
-                     (.setMaxConnectionsPerPartition 10)
-                     (.setMinConnectionsPerPartition 5)
-                     (.setPartitionCount 1)
-                     (.setConnectionHook (korma-auth/customizer-impl-bonecp (:psql-session-var db-asetukset)))
-                     )]
-  bonecp-ds))
+        bonecp-ds (doto (com.jolbox.bonecp.BoneCPDataSource.)
+                    (.setJdbcUrl (str "jdbc:" (:subprotocol korma-postgres) ":" (:subname korma-postgres)))
+                    (.setUsername (:user korma-postgres))
+                    (.setPassword (:password korma-postgres))
+                    (.setConnectionTestStatement "select 42")
+                    (.setConnectionTimeoutInMs 2000)
+                    (.setDefaultAutoCommit false)
+                    (.setMaxConnectionsPerPartition 10)
+                    (.setMinConnectionsPerPartition 5)
+                    (.setPartitionCount 1)
+                    (.setConnectionHook (korma-auth/customizer-impl-bonecp "aipal.kayttaja")))]
+    bonecp-ds))
 
 (defn luo-db [db-asetukset]
   (korma.db/default-connection
