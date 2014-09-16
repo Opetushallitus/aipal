@@ -1,4 +1,4 @@
-<h2>Organisaatiosi kyselyt</h2>
+<h1>Organisaatiosi kyselyt</h1>
 
 <fieldset class="luo-uusi-kysely" >
     <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="Etsi kyselyjä">
@@ -34,6 +34,7 @@
                 Näytä raportti
             </a>
         </div>
+        <span ng-show="!kysely.kyselykerrat.length" class="text-muted">Ei kyselykertoja</span>
     </accordion-group>
 </accordion>
 
