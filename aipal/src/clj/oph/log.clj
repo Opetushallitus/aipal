@@ -16,14 +16,15 @@
   (:require oph.common.infra.print-wrapper
             oph.korma.korma-auth
             [clojure.tools.logging]
-            [robert.hooke :refer [add-hook]]))
+            [robert.hooke :refer [add-hook]]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (def ^:dynamic *lisaa-uid-ja-request-id?* true)
 
 (defn lisaa-uid-ja-requestid
   [f logger level throwable message]
-  (let [uid (if (bound? #'oph.korma.korma-auth/*current-user-uid*)
-              oph.korma.korma-auth/*current-user-uid*
+  (let [uid (if (bound? #'*kayttaja*)
+              (:uid *kayttaja*)
               "-")
         requestid (if (bound? #'oph.common.infra.print-wrapper/*requestid*)
                     oph.common.infra.print-wrapper/*requestid*

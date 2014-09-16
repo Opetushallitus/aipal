@@ -19,8 +19,7 @@
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
-            [oph.korma.korma-auth :refer [*current-user-uid*
-                                          integraatiokayttaja]]
+            [oph.korma.korma-auth :refer [integraatiokayttaja]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 
@@ -40,7 +39,7 @@
 (defn ^:integration-api paivita!
   "Päivittää käyttäjätaulun uusilla käyttäjillä kt."
   [kt]
-  {:pre [(= *current-user-uid* integraatiokayttaja)]}
+  {:pre [(= (:uid *kayttaja*) integraatiokayttaja)]}
   (db/transaction
     ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
     (log/debug "Merkitään olemassaolevat käyttäjät ei-voimassaoleviksi")

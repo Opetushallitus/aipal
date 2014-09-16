@@ -70,6 +70,6 @@
   (nsr/refresh :after 'user/kaynnista!))
 
 (defmacro with-testikayttaja [& body]
-  `(binding [aipal.infra.kayttaja/*kayttaja* {:oid oph.korma.korma-auth/default-test-user-oid}
-             oph.korma.korma-auth/*current-user-uid* oph.korma.korma-auth/default-test-user-uid]
+  `(binding [aipal.infra.kayttaja/*kayttaja* {:oid oph.korma.korma-auth/default-test-user-oid
+                                              :uid oph.korma.korma-auth/default-test-user-uid}]
      ~@body))

@@ -32,14 +32,14 @@
   (:username request))
 
 (defn with-user [userid impersonoitu-oid f]
+  (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
   ;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu, joten tehdään
   ;; käyttäjän tietojen haku käyttäjänä JARJESTELMA.
-  (let [oid (binding [ka/*current-user-uid* userid
-                      *kayttaja* {:oid "JARJESTELMA"}]
+  (let [oid (binding [*kayttaja* {:oid "JARJESTELMA"}]
               (clojure.java.jdbc/with-connection (korma.db/get-connection @korma.db/_default)
                 (kayttaja/validate-user (clojure.java.jdbc/find-connection) userid)))]
-    (binding [ka/*current-user-uid* userid
-              *kayttaja* {:oid oid}]
+    (binding [*kayttaja* {:uid userid
+                          :oid oid}]
       (let [kayttaja (kayttaja-arkisto/hae-uid userid)]
         (binding [ka/*effective-user-oid* (or impersonoitu-oid (:oid kayttaja))]
           (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)

@@ -22,9 +22,6 @@
 (def default-test-user-oid "OID.T-1001")
 (def default-test-user-uid "T-1001")
 
-(def ^:dynamic *current-user-uid*
-  "Sisään kirjautuneen käyttäjän uid")
-
 (def ^:dynamic  *effective-user-oid*
   "Oikeustarkastelun perusteena olevan käyttäjän oid. Eri kuin sisään kirjautuneen käyttäjän oid mikäli impersonaatio on käytössä."
   nil)
@@ -38,7 +35,6 @@
 (defn auth-onCheckOut
   [c psql-varname]
   {:pre [(bound? #'*kayttaja*)]}
-  (log/debug "auth user " *current-user-uid*)
   (try
     (exec-sql c (str "set session " psql-varname " = '" (:oid *kayttaja*) "'"))
     (catch Exception e

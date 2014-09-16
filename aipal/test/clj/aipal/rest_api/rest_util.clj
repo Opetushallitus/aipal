@@ -17,8 +17,7 @@
 
 (defn with-auth-user [f]
   (let [olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid ka/default-test-user-oid, :uid ka/default-test-user-uid }]
-    (binding [ka/*current-user-uid* (:uid olemassaoleva-kayttaja)
-              *kayttaja* olemassaoleva-kayttaja
+    (binding [*kayttaja* olemassaoleva-kayttaja
               i18n/*locale* testi-locale
               *current-user-authmap* olemassaoleva-kayttaja]
       (f))))

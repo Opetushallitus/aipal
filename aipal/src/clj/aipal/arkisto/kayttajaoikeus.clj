@@ -17,8 +17,7 @@
             [korma.db :as db]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [clojure.tools.logging :as log]
-            [oph.korma.korma-auth :refer [*current-user-uid*
-                                          integraatiokayttaja]]
+            [oph.korma.korma-auth :refer [integraatiokayttaja]]
             [aipal.infra.kayttaja :refer [*kayttaja*]])
   (:use [aipal.integraatio.sql.korma]))
 
@@ -81,7 +80,7 @@
 (defn ^:integration-api paivita-kaikki!
   "Päivittää käyttäjätaulun uusilla käyttäjillä kt."
   [kt]
-  {:pre [(= *current-user-uid* integraatiokayttaja)]}
+  {:pre [(= (:uid *kayttaja*) integraatiokayttaja)]}
   (db/transaction
     ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
     (tyhjaa-kayttooikeudet!)
