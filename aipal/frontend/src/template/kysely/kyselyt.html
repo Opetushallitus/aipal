@@ -21,7 +21,7 @@
             <a ng-href="#/kysely/{{kysely.kyselyid}}" class="button left button-with-icon edit-icon-white" title="{{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}">
                 Muokkaa kyselyä
             </a>
-            <button class="button left button-with-icon add-icon-white" ng-click="uusiKyselykerta(kysely.kyselyid)">{{i18n.kyselykerta.uusi_kyselykerta}}</button>
+            <button class="button left button-with-icon add-icon-white" ng-click="uusiKyselykerta(kysely)">{{i18n.kyselykerta.uusi_kyselykerta}}</button>
         </div>
 
         <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
@@ -37,7 +37,3 @@
         <span ng-show="!kysely.kyselykerrat.length" class="text-muted">Ei kyselykertoja</span>
     </accordion-group>
 </accordion>
-
-<popup-ikkuna nayta-popup="naytaLuonti">
-  <kyselykerta-luonti kyselyid="valittuKyselyid" ilmoita-tallennus="suljePopup()"></kyselykerta-luonti>
-</popup-ikkuna>

@@ -1,6 +1,10 @@
+<div class="modal-header">
+  <h3>{{i18n.kyselykerta.uusi_kyselykerta}}</h3>
+</div>
+
 <form name="kyselykertaForm">
+  <div class="modal-body">
   <fieldset>
-    <h3>{{i18n.kyselykerta.uusi_kyselykerta}}</h3>
     <h4>{{i18n.yleiset.kysely}}: {{kysely.kyselyid}} {{kysely.nimi_fi}}</h4>
     <label class="pakollinen" ng-bind="i18n.kyselykerta.kyselykerran_nimi"></label>
     <input type="text" placeholder="{{i18n.kyselykerta.kyselykerran_nimi}}" ng-model="kyselykerta.nimi_fi" ng-required="true">
@@ -24,5 +28,9 @@
     </pvm-valitsin>
   </section>
   <pakollisia-kenttia></pakollisia-kenttia>
+  </div>
+  <div class="modal-footer">
   <tallenna formi-validi="kyselykertaForm.$valid" disabloi-pyyntojen-ajaksi="['tallenna-kyselykerta']" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
+  </div>
 </form>
+
