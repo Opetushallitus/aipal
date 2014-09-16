@@ -22,3 +22,7 @@
 }
 .accordion-container {margin-bottom: $marginM;}
 
+* {
+  transform: none !important;
+  transition: none !important;
+}

@@ -13,8 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal-e2e.util
-  (:require [aitu-e2e.util :refer [avaa-url]]
-    [aipal-e2e.tietokanta.yhteys :as yhteys]))
+  (:require [clj-webdriver.taxi :as w]
+            [aitu-e2e.util :refer [avaa-url]]
+            [aipal-e2e.tietokanta.yhteys :as yhteys]))
 
 (defn aipal-url [polku]
   (str (or (System/getenv "AIPAL_URL")
@@ -22,4 +23,5 @@
        polku))
 
 (defn avaa [polku]
-  (avaa-url (aipal-url polku) yhteys/testikayttaja-uid))
+  (avaa-url (aipal-url polku) yhteys/testikayttaja-uid)
+  (w/execute-script "angular.element(document.documentElement).data('$injector').get('$animate').enabled(false);"))

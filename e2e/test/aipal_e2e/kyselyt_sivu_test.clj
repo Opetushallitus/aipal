@@ -29,18 +29,28 @@
 (defn kyselyn-nimi [kysely-elementti]
   (w/text
     (w/find-element-under kysely-elementti
-                          {:css ".kysely-nimi"})))
+                          {:css ".e2e-kysely-nimi"})))
+
+(defn kysely-linkki [kysely-elementti]
+  (w/find-element-under kysely-elementti
+                        {:css "a"}))
+
+(defn kyselykerran-nimi [kyselykerta-elementti]
+  (w/find-element-under kyselykerta-elementti {:css ".e2e-kyselykerta-nimi"}))
+
+(defn avaa-kysely [kysely-elementti]
+  (w/click (kysely-linkki kysely-elementti)))
 
 (defn ^:private kyselykerrat-kyselylle [kysely-elementti]
   (let [kyselykerrat (w/find-elements-under kysely-elementti
                                             (-> *ng*
                                                 (.repeater "kyselykerta in kysely.kyselykerrat")))]
     (->> kyselykerrat
-        (map #(w/find-element-under % {:css ".kyselykerta-nimi"}))
+        (map kyselykerran-nimi)
         (map w/text))))
 
 (defn uusi-kyselykerta-kyselylle [kysely-elementti]
-  (w/find-element-under kysely-elementti {:css "a[ng-click=\"uusiKyselykerta(kysely.kyselyid)\"]"}))
+  (w/find-element-under kysely-elementti {:css "button[ng-click=\"uusiKyselykerta(kysely.kyselyid)\"]"}))
 
 (defn uusi-kysely []
   (w/find-element {:css "a[ng-click=\"luoUusiKysely()\"]"}))
@@ -67,12 +77,14 @@
       (testing
         "ensimmäisellä kyselyllä on kaksi kyselykertaa"
         (let [kysely (nth (kyselyt) 0)]
-          (is (= (kyselyn-nimi kysely) "1 Kysely 1"))
+          (avaa-kysely kysely)
+          (is (= (kyselyn-nimi kysely) "Kysely 1"))
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 1-1" "Kyselykerta: Kyselykerta 1-2"]))))
       (testing
         "toisella kyselyllä on yksi kyselykerta"
         (let [kysely (nth (kyselyt) 1)]
-          (is (= (kyselyn-nimi kysely) "2 Kysely 2"))
+          (avaa-kysely kysely)
+          (is (= (kyselyn-nimi kysely) "Kysely 2"))
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"])))))))
 
 (deftest luo-kysely-test
@@ -102,18 +114,22 @@
       (testing
         "Kyselykerran luonti onnistuu ensimmäiselle kyselylle"
         (let [kysely (nth (kyselyt) 0)]
+          (avaa-kysely kysely)
           (w/click (uusi-kyselykerta-kyselylle kysely))
           (syota-kenttaan "kyselykerta.nimi_fi" "Ensimmäinen kyselykerta")
           (syota-pvm "kyselykerta.voimassa_alkupvm" "1.8.2014")
           (tallenna))
         (let [kysely (nth (kyselyt) 0)]
+          (avaa-kysely kysely)
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Ensimmäinen kyselykerta"]))))
       (testing
         "Kyselykerran luonti onnistuu toiselle kyselylle"
         (let [kysely (nth (kyselyt) 1)]
+          (avaa-kysely kysely)
           (w/click (uusi-kyselykerta-kyselylle kysely))
           (syota-kenttaan "kyselykerta.nimi_fi" "Toinen kyselykerta")
           (syota-pvm "kyselykerta.voimassa_alkupvm" "1.8.2014")
           (tallenna))
         (let [kysely (nth (kyselyt) 1)]
+          (avaa-kysely kysely)
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Toinen kyselykerta"])))))))
