@@ -1,6 +1,6 @@
 <h1>{{i18n.yleiset.vastaajatunnus}}</h1>
 
-<a ng-click="luoTunnuksiaDialogi(kyselykerta.kyselykertaid)">
+<a ng-click="luoTunnuksiaDialogi()">
   {{i18n.vastaajatunnus.luonti}}
 </a>
 
@@ -13,7 +13,3 @@
     Rahoitusmuoto: <span>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto}}</span>
     <br>
 </div>
-
-<popup-ikkuna nayta-popup="naytaLuoTunnuksia">
-  <tunnusten-luonti kyselykertaid="kyselykertaid" ilmoita-luonti="luoTunnuksiaCallback(uusiTunnus)" rahoitusmuodot="rahoitusmuodot"></tunnusten-luonti>
-</popup-ikkuna>
