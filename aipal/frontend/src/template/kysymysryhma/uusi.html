@@ -12,9 +12,25 @@
 <h3>{{i18n.kysymysryhma.selite_sv}}</h3>
 <textarea ng-model="kysymysryhma.selite_sv" rows="5" cols="80"></textarea>
 
+<div>
+  <div>
+    <h3>{{i18n.kysymysryhma.kysymykset}}</h3>
+  </div>
+  <div ng-repeat="kysymys in kysymysryhma.kysymykset">
+    {{kysymys.jarjestys}} {{kysymys.kysymys_fi}}
+  </div>
+</div>
 
+<div ng-show="!lisaystila">
+  <button ng-click="lisaaKysymys()">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
+</div>
+<div ng-show="lisaystila">
+  <div>
+    <button ng-click="tallenna()">{{i18n.yleiset.tallenna}}</button>
+  </div>
+</div>
 
 <div>
+  <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || lisaystila">{{i18n.kysymysryhma.luo_uusi}}</button>
   <button ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
-  <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi">{{i18n.kysymysryhma.luo_uusi}}</button>
 </div>
