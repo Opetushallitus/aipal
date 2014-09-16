@@ -60,14 +60,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
         $scope.naytaLuonti = false;
         $scope.haeKyselyt();
       };
-
-      $scope.luoTunnuksiaDialogi = function(kyselykertaId) {
-        $scope.naytaLuoTunnuksia = true;
-        $scope.valittuKyselykertaId = kyselykertaId;
-      };
-      $scope.suljeLuoTunnuksiaDialogi = function() {
-        $scope.naytaLuoTunnuksia = false;
-      };
     }
   ])
 
