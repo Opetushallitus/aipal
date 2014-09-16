@@ -48,7 +48,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
       };
 
       $scope.haeKyselyt = function() {
-        $scope.kyselyt = Kysely.hae();
+        Kysely.hae(function(data) {
+          $scope.kyselyt = data;
+        });
       };
       $scope.haeKyselyt();
 
