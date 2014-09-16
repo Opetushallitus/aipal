@@ -15,7 +15,7 @@
 (ns oph.korma.korma-auth
   "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän. BoneCP pool."
   (:require [clojure.tools.logging :as log]
-            [aipal.infra.kayttaja :as kayttaja]))
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (def jarjestelmakayttaja "JARJESTELMA")
 (def integraatiokayttaja "INTEGRAATIO")
@@ -24,9 +24,6 @@
 
 (def ^:dynamic *current-user-uid*
   "Sisään kirjautuneen käyttäjän uid")
-
-(def ^:dynamic *current-user-oid*
-  "Sisään kirjautuneen käyttäjän oid - pitää hoitaa promisen avulla.")
 
 (def ^:dynamic  *effective-user-oid*
   "Oikeustarkastelun perusteena olevan käyttäjän oid. Eri kuin sisään kirjautuneen käyttäjän oid mikäli impersonaatio on käytössä."
@@ -40,12 +37,10 @@
 
 (defn auth-onCheckOut
   [c psql-varname]
-  {:pre [(bound? #'kayttaja/*kayttaja*)]}
+  {:pre [(bound? #'*kayttaja*)]}
   (log/debug "auth user " *current-user-uid*)
   (try
-    (let [oid (:oid kayttaja/*kayttaja*)]
-      (deliver *current-user-oid* oid)
-      (exec-sql c (str "set session " psql-varname " = '" oid "'")))
+    (exec-sql c (str "set session " psql-varname " = '" (:oid *kayttaja*) "'"))
     (catch Exception e
       (log/error e "Odottamaton poikkeus")))
   (log/debug "con ok" (.hashCode c)))

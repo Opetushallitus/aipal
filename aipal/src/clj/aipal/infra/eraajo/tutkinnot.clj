@@ -18,16 +18,14 @@
             [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
             [oph.korma.korma-auth
-             :refer [*current-user-uid* *current-user-oid* integraatiokayttaja]]
-            [aipal.integraatio.koodistopalvelu :as org]))
+             :refer [*current-user-uid* integraatiokayttaja]]
+            [aipal.integraatio.koodistopalvelu :as org]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn paivita-tutkinnot! [asetukset]
   (binding [*current-user-uid* integraatiokayttaja
-            ;; Tietokantayhteyden avaus asettaa *current-user-oid*-promisen
-            ;; arvon. Kun käsitellään HTTP-pyyntöä, auth-wrapper luo tämän
-            ;; promisen. Koska tätä funktiota ei kutsuta HTTP-pyynnön
-            ;; käsittelijästä, meidän täytyy luoda promise itse.
-            *current-user-oid* (promise)]
+            ;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu.
+            *kayttaja* {:oid integraatiokayttaja}]
     (org/paivita-tutkinnot! asetukset)))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan

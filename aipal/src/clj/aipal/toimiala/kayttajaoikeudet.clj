@@ -3,7 +3,8 @@
   (:require [aipal.toimiala.kayttajaroolit :refer :all]
             [oph.korma.korma-auth :as ka]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
-            [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]))
+            [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (def ^:dynamic *current-user-authmap*)
 
@@ -38,7 +39,7 @@
     #{"YLLAPITAJA"}))
 
 (defn impersonoiva-yllapitaja? []
-  (not= @ka/*current-user-oid* ka/*effective-user-oid*))
+  (not= (:oid *kayttaja*) ka/*effective-user-oid*))
 
 (defn kyselyiden-listaaminen?
   "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"

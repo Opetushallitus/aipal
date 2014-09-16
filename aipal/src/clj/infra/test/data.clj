@@ -47,9 +47,7 @@
 (defn luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
   (binding [ka/*current-user-uid* ka/jarjestelmakayttaja
-            ka/*current-user-oid* (promise)
             kayttaja/*kayttaja* {:oid ka/jarjestelmakayttaja}]
-    (deliver ka/*current-user-oid* ka/jarjestelmakayttaja)
     (when-not (first (sql/select kayttaja
                                  (sql/where {:oid testikayttaja-oid})))
       (db/transaction

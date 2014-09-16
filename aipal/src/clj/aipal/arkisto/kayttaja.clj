@@ -20,8 +20,8 @@
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [oph.korma.korma-auth :refer [*current-user-uid*
-                                          *current-user-oid*
-                                          integraatiokayttaja]]))
+                                          integraatiokayttaja]]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 
 (defn hae
@@ -46,7 +46,7 @@
     (log/debug "Merkitään olemassaolevat käyttäjät ei-voimassaoleviksi")
     (sql/update taulut/kayttaja
       (sql/set-fields {:voimassa false})
-      (sql/where {:luotu_kayttaja [= @*current-user-oid*]}))
+      (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]}))
     (doseq [k kt]
       (log/debug "Päivitetään käyttäjä" (pr-str k))
       (if (olemassa? k)

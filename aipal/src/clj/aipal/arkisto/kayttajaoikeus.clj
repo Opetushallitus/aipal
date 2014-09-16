@@ -17,9 +17,9 @@
             [korma.db :as db]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [clojure.tools.logging :as log]
-            [oph.korma.korma-auth :refer [*current-user-oid*
-                                          *current-user-uid*
-                                          integraatiokayttaja]])
+            [oph.korma.korma-auth :refer [*current-user-uid*
+                                          integraatiokayttaja]]
+            [aipal.infra.kayttaja :refer [*kayttaja*]])
   (:use [aipal.integraatio.sql.korma]))
 
 (defn hae-oikeudet
@@ -32,9 +32,7 @@
                      (sql/fields :rooli :organisaatio))]
         (assoc kayttaja :roolit roolit))))
   ([]
-    (let [userid oph.korma.korma-auth/*current-user-uid*]
-      (assert (realized? oph.korma.korma-auth/*current-user-oid*) (str "Ongelma sisäänkirjautumisessa. Käyttäjätunnuksella " userid " ei ole käyttöoikeuksia. (uid -> oid epäonnistui)."))
-      (hae-oikeudet @oph.korma.korma-auth/*current-user-oid*))))
+    (hae-oikeudet (:oid *kayttaja*))))
 
 (defn hae-kyselylla
   [kyselyid kayttaja-oid]
@@ -60,11 +58,11 @@
   (log/debug "Merkitään olemassaolevat käyttäjät ei-voimassaoleviksi")
   (sql/update kayttaja
     (sql/set-fields {:voimassa false})
-    (sql/where {:luotu_kayttaja [= @*current-user-oid*]}))
+    (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]}))
   (log/debug "Merkitään olemassaolevien käyttäjien roolit ei-voimassaoleviksi")
   (sql/update rooli-organisaatio
     (sql/set-fields {:voimassa false})
-    (sql/where {:luotu_kayttaja [= @*current-user-oid*]})))
+    (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]})))
 
 (defn ^:integration-api paivita-rooli!
   "Päivittää tai lisää käyttäjän roolin"

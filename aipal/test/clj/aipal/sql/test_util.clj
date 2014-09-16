@@ -58,10 +58,8 @@
   (let [pool (alusta-korma!)]
     (luo-testikayttaja!) ; eri transaktio kuin loppuosassa!
     (binding [ka/*current-user-uid* uid ; testin aikana eri käyttäjä
-              ka/*current-user-oid* (promise)
               kayttaja/*kayttaja* {:oid oid}
               i18n/*locale* testi-locale]
-      (deliver ka/*current-user-oid* oid)
       ; avataan transaktio joka on voimassa koko kutsun (f) ajan
       (db/transaction
         (binding [ko/*current-user-authmap* {} ]

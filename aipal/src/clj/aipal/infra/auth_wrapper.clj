@@ -23,7 +23,7 @@
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [clojure.tools.logging :as log]
-            [aipal.infra.kayttaja :as kayttaja]))
+            [aipal.infra.kayttaja :as kayttaja, :refer [*kayttaja*]]))
 
 (defn get-userid-from-request
   "cas filter laittaa :username nimiseen propertyyn käyttäjätunnuksen"
@@ -32,16 +32,14 @@
   (:username request))
 
 (defn with-user [userid impersonoitu-oid f]
-  ;; Poolista ei saa yhteyttä ilman että kayttaja/*kayttaja* on sidottu, joten
-  ;; tehdään käyttäjän tietojen haku käyttäjänä JARJESTELMA.
+  ;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu, joten tehdään
+  ;; käyttäjän tietojen haku käyttäjänä JARJESTELMA.
   (let [oid (binding [ka/*current-user-uid* userid
-                      ka/*current-user-oid* (promise)
-                      kayttaja/*kayttaja* {:oid "JARJESTELMA"}]
+                      *kayttaja* {:oid "JARJESTELMA"}]
               (clojure.java.jdbc/with-connection (korma.db/get-connection @korma.db/_default)
                 (kayttaja/validate-user (clojure.java.jdbc/find-connection) userid)))]
     (binding [ka/*current-user-uid* userid
-              ka/*current-user-oid* (promise)
-              kayttaja/*kayttaja* {:oid oid}]
+              *kayttaja* {:oid oid}]
       (let [kayttaja (kayttaja-arkisto/hae-uid userid)]
         (binding [ka/*effective-user-oid* (or impersonoitu-oid (:oid kayttaja))]
           (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
@@ -52,7 +50,6 @@
                                 :impersonoitu_kayttaja (str (:etunimi impersonoitu-kayttaja) " " (:sukunimi impersonoitu-kayttaja)))]
             (log/info "käyttäjä autentikoitu " auth-map )
             (binding [ko/*current-user-authmap* auth-map]
-              (deliver ka/*current-user-oid* (:oid kayttaja))
               (f))))))))
 
 (defn wrap-sessionuser [ring-handler]
