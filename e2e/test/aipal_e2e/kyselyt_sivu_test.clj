@@ -53,7 +53,7 @@
   (w/find-element-under kysely-elementti {:css "button[ng-click=\"uusiKyselykerta(kysely.kyselyid)\"]"}))
 
 (defn uusi-kysely []
-  (w/find-element {:css "a[ng-click=\"luoUusiKysely()\"]"}))
+  (w/find-element {:css ".e2e-luo-uusi-kysely"}))
 
 (deftest kyselyt-sivu-test
   (with-webdriver
