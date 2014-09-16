@@ -14,7 +14,8 @@
 
 (ns oph.korma.korma-auth
   "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän. BoneCP pool."
-  (:require [clojure.tools.logging :as log]))
+  (:require [clojure.tools.logging :as log]
+            [aipal.infra.kayttaja :refer [validate-user]]))
 
 (def jarjestelmakayttaja "JARJESTELMA")
 (def integraatiokayttaja "INTEGRAATIO")
@@ -30,22 +31,6 @@
 (def ^:dynamic  *effective-user-oid*
   "Oikeustarkastelun perusteena olevan käyttäjän oid. Eri kuin sisään kirjautuneen käyttäjän oid mikäli impersonaatio on käytössä."
   nil)
-
-(defn validate-user
-  [con uid]
-  {:pre [(string? uid)]}
-  (log/debug "tarkistetaan käyttäjä " uid)
-  (with-open [pstmt (doto
-                      (.prepareStatement con "select * from kayttaja where uid = ?")
-                      (.setString 1 uid))
-              rs (.executeQuery pstmt)]
-    (let [valid (.next rs)]
-      (when-not valid (throw (IllegalArgumentException. (str "Käyttäjä " uid " puuttuu tietokannasta"))))
-     (let [voimassa (.getBoolean rs "voimassa")
-           oid (.getString rs "oid")]
-       (when-not voimassa (throw (IllegalArgumentException. (str "Käyttäjätunnus " uid " ei ole voimassa."))))
-       (log/debug (str "user " uid " ok"))
-       oid))))
 
 (defn exec-sql
   "execute sql and close statement."
