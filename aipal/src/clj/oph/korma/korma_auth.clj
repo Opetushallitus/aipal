@@ -15,7 +15,7 @@
 (ns oph.korma.korma-auth
   "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän. BoneCP pool."
   (:require [clojure.tools.logging :as log]
-            [aipal.infra.kayttaja :refer [validate-user]]))
+            [aipal.infra.kayttaja :as kayttaja]))
 
 (def jarjestelmakayttaja "JARJESTELMA")
 (def integraatiokayttaja "INTEGRAATIO")
@@ -40,13 +40,12 @@
 
 (defn auth-onCheckOut
   [c psql-varname]
+  {:pre [(bound? #'kayttaja/*kayttaja*)]}
   (log/debug "auth user " *current-user-uid*)
   (try
-    (let [oid (validate-user c *current-user-uid*)]
+    (let [oid (:oid kayttaja/*kayttaja*)]
       (deliver *current-user-oid* oid)
       (exec-sql c (str "set session " psql-varname " = '" oid "'")))
-    (catch IllegalArgumentException e
-      (.printStackTrace e))
     (catch Exception e
       (log/error e "Odottamaton poikkeus")))
   (log/debug "con ok" (.hashCode c)))

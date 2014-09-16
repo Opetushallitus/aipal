@@ -23,7 +23,7 @@
             [aipal.integraatio.sql.korma :refer [kayttaja]]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aipal.toimiala.kayttajaoikeudet :as ko]
-             ))
+            [aipal.infra.kayttaja :as kayttaja]))
 
 (def testikayttaja-uid "MAN-O-TEST")
 (def testikayttaja-oid "OID.MAN-O-TEST")
@@ -59,6 +59,7 @@
     (luo-testikayttaja!) ; eri transaktio kuin loppuosassa!
     (binding [ka/*current-user-uid* uid ; testin aikana eri käyttäjä
               ka/*current-user-oid* (promise)
+              kayttaja/*kayttaja* {:oid oid}
               i18n/*locale* testi-locale]
       (deliver ka/*current-user-oid* oid)
       ; avataan transaktio joka on voimassa koko kutsun (f) ajan

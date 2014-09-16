@@ -1,6 +1,8 @@
 (ns aipal.infra.kayttaja
   (:require [clojure.tools.logging :as log]))
 
+(def ^:dynamic *kayttaja*)
+
 (defn validate-user
   [con uid]
   {:pre [(string? uid)]}
