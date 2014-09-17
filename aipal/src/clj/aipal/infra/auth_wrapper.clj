@@ -38,7 +38,6 @@
     (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
           kayttajatiedot {:kayttajan_nimi (:nimi *kayttaja*)}
           auth-map (assoc kayttajatiedot
-                          :roolit (:voimassaolevat-roolit *kayttaja*)
                           :impersonoitu_kayttaja (str (:etunimi impersonoitu-kayttaja) " " (:sukunimi impersonoitu-kayttaja)))]
       (log/info "käyttäjä autentikoitu " auth-map )
       (binding [ko/*current-user-authmap* auth-map]

@@ -27,7 +27,7 @@
   (not (empty? (clojure.set/select roolit (set (map :rooli roolirivit))))))
 
 (defn kayttajalla-on-jokin-rooleista? [roolit]
-  (sisaltaa-jonkin-rooleista? roolit (:roolit *current-user-authmap*)))
+  (sisaltaa-jonkin-rooleista? roolit (:voimassaolevat-roolit *kayttaja*)))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (sisaltaa-jonkin-rooleista? roolit
