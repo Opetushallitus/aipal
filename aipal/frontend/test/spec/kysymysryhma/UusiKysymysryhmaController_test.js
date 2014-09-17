@@ -51,10 +51,11 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
                                                  nimi_sv: 'fåå',
                                                  selite_fi: 'bar',
                                                  selite_sv: 'bår'}).respond(200);
-    $scope.kysely.nimi_fi = 'foo';
-    $scope.kysely.nimi_sv = 'fåå';
-    $scope.kysely.selite_fi = 'bar';
-    $scope.kysely.selite_sv = 'bår';
+    $scope.kysymysryhma = {};
+    $scope.kysymysryhma.nimi_fi = 'foo';
+    $scope.kysymysryhma.nimi_sv = 'fåå';
+    $scope.kysymysryhma.selite_fi = 'bar';
+    $scope.kysymysryhma.selite_sv = 'bår';
     $scope.luoUusi();
     $httpBackend.verifyNoOutstandingExpectation();
   });
