@@ -48,6 +48,12 @@
                 :kayttaja kayttaja
                 :organisaatio organisaatio})))
 
+(defn hae-roolit [oid]
+  (sql/select rooli-organisaatio
+    (sql/fields :rooli :organisaatio)
+    (sql/where {:kayttaja oid
+                :voimassa true})))
+
 (defn olemassa? [k]
   (boolean (hae-rooli (:rooli k) (:kayttaja k) (:organisaatio k))))
 

@@ -82,3 +82,5 @@
 (defentity toimipaikka
   (sql/pk :toimipaikkakoodi)
   (sql/belongs-to oppilaitos {:fk :oppilaitos}))
+
+(defentity kayttajarooli)
