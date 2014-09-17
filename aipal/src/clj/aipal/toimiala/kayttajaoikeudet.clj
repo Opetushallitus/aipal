@@ -6,8 +6,6 @@
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
-(def ^:dynamic *current-user-authmap*)
-
 (defn ->int
   "Merkkijono numeroksi tai numero sellaisenaan."
   [str-or-int]

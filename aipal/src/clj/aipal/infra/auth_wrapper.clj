@@ -35,10 +35,8 @@
 (defn with-user [userid impersonoitu-oid f]
   (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
   (with-kayttaja userid impersonoitu-oid
-    (let [auth-map {:impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)}]
-      (log/info "käyttäjä autentikoitu " auth-map )
-      (binding [ko/*current-user-authmap* auth-map]
-        (f)))))
+    (log/info "käyttäjä autentikoitu " *kayttaja*)
+    (f)))
 
 (defn wrap-sessionuser [ring-handler]
   (fn [request]

@@ -63,12 +63,11 @@
               i18n/*locale* testi-locale]
       ;; avataan transaktio joka on voimassa koko kutsun (f) ajan
       (db/transaction
-        (binding [ko/*current-user-authmap* {} ]
-          (try
-            (f)
-            (finally
-              (testdata/tyhjenna-testidata! oid)
-              (poista-testikayttaja!)))))
+        (try
+          (f)
+          (finally
+            (testdata/tyhjenna-testidata! oid)
+            (poista-testikayttaja!))))
       (-> pool :pool :datasource .close))))
 
 (defn tietokanta-fixture [f]
@@ -76,11 +75,3 @@
 
 (defmacro testidata-poistaen-kayttajana [oid & body]
   `(tietokanta-fixture-oid (fn [] ~@body) ~oid ~oid))
-
-(defn with-user-rights
-  ([f]
-   (with-user-rights {:roolitunnus (:kayttaja kayttajaroolit)}
-                     f))
-  ([kayttaja-authmap f]
-   (binding [ko/*current-user-authmap* kayttaja-authmap]
-     (f))))

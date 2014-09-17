@@ -8,7 +8,6 @@
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
-            [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
 
@@ -18,8 +17,7 @@
 (defn with-auth-user [f]
   (let [olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid ka/default-test-user-oid, :uid ka/default-test-user-uid }]
     (binding [*kayttaja* olemassaoleva-kayttaja
-              i18n/*locale* testi-locale
-              *current-user-authmap* olemassaoleva-kayttaja]
+              i18n/*locale* testi-locale]
       (f))))
 
 (defn mock-request [app url method params]
