@@ -26,6 +26,6 @@
   (sql/insert kysymysryhma
     (sql/values (assoc k :valtakunnallinen true))))
 
-(defn lisaa-kysymys! [k kysymysryhmaid]
+(defn lisaa-kysymys! [k]
   (sql/insert kysymys
-    (sql/values (assoc k :kysymysryhmaid kysymysryhmaid))))
+    (sql/values k)))

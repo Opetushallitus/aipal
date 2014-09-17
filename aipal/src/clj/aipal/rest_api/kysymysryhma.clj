@@ -17,6 +17,7 @@
           kysymykset (:kysymykset (:params request))]
       (doall
         (for [k (map #(assoc %1 :jarjestys %2) kysymykset (range))
-              :let [kysymys (dissoc k :muokattava)]]
-          (arkisto/lisaa-kysymys! kysymys (:kysymysryhmaid kysymysryhma))))
+              :let [kysymys (dissoc k :muokattava)
+                    kysymys (assoc kysymys :kysymysryhmaid (:kysymysryhmaid kysymysryhma))]]
+          (arkisto/lisaa-kysymys! kysymys)))
       (json-response kysymysryhma))))
