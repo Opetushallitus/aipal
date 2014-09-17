@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :refer [kysymysryhma]]))
+            [aipal.integraatio.sql.korma :refer [kysymysryhma kysymys]]))
 
 (defn hae-kysymysryhmat []
   (sql/select kysymysryhma
@@ -25,3 +25,7 @@
 (defn lisaa-kysymysryhma! [k]
   (sql/insert kysymysryhma
     (sql/values (assoc k :valtakunnallinen true))))
+
+(defn lisaa-kysymys! [k]
+  (sql/insert kysymys
+    (sql/values k)))
