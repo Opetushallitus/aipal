@@ -10,7 +10,7 @@
   ;; käyttäjän tietojen haku käyttäjänä JARJESTELMA.
   (if-let [k (binding [*kayttaja* {:oid "JARJESTELMA"}]
                (arkisto/hae-voimassaoleva uid))]
-    (binding [*kayttaja* k]
+    (binding [*kayttaja* (assoc k :effective-oid (or impersonoitu-oid (:oid k)))]
       (f))
     (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid)))))
 

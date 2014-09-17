@@ -14,10 +14,26 @@
 
 ;; Jos UIDilla löytyy voimassaoleva käyttäjä, with-kayttaja ajaa annetun koodin
 ;; sitoen varin *kayttaja* käyttäjän tietoihin.
-(deftest with-kayttaja-kayttaja
-  (let [*kayttaja*-funktiokutsun-aikana (atom nil)]
+(deftest with-kayttaja-sidonta
+  (let [k (atom nil)]
     (with-redefs [arkisto/hae-voimassaoleva
                  (constantly {:oid "oid"})]
       (with-kayttaja "uid" nil
-        (reset! *kayttaja*-funktiokutsun-aikana *kayttaja*))
-      (is (= {:oid "oid"} @*kayttaja*-funktiokutsun-aikana)))))
+        (reset! k *kayttaja*))
+      (is (= (:oid @k) "oid")))))
+
+;; Impersonoinnin aikana effective-oid = impersonoitavan käyttäjän oid.
+(deftest with-kayttaja-effective-oid-impersonointi
+  (let [k (atom nil)]
+    (with-redefs [arkisto/hae-voimassaoleva (constantly {:oid "oid"})]
+      (with-kayttaja "uid" "impersonoitava-oid"
+        (reset! k *kayttaja*))
+      (is (= (:effective-oid @k) "impersonoitava-oid")))))
+
+;; Ilman impersonointia effective-oid = käyttäjän oid.
+(deftest with-kayttaja-effective-oid-ei-impersonointia
+  (let [k (atom nil)]
+    (with-redefs [arkisto/hae-voimassaoleva (constantly {:oid "oid"})]
+      (with-kayttaja "uid" nil
+        (reset! k *kayttaja*))
+      (is (= (:effective-oid @k) "oid")))))
