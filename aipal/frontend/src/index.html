@@ -66,20 +66,6 @@
         </ul>
       </div>
     </nav>
-    <div class="impersonointi-haku ng-hide" ng-show="valitseHenkilo">
-      <button class="icon delete-icon sulje" ng-click="piilota()"></button>
-      <form name="impersonoiForm">
-          <haku-valitsin
-                  otsikko="{{i18n.impersonointi.valitse_avustettava_kayttaja}}"
-                  url="api/kayttaja/impersonoitava"
-                  model="impersonoitava"
-                  model-id-property="oid"
-                  model-text-property="nimi"
-                  pakollinen="true">
-          </haku-valitsin>
-          <tallenna formi-validi="impersonoiForm.$valid" ng-click="impersonoi()" teksti="{{i18n.impersonointi.valitse_kayttaja}}"></tallenna>
-      </form>
-    </div>
     <div id="content" class="app-wrapper">
       <div ng-view></div>
     </div>

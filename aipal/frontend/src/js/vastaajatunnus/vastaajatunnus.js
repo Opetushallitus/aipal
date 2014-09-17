@@ -24,19 +24,31 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       });
   }])
 
-  .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$routeParams', '$scope',
-    function(Rahoitusmuoto, Vastaajatunnus, $routeParams, $scope) {
-      $scope.luoTunnuksiaDialogi = function(kyselykertaId) {
-        $scope.naytaLuoTunnuksia = true;
-        $scope.valittuKyselykertaId = kyselykertaId;
-      };
-      $scope.luoTunnuksiaCallback = function(uudetTunnukset) {
-        $scope.naytaLuoTunnuksia = false;
-        _.forEach(uudetTunnukset, function(tunnus) {
-          tunnus.new = true;
-          $scope.tulos.unshift(tunnus);
+  .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope',
+    function(Rahoitusmuoto, Vastaajatunnus, $modal, $routeParams, $scope) {
+      $scope.luoTunnuksiaDialogi = function() {
+        var kyselykertaId = $routeParams.kyselykertaid;
+
+        var modalInstance = $modal.open({
+          templateUrl: 'template/kysely/tunnusten-luonti.html',
+          controller: 'LuoTunnuksiaModalController',
+          resolve: {
+            rahoitusmuodot: function() {
+              return $scope.rahoitusmuodot;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(vastaajatunnus) {
+          Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus, function(uudetTunnukset) {
+            _.forEach(uudetTunnukset, function(tunnus) {
+              tunnus.new = true;
+              $scope.tulos.unshift(tunnus);
+            });
+          });
         });
       };
+
       $scope.kyselykertaid = $routeParams.kyselykertaid;
       $scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki(function(data) {
         $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
@@ -46,26 +58,14 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
     }]
   )
 
-  .directive('tunnustenLuonti', ['Rahoitusmuoto', 'Vastaajatunnus', function(Rahoitusmuoto, Vastaajatunnus) {
-    return {
-      restrict: 'E',
-      scope: {
-        kyselykertaid: '=',
-        ilmoitaLuonti: '&',
-        rahoitusmuodot: '='
-      },
-      templateUrl: 'template/kysely/tunnusten-luonti.html',
-      link: function(scope) {
-        scope.vastaajatunnus = {
-          vastaajien_lkm: 1
-        };
-        scope.luoTunnuksia = function(vastaajatunnus) {
-          Vastaajatunnus.luoUusia(scope.kyselykertaid, vastaajatunnus, function(uusiTunnus) {
-            scope.ilmoitaLuonti({uusiTunnus: uusiTunnus});
-          });
-        };
-      }
+  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', 'rahoitusmuodot', function($modalInstance, $scope, rahoitusmuodot) {
+    $scope.vastaajatunnus = {
+      vastaajien_lkm: 1
+    };
+    $scope.rahoitusmuodot = rahoitusmuodot;
+
+    $scope.luoTunnuksia = function(vastaajatunnus) {
+      $modalInstance.close(vastaajatunnus);
     };
   }])
-
 ;

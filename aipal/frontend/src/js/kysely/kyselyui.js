@@ -29,8 +29,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
   }])
 
   .controller('KyselytController', [
-    '$location', '$scope', 'ilmoitus', 'Kysely', 'i18n',
-    function($location, $scope, ilmoitus, Kysely, i18n) {
+    '$location', '$modal', '$scope', 'ilmoitus', 'Kysely', 'Kyselykerta', 'i18n',
+    function($location, $modal, $scope, ilmoitus, Kysely, Kyselykerta, i18n) {
       $scope.naytaLuonti = false;
 
       $scope.status = {};
@@ -48,17 +48,27 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
       };
 
       $scope.haeKyselyt = function() {
-        $scope.kyselyt = Kysely.hae();
+        Kysely.hae(function(data) {
+          $scope.kyselyt = data;
+        });
       };
       $scope.haeKyselyt();
 
-      $scope.uusiKyselykerta = function(kyselyid) {
-        $scope.valittuKyselyid = kyselyid;
-        $scope.naytaLuonti = true;
-      };
-      $scope.suljePopup = function() {
-        $scope.naytaLuonti = false;
-        $scope.haeKyselyt();
+      $scope.uusiKyselykerta = function(kysely) {
+        var modalInstance = $modal.open({
+          templateUrl: 'template/kysely/kyselykerta-luonti.html',
+          controller: 'UusiKyselykertaModalController',
+          resolve: {
+            kysely: function() {
+              return kysely;
+            }
+          }
+        });
+        modalInstance.result.then(function(kyselykerta) {
+          Kyselykerta.tallenna(kysely.kyselyid, kyselykerta, function() {
+            $scope.haeKyselyt();
+          });
+        });
       };
     }
   ])
@@ -105,33 +115,11 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
     }
   ])
 
-  .directive('kyselykertaLuonti', ['Kysely', 'Kyselykerta', 'i18n', function(Kysely, Kyselykerta, i18n) {
-    return {
-      restrict: 'E',
-      scope: {
-        kyselyid : '=',
-        ilmoitaTallennus: '&'
-      },
-      templateUrl: 'template/kysely/kyselykerta-luonti.html',
-      link: function(scope) {
-        scope.i18n = i18n;
-        scope.kysely = {};
-        scope.kyselykerta = {};
-
-        scope.$watch('kyselyid', function(kyselyid) {
-          if(_.isNumber(kyselyid)) {
-            Kysely.haeId(kyselyid, function(kysely) {
-              _.assign(scope.kysely, kysely);
-            });
-          }
-        });
-        scope.tallenna = function() {
-          Kyselykerta.tallenna(scope.kyselyid, scope.kyselykerta, function() {
-            scope.ilmoitaTallennus();
-          });
-        };
-      }
+  .controller('UusiKyselykertaModalController', ['$modalInstance', '$scope', 'kysely', function($modalInstance, $scope, kysely) {
+    $scope.kysely = kysely;
+    $scope.kyselykerta = {};
+    $scope.tallenna = function() {
+      $modalInstance.close($scope.kyselykerta);
     };
   }])
-
 ;
