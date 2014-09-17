@@ -9,8 +9,14 @@
     (json-response (arkisto/hae-kysymysryhmat)))
 
   (cu/defapi :kysymysryhma-luonti nil :post "/" request
-    (json-response (arkisto/lisaa-kysymysryhma! (select-keys (:params request)
-                                                             [:nimi_fi
-                                                              :selite_fi
-                                                              :nimi_sv
-                                                              :selite_sv])))))
+    (let [kysymysryhma (arkisto/lisaa-kysymysryhma! (select-keys (:params request)
+                                                                 [:nimi_fi
+                                                                  :selite_fi
+                                                                  :nimi_sv
+                                                                  :selite_sv]))
+          kysymykset (:kysymykset (:params request))]
+      (doall
+        (for [k (map #(assoc %1 :jarjestys %2) kysymykset (range))
+              :let [kysymys (dissoc k :muokattava)]]
+          (arkisto/lisaa-kysymys! kysymys (:kysymysryhmaid kysymysryhma))))
+      (json-response kysymysryhma))))
