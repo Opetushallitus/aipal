@@ -8,7 +8,7 @@
 (use-fixtures :each tietokanta-fixture)
 
 ;; hae-voimassaoleva palauttaa nil jos UIDilla ei löydy käyttäjää.
-(deftest hae-voimassaoleva-ei-kayttajaa
+(deftest ^:integraatio hae-voimassaoleva-ei-kayttajaa
   (sql/insert kayttaja
     (sql/values {:oid "oid"
                  :uid "uid"
@@ -16,7 +16,7 @@
   (is (nil? (hae-voimassaoleva "tuntematonuid"))))
 
 ;; hae-voimassaoleva palauttaa voimassaolevan käyttäjän kaikki tiedot.
-(deftest hae-voimassaoleva-kayttaja-voimassa
+(deftest ^:integraatio hae-voimassaoleva-kayttaja-voimassa
   (sql/insert kayttaja
     (sql/values {:oid "oid"
                  :uid "uid"
@@ -27,7 +27,7 @@
           :voimassa true})))
 
 ;; hae-voimassaoleva palauttaa nil jos käyttäjä ei ole voimassa.
-(deftest hae-voimassaoleva-ei-voimassa
+(deftest ^:integraatio hae-voimassaoleva-ei-voimassa
   (sql/insert kayttaja
     (sql/values {:oid "uid"
                  :uid "uid"
