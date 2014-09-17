@@ -1,9 +1,9 @@
-(ns aipal.infra.auth-wrapper-test
+(ns aipal.infra.kayttaja.vaihto-test
   (:require [clojure.test :refer :all]
-            [aipal.infra.auth-wrapper :refer :all]
             [aipal.sql.test-util :refer [tietokanta-fixture]]
-            aipal.arkisto.kayttaja
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [aipal.infra.kayttaja.vaihto :refer :all]
+            [aipal.arkisto.kayttaja :as arkisto]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -14,9 +14,9 @@
 
 ;; Jos UIDilla löytyy voimassaoleva käyttäjä, with-kayttaja ajaa annetun koodin
 ;; sitoen varin *kayttaja* käyttäjän tietoihin.
-(deftest with-kayttaja*-kayttaja
+(deftest with-kayttaja-kayttaja
   (let [*kayttaja*-funktiokutsun-aikana (atom nil)]
-    (with-redefs [aipal.arkisto.kayttaja/hae-voimassaoleva
+    (with-redefs [arkisto/hae-voimassaoleva
                  (constantly {:oid "oid"})]
       (with-kayttaja "uid" nil
         (reset! *kayttaja*-funktiokutsun-aikana *kayttaja*))

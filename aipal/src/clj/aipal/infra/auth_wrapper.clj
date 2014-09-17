@@ -23,25 +23,14 @@
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [clojure.tools.logging :as log]
-            [aipal.infra.kayttaja :as kayttaja, :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
 
 (defn get-userid-from-request
   "cas filter laittaa :username nimiseen propertyyn käyttäjätunnuksen"
   [request]
   {:post [(not (nil? %))]}
   (:username request))
-
-(defn with-kayttaja* [uid impersonoitu-oid f]
-  ;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu, joten tehdään
-  ;; käyttäjän tietojen haku käyttäjänä JARJESTELMA.
-  (if-let [k (binding [*kayttaja* {:oid "JARJESTELMA"}]
-               (kayttaja-arkisto/hae-voimassaoleva uid))]
-    (binding [*kayttaja* k]
-      (f))
-    (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid)))))
-
-(defmacro with-kayttaja [uid impersonoitu-oid & body]
-  `(with-kayttaja* ~uid ~impersonoitu-oid (fn [] ~@body)))
 
 (defn with-user [userid impersonoitu-oid f]
   (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
