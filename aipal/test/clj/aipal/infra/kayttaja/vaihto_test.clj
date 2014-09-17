@@ -37,3 +37,12 @@
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
       (is (= (:effective-oid @k) "oid")))))
+
+;; with-kayttaja muodostaa käyttäjän koko nimen
+(deftest with-kayttaja-effective-oid-ei-impersonointia
+  (let [k (atom nil)]
+    (with-redefs [arkisto/hae-voimassaoleva (constantly {:etunimi "Matti"
+                                                         :sukunimi "Meikäläinen"})]
+      (with-kayttaja "uid" nil
+        (reset! k *kayttaja*))
+      (is (= (:nimi @k) "Matti Meikäläinen")))))
