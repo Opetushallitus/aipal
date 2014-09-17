@@ -31,19 +31,26 @@
   {:post [(not (nil? %))]}
   (:username request))
 
-(defn with-user [userid impersonoitu-oid f]
-  (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
+(defn with-kayttaja* [uid impersonoitu-oid f]
   ;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu, joten tehdään
   ;; käyttäjän tietojen haku käyttäjänä JARJESTELMA.
-  (let [kayttaja (binding [*kayttaja* {:oid "JARJESTELMA"}]
-                   (clojure.java.jdbc/with-connection (korma.db/get-connection @korma.db/_default)
-                     (kayttaja/validate-user (clojure.java.jdbc/find-connection) userid)
-                     (kayttaja-arkisto/hae-uid userid)))]
-    (binding [*kayttaja* (assoc kayttaja
-                                :effective-oid (or impersonoitu-oid (:oid kayttaja)))]
+  (if-let [k (binding [*kayttaja* {:oid "JARJESTELMA"}]
+               (kayttaja-arkisto/hae-voimassaoleva uid))]
+    (binding [*kayttaja* k]
+      (f))
+    (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid)))))
+
+(defmacro with-kayttaja [uid impersonoitu-oid & body]
+  `(with-kayttaja* ~uid ~impersonoitu-oid (fn [] ~@body)))
+
+(defn with-user [userid impersonoitu-oid f]
+  (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
+  (with-kayttaja userid impersonoitu-oid
+    (binding [*kayttaja* (assoc *kayttaja*
+                                :effective-oid (or impersonoitu-oid (:oid *kayttaja*)))]
       (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
             oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:effective-oid *kayttaja*))
-            kayttajatiedot {:kayttajan_nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja))}
+            kayttajatiedot {:kayttajan_nimi (str (:etunimi *kayttaja*) " " (:sukunimi *kayttaja*))}
             auth-map (assoc kayttajatiedot
                             :roolit (:roolit oikeudet)
                             :impersonoitu_kayttaja (str (:etunimi impersonoitu-kayttaja) " " (:sukunimi impersonoitu-kayttaja)))]

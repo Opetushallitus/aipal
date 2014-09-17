@@ -37,7 +37,7 @@
    "opintoala"
    "koulutusala"
    "koulutustoimija"
-   ])
+   "kayttaja"])
 
 (defn tyhjenna-testidata!
   [oid]

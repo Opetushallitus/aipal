@@ -28,10 +28,8 @@
   [oid]
   (first (sql/select taulut/kayttaja (sql/where {:oid oid}))))
 
-(defn hae-uid
-  "Hakee käyttäjätunnuksen perusteella."
-  [uid]
-  (first (sql/select taulut/kayttaja (sql/where {:uid uid}))))
+(defn hae-voimassaoleva [uid]
+  (first (sql/select taulut/kayttaja (sql/where {:uid uid, :voimassa true}))))
 
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
