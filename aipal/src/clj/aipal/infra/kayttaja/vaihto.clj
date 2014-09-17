@@ -11,7 +11,7 @@
   (if-let [k (binding [*kayttaja* {:oid "JARJESTELMA"}]
                (arkisto/hae-voimassaoleva uid))]
     (binding [*kayttaja* (assoc k
-                                :effective-oid (or impersonoitu-oid (:oid k))
+                                :voimassaoleva-oid (or impersonoitu-oid (:oid k))
                                 :nimi (str (:etunimi k) " " (:sukunimi k)))]
       (f))
     (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid)))))

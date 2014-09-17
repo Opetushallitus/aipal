@@ -32,14 +32,14 @@
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (sisaltaa-jonkin-rooleista? roolit
                               (kayttajaoikeus-arkisto/hae-kyselylla (->int kyselyid)
-                                                                    (:effective-oid *kayttaja*))))
+                                                                    (:voimassaoleva-oid *kayttaja*))))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
     #{"YLLAPITAJA"}))
 
 (defn impersonoiva-yllapitaja? []
-  (not= (:oid *kayttaja*) (:effective-oid *kayttaja*)))
+  (not= (:oid *kayttaja*) (:voimassaoleva-oid *kayttaja*)))
 
 (defn kyselyiden-listaaminen?
   "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"

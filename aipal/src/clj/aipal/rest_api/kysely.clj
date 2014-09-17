@@ -28,11 +28,11 @@
   (cu/defapi :kysely nil :get "/" []
     (json-response (if (yllapitaja?)
                      (kysely/hae-kaikki)
-                     (kysely/hae-kaikki (:effective-oid *kayttaja*)))))
+                     (kysely/hae-kaikki (:voimassaoleva-oid *kayttaja*)))))
 
   (cu/defapi :kysely-luonti nil :post "/" []
     (json-response (kysely/lisaa! {:nimi_fi "Uusi kysely"
-                                   :koulutustoimija (kayttaja/hae-organisaatio (:effective-oid *kayttaja*))})))
+                                   :koulutustoimija (kayttaja/hae-organisaatio (:voimassaoleva-oid *kayttaja*))})))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (let [kysely (kysely/hae (Integer/parseInt kyselyid))]

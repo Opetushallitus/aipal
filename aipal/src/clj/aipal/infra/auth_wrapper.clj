@@ -36,7 +36,7 @@
   (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
   (with-kayttaja userid impersonoitu-oid
     (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
-          oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:effective-oid *kayttaja*))
+          oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:voimassaoleva-oid *kayttaja*))
           kayttajatiedot {:kayttajan_nimi (:nimi *kayttaja*)}
           auth-map (assoc kayttajatiedot
                           :roolit (:roolit oikeudet)

@@ -22,24 +22,24 @@
         (reset! k *kayttaja*))
       (is (= (:oid @k) "oid")))))
 
-;; Impersonoinnin aikana effective-oid = impersonoitavan käyttäjän oid.
-(deftest with-kayttaja-effective-oid-impersonointi
+;; Impersonoinnin aikana voimassaoleva OID = impersonoitavan käyttäjän OID.
+(deftest with-kayttaja-voimassaoleva-oid-impersonointi
   (let [k (atom nil)]
     (with-redefs [arkisto/hae-voimassaoleva (constantly {:oid "oid"})]
       (with-kayttaja "uid" "impersonoitava-oid"
         (reset! k *kayttaja*))
-      (is (= (:effective-oid @k) "impersonoitava-oid")))))
+      (is (= (:voimassaoleva-oid @k) "impersonoitava-oid")))))
 
-;; Ilman impersonointia effective-oid = käyttäjän oid.
-(deftest with-kayttaja-effective-oid-ei-impersonointia
+;; Ilman impersonointia voimassaoleva OID = käyttäjän OID.
+(deftest with-kayttaja-voimassaoleva-oid-ei-impersonointia
   (let [k (atom nil)]
     (with-redefs [arkisto/hae-voimassaoleva (constantly {:oid "oid"})]
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
-      (is (= (:effective-oid @k) "oid")))))
+      (is (= (:voimassaoleva-oid @k) "oid")))))
 
 ;; with-kayttaja muodostaa käyttäjän koko nimen
-(deftest with-kayttaja-effective-oid-ei-impersonointia
+(deftest with-kayttaja-nimi
   (let [k (atom nil)]
     (with-redefs [arkisto/hae-voimassaoleva (constantly {:etunimi "Matti"
                                                          :sukunimi "Meikäläinen"})]
