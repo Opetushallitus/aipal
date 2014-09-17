@@ -190,6 +190,7 @@ CREATE TABLE kysymys
     jarjestys         INTEGER ,
     jatkokysymysid    INTEGER ,
     monivalinta_max   INTEGER ,
+    max_vastaus       INTEGER ,
     luotu_kayttaja    VARCHAR (80) NOT NULL ,
     muutettu_kayttaja VARCHAR (80) NOT NULL ,
     luotuaika TIMESTAMPTZ NOT NULL ,
