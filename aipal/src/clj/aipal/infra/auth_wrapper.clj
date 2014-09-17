@@ -36,9 +36,7 @@
   (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
   (with-kayttaja userid impersonoitu-oid
     (let [impersonoitu-kayttaja (kayttaja-arkisto/hae impersonoitu-oid)
-          kayttajatiedot {:kayttajan_nimi (:nimi *kayttaja*)}
-          auth-map (assoc kayttajatiedot
-                          :impersonoitu_kayttaja (str (:etunimi impersonoitu-kayttaja) " " (:sukunimi impersonoitu-kayttaja)))]
+          auth-map {:impersonoitu_kayttaja (str (:etunimi impersonoitu-kayttaja) " " (:sukunimi impersonoitu-kayttaja))}]
       (log/info "käyttäjä autentikoitu " auth-map )
       (binding [ko/*current-user-authmap* auth-map]
         (f)))))
