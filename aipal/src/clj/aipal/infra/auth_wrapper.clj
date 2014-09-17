@@ -23,25 +23,13 @@
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [clojure.tools.logging :as log]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
-
-(defn get-userid-from-request
-  "cas filter laittaa :username nimiseen propertyyn käyttäjätunnuksen"
-  [request]
-  {:post [(not (nil? %))]}
-  (:username request))
-
-(defn with-user [userid impersonoitu-oid f]
-  (log/debug "Yritetään asettaa nykyiseksi käyttäjäksi" userid)
-  (with-kayttaja userid impersonoitu-oid
-    (log/info "käyttäjä autentikoitu " *kayttaja*)
-    (f)))
 
 (defn wrap-sessionuser [ring-handler]
   (fn [request]
-    (let [userid (get-userid-from-request request)
+    ;; CAS-middleware lisää käyttäjätunnuksen :username-avaimen alle
+    (let [uid (:username request)
           impersonoitu-oid (get-in request [:session :impersonoitu-oid])
-          _ (log/debug "userid set to " userid ", impersonated oid " impersonoitu-oid)]
-      (with-user userid impersonoitu-oid
-        #(ring-handler request)))))
+          _ (log/debug "userid set to " uid ", impersonated oid " impersonoitu-oid)]
+      (with-kayttaja uid impersonoitu-oid
+        (ring-handler request)))))

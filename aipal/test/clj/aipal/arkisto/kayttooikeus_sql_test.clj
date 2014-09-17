@@ -10,7 +10,7 @@
     [aipal.arkisto.kayttaja :as kayttaja-arkisto]
     [oph.korma.korma-auth :as ka]
     [aipal.toimiala.kayttajaoikeudet :as ko]
-    [aipal.infra.auth-wrapper :as auth-wrapper]
+    [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
     [aipal.integraatio.sql.korma :as taulut]))
 
 (use-fixtures :each tietokanta-fixture)
@@ -48,7 +48,7 @@
           muun-organisaation-kysely (kysely-arkisto/lisaa! {:nimi_fi "testi"
                                                             :koulutustoimija "2345678-0"})]
       (doseq [uid (keys kysely-kayttajat)]
-        (auth-wrapper/with-user uid nil
+        (with-kayttaja uid nil
           #(let [tulos [(kayttajaoikeudet/kysely-luonti?)
                         (kayttajaoikeudet/kysely-luku? (:kyselyid oman-organisaation-kysely))
                         (kayttajaoikeudet/kysely-muokkaus? (:kyselyid oman-organisaation-kysely))
