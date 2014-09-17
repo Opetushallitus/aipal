@@ -6,12 +6,19 @@
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]))
 
-(use-fixtures :each tietokanta-fixture)
+(defn stub-fixture [f]
+  (with-redefs [kayttaja-arkisto/hae (constantly {})
+                kayttaja-arkisto/hae-voimassaoleva (constantly {})
+                kayttajaoikeus-arkisto/hae-roolit (constantly [])]
+    (f)))
+
+(use-fixtures :each stub-fixture)
 
 ;; with-kayttaja heittää IllegalStateExceptionin jos UIDilla ei löydy
 ;; voimassaolevaa käyttäjää.
 (deftest with-kayttaja-ei-voimassaolevaa-kayttajaa
-  (is (thrown? IllegalStateException (with-kayttaja "uid" nil))))
+  (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly nil)]
+    (is (thrown? IllegalStateException (with-kayttaja "uid" nil)))))
 
 ;; Jos UIDilla löytyy voimassaoleva käyttäjä, with-kayttaja ajaa annetun koodin
 ;; sitoen varin *kayttaja* käyttäjän tietoihin.
@@ -25,18 +32,15 @@
 ;; Impersonoinnin aikana voimassaoleva OID = impersonoitavan käyttäjän OID.
 (deftest with-kayttaja-voimassaoleva-oid-impersonointi
   (let [k (atom nil)]
-    (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})]
-      (with-kayttaja "uid" "impersonoitava-oid"
-        (reset! k *kayttaja*))
-      (is (= (:voimassaoleva-oid @k) "impersonoitava-oid")))))
+    (with-kayttaja "uid" "impersonoitava-oid"
+      (reset! k *kayttaja*))
+      (is (= (:voimassaoleva-oid @k) "impersonoitava-oid"))))
 
 ;; Impersonoinnin aikana voimassaolevat roolit = impersonoitavan käyttäjän roolit.
 (deftest with-kayttaja-voimassaolevat-roolit-impersonointi
   (let [k (atom nil)]
-    (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
-                  kayttajaoikeus-arkisto/hae-roolit
-                  {"oid" :...omat-roolit...
-                   "impersonoitava-oid" :...impersonoidut-roolit...}]
+    (with-redefs [kayttajaoikeus-arkisto/hae-roolit
+                  {"impersonoitava-oid" :...impersonoidut-roolit...}]
       (with-kayttaja "uid" "impersonoitava-oid"
         (reset! k *kayttaja*))
       (is (= (:voimassaolevat-roolit @k) :...impersonoidut-roolit...)))))
@@ -44,7 +48,8 @@
 ;; Ilman impersonointia voimassaoleva OID = käyttäjän oma OID.
 (deftest with-kayttaja-voimassaoleva-oid-ei-impersonointia
   (let [k (atom nil)]
-    (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})]
+    (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
+                  kayttajaoikeus-arkisto/hae-roolit {}]
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
       (is (= (:voimassaoleva-oid @k) "oid")))))
@@ -53,14 +58,12 @@
 (deftest with-kayttaja-voimassaolevat-roolit-ei-impersonointia
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
-                  kayttajaoikeus-arkisto/hae-roolit
-                  {"oid" :...omat-roolit...
-                   "impersonoitava-oid" :...impersonoidut-roolit...}]
+                  kayttajaoikeus-arkisto/hae-roolit {"oid" :...omat-roolit...}]
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
       (is (= (:voimassaolevat-roolit @k) :...omat-roolit...)))))
 
-;; with-kayttaja muodostaa käyttäjän koko nimen
+;; with-kayttaja muodostaa käyttäjän koko nimen.
 (deftest with-kayttaja-nimi
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva
