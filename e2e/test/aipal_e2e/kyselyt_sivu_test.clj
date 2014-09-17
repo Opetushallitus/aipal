@@ -50,7 +50,7 @@
         (map w/text))))
 
 (defn uusi-kyselykerta-kyselylle [kysely-elementti]
-  (w/find-element-under kysely-elementti {:css "button[ng-click=\"uusiKyselykerta(kysely.kyselyid)\"]"}))
+  (w/find-element-under kysely-elementti {:css ".e2e-uusi-kyselykerta"}))
 
 (defn uusi-kysely []
   (w/find-element {:css ".e2e-luo-uusi-kysely"}))
