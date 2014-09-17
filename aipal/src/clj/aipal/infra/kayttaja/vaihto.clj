@@ -6,6 +6,9 @@
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]))
 
+(defn kayttajan-nimi [k]
+  (str (:etunimi k) " " (:sukunimi k)))
+
 (defn with-kayttaja* [uid impersonoitu-oid f]
   ;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu, joten tehdään
   ;; käyttäjän tietojen haku käyttäjänä JARJESTELMA.
@@ -13,12 +16,16 @@
                (kayttaja-arkisto/hae-voimassaoleva uid))]
     (let [voimassaoleva-oid (or impersonoitu-oid (:oid k))
           voimassaolevat-roolit (binding [*kayttaja* {:oid "JARJESTELMA"}]
-                                  (kayttajaoikeus-arkisto/hae-roolit voimassaoleva-oid))]
+                                  (kayttajaoikeus-arkisto/hae-roolit voimassaoleva-oid))
+          ik (when impersonoitu-oid
+               (binding [*kayttaja* {:oid "JARJESTELMA"}]
+                 (kayttaja-arkisto/hae impersonoitu-oid)))]
       (binding [*kayttaja*
                 (assoc k
                        :voimassaoleva-oid voimassaoleva-oid
                        :voimassaolevat-roolit voimassaolevat-roolit
-                       :nimi (str (:etunimi k) " " (:sukunimi k)))]
+                       :nimi (kayttajan-nimi k)
+                       :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
         (f)))
     (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid)))))
 

@@ -72,3 +72,25 @@
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
       (is (= (:nimi @k) "Matti Meikäläinen")))))
+
+;; with-kayttaja muodostaa impersonoidun käyttäjän koko nimen.
+(deftest with-kayttaja-impersonoidun-kayttajan-nimi
+  (let [k (atom nil)]
+    (with-redefs [kayttaja-arkisto/hae
+                  (constantly {:etunimi "Maija"
+                               :sukunimi "Mallikas"})]
+      (with-kayttaja "uid" "impersonoitu-oid"
+        (reset! k *kayttaja*))
+      (is (= (:impersonoidun-kayttajan-nimi @k) "Maija Mallikas")))))
+
+; Ilman impersonointia with-kayttaja jättää impersonoidun käyttäjän nimen
+; tyhjäksi.
+(deftest with-kayttaja-impersonoidun-kayttajan-nimi-ilman-impersonointia
+  (let [k (atom nil)]
+    (with-redefs [kayttaja-arkisto/hae
+                  (constantly {:etunimi "Maija"
+                               :sukunimi "Mallikas"})]
+      (with-kayttaja "uid" nil
+        (reset! k *kayttaja*))
+      (is (= (:impersonoidun-kayttajan-nimi @k) "")))))
+
