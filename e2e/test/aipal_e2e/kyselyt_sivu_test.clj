@@ -19,7 +19,7 @@
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
             [aitu-e2e.util :refer :all]))
- 
+
 (def kyselyt-sivu "/#/kyselyt")
 
 (defn kyselyt []
@@ -127,6 +127,7 @@
         (let [kysely (nth (kyselyt) 1)]
           (avaa-kysely kysely)
           (w/click (uusi-kyselykerta-kyselylle kysely))
+          (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi_fi\"]"))) ; ajastusongelman kierto
           (syota-kenttaan "kyselykerta.nimi_fi" "Toinen kyselykerta")
           (syota-pvm "kyselykerta.voimassa_alkupvm" "1.8.2014")
           (tallenna))
