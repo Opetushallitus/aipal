@@ -30,7 +30,8 @@
 
 (defn auth-onCheckOut
   [c psql-varname]
-  {:pre [(bound? #'*kayttaja*)]}
+  (when-not (bound? #'*kayttaja*)
+    (log/error "Avattiin tietokantayhteys ilman sidontaa varille aipal.infra.kayttaja/*kayttaja*!"))
   (try
     (exec-sql c (str "set session " psql-varname " = '" (:oid *kayttaja*) "'"))
     (catch Exception e
