@@ -70,5 +70,5 @@
   (nsr/refresh :after 'user/kaynnista!))
 
 (defmacro with-testikayttaja [& body]
-  `(aipal.infra.kayttaja.vaihto/with-kayttaja oph.korma.korma-auth/default-test-user-oid nil
+  `(aipal.infra.kayttaja.vaihto/with-kayttaja aipal.infra.kayttaja.vakiot/default-test-user-uid nil
      ~@body))

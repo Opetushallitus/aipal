@@ -3,19 +3,19 @@
             [clj-time.core :as time]
             [cheshire.core :as cheshire]
 
-            [oph.korma.korma-auth :as ka]
             [oph.common.infra.i18n :as i18n]
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]
 
             [aipal.sql.test-util :refer :all]
             [aipal.sql.test-data-util :refer :all]))
 
 (defn with-auth-user [f]
-  (with-kayttaja ka/default-test-user-uid nil
+  (with-kayttaja default-test-user-uid nil
     (binding [i18n/*locale* testi-locale]
       (f))))
 
