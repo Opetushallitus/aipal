@@ -33,7 +33,7 @@
 
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
-            
+
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.anon-auth :as anon-auth]
 
@@ -44,7 +44,7 @@
 
             [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
             [aipal.reitit :refer [build-id]]
-            [aipal.infra.auth-wrapper :as auth]
+            [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.infra.eraajo :as eraajo]))
 
@@ -111,7 +111,7 @@
       wrap-params
       wrap-content-type
 
-      auth/wrap-sessionuser
+      wrap-kayttaja
       log-request-wrapper
       (auth-middleware asetukset)
 
