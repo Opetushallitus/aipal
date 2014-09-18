@@ -17,9 +17,9 @@
            org.joda.time.LocalDate)
   (:require  korma.db
              [korma.core :as sql]
-             [oph.korma.korma-auth :as korma-auth]
              [clj-time.coerce :as time-coerce]
-             [clj-time.core :as time]))
+             [clj-time.core :as time]
+             aipal.infra.kayttaja.sql-session-var))
 
 (defn korma-asetukset
   "Muuttaa asetustiedoston db-avaimen arvon Korman odottamaan muotoon."
@@ -40,7 +40,9 @@
                     (.setMaxConnectionsPerPartition 10)
                     (.setMinConnectionsPerPartition 5)
                     (.setPartitionCount 1)
-                    (.setConnectionHook (korma-auth/customizer-impl-bonecp "aipal.kayttaja")))]
+                    (.setConnectionHook
+                      (aipal.infra.kayttaja.sql-session-var/bonecp-connection-hook
+                        "aipal.kayttaja")))]
     bonecp-ds))
 
 (defn luo-db [db-asetukset]

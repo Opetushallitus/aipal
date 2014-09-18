@@ -8,7 +8,6 @@
     [aipal.arkisto.kysely :as kysely-arkisto]
     [aipal.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
     [aipal.arkisto.kayttaja :as kayttaja-arkisto]
-    [oph.korma.korma-auth :as ka]
     [aipal.toimiala.kayttajaoikeudet :as ko]
     [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
     [aipal.integraatio.sql.korma :as taulut]))

@@ -17,7 +17,6 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [oph.common.infra.i18n :as i18n]
-            [oph.korma.korma-auth :as ka]
             [infra.test.data :as testdata]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :refer [kayttaja]]

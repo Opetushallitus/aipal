@@ -12,8 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns oph.korma.korma-auth
-  "SQL Kormalle oma kantayhteyksien hallinta. Sitoo kantayhteyteen sisäänkirjautuneen käyttäjän. BoneCP pool."
+(ns aipal.infra.kayttaja.sql-session-var
   (:require [clojure.tools.logging :as log]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
@@ -42,8 +41,8 @@
       (log/error e "Odottamaton poikkeus")))
   (log/debug "con release ok" (.hashCode c)))
 
-(defn customizer-impl-bonecp
-  "Luo uuden BoneCP kantayhteys-räätälöijän, joka asettaa Postgrelle sisään kirjautuneen käyttäjän sessiota varten"
+(defn bonecp-connection-hook
+  "Luo uuden BoneCP connection hookin, joka asettaa Postgrelle sisään kirjautuneen käyttäjän sessiota varten"
   [psql-varname]
   (proxy [com.jolbox.bonecp.hooks.AbstractConnectionHook] []
     (onCheckIn [c]

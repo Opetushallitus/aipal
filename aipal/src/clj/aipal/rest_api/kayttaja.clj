@@ -14,7 +14,6 @@
 
 (ns aipal.rest-api.kayttaja
   (:require [compojure.core :as c]
-            [oph.korma.korma-auth :as ka]
             [aipal.arkisto.kayttaja :as arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]

@@ -1,7 +1,6 @@
 (ns aipal.toimiala.kayttajaoikeudet
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
   (:require [aipal.toimiala.kayttajaroolit :refer :all]
-            [oph.korma.korma-auth :as ka]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))

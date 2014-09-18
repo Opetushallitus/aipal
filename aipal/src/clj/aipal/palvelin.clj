@@ -40,7 +40,6 @@
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.korma]
-            [oph.korma.korma-auth :as korma-auth]
 
             [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
             [aipal.reitit :refer [build-id]]
