@@ -15,10 +15,10 @@
 (ns infra.test.data
   (:require [korma.core :as sql]
             [korma.db :as db]
-            [oph.korma.korma-auth :as ka]
             [aipal.integraatio.sql.korma :refer [kayttaja rooli-organisaatio]]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
-            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja.vakiot :refer [jarjestelma-uid]]))
 
 (def taulut
   "Taulut vierasavainriippuvuuksien mukaisessa järjestyksessä, ensin taulu josta viitataan myöhemmin nimettyyn."
@@ -46,7 +46,7 @@
 
 (defn luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
-  (with-kayttaja ka/jarjestelmakayttaja nil
+  (with-kayttaja jarjestelma-uid nil
     (when-not (first (sql/select kayttaja
                                  (sql/where {:oid testikayttaja-oid})))
       (db/transaction
