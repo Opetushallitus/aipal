@@ -1,36 +1,39 @@
 <div class="modal-header">
-  <h3>{{i18n.kyselykerta.uusi_kyselykerta}}</h3>
+    <a class="pull-right" ng-click="cancel()">X</a>
+    <h4>{{i18n.kyselykerta.uusi_kyselykerta}}</h4>
+    <h3>{{i18n.yleiset.kysely}}: {{kysely.kyselyid}} {{kysely.nimi_fi}}</h3>
 </div>
 
-<form name="kyselykertaForm">
-  <div class="modal-body">
-  <fieldset>
-    <h4>{{i18n.yleiset.kysely}}: {{kysely.kyselyid}} {{kysely.nimi_fi}}</h4>
-    <label class="pakollinen" ng-bind="i18n.kyselykerta.kyselykerran_nimi"></label>
-    <input type="text" placeholder="{{i18n.kyselykerta.kyselykerran_nimi}}" ng-model="kyselykerta.nimi_fi" ng-required="true">
-  </fieldset>
-  <section class="datepicker-vali">
-    <h4>{{i18n.kyselykerta.vastausaika}}</h4>
-    <pvm-valitsin
-      otsikko="{{i18n.yleiset.alkaen}}"
-      oletus-pvm="kysely.voimassa_alkupvm"
-      min-pvm="kysely.voimassa_alkupvm"
-      max-pvm="kysely.voimassa_loppupvm"
-      valittu-pvm="kyselykerta.voimassa_alkupvm"
-      pakollinen="true">
-    </pvm-valitsin>
-    <pvm-valitsin
-      otsikko="{{i18n.yleiset.asti}}"
-      oletus-pvm="kysely.voimassa_loppupvm"
-      min-pvm="kysely.voimassa_alkupvm"
-      max-pvm="kysely.voimassa_loppupvm"
-      valittu-pvm="kyselykerta.voimassa_loppupvm">
-    </pvm-valitsin>
-  </section>
-  <pakollisia-kenttia></pakollisia-kenttia>
-  </div>
-  <div class="modal-footer">
-  <tallenna formi-validi="kyselykertaForm.$valid" disabloi-pyyntojen-ajaksi="['tallenna-kyselykerta']" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
-  </div>
-</form>
+<div class="modal-body">
+    <form name="kyselykertaForm">
+      <fieldset>
+        <label class="pakollinen" ng-bind="i18n.kyselykerta.kyselykerran_nimi"></label>
+        <input type="text" placeholder="{{i18n.kyselykerta.kyselykerran_nimi}}" ng-model="kyselykerta.nimi_fi" ng-required="true">
+      </fieldset>
+      <section class="datepicker-vali">
+        <h3>{{i18n.kyselykerta.vastausaika}}</h3>
+        <pvm-valitsin
+          otsikko="{{i18n.yleiset.alkaen}}"
+          oletus-pvm="kysely.voimassa_alkupvm"
+          min-pvm="kysely.voimassa_alkupvm"
+          max-pvm="kysely.voimassa_loppupvm"
+          valittu-pvm="kyselykerta.voimassa_alkupvm"
+          pakollinen="true">
+        </pvm-valitsin>
+        <pvm-valitsin
+          otsikko="{{i18n.yleiset.asti}}"
+          oletus-pvm="kysely.voimassa_loppupvm"
+          min-pvm="kysely.voimassa_alkupvm"
+          max-pvm="kysely.voimassa_loppupvm"
+          valittu-pvm="kyselykerta.voimassa_loppupvm">
+        </pvm-valitsin>
+      </section>
 
+    </form>
+</div>
+
+<div class="modal-footer">
+    <small class="pull-right "><pakollisia-kenttia></pakollisia-kenttia></small>
+    <tallenna class="pull-left" formi-validi="kyselykertaForm.$valid" disabloi-pyyntojen-ajaksi="['tallenna-kyselykerta']" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
+    <button class="btn-default pull-left" ng-click="cancel()">Peruuta</button>
+</div>

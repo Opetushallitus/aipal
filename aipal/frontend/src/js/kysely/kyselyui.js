@@ -121,5 +121,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
     $scope.tallenna = function() {
       $modalInstance.close($scope.kyselykerta);
     };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
   }])
 ;
