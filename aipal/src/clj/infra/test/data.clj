@@ -18,7 +18,7 @@
             [oph.korma.korma-auth :as ka]
             [aipal.integraatio.sql.korma :refer [kayttaja rooli-organisaatio]]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
-            [aipal.infra.kayttaja :as kayttaja]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
 
 (def taulut
   "Taulut vierasavainriippuvuuksien mukaisessa järjestyksessä, ensin taulu josta viitataan myöhemmin nimettyyn."
@@ -46,8 +46,7 @@
 
 (defn luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
-  (binding [kayttaja/*kayttaja* {:uid ka/jarjestelmakayttaja
-                                 :oid ka/jarjestelmakayttaja}]
+  (with-kayttaja ka/jarjestelmakayttaja nil
     (when-not (first (sql/select kayttaja
                                  (sql/where {:oid testikayttaja-oid})))
       (db/transaction

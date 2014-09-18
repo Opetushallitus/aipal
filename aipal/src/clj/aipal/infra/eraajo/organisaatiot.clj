@@ -19,12 +19,10 @@
             [clojure.tools.logging :as log]
             [oph.korma.korma-auth :refer [integraatiokayttaja]]
             [aipal.integraatio.organisaatiopalvelu :as org]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
 
 (defn paivita-organisaatiot! [asetukset]
-  (binding [;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu.
-            *kayttaja* {:uid integraatiokayttaja
-                        :oid integraatiokayttaja}]
+  (with-kayttaja integraatiokayttaja nil
     (log/info "Päivitetään organisaatiot organisaatiopalvelusta")
     (org/paivita-organisaatiot! asetukset)
     (log/info "Organisaatioiden päivitys organisaatiopalvelusta valmis")))

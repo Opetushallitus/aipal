@@ -1,6 +1,5 @@
 (ns aipal.infra.kayttaja.vaihto-test
   (:require [clojure.test :refer :all]
-            [aipal.sql.test-util :refer [tietokanta-fixture]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vaihto :refer :all]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
@@ -93,4 +92,3 @@
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
       (is (= (:impersonoidun-kayttajan-nimi @k) "")))))
-

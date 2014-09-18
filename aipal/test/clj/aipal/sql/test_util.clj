@@ -23,7 +23,7 @@
             [aipal.integraatio.sql.korma :refer [kayttaja]]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aipal.toimiala.kayttajaoikeudet :as ko]
-            [aipal.infra.kayttaja :as kayttaja]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
 
 (def testikayttaja-uid "MAN-O-TEST")
 (def testikayttaja-oid "OID.MAN-O-TEST")
@@ -58,17 +58,16 @@
   (let [pool (alusta-korma!)]
     (luo-testikayttaja!) ; eri transaktio kuin loppuosassa!
     ;; testin aikana eri käyttäjä
-    (binding [kayttaja/*kayttaja* {:uid uid
-                                   :oid oid}
-              i18n/*locale* testi-locale]
-      ;; avataan transaktio joka on voimassa koko kutsun (f) ajan
-      (db/transaction
-        (try
-          (f)
-          (finally
-            (testdata/tyhjenna-testidata! oid)
-            (poista-testikayttaja!))))
-      (-> pool :pool :datasource .close))))
+    (with-kayttaja uid nil
+      (binding [i18n/*locale* testi-locale]
+        ;; avataan transaktio joka on voimassa koko kutsun (f) ajan
+        (db/transaction
+          (try
+            (f)
+            (finally
+              (testdata/tyhjenna-testidata! oid)
+              (poista-testikayttaja!))))
+        (-> pool :pool :datasource .close)))))
 
 (defn tietokanta-fixture [f]
   (tietokanta-fixture-oid f testikayttaja-oid testikayttaja-uid))
