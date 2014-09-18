@@ -5,3 +5,7 @@
 
 (def integraatio-oid "INTEGRAATIO")
 (def integraatio-uid "INTEGRAATIO")
+
+(def konversio-oid "KONVERSIO")
+
+(def vastaaja-oid "VASTAAJA")

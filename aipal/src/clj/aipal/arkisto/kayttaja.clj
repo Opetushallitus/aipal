@@ -21,7 +21,8 @@
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot
-             :refer [jarjestelma-oid integraatio-uid integraatio-oid]]))
+             :refer [jarjestelma-oid integraatio-uid integraatio-oid
+                     konversio-oid vastaaja-oid]]))
 
 
 (defn hae
@@ -70,7 +71,7 @@
                                     (sql/fields :rooli_organisaatio_id)
                                     (sql/where {:rooli (:paakayttaja kayttajaroolit)
                                                 :kayttaja :kayttaja.oid})))
-                                {:oid [not-in [jarjestelma-oid "KONVERSIO" integraatio-oid "VASTAAJA"]]})))
+                                {:oid [not-in [jarjestelma-oid konversio-oid integraatio-oid vastaaja-oid]]})))
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
