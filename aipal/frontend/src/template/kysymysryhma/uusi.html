@@ -42,7 +42,7 @@
           <input type="text" ng-model="kysymys.kysymys_sv" size="80" maxlength="200"/>
         </fieldset>
       </section>
-      <div ng-include="'template/kysymysryhma/' + kysymys.vastaustyyppi + '_kysymys.html'"></div>
+      <div ng-include="'template/kysymysryhma/osat/' + kysymys.vastaustyyppi + '.html'"></div>
       <div>
         <button ng-click="tallenna(kysymys)" ng-disabled="!kysymys.kysymys_fi">{{i18n.yleiset.tallenna}}</button>
       </div>
