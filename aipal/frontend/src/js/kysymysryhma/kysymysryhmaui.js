@@ -49,7 +49,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           poistettava: false,
           vastaustyyppi: 'vapaateksti',
           max_vastaus: 500,
-          muokattava: true
+          muokattava: true,
+          jatkokysymys: {}
         };
       }
     };

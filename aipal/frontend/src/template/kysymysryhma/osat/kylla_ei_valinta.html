@@ -1,6 +1,44 @@
 <section>
-  <fieldset>
-    <input type="checkbox">{{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}<br>
-    <input type="checkbox">{{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
-  </fieldset>
+    <label>{{i18n.kysymys.jatkokysymys}}</label>
+    <div>
+      <input type="checkbox" ng-model="nayta_kylla">{{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}
+    </div>
+    <div ng-show="nayta_kylla">
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.kylla_teksti_fi" size="80" maxlength="200"/>
+        </fieldset>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_ruotsiksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.kylla_teksti_sv" size="80" maxlength="200"/>
+        </fieldset>
+      </section>
+      <section>
+        <label>{{i18n.kysymys.naytettava_asteikko}}</label>
+        <div>{{i18n.kysymys.asteikko_valinnat}}</div>
+      </section>
+    </div>
+
+    <div>
+      <input type="checkbox" ng-model="nayta_ei">{{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
+    </div>
+    <div ng-show="nayta_ei">
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.ei_teksti_fi" size="80" maxlength="200"/>
+        </fieldset>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_ruotsiksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.ei_teksti_sv" size="80" maxlength="200"/>
+        </fieldset>
+      </section>
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.vastauksen_maksimipituus}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.max_vastaus"/>
+        </fieldset>
+      </section>
+    </div>
 </section>
