@@ -18,8 +18,7 @@
   (:require  korma.db
              [korma.core :as sql]
              [clj-time.coerce :as time-coerce]
-             [clj-time.core :as time]
-             aipal.infra.kayttaja.sql-session-var))
+             [clj-time.core :as time]))
 
 (defn korma-asetukset
   "Muuttaa asetustiedoston db-avaimen arvon Korman odottamaan muotoon."
@@ -39,10 +38,7 @@
                     (.setDefaultAutoCommit false)
                     (.setMaxConnectionsPerPartition 10)
                     (.setMinConnectionsPerPartition 5)
-                    (.setPartitionCount 1)
-                    (.setConnectionHook
-                      (aipal.infra.kayttaja.sql-session-var/bonecp-connection-hook
-                        "aipal.kayttaja")))]
+                    (.setPartitionCount 1))]
     bonecp-ds))
 
 (defn luo-db [db-asetukset]

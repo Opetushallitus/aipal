@@ -2,13 +2,15 @@
   (:require [clojure.test :refer :all]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vaihto :refer :all]
+            [aipal.infra.kayttaja.sql :refer [with-sql-kayttaja*]]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]))
 
 (defn stub-fixture [f]
   (with-redefs [kayttaja-arkisto/hae (constantly {})
                 kayttaja-arkisto/hae-voimassaoleva (constantly {})
-                kayttajaoikeus-arkisto/hae-roolit (constantly [])]
+                kayttajaoikeus-arkisto/hae-roolit (constantly [])
+                with-sql-kayttaja* (fn [_ f] (f))]
     (f)))
 
 (use-fixtures :each stub-fixture)

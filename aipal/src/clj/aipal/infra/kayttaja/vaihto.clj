@@ -3,26 +3,23 @@
 ;; nimiavaruudesta aipal.infra.kayttaja.
 (ns aipal.infra.kayttaja.vaihto
   (:require [clojure.tools.logging :as log]
+            [korma.core :as sql]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-oid]]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
-            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]))
+            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
+            [aipal.infra.kayttaja.sql :refer [with-sql-kayttaja]]))
 
 (defn kayttajan-nimi [k]
   (str (:etunimi k) " " (:sukunimi k)))
 
 (defn with-kayttaja* [uid impersonoitu-oid f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
-  ;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu, joten tehdään
-  ;; käyttäjän tietojen haku käyttäjänä JARJESTELMA.
-  (if-let [k (binding [*kayttaja* {:oid jarjestelma-oid}]
-               (kayttaja-arkisto/hae-voimassaoleva uid))]
+  (if-let [k (kayttaja-arkisto/hae-voimassaoleva uid)]
     (let [voimassaoleva-oid (or impersonoitu-oid (:oid k))
-          voimassaolevat-roolit (binding [*kayttaja* {:oid jarjestelma-oid}]
-                                  (kayttajaoikeus-arkisto/hae-roolit voimassaoleva-oid))
+          voimassaolevat-roolit (kayttajaoikeus-arkisto/hae-roolit voimassaoleva-oid)
           ik (when impersonoitu-oid
-               (binding [*kayttaja* {:oid jarjestelma-oid}]
-                 (kayttaja-arkisto/hae impersonoitu-oid)))]
+               (kayttaja-arkisto/hae impersonoitu-oid))]
       (binding [*kayttaja*
                 (assoc k
                        :voimassaoleva-oid voimassaoleva-oid
@@ -30,7 +27,8 @@
                        :nimi (kayttajan-nimi k)
                        :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
         (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
-        (f)))
+        (with-sql-kayttaja (:oid k)
+          (f))))
     (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid)))))
 
 (defmacro with-kayttaja [uid impersonoitu-oid & body]

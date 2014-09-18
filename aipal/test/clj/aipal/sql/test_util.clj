@@ -73,3 +73,10 @@
 
 (defmacro testidata-poistaen-kayttajana [oid & body]
   `(tietokanta-fixture-oid (fn [] ~@body) ~oid ~oid))
+
+(defn exec-raw-fixture [f]
+  (let [pool (alusta-korma!)]
+    (try
+      (f)
+      (finally
+        (-> pool :pool :datasource .close)))))
