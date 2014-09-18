@@ -4,6 +4,9 @@
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysymysryhma :as arkisto]))
 
+(defn jarjesta-kysymykset [kysymykset]
+  (map #(assoc %1 :jarjestys %2) kysymykset (range)))
+
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" []
     (json-response (arkisto/hae-kysymysryhmat)))
@@ -13,7 +16,7 @@
                                                      :selite_fi selite_fi
                                                      :nimi_sv nimi_sv
                                                      :selite_sv selite_sv})]
-      (doseq [k (map #(assoc %1 :jarjestys %2) kysymykset (range))
+      (doseq [k (jarjesta-kysymykset kysymykset)
               :let [kysymys (dissoc k :muokattava)
                     kysymys (assoc kysymys :kysymysryhmaid (:kysymysryhmaid kysymysryhma))]]
         (arkisto/lisaa-kysymys! kysymys))
