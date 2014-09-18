@@ -19,9 +19,9 @@
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
-            [oph.korma.korma-auth :refer [integraatiokayttaja]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [aipal.infra.kayttaja.vakiot :refer [jarjestelma-oid]]))
+            [aipal.infra.kayttaja.vakiot
+             :refer [jarjestelma-oid integraatio-uid integraatio-oid]]))
 
 
 (defn hae
@@ -38,7 +38,7 @@
 (defn ^:integration-api paivita!
   "Päivittää käyttäjätaulun uusilla käyttäjillä kt."
   [kt]
-  {:pre [(= (:uid *kayttaja*) integraatiokayttaja)]}
+  {:pre [(= (:uid *kayttaja*) integraatio-uid)]}
   (db/transaction
     ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
     (log/debug "Merkitään olemassaolevat käyttäjät ei-voimassaoleviksi")
@@ -70,7 +70,7 @@
                                     (sql/fields :rooli_organisaatio_id)
                                     (sql/where {:rooli (:paakayttaja kayttajaroolit)
                                                 :kayttaja :kayttaja.oid})))
-                                {:oid [not-in [jarjestelma-oid, "KONVERSIO", "INTEGRAATIO", "VASTAAJA"]]})))
+                                {:oid [not-in [jarjestelma-oid "KONVERSIO" integraatio-oid "VASTAAJA"]]})))
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
