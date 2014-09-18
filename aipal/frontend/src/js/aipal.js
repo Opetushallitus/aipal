@@ -35,6 +35,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.pakollisia-kenttia',
   'yhteiset.direktiivit.tallenna',
   'yhteiset.direktiivit.hakuvalitsin',
+  'yhteiset.suodattimet.enumarvo',
   'ui.bootstrap',
   'ngRoute',
   'kayttooikeudet',

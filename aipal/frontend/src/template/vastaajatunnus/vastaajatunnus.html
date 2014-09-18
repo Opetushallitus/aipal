@@ -10,6 +10,6 @@
     Tunnus: <span>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</span>,
     Voimassa: <span>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</span>,
     Vastattu: <span>{{tunnus.vastaajien_lkm}}</span>
-    Rahoitusmuoto: <span>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto}}</span>
+    Rahoitusmuoto: <span>{{ rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto' }}</span>
     <br>
 </div>

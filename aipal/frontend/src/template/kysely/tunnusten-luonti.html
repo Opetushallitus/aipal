@@ -11,7 +11,7 @@
   <div>Vastausaika</div>
   <div><pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_alkupvm"></pvm-valitsin> - <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_loppupvm"></pvm-valitsin></div>
 
-  <div><label>Rahoitusmuoto <select ng-options="rahoitusmuoto.rahoitusmuotoid as rahoitusmuoto.rahoitusmuoto for rahoitusmuoto in rahoitusmuodot" ng-model="vastaajatunnus.rahoitusmuotoid"></select></label></div>
+  <div><label>Rahoitusmuoto <select ng-options="rahoitusmuoto.rahoitusmuotoid as rahoitusmuoto.rahoitusmuoto |enumArvo:'rahoitusmuoto' for rahoitusmuoto in rahoitusmuodot" ng-model="vastaajatunnus.rahoitusmuotoid"></select></label></div>
 
   </div>
 
