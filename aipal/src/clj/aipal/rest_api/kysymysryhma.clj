@@ -7,6 +7,16 @@
 (defn jarjesta-kysymykset [kysymykset]
   (map #(assoc %1 :jarjestys %2) kysymykset (range)))
 
+(defn valitse-kysymyksen-kentat [kysymys]
+  (select-keys kysymys [:pakollinen
+                        :poistettava
+                        :vastaustyyppi
+                        :kysymys_fi
+                        :kysymys_sv
+                        :max_vastaus
+                        :monivalinta_max
+                        :jarjestys]))
+
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" []
     (json-response (arkisto/hae-kysymysryhmat)))
@@ -17,7 +27,7 @@
                                                      :nimi_sv nimi_sv
                                                      :selite_sv selite_sv})]
       (doseq [k (jarjesta-kysymykset kysymykset)
-              :let [kysymys (dissoc k :muokattava)
+              :let [kysymys (valitse-kysymyksen-kentat k)
                     kysymys (assoc kysymys :kysymysryhmaid (:kysymysryhmaid kysymysryhma))]]
         (arkisto/lisaa-kysymys! kysymys))
       (json-response kysymysryhma))))
