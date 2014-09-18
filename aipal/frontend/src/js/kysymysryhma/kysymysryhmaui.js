@@ -62,7 +62,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
     $scope.muokkaustila = false;
     $scope.vastaustyypit = [
-      {nimi: 'Vapaateksti', arvo: 'vapaateksti'}
+      'vapaateksti',
+      'asteikko',
+      'kylla_ei_valinta'
     ];
 
     $scope.lisaaKysymys = function() {

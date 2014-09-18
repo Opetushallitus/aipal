@@ -24,7 +24,10 @@
       <section>
         <fieldset>
           <label>{{i18n.kysymys.vastaustapa}}</label>
-          <select ng-model="kysymys.vastaustyyppi" ng-options="tyyppi.arvo as tyyppi.nimi for tyyppi in vastaustyypit">
+          <select ng-model="kysymys.vastaustyyppi" >
+            <option ng-repeat="tyyppi in vastaustyypit" ng-selected="{{kysymys.vastaustyyppi === tyyppi}}" value="{{tyyppi}}">
+              {{i18n.kysymys.tyyppi[tyyppi]}}
+            </option>
           </select>
         </fieldset>
         <fieldset>
