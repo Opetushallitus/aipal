@@ -52,6 +52,22 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           muokattava: true,
           jatkokysymys: {}
         };
+      },
+      poistaYlimaaraisetKentat: function(kysymys) {
+        if (!kysymys.jatkokysymys.kylla_jatkokysymys) {
+          delete kysymys.jatkokysymys.kylla_teksti_fi;
+          delete kysymys.jatkokysymys.kylla_teksti_sv;
+          delete kysymys.jatkokysymys.kylla_jatkokysymys;
+        }
+        if (!kysymys.jatkokysymys.ei_jatkokysymys) {
+          delete kysymys.jatkokysymys.ei_teksti_fi;
+          delete kysymys.jatkokysymys.ei_teksti_sv;
+          delete kysymys.jatkokysymys.max_vastaus;
+          delete kysymys.jatkokysymys.ei_jatkokysymys;
+        }
+        if (kysymys.vastaustyyppi !== 'vapaateksti') {
+          delete kysymys.max_vastaus;
+        }
       }
     };
   }])
@@ -73,6 +89,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       $scope.muokkaustila = true;
     };
     $scope.tallenna = function(kysymys) {
+      apu.poistaYlimaaraisetKentat(kysymys);
       kysymys.muokattava = false;
       $scope.muokkaustila = false;
     };

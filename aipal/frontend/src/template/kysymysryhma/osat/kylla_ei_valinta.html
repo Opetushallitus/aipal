@@ -1,9 +1,9 @@
 <section>
     <label>{{i18n.kysymys.jatkokysymys}}</label>
     <div>
-      <input type="checkbox" ng-model="nayta_kylla">{{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}
+      <input type="checkbox" ng-model="kysymys.jatkokysymys.kylla_jatkokysymys">{{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}
     </div>
-    <div ng-show="nayta_kylla">
+    <div ng-show="kysymys.jatkokysymys.kylla_jatkokysymys">
       <section>
         <fieldset>
           <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
@@ -21,9 +21,9 @@
     </div>
 
     <div>
-      <input type="checkbox" ng-model="nayta_ei">{{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
+      <input type="checkbox" ng-model="kysymys.jatkokysymys.ei_jatkokysymys">{{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
     </div>
-    <div ng-show="nayta_ei">
+    <div ng-show="kysymys.jatkokysymys.ei_jatkokysymys">
       <section>
         <fieldset>
           <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
