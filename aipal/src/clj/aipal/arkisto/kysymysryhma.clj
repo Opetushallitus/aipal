@@ -29,3 +29,7 @@
 (defn lisaa-kysymys! [k]
   (sql/insert kysymys
     (sql/values k)))
+
+(defn lisaa-jatkokysymys! [k]
+  (sql/insert :jatkokysymys
+    (sql/values k)))
