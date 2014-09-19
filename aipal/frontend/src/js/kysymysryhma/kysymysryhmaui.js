@@ -48,7 +48,6 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           pakollinen: true,
           poistettava: false,
           vastaustyyppi: 'vapaateksti',
-          max_vastaus: 500,
           muokattava: true,
           jatkokysymys: {}
         };
@@ -83,6 +82,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       'asteikko',
       'kylla_ei_valinta'
     ];
+    $scope.vapaateksti_maksimit = [500,1000,1500,2000,2500,3000];
 
     $scope.lisaaKysymys = function() {
       $scope.kysymysryhma.kysymykset.push(apu.uusiKysymys());
