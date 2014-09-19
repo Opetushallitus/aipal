@@ -41,6 +41,10 @@
 (defentity vastaajatunnus
   (sql/pk :vastaajatunnusid))
 
+(defentity vastaaja
+  (sql/pk :vastaajaid)
+  (sql/belongs-to vastaajatunnus {:fk :vastaajatunnusid}))
+
 (defentity rahoitusmuoto
   (sql/pk :rahoitusmuotoid))
 

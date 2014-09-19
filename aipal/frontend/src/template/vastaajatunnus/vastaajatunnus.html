@@ -9,7 +9,8 @@
 <div ng-repeat="tunnus in tulos">
     Tunnus: <span>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</span>,
     Voimassa: <span>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</span>,
-    Vastattu: <span>{{tunnus.vastaajien_lkm}}</span>
+    Vastaajia: <span>{{tunnus.vastaajien_lkm}}</span>
+    Vastauksia: <span>{{tunnus.vastausten_lkm}}</span>
     Rahoitusmuoto: <span>{{ rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto' }}</span>
     <br>
 </div>
