@@ -18,9 +18,11 @@
   </div>
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <div ng-show="!kysymys.muokattava">
-      {{kysymys.jarjestys}} {{kysymys.kysymys_fi}}
+      {{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}: {{kysymys.kysymys_fi}}
     </div>
     <div ng-show="kysymys.muokattava">
+      <form>
+      </form>
       <section>
         <fieldset>
           <label>{{i18n.kysymys.vastaustapa}}</label>
