@@ -14,7 +14,6 @@
 
 (ns oph.log
   (:require oph.common.infra.print-wrapper
-            oph.korma.korma-auth
             [clojure.tools.logging]
             [robert.hooke :refer [add-hook]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))

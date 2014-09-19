@@ -17,8 +17,8 @@
             [korma.db :as db]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [clojure.tools.logging :as log]
-            [oph.korma.korma-auth :refer [integraatiokayttaja]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]])
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]])
   (:use [aipal.integraatio.sql.korma]))
 
 (defn hae-oikeudet
@@ -47,6 +47,12 @@
     (sql/where {:rooli rooli
                 :kayttaja kayttaja
                 :organisaatio organisaatio})))
+
+(defn hae-roolit [oid]
+  (sql/select rooli-organisaatio
+    (sql/fields :rooli :organisaatio)
+    (sql/where {:kayttaja oid
+                :voimassa true})))
 
 (defn olemassa? [k]
   (boolean (hae-rooli (:rooli k) (:kayttaja k) (:organisaatio k))))
@@ -80,7 +86,7 @@
 (defn ^:integration-api paivita-kaikki!
   "Päivittää käyttäjätaulun uusilla käyttäjillä kt."
   [kt]
-  {:pre [(= (:uid *kayttaja*) integraatiokayttaja)]}
+  {:pre [(= (:uid *kayttaja*) integraatio-uid)]}
   (db/transaction
     ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
     (tyhjaa-kayttooikeudet!)

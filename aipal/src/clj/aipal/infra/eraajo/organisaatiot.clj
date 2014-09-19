@@ -17,14 +17,12 @@
              :refer [defjob]]
             [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
-            [oph.korma.korma-auth :refer [integraatiokayttaja]]
             [aipal.integraatio.organisaatiopalvelu :as org]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
 (defn paivita-organisaatiot! [asetukset]
-  (binding [;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu.
-            *kayttaja* {:uid integraatiokayttaja
-                        :oid integraatiokayttaja}]
+  (with-kayttaja integraatio-uid nil
     (log/info "Päivitetään organisaatiot organisaatiopalvelusta")
     (org/paivita-organisaatiot! asetukset)
     (log/info "Organisaatioiden päivitys organisaatiopalvelusta valmis")))

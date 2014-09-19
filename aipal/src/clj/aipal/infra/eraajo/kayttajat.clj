@@ -15,18 +15,16 @@
 (ns aipal.infra.eraajo.kayttajat
   (:require [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
-            [oph.korma.korma-auth :refer [integraatiokayttaja]]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.toimiala.kayttajaroolit :refer [ldap-roolit]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
-  (binding [;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu.
-            *kayttaja* {:uid integraatiokayttaja
-                        :oid integraatiokayttaja}]
+  (with-kayttaja integraatio-uid nil
     (let [oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
       (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
       (kayttajaoikeus-arkisto/paivita-kaikki!

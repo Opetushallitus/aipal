@@ -1,15 +1,16 @@
 (ns aipal.arkisto.kayttooikeus-sql-test
   (:require
     [clojure.test :refer :all]
+    [korma.core :as sql]
     [aipal.sql.test-util :refer :all]
     [aipal.sql.test-data-util :refer :all]
     [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
     [aipal.arkisto.kysely :as kysely-arkisto]
     [aipal.toimiala.kayttajaoikeudet :as kayttajaoikeudet]
     [aipal.arkisto.kayttaja :as kayttaja-arkisto]
-    [oph.korma.korma-auth :as ka]
     [aipal.toimiala.kayttajaoikeudet :as ko]
-    [aipal.infra.auth-wrapper :as auth-wrapper]))
+    [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+    [aipal.integraatio.sql.korma :as taulut]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -46,10 +47,63 @@
           muun-organisaation-kysely (kysely-arkisto/lisaa! {:nimi_fi "testi"
                                                             :koulutustoimija "2345678-0"})]
       (doseq [uid (keys kysely-kayttajat)]
-        (auth-wrapper/with-user uid nil
+        (with-kayttaja uid nil
           #(let [tulos [(kayttajaoikeudet/kysely-luonti?)
                         (kayttajaoikeudet/kysely-luku? (:kyselyid oman-organisaation-kysely))
                         (kayttajaoikeudet/kysely-muokkaus? (:kyselyid oman-organisaation-kysely))
                         (kayttajaoikeudet/kysely-luku? (:kyselyid muun-organisaation-kysely))
                         (kayttajaoikeudet/kysely-muokkaus? (:kyselyid muun-organisaation-kysely))]]
              (is (= tulos (get kysely-kayttajat uid)))))))))
+
+(deftest ^:integraatio hae-roolit-palauttaa-vain-annetun-kayttajan-roolit
+  (sql/insert taulut/koulutustoimija
+    (sql/values {:ytunnus "org"
+                 :nimi_fi "Organisaatio"}))
+  (sql/insert taulut/kayttaja
+    (sql/values [{:oid "oid1"}
+                 {:oid "oid2"}]))
+  (sql/insert taulut/kayttajarooli
+    (sql/values [{:roolitunnus "testirooli1"}
+                 {:roolitunnus "testirooli2"}]))
+  (sql/insert taulut/rooli-organisaatio
+    (sql/values [{:organisaatio "org"
+                  :rooli "testirooli1"
+                  :kayttaja "oid1"
+                  :voimassa true}
+                 {:organisaatio "org"
+                  :rooli "testirooli2"
+                  :kayttaja "oid2"
+                  :voimassa true}]))
+  (is (= (kayttajaoikeus-arkisto/hae-roolit "oid1")
+         [{:organisaatio "org"
+           :rooli "testirooli1"}]))
+  (sql/delete taulut/rooli-organisaatio
+    (sql/where {:rooli [like "testirooli%"]}))
+  (sql/delete taulut/kayttajarooli
+    (sql/where {:roolitunnus [like "testirooli%"]})))
+
+(deftest ^:integraatio hae-roolit-palauttaa-vain-voimassaolevat-roolit
+  (sql/insert taulut/koulutustoimija
+    (sql/values {:ytunnus "org"
+                 :nimi_fi "Organisaatio"}))
+  (sql/insert taulut/kayttaja
+    (sql/values [{:oid "oid1"}]))
+  (sql/insert taulut/kayttajarooli
+    (sql/values [{:roolitunnus "testirooli1"}
+                 {:roolitunnus "testirooli2"}]))
+  (sql/insert taulut/rooli-organisaatio
+    (sql/values [{:organisaatio "org"
+                  :rooli "testirooli1"
+                  :kayttaja "oid1"
+                  :voimassa true}
+                 {:organisaatio "org"
+                  :rooli "testirooli2"
+                  :kayttaja "oid1"
+                  :voimassa false}]))
+  (is (= (kayttajaoikeus-arkisto/hae-roolit "oid1")
+         [{:organisaatio "org"
+           :rooli "testirooli1"}]))
+  (sql/delete taulut/rooli-organisaatio
+    (sql/where {:rooli [like "testirooli%"]}))
+  (sql/delete taulut/kayttajarooli
+    (sql/where {:roolitunnus [like "testirooli%"]})))

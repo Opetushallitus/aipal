@@ -1,12 +1,9 @@
 (ns aipal.toimiala.kayttajaoikeudet
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
   (:require [aipal.toimiala.kayttajaroolit :refer :all]
-            [oph.korma.korma-auth :as ka]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
-
-(def ^:dynamic *current-user-authmap*)
 
 (defn ->int
   "Merkkijono numeroksi tai numero sellaisenaan."
@@ -27,19 +24,19 @@
   (not (empty? (clojure.set/select roolit (set (map :rooli roolirivit))))))
 
 (defn kayttajalla-on-jokin-rooleista? [roolit]
-  (sisaltaa-jonkin-rooleista? roolit (:roolit *current-user-authmap*)))
+  (sisaltaa-jonkin-rooleista? roolit (:voimassaolevat-roolit *kayttaja*)))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (sisaltaa-jonkin-rooleista? roolit
                               (kayttajaoikeus-arkisto/hae-kyselylla (->int kyselyid)
-                                                                    (:effective-oid *kayttaja*))))
+                                                                    (:voimassaoleva-oid *kayttaja*))))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
     #{"YLLAPITAJA"}))
 
 (defn impersonoiva-yllapitaja? []
-  (not= (:oid *kayttaja*) (:effective-oid *kayttaja*)))
+  (not= (:oid *kayttaja*) (:voimassaoleva-oid *kayttaja*)))
 
 (defn kyselyiden-listaaminen?
   "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"
