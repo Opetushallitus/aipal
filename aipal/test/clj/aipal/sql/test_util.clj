@@ -74,7 +74,9 @@
 (defmacro testidata-poistaen-kayttajana [oid & body]
   `(tietokanta-fixture-oid (fn [] ~@body) ~oid ~oid))
 
-(defn exec-raw-fixture [f]
+(defn exec-raw-fixture
+  "Alustaa korman ennen testiä ja sulkee tietokantayhteydet testin jälkeen."
+  [f]
   (let [pool (alusta-korma!)]
     (try
       (f)
