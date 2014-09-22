@@ -20,7 +20,11 @@
   (->
     (sql/select* :vastaajatunnus)
     (sql/fields :lukittu)
-    (sql/where {:tunnus vastaajatunnus})
+    (sql/where
+      (and
+        (= :tunnus vastaajatunnus)
+        (<= :voimassa_alkupvm (sql/sqlfn now))
+        (or (nil? :voimassa_loppupvm) (>= :voimassa_loppupvm (sql/sqlfn now)))))
     sql/exec
     first
     :lukittu
