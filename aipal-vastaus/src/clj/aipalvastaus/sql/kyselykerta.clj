@@ -36,7 +36,8 @@
                   :kysymys.vastaustyyppi
                   :kysymys.monivalinta_max
                   :kysymys.kysymys_fi
-                  :kysymys.kysymys_sv)
+                  :kysymys.kysymys_sv
+                  :kysymys.pakollinen)
     (sql/where {:vastaajatunnus.tunnus tunnus})
     (sql/order :kysymys.jarjestys)))
 
