@@ -2,12 +2,12 @@
 <p class="tutkinto" ng-if="data.tutkintotunnus">{{data.tutkintotunnus}} {{data.tutkinto_nimi_fi}}</p>
 <p class="selite">{{data.selite_fi}}</p>
 
-<form ng-submit="tallenna()">
+<form name="vastausForm">
   <div ng-repeat="kysymysryhma in data.kysymysryhmat">
     <h2>{{ kysymysryhma.nimi_fi }}</h2>
 
     <div ng-repeat="kysymys in kysymysryhma.kysymykset">
-      <h3>{{ kysymys.kysymys_fi }} </h3>
+      <h3>{{ kysymys.kysymys_fi }} <span ng-if="kysymys.pakollinen">*</span></h3>
 
       <span ng-if="kysymys.vastaustyyppi == 'vapaateksti'">
         <textarea ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen"></textarea>
@@ -43,5 +43,5 @@
       </span>
     </div>
   </div>
-  <input type="submit" id="submit" ng-value="i18n.yleiset.tallenna_vastaukset">
+  <input type="submit" id="submit" ng-value="i18n.yleiset.tallenna_vastaukset" ng-disabled="vastausForm.$error.required">
 </form>
