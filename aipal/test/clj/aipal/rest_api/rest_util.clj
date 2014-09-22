@@ -3,23 +3,20 @@
             [clj-time.core :as time]
             [cheshire.core :as cheshire]
 
-            [oph.korma.korma-auth :as ka]
             [oph.common.infra.i18n :as i18n]
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
-            [aipal.toimiala.kayttajaoikeudet :refer [*current-user-authmap*]]
             [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]
 
             [aipal.sql.test-util :refer :all]
             [aipal.sql.test-data-util :refer :all]))
 
 (defn with-auth-user [f]
-  (let [olemassaoleva-kayttaja {:roolitunnus (:yllapitaja kayttajaroolit), :oid ka/default-test-user-oid, :uid ka/default-test-user-uid }]
-    (binding [*kayttaja* olemassaoleva-kayttaja
-              i18n/*locale* testi-locale
-              *current-user-authmap* olemassaoleva-kayttaja]
+  (with-kayttaja default-test-user-uid nil
+    (binding [i18n/*locale* testi-locale]
       (f))))
 
 (defn mock-request [app url method params]

@@ -17,7 +17,6 @@
            org.joda.time.LocalDate)
   (:require  korma.db
              [korma.core :as sql]
-             [oph.korma.korma-auth :as korma-auth]
              [clj-time.coerce :as time-coerce]
              [clj-time.core :as time]))
 
@@ -39,8 +38,7 @@
                     (.setDefaultAutoCommit false)
                     (.setMaxConnectionsPerPartition 10)
                     (.setMinConnectionsPerPartition 5)
-                    (.setPartitionCount 1)
-                    (.setConnectionHook (korma-auth/customizer-impl-bonecp "aipal.kayttaja")))]
+                    (.setPartitionCount 1))]
     bonecp-ds))
 
 (defn luo-db [db-asetukset]

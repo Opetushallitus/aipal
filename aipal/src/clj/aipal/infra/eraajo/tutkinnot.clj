@@ -17,14 +17,12 @@
              :refer [defjob]]
             [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
-            [oph.korma.korma-auth :refer [integraatiokayttaja]]
             [aipal.integraatio.koodistopalvelu :as org]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
 (defn paivita-tutkinnot! [asetukset]
-  (binding [;; Poolista ei saa yhteyttä ilman että *kayttaja* on sidottu.
-            *kayttaja* {:uid integraatiokayttaja
-                        :oid integraatiokayttaja}]
+  (with-kayttaja integraatio-uid
     (org/paivita-tutkinnot! asetukset)))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan

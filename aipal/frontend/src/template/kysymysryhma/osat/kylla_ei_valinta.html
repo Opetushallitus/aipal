@@ -1,0 +1,46 @@
+<section>
+    <label>{{i18n.kysymys.jatkokysymys}}</label>
+    <div>
+      <input type="checkbox" ng-model="kysymys.jatkokysymys.kylla_jatkokysymys">{{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}
+    </div>
+    <div ng-show="kysymys.jatkokysymys.kylla_jatkokysymys">
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.kylla_teksti_fi" size="80" maxlength="200" ng-required="kysymys.jatkokysymys.kylla_jatkokysymys"/>
+        </fieldset>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_ruotsiksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.kylla_teksti_sv" size="80" maxlength="200"/>
+        </fieldset>
+      </section>
+      <section>
+        <label>{{i18n.kysymys.naytettava_asteikko}}</label>
+        <div>{{i18n.kysymys.asteikko_valinnat}}</div>
+      </section>
+    </div>
+
+    <div>
+      <input type="checkbox" ng-model="kysymys.jatkokysymys.ei_jatkokysymys">{{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
+    </div>
+    <div ng-show="kysymys.jatkokysymys.ei_jatkokysymys">
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.ei_teksti_fi" size="80" maxlength="200" ng-required="kysymys.jatkokysymys.ei_jatkokysymys"/>
+        </fieldset>
+        <fieldset>
+          <label>{{i18n.kysymys.kysymys_ruotsiksi}}</label>
+          <input type="text" ng-model="kysymys.jatkokysymys.ei_teksti_sv" size="80" maxlength="200"/>
+        </fieldset>
+      </section>
+      <section>
+        <fieldset>
+          <label>{{i18n.kysymys.vastauksen_maksimipituus}}</label>
+          <select ng-init="kysymys.jatkokysymys.max_vastaus = vapaateksti_maksimit[0]" ng-model="kysymys.jatkokysymys.max_vastaus"
+                  ng-options="max for max in vapaateksti_maksimit">
+          </select>
+        </fieldset>
+      </section>
+    </div>
+</section>

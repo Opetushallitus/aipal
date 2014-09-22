@@ -17,8 +17,7 @@
             [aipal-e2e.arkisto.sql.korma]
             [aipal-e2e.tietokanta.data :as data]))
 
-(def ^:private jarjestelmakayttaja-oid "JARJESTELMA")
-(def  testikayttaja-uid "AIPAL-E2E")
+(def testikayttaja-uid "AIPAL-E2E")
 (def testikayttaja-oid "OID.AIPAL-E2E")
 
 (def ^:private tietokantaasetukset
