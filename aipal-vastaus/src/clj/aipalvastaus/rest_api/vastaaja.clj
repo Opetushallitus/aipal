@@ -21,5 +21,7 @@
 (c/defroutes reitit
   (c/POST "/luo" [tunnus]
     (db/transaction
-      (json-response-nocache
-        {:vastaajaid (vastaaja/luo-vastaaja! tunnus)}))))
+      (if (vastaaja/validoi-vastaajatunnus tunnus)
+        (json-response-nocache
+          {:vastaajaid (vastaaja/luo-vastaaja! tunnus)})
+        {:status 403}))))

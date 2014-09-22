@@ -7,7 +7,11 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       .when('/vastaus/:tunnus', {
         controller: 'VastausController',
         templateUrl: 'template/vastaus/vastaus.html'
-      });
+      })
+      .when('/vastausaika-loppunut', {
+        templateUrl: 'template/vastaus/lukittu.html'
+      })
+    ;
   }])
 
   .factory('VastausControllerFunktiot', [function() {
@@ -58,6 +62,8 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
           sessionStorage.setItem('vastaajaid', data.vastaajaid);
           sessionStorage.setItem('tunnus', $routeParams.tunnus);
           $scope.vastaajaid = data.vastaajaid;
+        }, function() {
+          $location.path('/vastausaika-loppunut');
         });
       } else {
         $scope.vastaajaid = parseInt(sessionStorage.getItem('vastaajaid'), 10);
