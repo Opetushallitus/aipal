@@ -15,6 +15,17 @@
 (ns aipalvastaus.sql.vastaaja
   (:require [korma.core :as sql]))
 
+(defn validoi-vastaajatunnus
+  [vastaajatunnus]
+  (->
+    (sql/select* :vastaajatunnus)
+    (sql/fields :lukittu)
+    (sql/where {:tunnus vastaajatunnus})
+    sql/exec
+    first
+    :lukittu
+    false?))
+
 (defn luo-vastaaja!
   [vastaustunnus]
   (->
