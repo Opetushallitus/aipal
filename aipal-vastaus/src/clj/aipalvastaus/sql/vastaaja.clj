@@ -18,14 +18,13 @@
 (defn validoi-vastaajatunnus
   [vastaajatunnus]
   (->
-    (sql/select* :vastaajatunnus)
-    (sql/fields :lukittu)
-    (sql/where
-      (and
-        (= :tunnus vastaajatunnus)
-        (<= :voimassa_alkupvm (sql/sqlfn now))
-        (or (nil? :voimassa_loppupvm) (>= :voimassa_loppupvm (sql/sqlfn now)))))
-    sql/exec
+    (sql/select :vastaajatunnus
+      (sql/fields :lukittu)
+      (sql/where
+        (and
+          (= :tunnus vastaajatunnus)
+          (<= :voimassa_alkupvm (sql/sqlfn now))
+          (or (nil? :voimassa_loppupvm) (>= :voimassa_loppupvm (sql/sqlfn now))))))
     first
     :lukittu
     false?))
