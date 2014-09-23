@@ -1,0 +1,20 @@
+<section>
+  <label>Vaihtoehdot</label>
+  <ol>
+    <li ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot">
+      <section>
+        <fieldset>
+          <label>{{i18n.yleiset.suomeksi}}</label>
+          <input type="text" ng-model="vaihtoehto.teksti_fi" size="80" maxlength="200" required/>
+        </fieldset>
+        <fieldset>
+          <label>{{i18n.yleiset.ruotsiksi}}</label>
+          <input type="text" ng-model="vaihtoehto.teksti_sv" size="80" maxlength="200"/>
+        </fieldset>
+      </section>
+    </li>
+  </ol>
+  <div>
+    <button ng-click="lisaaVaihtoehto(kysymys)">{{i18n.kysymys.lisaa_vaihtoehto}}</button>
+  </div>
+</section>

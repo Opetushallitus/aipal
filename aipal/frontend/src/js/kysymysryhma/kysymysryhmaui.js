@@ -49,7 +49,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           poistettava: false,
           vastaustyyppi: 'vapaateksti',
           muokattava: true,
-          jatkokysymys: {}
+          jatkokysymys: {},
+          monivalintavaihtoehdot: []
         };
       },
       poistaYlimaaraisetKentat: function(kysymys) {
@@ -67,6 +68,12 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         if (kysymys.vastaustyyppi !== 'vapaateksti') {
           delete kysymys.max_vastaus;
         }
+      },
+      uusiVaihtoehto: function() {
+        return {
+          teksti_fi: '',
+          teksti_sv: ''
+        };
       }
     };
   }])
@@ -80,13 +87,17 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.vastaustyypit = [
       'vapaateksti',
       'asteikko',
-      'kylla_ei_valinta'
+      'kylla_ei_valinta',
+      'monivalinta'
     ];
     $scope.vapaateksti_maksimit = [500,1000,1500,2000,2500,3000];
 
     $scope.lisaaKysymys = function() {
       $scope.kysymysryhma.kysymykset.push(apu.uusiKysymys());
       $scope.muokkaustila = true;
+    };
+    $scope.lisaaVaihtoehto = function(kysymys) {
+      kysymys.monivalintavaihtoehdot.push(apu.uusiVaihtoehto());
     };
     $scope.tallenna = function(kysymys) {
       apu.poistaYlimaaraisetKentat(kysymys);
