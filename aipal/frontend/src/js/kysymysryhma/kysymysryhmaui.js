@@ -47,7 +47,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           kysymys_sv: '',
           pakollinen: true,
           poistettava: false,
-          vastaustyyppi: 'vapaateksti',
+          vastaustyyppi: 'asteikko',
           muokattava: true,
           jatkokysymys: {},
           monivalintavaihtoehdot: []
@@ -85,10 +85,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
     $scope.muokkaustila = false;
     $scope.vastaustyypit = [
-      'vapaateksti',
       'asteikko',
       'kylla_ei_valinta',
-      'monivalinta'
+      'monivalinta',
+      'vapaateksti'
     ];
     $scope.vapaateksti_maksimit = [500,1000,1500,2000,2500,3000];
 
