@@ -14,13 +14,23 @@
 
 'use strict';
 
-angular.module('yhteiset.suodattimet.numerot', [])
-  .filter('numerot', [function() {
+describe('Suodatin: numerot:', function () {
 
-    return function(taulukko, yhteensa) {
-      for (var i = 1; i <= yhteensa; i++) {
-        taulukko.push(i);
-      }
-      return taulukko;
-    };
-  }]);
+  beforeEach(module('yhteiset.suodattimet.numerot'));
+
+  it('pitäisi palauttaa numerot yhdestä annettuun numeroon', inject(function($filter){
+
+    var tulos = $filter('numerot')([], 4);
+
+    expect(tulos).toEqual([1,2,3,4]);
+
+  }));
+
+  it('pitäisi jättää taulukko ennalleen, jos numeroa ei ole annettu', inject(function($filter){
+
+    var tulos = $filter('numerot')([]);
+
+    expect(tulos).toEqual([]);
+
+  }));
+});
