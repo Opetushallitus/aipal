@@ -68,6 +68,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         if (kysymys.vastaustyyppi !== 'vapaateksti') {
           delete kysymys.max_vastaus;
         }
+        if (kysymys.vastaustyyppi !== 'monivalinta') {
+          delete kysymys.monivalintavaihtoehdot;
+        }
       },
       uusiVaihtoehto: function() {
         return {
