@@ -56,6 +56,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           vastaustyyppi: 'asteikko',
           muokattava: true,
           jatkokysymys: {},
+          monivalinta_max: 1,
           monivalintavaihtoehdot: [uusiVaihtoehto(), uusiVaihtoehto()]
         };
       },
@@ -76,6 +77,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         }
         if (kysymys.vastaustyyppi !== 'monivalinta') {
           delete kysymys.monivalintavaihtoehdot;
+          delete kysymys.monivalinta_max;
         }
       },
       uusiVaihtoehto: uusiVaihtoehto
