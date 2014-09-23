@@ -4,8 +4,8 @@
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysymysryhma :as arkisto]))
 
-(defn jarjesta-kysymykset [kysymykset]
-  (map #(assoc %1 :jarjestys %2) kysymykset (range)))
+(defn jarjesta-alkiot [alkiot]
+  (map #(assoc %1 :jarjestys %2) alkiot (range)))
 
 (defn valitse-kysymyksen-kentat [kysymys]
   (select-keys kysymys [:pakollinen
@@ -38,7 +38,7 @@
                                                      :selite_fi selite_fi
                                                      :nimi_sv nimi_sv
                                                      :selite_sv selite_sv})]
-      (doseq [k (jarjesta-kysymykset kysymykset)
+      (doseq [k (jarjesta-alkiot kysymykset)
               :let [jatkokysymys (muodosta-jatkokysymys k)
                     jatkokysymys (when jatkokysymys (arkisto/lisaa-jatkokysymys! jatkokysymys))
                     kysymys (valitse-kysymyksen-kentat k)
