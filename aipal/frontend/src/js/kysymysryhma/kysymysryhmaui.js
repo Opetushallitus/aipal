@@ -40,6 +40,12 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
   }])
 
   .factory('kysymysApurit', [function() {
+    var uusiVaihtoehto = function() {
+      return {
+        teksti_fi: '',
+        teksti_sv: ''
+      };
+    };
     return {
       uusiKysymys: function() {
         return {
@@ -50,7 +56,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           vastaustyyppi: 'asteikko',
           muokattava: true,
           jatkokysymys: {},
-          monivalintavaihtoehdot: []
+          monivalintavaihtoehdot: [uusiVaihtoehto(), uusiVaihtoehto()]
         };
       },
       poistaYlimaaraisetKentat: function(kysymys) {
@@ -72,12 +78,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           delete kysymys.monivalintavaihtoehdot;
         }
       },
-      uusiVaihtoehto: function() {
-        return {
-          teksti_fi: '',
-          teksti_sv: ''
-        };
-      }
+      uusiVaihtoehto: uusiVaihtoehto
     };
   }])
 
