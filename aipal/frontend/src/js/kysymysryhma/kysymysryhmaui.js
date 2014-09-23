@@ -81,7 +81,13 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           delete kysymys.monivalinta_max;
         }
       },
-      uusiVaihtoehto: uusiVaihtoehto
+      uusiVaihtoehto: uusiVaihtoehto,
+      poistaVaihtoehto: function(kysymys, index) {
+        kysymys.monivalintavaihtoehdot.splice(index,1);
+        if (kysymys.monivalinta_max > kysymys.monivalintavaihtoehdot.length) {
+          kysymys.monivalinta_max = kysymys.monivalintavaihtoehdot.length;
+        }
+      }
     };
   }])
 
@@ -106,9 +112,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.lisaaVaihtoehto = function(kysymys) {
       kysymys.monivalintavaihtoehdot.push(apu.uusiVaihtoehto());
     };
-    $scope.poistaVaihtoehto = function(kysymys, index) {
-      kysymys.monivalintavaihtoehdot.splice(index,1);
-    };
+    $scope.poistaVaihtoehto = apu.poistaVaihtoehto;
     $scope.tallenna = function(kysymys) {
       apu.poistaYlimaaraisetKentat(kysymys);
       kysymys.muokattava = false;
