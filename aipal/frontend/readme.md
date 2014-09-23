@@ -59,10 +59,24 @@ Testien ajaminen jatkuvasti:
 Grunt autotest
 ```
 
+## Bootstrap
 
+Bootstrap-teema on generoitu Bootstrap Magicilla: http://pikock.github.io/bootstrap-magic/app/index.html#!/editor
 
+Jos haluat muuttaa bootstrapin asetuksia, älä muokkaa tiedosta magic-bootstrap-min.css käsin, vaan toimi seuraavasti:
 
+1.  Kopioi tiedoston aipal/aipal/frontend/src/magic-bootstrap.less sisältö leikepöydälle:
 
+        # OS X
+        cat magic-bootstrap.less | pbcopy
 
+        # Linux
+        xclip -selection c magic-bootstrap.less
 
+2.  Avaa http://pikock.github.io/bootstrap-magic/app/index.html#!/editor, klikkaa Import Less Variables -nappia ja liitä tiedoston magic-boostrap.less sisältö leikepöydältä.
 
+3.  Muuta asetukset haluamasi mukaiseksi ja paina Apply-nappia.
+
+4.  Valitse asetus Minified, paina Save Less Variables -nappia ja ylikirjoita ladatulla tiedostolla aipal/aipal/frontend/src/magic-bootstrap.less.
+
+5.  Paina alareunan Save CSS -nappia ja ylikirjoita ladatulla tiedostolla aipal/aipal/frontend/src/css/magic-bootstrap-min.css.
