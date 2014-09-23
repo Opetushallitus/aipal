@@ -20,27 +20,41 @@
 - name: Luo asennushakemisto palvelimelle
   file: path={{ asennushakemisto }} state=directory owner=tomcat group=tomcat mode=0755
 
+- name: Kopioi versio palvelimelle
+  copy: src={{ sovellus_jar }} dest={{ asennushakemisto }}/{{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
+
+- name: Pura build-id.txt sovelluspaketista
+  shell: jar xf {{ sovellus_jar_palvelimella }} build-id.txt chdir="{{ asennushakemisto }}"
+
+- name: Päivitä asennukset.txt
+  shell: >
+    echo
+    "$(date '+%Y-%m-%d %H:%M:%S') |
+    {{ ansible_ssh_user }} |
+    $(cat build-id.txt)" >> asennukset.txt
+    chdir={{ asennushakemisto }}
+
 - name: Kopioi lokituksen asetustiedosto palvelimelle
-  copy: src="{{ inventory_dir }}/{{ lokituksen_asetustiedosto }}" dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644 force=no
-  when: lokituksen_asetustiedosto is defined
+  copy: src="{{ inventory_dir }}/{{ lokituksen_asetustiedosto }}" dest={{ asennushakemisto }}/resources/ owner=tomcat group=tomcat mode=0644
+  when: asenna_asetustiedostot|bool and lokituksen_asetustiedosto is defined
 
 - name: Kopioi sovelluksen asetustiedosto palvelimelle
-  template: src="{{ inventory_dir }}/{{ sovelluksen_asetustiedosto }}" dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644 force=no
-  when: sovelluksen_asetustiedosto is defined
+  template: src="{{ inventory_dir }}/{{ sovelluksen_asetustiedosto }}" dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644
+  when: asenna_asetustiedostot|bool and sovelluksen_asetustiedosto is defined
 
 - name: Aseta tietokantakäyttäjä sovelluksen asetustiedostoon
   replace:
     dest: "{{ asennushakemisto }}/{{ sovelluksen_asetustiedosto }}"
     regexp: ^db\.user.*
-    replace: db.user = {{ tietokannan_peruskayttaja }}
-  when: tietokannan_peruskayttaja is defined
+    replace: db.user = {{ tietokannan_peruskayttaja|default(None) or skeeman_peruskayttaja }}
+  when: ((tietokannan_peruskayttaja is defined) or (skeeman_peruskayttaja is defined)) and (sovelluksen_asetustiedosto is defined)
 
 - name: Aseta tietokantakäyttäjän salasana sovelluksen asetustiedostoon
   replace:
     dest: "{{ asennushakemisto }}/{{ sovelluksen_asetustiedosto }}"
     regexp: ^db\.password.*
-    replace: db.password = {{ tietokannan_peruskayttajan_salasana }}
-  when: tietokannan_peruskayttajan_salasana is defined
+    replace: db.password = {{ tietokannan_peruskayttajan_salasana|default(None) or skeeman_peruskayttajan_salasana }}
+  when: ((tietokannan_peruskayttajan_salasana is defined) or (skeeman_peruskayttajan_salasana is defined)) and (sovelluksen_asetustiedosto is defined)
 
 - name: Kopioi migraation asetustiedosto palvelimelle
   template: src="{{ inventory_dir }}/{{ migraation_asetustiedosto }}" dest={{ asennushakemisto }}/ owner=tomcat group=tomcat mode=0644 force=no
@@ -51,7 +65,7 @@
     dest: "{{ asennushakemisto }}/{{ migraation_asetustiedosto }}"
     regexp: ^db\.user.*
     replace: db.user = {{ tietokannan_paakayttaja }}
-  when: tietokannan_paakayttaja is defined
+  when: (tietokannan_paakayttaja is defined) and (migraation_asetustiedosto is defined)
 
 - name: Aseta tietokantakäyttäjän salasana migraation asetustiedostoon
   replace:
@@ -59,9 +73,6 @@
     regexp: ^db\.password.*
     replace: db.password = {{ tietokannan_paakayttajan_salasana }}
   when: tietokannan_paakayttajan_salasana is defined
-
-- name: Kopioi versio palvelimelle
-  copy: src={{ sovellus_jar }} dest={{ asennushakemisto }}/{{ sovellus_jar_palvelimella }} owner=tomcat group=tomcat mode=0644
 
 - name: Muodosta migraatiopaketin nimi etäpalvelimella
   set_fact:
@@ -82,12 +93,12 @@
 
 - include: migraatioskripti.yml
   dest: "{{ asennushakemisto }}/migrate-install-{{ palvelu }}.sh"
-  migraation_argumentit: "{{ migraation_argumentit_asennuksen_jalkeen|default(migraation_argumentit) }}"
+  migraation_argumentit_templatelle: "{{ migraation_argumentit_asennuksen_jalkeen|default(migraation_argumentit) }}"
   when: migraatio_jar_palvelimella is defined
 
 - include: migraatioskripti.yml
   dest: "{{ asennushakemisto }}/migrate-dump-{{ palvelu }}.sh"
-  migraation_argumentit: "{{ migraation_argumentit_dumpin_jalkeen|default(migraation_argumentit) }}"
+  migraation_argumentit_templatelle: "{{ migraation_argumentit_dumpin_jalkeen|default(migraation_argumentit) }}"
   when: migraatio_jar_palvelimella is defined
 
 - name: Päivitä palvelun init.d-skripti
