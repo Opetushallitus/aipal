@@ -106,6 +106,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.lisaaVaihtoehto = function(kysymys) {
       kysymys.monivalintavaihtoehdot.push(apu.uusiVaihtoehto());
     };
+    $scope.poistaVaihtoehto = function(kysymys, index) {
+      kysymys.monivalintavaihtoehdot.splice(index,1);
+    };
     $scope.tallenna = function(kysymys) {
       apu.poistaYlimaaraisetKentat(kysymys);
       kysymys.muokattava = false;
