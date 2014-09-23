@@ -51,7 +51,8 @@
                                    :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
                                    :jatkokysymysid (:jatkokysymysid jatkokysymys))
                     kysymys (arkisto/lisaa-kysymys! kysymys)]
-              :when (:monivalintavaihtoehdot k)
+              :when (and (= "monivalinta" (:vastaustyyppi kysymys))
+                         (:monivalintavaihtoehdot k))
               v (jarjesta-alkiot (:monivalintavaihtoehdot k))
               :let [vaihtoehto (valitse-vaihtoehdon-kentat v)
                     vaihtoehto (assoc vaihtoehto :kysymysid (:kysymysid kysymys))]]
