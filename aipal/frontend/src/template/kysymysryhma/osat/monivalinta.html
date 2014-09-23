@@ -1,4 +1,10 @@
 <section>
+  <fieldset>
+    <label>{{i18n.kysymys.valintojen_maksimimaara}}</label>
+    <select ng-model="kysymys.monivalinta_max" ng-options="max for max in [] | numerot:kysymys.monivalintavaihtoehdot.length + 1"></select>
+  </fieldset>
+</section>
+<section>
   <label>Vaihtoehdot</label>
   <ol>
     <li ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot">
