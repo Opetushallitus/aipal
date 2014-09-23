@@ -33,3 +33,7 @@
 (defn lisaa-jatkokysymys! [k]
   (sql/insert :jatkokysymys
     (sql/values k)))
+
+(defn lisaa-monivalintavaihtoehto! [v]
+  (sql/insert :monivalintavaihtoehto
+    (sql/values v)))

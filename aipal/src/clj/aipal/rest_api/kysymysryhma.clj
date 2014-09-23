@@ -24,6 +24,11 @@
                              :ei_teksti_sv
                              :max_vastaus]))
 
+(defn valitse-vaihtoehdon-kentat [vaihtoehto]
+  (select-keys vaihtoehto [:jarjestys
+                           :teksti_fi
+                           :teksti_sv]))
+
 (defn muodosta-jatkokysymys [kysymys]
   (when (and (= "kylla_ei_valinta" (:vastaustyyppi kysymys))
              (:jatkokysymys kysymys))
@@ -44,6 +49,11 @@
                     kysymys (valitse-kysymyksen-kentat k)
                     kysymys (assoc kysymys
                                    :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
-                                   :jatkokysymysid (:jatkokysymysid jatkokysymys))]]
-        (arkisto/lisaa-kysymys! kysymys))
+                                   :jatkokysymysid (:jatkokysymysid jatkokysymys))
+                    kysymys (arkisto/lisaa-kysymys! kysymys)]
+              :when (:monivalintavaihtoehdot k)
+              v (jarjesta-alkiot (:monivalintavaihtoehdot k))
+              :let [vaihtoehto (valitse-vaihtoehdon-kentat v)
+                    vaihtoehto (assoc vaihtoehto :kysymysid (:kysymysid kysymys))]]
+        (arkisto/lisaa-monivalintavaihtoehto! vaihtoehto))
       (json-response kysymysryhma))))
