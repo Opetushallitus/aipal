@@ -21,7 +21,7 @@ angular.module('etusivu.etusivuui', ['ngRoute'])
       .when('/', {
         controller: 'EtusivuController',
         templateUrl: 'template/etusivu/etusivu.html',
-        label: ""
+        label: ''
       });
   }])
 
