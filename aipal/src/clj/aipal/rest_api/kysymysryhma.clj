@@ -34,27 +34,40 @@
              (:jatkokysymys kysymys))
     (valitse-jatkokysymyksen-kentat (:jatkokysymys kysymys))))
 
+(defn lisaa-monivalintavaihtoehdot! [vaihtoehdot kysymysid]
+  (doseq [v (jarjesta-alkiot vaihtoehdot)]
+    (-> v
+      valitse-vaihtoehdon-kentat
+      (assoc :kysymysid kysymysid)
+      arkisto/lisaa-monivalintavaihtoehto!)))
+
+(defn lisaa-kysymys! [kysymys kysymysryhmaid]
+  (let [jatkokysymysid (some-> kysymys
+                         muodosta-jatkokysymys
+                         arkisto/lisaa-jatkokysymys!
+                         :jatkokysymysid)
+        kysymysid (-> kysymys
+                    valitse-kysymyksen-kentat
+                    (assoc :kysymysryhmaid kysymysryhmaid
+                           :jatkokysymysid jatkokysymysid)
+                    arkisto/lisaa-kysymys!
+                    :kysymysid)]
+    (when (= "monivalinta" (:vastaustyyppi kysymys))
+      (lisaa-monivalintavaihtoehdot! (:monivalintavaihtoehdot kysymys) kysymysid))))
+
+(defn lisaa-kysymysryhma! [kysymysryhma kysymykset]
+  (let [kysymysryhma (arkisto/lisaa-kysymysryhma! kysymysryhma)]
+    (doseq [k (jarjesta-alkiot kysymykset)]
+      (lisaa-kysymys! k (:kysymysryhmaid kysymysryhma)))
+    (json-response kysymysryhma)))
+
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" []
     (json-response (arkisto/hae-kysymysryhmat)))
 
   (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv kysymykset]
-    (let [kysymysryhma (arkisto/lisaa-kysymysryhma! {:nimi_fi nimi_fi
-                                                     :selite_fi selite_fi
-                                                     :nimi_sv nimi_sv
-                                                     :selite_sv selite_sv})]
-      (doseq [k (jarjesta-alkiot kysymykset)
-              :let [jatkokysymys (muodosta-jatkokysymys k)
-                    jatkokysymys (when jatkokysymys (arkisto/lisaa-jatkokysymys! jatkokysymys))
-                    kysymys (valitse-kysymyksen-kentat k)
-                    kysymys (assoc kysymys
-                                   :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
-                                   :jatkokysymysid (:jatkokysymysid jatkokysymys))
-                    kysymys (arkisto/lisaa-kysymys! kysymys)]
-              :when (and (= "monivalinta" (:vastaustyyppi kysymys))
-                         (:monivalintavaihtoehdot k))
-              v (jarjesta-alkiot (:monivalintavaihtoehdot k))
-              :let [vaihtoehto (valitse-vaihtoehdon-kentat v)
-                    vaihtoehto (assoc vaihtoehto :kysymysid (:kysymysid kysymys))]]
-        (arkisto/lisaa-monivalintavaihtoehto! vaihtoehto))
-      (json-response kysymysryhma))))
+    (lisaa-kysymysryhma! {:nimi_fi nimi_fi
+                          :selite_fi selite_fi
+                          :nimi_sv nimi_sv
+                          :selite_sv selite_sv}
+                         kysymykset)))
