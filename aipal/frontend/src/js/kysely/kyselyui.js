@@ -75,11 +75,14 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
 
   .controller('KyselyController', [
     'Kysely', 'Kyselypohja', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus',
-    function(Kysely, Kyselypohja, i18n, $routeParams, $route, $scope, ilmoitus) {
+    '$window',
+    function(Kysely, Kyselypohja, i18n, $routeParams, $route, $scope, ilmoitus,
+        $window) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function(kysely) {
         Kysely.tallenna(kysely, function() {
+          $window.location.hash = '/kyselyt';
           ilmoitus.onnistuminen(i18n.kysely.tallennus_onnistui);
         }, function() {
           ilmoitus.virhe(i18n.kysely.tallennus_epaonnistui);
