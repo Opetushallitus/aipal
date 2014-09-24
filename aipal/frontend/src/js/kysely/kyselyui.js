@@ -23,7 +23,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
         templateUrl: 'template/kysely/kyselyt.html',
         label: 'i18n.kysely.breadcrumb_kyselyt'
       })
-      .when('/kyselyt/:kyselyid', {
+      .when('/kyselyt/kysely/:kyselyid', {
         controller: 'KyselyController',
         templateUrl: 'template/kysely/kysely.html',
         label: 'i18n.kysely.breadcrumb_muokkaa_kyselya'
@@ -43,7 +43,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
 
       $scope.luoUusiKysely = function() {
         Kysely.luoUusi(function(data) {
-          $location.url('kyselyt/kysely/' + data.kyselyid);
+          $location.url('/kyselyt/kysely/' + data.kyselyid);
         }, function() {
           ilmoitus.virhe(i18n.kysely.uuden_luonti_epaonnistui);
         });
