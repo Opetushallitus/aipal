@@ -17,10 +17,13 @@
 angular.module('yhteiset.suodattimet.i18n', ['yhteiset.palvelut.i18n'])
   .filter('i18n', ['i18n',function(i18n){
     return function(input){
-      if(typeof input === 'undefined'){
+      if(typeof input === 'undefined' || input===''){
         return '';
       }
-      input = input.replace('i18n.','');
-      return i18n.hae(input);
+      if (i18n.$resolved) {
+        return i18n.hae(input.replace('i18n.', ''));
+      } else {
+        return '';
+      }
     };
   }]);
