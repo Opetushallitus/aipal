@@ -2,6 +2,7 @@
   (:require [compojure.core :as c]
             [oph.common.util.http-util :refer [json-response]]
             [aipal.compojure-util :as cu]
+            [clojure.tools.logging :as log]
             [aipal.arkisto.kysymysryhma :as arkisto]))
 
 (defn jarjesta-alkiot [alkiot]
@@ -35,6 +36,8 @@
     (valitse-jatkokysymyksen-kentat (:jatkokysymys kysymys))))
 
 (defn lisaa-monivalintavaihtoehdot! [vaihtoehdot kysymysid]
+  (when (nil? vaihtoehdot)
+    (log/error "Kysymyksellä" kysymysid "ei ole monivalintavaihtoehtoja."))
   (doseq [v (jarjesta-alkiot vaihtoehdot)]
     (-> v
       valitse-vaihtoehdon-kentat
