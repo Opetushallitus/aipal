@@ -1,9 +1,5 @@
 <h1>Kysely</h1>
 
-<div class="questionnaire-actions">
-  <a ng-click="tallenna(kysely)">{{i18n.yleiset.tallenna}}</a>
-</div>
-
 <h3>Kyselyn nimi (näkyy vastaajalle)</h3>
 <input type="text" ng-model="kysely.nimi_fi" />
 
@@ -34,10 +30,8 @@
 
   <select ng-model="kyselypohjaId" ng-options="pohja.kyselypohjaid as (pohja | lokalisoiKentta:'nimi') for pohja in kyselypohjat"></select>
 
-  <button ng-click="lisaaKyselypohja(kyselypohjaId)" ng-disabled="!kyselypohjaId">{{i18n.kyselypohja.lisaa_valittu}}</button>
+  <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselypohja(kyselypohjaId)" ng-disabled="!kyselypohjaId">{{i18n.kyselypohja.lisaa_valittu}}</button>
 </popup-ikkuna>
-
-<a ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</a>
 
 <div class="kysymysryhma" ng-repeat="kysymysryhma in kysely.kysymysryhmat">
   <h1>{{kysymysryhma | lokalisoiKentta:'nimi' }}</h1>
@@ -45,4 +39,11 @@
   <div ng-repeat="kysymys in kysymysryhma.kysymys">
     <h2 ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}} <a ng-click="poistaKysymys(kysymys)" ng-if="kysymys.poistettava && !kysymys.poistettu">[Poista]</a><a ng-click="palautaKysymys(kysymys)" ng-if="kysymys.poistettu">[Palauta]</a></h2>
   </div>
+</div>
+
+<div>
+  <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</button>
+</div>
+<div>
+  <button class="button" ng-click="tallenna(kysely)">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
 </div>
