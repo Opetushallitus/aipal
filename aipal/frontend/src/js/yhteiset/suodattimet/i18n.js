@@ -14,17 +14,11 @@
 
 'use strict';
 
-angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
-
-  .config(['$routeProvider', function($routeProvider) {
-    $routeProvider
-      .when('/kyselypohjat', {
-        controller: 'KyselypohjaController',
-        templateUrl: 'template/kyselypohja/kyselypohja.html',
-        label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
-      });
-  }])
-
-  .controller('KyselypohjaController',
-    function() { }
-  );
+angular.module('yhteiset.suodattimet.i18n', ['yhteiset.palvelut.i18n'])
+  .filter("i18n", ['i18n',function(i18n){
+    return function(input){
+      if(typeof input == "undefined") return "";
+      input = input.replace("i18n.","");
+      return i18n.hae(input);
+    }
+  }]);

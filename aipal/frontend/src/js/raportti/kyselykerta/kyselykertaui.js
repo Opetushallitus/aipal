@@ -25,13 +25,15 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
                                                       'ngResource'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/raportti/kyselykerrat', {
+      .when('/raportit/kyselykerrat', {
         controller: 'KyselykerratController',
-        templateUrl: 'template/raportti/kyselykerrat.html'
+        templateUrl: 'template/raportti/kyselykerrat.html',
+        label: 'i18n.raportit.breadcrumb_raportit'
       })
-      .when('/raportti/kyselykerta/:kyselykertaid', {
+      .when('/raportit/kyselykerrat/kyselykerta/:kyselykertaid', {
         controller: 'KyselykertaRaporttiController',
-        templateUrl: 'template/raportti/kyselykerta.html'
+        templateUrl: 'template/raportti/kyselykerta.html',
+        label: 'i18n.raportit.breadcrumb_raportti'
       });
   }])
 

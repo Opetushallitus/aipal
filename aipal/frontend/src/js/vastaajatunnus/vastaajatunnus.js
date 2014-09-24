@@ -18,9 +18,10 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
   
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/vastaajatunnus/:kyselykertaid', {
+      .when('/kyselyt/:kyselyid/kyselykerta/vastaajatunnus/:kyselykertaid', {
         controller: 'VastaajatunnusController',
-        templateUrl: 'template/vastaajatunnus/vastaajatunnus.html'
+        templateUrl: 'template/vastaajatunnus/vastaajatunnus.html',
+        label: 'Vastaajatunnus'
       });
   }])
 

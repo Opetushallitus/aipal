@@ -54,9 +54,6 @@ label {
 }
 
 a {color : $primary-color; text-decoration: none;
-  &:not(.ajax-link)[href=""] {
-    color: $darker-gray; cursor: default;
-  }
   &.show-more {
     &:before {content :"[";}
     &:after {content :"]";}

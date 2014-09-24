@@ -23,11 +23,13 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $routeProvider
       .when('/kysymysryhmat', {
         controller: 'KysymysryhmatController',
-        templateUrl: 'template/kysymysryhma/kysymysryhmat.html'
+        templateUrl: 'template/kysymysryhma/kysymysryhmat.html',
+        label: 'i18n.kysymysryhma.kysymysryhmat'
       })
-      .when('/kysymysryhma/uusi', {
+      .when('/kysymysryhmat/kysymysryhma/uusi', {
         controller: 'UusiKysymysryhmaController',
-        templateUrl: 'template/kysymysryhma/uusi.html'
+        templateUrl: 'template/kysymysryhma/uusi.html',
+        label: 'i18n.kysymysryhma.luo_uusi'
       });
   }])
 

@@ -23,7 +23,7 @@
             [aitu-e2e.data-util :refer [paivamaara-kayttoliittyman-muodossa]]
             [aitu-e2e.util :refer :all]))
 
-(defn kyselykertaraportti-sivu [kyselykertaid] (str "/#/raportti/kyselykerta/" kyselykertaid))
+(defn kyselykertaraportti-sivu [kyselykertaid] (str "/#/raportit/kyselykerrat/kyselykerta/" kyselykertaid))
 
 (defn sisemman-elementin-kentan-teksti [ulompi-elementti kentta]
   (w/text

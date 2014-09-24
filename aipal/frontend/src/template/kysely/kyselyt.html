@@ -1,7 +1,7 @@
-<h1>Organisaatiosi kyselyt</h1>
+<h1>{{i18n.kysely.otsikko}}</h1>
 
 <fieldset class="luo-uusi-kysely" >
-    <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="Etsi kyselyjä">
+    <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="{{i18n.kysely.etsi}}">
     <button class="button button-with-icon add-icon-white right ng-scope e2e-luo-uusi-kysely" ng-click="luoUusiKysely()">{{i18n.yleiset.luo_uusi_kysely}}</button>
 </fieldset>
 
@@ -18,8 +18,8 @@
         </accordion-heading>
 
         <div class="panel-tools-content">
-            <a ng-href="#/kysely/{{kysely.kyselyid}}" class="button left button-with-icon edit-icon-white" title="{{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}">
-                Muokkaa kyselyä
+            <a ng-href="#/kyselyt/{{kysely.kyselyid}}" class="button left button-with-icon edit-icon-white" title="{{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}">
+                {{i18n.kysely.muokkaa}}
             </a>
             <button class="button left button-with-icon add-icon-white e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">{{i18n.kyselykerta.uusi_kyselykerta}}</button>
         </div>
@@ -27,13 +27,13 @@
         <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
             <h3 class="e2e-kyselykerta-nimi">{{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
             <span class="text-muted">Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span><br />
-            <a ng-href="#/vastaajatunnus/{{kyselykerta.kyselykertaid}}" class="">
+            <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/vastaajatunnus/{{kyselykerta.kyselykertaid}}" class="">
                 {{i18n.vastaajatunnus.hallitse}}
             </a> <br />
-            <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
-                Näytä raportti
+            <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}">
+                {{i18n.kysely.raportti}}
             </a>
         </div>
-        <span ng-show="!kysely.kyselykerrat.length" class="text-muted">Ei kyselykertoja</span>
+        <span ng-show="!kysely.kyselykerrat.length" class="text-muted">{{i18n.kysely.ei_kyselykertoja}}</span>
     </accordion-group>
 </accordion>

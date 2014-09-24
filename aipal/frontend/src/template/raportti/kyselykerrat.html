@@ -4,7 +4,7 @@ Haku: <input type="text" ng-model="hakuehto.teksti">
 
 <ul>
   <li ng-repeat="kyselykerta in kyselykerrat | filter:hakuehto.teksti | limitTo:50">
-    <a ng-href="#/raportti/kyselykerta/{{kyselykerta.kyselykertaid}}">
+    <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}">
       {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
     </a>
   </li>

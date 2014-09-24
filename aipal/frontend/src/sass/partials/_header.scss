@@ -60,12 +60,18 @@ header {
   background-color: $primary-color;
   min-height: $nav-height;
   font-size: 1em;
-  a {
+
+  .app-wrapper {
+    position: relative;
+  }
+
+  a{
     display: inline-block;
     text-decoration: none;
-    color: $font-color!important;
+    color: $font-color;
     text-transform:uppercase;
     font-weight: 600;
+    cursor: pointer;
   }
   ul {
     margin: 0;
@@ -89,6 +95,30 @@ header {
       span {
         cursor: default;
       }
+    }
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    color: $gray-color;
+    font-size: 13px;
+    font-weight: 100;
+    .active {
+      color: $gray-color;
+    }
+    a {
+      text-transform: none;
+      color: $primary-color;
+      font-weight: 100;
+    }
+    a:hover {
+      text-decoration: underline;
     }
   }
 

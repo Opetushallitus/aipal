@@ -36,10 +36,12 @@ angular.module('aipal', [
   'yhteiset.direktiivit.tallenna',
   'yhteiset.direktiivit.hakuvalitsin',
   'yhteiset.suodattimet.enumarvo',
+  'yhteiset.suodattimet.i18n',
   'ui.bootstrap',
   'ngRoute',
   'kayttooikeudet',
-  'ui.select2'
+  'ui.select2',
+  'ng-breadcrumbs'
 ])
 
   .config(['$httpProvider', 'asetukset', function ($httpProvider, asetukset) {
@@ -64,8 +66,9 @@ angular.module('aipal', [
     );
   }])
 
-  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'kayttooikeudet', function ($location, $modal, $scope, $window, i18n, impersonaatioResource, kayttooikeudet) {
+  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'kayttooikeudet', 'breadcrumbs', function ($location, $modal, $scope, $window, i18n, impersonaatioResource, kayttooikeudet, breadcrumbs) {
     $scope.i18n = i18n;
+    $scope.breadcrumbs = breadcrumbs;
     $scope.baseUrl = _.has($window, 'ophBaseUrl') ? $window.ophBaseUrl : '';
     $scope.vastausBaseUrl = _.has($window, 'vastausBaseUrl') ? $window.vastausBaseUrl : 'http://192.168.50.1:8083';
     $scope.varmistaLogout = function () {
