@@ -69,6 +69,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
         modalInstance.result.then(function(kyselykerta) {
           Kyselykerta.tallenna(kysely.kyselyid, kyselykerta, function() {
             $scope.haeKyselyt();
+            ilmoitus.onnistuminen(i18n.kyselykerta.tallennus_onnistui);
+          }, function() {
+            ilmoitus.virhe(i18n.kyselykerta.tallennus_epaonnistui);
           });
         });
       };
