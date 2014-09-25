@@ -11,6 +11,8 @@ tietokanta = aipal
 skeema = public
 skeeman_peruskayttaja = aipalvastaus_user
 skeeman_peruskayttajan_salasana = aipalvastaus
+update_insert_oikeudet = vastaaja,vastaus
+sequence_oikeudet = vastaaja_vastaajaid_seq
 
 [oph_db:vars]
 
