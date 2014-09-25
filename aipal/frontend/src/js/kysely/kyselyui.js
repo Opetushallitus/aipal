@@ -45,7 +45,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
         Kysely.luoUusi(function(data) {
           $location.url('/kyselyt/kysely/' + data.kyselyid);
         }, function() {
-          ilmoitus.virhe(i18n.kysely.uuden_luonti_epaonnistui);
+          ilmoitus.virhe(i18n.hae('kysely.uuden_luonti_epaonnistui'));
         });
       };
 
@@ -69,9 +69,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
         modalInstance.result.then(function(kyselykerta) {
           Kyselykerta.tallenna(kysely.kyselyid, kyselykerta, function() {
             $scope.haeKyselyt();
-            ilmoitus.onnistuminen(i18n.kyselykerta.tallennus_onnistui);
+            ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
           }, function() {
-            ilmoitus.virhe(i18n.kyselykerta.tallennus_epaonnistui);
+            ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
           });
         });
       };
@@ -88,9 +88,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
       $scope.tallenna = function(kysely) {
         Kysely.tallenna(kysely, function() {
           $window.location.hash = '/kyselyt';
-          ilmoitus.onnistuminen(i18n.kysely.tallennus_onnistui);
+          ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
         }, function() {
-          ilmoitus.virhe(i18n.kysely.tallennus_epaonnistui);
+          ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
         });
       };
 
