@@ -3,12 +3,7 @@
 /* Modal */
 .modal-dialog {
   fieldset {
-    width: 80%;
-  }
-  .datepicker-vali .datepicker-field {
-    width: 37%;
-    margin-right: 15px;
-    margin-left: 0px;
+    width: 100%;
   }
   .modal-header {
     h4 {
@@ -27,5 +22,25 @@
       text-decoration: none;
     }
   }
+}
 
+.datepicker-field table button{
+  border: 0 !important;
+  &:before{
+    content: "" !important;
+  }
+}
+
+.datepicker-field ul *{
+  font-size: 1.0em;
+}
+
+.form-control{
+  height: 28px;
+  border-radius: 0px;
+  -webkit-border-radius: 0px !important;
+}
+
+.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+  float: none;
 }

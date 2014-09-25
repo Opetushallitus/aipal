@@ -113,6 +113,9 @@ angular.module('aipal', [
     $scope.impersonoi = function() {
       $modalInstance.close($scope.impersonoitava);
     };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
   }])
 
   .constant('asetukset', {

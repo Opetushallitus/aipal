@@ -71,5 +71,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
     $scope.luoTunnuksia = function(vastaajatunnus) {
       $modalInstance.close(vastaajatunnus);
     };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
   }])
 ;

@@ -1,15 +1,23 @@
-<form name="impersonoiForm">
-  <div class="modal-body">
-    <haku-valitsin
+<div class="modal-header">
+    <a class="pull-right" ng-click="cancel()">X</a>
+    <h4>{{i18n.impersonointi.vaihda_avustettavaksi_kayttajaksi}}</h4>
+
+</div>
+<div class="modal-body">
+    <form name="impersonoiForm">
+        <haku-valitsin
             otsikko="{{i18n.impersonointi.valitse_avustettava_kayttaja}}"
             url="api/kayttaja/impersonoitava"
             model="impersonoitava"
             model-id-property="oid"
             model-text-property="nimi"
             pakollinen="true">
-    </haku-valitsin>
-  </div>
-  <div class="modal-footer">
-    <tallenna formi-validi="impersonoiForm.$valid" ng-click="impersonoi()" teksti="{{i18n.impersonointi.valitse_kayttaja}}"></tallenna>
-  </div>
-</form>
+        </haku-valitsin>
+    </form>
+</div>
+<div class="modal-footer">
+    <small class="pull-right pakollinen"><pakollisia-kenttia></pakollisia-kenttia></small>
+    <tallenna class="pull-left" formi-validi="impersonoiForm.$valid" ng-click="impersonoi()" teksti="{{i18n.impersonointi.valitse_kayttaja}}"></tallenna>
+    <button class="btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
+</div>
+

@@ -238,7 +238,7 @@ fieldset.datepicker-field {
 .select2-fieldset .select2-container .select2-choice .select2-arrow {
   filter: none;
   background-image: none;
-  background-color: #107ea2;
+  background-color: $primary-color;
   width: 25px;
   border: 0;
   b {
@@ -258,7 +258,7 @@ fieldset.datepicker-field {
   background-image: none;
   filter: none;
   background-color: transparent;
-  border: 1px solid #107ea2;
+  border: 1px solid $primary-color;
   color: #000000;
 }
 .select2-container a.select2-choice, .select2-container-active a.select2-choice, .select2-drop, .select2-arrow {
