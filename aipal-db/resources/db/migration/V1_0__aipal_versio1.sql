@@ -95,6 +95,7 @@ IS
 IS
   'Kyselyn voimassaolon päättymispäivä' ;
   ALTER TABLE kysely ADD CONSTRAINT kysely_PK PRIMARY KEY ( kyselyid ) ;
+  ALTER TABLE kysely ADD CONSTRAINT alkupvm_ennen_loppupvm CHECK (voimassa_alkupvm IS NULL OR voimassa_loppupvm IS NULL OR voimassa_alkupvm <= voimassa_loppupvm);
 
 CREATE TABLE kysely_kysymys
   (
@@ -144,6 +145,7 @@ IS
 IS
   'Kyselykerran voimassaolon päättyminen' ;
   ALTER TABLE kyselykerta ADD CONSTRAINT kyselykerta_PK PRIMARY KEY ( kyselykertaid ) ;
+  ALTER TABLE kyselykerta ADD CONSTRAINT alkupvm_ennen_loppupvm CHECK (voimassa_alkupvm IS NULL OR voimassa_loppupvm IS NULL OR voimassa_alkupvm <= voimassa_loppupvm);
 
 CREATE TABLE kyselypohja
   (
@@ -177,6 +179,7 @@ IS
 IS
   'Kyselypohjan lakkautuspäivä' ;
   ALTER TABLE kyselypohja ADD CONSTRAINT kyselypohja_PK PRIMARY KEY ( kyselypohjaid ) ;
+  ALTER TABLE kyselypohja ADD CONSTRAINT alkupvm_ennen_loppupvm CHECK (voimassa_alkupvm IS NULL OR voimassa_loppupvm IS NULL OR voimassa_alkupvm <= voimassa_loppupvm);
 
 CREATE TABLE kysymys
   (
@@ -244,6 +247,7 @@ IS
 IS
   'Onko kysymysryhmä valtakunnallinen' ;
   ALTER TABLE kysymysryhma ADD CONSTRAINT kysymysryhmä_PK PRIMARY KEY ( kysymysryhmaid ) ;
+  ALTER TABLE kysymysryhma ADD CONSTRAINT alkupvm_ennen_loppupvm CHECK (voimassa_alkupvm IS NULL OR voimassa_loppupvm IS NULL OR voimassa_alkupvm <= voimassa_loppupvm);
 
 CREATE TABLE kysymysryhma_kyselypohja
   (
@@ -332,6 +336,7 @@ IS
   'Onko tunnukset lukittu suoraan tai tunnusten loppumisen takia' ;
   ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_PK PRIMARY KEY ( vastaajatunnusid ) ;
   ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus__UN UNIQUE ( tunnus ) ;
+  ALTER TABLE vastaajatunnus ADD CONSTRAINT alkupvm_ennen_loppupvm CHECK (voimassa_alkupvm IS NULL OR voimassa_loppupvm IS NULL OR voimassa_alkupvm <= voimassa_loppupvm);
 
 CREATE TABLE vastaus
   (
@@ -573,7 +578,7 @@ ALTER TABLE toimipaikka ADD CONSTRAINT toimipaikka_oppilaitos_FK FOREIGN KEY ( o
 
 ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
-ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_opintoala_FK FOREIGN KEY ( opintoala ) REFERENCES opintoala ( opintoalatunnus ) NOT DEFERRABLE ;  
+ALTER TABLE tutkinto ADD CONSTRAINT tutkinto_opintoala_FK FOREIGN KEY ( opintoala ) REFERENCES opintoala ( opintoalatunnus ) NOT DEFERRABLE ;
 
 ALTER TABLE opintoala ADD CONSTRAINT opintoala_kayttaja_FK FOREIGN KEY ( luotu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
 ALTER TABLE opintoala ADD CONSTRAINT opintoala_kayttaja_FKv1 FOREIGN KEY ( muutettu_kayttaja ) REFERENCES kayttaja ( oid ) NOT DEFERRABLE ;
@@ -825,27 +830,27 @@ COMMENT ON TABLE kayttajarooli IS 'AIPAL-käyttäjäroolit. Organisaatiokohtaise
 
 create or replace view kysely_omistaja_view as
 
-select  
+select
  k.ytunnus, k.nimi_fi, k.oid, ro.organisaatio, ro.rooli, ro.kayttaja, ro.voimassa, ky.kyselyid, ky.oppilaitos, ky.toimipaikka
- from koulutustoimija k 
+ from koulutustoimija k
   inner join rooli_organisaatio ro on ro.organisaatio = k.ytunnus
   inner join oppilaitos o on o.koulutustoimija = k.ytunnus
   inner join toimipaikka t on t.oppilaitos = o.oppilaitoskoodi
   inner join kysely ky on ky.toimipaikka = t.toimipaikkakoodi
 
 union all
-  select  
+  select
  k.ytunnus, k.nimi_fi, k.oid, ro.organisaatio, ro.rooli, ro.kayttaja, ro.voimassa, ky.kyselyid, ky.oppilaitos, ky.toimipaikka
- from koulutustoimija k 
+ from koulutustoimija k
   inner join rooli_organisaatio ro on ro.organisaatio = k.ytunnus
   inner join oppilaitos o on o.koulutustoimija = k.ytunnus
   inner join kysely ky on ky.oppilaitos = o.oppilaitoskoodi
 
  union all
- 
-  select  
+
+  select
  k.ytunnus, k.nimi_fi, k.oid, ro.organisaatio, ro.rooli, ro.kayttaja, ro.voimassa, ky.kyselyid, ky.oppilaitos, ky.toimipaikka
- from koulutustoimija k 
+ from koulutustoimija k
   inner join rooli_organisaatio ro on ro.organisaatio = k.ytunnus
   inner join kysely ky on ky.koulutustoimija = k.ytunnus;
 
