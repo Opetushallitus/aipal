@@ -14,8 +14,8 @@
 
 'use strict';
 
-angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta'])
-  
+angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'yhteiset.palvelut.ilmoitus'])
+
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/kyselyt/:kyselyid/kyselykerta/vastaajatunnus/:kyselykertaid', {
@@ -25,8 +25,8 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       });
   }])
 
-  .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope',
-    function(Rahoitusmuoto, Vastaajatunnus, $modal, $routeParams, $scope) {
+  .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n',
+    function(Rahoitusmuoto, Vastaajatunnus, $modal, $routeParams, $scope, ilmoitus, i18n) {
       $scope.luoTunnuksiaDialogi = function() {
         var kyselykertaId = $routeParams.kyselykertaid;
 
@@ -46,6 +46,9 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
               tunnus.new = true;
               $scope.tulos.unshift(tunnus);
             });
+            ilmoitus.onnistuminen(i18n.hae('vastaajatunnus.tallennus_onnistui'));
+          }, function() {
+            ilmoitus.virhe(i18n.hae('vastaajatunnus.tallennus_epaonnistui'));
           });
         });
       };
