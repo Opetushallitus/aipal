@@ -18,7 +18,7 @@
         </accordion-heading>
 
         <div class="panel-tools-content">
-            <a ng-href="#/kyselyt/{{kysely.kyselyid}}" class="button left button-with-icon edit-icon-white" title="{{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}">
+            <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}" class="button left button-with-icon edit-icon-white" title="{{kysely.kyselyid}} {{kysely | lokalisoiKentta:'nimi'}}">
                 {{i18n.kysely.muokkaa}}
             </a>
             <button class="button left button-with-icon add-icon-white e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">{{i18n.kyselykerta.uusi_kyselykerta}}</button>
