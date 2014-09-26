@@ -45,7 +45,8 @@ lopuksi. Soveltuu yksinkertaisiin testitapauksiin."
         _ (alusta-korma! asetukset)
         crout (palvelin/app asetukset)]
     (-> (peridot/session crout)
-      (mock-request-uid url method "T-1001" params))))
+      (mock-request-uid url method "T-1001" params)
+      :response)))
 
 (defn json-find
   "Etsii haluttua avain-arvo paria vastaavaa osumaa json-rakenteesta.
