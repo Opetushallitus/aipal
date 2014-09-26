@@ -123,12 +123,15 @@ angular.module('aipal', [
   })
 
   .constant('datepickerConfig', {
-    dayFormat: 'd',
-    monthFormat: 'MMMM',
-    yearFormat: 'yyyy',
-    dayHeaderFormat: 'EEE',
-    dayTitleFormat: 'MMMM yyyy',
-    monthTitleFormat: 'yyyy',
+    formatDay: 'd',
+    formatMonth: 'MMMM',
+    formatYear: 'yyyy',
+    formatDayHeader: 'EEE',
+    formatDayTitle: 'MMMM yyyy',
+    formatMonthTitle: 'yyyy',
+    datepickerMode: 'day',
+    minMode: 'day',
+    maxMode: 'year',
     showWeeks: false,
     startingDay: 1,
     yearRange: 20,
