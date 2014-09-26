@@ -5,7 +5,7 @@
     [aipal.sql.test-util :refer :all]
     [aipal.sql.test-data-util :refer :all]
     [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
-    [aipal.rest-api.rest-util :refer [rest-kutsu json-find]]
+    [aipal.rest-api.rest-util :refer [rest-kutsu body-json]]
     )
   (:use clojure.test))
 
@@ -16,12 +16,13 @@
     (let [response (rest-kutsu "/api/kyselykerta" :get {})]
       (is (= (:status response) 200)))))
 
-(deftest ^:integraatio kyselykertojen-haku
-  (testing "kyselykertojen hakurajapinta vastaa"
+(deftest ^:integraatio kyselykertojen-haku-id
+  (testing "kyselykertojen hakurajapinta suodattaa kyselykerran ID:llä"
     (let [tutkinto (lisaa-tutkinto!)
           rahoitusmuotoid 1 ; koodistodata
           kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)
           kyselykerta (lisaa-kyselykerta!)]
       (let [response (rest-kutsu (str "/api/kyselykerta/" (:kyselykertaid kyselykerta)) :get {})]
         (is (= (:status response) 200))
-        (is (true? (json-find  (:body response) :kyselykertaid (:kyselykertaid kyselykerta))))))))
+        (is (= (:kyselykertaid (first (body-json response)))
+               (:kyselykertaid kyselykerta)))))))

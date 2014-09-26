@@ -48,11 +48,5 @@ lopuksi. Soveltuu yksinkertaisiin testitapauksiin."
       (mock-request-uid url method "T-1001" params)
       :response)))
 
-(defn json-find
-  "Etsii haluttua avain-arvo paria vastaavaa osumaa json-rakenteesta.
-JSON-rakenne on joko map tai lista mappeja."
-  [json-str avain arvo]
-  (let [s (cheshire/parse-string json-str true)]
-    (or (and (map? s)
-             (= (get s avain) arvo))
-        (some #(= arvo (get % avain)) s))))
+(defn body-json [response]
+  (cheshire/parse-string (:body response) true))

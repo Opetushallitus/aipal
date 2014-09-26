@@ -4,7 +4,7 @@
             [aipal.sql.test-util :refer :all]
             [aipal.sql.test-data-util :refer :all]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus-arkisto]
-            [aipal.rest-api.rest-util :refer [rest-kutsu json-find]]))
+            [aipal.rest-api.rest-util :refer [rest-kutsu body-json]]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -30,4 +30,5 @@
         (is (= (:status tunnukseton) 200))
         (is (= (:status tunnuksellinen) 200))
         (is (= "[]" (:body tunnukseton)))
-        (is (json-find (:body tunnuksellinen) :kyselykertaid (:kyselykertaid kyselykerta)))))))
+        (is (= (:kyselykertaid (first (body-json tunnuksellinen)))
+               (:kyselykertaid kyselykerta)))))))
