@@ -1,0 +1,48 @@
+/*
+ * AngularJS-Toaster
+ * Version 0.3
+ * OPH style overrides
+*/
+
+div#toast-container{
+
+  button:hover{
+    background-color: transparent;
+  }
+
+  .toast {
+    opacity: 0.92;
+    width: 500px;
+    border-radius: 0px;
+    font-weight: 300;
+    font-size: 1.3em;
+  }
+
+  .toast-close-button{
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .toast.ng-enter,
+  .toast.ng-leave{
+    -webkit-transition: all 200ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
+    -moz-transition: all 200ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
+    -o-transition: all 200ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
+    transition: all 200ms cubic-bezier(0.455, 0.030, 0.515, 0.955); /* easeInOutQuad */
+
+    -webkit-transition-timing-function: cubic-bezier(0.455, 0.030, 0.515, 0.955);
+    -moz-transition-timing-function: cubic-bezier(0.455, 0.030, 0.515, 0.955);
+    -o-transition-timing-function: cubic-bezier(0.455, 0.030, 0.515, 0.955);
+    transition-timing-function: cubic-bezier(0.455, 0.030, 0.515, 0.955); /* easeInOutQuad */
+  }
+
+  .toast.ng-enter.ng-enter-active,
+  .toast.ng-leave {
+    opacity: 0.92;
+  }
+
+  .toast.ng-leave.ng-leave-active,
+  .toast.ng-enter {
+    opacity: 0;
+  }
+}
