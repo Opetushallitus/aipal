@@ -1,49 +1,73 @@
 <h1>Kysely</h1>
 
-<h3>Kyselyn nimi (näkyy vastaajalle)</h3>
-<input type="text" ng-model="kysely.nimi_fi" />
+<form role="form">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="kyselyn_nimi">Kyselyn nimi (näkyy vastaajalle)</label>
+                <input type="text" class="form-control" ng-model="kysely.nimi_fi" id="kyselyn_nimi"/>
+            </div>
 
-<h3>Kyselyn kuvaus (näkyy vastaajalle)</h3>
-<input type="text" ng-model="kysely.selite_fi" />
+            <div class="form-group">
+                <label for="kyselyn_kuvaus">Kyselyn kuvaus (näkyy vastaajalle)</label>
+                <input type="text" class="form-control" ng-model="kysely.selite_fi" id="kyselyn_kuvaus"/>
+            </div>
+        </div>
+    </div>
 
-<h3>Voimassa</h3>
+    <h3>Voimassa</h3>
 
-<pvm-valitsin
-        otsikko="{{i18n.yleiset.alkaen}}"
-        oletus-pvm="kysely.voimassa_alkupvm"
-        valittu-pvm="kysely.voimassa_alkupvm"
-        ng-model="kysely.voimassa_alkupvm"
-        pakollinen="true">
-</pvm-valitsin>
-<pvm-valitsin
-        otsikko="{{i18n.yleiset.asti}}"
-        oletus-pvm="kysely.voimassa_loppupvm"
-        valittu-pvm="kysely.voimassa_loppupvm"
-        ng-model="kysely.voimassa_loppupvm"
-        pakollinen="false">
-</pvm-valitsin>
+    <pvm-valitsin
+            otsikko="{{i18n.yleiset.alkaen}}"
+            oletus-pvm="kysely.voimassa_alkupvm"
+            valittu-pvm="kysely.voimassa_alkupvm"
+            ng-model="kysely.voimassa_alkupvm"
+            pakollinen="true">
+    </pvm-valitsin>
+    <pvm-valitsin
+            otsikko="{{i18n.yleiset.asti}}"
+            oletus-pvm="kysely.voimassa_loppupvm"
+            valittu-pvm="kysely.voimassa_loppupvm"
+            ng-model="kysely.voimassa_loppupvm"
+            pakollinen="false">
+    </pvm-valitsin>
 
-<popup-ikkuna nayta-popup="naytaLisaaKyselyPohjaPopup">
-  <h2>{{i18n.kyselypohja.valinta}}</h2>
+    <popup-ikkuna nayta-popup="naytaLisaaKyselyPohjaPopup">
+        <h2>{{i18n.kyselypohja.valinta}}</h2>
 
-  <p>{{i18n.kyselypohja.valinta_ohjeistus}}</p>
+        <p>{{i18n.kyselypohja.valinta_ohjeistus}}</p>
 
-  <select ng-model="kyselypohjaId" ng-options="pohja.kyselypohjaid as (pohja | lokalisoiKentta:'nimi') for pohja in kyselypohjat"></select>
+        <select ng-model="kyselypohjaId"
+                ng-options="pohja.kyselypohjaid as (pohja | lokalisoiKentta:'nimi') for pohja in kyselypohjat"></select>
 
-  <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselypohja(kyselypohjaId)" ng-disabled="!kyselypohjaId">{{i18n.kyselypohja.lisaa_valittu}}</button>
-</popup-ikkuna>
+        <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselypohja(kyselypohjaId)"
+                ng-disabled="!kyselypohjaId">{{i18n.kyselypohja.lisaa_valittu}}
+        </button>
+    </popup-ikkuna>
 
-<div class="kysymysryhma" ng-repeat="kysymysryhma in kysely.kysymysryhmat">
-  <h1>{{kysymysryhma | lokalisoiKentta:'nimi' }}</h1>
+    <accordion close-others="true">
+        <accordion-group ng-repeat="kysymysryhma in kysely.kysymysryhmat" is-open="group.open">
+            <accordion-heading>
+                {{kysymysryhma | lokalisoiKentta:'nimi' }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': group.open, 'glyphicon-chevron-right': !group.open}"></i>
+            </accordion-heading>
+            <ul>
+                <li ng-repeat="kysymys in kysymysryhma.kysymys">
+                    <span ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}}
+                        <a ng-click="poistaKysymys(kysymys)" ng-if="kysymys.poistettava && !kysymys.poistettu">[Poista]</a>
+                        <a ng-click="palautaKysymys(kysymys)" ng-if="kysymys.poistettu">[Palauta]</a>
+                    </span>
+                </li>
+            </ul>
+        </accordion-group>
+    </accordion>
 
-  <div ng-repeat="kysymys in kysymysryhma.kysymys">
-    <h2 ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}} <a ng-click="poistaKysymys(kysymys)" ng-if="kysymys.poistettava && !kysymys.poistettu">[Poista]</a><a ng-click="palautaKysymys(kysymys)" ng-if="kysymys.poistettu">[Palauta]</a></h2>
-  </div>
-</div>
-
-<div>
-  <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselyPohjaDialog()">{{i18n.kysely.lisaa_kyselypohja}}</button>
-</div>
-<div>
-  <button class="button" ng-click="tallenna(kysely)">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
-</div>
+    <div>
+        <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselyPohjaDialog()">
+            {{i18n.kysely.lisaa_kyselypohja}}
+        </button>
+    </div>
+    <div>
+        <button class="button" ng-click="tallenna(kysely)">{{i18n.yleiset.tallenna}}&nbsp;<span
+                class="glyphicon glyphicon-floppy-disk"></span></button>
+    </div>
+</form>

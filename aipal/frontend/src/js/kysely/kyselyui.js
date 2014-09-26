@@ -84,7 +84,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
     function(Kysely, Kyselypohja, i18n, $routeParams, $route, $scope, ilmoitus,
         $window) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
-
       $scope.tallenna = function(kysely) {
         Kysely.tallenna(kysely, function() {
           $window.location.hash = '/kyselyt';
