@@ -15,16 +15,10 @@
 
 (deftest ^:integraatio vastaajatunnusten-haku-kyselykerralla
   (testing "vastaajatunnusten hakurajapinta suodattaa kyselykerralla"
-    (let [tutkinto (lisaa-tutkinto!)
-          rahoitusmuotoid 1 ; koodistodata
-          kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)
-          kyselykerta (lisaa-kyselykerta!)
-          vastaajatunnus (vastaajatunnus-arkisto/lisaa!
-                           (:kyselykertaid kyselykerta)
-                           rahoitusmuotoid
-                           (:tutkintotunnus tutkinto)
-                           (time/now)
-                           nil)]
+    (let [kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)
+          kyselykerta (lisaa-kyselykerta!)]
+      (vastaajatunnus-arkisto/lisaa! (:kyselykertaid kyselykerta) nil nil
+                                     (time/now) nil)
       (let [tunnuksellinen (rest-kutsu (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta)) :get {})
             tunnukseton (rest-kutsu (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta-ilman-tunnuksia)) :get {})]
         (is (= (:status tunnukseton) 200))
