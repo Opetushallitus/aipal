@@ -4,6 +4,7 @@
     [valip.core :refer [validate]]
     [clj-time.format :refer [formatter formatters parse unparse parse-local-date with-locale]]
     [clj-time.coerce :as time-coerce]
+    [clj-time.core :as time]
     [oph.common.util.util :refer [uusin-muokkausaika]]
     [schema.core :as s] ))
 
@@ -31,11 +32,18 @@
     (catch IllegalArgumentException e
       nil)))
 
+(defn try-parse-local-date-with-tz
+  [f d]
+  (try
+    (time-coerce/to-local-date (time/to-time-zone (parse (formatter f) d) (time/default-time-zone)))
+    (catch IllegalArgumentException e
+      nil)))
+
 (defn parse-iso-date
   [d]
   (when d
     (or
-      (try-parse-local-date "yyyy-MM-dd'T'HH:mm:ss.sssZ" d)
+      (try-parse-local-date-with-tz "yyyy-MM-dd'T'HH:mm:ss.sssZ" d)
       (try-parse-local-date "yyyy-MM-dd" d)
       (try-parse-local-date "dd.MM.yyyy" d)
       (throw (IllegalArgumentException. "Virheellinen pvm formaatti")))))
@@ -74,7 +82,7 @@
        :headers {"Content-Type" "application/json"}}))
   ([data schema]
     (json-response (s/validate (s/maybe schema) data))))
- 
+
 (defn file-download-response
   [data filename content-type]
   {:status 200
@@ -118,4 +126,3 @@
 (defn json-response-nocache
   [data]
   (assoc-in (json-response data 0) [:headers "Cache-control"] "max-age=0"))
- 
