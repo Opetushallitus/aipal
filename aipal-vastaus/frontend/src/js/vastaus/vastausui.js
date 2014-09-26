@@ -62,8 +62,10 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
           sessionStorage.setItem('vastaajaid', data.vastaajaid);
           sessionStorage.setItem('tunnus', $routeParams.tunnus);
           $scope.vastaajaid = data.vastaajaid;
-        }, function() {
-          $location.path('/vastausaika-loppunut');
+        }, function(error) {
+          if (error.status == 403) {
+            $location.path('/vastausaika-loppunut');
+          }
         });
       } else {
         $scope.vastaajaid = parseInt(sessionStorage.getItem('vastaajaid'), 10);
