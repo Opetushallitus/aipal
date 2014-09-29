@@ -55,8 +55,9 @@
 (defn lisaa-vastaajatunnuksia
   [kyselykertaid henkilokohtainen kentat]
   (if henkilokohtainen
-    (for [x (range (:vastaajien_lkm kentat))]
-      (lisaa! kyselykertaid (assoc kentat :vastaajien_lkm 1)))
+    (doall
+      (for [x (range (:vastaajien_lkm kentat))]
+        (lisaa! kyselykertaid (assoc kentat :vastaajien_lkm 1))))
     [(lisaa! kyselykertaid kentat)]))
 
 
