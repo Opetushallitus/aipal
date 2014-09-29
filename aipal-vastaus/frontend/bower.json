@@ -9,6 +9,7 @@
     "angular-resource": "1.2.12",
     "angular-bootstrap": "0.10.0",
     "jquery": "2.1.0",
-    "lodash": "2.4.1"
+    "lodash": "2.4.1",
+    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.9"
   }
 }
