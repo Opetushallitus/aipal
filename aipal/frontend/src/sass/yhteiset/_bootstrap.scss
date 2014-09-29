@@ -24,6 +24,7 @@
   }
 }
 
+/* Datepicker */
 .datepicker-field table button{
   border: 0 !important;
   &:before{
@@ -43,4 +44,36 @@
 
 .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
   float: none;
+}
+
+/* Accordion */
+accordion {
+  .panel-heading {
+    color: inherit !important;
+    background-color: $lightest-gray;
+    border-color: #ddd;
+    padding: 0px;
+    &:hover{
+      background-color: $primary-color;
+    }
+    a.accordion-toggle{
+      padding: 10px;
+      &:hover{
+        color: #ffffff !important;
+      }
+      span{
+        padding-left: 10px;
+      }
+    }
+  }
+
+  h4.panel-title a{
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+
+  .panel-body {
+    padding: 10px;
+  }
 }

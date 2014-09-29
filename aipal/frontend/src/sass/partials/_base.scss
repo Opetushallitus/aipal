@@ -42,6 +42,15 @@ body { display:table; width: 100%; height: 100%;
   float: left;
 }
 
+.removed{
+  color: $darker-gray;
+  text-decoration: line-through;
+}
+
+a{
+  cursor: pointer;
+}
+
 header.etusivu{
   margin-top: -23px;
 }

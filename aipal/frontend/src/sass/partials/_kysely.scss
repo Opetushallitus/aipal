@@ -39,7 +39,11 @@ accordion.kyselyt {
     &:hover{
       background-color: $lightest-gray;
     }
+    a.accordion-toggle:hover {
+      color: #000000 !important;
+    }
   }
+
   .panel+.panel {
     margin-top: 0px;
   }
@@ -60,4 +64,12 @@ accordion.kyselyt {
   .group-active .panel-tools-content {
     background-color: #FFEDF8;
   }
+}
+
+ol.kysymykset li{
+  border-bottom: 1px solid $lightest-gray;
+  padding: 6px 0;
+}
+ol.kysymykset li:last-child{
+  border: 0;
 }
