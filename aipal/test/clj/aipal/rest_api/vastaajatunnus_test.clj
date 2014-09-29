@@ -36,21 +36,3 @@
              [{:kyselykertaid (:kyselykertaid kyselykerta)
                :vastaajien_lkm 7}])))))
 
-(deftest ^:integraatio vastaajatunnusten-lisays-henkilokohtaiset-tunnukset
-  (testing "vastaajatunnuksen lisäys palauttaa kaikkien henkilökohtaisten vastaajatunnuset tiedot"
-    (let [kyselykerta (lisaa-kyselykerta!)
-          response (-> (session)
-                     (peridot/request (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta))
-                                      :request-method :post
-                                      :body (str "{\"vastaajien_lkm\": 3,"
-                                                 "\"henkilokohtainen\": true}"))
-                     :response)]
-      (is (= (:status response) 200))
-      (is (= (map #(select-keys % [:kyselykertaid :vastaajien_lkm])
-                  (body-json response))
-             [{:kyselykertaid (:kyselykertaid kyselykerta)
-               :vastaajien_lkm 1}
-              {:kyselykertaid (:kyselykertaid kyselykerta)
-               :vastaajien_lkm 1}
-              {:kyselykertaid (:kyselykertaid kyselykerta)
-               :vastaajien_lkm 1}])))))

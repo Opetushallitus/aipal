@@ -19,10 +19,9 @@
     [aipal.arkisto.vastaajatunnus :as vastaajatunnus]))
 
 (c/defroutes reitit
-  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid henkilokohtainen & vastaajatunnus]
-    (json-response (vastaajatunnus/lisaa-vastaajatunnuksia
+  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
+    (json-response (vastaajatunnus/lisaa!
                      (Integer/parseInt kyselykertaid)
-                     henkilokohtainen
                      (merge vastaajatunnus {:voimassa_loppupvm (parse-iso-date (:voimassa_loppupvm vastaajatunnus))
                                             :voimassa_alkupvm (parse-iso-date (:voimassa_alkupvm vastaajatunnus))}))))
 
