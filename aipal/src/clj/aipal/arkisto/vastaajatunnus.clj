@@ -56,33 +56,17 @@
     (first (drop-while #(contains? luodut-tunnukset %)
       (take 10000 (repeatedly #(luo-tunnus pituus)))))))
 
-(defn lisaa-vastaajatunnus
+(defn lisaa!
   [kyselykertaid kentat]
-  (->
-    (sql/insert* vastaajatunnus)
+  (sql/insert vastaajatunnus
     (sql/values (merge kentat {:kyselykertaid kyselykertaid
-                               :tunnus (luo-tunnus 13)}))
-    sql/exec))
+                               :tunnus (luo-tunnus 13)}))))
 
 (defn lisaa-vastaajatunnuksia
   [kyselykertaid henkilokohtainen kentat]
   (if henkilokohtainen
     (for [x (range (:vastaajien_lkm kentat))]
-      (lisaa-vastaajatunnus kyselykertaid (assoc kentat :vastaajien_lkm 1)))
-    [(lisaa-vastaajatunnus kyselykertaid kentat)]))
-
-(defn lisaa!
-  "Lisää uuden vastaajatunnuksen tietokantaan"
-  [kyselykertaid rahoitusmuotoid tutkintotunnus voimassa_alkupvm voimassa_loppupvm]
-  (let [t (luo-tunnus 6)]
-    (sql/insert vastaajatunnus
-      (sql/values {:kyselykertaid kyselykertaid
-                   :rahoitusmuotoid rahoitusmuotoid
-                   :tutkintotunnus tutkintotunnus
-                   :voimassa_alkupvm voimassa_alkupvm
-                   :voimassa_loppupvm voimassa_loppupvm
-                   :lukittu false
-                   :vastaajien_lkm 1
-                   :tunnus t}))))
+      (lisaa! kyselykertaid (assoc kentat :vastaajien_lkm 1)))
+    [(lisaa! kyselykertaid kentat)]))
 
 

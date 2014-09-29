@@ -14,11 +14,13 @@
     (let [tutkinto (lisaa-tutkinto!)
           rahoitusmuotoid 1 ; koodistodata
           kyselykerta (lisaa-kyselykerta!)
-          vastaajatunnus (vastaajatunnus-arkisto/lisaa! (:kyselykertaid kyselykerta)
-                           rahoitusmuotoid (:tutkintotunnus tutkinto)
-                           (time/now)
-                           nil
-                           )
+          vastaajatunnus (vastaajatunnus-arkisto/lisaa!
+                           (:kyselykertaid kyselykerta)
+                           {:rahoitusmuotoid rahoitusmuotoid
+                            :tutkintotunnus (:tutkintotunnus tutkinto)
+                            :voimassa_alkupvm (time/now)
+                            :voimassa_loppupvm nil
+                            :vastaajien_lkm 1})
           viimeksi-lisatty (first (vastaajatunnus-arkisto/hae-kaikki))]
       (is (= (:kyselykertaid viimeksi-lisatty) (:kyselykertaid vastaajatunnus)))
       (is (= (:tutkintotunnus viimeksi-lisatty) (:tutkintotunnus vastaajatunnus))))))
@@ -30,11 +32,13 @@
           rahoitusmuotoid 1 ; koodistodata
           kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)
           kyselykerta (lisaa-kyselykerta!)
-          vastaajatunnus (vastaajatunnus-arkisto/lisaa! (:kyselykertaid kyselykerta)
-                           rahoitusmuotoid (:tutkintotunnus tutkinto)
-                           (time/now)
-                           nil
-                           )
+          vastaajatunnus (vastaajatunnus-arkisto/lisaa!
+                           (:kyselykertaid kyselykerta)
+                           {:rahoitusmuotoid rahoitusmuotoid
+                            :tutkintotunnus (:tutkintotunnus tutkinto)
+                            :voimassa_alkupvm (time/now)
+                            :voimassa_loppupvm nil
+                            :vastaajien_lkm 1})
           viimeksi-lisatyt (vastaajatunnus-arkisto/hae-kyselykerralla (:kyselykertaid kyselykerta))
           tyhja (vastaajatunnus-arkisto/hae-kyselykerralla (:kyselykertaid kyselykerta-ilman-tunnuksia))]
       (is (= (count viimeksi-lisatyt) 1))

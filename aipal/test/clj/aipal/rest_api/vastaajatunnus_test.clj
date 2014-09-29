@@ -18,8 +18,7 @@
   (testing "vastaajatunnusten hakurajapinta suodattaa kyselykerralla"
     (let [kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)
           kyselykerta (lisaa-kyselykerta!)]
-      (vastaajatunnus-arkisto/lisaa! (:kyselykertaid kyselykerta) nil nil
-                                     (time/now) nil)
+      (vastaajatunnus-arkisto/lisaa! (:kyselykertaid kyselykerta) {:vastaajien_lkm 1})
       (let [tunnuksellinen (rest-kutsu (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta)) :get {})
             tunnukseton (rest-kutsu (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta-ilman-tunnuksia)) :get {})]
         (is (= (:status tunnukseton) 200))
