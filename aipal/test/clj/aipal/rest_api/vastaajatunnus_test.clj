@@ -1,10 +1,11 @@
 (ns aipal.rest-api.vastaajatunnus-test
   (:require [clojure.test :refer :all]
             [clj-time.core :as time]
+            [peridot.core :as peridot]
             [aipal.sql.test-util :refer :all]
             [aipal.sql.test-data-util :refer :all]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus-arkisto]
-            [aipal.rest-api.rest-util :refer [rest-kutsu body-json]]))
+            [aipal.rest-api.rest-util :refer [rest-kutsu body-json session]]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -26,3 +27,36 @@
         (is (= "[]" (:body tunnukseton)))
         (is (= (:kyselykertaid (first (body-json tunnuksellinen)))
                (:kyselykertaid kyselykerta)))))))
+
+(deftest ^:integraatio vastaajatunnusten-lisays
+  (testing "vastaajatunnuksen lisäys palauttaa lisätyn vastaajatunnuksen tiedot"
+    (let [kyselykerta (lisaa-kyselykerta!)
+          response (-> (session)
+                     (peridot/request (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta))
+                                      :request-method :post
+                                      :body "{\"vastaajien_lkm\": 7}")
+                     :response)]
+      (is (= (:status response) 200))
+      (is (= (map #(select-keys % [:kyselykertaid :vastaajien_lkm])
+                  (body-json response))
+             [{:kyselykertaid (:kyselykertaid kyselykerta)
+               :vastaajien_lkm 7}])))))
+
+(deftest ^:integraatio vastaajatunnusten-lisays-henkilokohtaiset-tunnukset
+  (testing "vastaajatunnuksen lisäys palauttaa kaikkien henkilökohtaisten vastaajatunnuset tiedot"
+    (let [kyselykerta (lisaa-kyselykerta!)
+          response (-> (session)
+                     (peridot/request (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta))
+                                      :request-method :post
+                                      :body (str "{\"vastaajien_lkm\": 3,"
+                                                 "\"henkilokohtainen\": true}"))
+                     :response)]
+      (is (= (:status response) 200))
+      (is (= (map #(select-keys % [:kyselykertaid :vastaajien_lkm])
+                  (body-json response))
+             [{:kyselykertaid (:kyselykertaid kyselykerta)
+               :vastaajien_lkm 1}
+              {:kyselykertaid (:kyselykertaid kyselykerta)
+               :vastaajien_lkm 1}
+              {:kyselykertaid (:kyselykertaid kyselykerta)
+               :vastaajien_lkm 1}])))))

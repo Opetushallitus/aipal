@@ -19,34 +19,30 @@
     (binding [i18n/*locale* testi-locale]
       (f))))
 
-(defn mock-request [app url method params]
-  (with-auth-user
-    #(peridot/request app url
-      :request-method method
-      :headers {"x-xsrf-token" "token"}
-      :cookies {"XSRF-TOKEN" {:value "token"}}
-      :params params)))
-
 (defn mock-request-uid [app url method uid params]
   (peridot/request app url
     :request-method method
     :headers {"x-xsrf-token" "token"
               "uid" uid}
-    :cookies {"XSRF-TOKEN" {:value "token"}}
+    :cookies {"XSRF-TOKEN" {:value "tokenz"}}
     :params params))
+
+(defn session []
+  (let [asetukset (-> oletusasetukset
+                    (assoc-in [:cas-auth-server :enabled] false)
+                    (assoc :development-mode true))]
+    (alusta-korma! asetukset)
+    (-> (peridot/session (palvelin/app asetukset))
+      (peridot/header "uid" testikayttaja-uid)
+      (peridot/content-type "application/json"))))
 
 (defn rest-kutsu
   "Tekee yksinkertaisen simuloidun rest-kutsun. Peridot-sessio suljetaan
 lopuksi. Soveltuu yksinkertaisiin testitapauksiin."
   [url method params]
-  (let [asetukset (-> oletusasetukset
-                    (assoc-in [:cas-auth-server :enabled] false)
-                    (assoc :development-mode true))
-        _ (alusta-korma! asetukset)
-        crout (palvelin/app asetukset)]
-    (-> (peridot/session crout)
-      (mock-request-uid url method "T-1001" params)
-      :response)))
+  (-> (session)
+    (mock-request-uid url method "T-1001" params)
+    :response))
 
 (defn body-json [response]
   (cheshire/parse-string (:body response) true))
