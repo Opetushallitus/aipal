@@ -21,16 +21,6 @@
   "Merkit, joista vastaajatunnus muodostetaan. Ei erikoismerkkejä, koska näistä tulee samalla URL-osoite vastaajan selainta varten."
   "01234567890abcdefghjlkmnopqrstuwvxyzABCDEFGHJLMNOPQRSTUWVXYZ")
 
-
-(defn hae-kaikki
-  "Hae kaikki vastaajatunnukset"
-  []
-  (->
-    (sql/select* vastaajatunnus)
-    (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :voimassa_alkupvm :voimassa_loppupvm)
-    (sql/order :kyselykertaid :DESC)
-    sql/exec))
-
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]

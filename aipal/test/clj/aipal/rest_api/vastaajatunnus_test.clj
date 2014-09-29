@@ -9,11 +9,6 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-(deftest ^:integraatio vastaajatunnusten-haku
-  (testing "vastaajatunnusten hakurajapinta vastaa"
-    (let [response (rest-kutsu "/api/vastaajatunnus" :get {})]
-      (is (= (:status response) 200)))))
-
 (deftest ^:integraatio vastaajatunnusten-haku-kyselykerralla
   (testing "vastaajatunnusten hakurajapinta suodattaa kyselykerralla"
     (let [kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)

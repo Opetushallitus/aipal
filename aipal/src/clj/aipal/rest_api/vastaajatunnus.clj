@@ -19,9 +19,6 @@
     [aipal.arkisto.vastaajatunnus :as vastaajatunnus]))
 
 (c/defroutes reitit
-  (cu/defapi :vastaajatunnus nil :get "/" []
-    (json-response (vastaajatunnus/hae-kaikki)))
-
   (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid henkilokohtainen & vastaajatunnus]
     (json-response (vastaajatunnus/lisaa-vastaajatunnuksia
                      (Integer/parseInt kyselykertaid)
