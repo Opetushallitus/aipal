@@ -6,10 +6,14 @@ values ('OID.AIPAL-E2E', 'AIPAL-E2E', 'Test', 'End-to-End', true);
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values (null, 'YLLAPITAJA', 'OID.AIPAL-E2E', 'true');
 
+-- Testiorganisaatio opetushallituskäyttäjille
+insert into koulutustoimija (ytunnus, nimi_fi, oid )
+  values ('9876543-2', 'Testi-Opetushallitus', '1.2.246.777.888.1111111111');
+
 -- manuaaliseen testaukseen tarkoitetut testikäyttäjät
 
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
-values ('OID.T-1001', 'T-1001', 'Yrjö', 'Ylläpitäjä', true);
+values ('OID.T-1001', 'T-1001', 'Pekka', 'Pääkäyttäjä', true);
 
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
 values ('OID.T-800', 'T-800', 'Arska', 'Katselija', true);
@@ -21,10 +25,10 @@ insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
 values ('OID.T-700', 'T-700', 'Uolevi', 'Katselija', true);
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'YLLAPITAJA', 'OID.T-1001', 'true');
+values ('9876543-2', 'YLLAPITAJA', 'OID.T-1001', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'OPH-KATSELIJA', 'OID.T-800', 'true');
+values ('9876543-2', 'OPH-KATSELIJA', 'OID.T-800', 'true');
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values (null, 'TTK-KATSELIJA', 'OID.T-850', 'true');
