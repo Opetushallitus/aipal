@@ -1,28 +1,19 @@
 (ns aipal.arkisto.vastaajatunnus-sql-test
-  (:require
-    [clj-time.core :as time]
-    [aipal.sql.test-util :refer :all]
-    [aipal.sql.test-data-util :refer :all]
-    [aipal.arkisto.vastaajatunnus :as vastaajatunnus-arkisto]
-    )
-  (:use clojure.test))
+  (:require [clojure.test :refer :all]
+            [clj-time.core :as time]
+            [aipal.sql.test-util :refer :all]
+            [aipal.sql.test-data-util :refer :all]
+            [aipal.arkisto.vastaajatunnus :refer :all]))
 
 (use-fixtures :each tietokanta-fixture)
 
+;; Lisäys testataan implisiittisesti hakujen kautta
+
 (deftest ^:integraatio kyselykerralla-haku
-  (testing "Haku filtteröi oikein kyselykerran perusteella"
-    (let [tutkinto (lisaa-tutkinto!)
-          rahoitusmuotoid 1 ; koodistodata
-          kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)
-          kyselykerta (lisaa-kyselykerta!)
-          vastaajatunnus (vastaajatunnus-arkisto/lisaa!
-                           (:kyselykertaid kyselykerta)
-                           {:rahoitusmuotoid rahoitusmuotoid
-                            :tutkintotunnus (:tutkintotunnus tutkinto)
-                            :voimassa_alkupvm (time/now)
-                            :voimassa_loppupvm nil
-                            :vastaajien_lkm 1})
-          viimeksi-lisatyt (vastaajatunnus-arkisto/hae-kyselykerralla (:kyselykertaid kyselykerta))
-          tyhja (vastaajatunnus-arkisto/hae-kyselykerralla (:kyselykertaid kyselykerta-ilman-tunnuksia))]
-      (is (= (count viimeksi-lisatyt) 1))
-      (is (empty? tyhja)))))
+  (testing "hae-kyselykerralla palauttaa vain annetun kyselykerran vastaajatunnukset."
+    (let [k1 (:kyselykertaid (lisaa-kyselykerta!))
+          k2 (:kyselykertaid (lisaa-kyselykerta!))]
+      (lisaa! k1 {:vastaajien_lkm 1})
+      (lisaa! k2 {:vastaajien_lkm 2})
+      (is (= (map :vastaajien_lkm (hae-kyselykerralla k1))
+             [1])))))
