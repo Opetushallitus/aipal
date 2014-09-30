@@ -58,3 +58,9 @@
       (doall (map lisaa-1! (repeat (:vastaajien_lkm kentat)
                                    (assoc kentat :vastaajien_lkm 1))))
       [(lisaa-1! kentat)])))
+
+(defn lukitse! [kyselykertaid vastaajatunnusid lukitse]
+  (sql/update vastaajatunnus
+    (sql/set-fields {:lukittu lukitse})
+    (sql/where {:kyselykertaid kyselykertaid
+                :vastaajatunnusid vastaajatunnusid})))

@@ -60,6 +60,13 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
       });
 
       $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
+
+      $scope.lukitseTunnus = function(vastaajaTunnusId, lukitse) {
+        Vastaajatunnus.lukitse($routeParams.kyselykertaid, vastaajaTunnusId, lukitse, function(tunnus) {
+          var vanhaTunnus = _.find($scope.tulos, {'vastaajatunnusid': tunnus.vastaajatunnusid});
+          _.assign(vanhaTunnus, tunnus);
+        });
+      };
     }]
   )
 

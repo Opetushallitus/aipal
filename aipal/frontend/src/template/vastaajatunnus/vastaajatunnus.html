@@ -12,6 +12,7 @@
       <th>{{'i18n.vastaajatunnus.vastaajia'|i18n}}</th>
       <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
       <th>{{'i18n.yleiset.rahoitusmuoto'|i18n}}</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +22,10 @@
       <td>{{tunnus.vastaajien_lkm}}</td>
       <td>{{tunnus.vastausten_lkm}}</td>
       <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>
+      <td>
+        <span ng-if="tunnus.lukittu" class="glyphicon glyphicon-lock" style="cursor: pointer" ng-click="lukitseTunnus(tunnus.vastaajatunnusid, false)"></span>
+        <span ng-if="!tunnus.lukittu" class="glyphicon glyphicon-ok" style="cursor: pointer" ng-click="lukitseTunnus(tunnus.vastaajatunnusid, true)"></span>
+      </td>
     </tr>
   </tbody>
 </table>
