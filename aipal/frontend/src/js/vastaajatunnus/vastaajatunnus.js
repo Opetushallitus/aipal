@@ -61,10 +61,9 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
 
       $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
 
-      $scope.lukitseTunnus = function(vastaajaTunnusId, lukitse) {
-        Vastaajatunnus.lukitse($routeParams.kyselykertaid, vastaajaTunnusId, lukitse, function(tunnus) {
-          var vanhaTunnus = _.find($scope.tunnukset, {'vastaajatunnusid': tunnus.vastaajatunnusid});
-          _.assign(vanhaTunnus, tunnus);
+      $scope.lukitseTunnus = function(tunnus, lukitse) {
+        Vastaajatunnus.lukitse($routeParams.kyselykertaid, tunnus.vastaajatunnusid, lukitse, function(uusiTunnus) {
+          _.assign(tunnus, uusiTunnus);
         });
       };
     }]
