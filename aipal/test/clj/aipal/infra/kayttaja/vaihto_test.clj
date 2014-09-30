@@ -47,6 +47,14 @@
         (reset! k *kayttaja*))
       (is (= (:voimassaolevat-roolit @k) :...impersonoidut-roolit...)))))
 
+;; Impersonoinnin aikana voimassaoleva organisaatio = impersonoitavan käyttäjän organisaatio.
+(deftest with-kayttaja-voimassaoleva-organisaatio-impersonointi
+  (let [k (atom nil)]
+    (with-redefs [kayttaja-arkisto/hae-organisaatio {"impersonoitava-oid" "impersonoitu-organisaatio"}]
+      (with-kayttaja "uid" "impersonoitava-oid"
+        (reset! k *kayttaja*))
+      (is (= (:voimassaoleva-organisaatio @k) "impersonoitu-organisaatio")))))
+
 ;; Ilman impersonointia voimassaoleva OID = käyttäjän oma OID.
 (deftest with-kayttaja-voimassaoleva-oid-ei-impersonointia
   (let [k (atom nil)]
@@ -64,6 +72,15 @@
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
       (is (= (:voimassaolevat-roolit @k) :...omat-roolit...)))))
+
+;; Ilman impersonointia voimassaoleva organisaatio = käyttäjän oma organisaatio.
+(deftest with-kayttaja-voimassaoleva-organisaatio-ei-impersonointia
+  (let [k (atom nil)]
+    (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
+                  kayttaja-arkisto/hae-organisaatio {"oid" "organisaatio"}]
+      (with-kayttaja "uid" nil
+        (reset! k *kayttaja*))
+      (is (= (:voimassaoleva-organisaatio @k) "organisaatio")))))
 
 ;; with-kayttaja muodostaa käyttäjän koko nimen.
 (deftest with-kayttaja-nimi
