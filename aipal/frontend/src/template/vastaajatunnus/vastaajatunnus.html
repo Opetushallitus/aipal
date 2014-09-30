@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="tunnus in tulos" ng-class="{voimassa: tunnus.voimassa}">
+    <tr ng-repeat="tunnus in tulos" ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.voimassa}">
       <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
       <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
       <td>{{tunnus.vastaajien_lkm}}</td>
