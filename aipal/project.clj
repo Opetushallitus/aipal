@@ -31,7 +31,7 @@
                   :exclusions [ring]]
                  [cas-single-sign-out "0.1.2"
                   :exclusions [clj-cas-client]]
-                 
+
                  [org.clojure/tools.logging "0.2.6"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-api "1.7.5"]
@@ -57,7 +57,8 @@
                                   [clj-http "0.7.6"]
                                   [ring-mock "0.1.5"]]}
              :uberjar {:main aipal.palvelin
-                       :aot :all}}
+                       :aot :all}
+             :test {:resource-paths ["test-resources"]}}
   :source-paths ["src/clj"]
   :java-source-paths ["src/java"]
   :test-paths ["test/clj"]
