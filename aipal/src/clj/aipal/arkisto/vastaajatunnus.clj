@@ -13,9 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.vastaajatunnus
-  (:require [korma.core :as sql]
-    [clojure.string :as st])
-  (:use [aipal.integraatio.sql.korma]))
+  (:require [clojure.string :as st]
+            [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (def sallitut-url-merkit
   "Merkit, joista vastaajatunnus muodostetaan. Ei erikoismerkkejä, koska näistä tulee samalla URL-osoite vastaajan selainta varten."
@@ -25,10 +25,10 @@
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]
   (->
-    (sql/select* vastaajatunnus)
+    (sql/select* taulut/vastaajatunnus)
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :voimassa_alkupvm :voimassa_loppupvm
                 [(sql/raw "((voimassa_alkupvm IS NULL OR voimassa_alkupvm < now()) AND (voimassa_loppupvm IS NULL OR voimassa_loppupvm >= now()))") :voimassa])
-    (sql/fields [(sql/subselect vastaaja
+    (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
                                :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
@@ -47,14 +47,13 @@
     (first (drop-while #(contains? luodut-tunnukset %)
       (take 10000 (repeatedly #(luo-tunnus pituus)))))))
 
-(defn lisaa! [kyselykertaid kentat]
-  (letfn [(lisaa-1! [v]
-            (sql/insert vastaajatunnus
-              (sql/values (-> v
+(defn lisaa! [vastaajatunnus]
+  (letfn [(lisaa-1! [vastaajatunnus]
+            (sql/insert taulut/vastaajatunnus
+              (sql/values (-> vastaajatunnus
                             (dissoc :henkilokohtainen)
-                            (assoc :kyselykertaid kyselykertaid
-                                   :tunnus (luo-tunnus 13))))))]
-    (if (:henkilokohtainen kentat)
-      (doall (map lisaa-1! (repeat (:vastaajien_lkm kentat)
-                                   (assoc kentat :vastaajien_lkm 1))))
-      [(lisaa-1! kentat)])))
+                            (assoc :tunnus (luo-tunnus 13))))))]
+    (if (:henkilokohtainen vastaajatunnus)
+      (doall (map lisaa-1! (repeat (:vastaajien_lkm vastaajatunnus)
+                                   (assoc vastaajatunnus :vastaajien_lkm 1))))
+      [(lisaa-1! vastaajatunnus)])))

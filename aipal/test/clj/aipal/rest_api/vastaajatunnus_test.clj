@@ -11,16 +11,17 @@
 
 (deftest ^:integraatio vastaajatunnusten-haku-kyselykerralla
   (testing "vastaajatunnusten hakurajapinta suodattaa kyselykerralla"
-    (let [kyselykerta-ilman-tunnuksia (lisaa-kyselykerta!)
-          kyselykerta (lisaa-kyselykerta!)]
-      (vastaajatunnus-arkisto/lisaa! (:kyselykertaid kyselykerta) {:vastaajien_lkm 1})
-      (let [tunnuksellinen (rest-kutsu (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta)) :get {})
-            tunnukseton (rest-kutsu (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta-ilman-tunnuksia)) :get {})]
+    (let [kyselykerta-ilman-tunnuksia (:kyselykertaid (lisaa-kyselykerta!))
+          kyselykerta (:kyselykertaid (lisaa-kyselykerta!))]
+      (vastaajatunnus-arkisto/lisaa! {:kyselykertaid kyselykerta
+                                      :vastaajien_lkm 1})
+      (let [tunnuksellinen (rest-kutsu (str "/api/vastaajatunnus/" kyselykerta) :get {})
+            tunnukseton (rest-kutsu (str "/api/vastaajatunnus/" kyselykerta-ilman-tunnuksia) :get {})]
         (is (= (:status tunnukseton) 200))
         (is (= (:status tunnuksellinen) 200))
         (is (= "[]" (:body tunnukseton)))
         (is (= (:kyselykertaid (first (body-json tunnuksellinen)))
-               (:kyselykertaid kyselykerta)))))))
+               kyselykerta))))))
 
 (deftest ^:integraatio vastaajatunnusten-lisays
   (testing "vastaajatunnuksen lisäys palauttaa lisätyn vastaajatunnuksen tiedot"
