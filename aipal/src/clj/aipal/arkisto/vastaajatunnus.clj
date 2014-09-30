@@ -33,7 +33,7 @@
                    (sql/where {:vastannut true
                                :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
     (sql/where (= :kyselykertaid kyselykertaid))
-    (sql/order :muutettuaika :DESC)
+    (sql/order :luotuaika :DESC)
     sql/exec))
 
 (defn luo-tunnus
