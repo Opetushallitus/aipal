@@ -10,6 +10,7 @@
   (with-redefs [kayttaja-arkisto/hae (constantly {})
                 kayttaja-arkisto/hae-voimassaoleva (constantly {})
                 kayttajaoikeus-arkisto/hae-roolit (constantly [])
+                kayttaja-arkisto/hae-organisaatio (constantly "")
                 with-sql-kayttaja* (fn [_ f] (f))]
     (f)))
 
