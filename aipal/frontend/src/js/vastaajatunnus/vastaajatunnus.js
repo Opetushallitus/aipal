@@ -45,7 +45,7 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
             _.forEach(uudetTunnukset, function(tunnus) {
               tunnus.new = true;
               tunnus.voimassa = true;
-              $scope.tulos.unshift(tunnus);
+              $scope.tunnukset.unshift(tunnus);
             });
             ilmoitus.onnistuminen(i18n.hae('vastaajatunnus.tallennus_onnistui'));
           }, function() {
@@ -59,11 +59,11 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
         $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
       });
 
-      $scope.tulos = Vastaajatunnus.hae($routeParams.kyselykertaid);
+      $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
 
       $scope.lukitseTunnus = function(vastaajaTunnusId, lukitse) {
         Vastaajatunnus.lukitse($routeParams.kyselykertaid, vastaajaTunnusId, lukitse, function(tunnus) {
-          var vanhaTunnus = _.find($scope.tulos, {'vastaajatunnusid': tunnus.vastaajatunnusid});
+          var vanhaTunnus = _.find($scope.tunnukset, {'vastaajatunnusid': tunnus.vastaajatunnusid});
           _.assign(vanhaTunnus, tunnus);
         });
       };
