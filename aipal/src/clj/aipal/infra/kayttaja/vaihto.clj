@@ -18,12 +18,14 @@
   (if-let [k (kayttaja-arkisto/hae-voimassaoleva uid)]
     (let [voimassaoleva-oid (or impersonoitu-oid (:oid k))
           voimassaolevat-roolit (kayttajaoikeus-arkisto/hae-roolit voimassaoleva-oid)
+          voimassaoleva-organisaatio (kayttaja-arkisto/hae-organisaatio voimassaoleva-oid)
           ik (when impersonoitu-oid
                (kayttaja-arkisto/hae impersonoitu-oid))]
       (binding [*kayttaja*
                 (assoc k
                        :voimassaoleva-oid voimassaoleva-oid
                        :voimassaolevat-roolit voimassaolevat-roolit
+                       :voimassaoleva-organisaatio voimassaoleva-organisaatio
                        :nimi (kayttajan-nimi k)
                        :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
         (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))

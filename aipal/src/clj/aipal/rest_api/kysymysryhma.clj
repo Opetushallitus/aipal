@@ -4,7 +4,6 @@
             [aipal.compojure-util :as cu]
             [clojure.tools.logging :as log]
             [aipal.arkisto.kysymysryhma :as arkisto]
-            [aipal.arkisto.kayttaja :as kayttaja]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn jarjesta-alkiot [alkiot]
@@ -75,5 +74,5 @@
                           :selite_fi selite_fi
                           :nimi_sv nimi_sv
                           :selite_sv selite_sv
-                          :koulutustoimija (kayttaja/hae-organisaatio (:voimassaoleva-oid *kayttaja*))}
+                          :koulutustoimija (:voimassaoleva-organisaatio *kayttaja*)}
                          kysymykset)))
