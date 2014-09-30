@@ -29,11 +29,16 @@
           response (-> (session)
                      (peridot/request (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta))
                                       :request-method :post
-                                      :body "{\"vastaajien_lkm\": 7}")
+                                      :body (str "{\"vastaajien_lkm\": 7,"
+                                                 "\"voimassa_alkupvm\": \"2050-12-23\","
+                                                 "\"voimassa_loppupvm\": \"2050-12-25\"}"))
                      :response)]
       (is (= (:status response) 200))
-      (is (= (map #(select-keys % [:kyselykertaid :vastaajien_lkm])
+      (is (= (map #(select-keys % [:kyselykertaid :vastaajien_lkm
+                                   :voimassa_alkupvm :voimassa_loppupvm])
                   (body-json response))
              [{:kyselykertaid (:kyselykertaid kyselykerta)
-               :vastaajien_lkm 7}])))))
+               :vastaajien_lkm 7
+               :voimassa_alkupvm "2050-12-23"
+               :voimassa_loppupvm "2050-12-25"}])))))
 
