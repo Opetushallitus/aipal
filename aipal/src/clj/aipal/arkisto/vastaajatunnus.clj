@@ -24,8 +24,7 @@
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]
-  (->
-    (sql/select* taulut/vastaajatunnus)
+  (sql/select taulut/vastaajatunnus
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :voimassa_alkupvm :voimassa_loppupvm
                 [(sql/raw "((voimassa_alkupvm IS NULL OR voimassa_alkupvm < now()) AND (voimassa_loppupvm IS NULL OR voimassa_loppupvm >= now()))") :voimassa])
     (sql/fields [(sql/subselect taulut/vastaaja
@@ -33,8 +32,7 @@
                    (sql/where {:vastannut true
                                :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
     (sql/where (= :kyselykertaid kyselykertaid))
-    (sql/order :muutettuaika :DESC)
-    sql/exec))
+    (sql/order :muutettuaika :DESC)))
 
 (defn luo-tunnus
   "Luo yksilöllisen tunnuksen. "
