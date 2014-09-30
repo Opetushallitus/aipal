@@ -18,7 +18,7 @@
   (if-let [k (kayttaja-arkisto/hae-voimassaoleva uid)]
     (let [voimassaoleva-oid (or impersonoitu-oid (:oid k))
           voimassaolevat-roolit (kayttajaoikeus-arkisto/hae-roolit voimassaoleva-oid)
-          voimassaoleva-organisaatio (kayttaja-arkisto/hae-organisaatio voimassaoleva-oid)
+          voimassaoleva-organisaatio (some :organisaatio voimassaolevat-roolit)
           ik (when impersonoitu-oid
                (kayttaja-arkisto/hae impersonoitu-oid))]
       (binding [*kayttaja*
