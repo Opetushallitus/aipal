@@ -21,18 +21,28 @@
   "Merkit, joista vastaajatunnus muodostetaan. Ei erikoismerkkejä, koska näistä tulee samalla URL-osoite vastaajan selainta varten."
   "01234567890abcdefghjlkmnopqrstuwvxyzABCDEFGHJLMNOPQRSTUWVXYZ")
 
-(defn hae-kyselykerralla
-  "Hae kyselykerran vastaajatunnukset"
-  [kyselykertaid]
-  (sql/select taulut/vastaajatunnus
+(def kyselykerta-select
+  (-> (sql/select* taulut/vastaajatunnus)
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :voimassa_alkupvm :voimassa_loppupvm
                 [(sql/raw "((voimassa_alkupvm IS NULL OR voimassa_alkupvm < now()) AND (voimassa_loppupvm IS NULL OR voimassa_loppupvm >= now()))") :voimassa])
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
                                :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
-    (sql/where (= :kyselykertaid kyselykertaid))
     (sql/order :muutettuaika :DESC)))
+
+(defn hae-kyselykerralla
+  "Hae kyselykerran vastaajatunnukset"
+  [kyselykertaid]
+  (-> kyselykerta-select
+    (sql/where (= :kyselykertaid kyselykertaid))
+    sql/exec))
+
+(defn hae [id]
+  (-> kyselykerta-select
+    (sql/where {:vastaajatunnusid id})
+    sql/exec
+    first))
 
 (defn luo-tunnus
   "Luo yksilöllisen tunnuksen. "
@@ -46,11 +56,14 @@
       (take 10000 (repeatedly #(luo-tunnus pituus)))))))
 
 (defn lisaa! [vastaajatunnus]
+  {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (letfn [(lisaa-1! [vastaajatunnus]
-            (sql/insert taulut/vastaajatunnus
-              (sql/values (-> vastaajatunnus
-                            (dissoc :henkilokohtainen)
-                            (assoc :tunnus (luo-tunnus 13))))))]
+            (-> (sql/insert taulut/vastaajatunnus
+                  (sql/values (-> vastaajatunnus
+                                (dissoc :henkilokohtainen)
+                                (assoc :tunnus (luo-tunnus 13)))))
+              :vastaajatunnusid
+              hae))]
     (if (:henkilokohtainen vastaajatunnus)
       (doall (map lisaa-1! (repeat (:vastaajien_lkm vastaajatunnus)
                                    (assoc vastaajatunnus :vastaajien_lkm 1))))

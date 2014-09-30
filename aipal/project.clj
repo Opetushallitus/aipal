@@ -55,7 +55,8 @@
                    :dependencies [[org.clojure/tools.namespace "0.2.4"]
                                   [clj-webdriver "0.6.0"]
                                   [clj-http "0.7.6"]
-                                  [ring-mock "0.1.5"]]}
+                                  [ring-mock "0.1.5"]
+                                  [org.clojure/test.check "0.5.9"]]}
              :uberjar {:main aipal.palvelin
                        :aot :all}
              :test {:resource-paths ["test-resources"]}}
