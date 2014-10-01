@@ -44,7 +44,6 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
           Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus, function(uudetTunnukset) {
             _.forEach(uudetTunnukset, function(tunnus) {
               tunnus.new = true;
-              tunnus.voimassa = true;
               $scope.tunnukset.unshift(tunnus);
             });
             ilmoitus.onnistuminen(i18n.hae('vastaajatunnus.tallennus_onnistui'));
