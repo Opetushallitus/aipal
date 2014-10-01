@@ -1,5 +1,9 @@
 <h1>{{i18n.kysymysryhma.uusi}}</h1>
 
+<div ng-if="yllapitaja">
+  <input type="checkbox" ng-model="kysymysryhma.valtakunnallinen"> {{i18n.kysymysryhma.valtakunnallinen}}
+</div>
+
 <h3>{{i18n.kysymysryhma.nimi_fi}} *</h3>
 <input type="text" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
 
