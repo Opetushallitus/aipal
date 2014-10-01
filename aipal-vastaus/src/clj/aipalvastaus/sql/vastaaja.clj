@@ -24,7 +24,7 @@
         (and
           (= :tunnus vastaajatunnus)
           (<= :voimassa_alkupvm (sql/sqlfn now))
-          (or (nil? :voimassa_loppupvm) (>= :voimassa_loppupvm (sql/sqlfn now))))))
+          (or {:voimassa_loppupvm [= nil]} (>= :voimassa_loppupvm (sql/sqlfn now))))))
     first
     :lukittu
     false?))
