@@ -66,3 +66,7 @@
 (defn hae-asetukset
   ([alkuasetukset] (lue-asetukset alkuasetukset Asetukset "aipal.properties"))
   ([] (hae-asetukset oletusasetukset)))
+
+(defn service-path [base-url]
+  (let [path (drop 3 (clojure.string/split base-url #"/"))]
+    (str "/" (clojure.string/join "/" path))))

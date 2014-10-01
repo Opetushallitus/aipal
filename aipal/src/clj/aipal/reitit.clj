@@ -5,6 +5,8 @@
             [compojure.route :as r]
             [stencil.core :as s]
 
+            [aitu.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
+            [aipal.asetukset :refer [service-path]]
             aipal.rest-api.i18n
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
@@ -25,28 +27,33 @@
 
 (defn reitit [asetukset]
   (c/routes
-    (c/GET "/" [] (s/render-file "public/app/index.html" (merge {:base-url (-> asetukset :server :base-url)
-                                                                 :vastaus-base-url (-> asetukset :vastaus-base-url)
-                                                                 :current-user (:nimi *kayttaja*)
-                                                                 :build-id @build-id
-                                                                 :development-mode (pr-str (:development-mode asetukset))}
-                                                                (when-let [cas-url (-> asetukset :cas-auth-server :url)]
-                                                                  {:logout-url (str cas-url "/logout")}))))
+    (c/GET "/" [] {:status 200
+                   :headers {"Content-type" "text/html; charset=utf-8"
+                             "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}
+                   :body (s/render-file
+                           "public/app/index.html"
+                           (merge {:base-url (-> asetukset :server :base-url)
+                                   :vastaus-base-url (-> asetukset :vastaus-base-url)
+                                   :current-user (:nimi *kayttaja*)
+                                   :build-id @build-id
+                                   :development-mode (pr-str (:development-mode asetukset))}
+                                  (when-let [cas-url (-> asetukset :cas-auth-server :url)]
+                                    {:logout-url (str cas-url "/logout")})))})
     (c/GET "/status" [] (s/render-file "status" (assoc (status)
                                                   :asetukset (with-out-str
                                                                (-> asetukset
                                                                    (assoc-in [:db :password] "*****")
                                                                    pprint))
                                                   :build-id @build-id)))
-    (c/context "/api/jslog" [] aipal.rest_api.js-log/reitit)
+    (c/context "/api/jslog" [] (wrap-tarkasta-csrf-token aipal.rest_api.js-log/reitit))
 
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
-    (c/context "/api/kyselykerta" [] aipal.rest-api.kyselykerta/reitit)
-    (c/context "/api/kyselypohja" [] aipal.rest-api.kyselypohja/reitit)
-    (c/context "/api/rahoitusmuoto" [] aipal.rest-api.rahoitusmuoto/reitit)
-    (c/context "/api/raportti/kyselykerta" [] aipal.rest-api.raportti.kyselykerta/reitit)
-    (c/context "/api/kysely" [] aipal.rest-api.kysely/reitit)
-    (c/context "/api/kysymysryhma" [] aipal.rest-api.kysymysryhma/reitit)
-    (c/context "/api/vastaajatunnus" [] aipal.rest-api.vastaajatunnus/reitit)
-    (c/context "/api/kayttaja" [] aipal.rest-api.kayttaja/reitit)
+    (c/context "/api/kyselykerta" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselykerta/reitit))
+    (c/context "/api/kyselypohja" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselypohja/reitit))
+    (c/context "/api/rahoitusmuoto" [] (wrap-tarkasta-csrf-token aipal.rest-api.rahoitusmuoto/reitit))
+    (c/context "/api/raportti/kyselykerta" [] (wrap-tarkasta-csrf-token aipal.rest-api.raportti.kyselykerta/reitit))
+    (c/context "/api/kysely" [] (wrap-tarkasta-csrf-token aipal.rest-api.kysely/reitit))
+    (c/context "/api/kysymysryhma" [] (wrap-tarkasta-csrf-token aipal.rest-api.kysymysryhma/reitit))
+    (c/context "/api/vastaajatunnus" [] (wrap-tarkasta-csrf-token aipal.rest-api.vastaajatunnus/reitit))
+    (c/context "/api/kayttaja" [] (wrap-tarkasta-csrf-token aipal.rest-api.kayttaja/reitit))
     (r/not-found "Not found")))
