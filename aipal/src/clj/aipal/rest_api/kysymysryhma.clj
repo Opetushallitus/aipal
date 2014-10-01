@@ -67,7 +67,7 @@
 
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" []
-    (json-response (arkisto/hae-kysymysryhmat)))
+    (json-response (arkisto/hae-kysymysryhmat (:voimassaoleva-organisaatio *kayttaja*))))
 
   (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv kysymykset]
     (lisaa-kysymysryhma! {:nimi_fi nimi_fi

@@ -16,11 +16,16 @@
   (:require [korma.core :as sql]
             [aipal.integraatio.sql.korma :refer [kysymysryhma kysymys]]))
 
-(defn hae-kysymysryhmat []
-  (sql/select kysymysryhma
-    (sql/fields :nimi_fi :nimi_sv :selite_fi :selite_sv)
-    (sql/order :muutettuaika :desc)
-    (sql/order :kysymysryhmaid :desc)))
+(defn hae-kysymysryhmat [organisaatio]
+  (let [organisaatiosuodatus (fn [query]
+                               (-> query
+                                 (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
+                                 (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
+                                                {:kysymysryhma_organisaatio_view.valtakunnallinen true}))))]
+    (sql/select kysymysryhma
+      (organisaatiosuodatus)
+      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen)
+      (sql/order :muutettuaika :desc))))
 
 (defn lisaa-kysymysryhma! [k]
   (sql/insert kysymysryhma
