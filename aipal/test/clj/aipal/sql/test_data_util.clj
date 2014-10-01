@@ -70,17 +70,10 @@
 (defn lisaa-koulutustoimija!
   ([koulutustoimija]
     (let [t (merge default-koulutustoimija koulutustoimija)]
-      (sql/exec-raw [(str "insert into koulutustoimija("
-                     "ytunnus,"
-                     "nimi_fi "
-                     ")values("
-                     "?,"
-                     "? "
-                     ")")
-                    (map t [:ytunnus :nimi_fi])])
-      t
-      ))
-  ([] lisaa-koulutustoimija! default-koulutustoimija))
+      (sql/insert :koulutustoimija
+        (sql/values t))))
+  ([]
+    (lisaa-koulutustoimija! default-koulutustoimija)))
 
 (defn anna-koulutustoimija!
   "Palauttaa koulutustoimijan kannasta tai lisää uuden"
