@@ -15,7 +15,7 @@
 (ns aipalvastaus.sql.vastaaja
   (:require [korma.core :as sql]))
 
-(defn validoi-vastaajatunnus
+(defn vastaajatunnus-voimassa?
   [vastaajatunnus]
   (->
     (sql/select :vastaajatunnus
@@ -28,6 +28,19 @@
     first
     :lukittu
     false?))
+
+(defn vastaajatunnuksella-vastauskertoja?
+  [vastaajatunnus]
+  (let [tulos (first (sql/select :vastaajatunnus
+                       (sql/fields :vastaajien_lkm [(sql/subselect :vastaaja
+                                                      (sql/aggregate (count :*) :vastaajia)
+                                                      (sql/where {:vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajia])
+                       (sql/where {:tunnus vastaajatunnus})))]
+    (> (:vastaajien_lkm tulos) (:vastaajia tulos))))
+
+(defn validoi-vastaajatunnus
+  [vastaajatunnus]
+  (and (vastaajatunnus-voimassa? vastaajatunnus) (vastaajatunnuksella-vastauskertoja? vastaajatunnus)))
 
 (defn luo-vastaaja!
   [vastaustunnus]
