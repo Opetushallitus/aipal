@@ -4,6 +4,7 @@
             [aipal.compojure-util :as cu]
             [clojure.tools.logging :as log]
             [aipal.arkisto.kysymysryhma :as arkisto]
+            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn jarjesta-alkiot [alkiot]
@@ -69,10 +70,13 @@
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" []
     (json-response (arkisto/hae-kysymysryhmat (:voimassaoleva-organisaatio *kayttaja*))))
 
-  (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv kysymykset]
+  (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset]
     (lisaa-kysymysryhma! {:nimi_fi nimi_fi
                           :selite_fi selite_fi
                           :nimi_sv nimi_sv
                           :selite_sv selite_sv
+                          :valtakunnallinen (if (yllapitaja?)
+                                              (true? valtakunnallinen)
+                                              false)
                           :koulutustoimija (:voimassaoleva-organisaatio *kayttaja*)}
                          kysymykset)))
