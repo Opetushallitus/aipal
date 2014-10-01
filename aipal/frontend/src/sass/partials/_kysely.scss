@@ -69,6 +69,10 @@ accordion.kyselyt {
 .vastaajatunnus-taulukko tr.voimassa {
   background-color: #bea;
 }
+.vastaajatunnus-taulukko tr.lukittu {
+  color: #aaa;
+}
+
 ol.kysymykset li{
   border-bottom: 1px solid $lightest-gray;
   padding: 6px 0;

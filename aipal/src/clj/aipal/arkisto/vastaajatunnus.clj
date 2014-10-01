@@ -29,7 +29,7 @@
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
                                :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
-    (sql/order :muutettuaika :DESC)))
+    (sql/order :luotuaika :DESC)))
 
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
@@ -68,3 +68,9 @@
       (doall (map lisaa-1! (repeat (:vastaajien_lkm vastaajatunnus)
                                    (assoc vastaajatunnus :vastaajien_lkm 1))))
       [(lisaa-1! vastaajatunnus)])))
+
+(defn lukitse! [kyselykertaid vastaajatunnusid lukitse]
+  (sql/update taulut/vastaajatunnus
+    (sql/set-fields {:lukittu lukitse})
+    (sql/where {:kyselykertaid kyselykertaid
+                :vastaajatunnusid vastaajatunnusid})))

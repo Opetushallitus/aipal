@@ -3,7 +3,8 @@
             [oph.common.util.http-util :refer [json-response]]
             [aipal.compojure-util :as cu]
             [clojure.tools.logging :as log]
-            [aipal.arkisto.kysymysryhma :as arkisto]))
+            [aipal.arkisto.kysymysryhma :as arkisto]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn jarjesta-alkiot [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))
@@ -72,5 +73,6 @@
     (lisaa-kysymysryhma! {:nimi_fi nimi_fi
                           :selite_fi selite_fi
                           :nimi_sv nimi_sv
-                          :selite_sv selite_sv}
+                          :selite_sv selite_sv
+                          :koulutustoimija (:voimassaoleva-organisaatio *kayttaja*)}
                          kysymykset)))

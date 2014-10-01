@@ -12,15 +12,20 @@
       <th>{{'i18n.vastaajatunnus.vastaajia'|i18n}}</th>
       <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
       <th>{{'i18n.yleiset.rahoitusmuoto'|i18n}}</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="tunnus in tulos" ng-class="{voimassa: tunnus.voimassa}">
+    <tr ng-repeat="tunnus in tunnukset" ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.voimassa}">
       <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
       <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
       <td>{{tunnus.vastaajien_lkm}}</td>
       <td>{{tunnus.vastausten_lkm}}</td>
       <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>
+      <td>
+        <span ng-if="tunnus.lukittu" class="glyphicon glyphicon-lock" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, false)"></span>
+        <span ng-if="!tunnus.lukittu" class="glyphicon glyphicon-ok" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, true)"></span>
+      </td>
     </tr>
   </tbody>
 </table>

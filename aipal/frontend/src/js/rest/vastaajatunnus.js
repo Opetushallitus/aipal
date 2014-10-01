@@ -26,6 +26,10 @@ angular.module('rest.vastaajatunnus', ['ngResource'])
         method: 'POST',
         url: 'api/vastaajatunnus/:kyselykertaid',
         isArray: true
+      },
+      lukitse: {
+        method: 'POST',
+        url: 'api/vastaajatunnus/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse'
       }
     });
 
@@ -35,6 +39,9 @@ angular.module('rest.vastaajatunnus', ['ngResource'])
       },
       luoUusia: function(kyselykertaid, vastaajatunnus, successCallback, errorCallback) {
         return resource.luoUusia({kyselykertaid: kyselykertaid}, vastaajatunnus, successCallback, errorCallback);
+      },
+      lukitse: function(kyselykertaid, vastaajatunnusid, lukitse, successCallback, errorCallback) {
+        return resource.lukitse({kyselykertaid: kyselykertaid, vastaajatunnusid: vastaajatunnusid}, {lukitse: lukitse}, successCallback, errorCallback);
       }
     };
   }]);

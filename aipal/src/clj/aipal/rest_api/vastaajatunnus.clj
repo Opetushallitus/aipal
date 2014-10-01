@@ -26,5 +26,8 @@
                        (update-in [:voimassa_loppupvm] parse-iso-date)
                        (update-in [:voimassa_alkupvm] parse-iso-date)))))
 
+  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" [kyselykertaid vastaajatunnusid lukitse]
+    (json-response (vastaajatunnus/lukitse! (Integer/parseInt kyselykertaid) (Integer/parseInt vastaajatunnusid) lukitse)))
+
   (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid" [kyselykertaid]
     (json-response (vastaajatunnus/hae-kyselykerralla (java.lang.Integer/parseInt kyselykertaid)))))
