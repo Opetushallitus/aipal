@@ -44,3 +44,11 @@
                                           {:nimi_fi "b"
                                            :valtakunnallinen true}]))
     (is (= #{"a" "b"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija))))))))
+
+;; tarkastetaan ettei haku duplikoi organisaatiolla olevia valtakunnallisia ryhmiä
+(deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset-oph
+  (let [oph (lisaa-koulutustoimija!  {:ytunnus "1111111-1"})]
+    (sql/insert kysymysryhma (sql/values [{:nimi_fi "a"
+                                           :valtakunnallinen true
+                                           :koulutustoimija (:ytunnus oph)}]))
+    (is (= ["a"] (map :nimi_fi (hae-kysymysryhmat (:ytunnus oph)))))))
