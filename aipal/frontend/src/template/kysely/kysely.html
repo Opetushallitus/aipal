@@ -32,19 +32,6 @@
             pakollinen="false">
     </pvm-valitsin>
 
-    <popup-ikkuna nayta-popup="naytaLisaaKyselyPohjaPopup">
-        <h2>{{i18n.kyselypohja.valinta}}</h2>
-
-        <p>{{i18n.kyselypohja.valinta_ohjeistus}}</p>
-
-        <select ng-model="kyselypohjaId"
-                ng-options="pohja.kyselypohjaid as (pohja | lokalisoiKentta:'nimi') for pohja in kyselypohjat"></select>
-
-        <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselypohja(kyselypohjaId)"
-                ng-disabled="!kyselypohjaId">{{i18n.kyselypohja.lisaa_valittu}}
-        </button>
-    </popup-ikkuna>
-
     <accordion close-others="true">
         <accordion-group ng-repeat="kysymysryhma in kysely.kysymysryhmat" is-open="group.open">
             <accordion-heading>
@@ -61,12 +48,13 @@
     </accordion>
 
     <div>
-        <button class="button button-with-icon add-icon-white" ng-click="lisaaKyselyPohjaDialog()">
+        <button class="button" ng-click="lisaaKyselypohjaModal()">
             {{i18n.kysely.lisaa_kyselypohja}}
+            <span class="glyphicon glyphicon glyphicon-plus"></span>
         </button>
-    </div>
-    <div>
-        <button class="button" ng-click="tallenna(kysely)">{{i18n.yleiset.tallenna}}&nbsp;<span
-                class="glyphicon glyphicon-floppy-disk"></span></button>
+        <button class="button" ng-click="tallenna(kysely)">
+            {{i18n.yleiset.tallenna}}&nbsp;
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+        </button>
     </div>
 </form>

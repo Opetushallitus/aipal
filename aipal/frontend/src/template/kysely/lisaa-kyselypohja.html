@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <a class="pull-right" ng-click="cancel()">X</a>
+    <h4>{{i18n.kyselypohja.valinta}}</h4>
+</div>
+
+<div class="modal-body">
+    <p>{{i18n.kyselypohja.valinta_ohjeistus}}</p>
+
+    <select ng-model="kyselypohjaId"
+            ng-options="pohja.kyselypohjaid as (pohja | lokalisoiKentta:'nimi') for pohja in kyselypohjat"></select>
+</div>
+
+<div class="modal-footer">
+    <small class="pull-right">
+        <pakollisia-kenttia></pakollisia-kenttia>
+    </small>
+    <button class="button pull-left" ng-disabled="!kyselypohjaId" ng-click="tallenna(kyselypohjaId)">
+        {{i18n.kyselypohja.lisaa_valittu}}
+    </button>
+    <button class="btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
+</div>
