@@ -94,6 +94,13 @@
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
 
+(defn kyselykerta-luonti? [kyselyid]
+  (or (yllapitaja?)
+      (kayttajalla-on-jokin-rooleista-kyselyssa?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"}
+        kyselyid)))
+
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
@@ -103,6 +110,7 @@
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
     :kyselykerta-luku kyselykerta-luku?
+    :kyselykerta-luonti kyselykerta-luonti?
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
     :kysymysryhma-luonti kysymysryhma-luonti?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
