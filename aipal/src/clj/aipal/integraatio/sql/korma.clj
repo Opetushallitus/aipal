@@ -30,6 +30,8 @@
   (sql/pk :kysymysryhmaid)
   (sql/has-many kysymys {:fk :kysymysryhmaid}))
 
+(defentity kyselypohja)
+
 (defentity kysely_kysymysryhma)
 
 (defentity kysely_kysymys)
