@@ -19,6 +19,8 @@
 (defn hae-kyselypohjat
   [organisaatio]
   (sql/select :kyselypohja
-    (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.voimassa_alkupvm :kyselypohja.voimassa_loppupvm)
-    (sql/where {:kyselypohja.poistettu nil})
+    (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
+    (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.voimassa_alkupvm :kyselypohja.voimassa_loppupvm :kyselypohja.poistettu)
+    (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
+                   {:kyselypohja_organisaatio_view.valtakunnallinen true}))
     (sql/order :muutettuaika :desc)))
