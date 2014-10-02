@@ -144,6 +144,10 @@ angular.module('aipal', [
     cfpLoadingBarProvider.includeSpinner = false;
   }])
 
+  .run(['$cookies', function($cookies) {
+    $.fn.select2.ajaxDefaults.params.headers = {"x-xsrf-token" : $cookies['XSRF-TOKEN']};
+  }])
+
   .directive('kielenVaihto', ['kieli', function (kieli) {
     return {
       restrict: 'E',
