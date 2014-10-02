@@ -24,7 +24,7 @@
     :request-method method
     :headers {"x-xsrf-token" "token"
               "uid" uid}
-    :cookies {"XSRF-TOKEN" {:value "tokenz"}}
+    :cookies {"XSRF-TOKEN" {:value "token"}}
     :params params))
 
 (defn session []
