@@ -29,8 +29,6 @@
           response (-> (session)
                      (peridot/request (str "/api/vastaajatunnus/" (:kyselykertaid kyselykerta))
                                       :request-method :post
-                                      :headers {"x-xsrf-token" "token"}
-                                      :cookies {"XSRF-TOKEN" {:value "token"}}
                                       :body (str "{\"vastaajien_lkm\": 7,"
                                                  "\"voimassa_alkupvm\": \"2050-12-23\","
                                                  "\"voimassa_loppupvm\": \"2050-12-25\"}"))

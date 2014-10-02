@@ -22,9 +22,7 @@
 (defn mock-request-uid [app url method uid params]
   (peridot/request app url
     :request-method method
-    :headers {"x-xsrf-token" "token"
-              "uid" uid}
-    :cookies {"XSRF-TOKEN" {:value "token"}}
+    :headers {"uid" uid}
     :params params))
 
 (defn session []
@@ -32,8 +30,10 @@
                     (assoc-in [:cas-auth-server :enabled] false)
                     (assoc :development-mode true))]
     (alusta-korma! asetukset)
-    (-> (peridot/session (palvelin/app asetukset))
+    (-> (peridot/session (palvelin/app asetukset)
+                         :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
       (peridot/header "uid" testikayttaja-uid)
+      (peridot/header "x-xsrf-token" "token")
       (peridot/content-type "application/json"))))
 
 (defn rest-kutsu
