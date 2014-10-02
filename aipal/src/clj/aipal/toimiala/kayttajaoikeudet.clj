@@ -35,6 +35,11 @@
   (kayttajalla-on-jokin-rooleista?
     #{"YLLAPITAJA"}))
 
+(defn paakayttaja-tai-vastuukayttaja? []
+  (kayttajalla-on-jokin-rooleista?
+    #{"OPL-PAAKAYTTAJA"
+      "OPL-VASTUUKAYTTAJA"}))
+
 (defn impersonoiva-yllapitaja? []
   (not= (:oid *kayttaja*) (:voimassaoleva-oid *kayttaja*)))
 
@@ -86,9 +91,11 @@
 
 (defn kysymysryhma-luonti? []
   (or (yllapitaja?)
-      (kayttajalla-on-jokin-rooleista?
-        #{"OPL-PAAKAYTTAJA"
-          "OPL-VASTUUKAYTTAJA"})))
+      (paakayttaja-tai-vastuukayttaja?)))
+
+(defn kyselypohja-listaaminen? []
+  (or (yllapitaja?)
+      (paakayttaja-tai-vastuukayttaja?)))
 
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
@@ -101,6 +108,7 @@
     :kyselykerta-luku kyselykerta-luku?
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
     :kysymysryhma-luonti kysymysryhma-luonti?
+    :kyselypohja-listaaminen kyselypohja-listaaminen?
     :impersonointi yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
