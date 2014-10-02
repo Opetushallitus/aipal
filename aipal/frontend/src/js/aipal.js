@@ -145,7 +145,7 @@ angular.module('aipal', [
   }])
 
   .run(['$cookies', function($cookies) {
-    $.fn.select2.ajaxDefaults.params.headers = {"x-xsrf-token" : $cookies['XSRF-TOKEN']};
+    $.fn.select2.ajaxDefaults.params.headers = {'x-xsrf-token' : $cookies['XSRF-TOKEN']};
   }])
 
   .directive('kielenVaihto', ['kieli', function (kieli) {
