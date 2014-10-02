@@ -46,19 +46,17 @@
 (defn kyselyiden-listaaminen?
   "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"
   []
-  (kayttajalla-on-jokin-rooleista?
-    #{"YLLAPITAJA"
-      "OPL-PAAKAYTTAJA"
-      "OPL-VASTUUKAYTTAJA"
-      "OPL-KAYTTAJA"
-      "OPL-KATSELIJA"}))
+  (or (yllapitaja?)
+      (paakayttaja-tai-vastuukayttaja?)
+      (kayttajalla-on-jokin-rooleista?
+        #{"OPL-KAYTTAJA"
+          "OPL-KATSELIJA"})))
 
 (defn kysely-luonti? []
-  (kayttajalla-on-jokin-rooleista?
-    #{"YLLAPITAJA"
-      "OPL-PAAKAYTTAJA"
-      "OPL-VASTUUKAYTTAJA"
-      "OPL-KAYTTAJA"}))
+  (or (yllapitaja?)
+      (paakayttaja-tai-vastuukayttaja?)
+      (kayttajalla-on-jokin-rooleista?
+        #{"OPL-KAYTTAJA"})))
 
 (defn kysely-muokkaus? [kyselyid]
   (or (yllapitaja?)
@@ -83,10 +81,9 @@
 
 (defn kysymysryhma-listaaminen? []
   (or (yllapitaja?)
+      (paakayttaja-tai-vastuukayttaja?)
       (kayttajalla-on-jokin-rooleista?
-        #{"OPL-PAAKAYTTAJA"
-          "OPL-VASTUUKAYTTAJA"
-          "OPL-KAYTTAJA"
+        #{"OPL-KAYTTAJA"
           "OPL-KATSELIJA"})))
 
 (defn kysymysryhma-luonti? []
