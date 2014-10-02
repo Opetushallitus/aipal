@@ -18,11 +18,7 @@
 
 (defn hae-kyselypohjat
   [organisaatio]
-  (->
-    (sql/select* :kyselypohja)
-    (sql/fields :kyselypohjaid :nimi_fi :nimi_sv)
-    (sql/where (and
-                 (< :voimassa_alkupvm (sql/sqlfn :now))
-                 (< (sql/sqlfn :now) (sql/sqlfn :coalesce :voimassa_loppupvm (java.sql.Date. 2900 1 1)))))
-    (sql/order :kyselypohjaid :ASC)
-    (sql/exec)))
+  (sql/select :kyselypohja
+    (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.voimassa_alkupvm :kyselypohja.voimassa_loppupvm)
+    (sql/where {:kyselypohja.poistettu nil})
+    (sql/order :muutettuaika :desc)))
