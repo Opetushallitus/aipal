@@ -16,8 +16,8 @@
   (:import java.sql.Date)
   (:require [korma.core :as sql]))
 
-(defn hae-kaikki
-  []
+(defn hae-kyselypohjat
+  [organisaatio]
   (->
     (sql/select* :kyselypohja)
     (sql/fields :kyselypohjaid :nimi_fi :nimi_sv)

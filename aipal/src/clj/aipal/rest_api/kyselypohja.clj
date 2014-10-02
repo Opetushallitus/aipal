@@ -15,9 +15,10 @@
 (ns aipal.rest-api.kyselypohja
   (:require [compojure.core :as c]
             [korma.db :as db]
-            [aipal.arkisto.kyselypohja :as kyselypohja]
+            [aipal.arkisto.kyselypohja :as arkisto]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
   (c/GET "/" []
-    (db/transaction (json-response (kyselypohja/hae-kaikki)))))
+    (db/transaction (json-response (arkisto/hae-kyselypohjat (:voimassaoleva-organisaatio *kayttaja*))))))
