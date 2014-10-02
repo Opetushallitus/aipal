@@ -14,11 +14,12 @@
 
 (ns aipal.rest-api.kyselypohja
   (:require [compojure.core :as c]
+            [aipal.compojure-util :as cu]
             [korma.db :as db]
             [aipal.arkisto.kyselypohja :as arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
-  (c/GET "/" []
-    (db/transaction (json-response (arkisto/hae-kyselypohjat (:voimassaoleva-organisaatio *kayttaja*))))))
+  (cu/defapi :kyselypohja-listaaminen nil :get "/" []
+    (json-response (arkisto/hae-kyselypohjat (:voimassaoleva-organisaatio *kayttaja*)))))
