@@ -14,7 +14,10 @@
 
 'use strict';
 
-angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vastaajatunnus', 'yhteiset.palvelut.i18n', 'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus'])
+angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
+                                   'rest.vastaajatunnus', 'yhteiset.palvelut.i18n',
+                                   'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus',
+                                   'rest.kysymysryhma'])
 
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider
@@ -124,6 +127,21 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
         });
       };
 
+      $scope.lisaaKysymysryhmaModal = function(kysely) {
+        var modalInstance = $modal.open({
+          templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
+          controller: 'LisaaKysymysryhmaModalController',
+          resolve: {
+            kysely: function () {
+              return kysely;
+            }
+          }
+        });
+        modalInstance.result.then(function (kysymysryhmaid) {
+          $scope.kysymysryhmaid = kysymysryhmaid;
+        });
+      };
+
       $scope.poistaKysymys = function (kysymys) {
         Kysely.poistaKysymys($scope.kysely.kyselyid, kysymys.kysymysid, function () {
           kysymys.poistettu = true;
@@ -155,6 +173,19 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja', 'rest.vast
     $scope.kyselypohjat = kyselypohjat;
     $scope.tallenna = function (kyselypohjaId) {
       $modalInstance.close(kyselypohjaId);
+    };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  }])
+
+  .controller('LisaaKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysely', 'Kysymysryhma', function ($modalInstance, $scope, kysely, Kysymysryhma) {
+    $scope.kysely = kysely;
+    Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
+      $scope.kysymysryhmat = kysymysryhmat;
+    });
+    $scope.tallenna = function (kysymysryhmaid) {
+      $modalInstance.close(kysymysryhmaid);
     };
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');

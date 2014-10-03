@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <a class="pull-right" ng-click="cancel()">X</a>
+  <h4>{{i18n.kysymysryhma.valinta}}</h4>
+</div>
+
+<div class="modal-body">
+  <p>{{i18n.kysymysryhma.valinta_ohjeistus}}</p>
+
+  <select ng-model="kysymysryhmaid" ng-options="ryhma.kysymysryhmaid as (ryhma | lokalisoiKentta:'nimi') for ryhma in kysymysryhmat"></select>
+</div>
+
+<div class="modal-footer">
+  <small class="pull-right">
+    <pakollisia-kenttia></pakollisia-kenttia>
+  </small>
+  <button class="button pull-left" ng-disabled="!kysymysryhmaid" ng-click="tallenna(kysymysryhmaid)">
+    {{i18n.yleiset.lisaa_valittu}}
+  </button>
+  <button class="btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
+</div>
