@@ -20,7 +20,10 @@
   [organisaatio]
   (sql/select :kyselypohja
     (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
-    (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.voimassa_alkupvm :kyselypohja.voimassa_loppupvm :kyselypohja.poistettu)
+    (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv
+                [(sql/raw (str "((voimassa_alkupvm IS NULL OR voimassa_alkupvm <= current_date) AND "
+                               "(voimassa_loppupvm IS NULL OR voimassa_loppupvm >= current_date) AND "
+                               "poistettu is null)")) :voimassa])
     (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
                    {:kyselypohja_organisaatio_view.valtakunnallinen true}))
     (sql/order :muutettuaika :desc)))
