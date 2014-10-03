@@ -52,3 +52,36 @@
                                           :valtakunnallinen true
                                           :koulutustoimija (:ytunnus oph)}]))
     (is (= ["a"] (map :nimi_fi (hae-kyselypohjat (:ytunnus oph)))))))
+
+(deftest ^:integraatio kyselypohjan-voimassaolo-paattynyt
+  (let [koulutustoimija (lisaa-koulutustoimija!)]
+    (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :voimassa_alkupvm (time/local-date 1900 1 1)
+                                          :voimassa_loppupvm (time/minus (time/today) (time/days 1))
+                                          :koulutustoimija (:ytunnus koulutustoimija)}]))
+    (is (= [false] (map :voimassa (hae-kyselypohjat (:ytunnus koulutustoimija)))))))
+
+(deftest ^:integraatio kyselypohja-ei-ole-viela-voimassa
+  (let [koulutustoimija (lisaa-koulutustoimija!)]
+    (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :voimassa_alkupvm (time/plus (time/today) (time/days 1))
+                                          :voimassa_loppupvm (time/local-date 2100 1 1)
+                                          :koulutustoimija (:ytunnus koulutustoimija)}]))
+    (is (= [false] (map :voimassa (hae-kyselypohjat (:ytunnus koulutustoimija)))))))
+
+(deftest ^:integraatio kyselypohja-on-voimassa
+  (let [koulutustoimija (lisaa-koulutustoimija!)]
+    (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :voimassa_alkupvm (time/minus (time/today) (time/days 1))
+                                          :voimassa_loppupvm (time/plus (time/today) (time/days 1))
+                                          :koulutustoimija (:ytunnus koulutustoimija)}]))
+    (is (= [true] (map :voimassa (hae-kyselypohjat (:ytunnus koulutustoimija)))))))
+
+(deftest ^:integraatio kyselypohja-on-poistettu
+  (let [koulutustoimija (lisaa-koulutustoimija!)]
+    (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :voimassa_alkupvm (time/minus (time/today) (time/days 1))
+                                          :voimassa_loppupvm (time/plus (time/today) (time/days 1))
+                                          :poistettu (time/today)
+                                          :koulutustoimija (:ytunnus koulutustoimija)}]))
+    (is (= [false] (map :voimassa (hae-kyselypohjat (:ytunnus koulutustoimija)))))))
