@@ -25,7 +25,7 @@ angular.module('rest.kyselypohja', ['ngResource'])
     });
 
     return {
-      hae: function(successCallback, errorCallback) {
+      haeKaikki: function(successCallback, errorCallback) {
         return resource.haku({}, successCallback, errorCallback);
       }
     };

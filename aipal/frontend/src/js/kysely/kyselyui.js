@@ -96,7 +96,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.haeKyselypohjat = function () {
-        Kyselypohja.hae(function (data) {
+        Kyselypohja.haeKaikki(function (data) {
           $scope.kyselypohjat = data;
         });
       };
