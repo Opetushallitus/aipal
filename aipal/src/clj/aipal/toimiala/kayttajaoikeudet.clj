@@ -31,6 +31,9 @@
                               (kayttajaoikeus-arkisto/hae-kyselylla (->int kyselyid)
                                                                     (:voimassaoleva-oid *kayttaja*))))
 
+(defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
+  (not (empty? (kayttajaoikeus-arkisto/hae-kysymysryhmalla (->int kysymysryhmaid) (:voimassaoleva-organisaatio *kayttaja*)))))
+
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
     #{"YLLAPITAJA"}))
@@ -86,6 +89,10 @@
         #{"OPL-KAYTTAJA"
           "OPL-KATSELIJA"})))
 
+(defn kysymysryhma-luku? [kysymysryhmaid]
+  (or (yllapitaja?)
+      (kayttajalla-on-lukuoikeus-kysymysryhmaan? kysymysryhmaid)))
+
 (defn kysymysryhma-luonti? []
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
@@ -112,6 +119,7 @@
     :kyselykerta-luku kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
+    :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :impersonointi yllapitaja?

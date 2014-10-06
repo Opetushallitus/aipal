@@ -42,6 +42,15 @@
                  [kyselyid kayttaja-oid]]
                 :results))
 
+(defn hae-kysymysryhmalla
+  [kysymysryhmaid organisaatio]
+  (first
+    (sql/select :kysymysryhma_organisaatio_view
+      (sql/fields :koulutustoimija :valtakunnallinen)
+      (sql/where (and {:kysymysryhmaid kysymysryhmaid}
+                      (or {:valtakunnallinen true}
+                          {:koulutustoimija organisaatio}))))))
+
 (defn hae-rooli [rooli kayttaja organisaatio]
   (sql/select rooli-organisaatio
     (sql/where {:rooli rooli
