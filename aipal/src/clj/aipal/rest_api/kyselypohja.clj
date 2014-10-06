@@ -17,9 +17,13 @@
             [aipal.compojure-util :as cu]
             [korma.db :as db]
             [aipal.arkisto.kyselypohja :as arkisto]
+            [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
   (cu/defapi :kyselypohja-listaaminen nil :get "/" []
-    (json-response (arkisto/hae-kyselypohjat (:voimassaoleva-organisaatio *kayttaja*)))))
+    (json-response (arkisto/hae-kyselypohjat (:voimassaoleva-organisaatio *kayttaja*))))
+
+  (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid" [kyselypohjaid]
+    (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))

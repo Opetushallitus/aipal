@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :refer [kysymysryhma kysymys]]))
+            [aipal.integraatio.sql.korma :refer [kysymysryhma kysymys kysymysryhma-kyselypohja]]))
 
 (defn hae-kysymysryhmat [organisaatio]
   (let [organisaatiosuodatus (fn [query]
@@ -43,15 +43,28 @@
   (sql/insert :monivalintavaihtoehto
     (sql/values v)))
 
+(def kysymysryhma-select
+  (->
+    (sql/select* kysymysryhma)
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :taustakysymykset :valtakunnallinen)
+    (sql/with kysymys
+      (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
+      (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
+                  :kysymys.poistettava :kysymys.pakollinen
+                  :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
+                  :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
+      (sql/order :kysymys.jarjestys))))
+
 (defn hae [kysymysryhmaid]
   (first
-    (sql/select kysymysryhma
-      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :taustakysymykset :valtakunnallinen)
-      (sql/with kysymys
-        (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
-        (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
-                    :kysymys.poistettava :kysymys.pakollinen
-                    :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
-                    :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
-        (sql/order :jarjestys))
-      (sql/where {:kysymysryhmaid kysymysryhmaid}))))
+    (-> kysymysryhma-select
+      (sql/where {:kysymysryhmaid kysymysryhmaid})
+      sql/exec)))
+
+(defn hae-kyselypohjasta [kyselypohjaid]
+  (-> kysymysryhma-select
+    (sql/join :inner kysymysryhma-kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
+    (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid)
+    (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid})
+    (sql/order :kysymysryhma_kyselypohja.jarjestys)
+    sql/exec))

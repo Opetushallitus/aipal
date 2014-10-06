@@ -35,7 +35,7 @@
   (not (empty? (kayttajaoikeus-arkisto/hae-kysymysryhmalla (->int kysymysryhmaid) (:voimassaoleva-organisaatio *kayttaja*)))))
 
 (defn kayttajalla-on-lukuoikeus-kyselypohjaan? [kyselypohjaid]
-  (kayttajaoikeus-arkisto/hae-kyselypohjalla (->int kyselypohjaid) (:voimassaoleva-organisaatio *kayttaja*)))
+  (not (empty? (kayttajaoikeus-arkisto/hae-kyselypohjalla (->int kyselypohjaid) (:voimassaoleva-organisaatio *kayttaja*)))))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
