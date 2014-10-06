@@ -79,4 +79,7 @@
                                               (true? valtakunnallinen)
                                               false)
                           :koulutustoimija (:voimassaoleva-organisaatio *kayttaja*)}
-                         kysymykset)))
+                         kysymykset))
+
+  (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
+    (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid)))))
