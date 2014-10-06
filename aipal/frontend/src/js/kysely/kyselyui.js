@@ -82,8 +82,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   ])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$window', '$modal',
-    function (Kysely, Kyselypohja, i18n, $routeParams, $route, $scope, ilmoitus, $window, $modal) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$window', '$modal',
+    function (Kysely, Kyselypohja, Kysymysryhma, i18n, $routeParams, $route, $scope, ilmoitus, $window, $modal) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function (kysely) {
@@ -138,7 +138,14 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           }
         });
         modalInstance.result.then(function (kysymysryhmaid) {
-          $scope.kysymysryhmaid = kysymysryhmaid;
+          Kysymysryhma.hae(kysymysryhmaid)
+          .success(function(kysymysryhma) {
+            $scope.kysely.kysymysryhmat.push(kysymysryhma);
+            ilmoitus.onnistuminen(i18n.hae('kyselykerta.ryhman_haku_onnistui'));
+          })
+          .error(function() {
+            ilmoitus.virhe(i18n.hae('kyselykerta.ryhman_haku_epaonnistui'));
+          });
         });
       };
 

@@ -21,6 +21,9 @@ angular.module('rest.kysymysryhma', ['ngResource'])
         return $http.get('api/kysymysryhma',
                          {params: {nocache: Date.now()}});
       },
+      hae: function(kysymysryhmaid) {
+        return $http.get('api/kysymysryhma/' + kysymysryhmaid);
+      },
       luoUusi: function(kysely){
         return $http.post('api/kysymysryhma', kysely);
       }
