@@ -34,6 +34,9 @@
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
   (not (empty? (kayttajaoikeus-arkisto/hae-kysymysryhmalla (->int kysymysryhmaid) (:voimassaoleva-organisaatio *kayttaja*)))))
 
+(defn kayttajalla-on-lukuoikeus-kyselypohjaan? [kyselypohjaid]
+  (kayttajaoikeus-arkisto/hae-kyselypohjalla (->int kyselypohjaid) (:voimassaoleva-organisaatio *kayttaja*)))
+
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
     #{"YLLAPITAJA"}))
@@ -101,6 +104,10 @@
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
 
+(defn kyselypohja-luku? [kyselypohjaid]
+  (or (yllapitaja?)
+      (kayttajalla-on-lukuoikeus-kyselypohjaan? kyselypohjaid)))
+
 (defn kyselykerta-luonti? [kyselyid]
   (or (yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa?
@@ -122,6 +129,7 @@
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
+    :kyselypohja-luku kyselypohja-luku?
     :impersonointi yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?

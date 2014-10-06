@@ -51,6 +51,15 @@
                       (or {:valtakunnallinen true}
                           {:koulutustoimija organisaatio}))))))
 
+(defn hae-kyselypohjalla
+  [kyselypohjaid organisaatio]
+  (first
+    (sql/select :kyselypohja_organisaatio_view
+      (sql/fields :koulutustoimija :valtakunnallinen)
+      (sql/where (and {:kyselypohjaid kyselypohjaid}
+                      (or {:valtakunnallinen true}
+                          {:koulutustoimija organisaatio}))))))
+
 (defn hae-rooli [rooli kayttaja organisaatio]
   (sql/select rooli-organisaatio
     (sql/where {:rooli rooli
