@@ -17,7 +17,7 @@
             [korma.db :as db]
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
-            [aipal.arkisto.kysely :as kysely]
+            [aipal.arkisto.kysely :as arkisto]
             [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
@@ -26,35 +26,35 @@
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
     (json-response (if (yllapitaja?)
-                     (kysely/hae-kaikki)
-                     (kysely/hae-kaikki (:voimassaoleva-oid *kayttaja*)))))
+                     (arkisto/hae-kaikki)
+                     (arkisto/hae-kaikki (:voimassaoleva-oid *kayttaja*)))))
 
   (cu/defapi :kysely-luonti nil :post "/" []
-    (json-response (kysely/lisaa! {:nimi_fi "Uusi kysely"
+    (json-response (arkisto/lisaa! {:nimi_fi "Uusi kysely"
                                    :koulutustoimija (:voimassaoleva-organisaatio *kayttaja*)})))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
-    (json-response (let [kysely (kysely/hae (Integer/parseInt kyselyid))]
-                     (assoc kysely :kysymysryhmat (kysely/hae-kysymysryhmat (Integer/parseInt kyselyid))))))
+    (json-response (let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
+                     (assoc kysely :kysymysryhmat (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
     (json-response
-      (kysely/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))
+      (arkisto/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid/lisaa-kyselypohja/:kyselypohjaid" [kyselyid kyselypohjaid]
-    (json-response (kysely/lisaa-kyselypohja (Integer/parseInt kyselyid) (Integer/parseInt kyselypohjaid))))
+    (json-response (arkisto/lisaa-kyselypohja (Integer/parseInt kyselyid) (Integer/parseInt kyselypohjaid))))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/kysymysryhmat" [kyselyid]
-    (json-response (kysely/hae-kysymysryhmat (Integer/parseInt kyselyid))))
+    (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))
 
   (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid/poista-kysymys/:kysymysid" [kyselyid kysymysid]
     (json-response
-      (kysely/poista-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
+      (arkisto/poista-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid/palauta-kysymys/:kysymysid" [kyselyid kysymysid]
     (json-response
-      (kysely/palauta-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
+      (arkisto/palauta-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
     (json-response
-      (kysely/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)))))
+      (arkisto/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)))))
