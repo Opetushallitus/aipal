@@ -57,20 +57,5 @@
     (json-response
       (paivita-kysely! (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))
 
-  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid/lisaa-kyselypohja/:kyselypohjaid" [kyselyid kyselypohjaid]
-    (json-response (arkisto/lisaa-kyselypohja (Integer/parseInt kyselyid) (Integer/parseInt kyselypohjaid))))
-
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/kysymysryhmat" [kyselyid]
-    (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))
-
-  (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid/poista-kysymys/:kysymysid" [kyselyid kysymysid]
-    (json-response
-      (arkisto/poista-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
-
-  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid/palauta-kysymys/:kysymysid" [kyselyid kysymysid]
-    (json-response
-      (arkisto/palauta-kysymys (Integer/parseInt kyselyid) (Integer/parseInt kysymysid))))
-
-  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
-    (json-response
-      (arkisto/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)))))
+    (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid)))))

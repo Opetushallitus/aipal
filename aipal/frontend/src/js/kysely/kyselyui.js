@@ -141,14 +141,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.poistaKysymys = function (kysymys) {
-        Kysely.poistaKysymys($scope.kysely.kyselyid, kysymys.kysymysid, function () {
-          kysymys.poistettu = true;
-        });
+        kysymys.poistettu = true;
       };
       $scope.palautaKysymys = function (kysymys) {
-        Kysely.palautaKysymys($scope.kysely.kyselyid, kysymys.kysymysid, function () {
-          kysymys.poistettu = false;
-        });
+        kysymys.poistettu = false;
       };
     }
   ])

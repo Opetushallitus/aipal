@@ -70,35 +70,6 @@
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
 
-(defn poista-kyselypohjan-kysymykset [kyselyid kyselypohjaid]
-  (sql/delete kysely_kysymys
-    (sql/where {:kyselyid kyselyid
-                :kysymysid [in (sql/subselect kysymys
-                                 (sql/fields :kysymysid)
-                                 (sql/join kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
-                                 (sql/where {:kysely_kysymysryhma.kyselypohjaid kyselypohjaid}))]})))
-
-(defn poista-kyselypohjan-kysymysryhmat [kyselyid kyselypohjaid]
-  (sql/delete kysely_kysymysryhma
-    (sql/where {:kyselyid kyselyid
-                :kyselypohjaid kyselypohjaid})))
-
-(defn lisaa-kyselypohja-kysymykset [kyselyid kyselypohjaid]
-  (sql/exec-raw [(str "INSERT INTO kysely_kysymys(kyselyid, kysymysid)"
-                      " SELECT ?, kysymys.kysymysid"
-                      " FROM kysymys INNER JOIN kysely_kysymysryhma ON kysymys.kysymysryhmaid = kysely_kysymysryhma.kysymysryhmaid"
-                      " WHERE kysely_kysymysryhma.kyselyid = ? AND kysely_kysymysryhma.kyselypohjaid = ?") [kyselyid kyselyid kyselypohjaid]] true))
-
-(defn lisaa-kyselypohja [kyselyid kyselypohjaid]
-  (poista-kyselypohjan-kysymykset kyselyid kyselypohjaid)
-  (poista-kyselypohjan-kysymysryhmat kyselyid kyselypohjaid)
-  (first (sql/exec-raw [(str "INSERT INTO kysely_kysymysryhma(kyselyid, kysymysryhmaid, kyselypohjaid) "
-                  "SELECT ?, kysymysryhmaid, kyselypohjaid "
-                  "FROM kysymysryhma_kyselypohja "
-                  "WHERE kyselypohjaid = ?") [kyselyid kyselypohjaid]] true))
-  (first (lisaa-kyselypohja-kysymykset kyselyid kyselypohjaid)))
-
-
 ; -- Kyselyn kautta, tieto poistetuista kysely_kysymys -taulusta
 ; SELECT kysymys.kysymysid,kysymys.poistettava,kysymys.kysymys_fi,kysely_kysymys.kysymysid IS NULL AS poistettu
 ; FROM kysely_kysymysryhma INNER JOIN kysymys ON kysely_kysymysryhma.kysymysryhmaid = kysymys.kysymysryhmaid LEFT JOIN kysely_kysymys ON kysymys.kysymysid = kysely_kysymys.kysymysid AND kysely_kysymys.kyselyid = 275
