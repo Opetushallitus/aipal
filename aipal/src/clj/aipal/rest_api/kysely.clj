@@ -18,7 +18,7 @@
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysely :as arkisto]
-            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
+            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja? kysymysryhma-luku?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.rest-api.kysymysryhma :refer [jarjesta-alkiot]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
@@ -27,8 +27,10 @@
 (defn lisaa-kysymysryhma!
   [kyselyid kysymysryhma]
   (doseq [kysymys (:kysymys kysymysryhma)
-          :when (not (:poistettu kysymys))]
-    (arkisto/lisaa-kysymys! kyselyid (:kysymysid kysymys)))
+          :let [kysymysid (:kysymysid kysymys)]]
+    (if (:poistettu kysymys)
+      (assert (arkisto/poistettava-kysymys? kysymysid))
+      (arkisto/lisaa-kysymys! kyselyid kysymysid)))
   (arkisto/lisaa-kysymysryhma! kyselyid kysymysryhma))
 
 (defn paivita-kysely!
@@ -36,6 +38,7 @@
   (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
   (arkisto/poista-kysymykset! (:kyselyid kysely))
   (doseq [kysymysryhma (jarjesta-alkiot (:kysymysryhmat kysely))]
+    (assert (kysymysryhma-luku? (:kysymysryhmaid kysymysryhma)))
     (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
   (arkisto/muokkaa-kyselya kysely))
 
