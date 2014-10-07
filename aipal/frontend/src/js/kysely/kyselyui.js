@@ -141,6 +141,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           Kysymysryhma.hae(kysymysryhmaid)
           .success(function(kysymysryhma) {
             $scope.kysely.kysymysryhmat.push(kysymysryhma);
+            _.assign($scope.kysely, { kysymysryhmat: _($scope.kysely.kysymysryhmat).uniq('kysymysryhmaid').value() });
             ilmoitus.onnistuminen(i18n.hae('kyselykerta.ryhman_haku_onnistui'));
           })
           .error(function() {
