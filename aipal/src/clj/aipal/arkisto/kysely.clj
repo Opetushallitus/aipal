@@ -98,20 +98,6 @@
     first
     :poistettava))
 
-(defn poista-kysymys [kyselyid kysymysid]
-  (assert (poistettava-kysymys? kysymysid))
-  (->
-    (sql/delete* kysely_kysymys)
-    (sql/where {:kyselyid kyselyid
-                :kysymysid kysymysid})
-    sql/exec))
-
-(defn palauta-kysymys [kyselyid kysymysid]
-  (->
-    (sql/insert* kysely_kysymys)
-    (sql/values {:kyselyid kyselyid :kysymysid kysymysid})
-    sql/exec))
-
 (defn poista-kysymykset!
   [kyselyid]
   (sql/delete kysely_kysymys

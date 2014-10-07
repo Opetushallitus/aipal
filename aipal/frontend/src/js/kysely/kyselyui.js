@@ -95,15 +95,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         });
       };
 
-      $scope.lisaaKyselypohjaModal = function (kysely) {
+      $scope.lisaaKyselypohjaModal = function () {
         var modalInstance = $modal.open({
           templateUrl: 'template/kysely/lisaa-kyselypohja.html',
-          controller: 'LisaaKyselypohjaModalController',
-          resolve: {
-            kysely: function () {
-              return kysely;
-            }
-          }
+          controller: 'LisaaKyselypohjaModalController'
         });
         modalInstance.result.then(function (kyselypohjaId) {
           Kyselypohja.hae(kyselypohjaId,
@@ -117,15 +112,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         });
       };
 
-      $scope.lisaaKysymysryhmaModal = function(kysely) {
+      $scope.lisaaKysymysryhmaModal = function() {
         var modalInstance = $modal.open({
           templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
-          controller: 'LisaaKysymysryhmaModalController',
-          resolve: {
-            kysely: function () {
-              return kysely;
-            }
-          }
+          controller: 'LisaaKysymysryhmaModalController'
         });
         modalInstance.result.then(function (kysymysryhmaid) {
           Kysymysryhma.hae(kysymysryhmaid)
@@ -161,8 +151,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     };
   }])
 
-  .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'kysely', 'Kyselypohja', function ($modalInstance, $scope, kysely, Kyselypohja) {
-    $scope.kysely = kysely;
+  .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'Kyselypohja', function ($modalInstance, $scope, Kyselypohja) {
     Kyselypohja.haeKaikki(function (data) {
       $scope.kyselypohjat = data;
     });
@@ -174,8 +163,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     };
   }])
 
-  .controller('LisaaKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysely', 'Kysymysryhma', function ($modalInstance, $scope, kysely, Kysymysryhma) {
-    $scope.kysely = kysely;
+  .controller('LisaaKysymysryhmaModalController', ['$modalInstance', '$scope', 'Kysymysryhma', function ($modalInstance, $scope, Kysymysryhma) {
     Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
     });
