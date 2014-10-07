@@ -21,12 +21,20 @@ angular.module('rest.kyselypohja', ['ngResource'])
         method: 'GET',
         isArray: true,
         url: 'api/kyselypohja'
+      },
+      idHaku: {
+        method: 'GET',
+        isArray: true,
+        url: 'api/kyselypohja/:id'
       }
     });
 
     return {
       haeKaikki: function(successCallback, errorCallback) {
         return resource.haku({}, successCallback, errorCallback);
+      },
+      hae: function(id, successCallback, errorCallback) {
+        return resource.idHaku({id: id}, successCallback, errorCallback);
       }
     };
   }]);

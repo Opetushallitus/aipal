@@ -116,9 +116,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           }
         });
         modalInstance.result.then(function (kyselypohjaId) {
-          Kysely.lisaaKyselypohja($scope.kysely.kyselyid, kyselypohjaId,
-            function(){
-              $scope.kysely = Kysely.haeId($routeParams.kyselyid);
+          Kyselypohja.hae(kyselypohjaId,
+            function(kysymysryhmat) {
+              _.assign($scope.kysely, { kysymysryhmat: _($scope.kysely.kysymysryhmat.concat(kysymysryhmat)).uniq('kysymysryhmaid').value() });
               ilmoitus.onnistuminen(i18n.hae('kyselykerta.pohjan_lisays_onnistui'));
             },
             function(){
