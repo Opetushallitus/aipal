@@ -140,3 +140,27 @@
     (sql/insert* kysely_kysymys)
     (sql/values {:kyselyid kyselyid :kysymysid kysymysid})
     sql/exec))
+
+(defn poista-kysymykset!
+  [kyselyid]
+  (sql/delete kysely_kysymys
+    (sql/where {:kyselyid kyselyid})))
+
+(defn poista-kysymysryhmat!
+  [kyselyid]
+  (sql/delete kysely_kysymysryhma
+    (sql/where {:kyselyid kyselyid})))
+
+(defn lisaa-kysymysryhma!
+  [kyselyid ryhma]
+  (sql/insert kysely_kysymysryhma
+    (sql/values {:kyselyid kyselyid
+                 :kysymysryhmaid (:kysymysryhmaid ryhma)
+                 :kyselypohjaid (:kyselypohjaid ryhma)
+                 :jarjestys (:jarjestys ryhma)})))
+
+(defn lisaa-kysymys!
+  [kyselyid kysymysid]
+  (sql/insert kysely_kysymys
+    (sql/values {:kyselyid kyselyid
+                 :kysymysid kysymysid})))

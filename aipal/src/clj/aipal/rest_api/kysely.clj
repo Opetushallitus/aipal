@@ -20,8 +20,24 @@
             [aipal.arkisto.kysely :as arkisto]
             [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
+            [aipal.rest-api.kysymysryhma :refer [jarjesta-alkiot]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
+
+(defn lisaa-kysymysryhma!
+  [kyselyid kysymysryhma]
+  (doseq [kysymys (:kysymys kysymysryhma)
+          :when (not (:poistettu kysymys))]
+    (arkisto/lisaa-kysymys! kyselyid (:kysymysid kysymys)))
+  (arkisto/lisaa-kysymysryhma! kyselyid kysymysryhma))
+
+(defn paivita-kysely!
+  [kysely]
+  (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
+  (arkisto/poista-kysymykset! (:kyselyid kysely))
+  (doseq [kysymysryhma (jarjesta-alkiot (:kysymysryhmat kysely))]
+    (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
+  (arkisto/muokkaa-kyselya kysely))
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
@@ -39,7 +55,7 @@
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
     (json-response
-      (arkisto/muokkaa-kyselya (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))
+      (paivita-kysely! (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid/lisaa-kyselypohja/:kyselypohjaid" [kyselyid kyselypohjaid]
     (json-response (arkisto/lisaa-kyselypohja (Integer/parseInt kyselyid) (Integer/parseInt kyselypohjaid))))
