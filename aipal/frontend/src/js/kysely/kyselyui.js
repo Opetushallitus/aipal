@@ -95,13 +95,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         });
       };
 
-      $scope.haeKyselypohjat = function () {
-        Kyselypohja.haeKaikki(function (data) {
-          $scope.kyselypohjat = data;
-        });
-      };
-      $scope.haeKyselypohjat();
-
       $scope.lisaaKyselypohjaModal = function (kysely) {
         var modalInstance = $modal.open({
           templateUrl: 'template/kysely/lisaa-kyselypohja.html',
@@ -109,9 +102,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           resolve: {
             kysely: function () {
               return kysely;
-            },
-            kyselypohjat: function() {
-              return $scope.kyselypohjat;
             }
           }
         });
@@ -175,10 +165,11 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     };
   }])
 
-  .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'kysely', 'kyselypohjat', function ($modalInstance, $scope, kysely, kyselypohjat) {
+  .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'kysely', 'Kyselypohja', function ($modalInstance, $scope, kysely, Kyselypohja) {
     $scope.kysely = kysely;
-    $scope.kyselypohja = {};
-    $scope.kyselypohjat = kyselypohjat;
+    Kyselypohja.haeKaikki(function (data) {
+      $scope.kyselypohjat = data;
+    });
     $scope.tallenna = function (kyselypohjaId) {
       $modalInstance.close(kyselypohjaId);
     };
