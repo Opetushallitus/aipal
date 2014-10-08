@@ -14,65 +14,20 @@
 
 'use strict';
 
-angular.module('rest.kysely', ['ngResource'])
-  .factory('Kysely', ['$resource', function($resource) {
-    var resource = $resource(null, null, {
-      haku: {
-        method: 'GET',
-        isArray: true,
-        url: 'api/kysely',
-        params: {
-          nocache: function() {return Date.now();}
-        },
-        id: 'kyselylistaus'
-      },
-      idHaku: {
-        method: 'GET',
-        url: 'api/kysely/:id'
-      },
-      luoUusi: {
-        method: 'POST',
-        url: 'api/kysely'
-      },
-      tallenna: {
-        method: 'POST',
-        url: 'api/kysely/:id'
-      },
-      lisaaKyselypohja: {
-        method: 'POST',
-        url: 'api/kysely/:kyselyId/lisaa-kyselypohja/:kyselypohjaId'
-      },
-      poistaKysymys: {
-        method: 'DELETE',
-        url: 'api/kysely/:kyselyId/poista-kysymys/:kysymysId'
-      },
-      palautaKysymys: {
-        method: 'POST',
-        url: 'api/kysely/:kyselyId/palauta-kysymys/:kysymysId'
-      }
-    });
-
+angular.module('rest.kysely', [])
+  .factory('Kysely', ['$http', function($http) {
     return {
-      hae: function(successCallback, errorCallback) {
-        return resource.haku({}, successCallback, errorCallback);
+      hae: function() {
+        return $http.get('api/kysely', {params: {nocache: Date.now()}});
       },
-      haeId: function(id, successCallback, errorCallback) {
-        return resource.idHaku({id: id}, successCallback, errorCallback);
+      haeId: function(id) {
+        return $http.get('api/kysely/' + id);
       },
-      luoUusi: function(successCallback, errorCallback) {
-        return resource.luoUusi({}, {}, successCallback, errorCallback);
+      luoUusi: function() {
+        return $http.post('api/kysely');
       },
-      tallenna: function(data, successCallback, errorCallback) {
-        return resource.tallenna({id: data.kyselyid}, data, successCallback, errorCallback);
-      },
-      lisaaKyselypohja: function(kyselyId, kyselypohjaId, successCallback, errorCallback) {
-        return resource.lisaaKyselypohja({kyselyId: kyselyId, kyselypohjaId: kyselypohjaId}, {}, successCallback, errorCallback);
-      },
-      poistaKysymys: function(kyselyId, kysymysId, successCallback, errorCallback) {
-        return resource.poistaKysymys({kyselyId: kyselyId, kysymysId: kysymysId}, {}, successCallback, errorCallback);
-      },
-      palautaKysymys: function(kyselyId, kysymysId, successCallback, errorCallback) {
-        return resource.palautaKysymys({kyselyId: kyselyId, kysymysId: kysymysId}, {}, successCallback, errorCallback);
+      tallenna: function(data) {
+        return $http.post('api/kysely' + data.kyselyid, data);
       }
     };
   }]);

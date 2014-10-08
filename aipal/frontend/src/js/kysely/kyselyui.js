@@ -45,16 +45,22 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.luoUusiKysely = function () {
-        Kysely.luoUusi(function (data) {
+        Kysely.luoUusi()
+        .success(function (data) {
           $location.url('/kyselyt/kysely/' + data.kyselyid);
-        }, function () {
+        })
+        .error(function () {
           ilmoitus.virhe(i18n.hae('kysely.uuden_luonti_epaonnistui'));
         });
       };
 
       $scope.haeKyselyt = function () {
-        Kysely.hae(function (data) {
+        Kysely.hae()
+        .success(function (data) {
           $scope.kyselyt = data;
+        })
+        .error(function() {
+          ilmoitus.virhe(i18n.hae('i18n.yleiset.lataus_epaonnistui'));
         });
       };
       $scope.haeKyselyt();
@@ -92,13 +98,21 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   .controller('KyselyController', [
     'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal',
     function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal) {
-      $scope.kysely = Kysely.haeId($routeParams.kyselyid);
+      Kysely.haeId($routeParams.kyselyid)
+        .success(function(kysely) {
+          $scope.kysely = kysely;
+        })
+        .error(function() {
+          ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
+        });
 
       $scope.tallenna = function (kysely) {
-        Kysely.tallenna(kysely, function () {
+        Kysely.tallenna(kysely)
+        .success(function () {
           $location.path('/kyselyt');
           ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
-        }, function () {
+        })
+        .error(function () {
           ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
         });
       };
@@ -109,13 +123,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           controller: 'LisaaKyselypohjaModalController'
         });
         modalInstance.result.then(function (kyselypohjaId) {
-          Kyselypohja.hae(kyselypohjaId,
-            function(kysymysryhmat) {
-              apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhmat);
-            },
-            function(){
-              ilmoitus.virhe(i18n.hae('kyselykerta.pohjan_lisays_epaonnistui'));
-            });
+          Kyselypohja.hae(kyselypohjaId)
+          .success(function(kysymysryhmat) {
+            apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhmat);
+          })
+          .error(function(){
+            ilmoitus.virhe(i18n.hae('kyselykerta.pohjan_lisays_epaonnistui'));
+          });
         });
       };
 
