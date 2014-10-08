@@ -81,9 +81,17 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     }
   ])
 
+  .factory('kyselyApurit', [function() {
+    return {
+      lisaaUniikitKysymysryhmatKyselyyn: function(kysely, uudet) {
+        _.assign(kysely, { kysymysryhmat: _(kysely.kysymysryhmat.concat(uudet)).uniq('kysymysryhmaid').value() });
+      }
+    };
+  }])
+
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal',
-    function (Kysely, Kyselypohja, Kysymysryhma, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function (kysely) {
@@ -103,8 +111,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         modalInstance.result.then(function (kyselypohjaId) {
           Kyselypohja.hae(kyselypohjaId,
             function(kysymysryhmat) {
-              _.assign($scope.kysely, { kysymysryhmat: _($scope.kysely.kysymysryhmat.concat(kysymysryhmat)).uniq('kysymysryhmaid').value() });
-              ilmoitus.onnistuminen(i18n.hae('kyselykerta.pohjan_lisays_onnistui'));
+              apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhmat);
             },
             function(){
               ilmoitus.virhe(i18n.hae('kyselykerta.pohjan_lisays_epaonnistui'));
@@ -120,9 +127,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         modalInstance.result.then(function (kysymysryhmaid) {
           Kysymysryhma.hae(kysymysryhmaid)
           .success(function(kysymysryhma) {
-            $scope.kysely.kysymysryhmat.push(kysymysryhma);
-            _.assign($scope.kysely, { kysymysryhmat: _($scope.kysely.kysymysryhmat).uniq('kysymysryhmaid').value() });
-            ilmoitus.onnistuminen(i18n.hae('kyselykerta.ryhman_haku_onnistui'));
+            apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhma);
           })
           .error(function() {
             ilmoitus.virhe(i18n.hae('kyselykerta.ryhman_haku_epaonnistui'));
