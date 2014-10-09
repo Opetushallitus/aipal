@@ -50,7 +50,7 @@
         :password "aipal"
         :maximum-pool-size 15
         :minimum-pool-size 3}
-   :cas-auth-server {:url "https://localhost:9443/cas-server-webapp-3.5.2"
+   :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
                      :unsafe-https false
                      :enabled true}
    :ldap-auth-server {:host "localhost"
