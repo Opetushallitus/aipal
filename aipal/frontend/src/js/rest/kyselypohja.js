@@ -18,10 +18,10 @@ angular.module('rest.kyselypohja', [])
   .factory('Kyselypohja', ['$http', function($http) {
     return {
       haeKaikki: function() {
-        return $http.get('api/kyselypohja');
+        return $http.get('api/kyselypohja', {params: {nocache: Date.now()}});
       },
       hae: function(id) {
-        return $http.get('api/kyselypohja/' + id);
+        return $http.get('api/kyselypohja/' + id, {params: {nocache: Date.now()}});
       }
     };
   }]);

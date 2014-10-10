@@ -21,7 +21,7 @@ angular.module('rest.kysely', [])
         return $http.get('api/kysely', {params: {nocache: Date.now()}});
       },
       haeId: function(id) {
-        return $http.get('api/kysely/' + id);
+        return $http.get('api/kysely/' + id, {params: {nocache: Date.now()}});
       },
       luoUusi: function() {
         return $http.post('api/kysely');

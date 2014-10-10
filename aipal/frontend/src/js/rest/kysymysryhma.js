@@ -22,7 +22,7 @@ angular.module('rest.kysymysryhma', ['ngResource'])
                          {params: {nocache: Date.now()}});
       },
       hae: function(kysymysryhmaid) {
-        return $http.get('api/kysymysryhma/' + kysymysryhmaid);
+        return $http.get('api/kysymysryhma/' + kysymysryhmaid, {params: {nocache: Date.now()}});
       },
       luoUusi: function(kysely){
         return $http.post('api/kysymysryhma', kysely);
