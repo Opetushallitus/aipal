@@ -82,13 +82,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   ])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$window', '$modal',
-    function (Kysely, Kyselypohja, Kysymysryhma, i18n, $routeParams, $route, $scope, ilmoitus, $window, $modal) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal',
+    function (Kysely, Kyselypohja, Kysymysryhma, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal) {
       $scope.kysely = Kysely.haeId($routeParams.kyselyid);
 
       $scope.tallenna = function (kysely) {
         Kysely.tallenna(kysely, function () {
-          $window.location.hash = '/kyselyt';
+          $location.path('/kyselyt');
           ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
         }, function () {
           ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
