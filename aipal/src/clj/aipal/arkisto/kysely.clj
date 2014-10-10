@@ -98,6 +98,12 @@
     first
     :poistettava))
 
+(defn hae-kysymysten-poistettavuus
+  [kysymysryhmaid]
+  (sql/select taulut/kysymys
+    (sql/fields :kysymysid :poistettava)
+    (sql/where {:kysymysryhmaid kysymysryhmaid})))
+
 (defn poista-kysymykset!
   [kyselyid]
   (sql/delete taulut/kysely_kysymys

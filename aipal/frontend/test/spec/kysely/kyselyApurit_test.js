@@ -25,7 +25,7 @@ describe('kysely.kyselyui.kyselyApurit', function(){
   }));
 
   describe('lisaaUniikitKysymysryhmatKyselyyn:', function() {
-    it('pitäisi asettaa lisätä kysymysryhmä kysymysryhmat taulukkoon', function(){
+    it('pitäisi lisätä kysymysryhmä kysymysryhmat taulukkoon', function(){
       var kysely = {
         kysymysryhmat: []
       };

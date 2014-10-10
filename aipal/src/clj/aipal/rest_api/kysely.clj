@@ -22,14 +22,18 @@
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.common.util.util :refer [map-by]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn lisaa-kysymysryhma!
   [kyselyid kysymysryhma]
-  (doseq [kysymys (:kysymys kysymysryhma)
-          :let [kysymysid (:kysymysid kysymys)]]
-    (if (:poistettu kysymys)
-      (assert (arkisto/poistettava-kysymys? kysymysid))
+  (let [kayttajan-kysymykset (map-by :kysymysid (:kysymys kysymysryhma))]
+    (doseq [kysymys (arkisto/hae-kysymysten-poistettavuus (:kysymysryhmaid kysymysryhma))
+            :let [kysymysid (:kysymysid kysymys)
+                  kayttajan-kysymys (get kayttajan-kysymykset kysymysid)]
+            :when (not (and (:poistettu kayttajan-kysymys)
+                            (:poistettava kysymys)))]
+      (assert (not (:poistettu kayttajan-kysymys)))
       (arkisto/lisaa-kysymys! kyselyid kysymysid)))
   (arkisto/lisaa-kysymysryhma! kyselyid kysymysryhma))
 
