@@ -27,7 +27,7 @@ angular.module('rest.kysely', [])
         return $http.post('api/kysely');
       },
       tallenna: function(data) {
-        return $http.post('api/kysely' + data.kyselyid, data);
+        return $http.post('api/kysely/' + data.kyselyid, data);
       }
     };
   }]);

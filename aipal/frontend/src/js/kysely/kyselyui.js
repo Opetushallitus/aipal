@@ -60,7 +60,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           $scope.kyselyt = data;
         })
         .error(function() {
-          ilmoitus.virhe(i18n.hae('i18n.yleiset.lataus_epaonnistui'));
+          ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
         });
       };
       $scope.haeKyselyt();
