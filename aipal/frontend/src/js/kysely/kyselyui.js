@@ -34,8 +34,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselytController', [
-    '$location', '$modal', '$scope', 'ilmoitus', 'Kysely', 'Kyselykerta', 'i18n',
-    function ($location, $modal, $scope, ilmoitus, Kysely, Kyselykerta, i18n) {
+    '$location', '$modal', '$scope', 'ilmoitus', 'Kysely', 'Kyselykerta', 'i18n', 'seuranta',
+    function ($location, $modal, $scope, ilmoitus, Kysely, Kyselykerta, i18n, seuranta) {
       $scope.naytaLuonti = false;
 
       $scope.status = {};
@@ -55,7 +55,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.haeKyselyt = function () {
-        Kysely.hae()
+        seuranta.asetaLatausIndikaattori(Kysely.hae(), 'kyselylistaus')
         .success(function (data) {
           $scope.kyselyt = data;
         })
