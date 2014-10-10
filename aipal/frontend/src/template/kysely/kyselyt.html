@@ -27,7 +27,7 @@
         <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
             <h3 class="e2e-kyselykerta-nimi">{{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
             <span class="text-muted">Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span><br />
-            <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/vastaajatunnus/{{kyselykerta.kyselykertaid}}" class="">
+            <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="">
                 {{i18n.vastaajatunnus.hallitse}}
             </a> <br />
             <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}">

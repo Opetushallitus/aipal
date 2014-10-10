@@ -18,7 +18,7 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/kyselyt/:kyselyid/kyselykerta/vastaajatunnus/:kyselykertaid', {
+      .when('/kyselyt/:kyselyid/kyselykerta/:kyselykertaid', {
         controller: 'VastaajatunnusController',
         templateUrl: 'template/vastaajatunnus/vastaajatunnus.html',
         label: 'i18n.kysely.breadcrumb_muokkaa_kyselykertaa'
