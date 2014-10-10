@@ -1,3 +1,3 @@
-<div class="loader" ng-show="latausKaynnissa">{{viesti}}</div>
-<div class="loader-error" ng-show="virhe && !latausKaynnissa"><p>{{virheviesti}}</p><button ng-click="yritaUudelleen()">{{i18n.yleiset.yrita_uudelleen}}</button></div>
+<div class="loader" ng-show="latausKaynnissa" ng-bind="viesti"></div>
+<div class="loader-error" ng-show="virhe && !latausKaynnissa"><p ng-bind="virheviesti"></p><button ng-click="yritaUudelleen()" ng-bind="i18n.yleiset.yrita_uudelleen"></button></div>
 <div ng-hide="latausKaynnissa || virhe" ng-transclude>

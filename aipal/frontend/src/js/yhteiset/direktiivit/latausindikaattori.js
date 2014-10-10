@@ -14,50 +14,40 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.latausindikaattori', ['yhteiset.palvelut.apicallinterceptor', 'yhteiset.palvelut.i18n'])
+angular.module('yhteiset.direktiivit.latausindikaattori', ['yhteiset.palvelut.seuranta', 'yhteiset.palvelut.i18n'])
 
-  .directive('latausIndikaattori', ['apiCallInterceptor', 'i18n', function(apiCallInterceptor, i18n){
+  .directive('latausIndikaattori', ['seuranta', 'i18n', function(seuranta, i18n){
 
-    function tarkastaPyynnonTila(metodiIdt, tarkastusFunktio) {
-      var val = _.all( metodiIdt,
-        function(id) {
-          var pyynto = _.pick(apiCallInterceptor.pyynnot, id);
-          return !_.isEmpty(pyynto) ? _.all(_.values(pyynto), tarkastusFunktio) : true;
-        });
-      return val;
+    function paivitaStatus(id, scope) {
+      var tila = seuranta.haeTila(id);
+      scope.latausKaynnissa = !tila.valmis;
+      scope.virhe = !tila.ok;
     }
 
-    function paivitaStatus(metodiIdt, scope) {
-      var ok = tarkastaPyynnonTila(metodiIdt, function(pyynto) {return pyynto.viimeinenPyyntoOnnistui;});
-      var valmis = tarkastaPyynnonTila(metodiIdt, function(pyynto) {return pyynto.pyyntojaKaynnissa === 0;});
-      scope.latausKaynnissa = !valmis;
-      scope.virhe = !ok;
-    }
-
-    function statusPaivitettyViimeksi(metodiIdt) {
-      return _(apiCallInterceptor.pyynnot).pick(metodiIdt).map(function(pyynto){return pyynto.paivitetty;}).max().value();
+    function statusPaivitettyViimeksi(id) {
+      return seuranta.haePaivitysaika(id);
     }
 
     return {
       scope : {
         viesti: '@',
-        metodiIdt : '@',
+        metodiId : '@',
         virheviesti: '@',
         yritaUudelleen : '&'
       },
       transclude: true,
       templateUrl : 'template/yhteiset/direktiivit/latausindikaattori.html',
       restrict: 'A',
-      link: function(scope, element, attrs) {
-        var idt = scope.$eval(attrs.metodiIdt);
-        paivitaStatus(idt, scope);
+      link: function(scope) {
+        var id = scope.metodiId;
+        paivitaStatus(id, scope);
         scope.i18n = i18n;
 
         scope.$watch(function() {
-          return statusPaivitettyViimeksi(idt);
+          return statusPaivitettyViimeksi(id);
         }, function(paivitetty){
           if(paivitetty) {
-            paivitaStatus(idt, scope);
+            paivitaStatus(id, scope);
           }
         });
       }
