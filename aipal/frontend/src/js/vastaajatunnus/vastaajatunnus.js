@@ -20,7 +20,7 @@ angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ng
     $routeProvider
       .when('/kyselyt/:kyselyid/kyselykerta/:kyselykertaid', {
         controller: 'VastaajatunnusController',
-        templateUrl: 'template/vastaajatunnus/vastaajatunnus.html',
+        templateUrl: 'template/kyselykerta/kyselykerta.html',
         label: 'i18n.kysely.breadcrumb_muokkaa_kyselykertaa'
       });
   }])
