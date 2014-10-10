@@ -128,7 +128,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
             apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhmat);
           })
           .error(function(){
-            ilmoitus.virhe(i18n.hae('kyselykerta.pohjan_lisays_epaonnistui'));
+            ilmoitus.virhe(i18n.hae('kysely.pohjan_haku_epaonnistui'));
           });
         });
       };
@@ -144,7 +144,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
             apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhma);
           })
           .error(function() {
-            ilmoitus.virhe(i18n.hae('kyselykerta.ryhman_haku_epaonnistui'));
+            ilmoitus.virhe(i18n.hae('kysely.ryhman_haku_epaonnistui'));
           });
         });
       };
