@@ -4,7 +4,7 @@
 
 (deftest kysymyksiin-lisataan-jarjestys
   (testing "kysymysten järjestys lisää järjestyksen kysymyksiin"
-    (is (= (api/jarjesta-alkiot [{:kysymys "a"} {:kysymys "b"}])
+    (is (= (api/lisaa-jarjestys [{:kysymys "a"} {:kysymys "b"}])
            [{:kysymys "a" :jarjestys 0} {:kysymys "b" :jarjestys 1}]))))
 
 (deftest kysymyksesta-valitaan-oikeat-kentat

@@ -7,7 +7,7 @@
             [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
-(defn jarjesta-alkiot [alkiot]
+(defn lisaa-jarjestys [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))
 
 (defn valitse-kysymyksen-kentat [kysymys]
@@ -40,7 +40,7 @@
 (defn lisaa-monivalintavaihtoehdot! [vaihtoehdot kysymysid]
   (when (nil? vaihtoehdot)
     (log/error "Kysymyksellä" kysymysid "ei ole monivalintavaihtoehtoja."))
-  (doseq [v (jarjesta-alkiot vaihtoehdot)]
+  (doseq [v (lisaa-jarjestys vaihtoehdot)]
     (-> v
       valitse-vaihtoehdon-kentat
       (assoc :kysymysid kysymysid)
@@ -62,7 +62,7 @@
 
 (defn lisaa-kysymysryhma! [kysymysryhma kysymykset]
   (let [kysymysryhma (arkisto/lisaa-kysymysryhma! kysymysryhma)]
-    (doseq [k (jarjesta-alkiot kysymykset)]
+    (doseq [k (lisaa-jarjestys kysymykset)]
       (lisaa-kysymys! k (:kysymysryhmaid kysymysryhma)))
     (json-response kysymysryhma)))
 

@@ -20,7 +20,7 @@
             [aipal.arkisto.kysely :as arkisto]
             [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja? kysymysryhma-luku?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
-            [aipal.rest-api.kysymysryhma :refer [jarjesta-alkiot]]
+            [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
@@ -37,7 +37,7 @@
   [kysely]
   (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
   (arkisto/poista-kysymykset! (:kyselyid kysely))
-  (doseq [kysymysryhma (jarjesta-alkiot (:kysymysryhmat kysely))]
+  (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
     (assert (kysymysryhma-luku? (:kysymysryhmaid kysymysryhma)))
     (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
   (arkisto/muokkaa-kyselya kysely))
