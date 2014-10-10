@@ -14,27 +14,14 @@
 
 'use strict';
 
-angular.module('rest.kyselypohja', ['ngResource'])
-  .factory('Kyselypohja', ['$resource', function($resource) {
-    var resource = $resource(null, null, {
-      haku: {
-        method: 'GET',
-        isArray: true,
-        url: 'api/kyselypohja'
-      },
-      idHaku: {
-        method: 'GET',
-        isArray: true,
-        url: 'api/kyselypohja/:id'
-      }
-    });
-
+angular.module('rest.kyselypohja', [])
+  .factory('Kyselypohja', ['$http', function($http) {
     return {
-      haeKaikki: function(successCallback, errorCallback) {
-        return resource.haku({}, successCallback, errorCallback);
+      haeKaikki: function() {
+        return $http.get('api/kyselypohja');
       },
-      hae: function(id, successCallback, errorCallback) {
-        return resource.idHaku({id: id}, successCallback, errorCallback);
+      hae: function(id) {
+        return $http.get('api/kyselypohja/' + id);
       }
     };
   }]);

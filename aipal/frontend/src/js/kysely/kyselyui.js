@@ -171,7 +171,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'Kyselypohja', function ($modalInstance, $scope, Kyselypohja) {
-    Kyselypohja.haeKaikki(function (data) {
+    Kyselypohja.haeKaikki()
+    .success(function (data) {
       $scope.kyselypohjat = data;
     });
     $scope.tallenna = function (kyselypohjaId) {
