@@ -13,23 +13,23 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.oppilaitos
-  (:require [korma.core :as sql])
-  (:use [aipal.integraatio.sql.korma]))
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn lisaa!
   [tiedot]
-  (sql/insert oppilaitos
+  (sql/insert taulut/oppilaitos
     (sql/values tiedot)))
 
 (defn paivita!
   [oppilaitoskoodi tiedot]
-  (sql/update oppilaitos
+  (sql/update taulut/oppilaitos
     (sql/set-fields tiedot)
     (sql/where {:oppilaitoskoodi oppilaitoskoodi})))
 
 (defn hae-kaikki
   []
   (->
-    (sql/select* oppilaitos)
+    (sql/select* taulut/oppilaitos)
     (sql/order :oppilaitoskoodi)
     sql/exec))

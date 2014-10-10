@@ -18,14 +18,14 @@
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [clojure.tools.logging :as log]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]])
-  (:use [aipal.integraatio.sql.korma]))
+            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-oikeudet
   ([oid]
     (db/transaction
       (let [kayttaja (kayttaja-arkisto/hae oid)
-            roolit (sql/select rooli-organisaatio
+            roolit (sql/select taulut/rooli-organisaatio
                      (sql/where {:kayttaja oid
                                  :voimassa true})
                      (sql/fields :rooli :organisaatio))]
@@ -61,13 +61,13 @@
                           {:koulutustoimija organisaatio}))))))
 
 (defn hae-rooli [rooli kayttaja organisaatio]
-  (sql/select rooli-organisaatio
+  (sql/select taulut/rooli-organisaatio
     (sql/where {:rooli rooli
                 :kayttaja kayttaja
                 :organisaatio organisaatio})))
 
 (defn hae-roolit [oid]
-  (sql/select rooli-organisaatio
+  (sql/select taulut/rooli-organisaatio
     (sql/fields :rooli :organisaatio)
     (sql/where {:kayttaja oid
                 :voimassa true})))
@@ -79,11 +79,11 @@
   "Merkitään olemassaolevat käyttäjät ja roolit ei-voimassaoleviksi"
   []
   (log/debug "Merkitään olemassaolevat käyttäjät ei-voimassaoleviksi")
-  (sql/update kayttaja
+  (sql/update taulut/kayttaja
     (sql/set-fields {:voimassa false})
     (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]}))
   (log/debug "Merkitään olemassaolevien käyttäjien roolit ei-voimassaoleviksi")
-  (sql/update rooli-organisaatio
+  (sql/update taulut/rooli-organisaatio
     (sql/set-fields {:voimassa false})
     (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]})))
 
@@ -94,12 +94,12 @@
   (if (olemassa? r)
     (do
       (log/debug "Rooli on jo olemassa, päivitetään tiedot")
-      (sql/update rooli-organisaatio
+      (sql/update taulut/rooli-organisaatio
                   (sql/set-fields r)
                   (sql/where {:kayttaja [= (:kayttaja r)]})))
     (do
       (log/debug "Luodaan uusi rooli")
-      (sql/insert rooli-organisaatio (sql/values r)))))
+      (sql/insert taulut/rooli-organisaatio (sql/values r)))))
 
 (defn ^:integration-api paivita-kaikki!
   "Päivittää käyttäjätaulun uusilla käyttäjillä kt."

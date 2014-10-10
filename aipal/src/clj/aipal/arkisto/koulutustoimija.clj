@@ -13,29 +13,30 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.koulutustoimija
-  (:require [korma.core :as sql])
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut])
   (:use [aipal.integraatio.sql.korma]))
 
 (defn lisaa!
   [tiedot]
-  (sql/insert koulutustoimija
+  (sql/insert taulut/koulutustoimija
     (sql/values tiedot)))
 
 (defn paivita!
   [y-tunnus tiedot]
-  (sql/update koulutustoimija
+  (sql/update taulut/koulutustoimija
     (sql/set-fields tiedot)
     (sql/where {:ytunnus y-tunnus})))
 
 (defn hae-kaikki
   []
   (->
-    (sql/select* koulutustoimija)
+    (sql/select* taulut/koulutustoimija)
     (sql/order :ytunnus :DESC)
     sql/exec))
 
 (defn hae-kaikki-joissa-oid
   []
-  (sql/select koulutustoimija
+  (sql/select taulut/koulutustoimija
     (sql/fields :oid :ytunnus)
     (sql/where (not= :oid nil))))

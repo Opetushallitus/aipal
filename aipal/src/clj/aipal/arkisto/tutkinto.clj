@@ -13,21 +13,21 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.tutkinto
-  (:require [korma.core :as sql])
-  (:use [aipal.integraatio.sql.korma]))
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn lisaa!
   [tiedot]
-  (sql/insert tutkinto
+  (sql/insert taulut/tutkinto
     (sql/values tiedot)))
 
 (defn paivita!
   [tutkintotunnus tiedot]
-  (sql/update tutkinto
+  (sql/update taulut/tutkinto
     (sql/set-fields tiedot)
     (sql/where {:tutkintotunnus tutkintotunnus})))
 
 (defn hae-kaikki
   []
-  (sql/select tutkinto
+  (sql/select taulut/tutkinto
     (sql/order :tutkintotunnus)))

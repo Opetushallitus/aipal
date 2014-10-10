@@ -13,21 +13,21 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.opintoala
-  (:require [korma.core :as sql])
-  (:use [aipal.integraatio.sql.korma]))
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn lisaa!
   [tiedot]
-  (sql/insert opintoala
+  (sql/insert taulut/opintoala
     (sql/values tiedot)))
 
 (defn paivita!
   [opintoalatunnus tiedot]
-  (sql/update opintoala
+  (sql/update taulut/opintoala
     (sql/set-fields tiedot)
     (sql/where {:opintoalatunnus opintoalatunnus})))
 
 (defn hae-kaikki
   []
-  (sql/select opintoala
+  (sql/select taulut/opintoala
     (sql/order :opintoalatunnus)))

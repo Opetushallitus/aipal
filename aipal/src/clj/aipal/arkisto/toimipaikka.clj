@@ -13,23 +13,23 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.toimipaikka
-  (:require [korma.core :as sql])
-  (:use [aipal.integraatio.sql.korma]))
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn lisaa!
   [tiedot]
-  (sql/insert toimipaikka
+  (sql/insert taulut/toimipaikka
     (sql/values tiedot)))
 
 (defn paivita!
   [toimipaikkakoodi tiedot]
-  (sql/update toimipaikka
+  (sql/update taulut/toimipaikka
     (sql/set-fields tiedot)
     (sql/where {:toimipaikkakoodi toimipaikkakoodi})))
 
 (defn hae-kaikki
   []
   (->
-    (sql/select* toimipaikka)
+    (sql/select* taulut/toimipaikka)
     (sql/order :toimipaikkakoodi)
     sql/exec))

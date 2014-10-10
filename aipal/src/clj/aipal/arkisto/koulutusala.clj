@@ -13,21 +13,21 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.koulutusala
-  (:require [korma.core :as sql])
-  (:use [aipal.integraatio.sql.korma]))
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn lisaa!
   [tiedot]
-  (sql/insert koulutusala
+  (sql/insert taulut/koulutusala
     (sql/values tiedot)))
 
 (defn paivita!
   [koulutusalatunnus tiedot]
-  (sql/update koulutusala
+  (sql/update taulut/koulutusala
     (sql/set-fields tiedot)
     (sql/where {:koulutusalatunnus koulutusalatunnus})))
 
 (defn hae-kaikki
   []
-  (sql/select koulutusala
+  (sql/select taulut/koulutusala
     (sql/order :koulutusalatunnus)))

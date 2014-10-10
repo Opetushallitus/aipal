@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :refer [kysymysryhma kysymys kysymysryhma-kyselypohja]]))
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kysymysryhmat [organisaatio]
   (let [organisaatiosuodatus (fn [query]
@@ -22,17 +22,17 @@
                                  (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
                                  (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
                                                 {:kysymysryhma_organisaatio_view.valtakunnallinen true}))))]
-    (sql/select kysymysryhma
+    (sql/select taulut/kysymysryhma
       (organisaatiosuodatus)
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen)
       (sql/order :muutettuaika :desc))))
 
 (defn lisaa-kysymysryhma! [k]
-  (sql/insert kysymysryhma
+  (sql/insert taulut/kysymysryhma
     (sql/values k)))
 
 (defn lisaa-kysymys! [k]
-  (sql/insert kysymys
+  (sql/insert taulut/kysymys
     (sql/values k)))
 
 (defn lisaa-jatkokysymys! [k]
@@ -45,9 +45,9 @@
 
 (def kysymysryhma-select
   (->
-    (sql/select* kysymysryhma)
+    (sql/select* taulut/kysymysryhma)
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :taustakysymykset :valtakunnallinen)
-    (sql/with kysymys
+    (sql/with taulut/kysymys
       (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
       (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
                   :kysymys.poistettava :kysymys.pakollinen
@@ -63,7 +63,7 @@
 
 (defn hae-kyselypohjasta [kyselypohjaid]
   (-> kysymysryhma-select
-    (sql/join :inner kysymysryhma-kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
+    (sql/join :inner taulut/kysymysryhma-kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid)
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)

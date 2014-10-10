@@ -13,14 +13,14 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kyselykerta
-  (:require [korma.core :as sql])
-  (:use [aipal.integraatio.sql.korma]))
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kaikki
   "Hae kaikki kyselykerrat"
   []
   (->
-    (sql/select* kyselykerta)
+    (sql/select* taulut/kyselykerta)
     (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
     (sql/order :kyselykerta.kyselykertaid :ASC)
 
@@ -28,7 +28,7 @@
 
 (defn lisaa!
   [kyselyid kyselykerta-data]
-  (sql/insert kyselykerta
+  (sql/insert taulut/kyselykerta
     (sql/values {:kyselyid kyselyid
                  :nimi_fi (:nimi_fi kyselykerta-data)
                  :voimassa_alkupvm (:voimassa_alkupvm kyselykerta-data)
@@ -38,7 +38,7 @@
   "Hae kyselykerta tunnuksella"
   [kyselykertaid]
   (->
-    (sql/select* kyselykerta)
+    (sql/select* taulut/kyselykerta)
     (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
     (sql/where (= :kyselykertaid kyselykertaid))
     (sql/order :kyselykerta.kyselykertaid :ASC)
