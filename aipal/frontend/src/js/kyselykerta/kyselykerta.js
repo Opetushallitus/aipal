@@ -25,8 +25,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
   }])
 
-  .controller('KyselykertaController', ['Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n',
-    function(Rahoitusmuoto, Vastaajatunnus, $modal, $routeParams, $scope, ilmoitus, i18n) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n',
+    function(Kyselykerta, Rahoitusmuoto, Vastaajatunnus, $modal, $routeParams, $scope, ilmoitus, i18n) {
       $scope.luoTunnuksiaDialogi = function() {
         var kyselykertaId = $routeParams.kyselykertaid;
 
@@ -59,6 +59,11 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
 
       $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
+
+      $scope.kyselykerta = {};
+      Kyselykerta.haeYksi($scope.kyselykertaid, function(kyselykerta) {
+        $scope.kyselykerta = kyselykerta;
+      });
 
       $scope.lukitseTunnus = function(tunnus, lukitse) {
         Vastaajatunnus.lukitse($routeParams.kyselykertaid, tunnus.vastaajatunnusid, lukitse, function(uusiTunnus) {
