@@ -14,18 +14,18 @@
 
 'use strict';
 
-angular.module('vastaajatunnus.vastaajatunnusui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'yhteiset.palvelut.ilmoitus'])
+angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'yhteiset.palvelut.ilmoitus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/kyselyt/:kyselyid/kyselykerta/:kyselykertaid', {
-        controller: 'VastaajatunnusController',
+        controller: 'KyselykertaController',
         templateUrl: 'template/kyselykerta/kyselykerta.html',
         label: 'i18n.kysely.breadcrumb_muokkaa_kyselykertaa'
       });
   }])
 
-  .controller('VastaajatunnusController', ['Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n',
+  .controller('KyselykertaController', ['Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n',
     function(Rahoitusmuoto, Vastaajatunnus, $modal, $routeParams, $scope, ilmoitus, i18n) {
       $scope.luoTunnuksiaDialogi = function() {
         var kyselykertaId = $routeParams.kyselykertaid;
