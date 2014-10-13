@@ -19,14 +19,14 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   var $scope;
   var $httpBackend;
   var $controller;
-  var $window;
+  var $location;
   var ilmoitus;
 
   beforeEach(module('kysymysryhma.kysymysryhmaui'));
 
   beforeEach(module(function($provide){
-    $window = {location: {}};
-    $provide.value('$window', $window);
+    $location = {path: jasmine.createSpy('path')};
+    $provide.value('$location', $location);
 
     $provide.value('i18n', {hae: function(){return '';}});
 
@@ -65,7 +65,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(200);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect($window.location.hash).toEqual('/kysymysryhmat');
+    expect($location.path).toHaveBeenCalledWith('/kysymysryhmat');
   });
 
   it('ei näytä virheilmoitusta, jos luonti onnistuu', function(){
@@ -89,7 +89,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $httpBackend.whenPOST('api/kysymysryhma').respond(500);
     $scope.luoUusi();
     $httpBackend.flush();
-    expect($window.location.hash).toBe(undefined);
+    expect($location.path).not.toHaveBeenCalled();
   });
 
   it('näyttää virheilmoituksen, jos luonti epäonnistuu', function(){
