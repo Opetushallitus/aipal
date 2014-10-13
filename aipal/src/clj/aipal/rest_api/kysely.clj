@@ -33,6 +33,7 @@
                   kayttajan-kysymys (get kayttajan-kysymykset kysymysid)]
             :when (not (and (:poistettu kayttajan-kysymys)
                             (:poistettava kysymys)))]
+      ;; Assertiin pitäisi törmätä vain jos käyttäjä on muokannut poistetuksi kysymyksen jota ei saisi poistaa
       (assert (not (:poistettu kayttajan-kysymys)))
       (arkisto/lisaa-kysymys! kyselyid kysymysid)))
   (arkisto/lisaa-kysymysryhma! kyselyid kysymysryhma))
