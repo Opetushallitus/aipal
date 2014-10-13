@@ -6,7 +6,7 @@
 <div class="modal-body">
     <p>{{i18n.kyselypohja.valinta_ohjeistus}}</p>
 
-    <select ng-model="kyselypohjaId"
+    <select ng-model="kyselypohjaId" class="form-control"
             ng-options="pohja.kyselypohjaid as (pohja | lokalisoiKentta:'nimi') for pohja in kyselypohjat"></select>
 </div>
 

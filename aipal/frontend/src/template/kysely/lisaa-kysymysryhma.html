@@ -6,7 +6,7 @@
 <div class="modal-body">
   <p>{{i18n.kysymysryhma.valinta_ohjeistus}}</p>
 
-  <select ng-model="kysymysryhmaid" ng-options="ryhma.kysymysryhmaid as (ryhma | lokalisoiKentta:'nimi') for ryhma in kysymysryhmat"></select>
+  <select class="form-control" ng-model="kysymysryhmaid" ng-options="ryhma.kysymysryhmaid as (ryhma | lokalisoiKentta:'nimi') for ryhma in kysymysryhmat"></select>
 </div>
 
 <div class="modal-footer">
