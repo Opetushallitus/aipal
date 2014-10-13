@@ -18,16 +18,6 @@ angular.module('yhteiset.direktiivit.latausindikaattori', ['yhteiset.palvelut.se
 
   .directive('latausIndikaattori', ['seuranta', 'i18n', function(seuranta, i18n){
 
-    function paivitaStatus(id, scope) {
-      var tila = seuranta.haeTila(id);
-      scope.latausKaynnissa = !tila.valmis;
-      scope.virhe = !tila.ok;
-    }
-
-    function statusPaivitettyViimeksi(id) {
-      return seuranta.haePaivitysaika(id);
-    }
-
     return {
       scope : {
         viesti: '@',
@@ -40,15 +30,14 @@ angular.module('yhteiset.direktiivit.latausindikaattori', ['yhteiset.palvelut.se
       restrict: 'A',
       link: function(scope) {
         var id = scope.metodiId;
-        paivitaStatus(id, scope);
         scope.i18n = i18n;
 
         scope.$watch(function() {
-          return statusPaivitettyViimeksi(id);
-        }, function(paivitetty){
-          if(paivitetty) {
-            paivitaStatus(id, scope);
-          }
+          return seuranta.haeTila(id).paivitetty;
+        }, function(){
+          var tila = seuranta.haeTila(id);
+          scope.latausKaynnissa = !tila.valmis;
+          scope.virhe = !tila.ok;
         });
       }
     };

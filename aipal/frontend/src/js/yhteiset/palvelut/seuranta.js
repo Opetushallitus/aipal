@@ -20,6 +20,7 @@ angular.module('yhteiset.palvelut.seuranta', [])
     var latausIndikaattorit = [],
         seuraavaAikaleima = 0;
 
+    // aikaleimaa käytetään jotta tilan muuttumista pystytään seuraamaan siitä $watch metodilla
     function aikaleima() {
       return seuraavaAikaleima++;
     }
@@ -42,10 +43,7 @@ angular.module('yhteiset.palvelut.seuranta', [])
         return promise;
       },
       haeTila: function(id) {
-        return latausIndikaattorit[id] ? latausIndikaattorit[id] : { valmis: false, ok: false };
-      },
-      haePaivitysaika: function(id) {
-        return latausIndikaattorit[id] ? latausIndikaattorit[id].paivitetty : aikaleima();
+        return latausIndikaattorit[id] ? latausIndikaattorit[id] : { valmis: false, ok: false, paivitetty: aikaleima() };
       }
     };
   }]);
