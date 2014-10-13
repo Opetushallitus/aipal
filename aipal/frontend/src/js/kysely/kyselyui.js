@@ -40,10 +40,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
       $scope.status = {};
 
-      $scope.setActiveGroup = function (id) {
-        $location.hash(id);
-      };
-
       $scope.luoUusiKysely = function () {
         Kysely.luoUusi()
         .success(function (data) {
