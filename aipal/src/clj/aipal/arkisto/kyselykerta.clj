@@ -42,4 +42,5 @@
     (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
     (sql/where (= :kyselykertaid kyselykertaid))
     (sql/order :kyselykerta.kyselykertaid :ASC)
-    sql/exec))
+    sql/exec
+    first))
