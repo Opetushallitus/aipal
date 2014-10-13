@@ -43,5 +43,5 @@
       </span>
     </div>
   </div>
-  <input type="submit" id="submit" ng-value="i18n.yleiset.tallenna_vastaukset" ng-disabled="vastausForm.$error.required">
+  <button id="submit" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="vastausForm.$error.required"></button>
 </form>
