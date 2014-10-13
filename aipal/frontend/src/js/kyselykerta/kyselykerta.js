@@ -65,6 +65,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         $scope.kyselykerta = kyselykerta;
       });
 
+      $scope.tallennaKyselykerta = function() {
+        Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta);
+      };
+
       $scope.lukitseTunnus = function(tunnus, lukitse) {
         Vastaajatunnus.lukitse($routeParams.kyselykertaid, tunnus.vastaajatunnusid, lukitse, function(uusiTunnus) {
           _.assign(tunnus, uusiTunnus);
