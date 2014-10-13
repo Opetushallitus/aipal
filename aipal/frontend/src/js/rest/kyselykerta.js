@@ -26,7 +26,7 @@ angular.module('rest.kyselykerta', ['ngResource'])
         method: 'GET',
         url: 'api/kyselykerta/:id'
       },
-      tallennus: {
+      luoUusi: {
         method: 'POST',
         url: 'api/kyselykerta/:id',
         id: 'tallenna-kyselykerta'
@@ -40,8 +40,8 @@ angular.module('rest.kyselykerta', ['ngResource'])
       haeYksi: function(id, successCallback, errorCallback) {
         return resource.haeYksi({id: id}, successCallback, errorCallback);
       },
-      tallenna: function(id, kyselykerta, successCallback, errorCallback) {
-        return resource.tallennus({id: id}, {kyselykerta: kyselykerta}, successCallback, errorCallback);
+      luoUusi: function(kyselyId, kyselykerta, successCallback, errorCallback) {
+        return resource.luoUusi({id: kyselyId}, {kyselykerta: kyselykerta}, successCallback, errorCallback);
       }
     };
   }]);
