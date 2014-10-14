@@ -60,16 +60,13 @@
 
 (defn kysely-luonti? []
   (or (yllapitaja?)
-      (paakayttaja-tai-vastuukayttaja?)
-      (kayttajalla-on-jokin-rooleista?
-        #{"OPL-KAYTTAJA"})))
+      (paakayttaja-tai-vastuukayttaja?)))
 
 (defn kysely-muokkaus? [kyselyid]
   (or (yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa?
         #{"OPL-PAAKAYTTAJA"
-          "OPL-VASTUUKAYTTAJA"
-          "OPL-KAYTTAJA"}
+          "OPL-VASTUUKAYTTAJA"}
         kyselyid)))
 
 (defn kysely-luku? [kyselyid]
