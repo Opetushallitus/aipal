@@ -24,5 +24,5 @@
           kyselykerta (lisaa-kyselykerta!)]
       (let [response (rest-kutsu (str "/api/kyselykerta/" (:kyselykertaid kyselykerta)) :get {})]
         (is (= (:status response) 200))
-        (is (= (:kyselykertaid (first (body-json response)))
+        (is (= (:kyselykertaid (body-json response))
                (:kyselykertaid kyselykerta)))))))
