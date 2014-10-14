@@ -35,4 +35,5 @@
       (json-response (kyselykerta/lisaa! kyselyid kyselykerta-parsittu))))
 
   (cu/defapi :kyselykerta-muokkaus kyselykertaid :post "/:kyselykertaid" [kyselykertaid & kyselykerta]
-    (json-response (kyselykerta/paivita! (Integer/parseInt kyselykertaid) kyselykerta))))
+    (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (json-response (kyselykerta/paivita! (Integer/parseInt kyselykertaid) kyselykerta-parsittu)))))

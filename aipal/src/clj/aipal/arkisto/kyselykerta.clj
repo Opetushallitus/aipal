@@ -48,7 +48,7 @@
 (defn paivita!
   [kyselykertaid kyselykertadata]
   (sql/update taulut/kyselykerta
-    (sql/set-fields (select-keys kyselykertadata [:nimi_fi :nimi_sv]))
+    (sql/set-fields (select-keys kyselykertadata [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm]))
     (sql/where {:kyselykertaid kyselykertaid})))
 
 (defn kyselykertaid->kyselyid

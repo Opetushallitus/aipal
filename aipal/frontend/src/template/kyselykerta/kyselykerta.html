@@ -12,6 +12,23 @@
   <input id="kyselykerta_nimi_sv" type="text" ng-model="kyselykerta.nimi_sv" />
 </div>
 
+<div>
+  <pvm-valitsin
+          otsikko="{{i18n.yleiset.alkaen}}"
+          oletus-pvm="kyselykerta.voimassa_alkupvm"
+          valittu-pvm="kyselykerta.voimassa_alkupvm"
+          ng-model="kyselykerta.voimassa_alkupvm"
+          pakollinen="true">
+  </pvm-valitsin>
+  <pvm-valitsin
+          otsikko="{{i18n.yleiset.asti}}"
+          oletus-pvm="kyselykerta.voimassa_loppupvm"
+          valittu-pvm="kyselykerta.voimassa_loppupvm"
+          ng-model="kyselykerta.voimassa_loppupvm"
+          pakollinen="false">
+  </pvm-valitsin>
+</div>
+
 <button class="button" ng-click="tallennaKyselykerta()">
   {{i18n.yleiset.tallenna}}&nbsp;
   <span class="glyphicon glyphicon-floppy-disk"></span>
