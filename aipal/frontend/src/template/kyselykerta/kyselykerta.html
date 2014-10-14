@@ -2,14 +2,18 @@
 
 <h3>Perustiedot</h3>
 
-<div class="form-group">
-  <label for="kyselykerta_nimi_fi">Kyselykerran nimi suomeksi</label>
-  <input id="kyselykerta_nimi_fi" type="text" ng-model="kyselykerta.nimi_fi" />
-</div>
+<div class="row">
+  <div class="col-md-4">
+    <div class="form-group">
+      <label for="kyselykerta_nimi_fi">Kyselykerran nimi suomeksi</label>
+      <input id="kyselykerta_nimi_fi" type="text" ng-model="kyselykerta.nimi_fi" class="form-control" />
+    </div>
 
-<div class="form-group">
-  <label for="kyselykerta_nimi_sv">Kyselykerran nimi ruotsiksi</label>
-  <input id="kyselykerta_nimi_sv" type="text" ng-model="kyselykerta.nimi_sv" />
+    <div class="form-group">
+      <label for="kyselykerta_nimi_sv">Kyselykerran nimi ruotsiksi</label>
+      <input id="kyselykerta_nimi_sv" type="text" ng-model="kyselykerta.nimi_sv" class="form-control" />
+    </div>
+  </div>
 </div>
 
 <div>
@@ -34,9 +38,9 @@
   <span class="glyphicon glyphicon-floppy-disk"></span>
 </button>
 
-<button class="button button-with-icon add-icon-white right" ng-click="luoTunnuksiaDialogi()">{{i18n.vastaajatunnus.luonti}}</button>
-
 <h3>{{i18n.vastaajatunnus.lista}}</h3>
+
+<button class="button button-with-icon add-icon-white" ng-click="luoTunnuksiaDialogi()">{{i18n.vastaajatunnus.luonti}}</button>
 
 <table class="table vastaajatunnus-taulukko">
   <thead>
