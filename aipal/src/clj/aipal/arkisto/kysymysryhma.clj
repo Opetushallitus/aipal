@@ -68,3 +68,10 @@
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
     sql/exec))
+
+(defn hae-organisaatiotieto
+  [kysymysryhmaid]
+  (first
+    (sql/select :kysymysryhma_organisaatio_view
+      (sql/fields :koulutustoimija :valtakunnallinen)
+      (sql/where {:kysymysryhmaid kysymysryhmaid}))))

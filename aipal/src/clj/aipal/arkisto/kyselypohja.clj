@@ -27,3 +27,10 @@
     (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
                    {:kyselypohja_organisaatio_view.valtakunnallinen true}))
     (sql/order :muutettuaika :desc)))
+
+(defn hae-organisaatiotieto
+  [kyselypohjaid]
+  (first
+    (sql/select :kyselypohja_organisaatio_view
+      (sql/fields :koulutustoimija :valtakunnallinen)
+      (sql/where {:kyselypohjaid kyselypohjaid}))))

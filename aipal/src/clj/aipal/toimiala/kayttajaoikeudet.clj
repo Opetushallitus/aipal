@@ -3,6 +3,8 @@
   (:require [aipal.toimiala.kayttajaroolit :refer :all]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
+            [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
+            [aipal.arkisto.kyselypohja :as kyselypohja-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn ->int
@@ -32,10 +34,14 @@
                                                                     (:voimassaoleva-oid *kayttaja*))))
 
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
-  (not (empty? (kayttajaoikeus-arkisto/hae-kysymysryhmalla (->int kysymysryhmaid) (:voimassaoleva-organisaatio *kayttaja*)))))
+  (let [organisaatiotieto (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid))]
+    (or (:valtakunnallinen organisaatiotieto)
+        (= (:koulutustoimija organisaatiotieto) (:voimassaoleva-organisaatio *kayttaja*)))))
 
 (defn kayttajalla-on-lukuoikeus-kyselypohjaan? [kyselypohjaid]
-  (not (empty? (kayttajaoikeus-arkisto/hae-kyselypohjalla (->int kyselypohjaid) (:voimassaoleva-organisaatio *kayttaja*)))))
+  (let [organisaatiotieto (kyselypohja-arkisto/hae-organisaatiotieto (->int kyselypohjaid))]
+    (or (:valtakunnallinen organisaatiotieto)
+        (= (:koulutustoimija organisaatiotieto) (:voimassaoleva-organisaatio *kayttaja*)))))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
