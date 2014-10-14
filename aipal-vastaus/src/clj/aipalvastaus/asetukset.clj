@@ -25,8 +25,8 @@
    :db {:host "127.0.0.1"
         :port 3456
         :name "aipal"
-        :user "aipal_user"
-        :password "aipal"
+        :user "aipalvastaus_user"
+        :password "aipalvastaus"
         :maximum-pool-size 15
         :minimum-pool-size 3}})
 
