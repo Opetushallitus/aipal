@@ -20,12 +20,20 @@ angular.module('rest.kyselykerta', ['ngResource'])
       haku: {
         method: 'GET',
         isArray: true,
+        url: 'api/kyselykerta/'
+      },
+      haeYksi: {
+        method: 'GET',
         url: 'api/kyselykerta/:id'
       },
-      tallennus: {
+      luoUusi: {
         method: 'POST',
-        url: 'api/kyselykerta/:id',
+        url: 'api/kyselykerta/',
         id: 'tallenna-kyselykerta'
+      },
+      tallenna: {
+        method: 'POST',
+        url: 'api/kyselykerta/:id'
       }
     });
 
@@ -34,10 +42,13 @@ angular.module('rest.kyselykerta', ['ngResource'])
         return resource.haku({}, successCallback, errorCallback);
       },
       haeYksi: function(id, successCallback, errorCallback) {
-        return resource.haku({id: id}, successCallback, errorCallback);
+        return resource.haeYksi({id: id}, successCallback, errorCallback);
       },
-      tallenna: function(id, kyselykerta, successCallback, errorCallback) {
-        return resource.tallennus({id: id}, {kyselykerta: kyselykerta}, successCallback, errorCallback);
+      luoUusi: function(kyselyId, kyselykerta, successCallback, errorCallback) {
+        return resource.luoUusi({}, {kyselyid: kyselyId, kyselykerta: kyselykerta}, successCallback, errorCallback);
+      },
+      tallenna: function(kyselykertaId, kyselykerta, successCallback, errorCallback) {
+        return resource.tallenna({id: kyselykertaId}, kyselykerta, successCallback, errorCallback);
       }
     };
   }]);

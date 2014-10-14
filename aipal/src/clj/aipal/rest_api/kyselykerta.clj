@@ -30,7 +30,10 @@
   (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (json-response (kyselykerta/hae-yksi (Integer/parseInt kyselykertaid))))
 
-  (cu/defapi :kyselykerta-luonti kyselyid :post "/:kyselyid" [kyselyid kyselykerta]
-    (let [kyselyid_int (Integer/parseInt kyselyid)
-          kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (kyselykerta/lisaa! kyselyid_int kyselykerta-parsittu)))))
+  (cu/defapi :kyselykerta-luonti kyselyid :post "/" [kyselyid kyselykerta]
+    (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (json-response (kyselykerta/lisaa! kyselyid kyselykerta-parsittu))))
+
+  (cu/defapi :kyselykerta-muokkaus kyselykertaid :post "/:kyselykertaid" [kyselykertaid & kyselykerta]
+    (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (json-response (kyselykerta/paivita! (Integer/parseInt kyselykertaid) kyselykerta-parsittu)))))

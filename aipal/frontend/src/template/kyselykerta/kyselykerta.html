@@ -1,0 +1,69 @@
+<h1>{{i18n.kyselykerta.hallitse}}</h1>
+
+<h3>Perustiedot</h3>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="form-group">
+      <label for="kyselykerta_nimi_fi">Kyselykerran nimi suomeksi</label>
+      <input id="kyselykerta_nimi_fi" type="text" ng-model="kyselykerta.nimi_fi" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label for="kyselykerta_nimi_sv">Kyselykerran nimi ruotsiksi</label>
+      <input id="kyselykerta_nimi_sv" type="text" ng-model="kyselykerta.nimi_sv" class="form-control" />
+    </div>
+  </div>
+</div>
+
+<div>
+  <pvm-valitsin
+          otsikko="{{i18n.yleiset.alkaen}}"
+          oletus-pvm="kyselykerta.voimassa_alkupvm"
+          valittu-pvm="kyselykerta.voimassa_alkupvm"
+          ng-model="kyselykerta.voimassa_alkupvm"
+          pakollinen="true">
+  </pvm-valitsin>
+  <pvm-valitsin
+          otsikko="{{i18n.yleiset.asti}}"
+          oletus-pvm="kyselykerta.voimassa_loppupvm"
+          valittu-pvm="kyselykerta.voimassa_loppupvm"
+          ng-model="kyselykerta.voimassa_loppupvm"
+          pakollinen="false">
+  </pvm-valitsin>
+</div>
+
+<button class="button" ng-click="tallennaKyselykerta()">
+  {{i18n.yleiset.tallenna}}&nbsp;
+  <span class="glyphicon glyphicon-floppy-disk"></span>
+</button>
+
+<h3>{{i18n.vastaajatunnus.lista}}</h3>
+
+<button class="button button-with-icon add-icon-white" ng-click="luoTunnuksiaDialogi()">{{i18n.vastaajatunnus.luonti}}</button>
+
+<table class="table vastaajatunnus-taulukko">
+  <thead>
+    <tr>
+      <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
+      <th>{{'i18n.vastaajatunnus.vastausaika'|i18n}}</th>
+      <th>{{'i18n.vastaajatunnus.vastaajia'|i18n}}</th>
+      <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
+      <th>{{'i18n.yleiset.rahoitusmuoto'|i18n}}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="tunnus in tunnukset" ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.voimassa}">
+      <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
+      <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
+      <td>{{tunnus.vastaajien_lkm}}</td>
+      <td>{{tunnus.vastausten_lkm}}</td>
+      <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>
+      <td>
+        <span ng-if="tunnus.lukittu" class="glyphicon glyphicon-lock" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, false)"></span>
+        <span ng-if="!tunnus.lukittu" class="glyphicon glyphicon-ok" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, true)"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>

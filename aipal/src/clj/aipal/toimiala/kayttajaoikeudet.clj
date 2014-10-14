@@ -115,6 +115,10 @@
           "OPL-VASTUUKAYTTAJA"}
         kyselyid)))
 
+(defn kyselykerta-muokkaus? [kyselykertaid]
+  (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
+    (kyselykerta-luonti? kyselyid)))
+
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
@@ -125,6 +129,7 @@
     :kysely-muokkaus kysely-muokkaus?
     :kyselykerta-luku kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
+    :kyselykerta-muokkaus kyselykerta-muokkaus?
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?

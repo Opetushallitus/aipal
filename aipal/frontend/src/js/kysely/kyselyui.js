@@ -72,7 +72,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           }
         });
         modalInstance.result.then(function (kyselykerta) {
-          Kyselykerta.tallenna(kysely.kyselyid, kyselykerta, function () {
+          Kyselykerta.luoUusi(kysely.kyselyid, kyselykerta, function () {
             $scope.haeKyselyt();
             ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
           }, function () {

@@ -20,7 +20,7 @@ angular.module('aipal', [
   'kysely.kyselyui',
   'kyselypohja.kyselypohjaui',
   'kysymysryhma.kysymysryhmaui',
-  'vastaajatunnus.vastaajatunnusui',
+  'kyselykerta.kyselykertaui',
   'raportti.kyselykerta.kyselykertaui',
   'yhteiset.palvelut.i18n',
   'yhteiset.palvelut.apicallinterceptor',
