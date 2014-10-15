@@ -18,15 +18,13 @@
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kyselykerta :as kyselykerta]
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]))
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn paivita-arvot [m avaimet f]
   (reduce #(update-in % [%2] f) m avaimet))
 
 (c/defroutes reitit
-  (cu/defapi :kysely nil :get "/" []
-    (json-response (kyselykerta/hae-kaikki)))
-
   (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (json-response (kyselykerta/hae-yksi (Integer/parseInt kyselykertaid))))
 

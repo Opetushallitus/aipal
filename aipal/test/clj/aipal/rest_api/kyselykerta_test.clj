@@ -11,11 +11,6 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-(deftest ^:integraatio kyselykertojen-haku
-  (testing "kyselykertojen hakurajapinta vastaa"
-    (let [response (rest-kutsu "/api/kyselykerta" :get {})]
-      (is (= (:status response) 200)))))
-
 (deftest ^:integraatio kyselykertojen-haku-id
   (testing "kyselykertojen hakurajapinta suodattaa kyselykerran ID:llä"
     (let [tutkinto (lisaa-tutkinto!)

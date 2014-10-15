@@ -17,14 +17,14 @@
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kaikki
-  "Hae kaikki kyselykerrat"
-  []
-  (->
-    (sql/select* taulut/kyselykerta)
-    (sql/fields :kyselyid :kyselykertaid :nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm)
-    (sql/order :kyselykerta.kyselykertaid :ASC)
-
-    sql/exec))
+  "Hae kaikki koulutustoimijan kyselykerrat"
+  [koulutustoimija]
+  (sql/select taulut/kyselykerta
+    (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+    (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
+    (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi_fi :kyselykerta.nimi_sv :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm)
+    (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
+    (sql/order :kyselykerta.kyselykertaid :ASC)))
 
 (defn lisaa!
   [kyselyid kyselykerta-data]
