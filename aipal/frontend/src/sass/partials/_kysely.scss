@@ -69,8 +69,15 @@ accordion.kyselyt {
 .vastaajatunnus-taulukko tr.voimassa {
   background-color: #bea;
 }
-.vastaajatunnus-taulukko tr.lukittu {
-  color: #aaa;
+
+.vastaajatunnus-taulukko tr.vanhentunut {
+  td:first-child {
+    text-decoration: line-through;
+  }
+
+  td.vastausaika {
+    color: #aaa;
+  }
 }
 
 ol.kysymykset li{
