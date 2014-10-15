@@ -115,7 +115,8 @@
   (or (yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa?
         #{"OPL-PAAKAYTTAJA"
-          "OPL-VASTUUKAYTTAJA"}
+          "OPL-VASTUUKAYTTAJA"
+          "OPL-KAYTTAJA"}
         kyselyid)))
 
 (defn kyselykerta-muokkaus? [kyselykertaid]
