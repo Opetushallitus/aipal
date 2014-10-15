@@ -24,7 +24,7 @@
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
     (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm)
     (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
-    (sql/order :luotuaika :desc, :kyselyid :asc)))
+    (sql/order :luotuaika :desc)))
 
 (defn ^:private yhdista-tietorakenteet [kyselyt kyselyid->kyselykerrat]
   (for [kysely kyselyt]
