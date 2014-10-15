@@ -167,7 +167,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'Kyselypohja', function ($modalInstance, $scope, Kyselypohja) {
-    Kyselypohja.haeKaikki()
+    Kyselypohja.haeVoimassaolevat()
     .success(function (data) {
       $scope.kyselypohjat = data;
     });
@@ -180,7 +180,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('LisaaKysymysryhmaModalController', ['$modalInstance', '$scope', 'Kysymysryhma', function ($modalInstance, $scope, Kysymysryhma) {
-    Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
+    Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
     });
     $scope.tallenna = function (kysymysryhmaid) {

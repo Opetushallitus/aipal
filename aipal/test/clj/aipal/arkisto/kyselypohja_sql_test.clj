@@ -24,7 +24,8 @@
                                           :voimassa_alkupvm (time/local-date 2100 1 1)
                                           :voimassa_loppupvm (time/local-date 2200 1 1)
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))
-    (is (= #{"a" "b" "c"} (set (map :nimi_fi (hae-kyselypohjat (:ytunnus koulutustoimija))))))))
+    (is (= #{"a" "b" "c"} (set (map :nimi_fi (hae-kyselypohjat (:ytunnus koulutustoimija))))))
+    (is (= #{"b"} (set (map :nimi_fi (hae-kyselypohjat (:ytunnus koulutustoimija) true)))))))
 
 (deftest ^:integraatio hae-kyselypohjat-oma-organisaatio
   (let [oma-koulutustoimija (lisaa-koulutustoimija! {:ytunnus "1111111-1"})

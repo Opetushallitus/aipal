@@ -20,6 +20,10 @@ angular.module('rest.kyselypohja', [])
       haeKaikki: function() {
         return $http.get('api/kyselypohja', {params: {nocache: Date.now()}});
       },
+      haeVoimassaolevat: function() {
+        return $http.get('api/kyselypohja', {params: {nocache: Date.now(),
+                                                      voimassa: "true"}});
+      },
       hae: function(id) {
         return $http.get('api/kyselypohja/' + id, {params: {nocache: Date.now()}});
       }

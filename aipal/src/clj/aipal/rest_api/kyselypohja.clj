@@ -22,8 +22,8 @@
             [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
-  (cu/defapi :kyselypohja-listaaminen nil :get "/" []
-    (json-response (arkisto/hae-kyselypohjat (:voimassaoleva-organisaatio *kayttaja*))))
+  (cu/defapi :kyselypohja-listaaminen nil :get "/" [voimassa]
+    (json-response (arkisto/hae-kyselypohjat (:voimassaoleva-organisaatio *kayttaja*) (Boolean/parseBoolean voimassa))))
 
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid" [kyselypohjaid]
     (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))
