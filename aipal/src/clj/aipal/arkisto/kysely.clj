@@ -26,16 +26,17 @@
     (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
     (sql/order :luotuaika :desc)))
 
-(defn ^:private yhdista-tietorakenteet [kyselyt kyselyid->kyselykerrat]
-  (for [kysely kyselyt]
-    (assoc kysely :kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely)))))
+;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan
+(defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat]
+  (let [kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
+    (for [kysely kyselyt]
+      (assoc kysely :kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))))))
 
 (defn hae-kaikki
   [koulutustoimija]
   (let [kyselyt (hae-kyselyt koulutustoimija)
-        kyselykerrat (kyselykerta/hae-kaikki koulutustoimija)
-        kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
-    (yhdista-tietorakenteet kyselyt kyselyid->kyselykerrat)))
+        kyselykerrat (kyselykerta/hae-kaikki koulutustoimija)]
+    (yhdista-kyselykerrat-kyselyihin kyselyt kyselykerrat)))
 
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"
