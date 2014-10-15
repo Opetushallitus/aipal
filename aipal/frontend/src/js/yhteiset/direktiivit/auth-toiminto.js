@@ -20,9 +20,9 @@ angular.module('yhteiset.direktiivit.auth-toiminto', [])
 
     function resolveTemplate(el, attrs) {
       if (attrs.authLinkki !== undefined) {
-        return 'template/yhteiset/direktiivit/auth-linkki.htm';
+        return 'template/yhteiset/direktiivit/auth-linkki.html';
       } else if (attrs.authNappi !== undefined) {
-        return 'template/yhteiset/direktiivit/auth-nappi.htm';
+        return 'template/yhteiset/direktiivit/auth-nappi.html';
       }
     }
 
@@ -41,6 +41,8 @@ angular.module('yhteiset.direktiivit.auth-toiminto', [])
         scope.linkki = attrs.linkki;
         scope.teksti = attrs.teksti;
         scope.muotoilut = attrs.class;
+        // poistetaan class attribuutti jottei e2e testit sekoa
+        element.removeAttr('class');
 
         function paivitaOikeus() {
           scope.sallittu = onkoSallittu();
