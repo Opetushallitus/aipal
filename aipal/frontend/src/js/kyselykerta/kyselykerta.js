@@ -66,7 +66,11 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
 
       $scope.tallennaKyselykerta = function() {
-        Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta);
+        Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta, function() {
+          ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
+        }, function() {
+          ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
+        });
       };
 
       $scope.lukitseTunnus = function(tunnus, lukitse) {
