@@ -22,7 +22,7 @@ angular.module('rest.kyselypohja', [])
       },
       haeVoimassaolevat: function() {
         return $http.get('api/kyselypohja', {params: {nocache: Date.now(),
-                                                      voimassa: "true"}});
+                                                      voimassa: 'true'}});
       },
       hae: function(id) {
         return $http.get('api/kyselypohja/' + id, {params: {nocache: Date.now()}});
