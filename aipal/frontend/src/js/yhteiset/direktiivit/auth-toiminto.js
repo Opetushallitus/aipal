@@ -51,9 +51,7 @@ angular.module('yhteiset.direktiivit.auth-toiminto', [])
         function onkoSallittu() {
           if (kayttooikeudet && kayttooikeudet.$resolved) {
             try {
-              return _.reduce(kayttooikeudet.roolit, function(result, rooli) {
-                  return _.contains(sallitutRoolit, rooli.rooli) || result;
-                }, false);
+              return _.some(kayttooikeudet.roolit, function(rooli) { return _.contains(sallitutRoolit, rooli.rooli); });
             } catch (e) {
             }
           }
