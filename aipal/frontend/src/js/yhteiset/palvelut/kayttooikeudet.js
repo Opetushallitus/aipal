@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('kayttooikeudet', ['ngResource'])
+angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
   .factory('kayttooikeudet', ['$resource', function ($resource) {
     var resource = $resource('api/kayttaja', null, {
       get: {

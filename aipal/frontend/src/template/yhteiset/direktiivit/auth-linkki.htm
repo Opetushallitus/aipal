@@ -1,4 +1,3 @@
 <div>
-    <a href="{{href}}" ng-if="sallittu" ng-transclude></a>
-    <span ng-if="!sallittu" ng-transclude></span>
+    <a ng-if="sallittu" ng-href="{{linkki}}" ng-class="muotoilut" ng-bind="teksti"></a>
 </div>

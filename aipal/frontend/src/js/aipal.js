@@ -27,6 +27,7 @@ angular.module('aipal', [
   'yhteiset.palvelut.lokalisointi',
   'yhteiset.palvelut.virheLogitus',
   'yhteiset.palvelut.seuranta',
+  'yhteiset.palvelut.kayttooikeudet',
   'yhteiset.direktiivit.copyright',
   'yhteiset.direktiivit.navigaatio',
   'yhteiset.direktiivit.popup-ikkuna',
@@ -40,7 +41,6 @@ angular.module('aipal', [
   'yhteiset.suodattimet.i18n',
   'ui.bootstrap',
   'ngRoute',
-  'kayttooikeudet',
   'ui.select2',
   'ng-breadcrumbs'
 ])
