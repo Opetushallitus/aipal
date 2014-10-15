@@ -49,9 +49,7 @@
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
-    (json-response (if (yllapitaja?)
-                     (arkisto/hae-kaikki)
-                     (arkisto/hae-kaikki (:voimassaoleva-oid *kayttaja*)))))
+    (json-response (arkisto/hae-kaikki (:voimassaoleva-oid *kayttaja*))))
 
   (cu/defapi :kysely-luonti nil :post "/" []
     (json-response (arkisto/lisaa! {:nimi_fi "Uusi kysely"
