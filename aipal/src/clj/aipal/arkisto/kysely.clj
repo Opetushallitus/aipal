@@ -49,6 +49,17 @@
     sql/exec
     first))
 
+(defn hae-koulutustoimija
+  "Hakee koulutustoimijatiedon kyselyn pääavaimella"
+  [kyselyid]
+  (->
+    (sql/select taulut/kysely
+      (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
+      (sql/fields :kysely_organisaatio_view.koulutustoimija)
+      (sql/where {:kysely_organisaatio_view.kyselyid kyselyid}))
+    first
+    :koulutustoimija))
+
 (defn lisaa!
   "Lisää uuden kyselyn"
   [tiedot]

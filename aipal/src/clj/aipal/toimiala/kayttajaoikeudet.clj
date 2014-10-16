@@ -2,6 +2,7 @@
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
   (:require [aipal.toimiala.kayttajaroolit :refer :all]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
+            [aipal.arkisto.kysely :as kysely-arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.arkisto.kyselypohja :as kyselypohja-arkisto]
@@ -29,9 +30,9 @@
   (sisaltaa-jonkin-rooleista? roolit (:voimassaolevat-roolit *kayttaja*)))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
-  (sisaltaa-jonkin-rooleista? roolit
-                              (kayttajaoikeus-arkisto/hae-kyselylla (->int kyselyid)
-                                                                    (:voimassaoleva-oid *kayttaja*))))
+  (let [kyselyn-koulutustoimija (kysely-arkisto/hae-koulutustoimija (->int kyselyid))
+        koulutustoimijan-roolit (filter #(= kyselyn-koulutustoimija (:organisaatio %)) (:voimassaolevat-roolit *kayttaja*))]
+  (sisaltaa-jonkin-rooleista? roolit koulutustoimijan-roolit)))
 
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
   (let [organisaatiotieto (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid))]
