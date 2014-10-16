@@ -10,6 +10,10 @@
         <label class="pakollinen" ng-bind="i18n.kyselykerta.kyselykerran_nimi"></label>
         <input type="text" placeholder="{{i18n.kyselykerta.kyselykerran_nimi}}" ng-model="kyselykerta.nimi_fi" ng-required="true">
       </fieldset>
+      <fieldset>
+        <label class="pakollinen" ng-bind="i18n.kyselykerta.kyselykerran_nimi_sv"></label>
+        <input type="text" placeholder="{{i18n.kyselykerta.kyselykerran_nimi_sv}}" ng-model="kyselykerta.nimi_sv" ng-required="true">
+      </fieldset>
       <section class="datepicker-vali">
         <h3>{{i18n.kyselykerta.vastausaika}}</h3>
         <pvm-valitsin

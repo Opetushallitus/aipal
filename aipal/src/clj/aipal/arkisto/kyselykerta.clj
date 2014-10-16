@@ -29,10 +29,10 @@
 (defn lisaa!
   [kyselyid kyselykerta-data]
   (sql/insert taulut/kyselykerta
-    (sql/values {:kyselyid kyselyid
-                 :nimi_fi (:nimi_fi kyselykerta-data)
-                 :voimassa_alkupvm (:voimassa_alkupvm kyselykerta-data)
-                 :voimassa_loppupvm (:voimassa_loppupvm kyselykerta-data)})))
+    (sql/values
+      (assoc
+        (select-keys kyselykerta-data [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm])
+        :kyselyid kyselyid))))
 
 (defn hae-yksi
   "Hae kyselykerta tunnuksella"
