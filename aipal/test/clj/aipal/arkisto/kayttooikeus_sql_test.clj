@@ -36,7 +36,7 @@
   "Testikäyttäjät, uid, tietokannassa"
   {"8086" [true true true false false] ; luonti + oman organisaation luku/muokkaus
    "6502" [false true false false false] ; oman organisaation luku
-   "68000" [true true true false false] ; luonti + oman organisaation luku/muokkaus
+   "68000" [false true false false false] ; luonti + oman organisaation luku/muokkaus
   })
 
 ;; Testaa ennen kaikkea, että näkymän muodostava SQL on oikein.
@@ -48,12 +48,12 @@
                                                             :koulutustoimija "2345678-0"})]
       (doseq [uid (keys kysely-kayttajat)]
         (with-kayttaja uid nil
-          #(let [tulos [(kayttajaoikeudet/kysely-luonti?)
-                        (kayttajaoikeudet/kysely-luku? (:kyselyid oman-organisaation-kysely))
-                        (kayttajaoikeudet/kysely-muokkaus? (:kyselyid oman-organisaation-kysely))
-                        (kayttajaoikeudet/kysely-luku? (:kyselyid muun-organisaation-kysely))
-                        (kayttajaoikeudet/kysely-muokkaus? (:kyselyid muun-organisaation-kysely))]]
-             (is (= tulos (get kysely-kayttajat uid)))))))))
+          (let [tulos [(kayttajaoikeudet/kysely-luonti?)
+                       (kayttajaoikeudet/kysely-luku? (:kyselyid oman-organisaation-kysely))
+                       (kayttajaoikeudet/kysely-muokkaus? (:kyselyid oman-organisaation-kysely))
+                       (kayttajaoikeudet/kysely-luku? (:kyselyid muun-organisaation-kysely))
+                       (kayttajaoikeudet/kysely-muokkaus? (:kyselyid muun-organisaation-kysely))]]
+            (is (= tulos (get kysely-kayttajat uid)))))))))
 
 (deftest ^:integraatio hae-roolit-palauttaa-vain-annetun-kayttajan-roolit
   (sql/insert taulut/koulutustoimija
