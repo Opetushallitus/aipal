@@ -83,7 +83,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
   .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', 'rahoitusmuodot', function($modalInstance, $scope, rahoitusmuodot) {
     $scope.vastaajatunnus = {
-      vastaajien_lkm: 1
+      vastaajien_lkm: 1,
+      voimassa_alkupvm: new Date().toISOString().slice(0, 10)
     };
     $scope.rahoitusmuodot = rahoitusmuodot;
 
