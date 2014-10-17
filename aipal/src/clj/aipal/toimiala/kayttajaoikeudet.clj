@@ -37,12 +37,12 @@
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
   (let [organisaatiotieto (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid))]
     (or (:valtakunnallinen organisaatiotieto)
-        (= (:koulutustoimija organisaatiotieto) (:voimassaoleva-organisaatio *kayttaja*)))))
+        (= (:koulutustoimija organisaatiotieto) (:aktiivinen-koulutustoimija *kayttaja*)))))
 
 (defn kayttajalla-on-lukuoikeus-kyselypohjaan? [kyselypohjaid]
   (let [organisaatiotieto (kyselypohja-arkisto/hae-organisaatiotieto (->int kyselypohjaid))]
     (or (:valtakunnallinen organisaatiotieto)
-        (= (:koulutustoimija organisaatiotieto) (:voimassaoleva-organisaatio *kayttaja*)))))
+        (= (:koulutustoimija organisaatiotieto) (:aktiivinen-koulutustoimija *kayttaja*)))))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?

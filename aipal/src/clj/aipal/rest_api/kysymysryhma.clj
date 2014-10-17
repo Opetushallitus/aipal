@@ -68,7 +68,7 @@
 
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" [voimassa]
-    (json-response (arkisto/hae-kysymysryhmat (:voimassaoleva-organisaatio *kayttaja*) (Boolean/parseBoolean voimassa))))
+    (json-response (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
 
   (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset]
     (lisaa-kysymysryhma! {:nimi_fi nimi_fi
@@ -78,7 +78,7 @@
                           :valtakunnallinen (if (yllapitaja?)
                                               (true? valtakunnallinen)
                                               false)
-                          :koulutustoimija (:voimassaoleva-organisaatio *kayttaja*)}
+                          :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
                          kysymykset))
 
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]

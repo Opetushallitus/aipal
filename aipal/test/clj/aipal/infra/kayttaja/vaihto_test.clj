@@ -46,13 +46,13 @@
         (reset! k *kayttaja*))
       (is (= (:voimassaolevat-roolit @k) [:...impersonoidut-roolit...])))))
 
-;; Impersonoinnin aikana voimassaoleva organisaatio = impersonoitavan käyttäjän organisaatio.
-(deftest with-kayttaja-voimassaoleva-organisaatio-impersonointi
+;; Impersonoinnin aikana aktiivinen koulutustoimija = impersonoitavan käyttäjän koulutustoimija.
+(deftest with-kayttaja-aktiivinen-koulutustoimija-impersonointi
   (let [k (atom nil)]
-    (with-redefs [kayttajaoikeus-arkisto/hae-roolit {"impersonoitava-oid" [{:rooli "rooli" :organisaatio "impersonoitu-organisaatio"}]}]
+    (with-redefs [kayttajaoikeus-arkisto/hae-roolit {"impersonoitava-oid" [{:rooli "rooli" :organisaatio "impersonoitu-koulutustoimija"}]}]
       (with-kayttaja "uid" "impersonoitava-oid"
         (reset! k *kayttaja*))
-      (is (= (:voimassaoleva-organisaatio @k) "impersonoitu-organisaatio")))))
+      (is (= (:aktiivinen-koulutustoimija @k) "impersonoitu-koulutustoimija")))))
 
 ;; Ilman impersonointia voimassaoleva OID = käyttäjän oma OID.
 (deftest with-kayttaja-voimassaoleva-oid-ei-impersonointia
@@ -72,14 +72,14 @@
         (reset! k *kayttaja*))
       (is (= (:voimassaolevat-roolit @k) [:...omat-roolit...])))))
 
-;; Ilman impersonointia voimassaoleva organisaatio = käyttäjän oma organisaatio.
-(deftest with-kayttaja-voimassaoleva-organisaatio-ei-impersonointia
+;; Ilman impersonointia aktiivinen koulutustoimija = käyttäjän oma koulutustoimija.
+(deftest with-kayttaja-aktiivinen-koulutustoimija-ei-impersonointia
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
-                  kayttajaoikeus-arkisto/hae-roolit {"oid" [{:rooli "rooli" :organisaatio "organisaatio"}]}]
+                  kayttajaoikeus-arkisto/hae-roolit {"oid" [{:rooli "rooli" :organisaatio "koulutustoimija"}]}]
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
-      (is (= (:voimassaoleva-organisaatio @k) "organisaatio")))))
+      (is (= (:aktiivinen-koulutustoimija @k) "koulutustoimija")))))
 
 ;; with-kayttaja muodostaa käyttäjän koko nimen.
 (deftest with-kayttaja-nimi

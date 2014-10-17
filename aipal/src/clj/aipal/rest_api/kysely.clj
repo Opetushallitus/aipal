@@ -49,11 +49,11 @@
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
-    (json-response (arkisto/hae-kaikki (:voimassaoleva-organisaatio *kayttaja*))))
+    (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
   (cu/defapi :kysely-luonti nil :post "/" []
     (json-response (arkisto/lisaa! {:nimi_fi "Uusi kysely"
-                                   :koulutustoimija (:voimassaoleva-organisaatio *kayttaja*)})))
+                                   :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)})))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
