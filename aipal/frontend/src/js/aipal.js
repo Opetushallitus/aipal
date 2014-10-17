@@ -31,7 +31,6 @@ angular.module('aipal', [
   'yhteiset.direktiivit.copyright',
   'yhteiset.direktiivit.navigaatio',
   'yhteiset.direktiivit.popup-ikkuna',
-  'yhteiset.direktiivit.input',
   'yhteiset.direktiivit.pvm-valitsin',
   'yhteiset.direktiivit.latausindikaattori',
   'yhteiset.direktiivit.pakollisia-kenttia',
@@ -42,7 +41,8 @@ angular.module('aipal', [
   'ui.bootstrap',
   'ngRoute',
   'ui.select2',
-  'ng-breadcrumbs'
+  'ng-breadcrumbs',
+  'placeholderShim'
 ])
 
   .config(['$httpProvider', 'asetukset', function ($httpProvider, asetukset) {
