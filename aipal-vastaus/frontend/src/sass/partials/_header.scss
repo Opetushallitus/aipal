@@ -54,3 +54,54 @@ h1.title{
     padding-left: 15px;
   }
 }
+
+header {
+  color: black;
+  background-color: #e1e1e1;
+  height: 160px;
+  position: absolute;
+  width: 100%;
+  left: 0;
+
+  .app-wrapper {
+    background: #e1e1e1 url('../img/AITU-background.png') no-repeat left top;
+    height: 100%;
+  }
+
+  .vertical-aligner {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-left: $marginM;
+  }
+
+  h1 {
+    display: inline-block;
+    font-size: 2.2em;
+    font-weight: 800;
+    font-family: $font-heading-light;
+    margin: 0;
+    vertical-align: middle;
+  }
+  .separator {
+    position: relative;
+    top: -5px;
+    font-size: 4.2em;
+    font-weight: 100;
+    vertical-align: middle;
+  }
+}
+
+.oph-logo {
+  display: inline-block;
+  height: 100%;
+  width: 271px;
+  float: right;
+  margin-right: $marginM;
+  background: transparent url('../img/opetushallitus.svg') 0 center no-repeat;
+  .no-svg & {background-image: url('../img/opetushallitus.gif')}
+  &.kiitos{
+    float: none;
+    height: 100px;
+  }
+}

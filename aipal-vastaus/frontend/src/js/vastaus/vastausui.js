@@ -11,6 +11,9 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       .when('/vastausaika-loppunut', {
         templateUrl: 'template/vastaus/lukittu.html'
       })
+      .when('/kiitos', {
+        templateUrl: 'template/vastaus/kiitos.html'
+      })
     ;
   }])
 
@@ -76,7 +79,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
           // TODO: siirtyminen "kiitos vastauksesta" -sivulle
           sessionStorage.removeItem('tunnus');
           sessionStorage.removeItem('vastaajaid');
-          $location.url('/');
+          $location.url('/kiitos');
         });
       };
 
