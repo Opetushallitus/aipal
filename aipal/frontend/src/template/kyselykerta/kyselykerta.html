@@ -21,6 +21,7 @@
           otsikko="{{i18n.yleiset.alkaen}}"
           oletus-pvm="kyselykerta.voimassa_alkupvm"
           valittu-pvm="kyselykerta.voimassa_alkupvm"
+          max-pvm="kyselykerta.voimassa_loppupvm"
           ng-model="kyselykerta.voimassa_alkupvm"
           pakollinen="true">
   </pvm-valitsin>
@@ -28,6 +29,7 @@
           otsikko="{{i18n.yleiset.asti}}"
           oletus-pvm="kyselykerta.voimassa_loppupvm"
           valittu-pvm="kyselykerta.voimassa_loppupvm"
+          min-pvm="kyselykerta.voimassa_alkupvm"
           ng-model="kyselykerta.voimassa_loppupvm"
           pakollinen="false">
   </pvm-valitsin>
