@@ -37,14 +37,14 @@
       (reset! k *kayttaja*))
       (is (= (:aktiivinen-oid @k) "impersonoitava-oid"))))
 
-;; Impersonoinnin aikana voimassaolevat roolit = impersonoitavan käyttäjän roolit.
-(deftest with-kayttaja-voimassaolevat-roolit-impersonointi
+;; Impersonoinnin aikana aktiiviset roolit = impersonoitavan käyttäjän roolit.
+(deftest with-kayttaja-aktiiviset-roolit-impersonointi
   (let [k (atom nil)]
     (with-redefs [kayttajaoikeus-arkisto/hae-roolit
                   {"impersonoitava-oid" [:...impersonoidut-roolit...]}]
       (with-kayttaja "uid" "impersonoitava-oid"
         (reset! k *kayttaja*))
-      (is (= (:voimassaolevat-roolit @k) [:...impersonoidut-roolit...])))))
+      (is (= (:aktiiviset-roolit @k) [:...impersonoidut-roolit...])))))
 
 ;; Impersonoinnin aikana aktiivinen koulutustoimija = impersonoitavan käyttäjän koulutustoimija.
 (deftest with-kayttaja-aktiivinen-koulutustoimija-impersonointi
@@ -63,14 +63,14 @@
         (reset! k *kayttaja*))
       (is (= (:aktiivinen-oid @k) "oid")))))
 
-;; Ilman impersonointia voimassaolevat roolit = käyttäjän omat roolit.
-(deftest with-kayttaja-voimassaolevat-roolit-ei-impersonointia
+;; Ilman impersonointia aktiiviset roolit = käyttäjän omat roolit.
+(deftest with-kayttaja-aktiiviset-roolit-ei-impersonointia
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
                   kayttajaoikeus-arkisto/hae-roolit {"oid" [:...omat-roolit...]}]
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
-      (is (= (:voimassaolevat-roolit @k) [:...omat-roolit...])))))
+      (is (= (:aktiiviset-roolit @k) [:...omat-roolit...])))))
 
 ;; Ilman impersonointia aktiivinen koulutustoimija = käyttäjän oma koulutustoimija.
 (deftest with-kayttaja-aktiivinen-koulutustoimija-ei-impersonointia

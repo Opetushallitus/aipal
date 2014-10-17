@@ -17,14 +17,14 @@
   (log/debug "Yritetään autentikoida käyttäjä" uid)
   (if-let [k (kayttaja-arkisto/hae-voimassaoleva uid)]
     (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
-          voimassaolevat-roolit (kayttajaoikeus-arkisto/hae-roolit aktiivinen-oid)
-          aktiivinen-koulutustoimija (some :organisaatio voimassaolevat-roolit)
+          aktiiviset-roolit (kayttajaoikeus-arkisto/hae-roolit aktiivinen-oid)
+          aktiivinen-koulutustoimija (some :organisaatio aktiiviset-roolit)
           ik (when impersonoitu-oid
                (kayttaja-arkisto/hae impersonoitu-oid))]
       (binding [*kayttaja*
                 (assoc k
                        :aktiivinen-oid aktiivinen-oid
-                       :voimassaolevat-roolit voimassaolevat-roolit
+                       :aktiiviset-roolit aktiiviset-roolit
                        :aktiivinen-koulutustoimija aktiivinen-koulutustoimija
                        :nimi (kayttajan-nimi k)
                        :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]

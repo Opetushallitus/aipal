@@ -27,11 +27,11 @@
   (not (empty? (clojure.set/select roolit (set (map :rooli roolirivit))))))
 
 (defn kayttajalla-on-jokin-rooleista? [roolit]
-  (sisaltaa-jonkin-rooleista? roolit (:voimassaolevat-roolit *kayttaja*)))
+  (sisaltaa-jonkin-rooleista? roolit (:aktiiviset-roolit *kayttaja*)))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (let [kyselyn-koulutustoimija (kysely-arkisto/hae-koulutustoimija (->int kyselyid))
-        koulutustoimijan-roolit (filter #(= kyselyn-koulutustoimija (:organisaatio %)) (:voimassaolevat-roolit *kayttaja*))]
+        koulutustoimijan-roolit (filter #(= kyselyn-koulutustoimija (:organisaatio %)) (:aktiiviset-roolit *kayttaja*))]
   (sisaltaa-jonkin-rooleista? roolit koulutustoimijan-roolit)))
 
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
