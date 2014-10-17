@@ -17,7 +17,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
     ;
   }])
 
-  .factory('VastausControllerFunktiot', [function() {
+  .factory('VastausControllerFunktiot', ['Vastaus', '$location', function(Vastaus, $location) {
     function keraaVastausdata(data) {
       var vastaukset = [];
 
@@ -46,8 +46,15 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       return {vastaukset: vastaukset};
     }
 
+    function tallenna($scope) {
+      Vastaus.tallenna($scope.tunnus, keraaVastausdata($scope.data), function() {
+        $location.url('/kiitos');
+      });
+    }
+
     return {
-      keraaVastausdata: keraaVastausdata
+      keraaVastausdata: keraaVastausdata,
+      tallenna: tallenna
     };
   }])
 
@@ -59,10 +66,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
       $scope.monivalinta = {};
 
       $scope.tallenna = function() {
-        Vastaus.tallenna($scope.tunnus, f.keraaVastausdata($scope.data), function() {
-          // TODO: siirtyminen "kiitos vastauksesta" -sivulle
-          $location.url('/kiitos');
-        });
+        f.tallenna($scope);
       };
 
       $scope.vaihdaMonivalinta = function(vaihtoehto, kysymysid) {
