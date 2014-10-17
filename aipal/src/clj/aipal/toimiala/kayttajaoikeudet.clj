@@ -54,7 +54,7 @@
       "OPL-VASTUUKAYTTAJA"}))
 
 (defn impersonoiva-yllapitaja? []
-  (not= (:oid *kayttaja*) (:voimassaoleva-oid *kayttaja*)))
+  (not= (:oid *kayttaja*) (:aktiivinen-oid *kayttaja*)))
 
 (defn kyselyiden-listaaminen?
   "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"

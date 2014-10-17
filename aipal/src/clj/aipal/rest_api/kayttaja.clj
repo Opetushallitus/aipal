@@ -36,7 +36,7 @@
     (json-response (arkisto/hae-impersonoitava-termilla termi)))
 
   (cu/defapi :omat_tiedot nil :get "/" []
-    (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:voimassaoleva-oid *kayttaja*))]
+    (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:aktiivinen-oid *kayttaja*))]
       (json-response (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)))))
 
   (cu/defapi :kayttajan_tiedot oid :get "/:oid" [oid]

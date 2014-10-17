@@ -30,12 +30,12 @@
         (reset! k *kayttaja*))
       (is (= (:oid @k) "oid")))))
 
-;; Impersonoinnin aikana voimassaoleva OID = impersonoitavan käyttäjän OID.
-(deftest with-kayttaja-voimassaoleva-oid-impersonointi
+;; Impersonoinnin aikana aktiivinen OID = impersonoitavan käyttäjän OID.
+(deftest with-kayttaja-aktiivinen-oid-impersonointi
   (let [k (atom nil)]
     (with-kayttaja "uid" "impersonoitava-oid"
       (reset! k *kayttaja*))
-      (is (= (:voimassaoleva-oid @k) "impersonoitava-oid"))))
+      (is (= (:aktiivinen-oid @k) "impersonoitava-oid"))))
 
 ;; Impersonoinnin aikana voimassaolevat roolit = impersonoitavan käyttäjän roolit.
 (deftest with-kayttaja-voimassaolevat-roolit-impersonointi
@@ -54,14 +54,14 @@
         (reset! k *kayttaja*))
       (is (= (:aktiivinen-koulutustoimija @k) "impersonoitu-koulutustoimija")))))
 
-;; Ilman impersonointia voimassaoleva OID = käyttäjän oma OID.
-(deftest with-kayttaja-voimassaoleva-oid-ei-impersonointia
+;; Ilman impersonointia aktiivinen OID = käyttäjän oma OID.
+(deftest with-kayttaja-aktiivinen-oid-ei-impersonointia
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
                   kayttajaoikeus-arkisto/hae-roolit {}]
       (with-kayttaja "uid" nil
         (reset! k *kayttaja*))
-      (is (= (:voimassaoleva-oid @k) "oid")))))
+      (is (= (:aktiivinen-oid @k) "oid")))))
 
 ;; Ilman impersonointia voimassaolevat roolit = käyttäjän omat roolit.
 (deftest with-kayttaja-voimassaolevat-roolit-ei-impersonointia
