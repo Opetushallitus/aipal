@@ -22,7 +22,7 @@
   </div>
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <div ng-show="!kysymys.muokattava">
-      {{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}: {{kysymys.kysymys_fi}}
+      <a ng-click="muokkaa(kysymys)">{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}: {{kysymys.kysymys_fi}}</a>
     </div>
     <div ng-show="kysymys.muokattava">
       <ng-form name="kysymysForm">
