@@ -35,7 +35,8 @@
   (with-sh-dir "frontend"
     (doseq [komento frontend-kaannoskomennot]
       (println "$" komento)
-      (println (:out (sh "bash" "-c" komento))))))
+      (let [{:keys [err out]} (sh "bash" "-l" "-c" komento)]
+        (println err out)))))
 
 (defonce ^:private palvelin (atom nil))
 
