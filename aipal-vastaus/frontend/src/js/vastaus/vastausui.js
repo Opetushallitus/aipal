@@ -47,8 +47,11 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
     }
 
     function tallenna($scope) {
+      $scope.tallennaNappiDisabloitu = true;
       Vastaus.tallenna($scope.tunnus, keraaVastausdata($scope.data), function() {
         $location.url('/kiitos');
+      }, function(){
+        $scope.tallennaNappiDisabloitu = false;
       });
     }
 
@@ -64,6 +67,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
 
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
+      $scope.tallennaNappiDisabloitu = false;
 
       $scope.tallenna = function() {
         f.tallenna($scope);

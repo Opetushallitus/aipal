@@ -16,11 +16,19 @@
 
 describe('vastaus.vastausui.VastausControllerFunktiot', function() {
   var f;
+  var $httpBackend;
+  var $location;
+
+  beforeEach(module(function($provide){
+    $location = {url: jasmine.createSpy('url')};
+    $provide.value('$location', $location);
+  }));
 
   beforeEach(module('vastaus.vastausui'));
 
-  beforeEach(inject(function(VastausControllerFunktiot){
+  beforeEach(inject(function(VastausControllerFunktiot, _$httpBackend_){
     f = VastausControllerFunktiot;
+    $httpBackend = _$httpBackend_;
   }));
 
   describe('kerätään kaikki vastaukset', function() {
@@ -160,5 +168,33 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
       };
       expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]},{kysymysid:3,vastaus:['kylla']}]});
     });
+  });
+
+  it('Käyttäjä siirretään kiitos-sivulle, jos vastausten tallennus onnistuu', function(){
+    $httpBackend.whenPOST('api/vastaus').respond(200);
+    f.tallenna({data: {}});
+    $httpBackend.flush();
+    expect($location.url).toHaveBeenCalledWith('/kiitos');
+  });
+
+  it('Käyttäjää ei siirretä, jos vastausten tallennus epäonnistuu', function(){
+    $httpBackend.whenPOST('api/vastaus').respond(500);
+    f.tallenna({data: {}});
+    $httpBackend.flush();
+    expect($location.url).not.toHaveBeenCalled();
+  });
+
+  it('Tallenna-nappi disabloidaan vastausten lähetyksen ajaksi', function(){
+    var $scope = {data: {}, tallennaNappiDisabloitu: false};
+    f.tallenna($scope);
+    expect($scope.tallennaNappiDisabloitu).toBe(true);
+  });
+
+  it('Tallenna-nappi enabloidaan palvelinvirheen jälkeen', function(){
+    $httpBackend.whenPOST('api/vastaus').respond(500);
+    var $scope = {data: {}};
+    f.tallenna($scope);
+    $httpBackend.flush();
+    expect($scope.tallennaNappiDisabloitu).toBe(false);
   });
 });
