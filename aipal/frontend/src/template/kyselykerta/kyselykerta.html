@@ -2,11 +2,13 @@
 
 <h3>Perustiedot</h3>
 
+<form name="kyselykertaForm">
+
 <div class="row">
   <div class="col-md-4">
     <div class="form-group">
-      <label for="kyselykerta_nimi_fi">Kyselykerran nimi suomeksi</label>
-      <input id="kyselykerta_nimi_fi" type="text" ng-model="kyselykerta.nimi_fi" class="form-control" />
+      <label for="kyselykerta_nimi_fi" class="pakollinen">Kyselykerran nimi suomeksi</label>
+      <input id="kyselykerta_nimi_fi" type="text" ng-model="kyselykerta.nimi_fi" class="form-control" ng-required="true" />
     </div>
 
     <div class="form-group">
@@ -37,10 +39,9 @@
   </pvm-valitsin>
 </div>
 
-<button class="button" ng-click="tallennaKyselykerta()">
-  {{i18n.yleiset.tallenna}}&nbsp;
-  <span class="glyphicon glyphicon-floppy-disk"></span>
-</button>
+</form>
+
+<tallenna formi-validi="kyselykertaForm.$valid" ng-click="tallennaKyselykerta()" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
 
 <h3>{{i18n.vastaajatunnus.lista}}</h3>
 
