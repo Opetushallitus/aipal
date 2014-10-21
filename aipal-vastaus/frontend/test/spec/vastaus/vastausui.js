@@ -28,7 +28,7 @@ describe('vastaus.vastausui.VastausController', function() {
 
     sessionStorage.clear();
 
-    $httpBackend.whenGET(/api\/kyselykerta\/.*/).respond({});
+    $httpBackend.whenGET(/api\/kyselykerta\/.*/).respond({data:'data'});
   }));
 
   function alustaController(tunnus) {
@@ -36,48 +36,10 @@ describe('vastaus.vastausui.VastausController', function() {
     $controller('VastausController', {$scope: $scope, $routeParams: {'tunnus': tunnus}});
   }
 
-  it('Uusi vastaajaid haetaan $scopeen', function() {
-    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
+  it('pitäisi hakea kyselykerta alustuksessa scopeen', function() {
     alustaController();
     $httpBackend.flush();
 
-    expect($scope.vastaajaid).toEqual(123456);
-  });
-
-  it('Uusi vastaajaid haetaan jos tunnus vaihtuu', function() {
-    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
-    alustaController('abc');
-    $httpBackend.flush();
-
-    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 23456 });
-    alustaController('def');
-    $httpBackend.flush();
-
-    expect($scope.vastaajaid).toEqual(23456);
-  });
-
-  it('Uusi vastaajaid haetaan vain kerran', function() {
-    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
-    alustaController();
-    $httpBackend.flush();
-
-    alustaController();
-    $httpBackend.flush(); // Hajoaa jos POST api/vastaaja/luo tehdään toisen kerran
-  });
-
-  it('Uusi vastaajaid haetaan tallennuksen jälkeisellä sivulatauksella', function() {
-    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 123456 });
-    alustaController();
-    $httpBackend.flush();
-
-    $scope.data = {};
-    $httpBackend.whenPOST(/api\/vastaus\/.*/).respond({});
-    $scope.tallenna();
-    $httpBackend.flush();
-
-    $httpBackend.expectPOST('api/vastaaja/luo').respond({ 'vastaajaid': 23456 });
-    alustaController();
-    $httpBackend.flush();
-    expect($scope.vastaajaid).toEqual(23456);
+    expect($scope.data).toEqual({data:'data'});
   });
 });
