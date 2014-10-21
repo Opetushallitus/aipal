@@ -19,6 +19,9 @@ angular.module('rest.vastaajatunnus', ['ngResource'])
     var resource = $resource(null, null, {
       haku: {
         method: 'GET',
+        params: {
+          nocache: function() {return Date.now();},
+        },
         url: 'api/vastaajatunnus/:kyselykertaid',
         isArray: true
       },

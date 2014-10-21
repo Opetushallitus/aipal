@@ -19,6 +19,9 @@ angular.module('rest.rahoitusmuoto', [])
     var resource = $resource(null, null, {
       haeKaikki: {
         method: 'GET',
+        params: {
+          nocache: function() {return Date.now();},
+        },
         url: 'api/rahoitusmuoto',
         isArray: true
       }
