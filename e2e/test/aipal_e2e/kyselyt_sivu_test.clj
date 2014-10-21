@@ -18,7 +18,8 @@
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer :all]))
+            [aitu-e2e.util :refer :all]
+            [clj-time.core :as time]))
 
 (def kyselyt-sivu "/#/kyselyt")
 
@@ -114,10 +115,12 @@
                                       :voimassa true}]
                 :kysely [{:kyselyid 1
                           :nimi_fi "Kysely 1"
-                          :koulutustoimija "0000000-0"}
+                          :koulutustoimija "0000000-0"
+                          :voimassa_alkupvm (time/local-date 2000 1 1)}
                          {:kyselyid 2
                           :nimi_fi "Kysely 2"
-                          :koulutustoimija "0000000-0"}]}
+                          :koulutustoimija "0000000-0"
+                          :voimassa_alkupvm (time/local-date 2000 1 1)}]}
       (avaa kyselyt-sivu)
       (testing
         "Kyselykerran luonti onnistuu ensimmäiselle kyselylle"
@@ -126,7 +129,6 @@
           (w/click (uusi-kyselykerta-kyselylle kysely))
           (syota-kenttaan "kyselykerta.nimi_fi" "Ensimmäinen kyselykerta")
           (syota-kenttaan "kyselykerta.nimi_sv" "Ensimmäinen kyselykerta")
-          (syota-pvm "kyselykerta.voimassa_alkupvm" "1.8.2014")
           (tallenna))
         (let [kysely (nth (kyselyt) 0)]
           (avaa-kysely kysely)
@@ -139,7 +141,6 @@
           (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi_fi\"]"))) ; ajastusongelman kierto
           (syota-kenttaan "kyselykerta.nimi_fi" "Toinen kyselykerta")
           (syota-kenttaan "kyselykerta.nimi_sv" "Toinen kyselykerta")
-          (syota-pvm "kyselykerta.voimassa_alkupvm" "1.8.2014")
           (tallenna))
         (let [kysely (nth (kyselyt) 1)]
           (avaa-kysely kysely)
