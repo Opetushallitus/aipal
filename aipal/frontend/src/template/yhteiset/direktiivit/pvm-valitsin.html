@@ -9,7 +9,9 @@
     is-open="opened"
     min-date="minPvm"
     max-date="maxPvm"
-    show-button-bar="false"/>
+    show-button-bar="false"
+    readonly
+    ng-click="open($event)"/>
   <button
     ng-click="open($event)"
     class="open-datepicker icon calendar-icon" />
