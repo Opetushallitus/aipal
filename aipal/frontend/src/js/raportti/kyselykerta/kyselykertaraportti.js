@@ -19,6 +19,9 @@ angular.module('raportti.kyselykerta.kyselykertaraportti', ['ngResource'])
     var resource = $resource(null, null, {
       haku: {
         method: 'GET',
+        params: {
+          nocache: function() {return Date.now();},
+        },
         url: 'api/raportti/kyselykerta/:kyselykertaid'
       }
     });
