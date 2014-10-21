@@ -16,10 +16,11 @@
 
 angular.module('aipalvastaus', [
     'lomake.lomakeui',
-    'yhteiset.palvelut.palvelinvirhe',
-    'yhteiset.palvelut.i18n',
-    'yhteiset.direktiivit.copyright',
     'vastaus.vastausui',
+    'yhteiset.direktiivit.copyright',
+    'yhteiset.palvelut.i18n',
+    'yhteiset.palvelut.lokalisointi',
+    'yhteiset.palvelut.palvelinvirhe',
     'ngRoute'
   ])
 
