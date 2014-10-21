@@ -77,8 +77,12 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
         }
       };
 
-      $http.get('api/kyselykerta/' + $routeParams.tunnus).success(function(data) {
+      $http.get('api/kyselykerta/' + $routeParams.tunnus)
+      .success(function(data) {
         $scope.data = data;
+      })
+      .error(function() {
+        $location.path('/vastausaika-loppunut');
       });
     }
   ]);

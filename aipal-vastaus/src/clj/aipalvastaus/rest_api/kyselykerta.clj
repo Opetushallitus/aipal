@@ -16,8 +16,12 @@
   (:require [compojure.core :as c]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response-nocache]]
-            [aipalvastaus.sql.kyselykerta :as kysely]))
+            [aipalvastaus.sql.kyselykerta :as kysely]
+            [aipalvastaus.sql.vastaaja :as vastaaja]))
 
 (c/defroutes reitit
-  (c/GET "/:tunnus" [tunnus] (db/transaction
-                               (json-response-nocache (kysely/hae tunnus)))))
+  (c/GET "/:tunnus" [tunnus]
+    (db/transaction
+      (json-response-nocache
+        (when (vastaaja/validoi-vastaajatunnus tunnus)
+          (kysely/hae tunnus))))))
