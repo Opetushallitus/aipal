@@ -45,15 +45,13 @@
   (and (vastaajatunnus-voimassa? vastaajatunnus) (vastaajatunnuksella-vastauskertoja? vastaajatunnus)))
 
 (defn luo-vastaaja!
-  [vastaustunnus]
-  (->
-    (sql/exec-raw [(str "INSERT INTO vastaaja(kyselykertaid, vastaajatunnusid)"
-                        " SELECT kyselykertaid, vastaajatunnusid"
-                        " FROM vastaajatunnus"
-                        " WHERE tunnus = ?"
-                        " RETURNING vastaajaid") [vastaustunnus]] :results)
-    first
-    :vastaajaid))
+  [tunnus]
+  (when (vastaajatunnus-voimassa? tunnus)
+    (let [vastaajatunnus (first (sql/select :vastaajatunnus
+                                  (sql/where {:tunnus tunnus})))]
+      (sql/insert :vastaaja
+        (sql/values {:kyselykertaid (:kyselykertaid vastaajatunnus)
+                     :vastaajatunnusid (:vastaajatunnusid vastaajatunnus)})))))
 
 (defn paivata-vastaaja! [vastaajaid]
   (->

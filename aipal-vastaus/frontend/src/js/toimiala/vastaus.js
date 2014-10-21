@@ -28,8 +28,7 @@ angular.module('toimiala.vastaus', ['ngResource'])
     });
 
     return {
-      tallenna: function(tunnus, vastaajaid, data, successCallback, errorCallback) {
-        data.vastaajaid = vastaajaid;
+      tallenna: function(tunnus, data, successCallback, errorCallback) {
         return resource.tallenna({tunnus: tunnus}, data, successCallback, errorCallback);
       },
       luoVastaaja: function(tunnus, successCallback, errorCallback) {
