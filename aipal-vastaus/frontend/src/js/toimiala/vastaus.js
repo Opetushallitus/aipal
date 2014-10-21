@@ -20,19 +20,12 @@ angular.module('toimiala.vastaus', ['ngResource'])
       tallenna: {
         method: 'POST',
         url: 'api/vastaus/:tunnus'
-      },
-      luoVastaaja: {
-        method: 'POST',
-        url: 'api/vastaaja/luo'
       }
     });
 
     return {
       tallenna: function(tunnus, data, successCallback, errorCallback) {
         return resource.tallenna({tunnus: tunnus}, data, successCallback, errorCallback);
-      },
-      luoVastaaja: function(tunnus, successCallback, errorCallback) {
-        return resource.luoVastaaja({}, {tunnus: tunnus}, successCallback, errorCallback);
       }
     };
   }]);
