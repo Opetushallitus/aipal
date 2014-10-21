@@ -23,8 +23,10 @@
       (sql/where
         (and
           (= :tunnus vastaajatunnus)
-          (<= :voimassa_alkupvm (sql/sqlfn now))
-          (or {:voimassa_loppupvm [= nil]} (>= :voimassa_loppupvm (sql/sqlfn now))))))
+          (or {:voimassa_alkupvm nil}
+              {:voimassa_alkupvm [<= (sql/raw "current_date")]})
+          (or {:voimassa_loppupvm nil}
+              {:voimassa_loppupvm [>= (sql/raw "current_date")]}))))
     first
     :lukittu
     false?))
