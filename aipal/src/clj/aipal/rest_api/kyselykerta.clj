@@ -25,6 +25,9 @@
   (reduce #(update-in % [%2] f) m avaimet))
 
 (c/defroutes reitit
+  (cu/defapi :kysely nil :get "/" []
+    (json-response (kyselykerta/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
+
   (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (json-response (kyselykerta/hae-yksi (Integer/parseInt kyselykertaid))))
 
