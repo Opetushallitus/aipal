@@ -25,10 +25,6 @@ describe('vastaus.vastausui.VastausController', function() {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $scope = _$rootScope_.$new();
-
-    sessionStorage.clear();
-
-    $httpBackend.whenGET(/api\/kyselykerta\/.*/).respond({data:'data'});
   }));
 
   function alustaController(tunnus) {
@@ -37,6 +33,7 @@ describe('vastaus.vastausui.VastausController', function() {
   }
 
   it('pitäisi hakea kyselykerta alustuksessa scopeen', function() {
+    $httpBackend.whenGET(/api\/kyselykerta\/.*/).respond({data:'data'});
     alustaController();
     $httpBackend.flush();
 
