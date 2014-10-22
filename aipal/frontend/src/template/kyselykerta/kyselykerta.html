@@ -1,4 +1,5 @@
-<h1>{{i18n.kyselykerta.hallitse}}</h1>
+<h1 ng-if="!uusi">{{i18n.kyselykerta.hallitse}}</h1>
+<h1 ng-if="uusi">{{i18n.kyselykerta.uusi_kyselykerta}}</h1>
 
 <h3>Perustiedot</h3>
 
@@ -43,6 +44,8 @@
 
 <tallenna formi-validi="kyselykertaForm.$valid" ng-click="tallennaKyselykerta()" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
 
+<div ng-if="!uusi">
+
 <h3>{{i18n.vastaajatunnus.lista}}</h3>
 
 <button class="button button-with-icon add-icon-white" ng-click="luoTunnuksiaDialogi()">{{i18n.vastaajatunnus.luonti}}</button>
@@ -74,3 +77,5 @@
     </tr>
   </tbody>
 </table>
+
+</div>
