@@ -26,6 +26,11 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         templateUrl: 'template/kysely/kyselyt.html',
         label: 'i18n.kysely.breadcrumb_kyselyt'
       })
+      .when('/kyselyt/kysely/uusi', {
+        controller: 'KyselyController',
+        templateUrl: 'template/kysely/kysely.html',
+        label: 'i18n.kysely.breadcrumb_uusi_kysely'
+      })
       .when('/kyselyt/kysely/:kyselyid', {
         controller: 'KyselyController',
         templateUrl: 'template/kysely/kysely.html',
@@ -41,13 +46,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.status = {};
 
       $scope.luoUusiKysely = function () {
-        Kysely.luoUusi()
-        .success(function (data) {
-          $location.url('/kyselyt/kysely/' + data.kyselyid);
-        })
-        .error(function () {
-          ilmoitus.virhe(i18n.hae('kysely.uuden_luonti_epaonnistui'));
-        });
+        $location.url('/kyselyt/kysely/uusi');
       };
 
       $scope.haeKyselyt = function () {
@@ -78,16 +77,23 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   .controller('KyselyController', [
     'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal',
     function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal) {
-      Kysely.haeId($routeParams.kyselyid)
-        .success(function(kysely) {
-          $scope.kysely = kysely;
-        })
-        .error(function() {
-          ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
-        });
+      var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
+
+      if ($routeParams.kyselyid) {
+        Kysely.haeId($routeParams.kyselyid)
+          .success(function(kysely) {
+            $scope.kysely = kysely;
+          })
+          .error(function() {
+            ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
+          });
+      }
+      else {
+        $scope.kysely = {};
+      }
 
       $scope.tallenna = function (kysely) {
-        Kysely.tallenna(kysely)
+        tallennusFn(kysely)
         .success(function () {
           $location.path('/kyselyt');
           ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));

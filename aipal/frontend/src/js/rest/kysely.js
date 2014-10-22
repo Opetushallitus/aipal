@@ -23,11 +23,11 @@ angular.module('rest.kysely', [])
       haeId: function(id) {
         return $http.get('api/kysely/' + id, {params: {nocache: Date.now()}});
       },
-      luoUusi: function() {
-        return $http.post('api/kysely');
+      luoUusi: function(kysely) {
+        return $http.post('api/kysely', kysely);
       },
-      tallenna: function(data) {
-        return $http.post('api/kysely/' + data.kyselyid, data);
+      tallenna: function(kysely) {
+        return $http.post('api/kysely/' + kysely.kyselyid, kysely);
       }
     };
   }]);

@@ -51,9 +51,11 @@
   (cu/defapi :kysely nil :get "/" []
     (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
-  (cu/defapi :kysely-luonti nil :post "/" []
-    (json-response (arkisto/lisaa! {:nimi_fi "Uusi kysely"
-                                   :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)})))
+  (cu/defapi :kysely-luonti nil :post "/" [& kysely]
+    (json-response
+      (arkisto/lisaa! (paivita-arvot (assoc kysely :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))
+                                     [:voimassa_alkupvm :voimassa_loppupvm]
+                                     parse-iso-date))))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (when-let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
