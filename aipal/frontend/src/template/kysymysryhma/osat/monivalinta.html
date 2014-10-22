@@ -1,7 +1,9 @@
 <section>
   <fieldset>
     <label>{{i18n.kysymys.valintojen_maksimimaara}}</label>
-    <select class="form-control" ng-model="kysymys.monivalinta_max" ng-options="max for max in [] | numerot:kysymys.monivalintavaihtoehdot.length"></select>
+    <select class="form-control" ng-model="kysymys.monivalinta_max" ng-options="max for max in [] | numerot:kysymys.monivalintavaihtoehdot.length" ng-show="monivalintavaihtoehdot.length > 0">
+        <option value=""></option>
+    </select>
   </fieldset>
 </section>
 <section>

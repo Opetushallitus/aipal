@@ -38,7 +38,8 @@
         <fieldset>
           <label>{{i18n.kysymys.vastauksen_maksimipituus}}</label>
           <select ng-init="kysymys.jatkokysymys.max_vastaus = vapaateksti_maksimit[0]" ng-model="kysymys.jatkokysymys.max_vastaus"
-                  ng-options="max for max in vapaateksti_maksimit" class="form-control">
+                  ng-options="max for max in vapaateksti_maksimit" class="form-control" ng-show="vapaateksti_maksimit.length > 0">
+              <option value=""></option>
           </select>
         </fieldset>
       </section>
