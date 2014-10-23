@@ -20,7 +20,7 @@ angular.module('rest.kyselykerta', ['ngResource'])
       haku: {
         method: 'GET',
         params: {
-          nocache: function() {return Date.now();},
+          nocache: function() {return Date.now();}
         },
         isArray: true,
         url: 'api/kyselykerta/'
@@ -28,7 +28,7 @@ angular.module('rest.kyselykerta', ['ngResource'])
       haeYksi: {
         method: 'GET',
         params: {
-          nocache: function() {return Date.now();},
+          nocache: function() {return Date.now();}
         },
         url: 'api/kyselykerta/:id'
       },
