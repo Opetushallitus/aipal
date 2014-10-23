@@ -82,6 +82,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
         Kyselykerta.haeYksi($scope.kyselykertaid, function(kyselykerta) {
           $scope.kyselykerta = kyselykerta;
+        }, function() {
+          $location.url('/');
         });
       }
 
