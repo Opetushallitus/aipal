@@ -18,15 +18,26 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
+      .when('/kyselyt/:kyselyid/kyselykerta/uusi', {
+        controller: 'KyselykertaController',
+        templateUrl: 'template/kyselykerta/kyselykerta.html',
+        label: 'i18n.kysely.breadcrumb_uusi_kyselykerta',
+        resolve: {
+          uusi: function() { return true; }
+        }
+      })
       .when('/kyselyt/:kyselyid/kyselykerta/:kyselykertaid', {
         controller: 'KyselykertaController',
         templateUrl: 'template/kyselykerta/kyselykerta.html',
-        label: 'i18n.kysely.breadcrumb_muokkaa_kyselykertaa'
+        label: 'i18n.kysely.breadcrumb_muokkaa_kyselykertaa',
+        resolve: {
+          uusi: function() { return false; }
+        }
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Rahoitusmuoto', 'Vastaajatunnus', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n',
-    function(Kyselykerta, Kysely, Rahoitusmuoto, Vastaajatunnus, $modal, $routeParams, $scope, ilmoitus, i18n) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Rahoitusmuoto', 'Vastaajatunnus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi',
+    function(Kyselykerta, Kysely, Rahoitusmuoto, Vastaajatunnus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi) {
       $scope.luoTunnuksiaDialogi = function() {
         var kyselykertaId = $routeParams.kyselykertaid;
 
@@ -53,28 +64,39 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         });
       };
 
+      $scope.uusi = uusi;
       $scope.kyselykertaid = $routeParams.kyselykertaid;
       $scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki(function(data) {
         $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
       });
 
-      $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
-
+      $scope.tunnukset = [];
+      $scope.kyselykerta = {};
+      $scope.kysely = {};
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = kysely;
       });
 
-      $scope.kyselykerta = {};
-      Kyselykerta.haeYksi($scope.kyselykertaid, function(kyselykerta) {
-        $scope.kyselykerta = kyselykerta;
-      });
+      if (!$scope.uusi) {
+        $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
+
+        Kyselykerta.haeYksi($scope.kyselykertaid, function(kyselykerta) {
+          $scope.kyselykerta = kyselykerta;
+        });
+      }
 
       $scope.tallennaKyselykerta = function() {
-        Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta, function() {
-          ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
-        }, function() {
-          ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
-        });
+        if ($scope.uusi) {
+          Kyselykerta.luoUusi(parseInt($routeParams.kyselyid, 10), $scope.kyselykerta, function(kyselykerta) {
+            $location.url('/kyselyt/' + $routeParams.kyselyid + '/kyselykerta/' + kyselykerta.kyselykertaid);
+          });
+        } else {
+          Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta, function() {
+            ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
+          }, function() {
+            ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
+          });
+        }
       };
 
       $scope.lukitseTunnus = function(tunnus, lukitse) {

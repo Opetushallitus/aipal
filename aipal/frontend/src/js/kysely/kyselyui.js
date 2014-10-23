@@ -62,23 +62,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.haeKyselyt();
 
       $scope.uusiKyselykerta = function (kysely) {
-        var modalInstance = $modal.open({
-          templateUrl: 'template/kysely/kyselykerta-luonti.html',
-          controller: 'UusiKyselykertaModalController',
-          resolve: {
-            kysely: function () {
-              return kysely;
-            }
-          }
-        });
-        modalInstance.result.then(function (kyselykerta) {
-          Kyselykerta.luoUusi(kysely.kyselyid, kyselykerta, function () {
-            $scope.haeKyselyt();
-            ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
-          }, function () {
-            ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
-          });
-        });
+        $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
       };
     }
   ])
@@ -153,18 +137,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
     }
   ])
-
-  .controller('UusiKyselykertaModalController', ['$modalInstance', '$scope', 'kysely', function ($modalInstance, $scope, kysely) {
-    $scope.kysely = kysely;
-
-    $scope.kyselykerta = {};
-    $scope.tallenna = function () {
-      $modalInstance.close($scope.kyselykerta);
-    };
-    $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
-    };
-  }])
 
   .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'Kyselypohja', function ($modalInstance, $scope, Kyselypohja) {
     Kyselypohja.haeVoimassaolevat()
