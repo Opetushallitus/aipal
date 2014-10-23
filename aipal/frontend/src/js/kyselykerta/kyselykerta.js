@@ -89,7 +89,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         });
       }
 
-      $scope.tallennaKyselykerta = function() {
+      $scope.tallenna = function() {
         if ($scope.uusi) {
           Kyselykerta.luoUusi(parseInt($routeParams.kyselyid, 10), $scope.kyselykerta, function(kyselykerta) {
             $location.url('/kyselyt/' + $routeParams.kyselyid + '/kyselykerta/' + kyselykerta.kyselykertaid);

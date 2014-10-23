@@ -129,7 +129,8 @@
           (w/click (uusi-kyselykerta-kyselylle kysely))
           (syota-kenttaan "kyselykerta.nimi_fi" "Ensimmäinen kyselykerta")
           (syota-kenttaan "kyselykerta.nimi_sv" "Ensimmäinen kyselykerta")
-          (tallenna))
+          (tallenna)
+          (avaa kyselyt-sivu))
         (let [kysely (nth (kyselyt) 0)]
           (avaa-kysely kysely)
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Ensimmäinen kyselykerta"]))))
@@ -141,7 +142,8 @@
           (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi_fi\"]"))) ; ajastusongelman kierto
           (syota-kenttaan "kyselykerta.nimi_fi" "Toinen kyselykerta")
           (syota-kenttaan "kyselykerta.nimi_sv" "Toinen kyselykerta")
-          (tallenna))
+          (tallenna)
+          (avaa kyselyt-sivu))
         (let [kysely (nth (kyselyt) 1)]
           (avaa-kysely kysely)
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Toinen kyselykerta"])))))))
