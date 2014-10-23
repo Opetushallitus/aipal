@@ -59,10 +59,10 @@
     "OK"))
 
 (c/defroutes reitit
-  (c/POST "/:vastaustunnus" [vastaustunnus vastaukset]
+  (c/POST "/:vastaajatunnus" [vastaajatunnus vastaukset]
     (db/transaction
       (schema/validate [KayttajanVastaus] vastaukset)
-      (if-let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaustunnus))]
+      (if-let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaajatunnus))]
         (json-response-nocache
-          (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely/hae-kysymykset vastaustunnus)))
+          (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely/hae-kysymykset vastaajatunnus)))
         {:status 403}))))
