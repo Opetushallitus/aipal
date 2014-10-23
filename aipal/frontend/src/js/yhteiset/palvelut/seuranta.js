@@ -43,7 +43,7 @@ angular.module('yhteiset.palvelut.seuranta', [])
         return promise;
       },
       haeTila: function(id) {
-        return latausIndikaattorit[id] ? latausIndikaattorit[id] : { valmis: false, ok: false, paivitetty: aikaleima() };
+        return latausIndikaattorit[id] ? latausIndikaattorit[id] : { valmis: true, ok: true, paivitetty: -1 };
       }
     };
   }]);
