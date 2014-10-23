@@ -21,6 +21,10 @@ describe('vastaus.vastausui.VastausController', function() {
 
   beforeEach(module('vastaus.vastausui'));
 
+  beforeEach(module(function($provide){
+    $provide.value('i18n', {hae: function(){return '';}});
+  }));
+
   beforeEach(inject(function(_$controller_, _$httpBackend_, _$rootScope_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;

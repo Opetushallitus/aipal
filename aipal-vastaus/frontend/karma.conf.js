@@ -34,6 +34,8 @@ module.exports = function(config) {
       'src/bower_components/lodash/dist/lodash.js',
       'src/bower_components/angular-mocks/angular-mocks.js',
       'src/bower_components/aituaipaljs/src/js/**/*.js',
+      'src/bower_components/AngularJS-Toaster/toaster.js',
+      'src/bower_components/angular-animate/angular-animate.js',
       'src/js/*.js',
       'src/js/**/*.js',
       'test/spec/**/*.js'

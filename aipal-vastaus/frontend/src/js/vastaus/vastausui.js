@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
+angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.i18n'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -17,7 +17,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
     ;
   }])
 
-  .factory('VastausControllerFunktiot', ['Vastaus', '$location', function(Vastaus, $location) {
+  .factory('VastausControllerFunktiot', ['Vastaus', '$location', 'ilmoitus', 'i18n', function(Vastaus, $location, ilmoitus, i18n) {
     function keraaVastausdata(data) {
       var vastaukset = [];
 
@@ -52,6 +52,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus'])
         $location.url('/kiitos');
       }, function(){
         $scope.tallennaNappiDisabloitu = false;
+        ilmoitus.virhe(i18n.hae('palvelinvirhe.teksti'));
       });
     }
 

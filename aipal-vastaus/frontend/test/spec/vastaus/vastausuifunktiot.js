@@ -18,13 +18,19 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
   var f;
   var $httpBackend;
   var $location;
+  var ilmoitus;
+
+  beforeEach(module('vastaus.vastausui'));
 
   beforeEach(module(function($provide){
     $location = {url: jasmine.createSpy('url')};
     $provide.value('$location', $location);
-  }));
 
-  beforeEach(module('vastaus.vastausui'));
+    ilmoitus = {virhe: jasmine.createSpy('virhe')};
+    $provide.value('ilmoitus', ilmoitus);
+
+    $provide.value('i18n', {hae: function(){return '';}});
+  }));
 
   beforeEach(inject(function(VastausControllerFunktiot, _$httpBackend_){
     f = VastausControllerFunktiot;
@@ -196,5 +202,19 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
     f.tallenna($scope);
     $httpBackend.flush();
     expect($scope.tallennaNappiDisabloitu).toBe(false);
+  });
+
+  it('Ei näytetä virheilmoitusta, jos vastausten tallennus onnistuu', function(){
+    $httpBackend.whenPOST('api/vastaus').respond(200);
+    f.tallenna({data: {}});
+    $httpBackend.flush();
+    expect(ilmoitus.virhe).not.toHaveBeenCalled();
+  });
+
+  it('Näytetään virheilmoitus, jos vastausten tallennus epäonnistuu', function(){
+    $httpBackend.whenPOST('api/vastaus').respond(500);
+    f.tallenna({data: {}});
+    $httpBackend.flush();
+    expect(ilmoitus.virhe).toHaveBeenCalled();
   });
 });

@@ -20,7 +20,6 @@ angular.module('aipalvastaus', [
     'yhteiset.direktiivit.copyright',
     'yhteiset.palvelut.i18n',
     'yhteiset.palvelut.lokalisointi',
-    'yhteiset.palvelut.palvelinvirhe',
     'ngRoute'
   ])
 
