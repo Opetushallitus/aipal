@@ -75,6 +75,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       $scope.kysely = {};
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = kysely;
+      }).error(function() {
+        $location.url('/');
       });
 
       if (!$scope.uusi) {
