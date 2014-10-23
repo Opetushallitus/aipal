@@ -1,6 +1,8 @@
 <h1 ng-if="!uusi">{{i18n.kyselykerta.hallitse}}</h1>
 <h1 ng-if="uusi">{{i18n.kyselykerta.uusi_kyselykerta}}</h1>
 
+<h2>Kysely: {{ kysely | lokalisoiKentta:'nimi' }}</h2>
+
 <h3>Perustiedot</h3>
 
 <form name="kyselykertaForm">
