@@ -75,8 +75,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal',
-    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta) {
       var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
 
       if ($routeParams.kyselyid) {
@@ -93,7 +93,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       }
 
       $scope.tallenna = function (kysely) {
-        tallennusFn(kysely)
+        seuranta.asetaLatausIndikaattori(tallennusFn(kysely), 'kyselynTallennus')
         .success(function () {
           $location.path('/kyselyt');
           ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
@@ -101,6 +101,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         .error(function () {
           ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
         });
+      };
+
+      $scope.peruuta = function() {
+        $location.path('/kyselyt');
       };
 
       $scope.lisaaKyselypohjaModal = function () {

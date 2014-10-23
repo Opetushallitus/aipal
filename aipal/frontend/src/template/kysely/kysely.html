@@ -1,11 +1,11 @@
 <h1>{{i18n.yleiset.kysely}}</h1>
 
-<form role="form">
+<form role="form" name="kyselyForm">
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label for="kyselyn_nimi">{{i18n.kysely.nimi_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
-                <input type="text" class="form-control" ng-model="kysely.nimi_fi" id="kyselyn_nimi"/>
+                <label class="pakollinen" for="kyselyn_nimi">{{i18n.kysely.nimi_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
+                <input type="text" class="form-control" ng-model="kysely.nimi_fi" id="kyselyn_nimi" ng-required="true"/>
             </div>
 
             <div class="form-group">
@@ -63,17 +63,21 @@
     </accordion>
 
     <div>
-        <button class="button" ng-click="lisaaKyselypohjaModal()">
-            {{i18n.kysely.lisaa_kyselypohja}}
-            <span class="glyphicon glyphicon glyphicon-plus"></span>
-        </button>
-        <button class="button" ng-click="lisaaKysymysryhmaModal()">
-            {{i18n.kysely.lisaa_kysymysryhma}}
-            <span class="glyphicon glyphicon glyphicon-plus"></span>
-        </button>
-        <button class="button" ng-click="tallenna(kysely)">
-            {{i18n.yleiset.tallenna}}&nbsp;
-            <span class="glyphicon glyphicon-floppy-disk"></span>
-        </button>
+      <small><pakollisia-kenttia></pakollisia-kenttia></small>
+      <button class="button" ng-click="lisaaKyselypohjaModal()">
+        {{i18n.kysely.lisaa_kyselypohja}}
+        <span class="glyphicon glyphicon glyphicon-plus"></span>
+      </button>
+      <button class="button" ng-click="lisaaKysymysryhmaModal()">
+        {{i18n.kysely.lisaa_kysymysryhma}}
+        <span class="glyphicon glyphicon glyphicon-plus"></span>
+      </button>
+    </div>
+    <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{i18n.yleiset.tallennataan}}" virheviesti="{{i18n.yleiset.tallennus_epaonnistui}}" yrita-uudelleen="tallenna(kysely)">
+      <br>
+      <tallenna class="pull-left" formi-validi="kyselyForm.$valid"
+        disabloi-pyyntojen-ajaksi="['tallenna-kyselykerta']" ng-click="tallenna(kysely)" teksti="{{i18n.yleiset.tallenna}}">
+      </tallenna>
+      <button class="btn-default pull-left" ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
     </div>
 </form>
