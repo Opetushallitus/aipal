@@ -1,12 +1,12 @@
 <div class="modal-header">
     <a class="pull-right" ng-click="cancel()">X</a>
-    <h4>Vastaajatunnusten luonti</h4>
+    <h4>{{i18n.vastaajatunnus.uusi_vastaajatunnus}}</h4>
 </div>
 
 <div class="modal-body">
     <form name="tunnustenLuontiForm" role="form">
         <div class="form-group">
-            <label for="vastaajien_maara">Vastaajien määrä</label>
+            <label for="vastaajien_maara">{{i18n.vastaajatunnus.vastaajia}}</label>
             <div class="row">
                 <div class="col-md-4">
                     <input id="vastaajien_maara" type="number" min="1" class="form-control"
@@ -17,12 +17,12 @@
 
         <div class="checkbox">
             <label>
-                <input type="checkbox" ng-model="vastaajatunnus.henkilokohtainen"> Henkilökohtainen
+                <input type="checkbox" ng-model="vastaajatunnus.henkilokohtainen"> {{i18n.vastaajatunnus.henkilokohtainen}}
             </label>
         </div>
 
         <div class="form-group">
-            <h3>Vastausaika</h3>
+            <h3>{{i18n.vastaajatunnus.vastausaika}}</h3>
             <div class="row" id="vastausaika">
                 <div class="col-md-5">
                     <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_alkupvm" otsikko="{{i18n.yleiset.alkaen}}" pakollinen="true"></pvm-valitsin>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="form-group">
-            <label>Rahoitusmuoto
+            <label>{{i18n.yleiset.rahoitusmuoto}}
                <select ng-options="rahoitusmuoto.rahoitusmuotoid as rahoitusmuoto.rahoitusmuoto |enumArvo:'rahoitusmuoto' for rahoitusmuoto in rahoitusmuodot"
                         ng-model="vastaajatunnus.rahoitusmuotoid"
                         class="form-control"
@@ -51,7 +51,7 @@
     <small class="pull-right ">
         <pakollisia-kenttia></pakollisia-kenttia>
     </small>
-    <button class="pull-left" ng-click="luoTunnuksia(vastaajatunnus)">Lisää vastaustunnuksia</button>
+    <button class="pull-left" ng-click="luoTunnuksia(vastaajatunnus)">{{i18n.vastaajatunnus.lisaa_vastaajatunnukset}}</button>
     <button class="btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
 </div>
 
