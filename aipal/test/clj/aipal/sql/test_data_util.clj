@@ -50,6 +50,9 @@
    :vastaustyyppi "asteikko"
    :kysymys_fi "Kysymys"})
 
+(def default-jatkokysymys
+  {:kylla_teksti_fi "Kyllä teksti"})
+
 (defn lisaa-koulutusala!
   ([koulutusala]
     (let [k (merge default-koulutusala koulutusala)]
@@ -134,3 +137,10 @@
   [uusi-kysymys]
   (let [kysymys (merge default-kysymys uusi-kysymys)]
     (sql/insert :kysymys (sql/values [kysymys]))))
+
+(defn lisaa-jatkokysymys!
+  ([uusi-jatkokysymys]
+  (let [jatkokysymys (merge default-jatkokysymys uusi-jatkokysymys)]
+    (sql/insert :jatkokysymys (sql/values [jatkokysymys]))))
+  ([]
+    (lisaa-jatkokysymys! default-jatkokysymys)))

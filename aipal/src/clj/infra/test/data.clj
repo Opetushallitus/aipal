@@ -26,6 +26,7 @@
    "kysely_kysymysryhma"
    "kysely_kysymys"
    "kysymysryhma"
+   "jatkokysymys"
    "kyselypohja"
    "monivalintavaihtoehto"
    "vastaus"

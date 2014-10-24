@@ -43,6 +43,8 @@
   (sql/pk :kysymysid)
   (sql/belongs-to kysymysryhma {:fk :kysymysryhmaid}))
 
+(defentity jatkokysymys)
+
 (defentity vastaajatunnus
   (sql/pk :vastaajatunnusid))
 

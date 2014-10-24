@@ -3,20 +3,33 @@
             [korma.core :as sql]
             [clj-time.core :as time]
             [aipal.sql.test-util :refer [tietokanta-fixture]]
-            [aipal.integraatio.sql.korma :refer [kysymys kysymysryhma]]
+            [aipal.integraatio.sql.korma :refer [jatkokysymys kysymys kysymysryhma]]
             [aipal.arkisto.kysymysryhma :refer :all]
             [aipal.sql.test-data-util :as test-data]))
 
 (use-fixtures :each tietokanta-fixture)
 
 (deftest ^:integraatio hae-kysymysryhman-kysymykset
-  (let [kysymysryhma (test-data/lisaa-kysymysryhma!)
-        kysymysryhmaid (:kysymysryhmaid kysymysryhma)
-        kysymys (test-data/lisaa-kysymys! {:kysymysryhmaid kysymysryhmaid})]
-    (is (= [(:kysymysid kysymys)]
+  (let [kysymysryhmaid (-> (test-data/lisaa-kysymysryhma!)
+                         :kysymysryhmaid)
+        kysymysid (-> (test-data/lisaa-kysymys! {:kysymysryhmaid kysymysryhmaid})
+                    :kysymysid)]
+    (is (= [kysymysid]
            (->> (hae kysymysryhmaid)
              :kysymys
              (map :kysymysid))))))
+
+(deftest ^:integraatio hae-kysymysryhman-kysymysten-jatkokysymykset
+  (let [kysymysryhmaid (-> (test-data/lisaa-kysymysryhma!)
+                         :kysymysryhmaid)
+        jatkokysymysid (-> (test-data/lisaa-jatkokysymys! {:kylla_teksti_fi "Jatkokysymys"})
+                         :jatkokysymysid)
+        _ (test-data/lisaa-kysymys! {:kysymysryhmaid kysymysryhmaid
+                                     :jatkokysymysid jatkokysymysid})]
+    (is (= ["Jatkokysymys"]
+           (->> (hae kysymysryhmaid)
+             :kysymys
+             (map :kylla_teksti_fi))))))
 
 ;; hae-kysymysryhmat palauttaa kaikki kysymysryhmät riippumatta voimassaolosta
 (deftest ^:integraatio hae-kysymysryhmat-voimassaolo
