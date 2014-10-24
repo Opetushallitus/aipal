@@ -41,6 +41,15 @@
   {:ytunnus "1234567-8"
    :nimi_fi "Pörsänmäen opistokeskittymä"})
 
+(def default-kysymysryhma
+  {:nimi_fi "Kysymysryhma"})
+
+(def default-kysymys
+  {:pakollinen true
+   :poistettava false
+   :vastaustyyppi "asteikko"
+   :kysymys_fi "Kysymys"})
+
 (defn lisaa-koulutusala!
   ([koulutusala]
     (let [k (merge default-koulutusala koulutusala)]
@@ -112,3 +121,16 @@
     (aipal.arkisto.vastaajatunnus/lisaa! (merge {:kyselykertaid (:kyselykertaid kyselykerta)
                                                  :vastaajien_lkm 1}
                                                 vastaajatunnus))))
+
+(defn lisaa-kysymysryhma!
+  ([uusi-kysymysryhma]
+    (let [kysymysryhma (merge default-kysymysryhma uusi-kysymysryhma)]
+      (sql/insert :kysymysryhma (sql/values [kysymysryhma]))))
+  ([]
+    (let [koulutustoimija (lisaa-koulutustoimija!)]
+      (lisaa-kysymysryhma! (assoc default-kysymysryhma :koulutustoimija (:ytunnus koulutustoimija)) ))))
+
+(defn lisaa-kysymys!
+  [uusi-kysymys]
+  (let [kysymys (merge default-kysymys uusi-kysymys)]
+    (sql/insert :kysymys (sql/values [kysymys]))))
