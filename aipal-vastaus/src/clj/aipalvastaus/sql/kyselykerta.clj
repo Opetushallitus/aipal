@@ -31,13 +31,19 @@
     (sql/join :inner :kysely_kysymys (= :kysely_kysymys.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
     (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
-      (sql/fields :kysymys.kysymysryhmaid
-                  :kysymys.kysymysid
-                  :kysymys.vastaustyyppi
-                  :kysymys.monivalinta_max
-                  :kysymys.kysymys_fi
-                  :kysymys.kysymys_sv
-                  :kysymys.pakollinen)
+    (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
+    (sql/fields :kysymys.kysymysryhmaid
+                :kysymys.kysymysid
+                :kysymys.vastaustyyppi
+                :kysymys.monivalinta_max
+                :kysymys.kysymys_fi
+                :kysymys.kysymys_sv
+                :kysymys.pakollinen
+                :jatkokysymys.kylla_teksti_fi
+                :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.ei_teksti_fi
+                :jatkokysymys.ei_teksti_sv
+                [:jatkokysymys.max_vastaus :ei_max_vastaus])
     (sql/where {:vastaajatunnus.tunnus tunnus})
     (sql/order :kysymys.jarjestys)))
 
