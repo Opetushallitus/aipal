@@ -102,14 +102,22 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
   }])
 
-  .controller('UusiKysymysryhmaController', ['$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus',
-                                             function($scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus) {
+  .controller('UusiKysymysryhmaController', ['$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus',
+                                             function($routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus) {
     $scope.$watch('form', function(form) {
       tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
     });
+
     $scope.kysymysryhma = {
       kysymykset: []
     };
+    if ($routeParams.kysymysryhmaid) { // if uusi
+      Kysymysryhma.hae($routeParams.kysymysryhmaid)
+      .success(function(kysymysryhma) {
+        $scope.kysymysryhma = kysymysryhma;
+      });
+    }
+
     $scope.muokkaustila = false;
     $scope.vastaustyypit = [
       'asteikko',
