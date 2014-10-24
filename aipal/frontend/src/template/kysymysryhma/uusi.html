@@ -1,70 +1,123 @@
 <h1>{{i18n.kysymysryhma.uusi}}</h1>
 
-<div ng-if="yllapitaja">
-  <input type="checkbox" ng-model="kysymysryhma.valtakunnallinen"> {{i18n.kysymysryhma.valtakunnallinen}}
-</div>
+<form role="form" novalidate>
+    <div class="row">
+        <div class="col-md-5">
+            <div ng-if="yllapitaja" class="checkbox">
+              <label>
+                  <input type="checkbox" ng-model="kysymysryhma.valtakunnallinen">
+                  {{i18n.kysymysryhma.valtakunnallinen}}
+              </label>
+            </div>
 
-<h3>{{i18n.kysymysryhma.nimi_fi}} *</h3>
-<input type="text" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
+            <label>{{i18n.kysymysryhma.nimi_fi}} *
+                <input type="text" class="form-control" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
+            </label>
 
-<h3>{{i18n.kysymysryhma.nimi_sv}}</h3>
-<input type="text" ng-model="kysymysryhma.nimi_sv" size="80" maxlength="200" />
+            <label>{{i18n.kysymysryhma.nimi_sv}}
+                <input type="text" class="form-control" ng-model="kysymysryhma.nimi_sv" size="80" maxlength="200" />
+            </label>
 
-<h3>{{i18n.kysymysryhma.selite_fi}}</h3>
-<textarea ng-model="kysymysryhma.selite_fi" rows="5" cols="80"></textarea>
+            <label>{{i18n.kysymysryhma.selite_fi}}
+                <textarea class="form-control" ng-model="kysymysryhma.selite_fi" rows="5" cols="80"></textarea>
+            </label>
 
-<h3>{{i18n.kysymysryhma.selite_sv}}</h3>
-<textarea ng-model="kysymysryhma.selite_sv" rows="5" cols="80"></textarea>
-
-<div>
-  <div>
-    <h3>{{i18n.kysymysryhma.kysymykset}}</h3>
-  </div>
-  <div ng-repeat="kysymys in kysymysryhma.kysymykset">
-    <div ng-show="!kysymys.muokattava">
-      <a ng-click="muokkaa(kysymys)">{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}: {{kysymys.kysymys_fi}}</a>
-    </div>
-    <div ng-show="kysymys.muokattava">
-      <ng-form name="kysymysForm">
-        <section>
-          <fieldset>
-            <label>{{i18n.kysymys.vastaustapa}}</label>
-            <select ng-model="kysymys.vastaustyyppi" class="form-control">
-              <option ng-repeat="tyyppi in vastaustyypit" ng-selected="{{kysymys.vastaustyyppi === tyyppi}}" value="{{tyyppi}}">
-                {{i18n.kysymys.tyyppi[tyyppi]}}
-              </option>
-            </select>
-          </fieldset>
-          <fieldset>
-            <input type="checkbox" ng-model="kysymys.pakollinen">{{i18n.kysymys.vastaus_pakollinen}}<br>
-            <input type="checkbox" ng-model="kysymys.poistettava">{{i18n.kysymys.poistettava}}
-          </fieldset>
-        </section>
-        <section>
-          <fieldset>
-            <label>{{i18n.kysymys.kysymys_suomeksi}}</label>
-            <input type="text" ng-model="kysymys.kysymys_fi" size="80" maxlength="200" required/>
-          </fieldset>
-          <fieldset>
-            <label>{{i18n.kysymys.kysymys_ruotsiksi}}</label>
-            <input type="text" ng-model="kysymys.kysymys_sv" size="80" maxlength="200"/>
-          </fieldset>
-        </section>
-        <div ng-include="'template/kysymysryhma/osat/' + kysymys.vastaustyyppi + '.html'"></div>
-        <div>
-          <button ng-click="tallenna(kysymys)" ng-disabled="kysymysForm.$error.required">{{i18n.yleiset.tallenna}}</button>
+            <label>{{i18n.kysymysryhma.selite_sv}}
+                <textarea class="form-control" ng-model="kysymysryhma.selite_sv" rows="5" cols="80"></textarea>
+            </label>
         </div>
-      </ng-form>
+
+        <div class="col-md-7">
+            <div class="row">
+                <h3 class="pull-left">{{i18n.kysymysryhma.kysymykset}}</h3>
+                <div ng-show="!muokkaustila" class="pull-right">
+                    <button ng-click="lisaaKysymys()" class="button-with-icon add-icon-white">{{i18n.kysymysryhma.luo_uusi_kysymys}}</button>
+                </div>
+            </div>
+
+            <table class="table table-striped kysymys-taulukko" ng-show="!muokkaustila">
+                <thead>
+                <tr>
+                    <th>Kysymys</th>
+                    <th>Tyyppi</th>
+                    <th>Pakollinen</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="kysymys in kysymysryhma.kysymykset">
+                        <td>{{kysymys.kysymys_fi}}</td>
+                        <td>{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}</td>
+                        <td>
+                            <span ng-show="kysymys.pakollinen" class="glyphicon glyphicon-ok"></span>
+                        </td>
+                        <td>
+                            <span class="glyphicon glyphicon-pencil" style="cursor: pointer" ng-click="muokkaa(kysymys)"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div ng-show="muokkaustila" class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title" ng-show="aktiivinenKysymys.uusi">{{i18n.kysymysryhma.luo_uusi_kysymys}}</h4>
+                    <h4 class="panel-title" ng-show="!aktiivinenKysymys.uusi">{{i18n.kysymysryhma.muokkaa_kysymysta}}</h4>
+                </div>
+                <div class="panel-body">
+                    <ng-form name="kysymysForm">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="aktiivinenKysymys.pakollinen"> {{i18n.kysymys.vastaus_pakollinen}}
+                            </label>
+                        </div>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="aktiivinenKysymys.poistettava"> {{i18n.kysymys.poistettava}}
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{i18n.kysymys.kysymys_suomeksi}}
+                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_fi" size="80" maxlength="200" required/>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{i18n.kysymys.kysymys_ruotsiksi}}
+                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_sv" size="80" maxlength="200"/>
+                            </label>
+                        </div>
+
+                        <fieldset>
+                            <label>{{i18n.kysymys.vastaustapa}}</label>
+                            <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control">
+                                <option ng-repeat="tyyppi in vastaustyypit" ng-selected="{{aktiivinenKysymys.vastaustyyppi === tyyppi}}" value="{{tyyppi}}">
+                                    {{i18n.kysymys.tyyppi[tyyppi]}}
+                                </option>
+                            </select>
+                        </fieldset>
+
+                        <div ng-include="'template/kysymysryhma/osat/' + aktiivinenKysymys.vastaustyyppi + '.html'"></div>
+
+                        <br />
+
+                        <div>
+                            <button ng-show="aktiivinenKysymys.uusi" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
+                            <button ng-show="!aktiivinenKysymys.uusi" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.muokkaa_kysymysta}}</button>
+                            <button ng-click="peruutaKysymysTallennus()" class="btn-default">{{i18n.yleiset.peruuta}}</button>
+                        </div>
+                    </ng-form>
+                </div>
+            </div>
+
     </div>
-  </div>
-</div>
 
-<div ng-show="!muokkaustila">
-  <button ng-click="lisaaKysymys()">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
-</div>
-
-
-<div>
-  <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.kysymysryhma.luo_uusi}}</button>
-  <button ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
-</div>
+    </div>
+    <div class="row clearfix">
+        <div>
+            <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}</button>
+            <button ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
+        </div>
+    </div>
+</form>

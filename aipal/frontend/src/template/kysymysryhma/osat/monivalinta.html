@@ -1,31 +1,29 @@
 <section>
-  <fieldset>
-    <label>{{i18n.kysymys.valintojen_maksimimaara}}</label>
-    <select class="form-control" ng-model="kysymys.monivalinta_max" ng-options="max for max in [] | numerot:kysymys.monivalintavaihtoehdot.length" ng-show="monivalintavaihtoehdot.length > 0">
+    <label>{{i18n.kysymys.valintojen_maksimimaara}}
+    <select class="form-control" ng-model="aktiivinenKysymys.monivalinta_max" ng-options="max for max in [] | numerot:aktiivinenKysymys.monivalintavaihtoehdot.length" ng-show="monivalintavaihtoehdot.length > 0">
         <option value=""></option>
     </select>
-  </fieldset>
+    </label>
 </section>
+
 <section>
-  <label>Vaihtoehdot</label>
-  <ol>
-    <li ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot">
-      <section>
-        <fieldset>
-          <label>{{i18n.yleiset.suomeksi}}</label>
-          <input type="text" ng-model="vaihtoehto.teksti_fi" size="80" maxlength="200" required/>
-        </fieldset>
-        <fieldset>
-          <label>{{i18n.yleiset.ruotsiksi}}</label>
-          <input type="text" ng-model="vaihtoehto.teksti_sv" size="80" maxlength="200"/>
-        </fieldset>
-        <fieldset>
-          <button class="icon delete-icon" ng-show="kysymys.monivalintavaihtoehdot.length > 2" ng-click="poistaVaihtoehto(kysymys,$index)"></button>
-        </fieldset>
-      </section>
+  <h3>Vaihtoehdot</h3>
+
+  <ol class="monivalinnat">
+    <li ng-repeat="vaihtoehto in aktiivinenKysymys.monivalintavaihtoehdot">
+        <div class="well">
+            <div class="form-group">
+              <label>{{i18n.yleiset.suomeksi}}
+                <input class="form-control" type="text" ng-model="vaihtoehto.teksti_fi" size="80" maxlength="200" required/>
+              </label>
+
+              <label>{{i18n.yleiset.ruotsiksi}}
+                <input class="form-control" type="text" ng-model="vaihtoehto.teksti_sv" size="80" maxlength="200"/>
+              </label>
+                <button class="icon delete-icon" ng-show="aktiivinenKysymys.monivalintavaihtoehdot.length > 2" ng-click="poistaVaihtoehto(aktiivinenKysymys,$index)"></button>
+            </div>
+        </div>
     </li>
   </ol>
-  <div>
-    <button ng-click="lisaaVaihtoehto(kysymys)">{{i18n.kysymys.lisaa_vaihtoehto}}</button>
-  </div>
+  <button class="pull-right button-with-icon add-icon-white" ng-click="lisaaVaihtoehto(aktiivinenKysymys)">{{i18n.kysymys.lisaa_vaihtoehto}}</button>
 </section>

@@ -295,3 +295,21 @@ fieldset.datepicker-field {
   }
 }
 
+ol.monivalinnat{
+  li {
+    vertical-align: top;
+    font-weight: bold;
+    .well{
+      position: relative;
+      padding: 10px;
+      button.icon.delete-icon{
+        position: absolute;
+        top: 3px;
+        right: 10px;
+      }
+      label{
+        font-weight: normal;
+      }
+    }
+  }
+}
