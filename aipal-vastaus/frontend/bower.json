@@ -12,8 +12,5 @@
     "jquery": "2.1.0",
     "lodash": "2.4.1",
     "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.12"
-  },
-  "resolutions": {
-    "angular": "1.2.12"
   }
 }
