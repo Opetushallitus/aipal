@@ -57,13 +57,15 @@
                                      [:voimassa_alkupvm :voimassa_loppupvm]
                                      parse-iso-date))))
 
+  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
+    (json-response
+      (paivita-kysely! (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid))
+                                      [:voimassa_alkupvm :voimassa_loppupvm]
+                                      parse-iso-date))))
+
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (when-let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
                      (assoc kysely :kysymysryhmat (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))))
-
-  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
-    (json-response
-      (paivita-kysely! (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid)) [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/kysymysryhmat" [kyselyid]
     (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid)))))
