@@ -102,9 +102,9 @@
                                       :voimassa true}]}
       (avaa kyselyt-sivu)
       (testing
-        "Luo uusi kysely ohjaa kyselyn muokkaukseen"
+        "Luo uusi kysely ohjaa kyselyn luontiin"
         (w/click (uusi-kysely))
-        (w/wait-until #(re-matches #".*/#/kyselyt/kysely/[0-9]+" (w/current-url)) 10000)))))
+        (w/wait-until #(re-matches #".*/#/kyselyt/kysely/uusi" (w/current-url)) 10000)))))
 
 (deftest ^:no-ie kyselyt-sivu-kyselykerran-luonti-test
   (with-webdriver
