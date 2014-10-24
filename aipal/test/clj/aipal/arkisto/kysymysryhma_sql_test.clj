@@ -16,7 +16,7 @@
                     :kysymysid)]
     (is (= [kysymysid]
            (->> (hae kysymysryhmaid)
-             :kysymys
+             :kysymykset
              (map :kysymysid))))))
 
 (deftest ^:integraatio hae-kysymysryhman-kysymysten-jatkokysymykset
@@ -28,7 +28,7 @@
                                      :jatkokysymysid jatkokysymysid})]
     (is (= ["Jatkokysymys"]
            (->> (hae kysymysryhmaid)
-             :kysymys
+             :kysymykset
              (map :kylla_teksti_fi))))))
 
 ;; hae-kysymysryhmat palauttaa kaikki kysymysryhmät riippumatta voimassaolosta

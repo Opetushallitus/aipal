@@ -68,7 +68,7 @@
                 {{kysymysryhma | lokalisoiKentta:'nimi' }} <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': group.open, 'glyphicon-chevron-right': !group.open}"></i>
             </accordion-heading>
             <ol class="kysymykset">
-                <li ng-repeat="kysymys in kysymysryhma.kysymys">
+                <li ng-repeat="kysymys in kysymysryhma.kysymykset">
                     <span ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}}</span>&nbsp;
                     <a ng-click="poistaKysymys(kysymys)" ng-if="kysymys.poistettava && !kysymys.poistettu">Poista</a>
                     <a ng-click="palautaKysymys(kysymys)" ng-if="kysymys.poistettu">Palauta</a>

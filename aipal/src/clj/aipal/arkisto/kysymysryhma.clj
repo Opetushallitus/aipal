@@ -49,20 +49,27 @@
 (def kysymysryhma-select
   (->
     (sql/select* taulut/kysymysryhma)
-    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :taustakysymykset :valtakunnallinen)
-    (sql/with taulut/kysymys
-      (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
-      (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
-                  :kysymys.poistettava :kysymys.pakollinen
-                  :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
-                  :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
-      (sql/order :kysymys.jarjestys))))
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :taustakysymykset :valtakunnallinen)))
+
+(def kysymys-select
+  (->
+    (sql/select* taulut/kysymys)
+    (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
+    (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
+                :kysymys.poistettava :kysymys.pakollinen
+                :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
+    (sql/order :kysymys.jarjestys)))
 
 (defn hae [kysymysryhmaid]
-  (first
-    (-> kysymysryhma-select
-      (sql/where {:kysymysryhmaid kysymysryhmaid})
-      sql/exec)))
+  (-> kysymysryhma-select
+    (sql/where {:kysymysryhmaid kysymysryhmaid})
+    sql/exec
+    first
+    (assoc :kysymykset
+           (-> kysymys-select
+             (sql/where {:kysymysryhmaid kysymysryhmaid})
+             (sql/exec)))))
 
 (defn hae-kyselypohjasta [kyselypohjaid]
   (-> kysymysryhma-select
