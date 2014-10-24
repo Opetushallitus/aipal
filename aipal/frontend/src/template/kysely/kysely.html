@@ -73,11 +73,9 @@
         <span class="glyphicon glyphicon glyphicon-plus"></span>
       </button>
     </div>
-    <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{i18n.yleiset.tallennataan}}" virheviesti="{{i18n.yleiset.tallennus_epaonnistui}}" yrita-uudelleen="tallenna(kysely)">
+    <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{'i18n.yleiset.tallennataan' | i18n}}" virheviesti="{{'i18n.yleiset.tallennus_epaonnistui' | i18n}}" yrita-uudelleen="tallenna()">
       <br>
-      <tallenna class="pull-left" formi-validi="kyselyForm.$valid"
-        disabloi-pyyntojen-ajaksi="['tallenna-kyselykerta']" ng-click="tallenna(kysely)" teksti="{{i18n.yleiset.tallenna}}">
-      </tallenna>
-      <button class="btn-default pull-left" ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
+      <button class="pull-left" ng-disabled="!kyselyForm.$valid" ng-click="tallenna()">{{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
+      <button class="btn-default pull-left" ng-click="peruuta()">{{'i18n.yleiset.peruuta' | i18n}}</button>
     </div>
 </form>

@@ -92,8 +92,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         $scope.kysely = {};
       }
 
-      $scope.tallenna = function (kysely) {
-        seuranta.asetaLatausIndikaattori(tallennusFn(kysely), 'kyselynTallennus')
+      $scope.tallenna = function () {
+        seuranta.asetaLatausIndikaattori(tallennusFn($scope.kysely), 'kyselynTallennus')
         .success(function () {
           $location.path('/kyselyt');
           ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
