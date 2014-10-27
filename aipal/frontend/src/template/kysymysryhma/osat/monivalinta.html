@@ -1,10 +1,9 @@
-<section>
+<div class="form-group">
     <label>{{i18n.kysymys.valintojen_maksimimaara}}
-    <select class="form-control" ng-model="aktiivinenKysymys.monivalinta_max" ng-options="max for max in [] | numerot:aktiivinenKysymys.monivalintavaihtoehdot.length" ng-show="monivalintavaihtoehdot.length > 0">
-        <option value=""></option>
-    </select>
+        <select class="form-control" ng-model="aktiivinenKysymys.monivalinta_max" ng-options="max for max in [] | numerot:aktiivinenKysymys.monivalintavaihtoehdot.length" ng-show="aktiivinenKysymys.monivalintavaihtoehdot.length > 0">
+        </select>
     </label>
-</section>
+</div>
 
 <section>
   <h3>Vaihtoehdot</h3>

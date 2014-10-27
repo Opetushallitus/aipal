@@ -89,35 +89,37 @@
                             </label>
                         </div>
 
-                        <fieldset>
-                            <label>{{i18n.kysymys.vastaustapa}}</label>
+                        <div class="form-group">
+                            <label>{{i18n.kysymys.vastaustapa}}
                             <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control">
                                 <option ng-repeat="tyyppi in vastaustyypit" ng-selected="{{aktiivinenKysymys.vastaustyyppi === tyyppi}}" value="{{tyyppi}}">
                                     {{i18n.kysymys.tyyppi[tyyppi]}}
                                 </option>
                             </select>
-                        </fieldset>
+                            </label>
+                        </div>
 
                         <div ng-include="'template/kysymysryhma/osat/' + aktiivinenKysymys.vastaustyyppi + '.html'"></div>
 
                         <br />
 
                         <div>
-                            <button ng-show="aktiivinenKysymys.uusi" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
+                            <button ng-show="aktiivinenKysymys.uusi" ng-click="tallenna()" ng-disabled="kysymysForm.$erro   r.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
                             <button ng-show="!aktiivinenKysymys.uusi" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.muokkaa_kysymysta}}</button>
                             <button ng-click="peruutaKysymysTallennus()" class="btn-default">{{i18n.yleiset.peruuta}}</button>
                         </div>
                     </ng-form>
                 </div>
             </div>
-
     </div>
 
     </div>
-    <div class="row clearfix">
-        <div>
-            <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}</button>
-            <button ng-click="peruuta()">{{i18n.yleiset.peruuta}}</button>
+    <div class="col-md-12">
+        <div class="row clearfix">
+            <div>
+                <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
+                <button ng-click="peruuta()" class="btn-default">{{i18n.yleiset.peruuta}}</button>
+            </div>
         </div>
     </div>
 </form>
