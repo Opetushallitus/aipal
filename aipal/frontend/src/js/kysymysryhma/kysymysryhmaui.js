@@ -101,8 +101,11 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
   }])
 
-  .controller('UusiKysymysryhmaController', ['$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit',
-                                             function($scope, $location, Kysymysryhma, i18n, ilmoitus, apu) {
+  .controller('UusiKysymysryhmaController', ['$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus',
+                                             function($scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus) {
+    $scope.$watch('form', function(form) {
+      tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
+    });
     $scope.kysymysryhma = {
       kysymykset: []
     };
@@ -150,6 +153,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.luoUusi = function(){
       Kysymysryhma.luoUusi($scope.kysymysryhma)
       .success(function(){
+        $scope.form.$setPristine();
         $location.path('/kysymysryhmat');
         ilmoitus.onnistuminen(i18n.hae('kysymysryhma.luonti_onnistui'));
       })
