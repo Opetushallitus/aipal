@@ -75,9 +75,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta',
-    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta) {
       var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
+      $scope.$watch('kyselyForm', function(form) {
+        // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
+        tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
+      });
 
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)
@@ -95,6 +99,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.tallenna = function () {
         seuranta.asetaLatausIndikaattori(tallennusFn($scope.kysely), 'kyselynTallennus')
         .success(function () {
+          $scope.kyselyForm.$setPristine();
           $location.path('/kyselyt');
           ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
         })

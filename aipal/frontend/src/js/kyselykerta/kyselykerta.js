@@ -36,8 +36,12 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Rahoitusmuoto', 'Vastaajatunnus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi',
-    function(Kyselykerta, Kysely, Rahoitusmuoto, Vastaajatunnus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Rahoitusmuoto', 'Vastaajatunnus', 'tallennusMuistutus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi',
+    function(Kyselykerta, Kysely, Rahoitusmuoto, Vastaajatunnus, tallennusMuistutus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi) {
+      $scope.$watch('kyselykertaForm', function(form) {
+        // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
+        tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
+      });
       $scope.luoTunnuksiaDialogi = function() {
         var kyselykertaId = $routeParams.kyselykertaid;
 
@@ -92,10 +96,12 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       $scope.tallenna = function() {
         if ($scope.uusi) {
           Kyselykerta.luoUusi(parseInt($routeParams.kyselyid, 10), $scope.kyselykerta, function(kyselykerta) {
+            $scope.kyselykertaForm.$setPristine();
             $location.url('/kyselyt/' + $routeParams.kyselyid + '/kyselykerta/' + kyselykerta.kyselykertaid);
           });
         } else {
           Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta, function() {
+            $scope.kyselykertaForm.$setPristine();
             ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
           }, function() {
             ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
