@@ -16,5 +16,7 @@
   (:require [schema.core :as s]))
 
 (def KayttajanVastaus {:kysymysid s/Int
-                       :vastaus [(s/either s/Int s/Str)]})
-
+                       :vastaus [(s/either s/Int s/Str)]
+                       (s/optional-key :jatkokysymysid) s/Int
+                       (s/optional-key :jatkovastaus_kylla) s/Int
+                       (s/optional-key :jatkovastaus_ei) s/Str})
