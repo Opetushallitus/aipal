@@ -33,6 +33,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     ilmoitus = {onnistuminen: jasmine.createSpy('onnistuminen'),
                 virhe: jasmine.createSpy('virhe')};
     $provide.value('ilmoitus', ilmoitus);
+    $provide.value('uusi', true);
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
