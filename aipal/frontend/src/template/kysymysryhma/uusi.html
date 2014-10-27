@@ -1,4 +1,5 @@
-<h1>{{i18n.kysymysryhma.uusi}}</h1>
+<h1 ng-if="uusi">{{i18n.kysymysryhma.uusi}}</h1>
+<h1 ng-if="!uusi">{{i18n.kysymysryhma.muokkaa}}</h1>
 
 <form name="form" role="form" novalidate>
     <div class="row">

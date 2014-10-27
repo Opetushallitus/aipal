@@ -119,6 +119,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
     });
 
+    $scope.uusi = uusi;
+
     $scope.kysymysryhma = {
       kysymykset: []
     };
