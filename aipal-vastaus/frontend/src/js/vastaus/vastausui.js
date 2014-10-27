@@ -35,6 +35,19 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
               }
             }
           }
+          else if (kysymysdata.vastaustyyppi === 'kylla_ei_valinta' && !_.isUndefined(kysymysdata.vastaus)) {
+            if (kysymysdata.jatkokysymysid) {
+              if (kysymysdata.vastaus === 'kylla' && kysymysdata.jatkovastaus_kylla) {
+                vastaus.jatkokysymysid = kysymysdata.jatkokysymysid;
+                vastaus.jatkovastaus_kylla = kysymysdata.jatkovastaus_kylla;
+              }
+              else if (kysymysdata.jatkovastaus_ei) {
+                vastaus.jatkokysymysid = kysymysdata.jatkokysymysid;
+                vastaus.jatkovastaus_ei = kysymysdata.jatkovastaus_ei;
+              }
+            }
+            vastaus.vastaus.push(kysymysdata.vastaus);
+          }
           else if (!_.isUndefined(kysymysdata.vastaus)) {
             vastaus.vastaus.push(kysymysdata.vastaus);
           }
