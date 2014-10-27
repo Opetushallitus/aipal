@@ -93,3 +93,65 @@
                :vapaateksti nil
                :vaihtoehto nil}]
              (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
+
+(deftest jatkokysymyksen-kylla-vastauksen-validointi
+  (testing "validi kyllä vastaus pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"}
+          vastaus {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus"}]
+      (is (v/kylla-jatkovastaus-validi? vastaus kysymys))))
+  (testing "väärällä id:llä ei pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"}
+          vastaus {:jatkokysymysid 2 :jatkovastaus_kylla "vastaus"}]
+      (is (not (v/kylla-jatkovastaus-validi? vastaus kysymys)))))
+  (testing "ilman vastausta ei pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"}
+          vastaus {:jatkokysymysid 1}]
+      (is (not (v/kylla-jatkovastaus-validi? vastaus kysymys)))))
+  (testing "ilman jatkokysymystä ei pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1}
+          vastaus {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus"}]
+      (is (not (v/kylla-jatkovastaus-validi? vastaus kysymys))))))
+
+(deftest jatkokysymyksen-ei-vastauksen-validointi
+  (testing "validi kyllä vastaus pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys"}
+          vastaus {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"}]
+      (is (v/ei-jatkovastaus-validi? vastaus kysymys))))
+  (testing "väärällä id:llä ei pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys"}
+          vastaus {:jatkokysymysid 2 :jatkovastaus_ei "vastaus"}]
+      (is (not (v/ei-jatkovastaus-validi? vastaus kysymys)))))
+  (testing "ilman vastausta ei pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys"}
+          vastaus {:jatkokysymysid 1}]
+      (is (not (v/ei-jatkovastaus-validi? vastaus kysymys)))))
+  (testing "ilman jatkokysymystä ei pitäisi olla validi"
+    (let [kysymys {:jatkokysymysid 1}
+          vastaus {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"}]
+      (is (not (v/ei-jatkovastaus-validi? vastaus kysymys))))))
+
+(deftest jatkokysymyksen-validointi
+  (testing "pakollinen kysymys on validi kun siihen on vastattu"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys" :pakollinen true}
+          vastaus {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"}]
+      (is (v/jatkovastaus-validi? vastaus kysymys))))
+  (testing "pakollinen kysymys ei ole validi kun siihen ei ole vastattu"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys" :pakollinen true}
+          vastaus {:jatkokysymysid 1}]
+      (is (not (v/jatkovastaus-validi? vastaus kysymys)))))
+  (testing "vapaaehtoinen kysymys on validi kun siihen on vastattu"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys" :pakollinen false}
+          vastaus {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"}]
+      (is (v/jatkovastaus-validi? vastaus kysymys))))
+  (testing "vapaaehtoinen kysymys on validi kun siihen ei ole vastattu"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys" :pakollinen false}
+          vastaus {:vastaus "vastaus"}]
+      (is (v/jatkovastaus-validi? vastaus kysymys))))
+  (testing "jatkovastaus ei ole validi jos jatkokysymystä ei ole"
+    (let [kysymys {:kysymysid 1}
+          vastaus {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"}]
+      (is (not (v/jatkovastaus-validi? vastaus kysymys)))))
+  (testing "jatkovastausid:tä ei saa olla olemassa jos ei ole vastausta"
+    (let [kysymys {:jatkokysymysid 1 :ei_teksti_fi "kysymys"}
+          vastaus {:jatkokysymysid 1}]
+      (is (not (v/jatkovastaus-validi? vastaus kysymys))))))
