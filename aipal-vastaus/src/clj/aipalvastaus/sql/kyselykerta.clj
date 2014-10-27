@@ -40,6 +40,7 @@
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.pakollinen
+                :jatkokysymys.jatkokysymysid
                 :jatkokysymys.kylla_teksti_fi
                 :jatkokysymys.kylla_teksti_sv
                 :jatkokysymys.ei_teksti_fi
