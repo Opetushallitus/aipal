@@ -1,6 +1,27 @@
 <h1>{{i18n.kysymysryhma.kysymysryhmat}}</h1>
-<a href="#/kysymysryhmat/kysymysryhma/uusi">{{i18n.kysymysryhma.luo_uusi}}</a>
+<a class="pull-right button button-with-icon add-icon-white" href="#/kysymysryhmat/kysymysryhma/uusi">{{i18n.kysymysryhma.luo_uusi}}</a>
 <div class="loader" ng-show="!latausValmis"></div>
-<ul ng-show="latausValmis">
-  <li ng-repeat="k in kysymysryhmat">{{k.nimi_fi}}</li>
-</ul>
+
+
+<table class="table table-striped kysymysryhmat-taulukko" ng-show="latausValmis">
+    <thead>
+    <tr>
+        <th>Nimi</th>
+        <th>Selite</th>
+        <th>Valtakunnallinen</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="k in kysymysryhmat">
+        <td>{{k.nimi_fi}}</td>
+        <td>{{k.selite_fi}}</td>
+        <td>
+            <span ng-show="k.valtakunnallinen" class="glyphicon glyphicon-ok"></span>
+        </td>
+        <td>
+            <span class="glyphicon glyphicon-pencil"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>
