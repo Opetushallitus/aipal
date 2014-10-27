@@ -153,7 +153,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         $scope.kysymysryhma.kysymykset = originals;
       }
       // Uudet "tyhjät" pois jos painetaan peruuta
-      $scope.kysymysryhma.kysymykset = _.where($scope.kysymysryhma.kysymykset, {uusi: false});
+      $scope.kysymysryhma.kysymykset = _.filter(
+        $scope.kysymysryhma.kysymykset,
+        function(kysymys) {return !kysymys.uusi;}
+      );
     };
 
     $scope.peruuta = function(){
