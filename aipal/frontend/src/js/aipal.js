@@ -25,6 +25,7 @@ angular.module('aipal', [
   'yhteiset.palvelut.i18n',
   'yhteiset.palvelut.apicallinterceptor',
   'yhteiset.palvelut.lokalisointi',
+  'yhteiset.palvelut.tallennusMuistutus',
   'yhteiset.palvelut.virheLogitus',
   'yhteiset.palvelut.seuranta',
   'yhteiset.palvelut.kayttooikeudet',
