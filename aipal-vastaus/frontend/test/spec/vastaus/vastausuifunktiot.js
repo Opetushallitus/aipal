@@ -174,6 +174,148 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
       };
       expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]},{kysymysid:3,vastaus:['kylla']}]});
     });
+    it('Kyllä vastaukselta saadaan vastaus jatkokysymykseen', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: 3,
+                vastaus: 'kylla',
+                jatkovastaus_kylla: 1
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['kylla'], jatkokysymysid:3, jatkovastaus_kylla:1}]});
+    });
+    it('Kyllä vastaukselta saadaan vastaus jatkokysymykseen vaikka ei-vastauksellekin olisi tallennettu jotain', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: 3,
+                vastaus: 'kylla',
+                jatkovastaus_kylla: 1,
+                jatkovastaus_ei: 'vastaus'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['kylla'], jatkokysymysid:3, jatkovastaus_kylla:1}]});
+    });
+    it('Ei vastaukselta saadaan vastaus jatkokysymykseen', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: 3,
+                vastaus: 'ei',
+                jatkovastaus_ei: 'vastaus'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['ei'], jatkokysymysid:3, jatkovastaus_ei:'vastaus'}]});
+    });
+    it('Ei vastaukselta saadaan vastaus jatkokysymykseen vaikka kyllä-vastauksellekin olisi tallennettu jotain', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: 3,
+                vastaus: 'ei',
+                jatkovastaus_kylla: 1,
+                jatkovastaus_ei: 'vastaus'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['ei'], jatkokysymysid:3, jatkovastaus_ei:'vastaus'}]});
+    });
+    it('kylla vastaukselta saadaan vastaus ilman jatkokysymystä', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: null,
+                vastaus: 'kylla'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['kylla']}]});
+    });
+    it('ei vastaukselta saadaan vastaus ilman jatkokysymystä', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: null,
+                vastaus: 'ei'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['ei']}]});
+    });
+    it('kylla vastaukselta saadaan vastaus ilman jatkokysymystä, jos jatkokysymykseen ei ole vastattu', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: 3,
+                vastaus: 'kylla'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['kylla']}]});
+    });
+    it('ei vastaukselta saadaan vastaus ilman jatkokysymystä, jos jatkokysymykseen ei ole vastattu', function() {
+      var vastausdata = {
+        kysymysryhmat: [
+          {
+            kysymykset: [
+              {
+                kysymysid: 2,
+                vastaustyyppi: 'kylla_ei_valinta',
+                jatkokysymysid: 3,
+                vastaus: 'ei'
+              }
+            ]
+          }
+        ]
+      };
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:['ei']}]});
+    });
   });
 
   it('Käyttäjä siirretään kiitos-sivulle, jos vastausten tallennus onnistuu', function(){
