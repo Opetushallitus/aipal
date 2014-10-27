@@ -43,6 +43,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
 
   function alustaController() {
     $controller('UusiKysymysryhmaController', {$scope: $scope});
+    $scope.form = { $setPristine: function() {} };
   }
 
   it('lähettää kysymysryhmän tiedot backendiin, kun luontinappia painetaan', function(){
