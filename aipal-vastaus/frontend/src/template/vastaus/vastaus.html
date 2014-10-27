@@ -10,7 +10,7 @@
       <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
       <span ng-if="kysymys.vastaustyyppi == 'vapaateksti'">
-        <textarea ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen"></textarea>
+        <textarea ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}"></textarea>
       </span>
       <span ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'">
         <label style="display: block">

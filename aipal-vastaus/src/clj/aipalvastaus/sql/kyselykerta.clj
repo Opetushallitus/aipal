@@ -36,6 +36,7 @@
                 :kysymys.kysymysid
                 :kysymys.vastaustyyppi
                 :kysymys.monivalinta_max
+                :kysymys.max_vastaus
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.pakollinen
