@@ -30,6 +30,18 @@
           vastaukset [{:kysymysid 1} {:kysymysid 4}]]
       (is (= nil (v/validoi-vastaukset vastaukset kysymykset))))))
 
+(deftest vastauksessa-on-validi-jatkokoysymys
+  (testing "Vastaukset löytyvät kysymysten joukosta"
+    (let [kysymykset [{:kysymysid 1 :jatkokysymysid 2 :kylla_teksti_fi "kysymys"}]
+          vastaukset [{:kysymysid 1 :jatkokysymysid 2 :jatkovastaus_kylla "vastaus"}]]
+      (is (= vastaukset (v/validoi-vastaukset vastaukset kysymykset))))))
+
+(deftest vastauksessa-on-virheellinen-jatkokoysymys
+  (testing "Vastaukset löytyvät kysymysten joukosta"
+    (let [kysymykset [{:kysymysid 1 :jatkokysymysid 2 :kylla_teksti_fi "kysymys"}]
+          vastaukset [{:kysymysid 1 :jatkokysymysid 1 :jatkovastaus_kylla "vastaus"}]]
+      (is (= nil (v/validoi-vastaukset vastaukset kysymykset))))))
+
 (deftest monivalinta-vastaus
   (testing "Yksi valinta tuottaa yhden vastauksen"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]

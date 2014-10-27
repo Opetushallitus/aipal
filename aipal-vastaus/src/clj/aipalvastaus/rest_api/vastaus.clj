@@ -55,8 +55,11 @@
 (defn validoi-vastaukset
   [vastaukset kysymykset]
   (when (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
-                        (for [vastaus vastaukset]
-                          (when (kysymysid->kysymys (:kysymysid vastaus)) true))))
+                        (for [vastaus vastaukset
+                              :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
+                          (when (and kysymys
+                                     (jatkovastaus-validi? vastaus kysymys))
+                            true))))
     vastaukset))
 
 (defn muodosta-tallennettavat-vastaukset
