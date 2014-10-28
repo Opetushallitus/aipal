@@ -62,31 +62,35 @@
                             true))))
     vastaukset))
 
-(defn muodosta-tallennettavat-vastaukset
-  [vastaukset vastaajaid kysymykset]
-  (flatten (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
-             (for [vastaus vastaukset
-                   :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
-                         vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
-                         vastaus-arvot (:vastaus vastaus)]]
-               (for [arvo vastaus-arvot]
-                 {:kysymysid (:kysymysid vastaus)
-                  :vastaajaid vastaajaid
-                  :vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
-                  :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
-                  :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
-                  :vaihtoehto (when (= "kylla_ei_valinta" vastaustyyppi) arvo)})))))
+(defn tallenna-jatkovastaus!
+  [vastaus]
+  (when (:jatkokysymysid vastaus)
+    (vastaus/tallenna-jatkovastaus! {:jatkokysymysid (:jatkokysymysid vastaus)
+                                     :kylla_asteikko (:jatkovastaus_kylla vastaus)
+                                     :ei_vastausteksti (:jatkovastaus_ei vastaus)})))
 
 (defn tallenna-vastaukset!
-  [vastaukset]
-  (doall (map vastaus/tallenna! vastaukset)))
+  [vastaukset vastaajaid kysymykset]
+  (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
+    (doseq [vastaus vastaukset
+            :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
+                  vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
+                  vastaus-arvot (:vastaus vastaus)
+                  jatkovastaus (tallenna-jatkovastaus! vastaus)]]
+      (doseq [arvo vastaus-arvot]
+        (vastaus/tallenna! {:kysymysid (:kysymysid vastaus)
+                            :vastaajaid vastaajaid
+                            :jatkovastausid (:jatkovastausid jatkovastaus)
+                            :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
+                            :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
+                            :vaihtoehto (when (= "kylla_ei_valinta" vastaustyyppi) arvo)})))
+    "OK"))
 
 (defn validoi-ja-tallenna-vastaukset
   [vastaajaid vastaukset kysymykset]
   (when (some-> vastaukset
           (validoi-vastaukset kysymykset)
-          (muodosta-tallennettavat-vastaukset vastaajaid kysymykset)
-          tallenna-vastaukset!)
+          (tallenna-vastaukset! vastaajaid kysymykset))
     (vastaaja/paivata-vastaaja! vastaajaid)
     "OK"))
 

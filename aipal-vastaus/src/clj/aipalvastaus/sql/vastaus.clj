@@ -20,9 +20,10 @@
 (defn tallenna!
   [vastaus]
   (sql/insert :vastaus
-    (sql/values {:kysymysid (:kysymysid vastaus)
-                 :vastaajaid (:vastaajaid vastaus)
-                 :vastausaika (time-coerce/to-sql-date (time/today))
-                 :vapaateksti (:vapaateksti vastaus)
-                 :numerovalinta (:numerovalinta vastaus)
-                 :vaihtoehto (:vaihtoehto vastaus)})))
+    (sql/values (merge vastaus
+                       {:vastausaika (time-coerce/to-sql-date (time/today))}))))
+
+(defn tallenna-jatkovastaus!
+  [vastaus]
+  (sql/insert :jatkovastaus
+    (sql/values vastaus)))
