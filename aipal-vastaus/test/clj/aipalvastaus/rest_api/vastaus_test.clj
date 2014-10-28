@@ -18,6 +18,23 @@
 
 (def vastaajaid 3679)
 
+(def vastaaja->vastaus (atom {}))
+(def jatkokysymysid->jatkovastaus (atom {}))
+
+(defn tyhjaa-fake-kanta! []
+  (reset! vastaaja->vastaus {})
+  (reset! jatkokysymysid->jatkovastaus {}))
+
+(defn fake-vastaus-fixture [f]
+  (tyhjaa-fake-kanta!)
+  (with-redefs [aipalvastaus.sql.vastaus/tallenna! (fn [vastaus]
+                                                     (swap! vastaaja->vastaus update-in [(:vastaajaid vastaus)] (fnil conj #{}) vastaus))
+                aipalvastaus.sql.vastaus/tallenna-jatkovastaus! (fn [vastaus]
+                                                                  (swap! jatkokysymysid->jatkovastaus update-in [(:jatkokysymysid vastaus)] (fnil conj #{}) vastaus))]
+    (f)))
+
+(use-fixtures :each fake-vastaus-fixture)
+
 (deftest vastaukset-tasmaavat-kysymyksiin
   (testing "Vastaukset löytyvät kysymysten joukosta"
     (let [kysymykset [{:kysymysid 1} {:kysymysid 2} {:kysymysid 3}]
@@ -46,65 +63,90 @@
   (testing "Yksi valinta tuottaa yhden vastauksen"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
           vastaukset [{:kysymysid 1 :vastaus [1]} ]]
-      (is (= [{:kysymysid 1
-              :vastaajaid vastaajaid
-              :vastaustyyppi "monivalinta"
-              :numerovalinta 1
-              :vapaateksti nil
-              :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset)))))
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@vastaaja->vastaus vastaajaid)
+             #{{:kysymysid 1
+                :vastaajaid vastaajaid
+                :jatkovastausid nil
+                :numerovalinta 1
+                :vapaateksti nil
+                :vaihtoehto nil}}))))
   (testing "kaksi valintaa tuottaa kaksi vastausta samalle kysymykselle"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
           vastaukset [{:kysymysid 1 :vastaus [1 2]} ]]
-      (is (= [{:kysymysid 1
-               :vastaajaid vastaajaid
-               :vastaustyyppi "monivalinta"
-               :numerovalinta 1
-               :vapaateksti nil
-               :vaihtoehto nil}
-              {:kysymysid 1
-               :vastaajaid vastaajaid
-               :vastaustyyppi "monivalinta"
-               :numerovalinta 2
-               :vapaateksti nil
-               :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@vastaaja->vastaus vastaajaid)
+             #{{:kysymysid 1
+                :vastaajaid vastaajaid
+                :jatkovastausid nil
+                :numerovalinta 1
+                :vapaateksti nil
+                :vaihtoehto nil}
+               {:kysymysid 1
+                :vastaajaid vastaajaid
+                :jatkovastausid nil
+                :numerovalinta 2
+                :vapaateksti nil
+                :vaihtoehto nil}})))))
 
 (deftest kylla-ei-vastaus
   (testing "Valinta tuottaa saman vastauksen"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta"}]
           vastaukset [{:kysymysid 1 :vastaus ["kylla"]} ]]
-      (is (= [{:kysymysid 1
-               :vastaajaid vastaajaid
-               :vastaustyyppi "kylla_ei_valinta"
-               :numerovalinta nil
-               :vapaateksti nil
-               :vaihtoehto "kylla"}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@vastaaja->vastaus vastaajaid)
+             #{{:kysymysid 1
+                :vastaajaid vastaajaid
+                :jatkovastausid nil
+                :numerovalinta nil
+                :vapaateksti nil
+                :vaihtoehto "kylla"}})))))
+
+(deftest kylla-jatkovastaus
+  (testing "kyllä-jatkovastaus tallentuu"
+    (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta" :jatkokysymysid 2 :kylla_teksti_fi "kysymys?"}]
+          vastaukset [{:kysymysid 1 :vastaus ["kylla"] :jatkokysymysid 2 :jatkovastaus_kylla 3} ]]
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@jatkokysymysid->jatkovastaus 2)
+             #{{:jatkokysymysid 2
+                :kylla_asteikko 3
+                :ei_vastausteksti nil}})))))
+
+(deftest ei-jatkovastaus
+  (testing "kyllä-jatkovastaus tallentuu"
+    (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta" :jatkokysymysid 2 :ei_teksti_fi "kysymys?"}]
+          vastaukset [{:kysymysid 1 :vastaus ["kylla"] :jatkokysymysid 2 :jatkovastaus_ei "vastaus"} ]]
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@jatkokysymysid->jatkovastaus 2)
+             #{{:jatkokysymysid 2
+                :kylla_asteikko nil
+                :ei_vastausteksti "vastaus"}})))))
 
 (deftest vapaateksti-vastaus
   (testing "Vastaus tallentuu vapaateksti kentään"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "vapaateksti"}]
           vastaukset [{:kysymysid 1 :vastaus ["vapaateksti"]} ]]
-      (is (= [{:kysymysid 1
-               :vastaajaid vastaajaid
-               :vastaustyyppi "vapaateksti"
-               :numerovalinta nil
-               :vapaateksti "vapaateksti"
-               :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@vastaaja->vastaus vastaajaid)
+             #{{:kysymysid 1
+                :vastaajaid vastaajaid
+                :jatkovastausid nil
+                :numerovalinta nil
+                :vapaateksti "vapaateksti"
+                :vaihtoehto nil}})))))
 
 (deftest asteikko-vastaus
   (testing "vastaus tallentuu numerovalinta kenttään"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "asteikko"}]
           vastaukset [{:kysymysid 1 :vastaus [2]} ]]
-      (is (= [{:kysymysid 1
-               :vastaajaid vastaajaid
-               :vastaustyyppi "asteikko"
-               :numerovalinta 2
-               :vapaateksti nil
-               :vaihtoehto nil}]
-             (v/muodosta-tallennettavat-vastaukset vastaukset vastaajaid kysymykset))))))
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@vastaaja->vastaus vastaajaid)
+             #{{:kysymysid 1
+                :vastaajaid vastaajaid
+                :jatkovastausid nil
+                :numerovalinta 2
+                :vapaateksti nil
+                :vaihtoehto nil}})))))
 
 (deftest jatkokysymyksen-kylla-vastauksen-validointi
   (testing "validi kyllä vastaus pitäisi olla validi"
