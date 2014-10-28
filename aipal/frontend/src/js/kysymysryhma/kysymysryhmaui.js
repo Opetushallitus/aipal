@@ -187,6 +187,25 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       });
     };
 
+    function tallennaKysymysryhma() {
+      Kysymysryhma.tallenna($scope.kysymysryhma)
+      .success(function(){
+        $scope.form.$setPristine();
+        ilmoitus.onnistuminen(i18n.hae('kysymysryhma.tallennus_onnistui'));
+      })
+      .error(function(){
+        ilmoitus.virhe(i18n.hae('kysymysryhma.tallennus_epaonnistui'));
+      });
+    }
+
+    $scope.tallennaKysymysryhma = function() {
+      if (uusi) {
+        $scope.luoUusi();
+      } else {
+        tallennaKysymysryhma();
+      }
+    };
+
     var originals = {};
     $scope.muokkaa = function(kysymys) {
       originals = angular.copy($scope.kysymysryhma.kysymykset);

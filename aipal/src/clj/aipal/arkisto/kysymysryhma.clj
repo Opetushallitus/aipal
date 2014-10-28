@@ -85,3 +85,10 @@
     (sql/select :kysymysryhma_organisaatio_view
       (sql/fields :koulutustoimija :valtakunnallinen)
       (sql/where {:kysymysryhmaid kysymysryhmaid}))))
+
+(defn paivita! [kysymysryhma]
+  (->
+    (sql/update* taulut/kysymysryhma)
+    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :selite_fi :selite_sv :valtakunnallinen :koulutustoimija :taustakysymykset]))
+    (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
+    (sql/update)))

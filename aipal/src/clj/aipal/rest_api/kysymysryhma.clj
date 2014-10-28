@@ -66,6 +66,10 @@
       (lisaa-kysymys! k (:kysymysryhmaid kysymysryhma)))
     (json-response kysymysryhma)))
 
+(defn paivita-kysymysryhma! [kysymysryhma]
+  (let [kysymysryhma (arkisto/paivita! kysymysryhma)]
+    (json-response kysymysryhma)))
+
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" [voimassa]
     (json-response (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
@@ -80,6 +84,10 @@
                                               false)
                           :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
                          kysymykset))
+
+  (cu/defapi :kysymysryhma-muokkaus nil :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
+    (json-response
+      (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid (Integer/parseInt kysymysryhmaid)))))
 
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
     (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid)))))

@@ -104,6 +104,10 @@
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
 
+(defn kysymysryhma-muokkaus? []
+  (or (yllapitaja?)
+      (paakayttaja-tai-vastuukayttaja?)))
+
 (defn kyselypohja-listaaminen? []
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
@@ -138,6 +142,7 @@
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
+    :kysymysryhma-muokkaus kysymysryhma-muokkaus?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?
     :impersonointi yllapitaja?
