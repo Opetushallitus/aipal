@@ -2,7 +2,7 @@
 <p class="tutkinto" ng-if="data.tutkintotunnus">{{data.tutkintotunnus}} {{data | lokalisoiKentta:'tutkinto_nimi'}}</p>
 <p class="selite">{{data | lokalisoiKentta:'selite'}}</p>
 
-<form name="vastausForm">
+<form name="vastausForm" ng-show="data">
   <div ng-repeat="kysymysryhma in data.kysymysryhmat">
     <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
 
