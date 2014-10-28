@@ -17,8 +17,8 @@
             [korma.db :as db]
             [schema.core :as schema]
             [oph.common.util.http-util :refer [json-response-nocache]]
-            [aipalvastaus.sql.vastaus :as vastaus]
-            [aipalvastaus.sql.kyselykerta :as kysely]
+            [aipalvastaus.sql.vastaus :as arkisto]
+            [aipalvastaus.sql.kyselykerta :as kysely-arkisto]
             [aipalvastaus.sql.vastaaja :as vastaaja]
             [aipalvastaus.toimiala.skeema :refer [KayttajanVastaus]]
             [oph.common.util.util :refer [map-by]]))
@@ -65,7 +65,7 @@
 (defn tallenna-jatkovastaus!
   [vastaus]
   (when (:jatkokysymysid vastaus)
-    (vastaus/tallenna-jatkovastaus! {:jatkokysymysid (:jatkokysymysid vastaus)
+    (arkisto/tallenna-jatkovastaus! {:jatkokysymysid (:jatkokysymysid vastaus)
                                      :kylla_asteikko (:jatkovastaus_kylla vastaus)
                                      :ei_vastausteksti (:jatkovastaus_ei vastaus)})))
 
@@ -78,7 +78,7 @@
                   vastaus-arvot (:vastaus vastaus)
                   jatkovastaus (tallenna-jatkovastaus! vastaus)]]
       (doseq [arvo vastaus-arvot]
-        (vastaus/tallenna! {:kysymysid (:kysymysid vastaus)
+        (arkisto/tallenna! {:kysymysid (:kysymysid vastaus)
                             :vastaajaid vastaajaid
                             :jatkovastausid (:jatkovastausid jatkovastaus)
                             :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
@@ -100,5 +100,5 @@
       (schema/validate [KayttajanVastaus] vastaukset)
       (if-let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaajatunnus))]
         (json-response-nocache
-          (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely/hae-kysymykset vastaajatunnus)))
+          (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus)))
         {:status 403}))))
