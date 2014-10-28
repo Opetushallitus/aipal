@@ -84,7 +84,7 @@
                             :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
                             :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
                             :vaihtoehto (when (= "kylla_ei_valinta" vastaustyyppi) arvo)})))
-    "OK"))
+    true))
 
 (defn validoi-ja-tallenna-vastaukset
   [vastaajaid vastaukset kysymykset]
@@ -92,13 +92,16 @@
           (validoi-vastaukset kysymykset)
           (tallenna-vastaukset! vastaajaid kysymykset))
     (vastaaja/paivata-vastaaja! vastaajaid)
-    "OK"))
+    true))
 
 (c/defroutes reitit
   (c/POST "/:vastaajatunnus" [vastaajatunnus vastaukset]
     (db/transaction
       (schema/validate [KayttajanVastaus] vastaukset)
-      (if-let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaajatunnus))]
-        (json-response-nocache
-          (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus)))
-        {:status 403}))))
+      (let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaajatunnus))]
+        (if (and vastaajaid
+                 (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus)))
+          (json-response-nocache "OK")
+          (do
+            (db/rollback)
+            {:status 403}))))))
