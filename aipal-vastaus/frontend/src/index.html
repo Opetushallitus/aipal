@@ -29,7 +29,7 @@
       <div ng-view></div>
     </div>
   </div>
-  <footer class="disclaimer-footer">
+  <footer class="disclaimer-footer" ng-show="i18n.$resolved">
     <div class="app-wrapper">
         <h4 ng-bind="i18n.yleiset.palvelun_tarjoaa"></h4>
         <p><span ng-bind="i18n.yleiset.palvelun_seloste"></span><br><span ng-bind="i18n.yleiset.palvelun_seloste_palaute"></span></p>
