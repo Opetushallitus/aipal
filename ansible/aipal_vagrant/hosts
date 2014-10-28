@@ -13,8 +13,7 @@ tietokannan_paakayttaja = aipal_adm
 tietokantapalvelimen_yksityinen_nimi = 192.168.50.61
 skeema = public
 skeeman_peruskayttaja = aipalvastaus_user
-update_insert_oikeudet = vastaaja,vastaus
-sequence_oikeudet = vastaaja_vastaajaid_seq,vastaus_vastausid_seq
+tee_aipalvastaus_grantit = yes
 
 # Käytetään tunnettuja salasanoja, koska dev-scripts/create-db-schema.sh ajaa
 # migraation suoraan (ilman asennusta tai ttk-db.properties-tiedostoa) ja
