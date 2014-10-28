@@ -25,11 +25,11 @@
             <h3>{{i18n.vastaajatunnus.vastausaika}}</h3>
             <div class="row" id="vastausaika">
                 <div class="col-md-5">
-                    <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_alkupvm" otsikko="{{i18n.yleiset.alkaen}}" pakollinen="true"></pvm-valitsin>
+                    <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_alkupvm" max-pvm="vastaajatunnus.voimassa_loppupvm" otsikko="{{i18n.yleiset.alkaen}}" pakollinen="true"></pvm-valitsin>
                 </div>
 
                 <div class="col-md-5">
-                    <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_loppupvm" otsikko="{{i18n.yleiset.asti}}"></pvm-valitsin>
+                    <pvm-valitsin valittu-pvm="vastaajatunnus.voimassa_loppupvm" min-pvm="vastaajatunnus.voimassa_alkupvm" otsikko="{{i18n.yleiset.asti}}"></pvm-valitsin>
                 </div>
             </div>
         </div>
