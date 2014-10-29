@@ -60,15 +60,33 @@
     (when (= "monivalinta" (:vastaustyyppi kysymys))
       (lisaa-monivalintavaihtoehdot! (:monivalintavaihtoehdot kysymys) kysymysid))))
 
+(defn lisaa-kysymykset-kysymysryhmaan! [kysymykset kysymysryhmaid]
+  (doseq [k (lisaa-jarjestys kysymykset)]
+    (lisaa-kysymys! k kysymysryhmaid)))
+
 (defn lisaa-kysymysryhma! [kysymysryhma kysymykset]
-  (let [kysymysryhma (arkisto/lisaa-kysymysryhma! kysymysryhma)]
-    (doseq [k (lisaa-jarjestys kysymykset)]
-      (lisaa-kysymys! k (:kysymysryhmaid kysymysryhma)))
+  (let [kysymysryhma (arkisto/lisaa-kysymysryhma! kysymysryhma)
+        kysymysryhmaid (:kysymysryhmaid kysymysryhma)]
+    (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
     (json-response kysymysryhma)))
 
+(defn poista-kysymys! [kysymys]
+  (when (= "monivalinta" (:vastaustyyppi kysymys))
+    (arkisto/poista-kysymyksen-monivalintavaihtoehdot! (:kysymysid kysymys)))
+  (arkisto/poista-kysymys! (:kysymysid kysymys)))
+
+(defn poista-kysymysryhman-kysymykset! [kysymysryhmaid]
+  (let [kysymysryhma (arkisto/hae kysymysryhmaid)
+        kysymykset (:kysymykset kysymysryhma)]
+    (doseq [kysymys kysymykset]
+      (poista-kysymys! kysymys))))
+
 (defn paivita-kysymysryhma! [kysymysryhma]
-  (let [kysymysryhma (arkisto/paivita! kysymysryhma)]
-    (json-response kysymysryhma)))
+  (let [kysymysryhmaid (:kysymysryhmaid kysymysryhma)
+        kysymykset (:kysymykset kysymysryhma)]
+    (poista-kysymysryhman-kysymykset! kysymysryhmaid)
+    (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
+    (arkisto/paivita! kysymysryhma)))
 
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" [voimassa]

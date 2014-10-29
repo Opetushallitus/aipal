@@ -46,6 +46,15 @@
   (sql/insert :monivalintavaihtoehto
     (sql/values v)))
 
+(defn hae-monivalintakysymyksen-vaihtoehdot
+  [kysymysid]
+  (->
+    (sql/select* :monivalintavaihtoehto)
+    (sql/fields :jarjestys :teksti_fi :teksti_sv)
+    (sql/order :jarjestys)
+    (sql/where {:kysymysid kysymysid})
+    (sql/exec)))
+
 (def kysymysryhma-select
   (->
     (sql/select* taulut/kysymysryhma)
@@ -61,15 +70,36 @@
                 :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
     (sql/order :kysymys.jarjestys)))
 
+(defn taydenna-monivalintakysymys
+  [monivalintakysymys]
+  (let [kysymysid (:kysymysid monivalintakysymys)]
+    (assoc monivalintakysymys :monivalintavaihtoehdot (hae-monivalintakysymyksen-vaihtoehdot kysymysid))))
+
+(defn taydenna-kysymys
+  [kysymys]
+  (cond-> kysymys
+    (= "monivalinta" (:vastaustyyppi kysymys))
+    taydenna-monivalintakysymys))
+
+(defn taydenna-kysymysryhman-kysymykset
+  [kysymysryhma]
+  (update-in kysymysryhma [:kysymykset] #(map taydenna-kysymys %)))
+
+(defn taydenna-kysymysryhma
+  [kysymysryhma]
+  (let [kysymysryhmaid (:kysymysryhmaid kysymysryhma)]
+    (assoc kysymysryhma :kysymykset
+           (-> kysymys-select
+             (sql/where {:kysymysryhmaid kysymysryhmaid})
+             (sql/exec)))))
+
 (defn hae [kysymysryhmaid]
   (-> kysymysryhma-select
     (sql/where {:kysymysryhmaid kysymysryhmaid})
     sql/exec
     first
-    (assoc :kysymykset
-           (-> kysymys-select
-             (sql/where {:kysymysryhmaid kysymysryhmaid})
-             (sql/exec)))))
+    (taydenna-kysymysryhma)
+    (taydenna-kysymysryhman-kysymykset)))
 
 (defn hae-kyselypohjasta [kyselypohjaid]
   (-> kysymysryhma-select
@@ -86,9 +116,22 @@
       (sql/fields :koulutustoimija :valtakunnallinen)
       (sql/where {:kysymysryhmaid kysymysryhmaid}))))
 
-(defn paivita! [kysymysryhma]
+(defn paivita!
+  [kysymysryhma]
   (->
     (sql/update* taulut/kysymysryhma)
     (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :selite_fi :selite_sv :valtakunnallinen :koulutustoimija :taustakysymykset]))
     (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
     (sql/update)))
+
+(defn poista-kysymys!
+  [kysymysid]
+  (sql/delete
+    taulut/kysymys
+    (sql/where {:kysymysid kysymysid})))
+
+(defn poista-kysymyksen-monivalintavaihtoehdot!
+  [kysymysid]
+  (sql/delete
+    :monivalintavaihtoehto
+    (sql/where {:kysymysid kysymysid})))
