@@ -111,9 +111,11 @@ angular.module('aipal', [
 
   .controller('ImpersonointiModalController', ['$modalInstance', '$scope', 'i18n', function($modalInstance, $scope, i18n) {
     $scope.i18n = i18n;
-    $scope.impersonoitava = {};
+    $scope.impersonointi = {
+      impersonoitava: {}
+    };
     $scope.impersonoi = function() {
-      $modalInstance.close($scope.impersonoitava);
+      $modalInstance.close($scope.impersonointi.impersonoitava);
     };
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
