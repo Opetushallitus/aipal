@@ -52,10 +52,15 @@
     (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
   (cu/defapi :kysely-luonti nil :post "/" [& kysely]
-    (json-response
-      (arkisto/lisaa! (paivita-arvot (assoc kysely :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))
-                                     [:voimassa_alkupvm :voimassa_loppupvm]
-                                     parse-iso-date))))
+    (let [kysely (paivita-arvot kysely
+                                [:voimassa_alkupvm :voimassa_loppupvm]
+                                parse-iso-date)]
+      (json-response
+        (let [{:keys [kyselyid]}
+              (arkisto/lisaa! (-> kysely
+                                (assoc :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))
+                                (dissoc :kysymysryhmat)))]
+          (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
     (json-response

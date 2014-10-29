@@ -94,7 +94,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           });
       }
       else {
-        $scope.kysely = {};
+        $scope.kysely = {kysymysryhmat: []};
       }
 
       $scope.tallenna = function () {
