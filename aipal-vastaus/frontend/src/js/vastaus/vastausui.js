@@ -35,7 +35,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
               }
             }
           }
-          else if (kysymysdata.vastaustyyppi === 'kylla_ei_valinta' && !_.isUndefined(kysymysdata.vastaus)) {
+          else if (kysymysdata.vastaustyyppi === 'kylla_ei_valinta' && kysymysdata.vastaus) {
             if (kysymysdata.jatkokysymysid) {
               if (kysymysdata.vastaus === 'kylla' && kysymysdata.jatkovastaus_kylla) {
                 vastaus.jatkokysymysid = kysymysdata.jatkokysymysid;
@@ -48,7 +48,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
             }
             vastaus.vastaus.push(kysymysdata.vastaus);
           }
-          else if (!_.isUndefined(kysymysdata.vastaus)) {
+          else if (kysymysdata.vastaus) {
             vastaus.vastaus.push(kysymysdata.vastaus);
           }
           if (!_.isEmpty(vastaus.vastaus)) {
