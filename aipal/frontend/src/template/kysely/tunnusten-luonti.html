@@ -3,8 +3,9 @@
     <h4>{{i18n.vastaajatunnus.uusi_vastaajatunnus}}</h4>
 </div>
 
+<form name="tunnustenLuontiForm" role="form">
+
 <div class="modal-body">
-    <form name="tunnustenLuontiForm" role="form">
         <div class="form-group">
             <label for="vastaajien_maara">{{i18n.vastaajatunnus.vastaajia}}</label>
             <div class="row">
@@ -44,14 +45,14 @@
                </select>
             </label>
         </div>
-    </form>
 </div>
 
 <div class="modal-footer">
     <small class="pull-right ">
         <pakollisia-kenttia></pakollisia-kenttia>
     </small>
-    <button class="pull-left" ng-click="luoTunnuksia(vastaajatunnus)">{{i18n.vastaajatunnus.lisaa_vastaajatunnukset}}</button>
+    <tallenna class="pull-left" formi-validi="tunnustenLuontiForm.$valid" teksti="{{i18n.vastaajatunnus.lisaa_vastaajatunnukset}}" ng-click="luoTunnuksia(vastaajatunnus)"></tallenna>
     <button class="btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
 </div>
 
+</form>
