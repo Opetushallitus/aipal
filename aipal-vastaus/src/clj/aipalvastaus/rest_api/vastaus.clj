@@ -47,11 +47,10 @@
 
 (defn jatkovastaus-validi?
   [vastaus kysymys]
-  (if (:jatkokysymysid kysymys)
-    (or (kylla-jatkovastaus-validi? vastaus kysymys)
-        (ei-jatkovastaus-validi? vastaus kysymys)
-        (ei-jatkovastausta? vastaus))
-    (not (:jatkokysymysid vastaus))))
+  (or (ei-jatkovastausta? vastaus)
+      (and (contains? kysymys :jatkokysymysid)
+           (or (kylla-jatkovastaus-validi? vastaus kysymys)
+               (ei-jatkovastaus-validi? vastaus kysymys)))))
 
 (defn validoi-vastaukset
   [vastaukset kysymykset]
