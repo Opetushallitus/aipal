@@ -117,6 +117,7 @@
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 3"
                              :jarjestys 3
+                             :max_vastaus 500
                              :vastaustyyppi "vapaateksti"}
                             {:kysymysid 4
                              :kysymysryhmaid 1
