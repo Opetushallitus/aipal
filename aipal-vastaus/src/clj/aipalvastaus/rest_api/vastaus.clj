@@ -25,29 +25,32 @@
 
 (defn kylla-jatkovastaus-validi?
   [vastaus kysymys]
-  (or (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
-           (:jatkovastaus_kylla vastaus)
-           (:kylla_teksti_fi kysymys))
-      (and (not (:jatkokysymysid vastaus))
-           (not (:jatkovastaus_kylla vastaus))
-           (not (:kylla_teksti_fi kysymys)))))
+  (boolean
+    (or (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
+             (:jatkovastaus_kylla vastaus)
+             (:kylla_teksti_fi kysymys))
+        (and (not (:jatkokysymysid vastaus))
+             (not (:jatkovastaus_kylla vastaus))
+             (not (:kylla_teksti_fi kysymys))))))
 
 (defn ei-jatkovastaus-validi?
   [vastaus kysymys]
-  (or (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
-           (:jatkovastaus_ei vastaus)
-           (:ei_teksti_fi kysymys))
-      (and (not (:jatkokysymysid vastaus))
-           (not (:jatkovastaus_ei vastaus))
-           (not (:ei_teksti_fi kysymys)))))
+  (boolean
+    (or (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
+             (:jatkovastaus_ei vastaus)
+             (:ei_teksti_fi kysymys))
+        (and (not (:jatkokysymysid vastaus))
+             (not (:jatkovastaus_ei vastaus))
+             (not (:ei_teksti_fi kysymys))))))
 
 (defn jatkovastaus-validi?
   [vastaus kysymys]
   (if (:jatkokysymysid kysymys)
-    (or (kylla-jatkovastaus-validi? vastaus kysymys)
-        (ei-jatkovastaus-validi? vastaus kysymys)
-        (and (not (:pakollinen kysymys))
-             (not (:jatkokysymysid vastaus))
+    (or (and (kylla-jatkovastaus-validi? vastaus kysymys)
+             (not (ei-jatkovastaus-validi? vastaus kysymys)))
+        (and (ei-jatkovastaus-validi? vastaus kysymys)
+             (not (kylla-jatkovastaus-validi? vastaus kysymys)))
+        (and (not (:jatkokysymysid vastaus))
              (not (:jatkovastaus_kylla vastaus))
              (not (:jatkovastaus_ei vastaus))))
     (not (:jatkokysymysid vastaus))))
