@@ -22,13 +22,13 @@
 
 (def taulut
   "Taulut vierasavainriippuvuuksien mukaisessa järjestyksessä, ensin taulu josta viitataan myöhemmin nimettyyn."
-  ["kysymys"
+  ["monivalintavaihtoehto"
+   "kysymys"
    "kysely_kysymysryhma"
    "kysely_kysymys"
    "kysymysryhma"
    "jatkokysymys"
    "kyselypohja"
-   "monivalintavaihtoehto"
    "vastaus"
    "vastaaja"
    "vastaajatunnus"

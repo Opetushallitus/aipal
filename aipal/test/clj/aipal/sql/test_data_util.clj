@@ -53,6 +53,10 @@
 (def default-jatkokysymys
   {:kylla_teksti_fi "Kyllä teksti"})
 
+(def default-monivalintavaihtoehto
+  {:teksti_fi "Oletusvaihtoehto"
+   :teksti_sv "Oletusvaihtoehto (sv)"})
+
 (defn lisaa-koulutusala!
   ([koulutusala]
     (let [k (merge default-koulutusala koulutusala)]
@@ -144,3 +148,8 @@
     (sql/insert :jatkokysymys (sql/values [jatkokysymys]))))
   ([]
     (lisaa-jatkokysymys! default-jatkokysymys)))
+
+(defn lisaa-monivalintavaihtoehto!
+  [uusi-monivalintavaihtoehto]
+  (let [monivalintavaihtoehto (merge default-monivalintavaihtoehto uusi-monivalintavaihtoehto)]
+    (sql/insert :monivalintavaihtoehto (sql/values [monivalintavaihtoehto]))))

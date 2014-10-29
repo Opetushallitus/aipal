@@ -31,6 +31,27 @@
              :kysymykset
              (map :kylla_teksti_fi))))))
 
+(deftest ^:integraatio hae-kysymysryhman-monivalintakysymysten-vaihtoehdot
+  (let [kysymysryhmaid (-> (test-data/lisaa-kysymysryhma!) :kysymysryhmaid)
+        kysymysid (-> (test-data/lisaa-kysymys!
+                        {:kysymysryhmaid kysymysryhmaid
+                         :vastaustyyppi "monivalinta"})
+                    :kysymysid)]
+    (test-data/lisaa-monivalintavaihtoehto!
+                                      {:kysymysid kysymysid
+                                       :teksti_fi "Vaihtoehto 1"
+                                       :jarjestys 1})
+    (test-data/lisaa-monivalintavaihtoehto!
+                                      {:kysymysid kysymysid
+                                       :teksti_fi "Vaihtoehto 2"
+                                       :jarjestys 2})
+    (is (= ["Vaihtoehto 1" "Vaihtoehto 2"]
+           (->> (hae kysymysryhmaid)
+             :kysymykset
+             first
+             :monivalintavaihtoehdot
+             (map :teksti_fi))))))
+
 ;; hae-kysymysryhmat palauttaa kaikki kysymysryhmät riippumatta voimassaolosta
 (deftest ^:integraatio hae-kysymysryhmat-voimassaolo
   (let [koulutustoimija (test-data/lisaa-koulutustoimija!)]
