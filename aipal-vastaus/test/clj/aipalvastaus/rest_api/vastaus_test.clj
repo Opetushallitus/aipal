@@ -145,18 +145,18 @@
 (deftest jatkokysymyksen-kylla-vastauksen-validointi
   (are [tulos vastaus kysymys] (= tulos (v/kylla-jatkovastaus-validi? vastaus kysymys))
        true {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus"} {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"} ; validi kyllä vastaus
+       false {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus" :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"} ; molemmat vastaukset
        false {:jatkokysymysid 2 :jatkovastaus_kylla "vastaus"} {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"} ; vastauksessa väärä jatkokysymys
        false {:jatkokysymysid 1} {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"} ; ei vastausta mutta jatkokysymysid
-       false {} {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"} ; ei jatkovastausta kysymykseen
        false {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus"} {} ; vastaus olemattomaan jatkokysymykseen
        ))
 
 (deftest jatkokysymyksen-ei-vastauksen-validointi
   (are [tulos vastaus kysymys] (= tulos (v/ei-jatkovastaus-validi? vastaus kysymys))
        true {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :ei_teksti_fi "kysymys"} ; validi ei vastaus
+       false {:jatkokysymysid 1 :jatkovastaus_ei "vastaus" :jatkovastaus_kylla "vastaus"} {:jatkokysymysid 1 :ei_teksti_fi "kysymys"} ; molemmat vastaukset
        false {:jatkokysymysid 2 :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :ei_teksti_fi "kysymys"} ; vastauksessa väärä jatkokysymys
        false {:jatkokysymysid 1} {:jatkokysymysid 1 :ei_teksti_fi "kysymys"} ; ei vastausta mutta jatkokysymysid
-       false {} {:jatkokysymysid 1 :ei_teksti_fi "kysymys"} ; ei jatkovastausta kysymykseen
        false {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"} {} ; vastaus olemattomaan jatkokysymykseen
        ))
 
