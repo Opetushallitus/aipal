@@ -56,8 +56,10 @@
                 :kysymys.kysymys_sv
                 :kysymys.vastaustyyppi
                 :jatkokysymys.jatkokysymysid
+                :jatkokysymys.kylla_kysymys
                 :jatkokysymys.kylla_teksti_fi
                 :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.ei_kysymys
                 :jatkokysymys.ei_teksti_fi
                 :jatkokysymys.ei_teksti_sv)))
 
