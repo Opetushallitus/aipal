@@ -27,41 +27,39 @@
     first))
 
 (defn ^:private hae-kysymykset [kyselykertaid]
-  (->
-    (sql/select* :kyselykerta)
-    (sql/fields :kyselykerta.kyselykertaid)
-    (sql/where {:kyselykertaid kyselykertaid})
-
-    (sql/join :inner {:table :kysely}
+  (sql/select :kyselykerta
+    (sql/join :inner :kysely
              (= :kyselykerta.kyselyid
                 :kysely.kyselyid))
-
-    (sql/join :inner {:table :kysely_kysymysryhma}
+    (sql/join :inner :kysely_kysymysryhma
              (= :kysely.kyselyid
                 :kysely_kysymysryhma.kyselyid))
-    (sql/order :kysely_kysymysryhma.jarjestys :ASC)
-
-    (sql/join :inner {:table :kysymysryhma}
-             (= :kysely_kysymysryhma.kysymysryhmaid
-                :kysymysryhma.kysymysryhmaid))
-    (sql/fields :kysymysryhma.kysymysryhmaid)
-
-    (sql/join :inner {:table :kysymys}
-             (= :kysymysryhma.kysymysryhmaid
-                :kysymys.kysymysryhmaid))
-    (sql/fields :kysymys.kysymysid
-                :kysymys.kysymys_fi
-                :kysymys.vastaustyyppi)
-    (sql/order :kysymys.jarjestys :ASC)
-
     ;; otetaan mukaan vain kyselyyn kuuluvat kysymykset
-    (sql/join :inner {:table :kysely_kysymys}
-              (and (= :kysely.kyselyid
-                      :kysely_kysymys.kyselyid)
-                   (= :kysymys.kysymysid
-                      :kysely_kysymys.kysymysid)))
-
-    sql/exec))
+    (sql/join :inner :kysely_kysymys
+              (= :kysely.kyselyid
+                 :kysely_kysymys.kyselyid))
+    (sql/join :inner :kysymys
+             (and (= :kysely_kysymysryhma.kysymysryhmaid
+                     :kysymys.kysymysryhmaid)
+                  (= :kysely_kysymys.kysymysid
+                     :kysymys.kysymysid)))
+    (sql/join :left :jatkokysymys
+              (= :jatkokysymys.jatkokysymysid
+                 :kysymys.jatkokysymysid))
+    (sql/where {:kyselykertaid kyselykertaid})
+    (sql/order :kysely_kysymysryhma.jarjestys :ASC)
+    (sql/order :kysymys.jarjestys :ASC)
+    (sql/fields :kyselykerta.kyselykertaid
+                :kysymys.kysymysryhmaid
+                :kysymys.kysymysid
+                :kysymys.kysymys_fi
+                :kysymys.kysymys_sv
+                :kysymys.vastaustyyppi
+                :jatkokysymys.jatkokysymysid
+                :jatkokysymys.kylla_teksti_fi
+                :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.ei_teksti_fi
+                :jatkokysymys.ei_teksti_sv)))
 
 (defn ^:private hae-vastaukset [kyselykertaid]
   (->
