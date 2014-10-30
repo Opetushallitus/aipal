@@ -41,6 +41,7 @@ angular.module('yhteiset.direktiivit.auth-toiminto', [])
         scope.linkki = attrs.linkki;
         scope.teksti = attrs.teksti;
         scope.muotoilut = attrs.class;
+        scope.icon = attrs.icon;
         // poistetaan class attribuutti jottei e2e testit sekoa
         element.removeAttr('class');
 

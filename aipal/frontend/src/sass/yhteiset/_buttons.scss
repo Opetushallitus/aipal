@@ -1,25 +1,18 @@
 button,
-a.button{
-  background-color: $primary-color;
-  color: white;
-  border-radius: 0;
-  border: none;
-  height: $baseline*1.16666666666667;
-  box-shadow: none;
+a.button,
+a.btn{
   margin: $marginS $marginL $marginS 0;
   cursor: pointer;
-  padding-left: 15px;
-  padding-right: 15px;
-  font-family: $font-body;
-  &:hover {background-color: $darker-primary;}
   text-decoration: none;
 }
-a.button{
-  line-height: $baseline*1.16666666666667;
+
+table td a.btn {
+  margin: 0;
 }
 
 button:disabled,
-a.button:disabled{
+a.button:disabled
+a.btn:disabled{
   opacity: 0.5;
   background-color: $primary-color;
 }

@@ -28,14 +28,15 @@ angular.module('yhteiset.direktiivit.tallenna', ['yhteiset.palvelut.apicallinter
         formiValidi : '=',
         teksti : '@'
       },
-      template : '<button ng-disabled="tallennusDisabloitu">{{teksti}}</button>',
+      template : '<button class="btn btn-primary" ng-disabled="tallennusDisabloitu">{{teksti}}&nbsp;&nbsp;<span ng-if="icon" ng-class="icon"></span></button>',
       replace : true,
-      link : function(scope) {
+      link : function(scope, element, attrs) {
         var idt = scope.$eval(scope.disabloiPyyntojenAjaksi);
         var pyyntojaKaynnissa = false;
         var tarkistaOnkoPyyntoja = _.partial(onkoPyyntojaKaynnissa, idt);
 
         scope.tallennusDisabloitu = false;
+        scope.icon = attrs.icon;
 
         function paivitaTila() {
           scope.tallennusDisabloitu = scope.formiValidi === false || pyyntojaKaynnissa;

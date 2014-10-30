@@ -1,3 +1,6 @@
 <div>
-  <button ng-if="sallittu" ng-bind="teksti" ng-class="muotoilut"></button>
+  <button ng-if="sallittu" ng-class="muotoilut">
+      {{teksti}}&nbsp;
+      <span ng-if="icon" ng-class="icon"></span>
+  </button>
 </div>

@@ -1,5 +1,24 @@
 /* AIPAL Bootstrap style overrides */
 
+/* Buttons */
+.btn {
+  padding: 3px 12px;
+  font-weight: 100 !important;
+  font-family: sans-serif !important;
+  &.btn-icon {
+    color: $primary-color;
+    background-color: transparent;
+    &:hover {
+      color: $darker-primary;
+    }
+  }
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn{
+  opacity: .4;
+}
+
 /* Modal */
 .modal-dialog {
   fieldset {
@@ -32,8 +51,16 @@
   }
 }
 
+.datepicker-field *:focus {
+  outline: 0;
+}
+
 .datepicker-field ul *{
   font-size: 1.0em;
+}
+
+button.open-datepicker{
+  border: 0;
 }
 
 .form-control{

@@ -1,7 +1,14 @@
 <h1>{{i18n.kysymysryhma.kysymysryhmat}}</h1>
-<a class="pull-right button button-with-icon add-icon-white" href="#/kysymysryhmat/kysymysryhma/uusi">{{i18n.kysymysryhma.luo_uusi}}</a>
-<div class="loader" ng-show="!latausValmis"></div>
+<div class="row">
+    <div class="col-md-12">
+        <a class="pull-right btn btn-primary" href="#/kysymysryhmat/kysymysryhma/uusi" style="margin: 0;">
+            {{i18n.kysymysryhma.luo_uusi}} &nbsp;
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+    </div>
+</div>
 
+<div class="loader" ng-show="!latausValmis"></div>
 
 <table class="table table-striped kysymysryhmat-taulukko" ng-show="latausValmis">
     <thead>

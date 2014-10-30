@@ -81,7 +81,7 @@ angular.module('aipal', [
     $scope.valitse = function () {
       var modalInstance = $modal.open({
         templateUrl: 'template/impersonointi.html',
-        controller: 'ImpersonointiModalController',
+        controller: 'ImpersonointiModalController'
       });
       modalInstance.result.then(function(impersonoitava) {
         impersonaatioResource.impersonoi({oid: impersonoitava.oid}, function () {

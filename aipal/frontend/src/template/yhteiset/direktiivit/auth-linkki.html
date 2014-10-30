@@ -1,3 +1,6 @@
 <div>
-    <a ng-if="sallittu" ng-href="{{linkki}}" ng-class="muotoilut" ng-bind="teksti"></a>
+    <a ng-if="sallittu" ng-href="{{linkki}}" ng-class="muotoilut">
+        {{teksti}}&nbsp;
+        <span ng-if="icon" ng-class="icon"></span>
+    </a>
 </div>

@@ -29,10 +29,11 @@
 
         <div class="col-md-7">
             <div class="row">
-                <h3 class="pull-left">{{i18n.kysymysryhma.kysymykset}}</h3>
-                <div ng-show="!muokkaustila" class="pull-right">
-                    <button ng-click="lisaaKysymys()" class="button-with-icon add-icon-white">{{i18n.kysymysryhma.luo_uusi_kysymys}}</button>
-                </div>
+                <h3 class="pull-left" ng-show="!muokkaustila">{{i18n.kysymysryhma.kysymykset}}</h3>
+                <button ng-click="lisaaKysymys()" class="pull-right btn btn-primary" ng-show="!muokkaustila">
+                    {{i18n.kysymysryhma.luo_uusi_kysymys}}&nbsp;
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
             </div>
 
             <table class="table table-striped kysymys-taulukko" ng-show="!muokkaustila">
@@ -104,9 +105,9 @@
                         <br />
 
                         <div>
-                            <button ng-show="aktiivinenKysymys.uusi" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
-                            <button ng-show="!aktiivinenKysymys.uusi" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.yleiset.tallenna}}</button>
-                            <button ng-click="peruutaKysymysTallennus()" class="btn-default">{{i18n.yleiset.peruuta}}</button>
+                            <button ng-show="aktiivinenKysymys.uusi" class="btn btn-primary" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
+                            <button ng-show="!aktiivinenKysymys.uusi" class="btn btn-primary" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.yleiset.tallenna}}</button>
+                            <button ng-click="peruutaKysymysTallennus()" class="btn btn-default">{{i18n.yleiset.peruuta}}</button>
                         </div>
                     </ng-form>
                 </div>
@@ -117,8 +118,8 @@
     <div class="col-md-12">
         <div class="row clearfix">
             <div>
-                <button ng-click="luoUusi()" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
-                <button ng-click="peruuta()" class="btn-default">{{i18n.yleiset.peruuta}}</button>
+                <button ng-click="luoUusi()" class="btn btn-primary" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
+                <button ng-click="peruuta()" class="btn btn-default">{{i18n.yleiset.peruuta}}</button>
             </div>
         </div>
     </div>

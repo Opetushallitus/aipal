@@ -47,6 +47,21 @@
             pakollinen="false">
     </pvm-valitsin>
 
+    <div class="row"><br /></div>
+
+    <div>
+        <button class="btn btn-primary" ng-click="lisaaKyselypohjaModal()">
+            {{i18n.kysely.lisaa_kyselypohja}}&nbsp;
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <button class="btn btn-primary" ng-click="lisaaKysymysryhmaModal()">
+            {{i18n.kysely.lisaa_kysymysryhma}}&nbsp;
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </div>
+
+    <div class="row"><br /></div>
+
     <accordion close-others="true">
         <accordion-group ng-repeat="kysymysryhma in kysely.kysymysryhmat" is-open="group.open">
             <accordion-heading>
@@ -62,20 +77,13 @@
         </accordion-group>
     </accordion>
 
-    <div>
-      <small><pakollisia-kenttia></pakollisia-kenttia></small>
-      <button class="button" ng-click="lisaaKyselypohjaModal()">
-        {{i18n.kysely.lisaa_kyselypohja}}
-        <span class="glyphicon glyphicon glyphicon-plus"></span>
-      </button>
-      <button class="button" ng-click="lisaaKysymysryhmaModal()">
-        {{i18n.kysely.lisaa_kysymysryhma}}
-        <span class="glyphicon glyphicon glyphicon-plus"></span>
-      </button>
-    </div>
+    <small class="pull-right"><pakollisia-kenttia></pakollisia-kenttia></small>
+
     <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{'i18n.yleiset.tallennataan' | i18n}}" virheviesti="{{'i18n.yleiset.tallennus_epaonnistui' | i18n}}" yrita-uudelleen="tallenna()">
       <br>
-      <button class="pull-left" ng-disabled="!kyselyForm.$valid" ng-click="tallenna()">{{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
-      <button class="btn-default pull-left" ng-click="peruuta()">{{'i18n.yleiset.peruuta' | i18n}}</button>
+      <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid" ng-click="tallenna()">
+          {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
+      </button>
+      <button class="btn btn-default pull-left" ng-click="peruuta()">{{'i18n.yleiset.peruuta' | i18n}}</button>
     </div>
 </form>

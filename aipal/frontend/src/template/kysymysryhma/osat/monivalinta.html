@@ -19,10 +19,15 @@
               <label>{{i18n.yleiset.ruotsiksi}}
                 <input class="form-control" type="text" ng-model="vaihtoehto.teksti_sv" size="80" maxlength="200"/>
               </label>
-                <button class="icon delete-icon" ng-show="aktiivinenKysymys.monivalintavaihtoehdot.length > 2" ng-click="poistaVaihtoehto(aktiivinenKysymys,$index)"></button>
+                <button class="btn btn-icon delete" ng-show="aktiivinenKysymys.monivalintavaihtoehdot.length > 2" ng-click="poistaVaihtoehto(aktiivinenKysymys,$index)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
             </div>
         </div>
     </li>
   </ol>
-  <button class="pull-right button-with-icon add-icon-white" ng-click="lisaaVaihtoehto(aktiivinenKysymys)">{{i18n.kysymys.lisaa_vaihtoehto}}</button>
+  <button class="btn btn-primary pull-right" ng-click="lisaaVaihtoehto(aktiivinenKysymys)">
+    {{i18n.kysymys.lisaa_vaihtoehto}}
+    <span class="glyphicon glyphicon-plus"></span>
+  </button>
 </section>

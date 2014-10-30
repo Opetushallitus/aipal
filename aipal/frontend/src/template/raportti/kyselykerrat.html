@@ -1,11 +1,31 @@
 <h1>Kyselykertaraportit</h1>
 
-Haku: <input type="text" ng-model="hakuehto.teksti">
+<div class="row">
+    <div class="col-md-4">
+        <input type="text" class="icon search-icon-input form-control" ng-model="hakuehto.teksti" placeholder="{{i18n.kysely.etsi}}">
+    </div>
+</div>
 
-<ul>
-  <li ng-repeat="kyselykerta in kyselykerrat | filter:hakuehto.teksti | limitTo:50">
-    <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}">
-      {{kyselykerta.kyselykertaid}} {{kyselykerta.nimi_fi}}
-    </a>
-  </li>
-</ul>
+<br />
+
+<table class="table table-striped raportit-taulukko">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>Nimi</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="kyselykerta in kyselykerrat | filter:hakuehto.teksti | limitTo:50">
+            <td>{{kyselykerta.kyselykertaid}}</td>
+            <td>{{kyselykerta.nimi_fi}}</td>
+            <td>
+                <a class="btn btn-primary btn-sm pull-right" ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}">
+                    Näytä raportti
+                    <span class="glyphicon glyphicon-stats"></span>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

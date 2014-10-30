@@ -52,7 +52,7 @@ describe('yhteiset.direktiivit.tallenna', function() {
   }));
 
   it('Näyttää teksti attribuutin arvon button tagien sisällä', function() {
-    expect(elementti.text()).toEqual('Tallenna');
+    expect(elementti.text()).toMatch(/Tallenna/);
   });
 
   it('Disabloi napin kun pyyntö käynnisssä ja enabloi kun vastaus saapuu', function() {
