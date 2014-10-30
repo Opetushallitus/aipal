@@ -244,7 +244,7 @@
 
 (defn ^:private suodata-raportin-kentat
   [raportti]
-  (map #(select-keys % [:kysymys_fi :jakauma :vastaukset :vastaustyyppi])
+  (map #(select-keys % [:kysymys_fi :kysymys_sv :jakauma :vastaukset :jatkovastaukset :vastaustyyppi])
        raportti))
 
 (defn ^:private muodosta-raportti-kyselykerrasta [kyselykertaid]
