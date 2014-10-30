@@ -25,23 +25,34 @@
   (let [kysymysryhma (-> oletus-kysymysryhma
                        (assoc :kysymykset [oletus-kysymys]))
         poistettu-kysymysid (atom nil)]
-    (with-redefs [aipal.arkisto.kysymysryhma/hae (fn [kysymysryhmaid] kysymysryhma)
+    (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly kysymysryhma)
                   aipal.arkisto.kysymysryhma/poista-kysymys! (partial reset! poistettu-kysymysid)]
       (paivita-kysymysryhma! kysymysryhma)
       (is (= (:kysymysid oletus-kysymys) @poistettu-kysymysid)))))
+
+(deftest paivita-kysymysryhma-poistaa-monivalintakysymyksen-vaihtoehdot
+  (let [kysymys (-> oletus-kysymys
+                  (assoc :vastaustyyppi "monivalinta"))
+        kysymysryhma (-> oletus-kysymysryhma
+                       (assoc :kysymykset [kysymys]))
+        poista-vaihtoehdot-kysymykselta (atom nil)]
+    (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly kysymysryhma)
+                  aipal.arkisto.kysymysryhma/poista-kysymyksen-monivalintavaihtoehdot! (partial reset! poista-vaihtoehdot-kysymykselta)]
+      (paivita-kysymysryhma! kysymysryhma)
+      (is (= (:kysymysid kysymys) @poista-vaihtoehdot-kysymykselta)))))
 
 (deftest paivita-kysymysryhma-lisaa-kysymyksen
  (let [kysymysryhma (-> oletus-kysymysryhma
                       (assoc :kysymykset [oletus-kysymys]))
        lisatty-kysymys (atom nil)
        uusi-kysymysid 12]
-   (with-redefs [aipal.arkisto.kysymysryhma/hae (fn [kysymysryhmaid] kysymysryhma)
+   (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly kysymysryhma)
                  aipal.arkisto.kysymysryhma/lisaa-kysymys! #(reset! lisatty-kysymys (assoc % :kysymysid uusi-kysymysid))]
      (paivita-kysymysryhma! kysymysryhma)
      (is (= uusi-kysymysid (:kysymysid @lisatty-kysymys))))))
 
 (deftest paivita-kysymysryhma-paivittaa-perustiedot
-  (with-redefs [aipal.arkisto.kysymysryhma/hae (fn [kysymysryhmaid] oletus-kysymysryhma)]
+  (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly oletus-kysymysryhma)]
     (let [kysymysryhma (assoc oletus-kysymysryhma :nimi_fi "Uusi nimi")]
       (is (= "Uusi nimi"
              (-> (paivita-kysymysryhma! kysymysryhma)
