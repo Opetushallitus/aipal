@@ -62,26 +62,28 @@
                 :jatkokysymys.ei_teksti_sv)))
 
 (defn ^:private hae-vastaukset [kyselykertaid]
-  (->
-    (sql/select* :kyselykerta)
-    (sql/fields :kyselykerta.kyselykertaid)
-    (sql/where {:kyselykertaid kyselykertaid})
-
-    (sql/join :inner {:table :vastaaja}
-             (= :kyselykerta.kyselykertaid
-                :vastaaja.kyselykertaid))
-    (sql/fields :vastaaja.vastaajaid)
-
-    (sql/join :inner {:table :vastaus}
+  (sql/select :kyselykerta
+    (sql/join :inner :vastaaja
+              (= :kyselykerta.kyselykertaid
+                 :vastaaja.kyselykertaid))
+    (sql/join :inner :vastaus
               (= :vastaaja.vastaajaid
                  :vastaus.vastaajaid))
-    (sql/fields :vastaus.vastausid
+    (sql/join :left :jatkovastaus
+              (= :jatkovastaus.jatkovastausid
+                 :vastaus.jatkovastausid))
+    (sql/where {:kyselykertaid kyselykertaid})
+    (sql/fields :kyselykerta.kyselykertaid
+                :vastaaja.vastaajaid
+                :vastaus.vastausid
                 :vastaus.kysymysid
                 :vastaus.numerovalinta
                 :vastaus.vaihtoehto
-                :vastaus.vapaateksti)
-
-    sql/exec))
+                :vastaus.vapaateksti
+                :jatkovastaus.jatkovastausid
+                :jatkovastaus.jatkokysymysid
+                :jatkovastaus.kylla_asteikko
+                :jatkovastaus.ei_vastausteksti)))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
