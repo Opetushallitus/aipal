@@ -105,6 +105,12 @@
   (merge {1 0 2 0 3 0 4 0 5 0}
          (frequencies (map :numerovalinta vastaukset))))
 
+(defn jaottele-jatkokysymys-asteikko
+  [vastaukset]
+  (dissoc (merge {1 0 2 0 3 0 4 0 5 0}
+                 (frequencies (map :kylla_asteikko vastaukset)))
+          nil))
+
 (defn jaottele-monivalinta
   [vastaukset]
   (frequencies (map :numerovalinta vastaukset)))
@@ -185,11 +191,35 @@
            (muodosta-monivalintavaihtoehdot kysymys)
            (jaottele-monivalinta vastaukset))))
 
+(defn keraa-kylla-jatkovastaukset
+  [kysymys vastaukset]
+  (when (:kylla_kysymys kysymys)
+    {:kysymys_fi (:kylla_teksti_fi kysymys)
+     :kysymys_sv (:kylla_teksti_sv kysymys)
+     :jakauma (muodosta-asteikko-jakauman-esitys (jaottele-jatkokysymys-asteikko vastaukset))}))
+
+(defn keraa-ei-jatkovastaukset
+  [kysymys vastaukset]
+  (when (:ei_kysymys kysymys)
+    (let [ei-vastaukset (filter identity (map :ei_vastausteksti vastaukset))]
+      {:kysymys_fi (:ei_teksti_fi kysymys)
+       :kysymys_sv (:ei_teksti_sv kysymys)
+       :vastaukset (map (fn [v] {:teksti v}) ei-vastaukset)})))
+
+(defn keraa-jatkovastaukset
+  [kysymys vastaukset]
+  (when (:jatkokysymysid kysymys)
+    {:kylla (keraa-kylla-jatkovastaukset kysymys vastaukset)
+     :ei (keraa-ei-jatkovastaukset kysymys vastaukset)}))
+
 (defn ^:private lisaa-vaihtoehtojen-jakauma
   [kysymys vastaukset]
-  (assoc kysymys :jakauma
+  (assoc kysymys
+         :jakauma
          (muodosta-kylla-ei-jakauman-esitys
-           (jaottele-vaihtoehdot vastaukset))))
+           (jaottele-vaihtoehdot vastaukset))
+         :jatkovastaukset
+         (keraa-jatkovastaukset kysymys vastaukset)))
 
 (defn ^:private lisaa-vastausten-vapaateksti
   [kysymys vastaukset]
