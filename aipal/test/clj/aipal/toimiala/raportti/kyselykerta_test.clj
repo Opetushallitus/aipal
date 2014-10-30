@@ -27,6 +27,16 @@
           "useampi sama vastaus" [{:numerovalinta 1} {:numerovalinta 1}] (merge tyhja-jakauma {1 2})
           "eri vastaukset" [{:numerovalinta 1} {:numerovalinta 2}] (merge tyhja-jakauma {1 1 2 1})))))
 
+(deftest jaottele-jatkokysymys-asteikko-test
+ (let [tyhja-jakauma {1 0 2 0 3 0 4 0 5 0}]
+   (are [kuvaus vastaukset odotettu-tulos] (is (= (jaottele-jatkokysymys-asteikko vastaukset) odotettu-tulos) kuvaus)
+        "ei vastauksia" [] tyhja-jakauma
+        "tyhja vastaus" [nil] tyhja-jakauma
+        "yksi vastaus" [{:kylla_asteikko 1}] (merge tyhja-jakauma {1 1})
+        "useampi sama vastaus" [{:kylla_asteikko 1} {:kylla_asteikko 1}] (merge tyhja-jakauma {1 2})
+        "useampi vastaus, mukana tyhja vastaus" [{:kylla_asteikko 1} nil {:kylla_asteikko 1}] (merge tyhja-jakauma {1 2})
+        "eri vastaukset" [{:kylla_asteikko 1} {:kylla_asteikko 2}] (merge tyhja-jakauma {1 1 2 1}))))
+
 (deftest jaottele-monivalinta-test
  (testing
    "jaottele monivalinta:"
