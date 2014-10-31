@@ -49,6 +49,7 @@
     </table>
 
     <div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">
+      <h3>{{$index + 1}}. {{i18n.raportit.jatkokysymykset}}</h3>
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
         <h4>{{kysymys.jatkovastaukset.kylla.kysymys_fi}}</h4>
         <vaittama-kaavio jakauma="kysymys.jatkovastaukset.kylla.jakauma">
