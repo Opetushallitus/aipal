@@ -153,3 +153,11 @@
            "yksi vastaus, vaihtoehto 2" {2 1} (esitys 0 0 1 100)
            "monta vastausta, sama vaihtoehto" {1 2} (esitys 2 100 0 0)
            "monta vastausta, eri vaihtoehto" {1 1 2 1} (esitys 1 50 1 50)))))
+
+(deftest keraa-ei-jatkovastaukset-test
+  (let [ei-kysymys {:ei_kysymys true :ei_teksti_fi "kysymys"}]
+    (are [kuvaus vastaukset odotettu-tulos] (is (= (:vastaukset (keraa-ei-jatkovastaukset ei-kysymys vastaukset)) odotettu-tulos) kuvaus)
+         "ei vastauksia" [] []
+         "yksi vastaus" [{:ei_vastausteksti "vastaus1"}] [{:teksti "vastaus1"}]
+         "useampi vastaus" [{:ei_vastausteksti "vastaus1"} {:ei_vastausteksti "vastaus2"}] [{:teksti "vastaus1"} {:teksti "vastaus2"}]
+         "yksi vastaus ja vastaamaton" [{:ei_vastausteksti "vastaus1"} {:ei_vastausteksti nil}] [{:teksti "vastaus1"}])))
