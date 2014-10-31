@@ -67,7 +67,8 @@
     (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
                 :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi
                 :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
-                :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
+                :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv
+                :jatkokysymys.max_vastaus)
     (sql/order :kysymys.jarjestys)))
 
 (defn taydenna-monivalintakysymys
@@ -75,11 +76,41 @@
   (let [kysymysid (:kysymysid monivalintakysymys)]
     (assoc monivalintakysymys :monivalintavaihtoehdot (hae-monivalintakysymyksen-vaihtoehdot kysymysid))))
 
+(def kylla-jatkokysymykset-kentat
+  [:kylla_teksti_fi
+   :kylla_teksti_sv])
+
+(def ei-jatkokysymykset-kentat
+  [:ei_teksti_fi
+   :ei_teksti_sv
+   :max_vastaus])
+
+(def jatkokysymykset-kentat
+  (apply conj kylla-jatkokysymykset-kentat ei-jatkokysymykset-kentat))
+
+(defn jatkokysymys?
+  [kysymys]
+  (not-every? nil? (vals (select-keys kysymys jatkokysymykset-kentat))))
+
+(defn poista-nil-kentat
+  [m]
+  (into {} (remove (comp nil? second) m)))
+
+(defn valitse-jatkokysymyksen-kentat [jatkokysymys]
+  (poista-nil-kentat (select-keys jatkokysymys jatkokysymykset-kentat)))
+
+(defn taydenna-jatkokysymys
+  [kysymys]
+  (let [jatkokysymys (valitse-jatkokysymyksen-kentat kysymys)]
+    (-> kysymys
+      (assoc :jatkokysymys jatkokysymys)
+      ((fn [kysymys] (apply dissoc kysymys jatkokysymykset-kentat))))))
+
 (defn taydenna-kysymys
   [kysymys]
   (cond-> kysymys
-    (= "monivalinta" (:vastaustyyppi kysymys))
-    taydenna-monivalintakysymys))
+    (= "monivalinta" (:vastaustyyppi kysymys)) taydenna-monivalintakysymys
+    (jatkokysymys? kysymys) taydenna-jatkokysymys))
 
 (defn taydenna-kysymysryhman-kysymykset
   [kysymysryhma]

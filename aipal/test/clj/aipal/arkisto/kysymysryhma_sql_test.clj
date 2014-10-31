@@ -26,10 +26,11 @@
                          :jatkokysymysid)
         _ (test-data/lisaa-kysymys! {:kysymysryhmaid kysymysryhmaid
                                      :jatkokysymysid jatkokysymysid})]
-    (is (= ["Jatkokysymys"]
+    (is (= [{:kylla_teksti_fi "Jatkokysymys"}]
            (->> (hae kysymysryhmaid)
              :kysymykset
-             (map :kylla_teksti_fi))))))
+             (map :jatkokysymys)
+             (map #(select-keys % [:kylla_teksti_fi])))))))
 
 (deftest ^:integraatio hae-kysymysryhman-monivalintakysymysten-vaihtoehdot
   (let [kysymysryhmaid (-> (test-data/lisaa-kysymysryhma!) :kysymysryhmaid)
