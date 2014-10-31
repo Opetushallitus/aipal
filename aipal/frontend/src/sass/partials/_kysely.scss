@@ -57,9 +57,16 @@ accordion.kyselyt {
     margin-right: -15px;
   }
   div.kyselykerrat-container {
-    /*border-top: 1px solid $lighter-gray;*/
+    border-top: 1px solid $lighter-gray;
     padding-left: 15px;
+    clear: both;
+    display: block;
+    overflow: auto;
   }
+  div.panel-body div.kyselykerrat-container:nth-of-type(1) {
+    border: 0;
+  }
+
   .group-active .panel-heading,
   .group-active .panel-tools-content {
     background-color: #FFEDF8;

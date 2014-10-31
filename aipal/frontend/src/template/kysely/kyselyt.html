@@ -40,23 +40,25 @@
             </auth-toiminto>
         </div>
 
-        <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
-            <h3 class="e2e-kyselykerta-nimi">{{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
-            <span class="text-muted">Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
-            <auth-toiminto auth-linkki
-                linkki="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}"
-                sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']"
-                teksti="{{i18n.kyselykerta.hallitse}}"
-                class="btn btn-primary btn-sm pull-left"
-                icon="glyphicon glyphicon-pencil">
-            </auth-toiminto>
-            <auth-toiminto auth-linkki
-                linkki="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}"
-                sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA']"
-                teksti="{{i18n.kysely.raportti}}"
-                class="btn btn-primary btn-sm pull-left"
-                icon="glyphicon glyphicon-stats">
-            </auth-toiminto>
+        <div class="kyselykerrat">
+            <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
+                <h3 class="e2e-kyselykerta-nimi">{{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
+                <span class="text-muted">Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
+                <auth-toiminto auth-linkki
+                    linkki="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}"
+                    sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']"
+                    teksti="{{i18n.kyselykerta.hallitse}}"
+                    class="btn btn-primary btn-sm pull-left"
+                    icon="glyphicon glyphicon-pencil">
+                </auth-toiminto>
+                <auth-toiminto auth-linkki
+                    linkki="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}"
+                    sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA']"
+                    teksti="{{i18n.kysely.raportti}}"
+                    class="btn btn-primary btn-sm pull-left"
+                    icon="glyphicon glyphicon-stats">
+                </auth-toiminto>
+            </div>
         </div>
         <span ng-show="!kysely.kyselykerrat.length" class="text-muted">{{i18n.kysely.ei_kyselykertoja}}</span>
     </accordion-group>
