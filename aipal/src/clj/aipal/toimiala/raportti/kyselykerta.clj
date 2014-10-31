@@ -107,9 +107,8 @@
 
 (defn jaottele-jatkokysymys-asteikko
   [vastaukset]
-  (dissoc (merge {1 0 2 0 3 0 4 0 5 0}
-                 (frequencies (map :kylla_asteikko vastaukset)))
-          nil))
+  (merge {1 0 2 0 3 0 4 0 5 0}
+         (frequencies (keep :kylla_asteikko vastaukset))))
 
 (defn jaottele-monivalinta
   [vastaukset]
@@ -201,10 +200,10 @@
 (defn keraa-ei-jatkovastaukset
   [kysymys vastaukset]
   (when (:ei_kysymys kysymys)
-    (let [ei-vastaukset (filter identity (map :ei_vastausteksti vastaukset))]
+    (let [ei-vastaukset (keep :ei_vastausteksti vastaukset)]
       {:kysymys_fi (:ei_teksti_fi kysymys)
        :kysymys_sv (:ei_teksti_sv kysymys)
-       :vastaukset (map (fn [v] {:teksti v}) ei-vastaukset)})))
+       :vastaukset (for [v ei-vastaukset] {:teksti v})})))
 
 (defn keraa-jatkovastaukset
   [kysymys vastaukset]
@@ -224,7 +223,7 @@
 (defn ^:private lisaa-vastausten-vapaateksti
   [kysymys vastaukset]
   (assoc kysymys :vastaukset
-         (map (fn [v] {:teksti (:vapaateksti v)}) vastaukset)))
+         (for [v vastaukset] {:teksti (:vapaateksti v)})))
 
 (defn kysymyksen-kasittelija
   [kysymys]
