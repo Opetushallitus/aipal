@@ -48,6 +48,27 @@
       </tbody>
     </table>
 
+    <div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">
+      <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
+        <h4>{{kysymys.jatkovastaukset.kylla.kysymys_fi}}</h4>
+        <vaittama-kaavio jakauma="kysymys.jatkovastaukset.kylla.jakauma">
+        </vaittama-kaavio>
+      </div>
+      <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
+        <h4>{{kysymys.jatkovastaukset.ei.kysymys_fi}}</h4>
+        <table class="report-table">
+          <thead>
+            <tr><th>Vastaukset:</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vastaukset">
+              <td>{{vastaus.teksti}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <table class="report-table" ng-if="kysymys.vastaustyyppi === 'vapaateksti'">
       <thead>
         <tr><th>Vastaukset:</th></tr>
