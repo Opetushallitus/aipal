@@ -88,9 +88,21 @@
 (def jatkokysymykset-kentat
   (apply conj kylla-jatkokysymykset-kentat ei-jatkokysymykset-kentat))
 
+(defn onko-jokin-kentista-annettu?
+  [m kentat]
+  (not-every? nil? (vals (select-keys m kentat))))
+
 (defn jatkokysymys?
   [kysymys]
-  (not-every? nil? (vals (select-keys kysymys jatkokysymykset-kentat))))
+  (onko-jokin-kentista-annettu? kysymys jatkokysymykset-kentat))
+
+(defn kylla-jatkokysymys?
+  [kysymys]
+  (onko-jokin-kentista-annettu? kysymys kylla-jatkokysymykset-kentat))
+
+(defn ei-jatkokysymys?
+  [kysymys]
+  (onko-jokin-kentista-annettu? kysymys ei-jatkokysymykset-kentat))
 
 (defn poista-nil-kentat
   [m]
@@ -99,9 +111,16 @@
 (defn valitse-jatkokysymyksen-kentat [jatkokysymys]
   (poista-nil-kentat (select-keys jatkokysymys jatkokysymykset-kentat)))
 
+(defn erottele-jatkokysymys
+  [kysymys]
+  (-> kysymys
+    valitse-jatkokysymyksen-kentat
+    (assoc :kylla_jatkokysymys (kylla-jatkokysymys? kysymys))
+    (assoc :ei_jatkokysymys (ei-jatkokysymys? kysymys))))
+
 (defn taydenna-jatkokysymys
   [kysymys]
-  (let [jatkokysymys (valitse-jatkokysymyksen-kentat kysymys)]
+  (let [jatkokysymys (erottele-jatkokysymys kysymys)]
     (-> kysymys
       (assoc :jatkokysymys jatkokysymys)
       ((fn [kysymys] (apply dissoc kysymys jatkokysymykset-kentat))))))
