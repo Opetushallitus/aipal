@@ -28,6 +28,7 @@
         vertical-align: middle;
         text-transform:uppercase;
         padding: 0 $marginM;
+        cursor: pointer;
       }
       span {
         cursor: default;
@@ -37,8 +38,9 @@
   .kielen-vaihto {
     float: right;
     li.valittu {
-      &:hover {background-color: transparent;}
-      span {color: $darkest-primary;}
+      background-color: $darker-primary;
+      &:hover {background-color: $darker-primary;}
+      span {color: white;}
     }
   }
 }
@@ -49,10 +51,10 @@ h1.title{
   line-height: 40px;
   font-size: 14px;
   font-family: "Open Sans", "arial";
-  a{
-    font-weight: 200;
-    padding-left: 15px;
-  }
+  font-weight: 200;
+  color: white;
+  text-align: left;
+  padding-left: 1em;
 }
 
 header {

@@ -1,21 +1,22 @@
 <h1>{{data | lokalisoiKentta:'nimi'}}</h1>
+<small class="pull-right" ng-bind="i18n.yleiset.pakolliset"></small>
 <p class="tutkinto" ng-if="data.tutkintotunnus">{{data.tutkintotunnus}} {{data | lokalisoiKentta:'tutkinto_nimi'}}</p>
 <p class="selite">{{data | lokalisoiKentta:'selite'}}</p>
 
 <form name="vastausForm" ng-show="data">
-  <div ng-repeat="kysymysryhma in data.kysymysryhmat">
+  <div ng-repeat="kysymysryhma in data.kysymysryhmat" class="kysymysryhma">
     <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
 
-    <div ng-repeat="kysymys in kysymysryhma.kysymykset">
-      <ng-form name="kysymysForm"
+    <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
+      <ng-form name="kysymysForm">
         <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
-        <span ng-if="kysymys.vastaustyyppi == 'vapaateksti'">
-          <textarea name="vapaateksti" ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}"></textarea>
+        <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">
+          <textarea name="vapaateksti" ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}" cols="70" rows="9"></textarea>
           <span ng-show="kysymysForm.vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
-        </span>
+        </div>
 
-        <span ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'">
+        <div ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'" class="vastaus_valinnat">
           <label style="display: block">
             <input type="radio" ng-model="kysymys.vastaus" value="kylla" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
             {{ i18n.yleiset.kylla }}
@@ -33,19 +34,19 @@
           </div>
           <div class="jatkokysymys" ng-if="kysymys.vastaus === 'ei' && kysymys.ei_teksti_fi">
             <h4>{{kysymys | lokalisoiKentta:'ei_teksti'}}</h4>
-            <textarea name="ei_vapaateksti" ng-model="kysymys.jatkovastaus_ei" ng-maxlength="{{kysymys.ei_max_vastaus}}"></textarea>
+            <textarea name="ei_vapaateksti" ng-model="kysymys.jatkovastaus_ei" ng-maxlength="{{kysymys.ei_max_vastaus}}" cols="50" rows="5"></textarea>
             <span ng-show="kysymysForm.ei_vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
           </div>
-        </span>
+        </div>
 
-        <span ng-if="kysymys.vastaustyyppi == 'asteikko'">
+        <div ng-if="kysymys.vastaustyyppi == 'asteikko'" class="vastaus_valinnat">
           <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
             <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
             {{ i18n.yleiset.asteikko[vaihtoehto] }}
           </label>
-        </span>
+        </div>
 
-        <span ng-if="kysymys.vastaustyyppi == 'monivalinta'">
+        <div ng-if="kysymys.vastaustyyppi == 'monivalinta'" class="vastaus_valinnat">
           <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
             <span ng-if="kysymys.monivalinta_max == 1">
               <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto.jarjestys" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
@@ -57,9 +58,11 @@
             </span>
             {{vaihtoehto | lokalisoiKentta:'teksti'}}
           </label>
-        </span>
+        </div>
       </ng-form>
     </div>
   </div>
+    <br />
+    <small class="pull-right" ng-bind="i18n.yleiset.pakolliset"></small>
   <button id="submit" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
 </form>

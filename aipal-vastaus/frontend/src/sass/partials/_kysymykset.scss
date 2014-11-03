@@ -1,3 +1,27 @@
 .jatkokysymys {
   padding-left: 30px;
 }
+
+.kysymys {
+  padding-left: 1em;
+  border-bottom: 1px solid $lightest-gray;
+  padding-bottom: 1em;
+  .vastaus_valinnat {
+    padding-left: 0;
+    label {
+      padding: .1em .5em;
+      margin: 0;
+      &:hover {
+        background-color: $lightest-gray;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.kysymysryhma {
+  margin-top: 2em;
+  .kysymys:last-child{
+    border-bottom: 0;
+  }
+}
