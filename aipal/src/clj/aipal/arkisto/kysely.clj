@@ -22,7 +22,9 @@
   [koulutustoimija]
   (sql/select taulut/kysely
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm)
+    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
+                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
+                :kysely.tila)
     (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
     (sql/order :luotuaika :desc)))
 
@@ -43,7 +45,10 @@
   [kyselyid]
   (->
     (sql/select* taulut/kysely)
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm :kysely.selite_fi :kysely.selite_sv)
+    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
+                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
+                :kysely.selite_fi :kysely.selite_sv
+                :kysely.tila)
     (sql/where (= :kyselyid kyselyid))
 
     sql/exec
@@ -69,7 +74,7 @@
 (defn muokkaa-kyselya [kyselydata]
   (->
     (sql/update* taulut/kysely)
-    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm]))
+    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila]))
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
 
