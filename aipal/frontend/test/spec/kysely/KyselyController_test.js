@@ -21,6 +21,8 @@ describe('kysely.kyselyui.KyselyController', function(){
   var $controller;
   var $routeParams;
   var $location;
+  var $modal;
+  var $q;
 
   beforeEach(module('ui.bootstrap','kysely.kyselyui','yhteiset.palvelut.seuranta'));
 
@@ -32,10 +34,12 @@ describe('kysely.kyselyui.KyselyController', function(){
     $provide.value('i18n', {hae: function(){return '';}});
   }));
 
-  beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
+  beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$modal_, _$q_){
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $controller = _$controller_;
+    $modal = _$modal_;
+    $q = _$q_;
   }));
 
   function alustaController() {
@@ -73,5 +77,16 @@ describe('kysely.kyselyui.KyselyController', function(){
     $httpBackend.expectPOST('api/kysely\/1').respond(200);
     $scope.tallenna();
     $httpBackend.flush();
+  });
+
+  it('voi lisätä kysymysryhmän uuteen kyselyyn', function(){
+    $httpBackend.whenGET(/api\/kysymysryhma\/123\??.*/).respond({kysymysryhmaid: 123});
+
+    alustaController();
+    spyOn($modal, 'open').and.returnValue({result: $q.when(123)});
+    $scope.lisaaKysymysryhmaModal();
+    $httpBackend.flush();
+
+    expect($scope.kysely.kysymysryhmat).toContain({kysymysryhmaid: 123});
   });
 });
