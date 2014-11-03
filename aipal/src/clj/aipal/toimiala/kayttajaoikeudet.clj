@@ -34,8 +34,14 @@
         koulutustoimijan-roolit (filter #(= kyselyn-koulutustoimija (:organisaatio %)) (:aktiiviset-roolit *kayttaja*))]
   (sisaltaa-jonkin-rooleista? roolit koulutustoimijan-roolit)))
 
+(defn hae-kyselyn-tila [kyselyid]
+  (:tila (kysely-arkisto/hae (->int kyselyid))))
+
 (defn kysely-on-luonnostilassa? [kyselyid]
-  (= "luonnos" (:tila (kysely-arkisto/hae (->int kyselyid)))))
+  (= "luonnos" (hae-kyselyn-tila kyselyid)))
+
+(defn kysely-on-julkaistu? [kyselyid]
+  (= "julkaistu" (hae-kyselyn-tila kyselyid)))
 
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
   (let [organisaatiotieto (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid))]
@@ -121,12 +127,13 @@
       (kayttajalla-on-lukuoikeus-kyselypohjaan? kyselypohjaid)))
 
 (defn kyselykerta-luonti? [kyselyid]
-  (or (yllapitaja?)
-      (kayttajalla-on-jokin-rooleista-kyselyssa?
-        #{"OPL-PAAKAYTTAJA"
-          "OPL-VASTUUKAYTTAJA"
-          "OPL-KAYTTAJA"}
-        kyselyid)))
+  (and (kysely-on-julkaistu? kyselyid)
+       (or (yllapitaja?)
+           (kayttajalla-on-jokin-rooleista-kyselyssa?
+             #{"OPL-PAAKAYTTAJA"
+               "OPL-VASTUUKAYTTAJA"
+               "OPL-KAYTTAJA"}
+             kyselyid))))
 
 (defn kyselykerta-muokkaus? [kyselykertaid]
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
