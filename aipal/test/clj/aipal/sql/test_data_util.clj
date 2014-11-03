@@ -83,22 +83,32 @@
       (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
 (defn lisaa-kysely!
-  []
-  (let [koulutustoimija (anna-koulutustoimija!)]
-    (aipal.arkisto.kysely/lisaa! {:nimi_fi "oletuskysely, testi"
-                                  :koulutustoimija (:ytunnus koulutustoimija)
-                                  })))
+  ([]
+    (lisaa-kysely! {}))
+  ([kysely]
+    (let [koulutustoimija (anna-koulutustoimija!)]
+      (aipal.arkisto.kysely/lisaa! (merge {:nimi_fi "oletuskysely, testi"
+                                           :koulutustoimija (:ytunnus koulutustoimija)
+                                           :tila "julkaistu"}
+                                          kysely)))))
 
 (defn lisaa-kyselykerta!
-  []
-  (let [kysely (lisaa-kysely!)]
-    (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) {:kyselyid (:kyselyid kysely)
-                                                          :nimi_fi "oletuskyselykerta, testi"
-                                                          :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
-                                                          :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))
-                                                          })))
+  ([]
+    (lisaa-kyselykerta! {} (lisaa-kysely!)))
+  ([kyselykerta]
+    (lisaa-kyselykerta! kyselykerta (lisaa-kysely!)))
+  ([kyselykerta kysely]
+    (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:nimi_fi "oletuskyselykerta, testi"
+                                                                 :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
+                                                                 :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
+                                                                kyselykerta))))
 
 (defn lisaa-vastaajatunnus!
-  []
-  (let [kyselykerta (lisaa-kyselykerta!)]
-    (aipal.arkisto.vastaajatunnus/lisaa! (:kyselykertaid kyselykerta) nil nil nil nil)))
+  ([]
+    (lisaa-vastaajatunnus! {} (lisaa-kyselykerta!)))
+  ([vastaajatunnus]
+    (lisaa-vastaajatunnus! vastaajatunnus (lisaa-kyselykerta!)))
+  ([vastaajatunnus kyselykerta]
+    (aipal.arkisto.vastaajatunnus/lisaa! (merge {:kyselykertaid (:kyselykertaid kyselykerta)
+                                                 :vastaajien_lkm 1}
+                                                vastaajatunnus))))
