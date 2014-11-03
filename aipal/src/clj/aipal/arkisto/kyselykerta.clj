@@ -31,7 +31,7 @@
   (sql/insert taulut/kyselykerta
     (sql/values
       (assoc
-        (select-keys kyselykerta-data [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm])
+        (select-keys kyselykerta-data [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm :lukittu])
         :kyselyid kyselyid))))
 
 (defn hae-yksi
@@ -48,7 +48,7 @@
 (defn paivita!
   [kyselykertaid kyselykertadata]
   (sql/update taulut/kyselykerta
-    (sql/set-fields (select-keys kyselykertadata [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm]))
+    (sql/set-fields (select-keys kyselykertadata [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm :lukittu]))
     (sql/where {:kyselykertaid kyselykertaid})))
 
 (defn kyselykertaid->kyselyid
