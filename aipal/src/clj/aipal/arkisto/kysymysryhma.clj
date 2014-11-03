@@ -149,8 +149,8 @@
     (sql/where {:kysymysryhmaid kysymysryhmaid})
     sql/exec
     first
-    (taydenna-kysymysryhma)
-    (taydenna-kysymysryhman-kysymykset)))
+    taydenna-kysymysryhma
+    taydenna-kysymysryhman-kysymykset))
 
 (defn hae-kyselypohjasta [kyselypohjaid]
   (-> kysymysryhma-select
@@ -158,7 +158,8 @@
     (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid)
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
-    sql/exec))
+    sql/exec
+    ((fn [kysymysryhmat] (map taydenna-kysymysryhma kysymysryhmat)))))
 
 (defn hae-organisaatiotieto
   [kysymysryhmaid]

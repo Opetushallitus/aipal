@@ -73,6 +73,10 @@
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
 
+(defn uudelleennimea-kysymys-kentta
+  [kysymysryhmat]
+  (map #(clojure.set/rename-keys % {:kysymys :kysymykset}) kysymysryhmat))
+
 ; -- Kyselyn kautta, tieto poistetuista kysely_kysymys -taulusta
 ; SELECT kysymys.kysymysid,kysymys.poistettava,kysymys.kysymys_fi,kysely_kysymys.kysymysid IS NULL AS poistettu
 ; FROM kysely_kysymysryhma INNER JOIN kysymys ON kysely_kysymysryhma.kysymysryhmaid = kysymys.kysymysryhmaid LEFT JOIN kysely_kysymys ON kysymys.kysymysid = kysely_kysymys.kysymysid AND kysely_kysymys.kyselyid = 275
@@ -90,7 +94,8 @@
               (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
               (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid) (= :kysely_kysymys.kyselyid kyselyid)))
               (sql/order :kysymys.jarjestys))
-    sql/exec))
+    sql/exec
+    uudelleennimea-kysymys-kentta))
 
 (defn poistettava-kysymys? [kysymysid]
   (->
