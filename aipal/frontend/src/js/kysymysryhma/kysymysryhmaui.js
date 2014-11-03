@@ -175,7 +175,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.peruuta = function(){
       $location.path('/kysymysryhmat');
     };
-    $scope.luoUusi = function(){
+
+    function luoUusiKysymysryhma(){
       Kysymysryhma.luoUusi($scope.kysymysryhma)
       .success(function(){
         $scope.form.$setPristine();
@@ -185,7 +186,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       .error(function(){
         ilmoitus.virhe(i18n.hae('kysymysryhma.luonti_epaonnistui'));
       });
-    };
+    }
 
     function tallennaKysymysryhma() {
       Kysymysryhma.tallenna($scope.kysymysryhma)
@@ -200,7 +201,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
 
     $scope.tallennaKysymysryhma = function() {
       if (uusi) {
-        $scope.luoUusi();
+        luoUusiKysymysryhma();
       } else {
         tallennaKysymysryhma();
       }

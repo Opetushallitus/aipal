@@ -58,14 +58,14 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     $scope.kysymysryhma.nimi_sv = 'fåå';
     $scope.kysymysryhma.selite_fi = 'bar';
     $scope.kysymysryhma.selite_sv = 'bår';
-    $scope.luoUusi();
+    $scope.tallennaKysymysryhma();
     $httpBackend.verifyNoOutstandingExpectation();
   });
 
   it('siirtää käyttäjän kysymysryhmien listausnäytölle luonnin jälkeen, jos luonti onnistuu', function(){
     alustaController();
     $httpBackend.whenPOST('api/kysymysryhma').respond(200);
-    $scope.luoUusi();
+    $scope.tallennaKysymysryhma();
     $httpBackend.flush();
     expect($location.path).toHaveBeenCalledWith('/kysymysryhmat');
   });
@@ -73,7 +73,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   it('ei näytä virheilmoitusta, jos luonti onnistuu', function(){
     alustaController();
     $httpBackend.whenPOST('api/kysymysryhma').respond(200);
-    $scope.luoUusi();
+    $scope.tallennaKysymysryhma();
     $httpBackend.flush();
     expect(ilmoitus.virhe).not.toHaveBeenCalled();
   });
@@ -81,7 +81,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   it('näyttää ilmoituksen, jos luonti onnistuu', function(){
     alustaController();
     $httpBackend.whenPOST('api/kysymysryhma').respond(200);
-    $scope.luoUusi();
+    $scope.tallennaKysymysryhma();
     $httpBackend.flush();
     expect(ilmoitus.onnistuminen).toHaveBeenCalled();
   });
@@ -89,7 +89,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   it('ei siirrä käyttäjää, jos luonti epäonnistuu', function(){
     alustaController();
     $httpBackend.whenPOST('api/kysymysryhma').respond(500);
-    $scope.luoUusi();
+    $scope.tallennaKysymysryhma();
     $httpBackend.flush();
     expect($location.path).not.toHaveBeenCalled();
   });
@@ -97,7 +97,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   it('näyttää virheilmoituksen, jos luonti epäonnistuu', function(){
     alustaController();
     $httpBackend.whenPOST('api/kysymysryhma').respond(500);
-    $scope.luoUusi();
+    $scope.tallennaKysymysryhma();
     $httpBackend.flush();
     expect(ilmoitus.virhe).toHaveBeenCalled();
   });
