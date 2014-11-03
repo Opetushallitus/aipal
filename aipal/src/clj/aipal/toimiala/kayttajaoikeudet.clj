@@ -34,6 +34,9 @@
         koulutustoimijan-roolit (filter #(= kyselyn-koulutustoimija (:organisaatio %)) (:aktiiviset-roolit *kayttaja*))]
   (sisaltaa-jonkin-rooleista? roolit koulutustoimijan-roolit)))
 
+(defn kysely-on-luonnostilassa? [kyselyid]
+  (= "luonnos" (:tila (kysely-arkisto/hae (->int kyselyid)))))
+
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
   (let [organisaatiotieto (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid))]
     (or (:valtakunnallinen organisaatiotieto)
@@ -70,11 +73,12 @@
       (paakayttaja-tai-vastuukayttaja?)))
 
 (defn kysely-muokkaus? [kyselyid]
-  (or (yllapitaja?)
-      (kayttajalla-on-jokin-rooleista-kyselyssa?
-        #{"OPL-PAAKAYTTAJA"
-          "OPL-VASTUUKAYTTAJA"}
-        kyselyid)))
+  (and (kysely-on-luonnostilassa? kyselyid)
+       (or (yllapitaja?)
+           (kayttajalla-on-jokin-rooleista-kyselyssa?
+             #{"OPL-PAAKAYTTAJA"
+               "OPL-VASTUUKAYTTAJA"}
+             kyselyid))))
 
 (defn kysely-luku? [kyselyid]
   (or (yllapitaja?)
