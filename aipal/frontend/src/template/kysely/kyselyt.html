@@ -17,8 +17,10 @@
 <kyselyjen-listaus kyselyt="kyselyt" suodatus="hakuehto">
 </kyselyjen-listaus>
 
-<div ng-if="muutKyselyt.length > 0">
-    <h2>{{ 'kysely.muut_kyselyt' | i18n }}</h2>
-    <kyselyjen-listaus kyselyt="muutKyselyt" suodatus="hakuehto">
-    </kyselyjen-listaus>
-</div>
+<auth-toiminto auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+    <div ng-if="muutKyselyt.length > 0">
+        <h2>{{ 'kysely.muut_kyselyt' | i18n }}</h2>
+        <kyselyjen-listaus kyselyt="muutKyselyt" suodatus="hakuehto">
+        </kyselyjen-listaus>
+    </div>
+</auth-toiminto>
