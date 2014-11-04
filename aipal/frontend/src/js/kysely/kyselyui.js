@@ -53,7 +53,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.haeKyselyt = function () {
         seuranta.asetaLatausIndikaattori(Kysely.hae(), 'kyselylistaus')
         .success(function (data) {
-          $scope.kyselyt = data;
+          $scope.kyselyt = _(data).filter({'tila' : 'julkaistu'}).value();
+          $scope.muutKyselyt = _(data).reject({'tila' : 'julkaistu'}).value();
         })
         .error(function() {
           ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
