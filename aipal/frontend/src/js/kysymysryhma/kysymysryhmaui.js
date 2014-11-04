@@ -72,6 +72,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           vastaustyyppi: 'asteikko',
           muokattava: true,
           jatkokysymys: {max_vastaus: 500},
+          max_vastaus: 500,
           monivalinta_max: 1,
           monivalintavaihtoehdot: [uusiVaihtoehto(), uusiVaihtoehto()]
         };

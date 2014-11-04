@@ -66,10 +66,10 @@
     (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
     (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
                 :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi
-                :kysymys.monivalinta_max
+                :kysymys.max_vastaus :kysymys.monivalinta_max
                 :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
                 :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv
-                :jatkokysymys.max_vastaus)
+                [:jatkokysymys.max_vastaus :jatkokysymys_max_vastaus])
     (sql/order :kysymys.jarjestys)))
 
 (defn taydenna-monivalintakysymys
@@ -84,7 +84,7 @@
 (def ei-jatkokysymykset-kentat
   [:ei_teksti_fi
    :ei_teksti_sv
-   :max_vastaus])
+   :jatkokysymys_max_vastaus])
 
 (def jatkokysymykset-kentat
   (apply conj kylla-jatkokysymykset-kentat ei-jatkokysymykset-kentat))
@@ -110,7 +110,10 @@
   (into {} (remove (comp nil? second) m)))
 
 (defn valitse-jatkokysymyksen-kentat [jatkokysymys]
-  (poista-nil-kentat (select-keys jatkokysymys jatkokysymykset-kentat)))
+  (-> jatkokysymys
+    (select-keys jatkokysymykset-kentat)
+    poista-nil-kentat
+    (clojure.set/rename-keys {:jatkokysymys_max_vastaus :max_vastaus})))
 
 (defn erottele-jatkokysymys
   [kysymys]
