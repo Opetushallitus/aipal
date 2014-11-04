@@ -14,18 +14,20 @@
                   sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"
                   class="btn btn-primary pull-left"
                   teksti="{{i18n.kysely.muokkaa}}"
-                  icon="glyphicon glyphicon-pencil">
+                  icon="glyphicon glyphicon-pencil"
+                  ng-if="kysely.tila === 'luonnos'">
               </auth-toiminto>
               <auth-toiminto auth-nappi
                   sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']"
                   class="btn btn-primary pull-left e2e-uusi-kyselykerta"
                   ng-click="uusiKyselykerta(kysely)"
                   teksti="{{i18n.kyselykerta.uusi_kyselykerta}}"
-                  icon="glyphicon glyphicon-plus">
+                  icon="glyphicon glyphicon-plus"
+                  ng-if="kysely.tila === 'julkaistu'">
               </auth-toiminto>
           </div>
 
-          <div class="kyselykerrat">
+          <div class="kyselykerrat" ng-if="kysely.tila !== 'luonnos'">
               <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
                   <h3 class="e2e-kyselykerta-nimi">{{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
                   <span class="text-muted">Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
@@ -44,8 +46,8 @@
                       icon="glyphicon glyphicon-stats">
                   </auth-toiminto>
               </div>
+              <span ng-show="!kysely.kyselykerrat.length" class="text-muted">{{i18n.kysely.ei_kyselykertoja}}</span>
           </div>
-          <span ng-show="!kysely.kyselykerrat.length" class="text-muted">{{i18n.kysely.ei_kyselykertoja}}</span>
       </accordion-group>
   </accordion>
 </div>
