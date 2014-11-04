@@ -23,12 +23,15 @@ angular.module('yhteiset.direktiivit.auth-toiminto', [])
         return 'template/yhteiset/direktiivit/auth-linkki.html';
       } else if (attrs.authNappi !== undefined) {
         return 'template/yhteiset/direktiivit/auth-nappi.html';
+      } else if (attrs.authContainer !== undefined) {
+        return 'template/yhteiset/direktiivit/auth-container.html';
       }
     }
 
     return {
       restrict: 'E',
       replace: true,
+      transclude: true,
       templateUrl: resolveTemplate,
       scope: true,
       link: function (scope, element, attrs) {
