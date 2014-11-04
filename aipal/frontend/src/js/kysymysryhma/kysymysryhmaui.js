@@ -192,6 +192,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       Kysymysryhma.tallenna($scope.kysymysryhma)
       .success(function(){
         $scope.form.$setPristine();
+        $location.path('/kysymysryhmat');
         ilmoitus.onnistuminen(i18n.hae('kysymysryhma.tallennus_onnistui'));
       })
       .error(function(){
