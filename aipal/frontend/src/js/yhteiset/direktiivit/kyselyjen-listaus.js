@@ -14,9 +14,9 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18n'])
+angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus'])
 
-  .directive('kyselyjenListaus', ['i18n', function(i18n) {
+  .directive('kyselyjenListaus', [function() {
     return {
       restrict: 'E',
       replace: true,
@@ -25,8 +25,39 @@ angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18
         suodatus: '='
       },
       templateUrl : 'template/yhteiset/direktiivit/kyselyjen-listaus.html',
-      link: function(scope) {
-        scope.i18n = i18n;
-      }
+      controller: ['$scope', '$modal', '$location', 'Kysely', 'ilmoitus', 'i18n', function($scope, $modal, $location, Kysely, ilmoitus, i18n) {
+        $scope.julkaiseKyselyModal = function(kysely) {
+          var modalInstance = $modal.open({
+            templateUrl: 'template/kysely/julkaise-kysely.html',
+            controller: 'JulkaiseKyselyModalController',
+            resolve: { kysely: function() { return kysely; } }
+          });
+          modalInstance.result.then(function (kyselyid) {
+            Kysely.julkaise(kyselyid)
+            .success(function() {
+              $location.path('/kyselyt');
+              ilmoitus.onnistuminen(i18n.hae('kysely.julkaisu_onnistui'));
+            })
+            .error(function() {
+              ilmoitus.virhe(i18n.hae('kysely.julkaisu_epaonnistui'));
+            });
+          });
+        };
+
+        $scope.uusiKyselykerta = function (kysely) {
+          $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
+        };
+      }]
+    };
+  }])
+
+  .controller('JulkaiseKyselyModalController', ['$modalInstance', '$scope', 'kysely', function ($modalInstance, $scope, kysely) {
+    $scope.kysely = kysely;
+
+    $scope.julkaise = function () {
+      $modalInstance.close(kysely.kyselyid);
+    };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
     };
   }]);

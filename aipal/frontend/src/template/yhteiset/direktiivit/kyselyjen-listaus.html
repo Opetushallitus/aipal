@@ -13,15 +13,23 @@
                   linkki="#/kyselyt/kysely/{{kysely.kyselyid}}"
                   sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"
                   class="btn btn-primary pull-left"
-                  teksti="{{i18n.kysely.muokkaa}}"
+                  teksti="{{ 'kysely.muokkaa' | i18n }}"
                   icon="glyphicon glyphicon-pencil"
+                  ng-if="kysely.tila === 'luonnos'">
+              </auth-toiminto>
+              <auth-toiminto auth-nappi
+                  sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"
+                  class="btn btn-primary pull-left e2e-uusi-kyselykerta"
+                  ng-click="julkaiseKyselyModal(kysely)"
+                  teksti="{{ 'kysely.julkaise' | i18n }}"
+                  icon="glyphicon glyphicon-upload"
                   ng-if="kysely.tila === 'luonnos'">
               </auth-toiminto>
               <auth-toiminto auth-nappi
                   sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']"
                   class="btn btn-primary pull-left e2e-uusi-kyselykerta"
                   ng-click="uusiKyselykerta(kysely)"
-                  teksti="{{i18n.kyselykerta.uusi_kyselykerta}}"
+                  teksti="{{ 'kyselykerta.uusi_kyselykerta' | i18n}}"
                   icon="glyphicon glyphicon-plus"
                   ng-if="kysely.tila === 'julkaistu'">
               </auth-toiminto>
