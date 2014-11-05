@@ -42,7 +42,8 @@
 (def ^:private kysely-tiedot {:luo-fn kysely/lisaa!
                               :poista-fn #(kysely/poista! (:kyselyid %))
                               :default (for [i (iterate inc 1)]
-                                         {:kyselyid i})})
+                                         {:kyselyid i
+                                          :tila "julkaistu"})})
 
 (def ^:private kysely-kysymys-tiedot {:luo-fn kysely-kysymys/lisaa!
                                       :poista-fn #(kysely-kysymys/poista! (:kyselyid %) (:kysymysid %))
