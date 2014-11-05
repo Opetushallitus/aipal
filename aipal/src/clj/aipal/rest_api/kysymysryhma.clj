@@ -73,6 +73,8 @@
 (defn poista-kysymys! [kysymys]
   (when (= "monivalinta" (:vastaustyyppi kysymys))
     (arkisto/poista-kysymyksen-monivalintavaihtoehdot! (:kysymysid kysymys)))
+  (when (:jatkokysymysid kysymys)
+    (arkisto/poista-jatkokysymys! (:jatkokysymysid kysymys)))
   (arkisto/poista-kysymys! (:kysymysid kysymys)))
 
 (defn poista-kysymysryhman-kysymykset! [kysymysryhmaid]

@@ -34,6 +34,15 @@
       (paivita-kysymysryhma! {:kysymysryhmaid 1})
       (is (= @poista-vaihtoehdot-kysymykselta 2)))))
 
+(deftest paivita-kysymysryhma-poistaa-jatkokysymyksen
+  (let [poista-jatkokysymysid (atom nil)]
+    (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly {:kysymysryhmaid 1
+                                                              :kysymykset [{:kysymysid 2
+                                                                            :jatkokysymysid 3}]})
+                  aipal.arkisto.kysymysryhma/poista-jatkokysymys! (partial reset! poista-jatkokysymysid)]
+      (paivita-kysymysryhma! {:kysymysryhmaid 1})
+      (is (= @poista-jatkokysymysid 3)))))
+
 (deftest paivita-kysymysryhma-lisaa-kysymyksen
  (let [lisaa-kysymys!-kutsut (atom [])]
    (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly {:kysymysryhmaid 1

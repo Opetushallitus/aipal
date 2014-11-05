@@ -186,3 +186,9 @@
   (sql/delete
     :monivalintavaihtoehto
     (sql/where {:kysymysid kysymysid})))
+
+(defn poista-jatkokysymys!
+  [jatkokysymysid]
+  (sql/delete
+    taulut/jatkokysymys
+    (sql/where {:jatkokysymysid jatkokysymysid})))
