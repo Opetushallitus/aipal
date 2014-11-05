@@ -77,12 +77,6 @@
   [kysymysryhmat]
   (map #(clojure.set/rename-keys % {:kysymys :kysymykset}) kysymysryhmat))
 
-; -- Kyselyn kautta, tieto poistetuista kysely_kysymys -taulusta
-; SELECT kysymys.kysymysid,kysymys.poistettava,kysymys.kysymys_fi,kysely_kysymys.kysymysid IS NULL AS poistettu
-; FROM kysely_kysymysryhma INNER JOIN kysymys ON kysely_kysymysryhma.kysymysryhmaid = kysymys.kysymysryhmaid LEFT JOIN kysely_kysymys ON kysymys.kysymysid = kysely_kysymys.kysymysid AND kysely_kysymys.kyselyid = 275
-; WHERE kysely_kysymysryhma.kyselyid = 275
-; AND kysely_kysymysryhma.kysymysryhmaid = 4;
-
 (defn hae-kysymysryhmat [kyselyid]
   (->
     (sql/select* taulut/kysymysryhma)

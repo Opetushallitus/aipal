@@ -87,7 +87,7 @@
    :jatkokysymys_max_vastaus])
 
 (def jatkokysymykset-kentat
-  (apply conj kylla-jatkokysymykset-kentat ei-jatkokysymykset-kentat))
+  (into kylla-jatkokysymykset-kentat ei-jatkokysymykset-kentat))
 
 (defn onko-jokin-kentista-annettu?
   [m kentat]
@@ -109,16 +109,12 @@
   [m]
   (into {} (remove (comp nil? second) m)))
 
-(defn valitse-jatkokysymyksen-kentat [jatkokysymys]
-  (-> jatkokysymys
-    (select-keys jatkokysymykset-kentat)
-    poista-nil-kentat
-    (clojure.set/rename-keys {:jatkokysymys_max_vastaus :max_vastaus})))
-
 (defn erottele-jatkokysymys
   [kysymys]
   (-> kysymys
-    valitse-jatkokysymyksen-kentat
+    (select-keys jatkokysymykset-kentat)
+    poista-nil-kentat
+    (clojure.set/rename-keys {:jatkokysymys_max_vastaus :max_vastaus})
     (assoc :kylla_jatkokysymys (kylla-jatkokysymys? kysymys))
     (assoc :ei_jatkokysymys (ei-jatkokysymys? kysymys))))
 
@@ -127,7 +123,7 @@
   (let [jatkokysymys (erottele-jatkokysymys kysymys)]
     (-> kysymys
       (assoc :jatkokysymys jatkokysymys)
-      ((fn [kysymys] (apply dissoc kysymys jatkokysymykset-kentat))))))
+      (as-> kysymys (apply dissoc kysymys jatkokysymykset-kentat)))))
 
 (defn taydenna-kysymys
   [kysymys]
@@ -137,7 +133,7 @@
 
 (defn taydenna-kysymysryhman-kysymykset
   [kysymysryhma]
-  (update-in kysymysryhma [:kysymykset] #(map taydenna-kysymys %)))
+  (update-in kysymysryhma [:kysymykset] #(doall (map taydenna-kysymys %))))
 
 (defn taydenna-kysymysryhma
   [kysymysryhma]
@@ -162,7 +158,7 @@
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
     sql/exec
-    ((fn [kysymysryhmat] (map taydenna-kysymysryhma kysymysryhmat)))))
+    ((fn [kysymysryhmat] (doall (map taydenna-kysymysryhma kysymysryhmat))))))
 
 (defn hae-organisaatiotieto
   [kysymysryhmaid]
