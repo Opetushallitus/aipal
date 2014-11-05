@@ -23,9 +23,9 @@
   (let [kysymysryhmaid (-> (test-data/lisaa-kysymysryhma!)
                          :kysymysryhmaid)
         jatkokysymysid (-> (test-data/lisaa-jatkokysymys! {:kylla_teksti_fi "Jatkokysymys"})
-                         :jatkokysymysid)
-        _ (test-data/lisaa-kysymys! {:kysymysryhmaid kysymysryhmaid
-                                     :jatkokysymysid jatkokysymysid})]
+                         :jatkokysymysid)]
+    (test-data/lisaa-kysymys! {:kysymysryhmaid kysymysryhmaid
+                               :jatkokysymysid jatkokysymysid})
     (is (= [{:kylla_teksti_fi "Jatkokysymys"}]
            (->> (hae kysymysryhmaid)
              :kysymykset
@@ -38,14 +38,12 @@
                         {:kysymysryhmaid kysymysryhmaid
                          :vastaustyyppi "monivalinta"})
                     :kysymysid)]
-    (test-data/lisaa-monivalintavaihtoehto!
-                                      {:kysymysid kysymysid
-                                       :teksti_fi "Vaihtoehto 1"
-                                       :jarjestys 1})
-    (test-data/lisaa-monivalintavaihtoehto!
-                                      {:kysymysid kysymysid
-                                       :teksti_fi "Vaihtoehto 2"
-                                       :jarjestys 2})
+    (test-data/lisaa-monivalintavaihtoehto! {:kysymysid kysymysid
+                                             :teksti_fi "Vaihtoehto 1"
+                                             :jarjestys 1})
+    (test-data/lisaa-monivalintavaihtoehto! {:kysymysid kysymysid
+                                             :teksti_fi "Vaihtoehto 2"
+                                             :jarjestys 2})
     (is (= ["Vaihtoehto 1" "Vaihtoehto 2"]
            (->> (hae kysymysryhmaid)
              :kysymykset
