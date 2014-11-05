@@ -3,12 +3,6 @@
             [korma.core :as sql]
             [aipal.rest-api.kysymysryhma :refer [paivita-kysymysryhma!]]))
 
-(def oletus-kysymysryhma
-  {:kysymysryhmaid 1 :nimi_fi "Nimi (fi)" :nimi_sv "Nimi (sv)"})
-
-(def oletus-kysymys
-  {:kysymysid 11})
-
 (defn arkisto-stub-fixture [f]
   (with-redefs [aipal.arkisto.kysymysryhma/hae (fn [kysymysryhmaid] {})
                 aipal.arkisto.kysymysryhma/poista-kysymys! (fn [kysymysid])
@@ -22,38 +16,39 @@
 (use-fixtures :each arkisto-stub-fixture)
 
 (deftest paivita-kysymysryhma-poistaa-kysymyksen
-  (let [kysymysryhma (-> oletus-kysymysryhma
-                       (assoc :kysymykset [oletus-kysymys]))
-        poistettu-kysymysid (atom nil)]
-    (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly kysymysryhma)
+  (let [poistettu-kysymysid (atom nil)]
+    (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly {:kysymysryhmaid 1
+                                                              :kysymykset [{:kysymysid 2}]})
                   aipal.arkisto.kysymysryhma/poista-kysymys! (partial reset! poistettu-kysymysid)]
-      (paivita-kysymysryhma! kysymysryhma)
-      (is (= (:kysymysid oletus-kysymys) @poistettu-kysymysid)))))
+      (paivita-kysymysryhma! {:kysymysryhmaid 1})
+      (is (= @poistettu-kysymysid 2)))))
 
 (deftest paivita-kysymysryhma-poistaa-monivalintakysymyksen-vaihtoehdot
-  (let [kysymys (-> oletus-kysymys
-                  (assoc :vastaustyyppi "monivalinta"))
-        kysymysryhma (-> oletus-kysymysryhma
-                       (assoc :kysymykset [kysymys]))
-        poista-vaihtoehdot-kysymykselta (atom nil)]
-    (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly kysymysryhma)
-                  aipal.arkisto.kysymysryhma/poista-kysymyksen-monivalintavaihtoehdot! (partial reset! poista-vaihtoehdot-kysymykselta)]
-      (paivita-kysymysryhma! kysymysryhma)
-      (is (= (:kysymysid kysymys) @poista-vaihtoehdot-kysymykselta)))))
+  (let [poista-vaihtoehdot-kysymykselta (atom nil)]
+    (with-redefs [aipal.arkisto.kysymysryhma/hae
+                  (constantly {:kysymysryhmaid 1
+                               :kysymykset [{:kysymysid 2
+                                             :vastaustyyppi "monivalinta"}]})
+                  aipal.arkisto.kysymysryhma/poista-kysymyksen-monivalintavaihtoehdot!
+                  (partial reset! poista-vaihtoehdot-kysymykselta)]
+      (paivita-kysymysryhma! {:kysymysryhmaid 1})
+      (is (= @poista-vaihtoehdot-kysymykselta 2)))))
 
 (deftest paivita-kysymysryhma-lisaa-kysymyksen
- (let [kysymysryhma (-> oletus-kysymysryhma
-                      (assoc :kysymykset [oletus-kysymys]))
-       lisatty-kysymys (atom nil)
-       uusi-kysymysid 12]
-   (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly kysymysryhma)
-                 aipal.arkisto.kysymysryhma/lisaa-kysymys! #(reset! lisatty-kysymys (assoc % :kysymysid uusi-kysymysid))]
-     (paivita-kysymysryhma! kysymysryhma)
-     (is (= uusi-kysymysid (:kysymysid @lisatty-kysymys))))))
+ (let [lisaa-kysymys!-kutsut (atom [])]
+   (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly {:kysymysryhmaid 1
+                                                             :kysymykset []})
+                 aipal.arkisto.kysymysryhma/lisaa-kysymys! #(swap! lisaa-kysymys!-kutsut conj (vec %&))]
+     (paivita-kysymysryhma! {:kysymysryhmaid 1
+                             :kysymykset [{:kysymys_fi "Uusi"}]})
+     (is (= (count @lisaa-kysymys!-kutsut) 1))
+     (let [lisatty-kysymys (get-in @lisaa-kysymys!-kutsut [0 0])]
+       (is (= (:kysymysryhmaid lisatty-kysymys) 1))
+       (is (= (:kysymys_fi lisatty-kysymys) "Uusi"))))))
 
 (deftest paivita-kysymysryhma-paivittaa-perustiedot
-  (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly oletus-kysymysryhma)]
-    (let [kysymysryhma (assoc oletus-kysymysryhma :nimi_fi "Uusi nimi")]
-      (is (= "Uusi nimi"
-             (-> (paivita-kysymysryhma! kysymysryhma)
-               :nimi_fi))))))
+  (with-redefs [aipal.arkisto.kysymysryhma/hae (constantly {:kysymysryhmaid 1
+                                                            :nimi_fi "Vanha"})]
+    (is (= (:nimi_fi (paivita-kysymysryhma! {:kysymysryhmaid 1
+                                             :nimi_fi "Uusi"}))
+           "Uusi"))))
