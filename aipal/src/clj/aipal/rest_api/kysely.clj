@@ -73,4 +73,7 @@
                      (assoc kysely :kysymysryhmat (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/kysymysryhmat" [kyselyid]
-    (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid)))))
+    (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))
+
+  (cu/defapi :kysely-julkaisu kyselyid :put "/julkaise/:kyselyid" [kyselyid]
+    (json-response (arkisto/julkaise-kysely (Integer/parseInt kyselyid)))))

@@ -82,6 +82,11 @@
   [kysymysryhmat]
   (map #(clojure.set/rename-keys % {:kysymys :kysymykset}) kysymysryhmat))
 
+(defn julkaise-kysely [kyselyid]
+  (sql/update taulut/kysely
+    (sql/set-fields {:tila "julkaistu"})
+    (sql/where {:kyselyid kyselyid})))
+
 (defn hae-kysymysryhmat [kyselyid]
   (->
     (sql/select* taulut/kysymysryhma)

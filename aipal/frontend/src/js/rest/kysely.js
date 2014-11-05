@@ -28,6 +28,9 @@ angular.module('rest.kysely', [])
       },
       tallenna: function(kysely) {
         return $http.post('api/kysely/' + kysely.kyselyid, kysely);
+      },
+      julkaise: function(id) {
+        return $http.put('api/kysely/julkaise/' + id);
       }
     };
   }]);
