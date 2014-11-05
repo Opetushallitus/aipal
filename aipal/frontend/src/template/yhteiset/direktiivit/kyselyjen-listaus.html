@@ -37,19 +37,19 @@
 
           <div class="kyselykerrat" ng-if="kysely.tila !== 'luonnos'">
               <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
-                  <h3 class="e2e-kyselykerta-nimi">{{i18n.yleiset.kyselykerta}}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
-                  <span class="text-muted">Voimassa: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
+                  <h3 class="e2e-kyselykerta-nimi">{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
+                  <span class="text-muted">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
                   <auth-toiminto auth-linkki
                       linkki="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}"
                       sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']"
-                      teksti="{{i18n.kyselykerta.hallitse}}"
+                      teksti="{{ 'kyselykerta.hallitse' | i18n }}"
                       class="btn btn-primary btn-sm pull-left"
                       icon="glyphicon glyphicon-pencil">
                   </auth-toiminto>
                   <auth-toiminto auth-linkki
                       linkki="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}"
                       sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA']"
-                      teksti="{{i18n.kysely.raportti}}"
+                      teksti="{{ 'kysely.raportti' | i18n }}"
                       class="btn btn-primary btn-sm pull-left"
                       icon="glyphicon glyphicon-stats">
                   </auth-toiminto>
