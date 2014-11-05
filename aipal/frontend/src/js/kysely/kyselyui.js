@@ -61,10 +61,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         });
       };
       $scope.haeKyselyt();
-
-      $scope.uusiKyselykerta = function (kysely) {
-        $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
-      };
     }
   ])
 
