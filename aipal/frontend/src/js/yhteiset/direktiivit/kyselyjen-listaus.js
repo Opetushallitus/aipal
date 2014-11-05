@@ -22,7 +22,8 @@ angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18
       replace: true,
       scope : {
         kyselyt: '=',
-        suodatus: '='
+        suodatus: '=',
+        tilafilter: '@'
       },
       templateUrl : 'template/yhteiset/direktiivit/kyselyjen-listaus.html',
       controller: ['$scope', '$modal', '$location', 'Kysely', 'ilmoitus', 'i18n', function($scope, $modal, $location, Kysely, ilmoitus, i18n) {
@@ -32,10 +33,10 @@ angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18
             controller: 'JulkaiseKyselyModalController',
             resolve: { kysely: function() { return kysely; } }
           });
-          modalInstance.result.then(function (kyselyid) {
-            Kysely.julkaise(kyselyid)
+          modalInstance.result.then(function () {
+            Kysely.julkaise(kysely.kyselyid)
             .success(function() {
-              $location.path('/kyselyt');
+              kysely.tila = 'julkaistu';
               ilmoitus.onnistuminen(i18n.hae('kysely.julkaisu_onnistui'));
             })
             .error(function() {
@@ -55,7 +56,7 @@ angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18
     $scope.kysely = kysely;
 
     $scope.julkaise = function () {
-      $modalInstance.close(kysely.kyselyid);
+      $modalInstance.close(kysely);
     };
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
