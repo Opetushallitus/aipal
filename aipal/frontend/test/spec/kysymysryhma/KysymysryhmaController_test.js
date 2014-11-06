@@ -14,7 +14,7 @@
 
 'use strict';
 
-describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
+describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
 
   var $scope;
   var $httpBackend;
@@ -43,7 +43,7 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
   }));
 
   function alustaController() {
-    $controller('UusiKysymysryhmaController', {$scope: $scope});
+    $controller('KysymysryhmaController', {$scope: $scope});
     $scope.form = { $setPristine: function() {} };
   }
 
