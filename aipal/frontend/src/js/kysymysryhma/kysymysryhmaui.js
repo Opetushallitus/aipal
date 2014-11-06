@@ -216,4 +216,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       $scope.aktiivinenKysymys = kysymys;
       $scope.muokkaustila = true;
     };
+
+    $scope.poistaKysymys = function(index) {
+      $scope.kysymysryhma.kysymykset.splice(index, 1);
+    };
   }]);
