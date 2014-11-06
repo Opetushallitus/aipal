@@ -20,7 +20,6 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
                                                       'raportti.kyselykerta.vaittamakaavio',
                                                       'rest.kyselykerta',
                                                       'yhteiset.suodattimet.voimassaoloaika',
-                                                      'yhteiset.direktiivit.auth-toiminto',
                                                       'ngRoute',
                                                       'ngResource'])
   .config(['$routeProvider', function($routeProvider) {

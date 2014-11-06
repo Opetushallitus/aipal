@@ -9,52 +9,44 @@
           </accordion-heading>
 
           <div class="panel-tools-content">
-              <auth-toiminto auth-linkki
-                  linkki="#/kyselyt/kysely/{{kysely.kyselyid}}"
-                  sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"
-                  class="btn btn-primary pull-left"
-                  teksti="{{ 'kysely.muokkaa' | i18n }}"
-                  icon="glyphicon glyphicon-pencil"
-                  ng-if="kysely.tila === 'luonnos'">
-              </auth-toiminto>
-              <auth-toiminto auth-nappi
-                  sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"
-                  class="btn btn-primary pull-left e2e-uusi-kyselykerta"
-                  ng-click="julkaiseKyselyModal(kysely)"
-                  teksti="{{ 'kysely.julkaise' | i18n }}"
-                  icon="glyphicon glyphicon-upload"
-                  ng-if="kysely.tila === 'luonnos'">
-              </auth-toiminto>
-              <auth-toiminto auth-nappi
-                  sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']"
-                  class="btn btn-primary pull-left e2e-uusi-kyselykerta"
-                  ng-click="uusiKyselykerta(kysely)"
-                  teksti="{{ 'kyselykerta.uusi_kyselykerta' | i18n}}"
-                  icon="glyphicon glyphicon-plus"
-                  ng-if="kysely.tila === 'julkaistu'">
-              </auth-toiminto>
+              <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'luonnos'">
+                  <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}" class="btn btn-primary pull-left">
+                      {{ 'kysely.muokkaa' | i18n }}&nbsp;
+                      <span class="glyphicon glyphicon-pencil"></span>
+                  </a>
+              </auth-container>
+              <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'luonnos'">
+                  <button class="btn btn-primary pull-left" ng-click="julkaiseKyselyModal(kysely)">
+                      {{ 'kysely.julkaise' | i18n }}&nbsp;
+                      <span class="glyphicon glyphicon-upload"></span>
+                  </button>
+              </auth-container>
+              <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu'">
+                  <button class="btn btn-primary pull-left e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">
+                      {{ 'kyselykerta.uusi_kyselykerta' | i18n }}&nbsp;
+                      <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+              </auth-container>
           </div>
 
           <div class="kyselykerrat" ng-if="kysely.tila !== 'luonnos'">
               <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
                   <h3 class="e2e-kyselykerta-nimi">{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta | lokalisoiKentta:'nimi'}}</h3>
                   <span class="text-muted">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
-                  <auth-toiminto auth-linkki
-                      linkki="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}"
-                      sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']"
-                      teksti="{{ 'kyselykerta.hallitse' | i18n }}"
-                      class="btn btn-primary btn-sm pull-left"
-                      icon="glyphicon glyphicon-pencil">
-                  </auth-toiminto>
-                  <auth-toiminto auth-linkki
-                      linkki="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}"
-                      sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA']"
-                      teksti="{{ 'kysely.raportti' | i18n }}"
-                      class="btn btn-primary btn-sm pull-left"
-                      icon="glyphicon glyphicon-stats">
-                  </auth-toiminto>
+                  <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']">
+                      <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
+                          {{ 'kyselykerta.hallitse' | i18n }}&nbsp;
+                          <span class="glyphicon glyphicon-pencil"></span>
+                      </a>
+                  </auth-container>
+                  <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA']">
+                      <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
+                          {{ 'kysely.raportti' | i18n }}&nbsp;
+                          <span class="glyphicon glyphicon-stats"></span>
+                      </a>
+                  </auth-container>
               </div>
-              <span ng-show="!kysely.kyselykerrat.length" class="text-muted">{{i18n.kysely.ei_kyselykertoja}}</span>
+              <span ng-show="!kysely.kyselykerrat.length" class="text-muted">{{ 'kysely.ei_kyselykertoja' | i18n }}</span>
           </div>
       </accordion-group>
   </accordion>

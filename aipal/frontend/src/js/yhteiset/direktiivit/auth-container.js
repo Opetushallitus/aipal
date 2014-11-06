@@ -14,25 +14,15 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.auth-toiminto', [])
+angular.module('yhteiset.direktiivit.auth-container', [])
 
-  .directive('authToiminto', ['kayttooikeudet', function (kayttooikeudetService) {
-
-    function resolveTemplate(el, attrs) {
-      if (attrs.authLinkki !== undefined) {
-        return 'template/yhteiset/direktiivit/auth-linkki.html';
-      } else if (attrs.authNappi !== undefined) {
-        return 'template/yhteiset/direktiivit/auth-nappi.html';
-      } else if (attrs.authContainer !== undefined) {
-        return 'template/yhteiset/direktiivit/auth-container.html';
-      }
-    }
+  .directive('authContainer', ['kayttooikeudet', function (kayttooikeudetService) {
 
     return {
       restrict: 'E',
       replace: true,
       transclude: true,
-      templateUrl: resolveTemplate,
+      templateUrl: 'template/yhteiset/direktiivit/auth-container.html',
       scope: true,
       link: function (scope, element, attrs) {
 
@@ -41,12 +31,6 @@ angular.module('yhteiset.direktiivit.auth-toiminto', [])
         sallitutRoolit.push('YLLAPITAJA');
 
         scope.sallittu = false;
-        scope.linkki = attrs.linkki;
-        scope.teksti = attrs.teksti;
-        scope.muotoilut = attrs.class;
-        scope.icon = attrs.icon;
-        // poistetaan class attribuutti jottei e2e testit sekoa
-        element.removeAttr('class');
 
         function paivitaOikeus() {
           scope.sallittu = onkoSallittu();

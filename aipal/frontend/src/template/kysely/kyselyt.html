@@ -2,13 +2,12 @@
 
 <fieldset class="luo-uusi-kysely" >
     <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="{{i18n.kysely.etsi}}">
-    <auth-toiminto auth-nappi
-        sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"
-        class="btn btn-primary pull-right e2e-luo-uusi-kysely"
-        ng-click="luoUusiKysely()"
-        teksti="{{i18n.yleiset.luo_uusi_kysely}}"
-        icon="glyphicon glyphicon-plus">
-    </auth-toiminto>
+    <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+        <button class="btn btn-primary pull-right e2e-luo-uusi-kysely" ng-click="luoUusiKysely()">
+            {{ 'yleiset.luo_uusi_kysely' | i18n }}&nbsp;
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </auth-container>
 </fieldset>
 
 <div lataus-indikaattori metodi-id="kyselylistaus"
@@ -17,11 +16,11 @@
 <kyselyjen-listaus kyselyt="kyselyt" tilafilter="julkaistu" suodatus="hakuehto">
 </kyselyjen-listaus>
 
-<auth-toiminto auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+<auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
     <h2>{{ 'kysely.muut_kyselyt' | i18n }}</h2>
     <kyselyjen-listaus kyselyt="kyselyt" tilafilter="luonnos" suodatus="hakuehto">
     </kyselyjen-listaus>
 
     <kyselyjen-listaus kyselyt="kyselyt" tilafilter="poistettu" suodatus="hakuehto">
     </kyselyjen-listaus>
-</auth-toiminto>
+</auth-container>
