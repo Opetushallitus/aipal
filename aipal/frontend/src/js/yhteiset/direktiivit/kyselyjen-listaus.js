@@ -23,7 +23,7 @@ angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18
       scope : {
         kyselyt: '=',
         suodatus: '=',
-        tilafilter: '@'
+        haku: '='
       },
       templateUrl : 'template/yhteiset/direktiivit/kyselyjen-listaus.html',
       controller: ['$scope', '$modal', '$location', 'Kysely', 'ilmoitus', 'i18n', function($scope, $modal, $location, Kysely, ilmoitus, i18n) {
