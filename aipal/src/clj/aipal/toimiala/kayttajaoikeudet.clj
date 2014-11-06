@@ -78,7 +78,9 @@
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
 
-(defn kysely-muokkaus? [kyselyid]
+(defn kysely-muokkaus?
+  "Onko kyselyn muokkaus sallittu. Koskee sekä varsinaista muokkausta että kyselyn julkaisua."
+  [kyselyid]
   (and (kysely-on-luonnostilassa? kyselyid)
        (or (yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kyselyssa?
@@ -135,14 +137,6 @@
                "OPL-KAYTTAJA"}
              kyselyid))))
 
-(defn kysely-julkaisu? [kyselyid]
-  (and (kysely-on-luonnostilassa? kyselyid)
-       (or (yllapitaja?)
-           (kayttajalla-on-jokin-rooleista-kyselyssa?
-             #{"OPL-PAAKAYTTAJA"
-               "OPL-VASTUUKAYTTAJA"}
-             kyselyid))))
-
 (defn kyselykerta-muokkaus? [kyselykertaid]
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
     (kyselykerta-luonti? kyselyid)))
@@ -155,7 +149,7 @@
     :kysely-luonti kysely-luonti?
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
-    :kysely-julkaisu kysely-julkaisu?
+    :kysely-julkaisu kysely-muokkaus?
     :kyselykerta-luku kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
     :kyselykerta-muokkaus kyselykerta-muokkaus?
