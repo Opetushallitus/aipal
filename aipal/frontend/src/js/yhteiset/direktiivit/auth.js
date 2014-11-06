@@ -14,21 +14,21 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.auth-container', [])
+angular.module('yhteiset.direktiivit.auth', [])
 
-  .directive('authContainer', ['kayttooikeudet', function (kayttooikeudetService) {
+  .directive('auth', ['kayttooikeudet', function (kayttooikeudetService) {
 
     return {
       restrict: 'E',
       replace: true,
       transclude: true,
-      templateUrl: 'template/yhteiset/direktiivit/auth-container.html',
+      templateUrl: 'template/yhteiset/direktiivit/auth.html',
       scope: true,
       link: function (scope, element, attrs) {
 
         var kayttooikeudet;
-        var sallitutRoolit = attrs.sallitutRoolit ? scope.$eval(attrs.sallitutRoolit) : [];
-        sallitutRoolit.push('YLLAPITAJA');
+        var roolit = attrs.roolit ? scope.$eval(attrs.roolit) : [];
+        roolit.push('YLLAPITAJA');
 
         scope.sallittu = false;
 
@@ -39,7 +39,7 @@ angular.module('yhteiset.direktiivit.auth-container', [])
         function onkoSallittu() {
           if (kayttooikeudet && kayttooikeudet.$resolved) {
             try {
-              return _.some(kayttooikeudet.roolit, function(rooli) { return _.contains(sallitutRoolit, rooli.rooli); });
+              return _.some(kayttooikeudet.roolit, function(rooli) { return _.contains(roolit, rooli.rooli); });
             } catch (e) {
             }
           }

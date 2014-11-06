@@ -2,30 +2,30 @@
 
 <fieldset class="luo-uusi-kysely" >
     <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="{{i18n.kysely.etsi}}">
-    <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+    <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
         <button class="btn btn-primary pull-right e2e-luo-uusi-kysely" ng-click="luoUusiKysely()">
             {{ 'yleiset.luo_uusi_kysely' | i18n }}&nbsp;
             <span class="glyphicon glyphicon-plus"></span>
         </button>
-    </auth-container>
+    </auth>
 </fieldset>
 
 <div lataus-indikaattori metodi-id="kyselylistaus"
      viesti="{{i18n.yleiset.ladataan}}" virheviesti="{{i18n.yleiset.lataus_epaonnistui}}" yrita-uudelleen="haeKyselyt()"></div>
 
-<auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+<auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
     <h2>{{ 'kysely.luonnokset' | i18n }}</h2>
     <kyselylista kyselyt="kyselyt" suodatus="{tila:'luonnos'}" haku="hakuehto.teksti">
     </kyselylista>
 
     <h2>{{ 'kysely.julkaistut' | i18n }}</h2>
-</auth-container>
+</auth>
 
 <kyselylista kyselyt="kyselyt" suodatus="{tila:'julkaistu'}" haku="hakuehto.teksti">
 </kyselylista>
 
-<auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+<auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
     <h2>{{ 'kysely.poistetut' | i18n }}</h2>
     <kyselylista kyselyt="kyselyt" suodatus="{tila:'poistettu'}" haku="hakuehto.teksti">
     </kyselylista>
-</auth-container>
+</auth>
