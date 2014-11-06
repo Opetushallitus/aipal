@@ -5,7 +5,9 @@
           <accordion-heading>
               <i class="pull-left icon" ng-class="{'contract-icon': group.open, 'expand-icon': !group.open}"></i>
               <h3 class="e2e-kysely-nimi">{{kysely | lokalisoiKentta:'nimi'}}</h3>
-              <span class="text-muted">Voimassa: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}</span>
+              <span class="text-muted" ng-if="kysely.tila === 'julkaistu'">
+                {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
+              </span>
           </accordion-heading>
 
           <div class="panel-tools-content">
