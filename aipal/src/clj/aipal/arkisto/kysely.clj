@@ -24,7 +24,10 @@
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
     (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
                 :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                :kysely.tila)
+                :kysely.tila
+                [(sql/subselect taulut/kysely_kysymysryhma
+                   (sql/aggregate (count :*) :lkm)
+                   (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
     (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
     (sql/order :luotuaika :desc)))
 
@@ -100,6 +103,14 @@
               (sql/order :kysymys.jarjestys))
     sql/exec
     uudelleennimea-kysymys-kentta))
+
+(defn laske-kysymysryhmat [kyselyid]
+  (->
+    (sql/select taulut/kysely_kysymysryhma
+      (sql/aggregate (count :*) :lkm)
+      (sql/where {:kysely_kysymysryhma.kyselyid kyselyid}))
+    first
+    :lkm))
 
 (defn poistettava-kysymys? [kysymysid]
   (->

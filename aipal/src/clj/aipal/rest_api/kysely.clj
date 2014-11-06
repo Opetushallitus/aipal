@@ -76,4 +76,7 @@
     (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))
 
   (cu/defapi :kysely-julkaisu kyselyid :put "/julkaise/:kyselyid" [kyselyid]
-    (json-response (arkisto/julkaise-kysely (Integer/parseInt kyselyid)))))
+    (let [kyselyid (Integer/parseInt kyselyid)]
+      (if (> (arkisto/laske-kysymysryhmat kyselyid) 0)
+        (json-response (arkisto/julkaise-kysely kyselyid))
+        {:status 403}))))

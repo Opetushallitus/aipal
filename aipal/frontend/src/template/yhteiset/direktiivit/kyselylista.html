@@ -8,6 +8,9 @@
               <span class="text-muted" ng-if="kysely.tila === 'julkaistu'">
                 {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
               </span>
+              <span class="text-muted" ng-if="kysely.kysymysryhmien_lkm === 0">
+                {{ 'kysely.ei_kysymysryhmia' | i18n }}
+              </span>
           </accordion-heading>
 
           <div class="panel-tools-content">
@@ -18,7 +21,7 @@
                   </a>
               </auth-container>
               <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'luonnos'">
-                  <button class="btn btn-primary pull-left" ng-click="julkaiseKyselyModal(kysely)">
+                  <button class="btn btn-primary pull-left" ng-click="julkaiseKyselyModal(kysely)" ng-disabled="kysely.kysymysryhmien_lkm === 0">
                       {{ 'kysely.julkaise' | i18n }}&nbsp;
                       <span class="glyphicon glyphicon-upload"></span>
                   </button>
