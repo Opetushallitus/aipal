@@ -38,7 +38,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.pakollisia-kenttia',
   'yhteiset.direktiivit.tallenna',
   'yhteiset.direktiivit.hakuvalitsin',
-  'yhteiset.direktiivit.kyselyjen-listaus',
+  'yhteiset.direktiivit.kyselylista',
   'yhteiset.suodattimet.enumarvo',
   'yhteiset.suodattimet.i18n',
   'ui.bootstrap',

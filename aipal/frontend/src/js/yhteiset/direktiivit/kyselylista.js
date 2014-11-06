@@ -14,9 +14,9 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus'])
+angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus'])
 
-  .directive('kyselyjenListaus', [function() {
+  .directive('kyselylista', [function() {
     return {
       restrict: 'E',
       replace: true,
@@ -25,7 +25,7 @@ angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18
         suodatus: '=',
         haku: '='
       },
-      templateUrl : 'template/yhteiset/direktiivit/kyselyjen-listaus.html',
+      templateUrl : 'template/yhteiset/direktiivit/kyselylista.html',
       controller: ['$scope', '$modal', '$location', 'Kysely', 'ilmoitus', 'i18n', function($scope, $modal, $location, Kysely, ilmoitus, i18n) {
         $scope.julkaiseKyselyModal = function(kysely) {
           var modalInstance = $modal.open({
