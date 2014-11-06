@@ -55,10 +55,6 @@ angular.module('yhteiset.direktiivit.kyselyjen-listaus', ['yhteiset.palvelut.i18
   .controller('JulkaiseKyselyModalController', ['$modalInstance', '$scope', 'kysely', function ($modalInstance, $scope, kysely) {
     $scope.kysely = kysely;
 
-    $scope.julkaise = function () {
-      $modalInstance.close(kysely);
-    };
-    $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
-    };
+    $scope.julkaise = $modalInstance.close;
+    $scope.cancel = $modalInstance.dismiss;
   }]);
