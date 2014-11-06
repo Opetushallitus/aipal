@@ -13,14 +13,19 @@
 <div lataus-indikaattori metodi-id="kyselylistaus"
      viesti="{{i18n.yleiset.ladataan}}" virheviesti="{{i18n.yleiset.lataus_epaonnistui}}" yrita-uudelleen="haeKyselyt()"></div>
 
+<auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+    <h2>{{ 'kysely.luonnokset' | i18n }}</h2>
+    <kyselylista kyselyt="kyselyt" suodatus="{tila:'luonnos'}" haku="hakuehto.teksti">
+    </kyselylista>
+
+    <h2>{{ 'kysely.julkaistut' | i18n }}</h2>
+</auth-container>
+
 <kyselylista kyselyt="kyselyt" suodatus="{tila:'julkaistu'}" haku="hakuehto.teksti">
 </kyselylista>
 
 <auth-container sallitut-roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
-    <h2>{{ 'kysely.muut_kyselyt' | i18n }}</h2>
-    <kyselylista kyselyt="kyselyt" suodatus="{tila:'luonnos'}" haku="hakuehto.teksti">
-    </kyselylista>
-
+    <h2>{{ 'kysely.poistetut' | i18n }}</h2>
     <kyselylista kyselyt="kyselyt" suodatus="{tila:'poistettu'}" haku="hakuehto.teksti">
     </kyselylista>
 </auth-container>
