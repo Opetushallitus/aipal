@@ -8,7 +8,7 @@
   a {
     display: inline-block;
     text-decoration: none;
-    color: $font-color!important;
+    color: $font-color;
     text-transform:uppercase;
     font-weight: 600;
   }
@@ -37,6 +37,8 @@
   }
   .kielen-vaihto {
     float: right;
+    overflow: auto;
+    display: block;
     li.valittu {
       background-color: $darker-primary;
       &:hover {background-color: $darker-primary;}
@@ -49,12 +51,14 @@ h1.title{
   margin: 0 0 0 10px;
   border-left: 1px solid $lightest-primary;
   line-height: 40px;
-  font-size: 14px;
+  font-size: 1em;
   font-family: "Open Sans", "arial";
   font-weight: 200;
   color: white;
   text-align: left;
   padding-left: 1em;
+  float: left;
+  width: 60%;
 }
 
 header {

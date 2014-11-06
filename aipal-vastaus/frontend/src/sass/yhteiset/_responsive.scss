@@ -1,0 +1,72 @@
+@media screen and (max-width: 550px) {
+  h1 {
+    font-size: 2em;
+  }
+  h2 {
+    font-size: 1.8em;
+  }
+  h3 {
+    font-size: 1.3em;
+  }
+  label {
+    font-size: 1.1em;
+  }
+  textarea {
+    width: 90%;
+  }
+  h1.title {
+    margin: 0px;
+    border: 0px;
+    line-height: 1.4em;
+    text-align: center;
+    padding: 0;
+    float: none;
+    padding: .7em 0em;
+    font-size: 1.4em;
+    width: 100%;
+  }
+
+  .main-nav {
+    overflow: auto;
+    a {
+      color: #ffffff;
+      cursor: pointer;
+    }
+    .kielen-vaihto {
+      float: right;
+      position: relative;
+      text-align: center;
+      padding-bottom: .5em;
+      clear: both;
+      width: 100%;
+      * {
+        border: 0px;
+        border-left: 0px !important;
+      }
+      li{
+        height: 2em;
+        display: block;
+        background-color: transparent;
+        text-align: center;
+        width: 50%;
+
+        &:hover {
+          background-color: transparent !important;
+        }
+        a,span {
+          display: block;
+        }
+      }
+      li.valittu {
+        background-color: $darker-primary;
+        padding: 0 .5em;
+        span {
+          color: #ffffff;
+        }
+        &:hover {
+          background-color: transparent !important;
+        }
+      }
+    }
+  }
+}

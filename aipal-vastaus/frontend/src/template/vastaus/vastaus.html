@@ -12,7 +12,7 @@
         <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
         <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">
-          <textarea name="vapaateksti" ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}" cols="70" rows="9"></textarea>
+          <textarea name="vapaateksti" ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}"></textarea>
           <span ng-show="kysymysForm.vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
         </div>
 

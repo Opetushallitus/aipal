@@ -13,16 +13,17 @@
   <link rel="stylesheet" href="bower_components/AngularJS-Toaster/toaster.css">
   <!-- endbuild -->
   <link rel="stylesheet" href="compiled_css/main.css">
+  <meta name="viewport" content="width = device-width, initial-scale = 1, maximum-scale = 2, minimum-scale=.5">
 </head>
 <body piilota-tekstien-latauksen-ajaksi ng-cloak ng-controller="AipalvastausController">
   <toaster-container toaster-options="{'close-button': true}"></toaster-container>
   <div>
     <nav class="main-nav">
       <div class="app-wrapper ">
-        <kielen-vaihto></kielen-vaihto>
-        <h1 class="title">
-            <span ng-bind="i18n.yleiset.palvelun_otsikko"></span>
-        </h1>
+         <h1 class="title">
+              <span ng-bind="i18n.yleiset.palvelun_otsikko"></span>
+         </h1>
+          <kielen-vaihto></kielen-vaihto>
       </div>
     </nav>
     <div id="content" class="app-wrapper">
@@ -47,11 +48,9 @@
   </footer>
 
   <!-- build:js js/libs.js -->
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
   <script src="bower_components/angular-route/angular-route.min.js"></script>
   <script src="bower_components/angular-resource/angular-resource.min.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <script src="bower_components/lodash/dist/lodash.min.js"></script>
   <script src="bower_components/angular-animate/angular-animate.min.js"></script>
   <script src="bower_components/AngularJS-Toaster/toaster.js"></script>
