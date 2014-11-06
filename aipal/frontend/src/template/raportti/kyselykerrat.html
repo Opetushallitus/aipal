@@ -19,7 +19,7 @@
     <tbody>
         <tr ng-repeat="kyselykerta in kyselykerrat | filter:hakuehto.teksti | limitTo:50">
             <td>{{kyselykerta.kyselykertaid}}</td>
-            <td>{{kyselykerta.nimi_fi}}</td>
+            <td>{{kyselykerta.nimi}}</td>
             <td>
                 <a class="btn btn-primary btn-sm pull-right" ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}">
                     Näytä raportti

@@ -71,13 +71,13 @@
                           :koulutustoimija "0000000-0"}]
                 :kyselykerta [{:kyselykertaid 1
                                :kyselyid 1
-                               :nimi_fi "Kyselykerta 1-1"}
+                               :nimi "Kyselykerta 1-1"}
                               {:kyselykertaid 2
                                :kyselyid 1
-                               :nimi_fi "Kyselykerta 1-2"}
+                               :nimi "Kyselykerta 1-2"}
                               {:kyselykertaid 3
                                :kyselyid 2
-                               :nimi_fi "Kyselykerta 2-3"}]}
+                               :nimi "Kyselykerta 2-3"}]}
       (avaa kyselyt-sivu)
       (testing
         "ensimmäisellä kyselyllä on kaksi kyselykertaa"
@@ -127,8 +127,7 @@
         (let [kysely (nth (kyselyt) 0)]
           (avaa-kysely kysely)
           (w/click (uusi-kyselykerta-kyselylle kysely))
-          (syota-kenttaan "kyselykerta.nimi_fi" "Ensimmäinen kyselykerta")
-          (syota-kenttaan "kyselykerta.nimi_sv" "Ensimmäinen kyselykerta")
+          (syota-kenttaan "kyselykerta.nimi" "Ensimmäinen kyselykerta")
           (tallenna)
           (avaa kyselyt-sivu))
         (let [kysely (nth (kyselyt) 0)]
@@ -139,9 +138,8 @@
         (let [kysely (nth (kyselyt) 1)]
           (avaa-kysely kysely)
           (w/click (uusi-kyselykerta-kyselylle kysely))
-          (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi_fi\"]"))) ; ajastusongelman kierto
-          (syota-kenttaan "kyselykerta.nimi_fi" "Toinen kyselykerta")
-          (syota-kenttaan "kyselykerta.nimi_sv" "Toinen kyselykerta")
+          (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi\"]"))) ; ajastusongelman kierto
+          (syota-kenttaan "kyselykerta.nimi" "Toinen kyselykerta")
           (tallenna)
           (avaa kyselyt-sivu))
         (let [kysely (nth (kyselyt) 1)]

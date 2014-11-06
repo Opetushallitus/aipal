@@ -114,7 +114,7 @@
   ([kyselykerta]
     (lisaa-kyselykerta! kyselykerta (lisaa-kysely!)))
   ([kyselykerta kysely]
-    (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:nimi_fi "oletuskyselykerta, testi"
+    (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:nimi "oletuskyselykerta, testi"
                                                                  :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
                                                                  :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
                                                                 kyselykerta))))

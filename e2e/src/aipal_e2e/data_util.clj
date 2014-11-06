@@ -58,7 +58,7 @@
 (def ^:private kyselykerta-tiedot {:luo-fn kyselykerta/lisaa!
                                    :poista-fn #(kyselykerta/poista! (:kyselykertaid %))
                                    :default (for [i (iterate inc 1)]
-                                              {:nimi_fi (str "Kyselykerta " i)
+                                              {:nimi (str "Kyselykerta " i)
                                                :voimassa_alkupvm (time/today)})})
 
 (def ^:private kyselypohja-tiedot {:luo-fn kyselypohja/lisaa!
