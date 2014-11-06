@@ -102,4 +102,18 @@ describe('kysymysryhma.kysymysryhmaui.UusiKysymysryhmaController', function(){
     expect(ilmoitus.virhe).toHaveBeenCalled();
   });
 
+  it('ainoan kysymyksen poisto', function() {
+    alustaController();
+    $scope.kysymysryhma.kysymykset = [{foo: 'bar'}];
+    $scope.poistaKysymys(0);
+    expect($scope.kysymysryhma.kysymykset).toEqual([]);
+  });
+
+  it('kysymyksen poisto', function() {
+    alustaController();
+    $scope.kysymysryhma.kysymykset = [{foo: 'bar'}, {bar: 'baz'}];
+    $scope.poistaKysymys(1);
+    expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar'}]);
+  });
+
 });
