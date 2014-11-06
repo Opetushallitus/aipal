@@ -25,7 +25,7 @@
 
 (defn kyselyt []
   (w/find-elements (-> *ng*
-                     (.repeater "kysely in kyselyt"))))
+                     (.repeater "kysely in suodatettu"))))
 
 (defn kyselyn-nimi [kysely-elementti]
   (w/text
