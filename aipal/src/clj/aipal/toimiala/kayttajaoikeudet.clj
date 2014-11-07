@@ -29,10 +29,17 @@
 (defn kayttajalla-on-jokin-rooleista? [roolit]
   (sisaltaa-jonkin-rooleista? roolit (:aktiiviset-roolit *kayttaja*)))
 
+(defn kayttajalla-on-jokin-rooleista-koulutustoimijassa? [roolit koulutustoimija]
+  (let [roolit-koulutustoimijassa (filter #(= koulutustoimija (:organisaatio %)) (:aktiiviset-roolit *kayttaja*))]
+    (sisaltaa-jonkin-rooleista? roolit roolit-koulutustoimijassa)))
+
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
-  (let [kyselyn-koulutustoimija (kysely-arkisto/hae-koulutustoimija (->int kyselyid))
-        koulutustoimijan-roolit (filter #(= kyselyn-koulutustoimija (:organisaatio %)) (:aktiiviset-roolit *kayttaja*))]
-  (sisaltaa-jonkin-rooleista? roolit koulutustoimijan-roolit)))
+  (let [koulutustoimija (kysely-arkisto/hae-koulutustoimija (->int kyselyid))]
+    (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
+
+(defn kayttajalla-on-jokin-rooleista-kysymysryhmassa? [roolit kysymysryhmaid]
+  (let [koulutustoimija (:koulutustoimija (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid)))]
+    (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
 
 (defn hae-kyselyn-tila [kyselyid]
   (:tila (kysely-arkisto/hae (->int kyselyid))))
@@ -116,9 +123,12 @@
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
 
-(defn kysymysryhma-muokkaus? []
+(defn kysymysryhma-muokkaus? [kysymysryhmaid]
   (or (yllapitaja?)
-      (paakayttaja-tai-vastuukayttaja?)))
+      (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"}
+        kysymysryhmaid)))
 
 (defn kyselypohja-listaaminen? []
   (or (yllapitaja?)

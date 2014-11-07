@@ -105,7 +105,7 @@
                           :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
                          kysymykset))
 
-  (cu/defapi :kysymysryhma-muokkaus nil :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
+  (cu/defapi :kysymysryhma-muokkaus kysymysryhmaid :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
     (json-response
       (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid (Integer/parseInt kysymysryhmaid)))))
 
