@@ -52,7 +52,6 @@
   <thead>
     <tr>
       <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
-      <th>{{'i18n.vastaajatunnus.vastausaika'|i18n}}</th>
       <th>{{'i18n.vastaajatunnus.vastaajia'|i18n}}</th>
       <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
       <th>{{'i18n.yleiset.rahoitusmuoto'|i18n}}</th>
@@ -62,7 +61,6 @@
   <tbody>
     <tr ng-repeat="tunnus in tunnukset" ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.voimassa, voimassa: tunnus.voimassa && !tunnus.lukittu && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
       <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
-      <td class="vastausaika">{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
       <td>{{tunnus.vastaajien_lkm}}</td>
       <td>{{tunnus.vastausten_lkm}}</td>
       <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>

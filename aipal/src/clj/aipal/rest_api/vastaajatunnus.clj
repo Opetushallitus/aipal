@@ -21,10 +21,7 @@
 (c/defroutes reitit
   (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
     (json-response (vastaajatunnus/lisaa!
-                     (-> vastaajatunnus
-                       (assoc :kyselykertaid (Integer/parseInt kyselykertaid))
-                       (update-in [:voimassa_loppupvm] parse-iso-date)
-                       (update-in [:voimassa_alkupvm] parse-iso-date)))))
+                     (assoc vastaajatunnus :kyselykertaid (Integer/parseInt kyselykertaid)))))
 
   (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" [kyselykertaid vastaajatunnusid lukitse]
     (json-response (vastaajatunnus/lukitse! (Integer/parseInt kyselykertaid) (Integer/parseInt vastaajatunnusid) lukitse)))
