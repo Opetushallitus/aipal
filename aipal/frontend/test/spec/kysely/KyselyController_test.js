@@ -49,7 +49,8 @@ describe('kysely.kyselyui.KyselyController', function(){
 
   it('pitäisi ilman id:tä tultaessa jättää kysely tyhjäksi', function(){
     alustaController();
-    expect($scope.kysely).toEqual({kysymysryhmat: []});
+    expect($scope.kysely.kysymysryhmat).toEqual([]);
+    expect($scope.kysely.nimi_fi).toEqual(undefined);
   });
 
   it('pitäisi id:n kanssa tultaessa hakea kysely palvelimelta', function(){
