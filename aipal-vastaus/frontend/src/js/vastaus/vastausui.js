@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.i18n'])
+angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.i18n', 'yhteiset.palvelut.tallennusMuistutus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -63,6 +63,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.tallennaNappiDisabloitu = true;
       Vastaus.tallenna($scope.tunnus, keraaVastausdata($scope.data), function() {
         $location.url('/kiitos');
+        $scope.vastausForm.$setPristine();
       }, function(){
         $scope.tallennaNappiDisabloitu = false;
         ilmoitus.virhe(i18n.hae('palvelinvirhe.teksti'));
@@ -76,8 +77,11 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
   }])
 
   .controller('VastausController', [
-    '$http', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot',
-    function($http, $routeParams, $scope, $location, Vastaus, f) {
+    '$http', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus',
+    function($http, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus) {
+      $scope.$watch('vastausForm', function(vastausForm) {
+        tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(vastausForm);
+      });
 
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
