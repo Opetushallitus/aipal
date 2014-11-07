@@ -54,31 +54,10 @@
       (is (= (map :vastaajien_lkm (hae-kyselykerralla k))
              [3])))))
 
-(defn pvm-gen [min-pvm max-pvm]
-  {:pre [(not (time/after? min-pvm max-pvm))]}
-  (let [paivia-valissa (time/in-days (time/interval
-                                       (clj-time.coerce/to-date-time min-pvm)
-                                       (clj-time.coerce/to-date-time max-pvm)))]
-    (gen/fmap #(time/plus min-pvm (time/days %))
-              (gen/choose 0 paivia-valissa))))
-
-(defn aikavali-gen [min-pvm max-pvm]
-  {:pre [(time/before? min-pvm max-pvm)]}
-  (gen/bind (pvm-gen min-pvm (time/minus max-pvm (time/days 1)))
-            (fn [alkupvm]
-              (gen/tuple (gen/return alkupvm)
-                         (pvm-gen (time/plus alkupvm (time/days 1))
-                                  max-pvm)))))
-
 (defn vastaajatunnus-gen [kyselykertaid]
-  (gen/bind (aikavali-gen (time/local-date 1900 1 1)
-                          (time/local-date 2100 1 1))
-            (fn [[alkupvm loppupvm]]
-              (gen/hash-map :kyselykertaid (gen/return kyselykertaid)
-                            :henkilokohtainen gen/boolean
-                            :vastaajien_lkm gen/s-pos-int
-                            :voimassa_alkupvm (gen/return alkupvm)
-                            :voimassa_loppupvm (gen/return loppupvm)))))
+  (gen/hash-map :kyselykertaid (gen/return kyselykertaid)
+                :henkilokohtainen gen/boolean
+                :vastaajien_lkm gen/s-pos-int))
 
 (defspec ^:integraatio lisays-paluuarvo 50
   (testing "lisaa-kyselykerta! palauttaa vastaajatunnukset samassa muodossa kuin hae-kyselykerralla"
