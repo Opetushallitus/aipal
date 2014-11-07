@@ -90,7 +90,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           });
       }
       else {
-        $scope.kysely = {kysymysryhmat: []};
+        $scope.kysely = {
+          kysymysryhmat: [],
+          voimassa_alkupvm: new Date().toISOString().slice(0, 10)
+        };
       }
 
       $scope.tallenna = function () {
