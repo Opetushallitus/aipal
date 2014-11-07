@@ -59,13 +59,13 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="tunnus in tunnukset" ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.voimassa, voimassa: tunnus.voimassa && !tunnus.lukittu && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
+    <tr ng-repeat="tunnus in tunnukset" ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.kaytettavissa, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
       <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
       <td>{{tunnus.vastaajien_lkm}}</td>
       <td>{{tunnus.vastausten_lkm}}</td>
       <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>
       <td>
-        <span ng-if="tunnus.voimassa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
+        <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
           <span ng-if="tunnus.lukittu" class="glyphicon glyphicon-lock" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, false)"></span>
           <span ng-if="!tunnus.lukittu" class="glyphicon glyphicon-ok" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, true)"></span>
         </span>

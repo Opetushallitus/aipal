@@ -23,8 +23,7 @@
 
 (def kyselykerta-select
   (-> (sql/select* taulut/vastaajatunnus)
-    (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :voimassa_alkupvm :voimassa_loppupvm
-                [(sql/raw "((voimassa_alkupvm IS NULL OR voimassa_alkupvm <= current_date) AND (voimassa_loppupvm IS NULL OR voimassa_loppupvm >= current_date))") :voimassa])
+    (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa)
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
