@@ -57,16 +57,14 @@
     sql/exec
     first))
 
-(defn hae-koulutustoimija
-  "Hakee koulutustoimijatiedon kyselyn pääavaimella"
+(defn hae-organisaatiotieto
+  "Hakee kyselyn luoneen organisaation tiedot"
   [kyselyid]
-  (->
-    (sql/select taulut/kysely
-      (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
-      (sql/fields :kysely_organisaatio_view.koulutustoimija)
-      (sql/where {:kysely_organisaatio_view.kyselyid kyselyid}))
-    first
-    :koulutustoimija))
+  (first
+    (sql/select
+      taulut/kysely
+      (sql/fields :koulutustoimija)
+      (sql/where {:kyselyid kyselyid}))))
 
 (defn lisaa!
   "Lisää uuden kyselyn"

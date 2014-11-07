@@ -34,7 +34,7 @@
     (sisaltaa-jonkin-rooleista? roolit roolit-koulutustoimijassa)))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
-  (let [koulutustoimija (kysely-arkisto/hae-koulutustoimija (->int kyselyid))]
+  (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))]
     (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
 
 (defn kayttajalla-on-jokin-rooleista-kysymysryhmassa? [roolit kysymysryhmaid]

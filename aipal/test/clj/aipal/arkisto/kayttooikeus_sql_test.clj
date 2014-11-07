@@ -18,7 +18,7 @@
   (testing "Haku palauttaa lisää-kutsulla luodun koulutustoimijan"
     (let [kysely (kysely-arkisto/lisaa! {:nimi_fi "oletuskysely, testi"
                                          :koulutustoimija "7654321-2"})
-          koulutustoimija (kysely-arkisto/hae-koulutustoimija (:kyselyid kysely))]
+          koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (:kyselyid kysely)))]
       (is (= "7654321-2" koulutustoimija)))))
 
 (deftest ^:integraatio omien-kyselyiden-listaus
