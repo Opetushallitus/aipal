@@ -320,7 +320,7 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
 
   it('Käyttäjä siirretään kiitos-sivulle, jos vastausten tallennus onnistuu', function(){
     $httpBackend.whenPOST('api/vastaus').respond(200);
-    f.tallenna({data: {}});
+    f.tallenna({data: {}, vastausForm: { $setPristine: function() {} }});
     $httpBackend.flush();
     expect($location.url).toHaveBeenCalledWith('/kiitos');
   });
@@ -348,7 +348,7 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
 
   it('Ei näytetä virheilmoitusta, jos vastausten tallennus onnistuu', function(){
     $httpBackend.whenPOST('api/vastaus').respond(200);
-    f.tallenna({data: {}});
+    f.tallenna({data: {}, vastausForm: { $setPristine: function() {} }});
     $httpBackend.flush();
     expect(ilmoitus.virhe).not.toHaveBeenCalled();
   });
