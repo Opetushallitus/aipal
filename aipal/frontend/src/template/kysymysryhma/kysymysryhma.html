@@ -83,13 +83,13 @@
 
                         <div class="form-group">
                             <label>{{i18n.kysymys.kysymys_suomeksi}}
-                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_fi" size="80" maxlength="200" required/>
+                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_fi" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_sv"/>
                             </label>
                         </div>
 
                         <div class="form-group">
                             <label>{{i18n.kysymys.kysymys_ruotsiksi}}
-                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_sv" size="80" maxlength="200"/>
+                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_sv" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_fi"/>
                             </label>
                         </div>
 
