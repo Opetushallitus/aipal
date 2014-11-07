@@ -38,28 +38,25 @@
   [nimi]
    (clojure.string/split (slurp (io/resource nimi)) #";"))
 
-(defn run-sql
-  [sql kayttaja-param]
-  (jdbc-do (str "set session " kayttaja-param "='JARJESTELMA'"))
+(defn run-sql [sql]
   (doseq [stmt sql]
     (try
+      (jdbc-do "set session aipal.kayttaja='JARJESTELMA'")
       (jdbc-do stmt)
       (catch java.sql.SQLException e
-        (throw (.getNextException e)))))
-  (jdbc-do (str "set " kayttaja-param " to default")))
+        (throw (.getNextException e)))
+      (finally
+        (jdbc-do "set aipal.kayttaja to default")))))
 
-(defn luo-kayttajat!
-  [kayttaja-param]
-  (run-sql (sql-resurssista "sql/ophkayttajat.sql") kayttaja-param))
+(defn luo-kayttajat! []
+  (run-sql (sql-resurssista "sql/ophkayttajat.sql")))
 
-(defn luo-testikayttajat!
-  [kayttaja-param]
-  (run-sql (sql-resurssista "sql/testikayttajat.sql") kayttaja-param))
+(defn luo-testikayttajat! []
+  (run-sql (sql-resurssista "sql/testikayttajat.sql")))
 
-(defn luo-koodistodata!
-  [kayttaja-param]
-  (run-sql (sql-resurssista "sql/koodistot.sql") kayttaja-param))
-  
+(defn luo-koodistodata! []
+  (run-sql (sql-resurssista "sql/koodistot.sql")))
+
 (defn aseta-oikeudet-sovelluskayttajalle
   [username]
   (jdbc-do
@@ -110,8 +107,6 @@
     :id :testikayttajat]
    ["-u" "--username USER" "Tietokantakäyttäjä"
     :default "aipal_user"]
-   ["-V" "--uservariable VAR" "Tietokantasessiossa triggereissä käytetty käyttäjän muuttujan nimi"
-    :default "aipal.kayttaja"]
    ["-h" "--help" "Käyttöohje"]])
 
 (defn ohje [options-summary]
@@ -169,13 +164,13 @@
           (println "Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista epäonnistuisi.")
           (aseta-oikeudet-sovelluskayttajalle (:username options))
           (println "Luodaan koodistodata")
-          (luo-koodistodata! (:uservariable options))
+          (luo-koodistodata!)
           (when (:clear options)
             (println "luodaan käyttäjät")
-            (luo-kayttajat! (:uservariable options)))
+            (luo-kayttajat!))
           (when (:testikayttajat options)
             (println "luodaan testikäyttäjät")
-            (luo-testikayttajat! (:uservariable options))))
+            (luo-testikayttajat!)))
         (finally
           (when migraatiopoikkeus
             (println "!!!! TAPAHTUI VIRHE !!!")
