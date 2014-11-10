@@ -21,7 +21,8 @@
     [clj-time.core :as time]
     [clj-time.core :as ctime]
     [korma.core :as sql]
-    [oph.korma.korma :refer [joda-datetime->sql-timestamp]]))
+    [oph.korma.korma :refer [joda-datetime->sql-timestamp]]
+    [aipal.integraatio.sql.korma :as taulut]))
 
 (def default-koulutusala
   {:koulutusalatunnus "1"
@@ -43,6 +44,9 @@
 
 (def default-kysymysryhma
   {:nimi_fi "Kysymysryhma"})
+
+(def default-kyselypohja
+  {:nimi_fi "Kyselypohja"})
 
 (def default-kysymys
   {:pakollinen true
@@ -130,12 +134,22 @@
                                                 vastaajatunnus))))
 
 (defn lisaa-kysymysryhma!
-  ([uusi-kysymysryhma]
-    (let [kysymysryhma (merge default-kysymysryhma uusi-kysymysryhma)]
-      (sql/insert :kysymysryhma (sql/values [kysymysryhma]))))
+  ([uusi-kysymysryhma koulutustoimija]
+    (let [default-kysymysryhma (assoc default-kysymysryhma :koulutustoimija (:ytunnus koulutustoimija))
+          kysymysryhma (merge default-kysymysryhma uusi-kysymysryhma)]
+      (sql/insert taulut/kysymysryhma (sql/values [kysymysryhma]))))
   ([]
     (let [koulutustoimija (lisaa-koulutustoimija!)]
-      (lisaa-kysymysryhma! (assoc default-kysymysryhma :koulutustoimija (:ytunnus koulutustoimija)) ))))
+      (lisaa-kysymysryhma! default-kysymysryhma koulutustoimija))))
+
+(defn lisaa-kyselypohja!
+  ([uusi-kyselypohja koulutustoimija]
+    (let [default-kyselypohja (assoc default-kyselypohja :koulutustoimija (:ytunnus koulutustoimija))
+          kyselypohja (merge default-kyselypohja uusi-kyselypohja)]
+      (sql/insert taulut/kyselypohja (sql/values [kyselypohja]))))
+  ([]
+    (let [koulutustoimija (lisaa-koulutustoimija!)]
+      (lisaa-kyselypohja! default-kyselypohja koulutustoimija))))
 
 (defn lisaa-kysymys!
   [uusi-kysymys]

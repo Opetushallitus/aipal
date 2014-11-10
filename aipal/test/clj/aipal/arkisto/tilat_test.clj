@@ -142,3 +142,59 @@
                                                        (sql/where {:kyselyid kyselyid})))))
          false (:kyselyid luonnos-kysely)
          false (:kyselyid poistettu-kysely))))
+
+(deftest ^:integraatio kysymysryhma-lisattavissa-test
+  (let [koulutustoimija (anna-koulutustoimija!)
+        luonnos-kysymysryhma (lisaa-kysymysryhma! {:tila "luonnos"} koulutustoimija)
+        julkaistu-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"} koulutustoimija)
+        poistettu-kysymysryhma (lisaa-kysymysryhma! {:tila "poistettu"} koulutustoimija)
+        voimassaoleva-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"
+                                                         :voimassa_alkupvm (time/minus (time/today) (time/days 1))
+                                                         :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
+                                                        koulutustoimija)
+        voimaantuleva-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"
+                                                         :voimassa_alkupvm (time/plus (time/today) (time/days 1))
+                                                         :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
+                                                        koulutustoimija)
+        vanhentunut-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"
+                                                       :voimassa_alkupvm (time/minus (time/today) (time/days 1))
+                                                       :voimassa_loppupvm (time/minus (time/today) (time/days 1))}
+                                                      koulutustoimija)]
+    (are [tulos kysymysryhmaid] (= tulos (:lisattavissa (first
+                                                          (sql/select :kysymysryhma
+                                                            (sql/fields :kysymysryhma.lisattavissa)
+                                                            (sql/where {:kysymysryhmaid kysymysryhmaid})))))
+         false (:kysymysryhmaid luonnos-kysymysryhma)
+         true (:kysymysryhmaid julkaistu-kysymysryhma)
+         false (:kysymysryhmaid poistettu-kysymysryhma)
+         true (:kysymysryhmaid voimassaoleva-kysymysryhma)
+         false (:kysymysryhmaid voimaantuleva-kysymysryhma)
+         false (:kysymysryhmaid vanhentunut-kysymysryhma))))
+
+(deftest ^:integraatio kyselypohja-kaytettavissa-test
+  (let [koulutustoimija (anna-koulutustoimija!)
+        luonnos-kyselypohja (lisaa-kyselypohja! {:tila "luonnos"} koulutustoimija)
+        julkaistu-kyselypohja (lisaa-kyselypohja! {:tila "julkaistu"} koulutustoimija)
+        poistettu-kyselypohja (lisaa-kyselypohja! {:tila "poistettu"} koulutustoimija)
+        voimassaoleva-kyselypohja (lisaa-kyselypohja! {:tila "julkaistu"
+                                                       :voimassa_alkupvm (time/minus (time/today) (time/days 1))
+                                                       :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
+                                                      koulutustoimija)
+        voimaantuleva-kyselypohja (lisaa-kyselypohja! {:tila "julkaistu"
+                                                       :voimassa_alkupvm (time/plus (time/today) (time/days 1))
+                                                       :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
+                                                      koulutustoimija)
+        vanhentunut-kyselypohja (lisaa-kyselypohja! {:tila "julkaistu"
+                                                     :voimassa_alkupvm (time/minus (time/today) (time/days 1))
+                                                     :voimassa_loppupvm (time/minus (time/today) (time/days 1))}
+                                                    koulutustoimija)]
+    (are [tulos kyselypohjaid] (= tulos (:kaytettavissa (first
+                                                          (sql/select :kyselypohja
+                                                            (sql/fields :kyselypohja.kaytettavissa)
+                                                            (sql/where {:kyselypohjaid kyselypohjaid})))))
+         false (:kyselypohjaid luonnos-kyselypohja)
+         true (:kyselypohjaid julkaistu-kyselypohja)
+         false (:kyselypohjaid poistettu-kyselypohja)
+         true (:kyselypohjaid voimassaoleva-kyselypohja)
+         false (:kyselypohjaid voimaantuleva-kyselypohja)
+         false (:kyselypohjaid vanhentunut-kyselypohja))))
