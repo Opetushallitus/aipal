@@ -57,6 +57,24 @@
 (defn luo-koodistodata! []
   (run-sql (sql-resurssista "sql/koodistot.sql")))
 
+(defn prefix [s n]
+  (.substring s 0 (min (.length s) n)))
+
+(defn luo-toimikuntakayttajat! [db-spec]
+  (doseq [{koulutustoimijan-nimi :nimi_fi
+           koulutustoimijan-y-tunnus :ytunnus} (jdbc/query db-spec ["SELECT * FROM koulutustoimija WHERE char_length(ytunnus) = 9"])
+          [rooli roolin-nimi] {"OPL-VASTUUKAYTTAJA" "Vastuukäyttäjä"
+                               "OPL-KAYTTAJA" "Käyttäjä"}
+          :let [kayttajan-oid (str "OID." koulutustoimijan-y-tunnus "." rooli)]]
+    (jdbc/insert! db-spec :kayttaja {:oid kayttajan-oid
+                                     :etunimi roolin-nimi
+                                     :sukunimi (prefix koulutustoimijan-nimi 99)
+                                     :voimassa true})
+    (jdbc/insert! db-spec :rooli_organisaatio {:organisaatio koulutustoimijan-y-tunnus
+                                               :rooli rooli
+                                               :kayttaja kayttajan-oid
+                                               :voimassa true})))
+
 (defn aseta-oikeudet-sovelluskayttajalle
   [username]
   (jdbc-do
@@ -154,13 +172,14 @@
       errors (exit 1 (error-msg errors)))
     (let [jdbc-url (or (first arguments) (file->jdbc-url "aipal-db.properties"))
           datasource (create-datasource! jdbc-url)
+          db-spec {:datasource datasource}
           migraatiopoikkeus (try
                               (alusta-flywaylla! datasource options)
                               nil
                               (catch FlywayException e
                                 e))]
       (try 
-        (jdbc/with-connection {:datasource datasource}
+        (jdbc/with-connection db-spec
           (println "Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista epäonnistuisi.")
           (aseta-oikeudet-sovelluskayttajalle (:username options))
           (println "Luodaan koodistodata")
@@ -170,6 +189,7 @@
             (luo-kayttajat!))
           (when (:testikayttajat options)
             (println "luodaan testikäyttäjät")
+            (luo-toimikuntakayttajat! db-spec)
             (luo-testikayttajat!)))
         (finally
           (when migraatiopoikkeus
