@@ -123,12 +123,16 @@
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
 
+(defn kysymysryhma-on-luonnostilassa? [kysymysryhmaid]
+  (= "luonnos" (:tila (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false))))
+
 (defn kysymysryhma-muokkaus? [kysymysryhmaid]
-  (or (yllapitaja?)
-      (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
-        #{"OPL-PAAKAYTTAJA"
-          "OPL-VASTUUKAYTTAJA"}
-        kysymysryhmaid)))
+  (and (kysymysryhma-on-luonnostilassa? kysymysryhmaid)
+       (or (yllapitaja?)
+          (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
+            #{"OPL-PAAKAYTTAJA"
+              "OPL-VASTUUKAYTTAJA"}
+            kysymysryhmaid))))
 
 (defn kyselypohja-listaaminen? []
   (or (yllapitaja?)
