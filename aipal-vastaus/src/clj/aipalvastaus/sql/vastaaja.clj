@@ -19,17 +19,10 @@
   [vastaajatunnus]
   (->
     (sql/select :vastaajatunnus
-      (sql/fields :lukittu)
-      (sql/where
-        (and
-          (= :tunnus vastaajatunnus)
-          (or {:voimassa_alkupvm nil}
-              {:voimassa_alkupvm [<= (sql/raw "current_date")]})
-          (or {:voimassa_loppupvm nil}
-              {:voimassa_loppupvm [>= (sql/raw "current_date")]}))))
+      (sql/fields :kaytettavissa)
+      (sql/where {:tunnus vastaajatunnus}))
     first
-    :lukittu
-    false?))
+    :kaytettavissa))
 
 (defn vastaajatunnuksella-vastauskertoja?
   [vastaajatunnus]
