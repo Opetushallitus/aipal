@@ -55,14 +55,17 @@
 (deftest ^:integraatio hae-kysymysryhmat-voimassaolo
   (let [koulutustoimija (test-data/lisaa-koulutustoimija!)]
     (sql/insert kysymysryhma (sql/values [{:nimi_fi "a"
+                                           :tila "julkaistu"
                                            :voimassa_alkupvm (time/local-date 1900 1 1)
                                            :voimassa_loppupvm (time/local-date 2000 1 1)
                                            :koulutustoimija (:ytunnus koulutustoimija)}
                                           {:nimi_fi "b"
+                                           :tila "julkaistu"
                                            :voimassa_alkupvm (time/local-date 2000 1 1)
                                            :voimassa_loppupvm (time/local-date 2100 1 1)
                                            :koulutustoimija (:ytunnus koulutustoimija)}
                                           {:nimi_fi "c"
+                                           :tila "julkaistu"
                                            :voimassa_alkupvm (time/local-date 2100 1 1)
                                            :voimassa_loppupvm (time/local-date 2200 1 1)
                                            :koulutustoimija (:ytunnus koulutustoimija)}]))
@@ -83,8 +86,10 @@
 (deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset
   (let [koulutustoimija (test-data/lisaa-koulutustoimija!)]
     (sql/insert kysymysryhma (sql/values [{:nimi_fi "a"
+                                           :tila "julkaistu"
                                            :valtakunnallinen true}
                                           {:nimi_fi "b"
+                                           :tila "julkaistu"
                                            :valtakunnallinen true}]))
     (is (= #{"a" "b"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija))))))))
 
@@ -92,6 +97,7 @@
 (deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset-oph
   (let [oph (test-data/lisaa-koulutustoimija!  {:ytunnus "1111111-1"})]
     (sql/insert kysymysryhma (sql/values [{:nimi_fi "a"
+                                           :tila "julkaistu"
                                            :valtakunnallinen true
                                            :koulutustoimija (:ytunnus oph)}]))
     (is (= ["a"] (map :nimi_fi (hae-kysymysryhmat (:ytunnus oph)))))))

@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :as taulut :refer [voimassa]]))
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
@@ -23,7 +23,7 @@
       (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
                      {:kysymysryhma_organisaatio_view.valtakunnallinen true}))
       (cond->
-        vain-voimassaolevat (voimassa))
+        vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen)
       (sql/order :muutettuaika :desc)
       sql/exec))
