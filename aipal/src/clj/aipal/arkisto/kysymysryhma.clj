@@ -21,7 +21,8 @@
     (-> (sql/select* taulut/kysymysryhma)
       (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
       (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
-                     {:kysymysryhma_organisaatio_view.valtakunnallinen true}))
+                     (and {:kysymysryhma_organisaatio_view.valtakunnallinen true}
+                          {:kysymysryhma.lisattavissa true})))
       (cond->
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
