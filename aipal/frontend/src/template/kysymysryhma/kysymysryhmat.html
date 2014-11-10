@@ -29,7 +29,7 @@
             <span ng-show="k.valtakunnallinen" class="glyphicon glyphicon-ok"></span>
         </td>
         <td>
-            <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="yllapitaja || !k.valtakunnallinen">
+            <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
                 <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>

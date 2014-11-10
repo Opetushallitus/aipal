@@ -24,7 +24,9 @@
                      {:kysymysryhma_organisaatio_view.valtakunnallinen true}))
       (cond->
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
-      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen)
+      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
+                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen
+                  :kysymysryhma.lisattavissa :kysymysryhma.tila)
       (sql/order :muutettuaika :desc)
       sql/exec))
   ([organisaatio]
@@ -143,13 +145,19 @@
              (sql/where {:kysymysryhmaid kysymysryhmaid})
              (sql/exec)))))
 
-(defn hae [kysymysryhmaid]
-  (-> kysymysryhma-select
-    (sql/where {:kysymysryhmaid kysymysryhmaid})
-    sql/exec
-    first
-    taydenna-kysymysryhma
-    taydenna-kysymysryhman-kysymykset))
+(defn hae
+  ([kysymysryhmaid]
+    (hae kysymysryhmaid true))
+  ([kysymysryhmaid hae-kysymykset]
+    (let [kysymysryhma (-> kysymysryhma-select
+                         (sql/where {:kysymysryhmaid kysymysryhmaid})
+                         sql/exec
+                         first)]
+      (if hae-kysymykset
+        (-> kysymysryhma
+          taydenna-kysymysryhma
+          taydenna-kysymysryhman-kysymykset)
+        kysymysryhma))))
 
 (defn hae-kyselypohjasta [kyselypohjaid]
   (-> kysymysryhma-select
