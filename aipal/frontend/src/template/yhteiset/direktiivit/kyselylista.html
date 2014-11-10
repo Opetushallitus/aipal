@@ -1,9 +1,9 @@
 <div>
   <accordion close-others="true" class="kyselyt">
-      <accordion-group ng-repeat="kysely in suodatettu = (kyselyt | filter: suodatus | filter:haku)" is-open="group.open" ng-class="{'group-active': group.open}">
+      <accordion-group ng-repeat="kysely in suodatettu = (kyselyt | filter: suodatus | filter:haku)" is-open="kysely.open" ng-class="{'group-active': kysely.open}">
 
           <accordion-heading>
-              <i class="pull-left icon" ng-class="{'contract-icon': group.open, 'expand-icon': !group.open}"></i>
+              <i class="pull-left icon" ng-class="{'contract-icon': kysely.open, 'expand-icon': !kysely.open}"></i>
               <h3 class="e2e-kysely-nimi">{{kysely | lokalisoiKentta:'nimi'}}</h3>
               <span class="text-muted" ng-if="kysely.tila === 'julkaistu'">
                 {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
