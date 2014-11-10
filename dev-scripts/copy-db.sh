@@ -21,7 +21,8 @@ sudo -u postgres psql -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM
 sudo -u postgres psql -c "DROP DATABASE IF EXISTS $kohde"
 sudo -u postgres psql -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$lahde' AND pid <> pg_backend_pid();"
 sudo -u postgres psql -c "CREATE DATABASE $kohde WITH TEMPLATE $lahde;"
-EOF)
+EOF
+)
 
 cd $repo_path/vagrant
 vagrant ssh aipal-db -c "$script"
