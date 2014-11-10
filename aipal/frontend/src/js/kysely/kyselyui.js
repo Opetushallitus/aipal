@@ -50,23 +50,29 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         $location.url('/kyselyt/kysely/uusi');
       };
 
+      var avaaMuistetutKyselyt = function() {
+        var avoimetKyselyIdt = JSON.parse(sessionStorage.getItem('avoimetKyselyt'));
+        _.forEach(avoimetKyselyIdt, function(kyselyId) {
+          var kysely = _.find($scope.kyselyt, {kyselyid: kyselyId});
+          if (kysely !== undefined) {
+            kysely.open = true;
+          }
+        });
+      };
+
+      var muistaAvattavatKyselyt = function() {
+        $scope.$watch('kyselyt', function(kyselyt) {
+          var avoimetKyselyIdt = _(kyselyt).filter('open').map('kyselyid').value();
+          sessionStorage.setItem('avoimetKyselyt', JSON.stringify(avoimetKyselyIdt));
+        }, true);
+      };
+
       $scope.haeKyselyt = function () {
         seuranta.asetaLatausIndikaattori(Kysely.hae(), 'kyselylistaus')
         .success(function (data) {
           $scope.kyselyt = data;
-
-          var avoimetKyselyIdt = JSON.parse(sessionStorage.getItem('avoimetKyselyt'));
-          _.forEach(avoimetKyselyIdt, function(kyselyId) {
-            var kysely = _.find($scope.kyselyt, {kyselyid: kyselyId});
-            if (kysely !== undefined) {
-              kysely.open = true;
-            }
-          });
-
-          $scope.$watch('kyselyt', function(kyselyt) {
-            var avoimetKyselyIdt = _(kyselyt).filter('open').map('kyselyid').value();
-            sessionStorage.setItem('avoimetKyselyt', JSON.stringify(avoimetKyselyIdt));
-          }, true);
+          avaaMuistetutKyselyt();
+          muistaAvattavatKyselyt();
         })
         .error(function() {
           ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
