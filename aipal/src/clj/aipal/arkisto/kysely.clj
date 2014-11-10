@@ -62,7 +62,7 @@
   [kyselyid]
   (first
     (sql/select
-      taulut/kysely
+      :kysely_organisaatio_view
       (sql/fields :koulutustoimija)
       (sql/where {:kyselyid kyselyid}))))
 
