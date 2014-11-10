@@ -140,6 +140,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           Kyselypohja.hae(kyselypohjaId)
           .success(function(kysymysryhmat) {
             apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhmat);
+            $scope.kyselyForm.$setDirty();
           })
           .error(function(){
             ilmoitus.virhe(i18n.hae('kysely.pohjan_haku_epaonnistui'));
@@ -156,6 +157,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           Kysymysryhma.hae(kysymysryhmaid)
           .success(function(kysymysryhma) {
             apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhma);
+            $scope.kyselyForm.$setDirty();
           })
           .error(function() {
             ilmoitus.virhe(i18n.hae('kysely.ryhman_haku_epaonnistui'));
