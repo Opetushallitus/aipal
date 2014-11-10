@@ -109,6 +109,10 @@ angular.module('aipal', [
         $scope.currentuser = $scope.kayttooikeudet.impersonoitu_kayttaja;
       }
     });
+
+    $scope.unohdaAvoimetKyselyt = function() {
+      sessionStorage.removeItem('avoimetKyselyt');
+    };
   }])
 
   .controller('ImpersonointiModalController', ['$modalInstance', '$scope', 'i18n', function($modalInstance, $scope, i18n) {
