@@ -29,13 +29,11 @@
         </div>
 
         <div class="col-md-7">
-            <div class="row">
                 <h3 class="pull-left" ng-show="!muokkaustila">{{i18n.kysymysryhma.kysymykset}}</h3>
-                <button ng-click="lisaaKysymys()" class="pull-right btn btn-primary" ng-show="!muokkaustila">
+                <button ng-click="lisaaKysymys()" class="pull-right btn btn-primary" ng-show="!muokkaustila" style="margin-right: 0px;">
                     {{i18n.kysymysryhma.luo_uusi_kysymys}}&nbsp;
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
-            </div>
 
             <table class="table table-striped kysymys-taulukko" ng-show="!muokkaustila">
                 <thead>
