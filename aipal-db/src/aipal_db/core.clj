@@ -65,10 +65,13 @@
            koulutustoimijan-y-tunnus :ytunnus} (jdbc/query db-spec ["SELECT * FROM koulutustoimija WHERE char_length(ytunnus) = 9"])
           [rooli roolin-nimi] {"OPL-VASTUUKAYTTAJA" "Vastuukäyttäjä"
                                "OPL-KAYTTAJA" "Käyttäjä"}
-          :let [kayttajan-oid (str "OID." koulutustoimijan-y-tunnus "." rooli)]]
+          :let [kayttajan-oid (str "OID." koulutustoimijan-y-tunnus "." rooli)
+                etunimi roolin-nimi
+                sukunimi (prefix koulutustoimijan-nimi 99)]]
+    (println "Luodaan" etunimi sukunimi)
     (jdbc/insert! db-spec :kayttaja {:oid kayttajan-oid
-                                     :etunimi roolin-nimi
-                                     :sukunimi (prefix koulutustoimijan-nimi 99)
+                                     :etunimi etunimi
+                                     :sukunimi sukunimi
                                      :voimassa true})
     (jdbc/insert! db-spec :rooli_organisaatio {:organisaatio koulutustoimijan-y-tunnus
                                                :rooli rooli
