@@ -46,7 +46,8 @@
   {:nimi_fi "Kysymysryhma"})
 
 (def default-kyselypohja
-  {:nimi_fi "Kyselypohja"})
+  {:nimi_fi "Kyselypohja"
+   :tila "julkaistu"})
 
 (def default-kysymys
   {:pakollinen true

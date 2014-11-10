@@ -13,14 +13,17 @@
 (deftest ^:integraatio hae-kyselypohjat-voimassaolo
   (let [koulutustoimija (lisaa-koulutustoimija!)]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :tila "julkaistu"
                                           :voimassa_alkupvm (time/local-date 1900 1 1)
                                           :voimassa_loppupvm (time/local-date 2000 1 1)
                                           :koulutustoimija (:ytunnus koulutustoimija)}
                                          {:nimi_fi "b"
+                                          :tila "julkaistu"
                                           :voimassa_alkupvm (time/local-date 2000 1 1)
                                           :voimassa_loppupvm (time/local-date 2100 1 1)
                                           :koulutustoimija (:ytunnus koulutustoimija)}
                                          {:nimi_fi "c"
+                                          :tila "julkaistu"
                                           :voimassa_alkupvm (time/local-date 2100 1 1)
                                           :voimassa_loppupvm (time/local-date 2200 1 1)
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))
@@ -50,6 +53,7 @@
 (deftest ^:integraatio hae-kyselypohjat-valtakunnalliset-oph
   (let [oph (lisaa-koulutustoimija!  {:ytunnus "1111111-1"})]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :tila "julkaistu"
                                           :valtakunnallinen true
                                           :koulutustoimija (:ytunnus oph)}]))
     (is (= ["a"] (map :nimi_fi (hae-kyselypohjat (:ytunnus oph)))))))
@@ -57,6 +61,7 @@
 (deftest ^:integraatio kyselypohjan-voimassaolo-paattynyt
   (let [koulutustoimija (lisaa-koulutustoimija!)]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :tila "julkaistu"
                                           :voimassa_alkupvm (time/local-date 1900 1 1)
                                           :voimassa_loppupvm (time/minus (time/today) (time/days 1))
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))
@@ -65,6 +70,7 @@
 (deftest ^:integraatio kyselypohja-ei-ole-viela-voimassa
   (let [koulutustoimija (lisaa-koulutustoimija!)]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :tila "julkaistu"
                                           :voimassa_alkupvm (time/plus (time/today) (time/days 1))
                                           :voimassa_loppupvm (time/local-date 2100 1 1)
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))
@@ -73,6 +79,7 @@
 (deftest ^:integraatio kyselypohja-on-voimassa
   (let [koulutustoimija (lisaa-koulutustoimija!)]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :tila "julkaistu"
                                           :voimassa_alkupvm (time/minus (time/today) (time/days 1))
                                           :voimassa_loppupvm (time/plus (time/today) (time/days 1))
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))
@@ -81,8 +88,8 @@
 (deftest ^:integraatio kyselypohja-on-poistettu
   (let [koulutustoimija (lisaa-koulutustoimija!)]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
+                                          :tila "poistettu"
                                           :voimassa_alkupvm (time/minus (time/today) (time/days 1))
                                           :voimassa_loppupvm (time/plus (time/today) (time/days 1))
-                                          :poistettu (time/today)
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))
     (is (= [false] (map :voimassa (hae-kyselypohjat (:ytunnus koulutustoimija)))))))

@@ -14,20 +14,18 @@
 
 (ns aipal.arkisto.kyselypohja
   (:import java.sql.Date)
-  (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :refer [voimassa]]))
+  (:require [korma.core :as sql]))
 
 (defn hae-kyselypohjat
   ([organisaatio vain-voimassaolevat]
     (-> (sql/select* :kyselypohja)
       (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
       (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv
-                  [(sql/raw (str "((voimassa_alkupvm IS NULL OR voimassa_alkupvm <= current_date) AND "
-                                 "(voimassa_loppupvm IS NULL OR voimassa_loppupvm >= current_date) AND "
-                                 "poistettu is null)")) :voimassa])
+                  [:kyselypohja.kaytettavissa :voimassa])
       (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
                      {:kyselypohja_organisaatio_view.valtakunnallinen true}))
-      (cond-> vain-voimassaolevat voimassa)
+      (cond->
+        vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
       (sql/order :muutettuaika :desc)
       sql/exec))
   ([organisaatio]
