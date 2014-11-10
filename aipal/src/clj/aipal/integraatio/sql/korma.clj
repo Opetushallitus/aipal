@@ -91,8 +91,3 @@
 
 (defentity kayttajarooli)
 
-(defn voimassa [query]
-  (sql/where query (and (or {:voimassa_alkupvm nil}
-                            {:voimassa_alkupvm [<= (sql/raw "current_date")]})
-                        (or {:voimassa_loppupvm nil}
-                            {:voimassa_loppupvm [>= (sql/raw "current_date")]}))))
