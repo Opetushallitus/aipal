@@ -131,7 +131,6 @@
           (tallenna)
           (avaa kyselyt-sivu))
         (let [kysely (nth (kyselyt) 0)]
-          (avaa-kysely kysely)
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Ensimmäinen kyselykerta"]))))
       (testing
         "Kyselykerran luonti onnistuu toiselle kyselylle"
@@ -143,5 +142,4 @@
           (tallenna)
           (avaa kyselyt-sivu))
         (let [kysely (nth (kyselyt) 1)]
-          (avaa-kysely kysely)
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Toinen kyselykerta"])))))))
