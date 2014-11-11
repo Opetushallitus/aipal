@@ -48,6 +48,17 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
         $scope.uusiKyselykerta = function (kysely) {
           $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
         };
+
+        $scope.suljeKysely = function(kysely) {
+          Kysely.sulje(kysely.kyselyid).success(function() {
+            kysely.tila = 'poistettu';
+          });
+        };
+        $scope.palautaKysely = function(kysely) {
+          Kysely.palauta(kysely.kyselyid).success(function() {
+            kysely.tila = 'julkaistu';
+          });
+        };
       }]
     };
   }])
