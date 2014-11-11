@@ -32,6 +32,18 @@
                       <span class="glyphicon glyphicon-plus"></span>
                   </button>
               </auth>
+              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'julkaistu'">
+                <button class="btn btn-primary pull-left" ng-click="suljeKysely(kysely)">
+                  {{ 'kysely.sulje' | i18n }}
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+              </auth>
+              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'poistettu'">
+                <button class="btn btn-primary pull-left" ng-click="palautaKysely(kysely)">
+                  {{ 'kysely.palauta' | i18n }}
+                  <span class="glyphicon glyphicon-ok"></span>
+                </button>
+              </auth>
           </div>
 
           <div class="kyselykerrat" ng-if="kysely.tila !== 'luonnos'">
