@@ -95,6 +95,13 @@
                "OPL-VASTUUKAYTTAJA"}
              kyselyid))))
 
+(defn kysely-sulkeminen?
+  "Onko kyselyn sulkeminen ja palautus sallittu."
+  [kyselyid]
+  (or (yllapitaja?)
+      (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-PAAKAYTTAJA"
+                                                   "OPL-VASTUUKAYTTAJA"} kyselyid)))
+
 (defn kysely-luku? [kyselyid]
   (or (yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa?
@@ -164,6 +171,7 @@
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
     :kysely-julkaisu kysely-muokkaus?
+    :kysely-sulkeminen kysely-sulkeminen?
     :kyselykerta-luku kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
     :kyselykerta-muokkaus kyselykerta-muokkaus?

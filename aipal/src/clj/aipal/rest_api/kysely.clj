@@ -81,8 +81,8 @@
         (json-response (arkisto/julkaise-kysely kyselyid))
         {:status 403})))
 
-  (cu/defapi :kysely-julkaisu kyselyid :put "/sulje/:kyselyid" [kyselyid]
+  (cu/defapi :kysely-sulkeminen kyselyid :put "/sulje/:kyselyid" [kyselyid]
     (arkisto/sulje-kysely (Integer/parseInt kyselyid)))
 
-  (cu/defapi :kysely-julkaisu kyselyid :put "/palauta/:kyselyid" [kyselyid]
+  (cu/defapi :kysely-sulkeminen kyselyid :put "/palauta/:kyselyid" [kyselyid]
     (arkisto/julkaise-kysely (Integer/parseInt kyselyid))))
