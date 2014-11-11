@@ -43,7 +43,7 @@ describe('kysely.kyselyui.KyselyController', function(){
   }));
 
   function alustaController() {
-    $scope.kyselyForm = { $setPristine: function() {} };
+    $scope.kyselyForm = { $setDirty: function() {}, $setPristine: function() {} };
     $controller('KyselyController', {$scope: $scope});
   }
 
