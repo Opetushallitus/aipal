@@ -86,7 +86,7 @@
       (paakayttaja-tai-vastuukayttaja?)))
 
 (defn kysely-muokkaus?
-  "Onko kyselyn muokkaus sallittu. Koskee sekä varsinaista muokkausta että kyselyn julkaisua."
+  "Onko kyselyn muokkaus sallittu."
   [kyselyid]
   (and (kysely-on-luonnostilassa? kyselyid)
        (or (yllapitaja?)
@@ -95,8 +95,8 @@
                "OPL-VASTUUKAYTTAJA"}
              kyselyid))))
 
-(defn kysely-sulkeminen?
-  "Onko kyselyn sulkeminen ja palautus sallittu."
+(defn kysely-tilamuutos?
+  "Onko kyselyn tilan muutos (luonnos/julkaistu/poistettu) sallittu."
   [kyselyid]
   (or (yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-PAAKAYTTAJA"
@@ -170,8 +170,7 @@
     :kysely-luonti kysely-luonti?
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
-    :kysely-julkaisu kysely-muokkaus?
-    :kysely-sulkeminen kysely-sulkeminen?
+    :kysely-tilamuutos kysely-tilamuutos?
     :kyselykerta-luku kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
     :kyselykerta-muokkaus kyselykerta-muokkaus?
