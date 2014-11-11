@@ -20,7 +20,7 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmatController', function(){
   var $httpBackend;
   var $controller;
 
-  beforeEach(module('kysymysryhma.kysymysryhmaui'));
+  beforeEach(module('ui.bootstrap','kysymysryhma.kysymysryhmaui','mock.yhteiset.palvelut.i18n'));
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
