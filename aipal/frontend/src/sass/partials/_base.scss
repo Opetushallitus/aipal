@@ -60,6 +60,10 @@ header.etusivu{
   overflow: auto;
 }
 
+td.actions {
+  text-align: right;
+}
+
 /* When applied to an element disables all animations (ngAnimate and Bootstrap). Used in e2e tests */
 body.disable-all-animations *{
   transform: none !important;

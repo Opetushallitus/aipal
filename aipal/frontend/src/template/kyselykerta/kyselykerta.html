@@ -52,7 +52,7 @@
   <thead>
     <tr>
       <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
-      <th>{{'i18n.vastaajatunnus.vastaajia'|i18n}}</th>
+      <th>{{'i18n.vastaajatunnus.vastausprosentti'|i18n}}</th>
       <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
       <th>{{'i18n.yleiset.rahoitusmuoto'|i18n}}</th>
       <th></th>
@@ -61,10 +61,10 @@
   <tbody>
     <tr ng-repeat="tunnus in tunnukset" ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.kaytettavissa, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
       <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
-      <td>{{tunnus.vastaajien_lkm}}</td>
-      <td>{{tunnus.vastausten_lkm}}</td>
+      <td>{{(tunnus.vastausten_lkm / tunnus.vastaajien_lkm) * 100 | number:0}} %</td>
+      <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
       <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>
-      <td>
+      <td class="nowrap actions">
         <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
           <span ng-if="tunnus.lukittu" class="glyphicon glyphicon-lock" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, false)"></span>
           <span ng-if="!tunnus.lukittu" class="glyphicon glyphicon-ok" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, true)"></span>
