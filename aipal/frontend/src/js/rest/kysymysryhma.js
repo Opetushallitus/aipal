@@ -34,6 +34,9 @@ angular.module('rest.kysymysryhma', ['ngResource'])
       },
       tallenna: function(kysymysryhma) {
         return $http.put('api/kysymysryhma/' + kysymysryhma.kysymysryhmaid, kysymysryhma);
+      },
+      julkaise: function(kysymysryhmaid) {
+        return $http.put('api/kysymysryhma/julkaise/' + kysymysryhmaid);
       }
     };
   }]);

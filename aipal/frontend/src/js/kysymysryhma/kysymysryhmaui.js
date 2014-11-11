@@ -45,13 +45,38 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       });
   }])
 
-  .controller('KysymysryhmatController', ['$scope', 'Kysymysryhma',
-                                          function($scope, Kysymysryhma) {
+  .controller('KysymysryhmatController', ['$scope', '$modal', 'Kysymysryhma', 'i18n', 'ilmoitus',
+                                          function($scope, $modal, Kysymysryhma, i18n, ilmoitus) {
     $scope.latausValmis = false;
     Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
       $scope.latausValmis = true;
     });
+
+    $scope.julkaiseKysymysryhmaModal = function(kysymysryhma) {
+      var modalInstance = $modal.open({
+        templateUrl: 'template/kysymysryhma/julkaise-kysymysryhma.html',
+        controller: 'JulkaiseKysymysryhmaModalController',
+        resolve: { kysymysryhma: function() { return kysymysryhma; } }
+      });
+      modalInstance.result.then(function () {
+        Kysymysryhma.julkaise(kysymysryhma.kysymysryhmaid)
+        .success(function() {
+          kysymysryhma.tila = 'julkaistu';
+          ilmoitus.onnistuminen(i18n.hae('kysymysryhma.julkaisu_onnistui'));
+        })
+        .error(function() {
+          ilmoitus.virhe(i18n.hae('kysymysryhma.julkaisu_epaonnistui'));
+        });
+      });
+    };
+  }])
+
+  .controller('JulkaiseKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function ($modalInstance, $scope, kysymysryhma) {
+    $scope.kysymysryhma = kysymysryhma;
+
+    $scope.julkaise = $modalInstance.close;
+    $scope.cancel = $modalInstance.dismiss;
   }])
 
   .factory('kysymysApurit', [function() {
