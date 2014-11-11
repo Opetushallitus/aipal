@@ -160,11 +160,14 @@
           taydenna-kysymysryhman-kysymykset)
         kysymysryhma))))
 
-(defn hae-kyselypohjasta [kyselypohjaid]
+(defn hae-kyselypohjasta
+  "Hakee kyselypohjan kyselyryhmät, jotka ovat lisättävissä kyselyyn"
+  [kyselypohjaid]
   (-> kysymysryhma-select
     (sql/join :inner taulut/kysymysryhma-kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid)
-    (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid})
+    (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid
+                :kysymysryhma.lisattavissa true})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
     sql/exec
     ((fn [kysymysryhmat] (doall (map taydenna-kysymysryhma kysymysryhmat))))))
