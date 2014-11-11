@@ -24,7 +24,7 @@
 
         <div class="form-group">
             <label>{{i18n.yleiset.rahoitusmuoto}}
-               <select ng-options="rahoitusmuoto.rahoitusmuotoid as rahoitusmuoto.rahoitusmuoto |enumArvo:'rahoitusmuoto' for rahoitusmuoto in rahoitusmuodot"
+               <select ng-required="true" ng-options="rahoitusmuoto.rahoitusmuotoid as rahoitusmuoto.rahoitusmuoto |enumArvo:'rahoitusmuoto' for rahoitusmuoto in rahoitusmuodot"
                         ng-model="vastaajatunnus.rahoitusmuotoid"
                         class="form-control"
                         ng-show="rahoitusmuodot.length > 0">
