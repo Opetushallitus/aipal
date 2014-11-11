@@ -33,7 +33,7 @@
                   </button>
               </auth>
               <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'julkaistu'">
-                <button class="btn btn-primary pull-left" ng-click="suljeKysely(kysely)">
+                <button class="btn btn-primary pull-left" ng-click="suljeKyselyModal(kysely)">
                   {{ 'kysely.sulje' | i18n }}
                   <span class="glyphicon glyphicon-remove"></span>
                 </button>

@@ -49,6 +49,17 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
           $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
         };
 
+        $scope.suljeKyselyModal = function(kysely) {
+          var modalInstance = $modal.open({
+            templateUrl: 'template/kysely/sulje-kysely.html',
+            controller: 'SuljeKyselyModalController',
+            resolve: { kysely: function() { return kysely; } }
+          });
+          modalInstance.result.then(function() {
+            $scope.suljeKysely(kysely);
+          });
+        };
+
         $scope.suljeKysely = function(kysely) {
           Kysely.sulje(kysely.kyselyid).success(function() {
             kysely.tila = 'poistettu';
@@ -70,4 +81,12 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
 
     $scope.julkaise = $modalInstance.close;
     $scope.cancel = $modalInstance.dismiss;
-  }]);
+  }])
+
+  .controller('SuljeKyselyModalController', ['$modalInstance', '$scope', 'kysely',  function($modalInstance, $scope, kysely) {
+    $scope.kysely = kysely;
+
+    $scope.sulje = $modalInstance.close;
+    $scope.cancel = $modalInstance.dismiss;
+  }])
+;
