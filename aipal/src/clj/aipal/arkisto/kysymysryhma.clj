@@ -27,7 +27,10 @@
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
                   :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen
-                  :kysymysryhma.lisattavissa :kysymysryhma.tila)
+                  :kysymysryhma.lisattavissa :kysymysryhma.tila
+                  [(sql/subselect taulut/kysymys
+                     (sql/aggregate (count :*) :lkm)
+                     (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm])
       (sql/order :muutettuaika :desc)
       sql/exec))
   ([organisaatio]
