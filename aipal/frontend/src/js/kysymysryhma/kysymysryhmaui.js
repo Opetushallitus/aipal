@@ -57,7 +57,11 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       var modalInstance = $modal.open({
         templateUrl: 'template/kysymysryhma/julkaise-kysymysryhma.html',
         controller: 'JulkaiseKysymysryhmaModalController',
-        resolve: { kysymysryhma: function() { return kysymysryhma; } }
+        resolve: {
+          kysymysryhma: function() {
+            return Kysymysryhma.hae(kysymysryhma.kysymysryhmaid).then(function(response) { return response.data; });
+          }
+        }
       });
       modalInstance.result.then(function () {
         Kysymysryhma.julkaise(kysymysryhma.kysymysryhmaid)
