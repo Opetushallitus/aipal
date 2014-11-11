@@ -12,7 +12,7 @@
             </div>
 
             <label>{{i18n.kysymysryhma.nimi_fi}} *
-                <input type="text" class="form-control" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
+                <input type="text" class="form-control e2e-kysymysryhma-nimi-fi" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
             </label>
 
             <label>{{i18n.kysymysryhma.nimi_sv}}
@@ -30,7 +30,7 @@
 
         <div class="col-md-7">
                 <h3 class="pull-left" ng-show="!muokkaustila">{{i18n.kysymysryhma.kysymykset}}</h3>
-                <button ng-click="lisaaKysymys()" class="pull-right btn btn-primary" ng-show="!muokkaustila" style="margin-right: 0px;">
+                <button ng-click="lisaaKysymys()" class="pull-right btn btn-primary e2e-luo-uusi-kysymys" ng-show="!muokkaustila" style="margin-right: 0px;">
                     {{i18n.kysymysryhma.luo_uusi_kysymys}}&nbsp;
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
@@ -52,7 +52,7 @@
                             <span ng-show="kysymys.pakollinen" class="glyphicon glyphicon-ok"></span>
                         </td class="nowrap">
                         <td class="nowrap">
-                            <span class="glyphicon glyphicon-pencil" style="cursor: pointer" ng-click="muokkaa(kysymys)"></span>
+                            <span class="glyphicon glyphicon-pencil e2e-muokkaa-kysymysta" style="cursor: pointer" ng-click="muokkaa(kysymys)"></span>
                             &nbsp;&nbsp;
                             <span class="glyphicon glyphicon-trash" style="cursor: pointer" ng-click="poistaKysymys($index)"></span>
                         </td>
@@ -81,7 +81,7 @@
 
                         <div class="form-group">
                             <label>{{i18n.kysymys.kysymys_suomeksi}}
-                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_fi" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_sv"/>
+                                <input class="form-control e2e-kysymys-suomeksi" type="text" ng-model="aktiivinenKysymys.kysymys_fi" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_sv"/>
                             </label>
                         </div>
 
@@ -106,7 +106,7 @@
                         <br />
 
                         <div>
-                            <button ng-show="aktiivinenKysymys.uusi" class="btn btn-primary" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
+                            <button ng-show="aktiivinenKysymys.uusi" class="btn btn-primary e2e-lisaa-kysymys" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
                             <button ng-show="!aktiivinenKysymys.uusi" class="btn btn-primary" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.yleiset.tallenna}}</button>
                             <button ng-click="peruutaKysymysTallennus()" class="btn btn-default">{{i18n.yleiset.peruuta}}</button>
                         </div>
@@ -119,7 +119,7 @@
     <div class="col-md-12">
         <div class="row clearfix">
             <div>
-                <button ng-click="tallennaKysymysryhma()" class="btn btn-primary" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
+                <button ng-click="tallennaKysymysryhma()" class="btn btn-primary e2e-tallenna-kysymysryhma" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
                 <button ng-click="peruuta()" class="btn btn-default">{{i18n.yleiset.peruuta}}</button>
             </div>
         </div>

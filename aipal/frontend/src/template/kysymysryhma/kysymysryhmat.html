@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-12">
         <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
-            <a class="pull-right btn btn-primary" href="#/kysymysryhmat/kysymysryhma/uusi" style="margin: 0;">
+            <a class="pull-right btn btn-primary e2e-luo-uusi-kysymysryhma" href="#/kysymysryhmat/kysymysryhma/uusi" style="margin: 0;">
                 {{i18n.kysymysryhma.luo_uusi}} &nbsp;
                 <span class="glyphicon glyphicon-plus"></span>
             </a>
@@ -31,7 +31,7 @@
         </td>
         <td>
             <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
-                <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}">
+                <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}" class="e2e-muokkaa-kysymysryhmaa">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
             </auth>
