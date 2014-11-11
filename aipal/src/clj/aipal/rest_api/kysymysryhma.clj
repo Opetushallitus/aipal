@@ -109,5 +109,11 @@
     (json-response
       (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid (Integer/parseInt kysymysryhmaid)))))
 
+  (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/julkaise/:kysymysryhmaid" [kysymysryhmaid]
+    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
+      (if (pos? (arkisto/laske-kysymykset kysymysryhmaid))
+        (json-response (arkisto/julkaise! kysymysryhmaid))
+        {:status 403})))
+
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
     (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid)))))

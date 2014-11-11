@@ -171,6 +171,7 @@
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
     :kysymysryhma-muokkaus kysymysryhma-muokkaus?
+    :kysymysryhma-julkaisu kysymysryhma-muokkaus?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?
     :impersonointi yllapitaja?

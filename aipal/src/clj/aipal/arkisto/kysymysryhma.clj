@@ -205,3 +205,18 @@
   (sql/delete
     taulut/jatkokysymys
     (sql/where {:jatkokysymysid jatkokysymysid})))
+
+(defn julkaise!
+  [kysymysryhmaid]
+  (sql/update taulut/kysymysryhma
+    (sql/set-fields {:tila "julkaistu"})
+    (sql/where {:kysymysryhmaid kysymysryhmaid})))
+
+(defn laske-kysymykset
+  [kysymysryhmaid]
+  (->
+    (sql/select taulut/kysymys
+      (sql/aggregate (count :*) :lkm)
+      (sql/where {:kysymysryhmaid kysymysryhmaid}))
+    first
+    :lkm))
