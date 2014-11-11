@@ -69,6 +69,10 @@
           <span ng-if="tunnus.lukittu" class="glyphicon glyphicon-lock" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, false)"></span>
           <span ng-if="!tunnus.lukittu" class="glyphicon glyphicon-ok" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, true)"></span>
         </span>
+        &nbsp;
+        <a href="mailto:?subject= {{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}" title="{{i18n.vastaajatunnus.laheta}}">
+          <span class="glyphicon glyphicon-envelope"></span>
+        </a>
       </td>
     </tr>
   </tbody>

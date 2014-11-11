@@ -55,6 +55,11 @@ header.etusivu{
   margin-top: -23px;
 }
 
+.nowrap{
+  white-space: nowrap !important;
+  overflow: auto;
+}
+
 /* When applied to an element disables all animations (ngAnimate and Bootstrap). Used in e2e tests */
 body.disable-all-animations *{
   transform: none !important;

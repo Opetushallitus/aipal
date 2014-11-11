@@ -20,6 +20,15 @@ fieldset[disabled] .btn{
   opacity: .4;
 }
 
+/* Glyph */
+table span.glyphicon{
+  color: $darker-gray;
+}
+
+table span.glyphicon:hover {
+  color: $primary-color;
+}
+
 /* Modal */
 .modal-dialog {
   fieldset {
