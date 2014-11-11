@@ -170,7 +170,8 @@
                 :kysymysryhma.lisattavissa true})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
     sql/exec
-    ((fn [kysymysryhmat] (doall (map taydenna-kysymysryhma kysymysryhmat))))))
+    (->> (map taydenna-kysymysryhma))
+    doall))
 
 (defn hae-organisaatiotieto
   [kysymysryhmaid]
