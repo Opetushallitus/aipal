@@ -19,7 +19,6 @@
         <th>Selite</th>
         <th>Valtakunnallinen</th>
         <th></th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -29,18 +28,17 @@
         <td>
             <span ng-show="k.valtakunnallinen" class="glyphicon glyphicon-ok"></span>
         </td>
-        <td>
+        <td class="actions nowrap">
             <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
                 <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}" class="e2e-muokkaa-kysymysryhmaa">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
             </auth>
-        </td>
-        <td>
+            &nbsp;&nbsp;
             <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
-                <button class="btn btn-primary" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0">
+                <button class="btn btn-primary btn-sm" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0">
                     {{ 'yleiset.julkaise' | i18n }}&nbsp;
-                    <span class="glyphicon glyphicon-upload"></span>
+                    <span class="glyphicon glyphicon-share-alt"></span>
                 </button>
             </auth>
         </td>

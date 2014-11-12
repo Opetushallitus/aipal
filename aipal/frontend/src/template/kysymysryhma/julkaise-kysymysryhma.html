@@ -1,11 +1,15 @@
 <div class="modal-header">
   <a class="pull-right" ng-click="cancel()">X</a>
-  <h3>{{ 'kysymysryhma.julkaise' | i18n }}</h3>
+  <h4>{{ 'kysymysryhma.julkaise' | i18n }}</h4>
 </div>
 
 <div class="modal-body">
+  <div class="alert alert-danger" role="alert">
+      {{ 'kysymysryhma.julkaise_ohjeistus' | i18n }}
+  </div>
+
   <h3>{{ kysymysryhma | lokalisoiKentta:'nimi'}}</h3>
-  <ol class="kysymykset">
+  <ol class="kysymykset small">
     <li ng-repeat="kysymys in kysymysryhma.kysymykset">
       <span>{{kysymys | lokalisoiKentta:'kysymys'}}</span>
     </li>
@@ -13,7 +17,6 @@
 </div>
 
 <div class="modal-footer">
-  <div>{{ 'kysymysryhma.julkaise_ohjeistus' | i18n }}</div>
   <button class="btn btn-primary pull-left" ng-click="julkaise()">{{ 'yleiset.julkaise' | i18n }}</button>
   <button class="btn btn-default pull-left" ng-click="cancel()">{{ 'yleiset.peruuta' | i18n }}</button>
 </div>

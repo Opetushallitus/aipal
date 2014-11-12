@@ -6,7 +6,8 @@ a.btn{
   text-decoration: none;
 }
 
-table td a.btn {
+table td.actions a.btn,
+table td.actions button.btn{
   margin: 0;
 }
 

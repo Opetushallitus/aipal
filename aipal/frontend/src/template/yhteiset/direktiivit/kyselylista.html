@@ -21,7 +21,7 @@
                   </a>
                   <button class="btn btn-primary pull-left" ng-click="julkaiseKyselyModal(kysely)" ng-disabled="kysely.kysymysryhmien_lkm === 0">
                       {{ 'kysely.julkaise' | i18n }}&nbsp;
-                      <span class="glyphicon glyphicon-upload"></span>
+                      <span class="glyphicon glyphicon-share-alt"></span>
                   </button>
               </auth>
               <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">

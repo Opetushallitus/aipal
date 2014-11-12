@@ -66,9 +66,14 @@
       <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>
       <td class="nowrap actions">
         <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
-          <span ng-if="tunnus.lukittu" class="glyphicon glyphicon-lock" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, false)"></span>
-          <span ng-if="!tunnus.lukittu" class="glyphicon glyphicon-ok" style="cursor: pointer" ng-click="lukitseTunnus(tunnus, true)"></span>
+            <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
+                <span class="glyphicon glyphicon-lock"></span>
+            </a>
+            <a ng-if="!tunnus.lukittu" ng-click="lukitseTunnus(tunnus, true)">
+                <span class="glyphicon glyphicon-ok"></span>
+            </a>
         </span>
+
         &nbsp;
         <a href="mailto:?subject= {{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}" title="{{i18n.vastaajatunnus.laheta}}">
           <span class="glyphicon glyphicon-envelope"></span>

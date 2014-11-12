@@ -62,6 +62,13 @@ header.etusivu{
 
 td.actions {
   text-align: right;
+  *:hover {
+    text-decoration: none;
+  }
+  span {
+    margin: 0px;
+    padding: 0px;
+  }
 }
 
 /* When applied to an element disables all animations (ngAnimate and Bootstrap). Used in e2e tests */

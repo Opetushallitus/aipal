@@ -21,17 +21,13 @@ fieldset[disabled] .btn{
 }
 
 /* Glyph */
-table span.glyphicon{
+table a:not(.btn) span.glyphicon{
   color: $darker-gray;
 }
-table span.glyphicon:hover {
+table a:not(.btn) span.glyphicon:hover {
   color: $primary-color;
 }
 
-table a.btn-primary span.glyphicon,
-table a.btn-primary span.glyphicon:hover{
-  color: white;
-}
 
 /* Modal */
 .modal-dialog {
@@ -126,4 +122,9 @@ accordion {
   h2 {
     margin: 0;
   }
+}
+
+/* Alerts */
+.alert {
+  color: $darker-gray;
 }
