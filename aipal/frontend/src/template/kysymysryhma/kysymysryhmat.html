@@ -23,8 +23,8 @@
     </thead>
     <tbody>
     <tr ng-repeat="k in kysymysryhmat">
-        <td>{{k.nimi_fi}}</td>
-        <td>{{k.selite_fi}}</td>
+        <td>{{ k | lokalisoiKentta:'nimi' }}</td>
+        <td>{{ k | lokalisoiKentta:'selite' }}</td>
         <td>
             <span ng-show="k.valtakunnallinen" class="glyphicon glyphicon-ok"></span>
         </td>
