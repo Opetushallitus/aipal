@@ -30,7 +30,7 @@
                       <span class="glyphicon glyphicon-plus"></span>
                   </button>
               </auth>
-              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'julkaistu'">
+              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.kaytettavissa && kysely.tila === 'julkaistu'">
                 <button class="btn btn-primary pull-left" ng-click="suljeKyselyModal(kysely)">
                   {{ 'kysely.sulje' | i18n }}
                   <span class="glyphicon glyphicon-remove"></span>
