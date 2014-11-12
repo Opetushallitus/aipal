@@ -90,7 +90,8 @@
 (defn sulje-kysely [kyselyid]
   (sql/update taulut/kysely
     (sql/set-fields {:tila "poistettu"})
-    (sql/where {:kyselyid kyselyid})))
+    (sql/where {:kyselyid kyselyid}))
+  (hae kyselyid))
 
 (defn hae-kysymysryhmat [kyselyid]
   (->
