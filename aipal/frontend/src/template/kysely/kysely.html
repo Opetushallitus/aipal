@@ -10,7 +10,7 @@
 
             <div class="form-group">
                 <label for="kyselyn_kuvaus">{{i18n.kysely.kuvaus_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
-                <input type="text" class="form-control" ng-model="kysely.selite_fi" id="kyselyn_kuvaus"/>
+                <textarea type="text" class="form-control" ng-model="kysely.selite_fi" id="kyselyn_kuvaus" rows="5" cols="80"></textarea>
             </div>
         </div>
       <div class="col-md-4">
@@ -21,7 +21,7 @@
 
         <div class="form-group">
           <label for="kyselyn_kuvaus_sv">{{i18n.kysely.kuvaus_ruotsiksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
-          <input type="text" class="form-control" ng-model="kysely.selite_sv" id="kyselyn_kuvaus_sv"/>
+          <textarea type="text" class="form-control" ng-model="kysely.selite_sv" id="kyselyn_kuvaus_sv" rows="5" cols="80"></textarea>
         </div>
       </div>
     </div>
