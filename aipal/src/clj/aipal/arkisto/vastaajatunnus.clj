@@ -19,7 +19,7 @@
 
 (def sallitut-url-merkit
   "Merkit, joista vastaajatunnus muodostetaan. Ei erikoismerkkejä, koska näistä tulee samalla URL-osoite vastaajan selainta varten."
-  "01234567890abcdefghjlkmnopqrstuwvxyzABCDEFGHJLMNOPQRSTUWVXYZ")
+  "ACEFHJKLMNPRTWXY347")
 
 (def kyselykerta-select
   (-> (sql/select* taulut/vastaajatunnus)
