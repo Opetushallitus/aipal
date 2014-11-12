@@ -86,6 +86,19 @@ button.open-datepicker{
   float: none;
 }
 
+/* Progress */
+.progress{
+  background-color: $lightest-gray;
+  margin: 0;
+  .progress-bar {
+    background-color: #617A91;
+    span {
+      filter: progid:DXImageTransform.Microsoft.Shadow(color=#0000FF,direction=45);
+      text-shadow: black 0.15em 0.15em 0.25em;
+    }
+  }
+}
+
 /* Accordion */
 accordion {
   .panel-heading {

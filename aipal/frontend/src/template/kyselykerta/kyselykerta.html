@@ -7,80 +7,118 @@
 
 <form name="kyselykertaForm">
     <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label for="kyselykerta_nimi" class="pakollinen">{{i18n.kyselykerta.kyselykerran_nimi}}</label>
-          <input id="kyselykerta_nimi" type="text" ng-model="kyselykerta.nimi" class="form-control" ng-required="true" />
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="kyselykerta_nimi" class="pakollinen">{{i18n.kyselykerta.kyselykerran_nimi}}</label>
+                <input id="kyselykerta_nimi" type="text" ng-model="kyselykerta.nimi" class="form-control"
+                       ng-required="true"/>
+            </div>
         </div>
-      </div>
     </div>
 
     <div>
-      <h3>{{i18n.kyselykerta.vastausaika}}</h3>
-      <pvm-valitsin
-              otsikko="{{i18n.yleiset.alkaen}}"
-              oletus-pvm="kysely.voimassa_alkupvm"
-              valittu-pvm="kyselykerta.voimassa_alkupvm"
-              min-pvm="kysely.voimassa_alkupvm"
-              max-pvm="kyselykerta.voimassa_loppupvm"
-              ng-model="kyselykerta.voimassa_alkupvm"
-              pakollinen="true">
-      </pvm-valitsin>
-      <pvm-valitsin
-              otsikko="{{i18n.yleiset.asti}}"
-              oletus-pvm="kyselykerta.voimassa_loppupvm"
-              valittu-pvm="kyselykerta.voimassa_loppupvm"
-              min-pvm="kyselykerta.voimassa_alkupvm"
-              max-pvm="kysely.voimassa_loppupvm"
-              ng-model="kyselykerta.voimassa_loppupvm"
-              pakollinen="false">
-      </pvm-valitsin>
+        <h3>{{i18n.kyselykerta.vastausaika}}</h3>
+        <pvm-valitsin
+                otsikko="{{i18n.yleiset.alkaen}}"
+                oletus-pvm="kysely.voimassa_alkupvm"
+                valittu-pvm="kyselykerta.voimassa_alkupvm"
+                min-pvm="kysely.voimassa_alkupvm"
+                max-pvm="kyselykerta.voimassa_loppupvm"
+                ng-model="kyselykerta.voimassa_alkupvm"
+                pakollinen="true">
+        </pvm-valitsin>
+        <pvm-valitsin
+                otsikko="{{i18n.yleiset.asti}}"
+                oletus-pvm="kyselykerta.voimassa_loppupvm"
+                valittu-pvm="kyselykerta.voimassa_loppupvm"
+                min-pvm="kyselykerta.voimassa_alkupvm"
+                max-pvm="kysely.voimassa_loppupvm"
+                ng-model="kyselykerta.voimassa_loppupvm"
+                pakollinen="false">
+        </pvm-valitsin>
     </div>
-    <tallenna formi-validi="kyselykertaForm.$valid" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}" icon="glyphicon glyphicon-floppy-disk"></tallenna>
+    <tallenna formi-validi="kyselykertaForm.$valid" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"
+              icon="glyphicon glyphicon-floppy-disk"></tallenna>
 </form>
 
 <div ng-if="!uusi">
+    <h2>{{i18n.vastaajatunnus.lista}}</h2>
+    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi()">
+        {{i18n.vastaajatunnus.luonti}}&nbsp;&nbsp;
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <br/>
 
-<h3>{{i18n.vastaajatunnus.lista}}</h3>
+    <div ng-repeat="rahoitusmuodot in rahoitusmuodotmap" ng-show="(tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}).length">
+        <h3>{{rahoitusmuodot.rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</h3>
+        <div class="well">
+        <table class="table table-striped vastaajatunnus-taulukko">
+            <thead>
+            <tr>
+                <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
+                <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td>
+                        Vastauksia
+                    </td>
+                    <td>
+                        <strong>{{getVastaustenLkm(rahoitusmuodot.rahoitusmuotoid)}} / {{getVastaajienLkm(rahoitusmuodot.rahoitusmuotoid)}}</strong>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        {{'i18n.vastaajatunnus.vastausprosentti'|i18n}}
+                    </td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}" aria-valuemin="0" aria-valuemax="100" style="width: {{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%;">
+                                <span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
+                    ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.kaytettavissa, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
+                    <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
+                    <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
+                    <td class="nowrap actions">
+                        <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
+                            <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
+                                <span class="glyphicon glyphicon-lock"></span>
+                            </a>
+                            <a ng-if="!tunnus.lukittu" ng-click="lukitseTunnus(tunnus, true)">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </a>
+                        </span>
+                        &nbsp;
+                        <a href="mailto:?subject= {{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}"
+                           title="{{i18n.vastaajatunnus.laheta}}">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
 
-<button class="btn btn-primary" ng-click="luoTunnuksiaDialogi()">
-    {{i18n.vastaajatunnus.luonti}}&nbsp;&nbsp;
-    <span class="glyphicon glyphicon-plus"></span>
-</button>
-
-<table class="table vastaajatunnus-taulukko">
-  <thead>
-    <tr>
-      <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
-      <th>{{'i18n.vastaajatunnus.vastausprosentti'|i18n}}</th>
-      <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
-      <th>{{'i18n.yleiset.rahoitusmuoto'|i18n}}</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="tunnus in tunnukset" ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.kaytettavissa, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
-      <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
-      <td>{{(tunnus.vastausten_lkm / tunnus.vastaajien_lkm) * 100 | number:0}} %</td>
-      <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
-      <td>{{rahoitusmuodotmap[tunnus.rahoitusmuotoid].rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</td>
-      <td class="nowrap actions">
-        <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
-            <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
-                <span class="glyphicon glyphicon-lock"></span>
-            </a>
-            <a ng-if="!tunnus.lukittu" ng-click="lukitseTunnus(tunnus, true)">
-                <span class="glyphicon glyphicon-ok"></span>
-            </a>
-        </span>
-
-        &nbsp;
-        <a href="mailto:?subject= {{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}" title="{{i18n.vastaajatunnus.laheta}}">
-          <span class="glyphicon glyphicon-envelope"></span>
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
+    <div class="center-block" ng-show="tunnukset.length>0">
+        <div class="yhteenveto">
+            <h2>Vastauksia</h2>
+            <h1>{{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h1>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{getVastausProsentti() | number:0}}" aria-valuemin="0" aria-valuemax="100" style="width: {{getVastausProsentti() | number:0}}%;">
+                    <span>{{getVastausProsentti() | number:0}}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

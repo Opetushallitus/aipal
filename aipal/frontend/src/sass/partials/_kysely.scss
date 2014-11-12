@@ -73,17 +73,19 @@ accordion.kyselyt {
   }
 }
 
-.vastaajatunnus-taulukko tr.voimassa {
-  background-color: #bea;
-}
-
-.vastaajatunnus-taulukko tr.vanhentunut {
-  td:first-child {
-    text-decoration: line-through;
+.vastaajatunnus-taulukko{
+  tr.voimassa td {
+    background-color: #bea !important;
   }
 
-  td.vastausaika {
-    color: #aaa;
+  tr.vanhentunut {
+    td:first-child {
+      text-decoration: line-through;
+    }
+
+    td.vastausaika {
+      color: #aaa;
+    }
   }
 }
 
@@ -93,4 +95,17 @@ ol.kysymykset li{
 }
 ol.kysymykset li:last-child{
   border: 0;
+}
+
+.yhteenveto {
+  text-align: center;
+  margin: 0 auto;
+  width: 50%;
+  .progress{
+    height: 2.4em;
+    span {
+      line-height: 1.5em;
+      font-size: 1.8em;
+    }
+  }
 }

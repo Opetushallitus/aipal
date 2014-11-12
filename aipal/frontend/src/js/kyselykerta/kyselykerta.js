@@ -85,13 +85,31 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
       if (!$scope.uusi) {
         $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
-
         Kyselykerta.haeYksi($scope.kyselykertaid, function(kyselykerta) {
           $scope.kyselykerta = kyselykerta;
         }, function() {
           $location.url('/');
         });
       }
+
+      $scope.getVastaustenLkm = function(rahoitusmuotoid){
+        if(!rahoitusmuotoid) {
+          return _($scope.tunnukset).map('vastausten_lkm').reduce(function (sum, num) {return sum + num;});
+        }
+        return _($scope.tunnukset).filter({ 'rahoitusmuotoid': rahoitusmuotoid }).map('vastausten_lkm').reduce(function(sum, num) {return sum + num;});
+      };
+      $scope.getVastaajienLkm = function(rahoitusmuotoid){
+        if(!rahoitusmuotoid) {
+          return _($scope.tunnukset).map('vastaajien_lkm').reduce(function (sum, num) {return sum + num;});
+        }
+        return _($scope.tunnukset).filter({ 'rahoitusmuotoid': rahoitusmuotoid }).map('vastaajien_lkm').reduce(function(sum, num) {return sum + num;});
+      };
+      $scope.getVastausProsentti = function(rahoitusmuotoid){
+        if(!rahoitusmuotoid) {
+          return ($scope.getVastaustenLkm() / $scope.getVastaajienLkm()) * 100;
+        }
+        return ($scope.getVastaustenLkm(rahoitusmuotoid) / $scope.getVastaajienLkm(rahoitusmuotoid))*100;
+      };
 
       $scope.tallenna = function() {
         if ($scope.uusi) {

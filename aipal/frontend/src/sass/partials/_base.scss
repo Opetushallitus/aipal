@@ -71,6 +71,23 @@ td.actions {
   }
 }
 
+tfoot {
+  background-color: #ffffff;
+  border: 0px !important;
+  tr,td {
+    border: 0px !important;
+  }
+  td:first-child {
+    text-align: right;
+    font-weight: 600;
+    border: 0px !important;
+  }
+}
+
+.border-bottom {
+  border-bottom: 5px solid $lighter-gray;
+}
+
 /* When applied to an element disables all animations (ngAnimate and Bootstrap). Used in e2e tests */
 body.disable-all-animations *{
   transform: none !important;
