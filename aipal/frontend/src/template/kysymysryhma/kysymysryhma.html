@@ -46,7 +46,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="kysymys in kysymysryhma.kysymykset">
-                        <td>{{kysymys.kysymys_fi}}</td>
+                        <td>{{ kysymys | lokalisoiKentta:'kysymys' }}</td>
                         <td class="nowrap">{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}</td>
                         <td class="nowrap">
                             <span ng-show="kysymys.pakollinen" class="glyphicon glyphicon-ok"></span>
