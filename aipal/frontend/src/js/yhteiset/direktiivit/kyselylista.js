@@ -61,14 +61,14 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
         };
 
         $scope.suljeKysely = function(kysely) {
-          Kysely.sulje(kysely.kyselyid).success(function() {
-            kysely.tila = 'poistettu';
+          Kysely.sulje(kysely.kyselyid).success(function(uusiKysely) {
+            _.assign(kysely, uusiKysely);
             ilmoitus.onnistuminen(i18n.hae('kysely.sulkeminen_onnistui'));
           });
         };
         $scope.palautaKysely = function(kysely) {
-          Kysely.palauta(kysely.kyselyid).success(function() {
-            kysely.tila = 'julkaistu';
+          Kysely.palauta(kysely.kyselyid).success(function(uusiKysely) {
+            _.assign(kysely, uusiKysely);
             ilmoitus.onnistuminen(i18n.hae('kysely.palautus_onnistui'));
           });
         };
