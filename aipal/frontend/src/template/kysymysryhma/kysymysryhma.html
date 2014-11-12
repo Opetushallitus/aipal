@@ -15,16 +15,19 @@
                 <input type="text" class="form-control e2e-kysymysryhma-nimi-fi" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
             </label>
 
+            <label>{{i18n.kysymysryhma.selite_fi}}
+                <input type="text" class="form-control" ng-model="kysymysryhma.selite_fi" size="80" maxlength="200" />
+            </label>
+
+            <br>
+            <br>
+
             <label>{{i18n.kysymysryhma.nimi_sv}}
                 <input type="text" class="form-control" ng-model="kysymysryhma.nimi_sv" size="80" maxlength="200" />
             </label>
 
-            <label>{{i18n.kysymysryhma.selite_fi}}
-                <textarea class="form-control" ng-model="kysymysryhma.selite_fi" rows="5" cols="80"></textarea>
-            </label>
-
             <label>{{i18n.kysymysryhma.selite_sv}}
-                <textarea class="form-control" ng-model="kysymysryhma.selite_sv" rows="5" cols="80"></textarea>
+                <input class="form-control" ng-model="kysymysryhma.selite_sv" size="80" maxlength="200" />
             </label>
         </div>
 
