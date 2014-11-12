@@ -60,7 +60,7 @@
             (-> (sql/insert taulut/vastaajatunnus
                   (sql/values (-> vastaajatunnus
                                 (dissoc :henkilokohtainen)
-                                (assoc :tunnus (luo-tunnus 13)))))
+                                (assoc :tunnus (luo-tunnus 6)))))
               :vastaajatunnusid
               hae))]
     (if (:henkilokohtainen vastaajatunnus)
