@@ -64,7 +64,9 @@
 (def kysymysryhma-select
   (->
     (sql/select* taulut/kysymysryhma)
-    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :taustakysymykset :valtakunnallinen :tila)))
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv
+                :selite_fi :selite_sv
+                :taustakysymykset :valtakunnallinen :tila)))
 
 (def kysymys-select
   (->
