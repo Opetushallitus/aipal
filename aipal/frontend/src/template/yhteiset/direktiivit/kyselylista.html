@@ -26,7 +26,7 @@
                       <span class="glyphicon glyphicon-upload"></span>
                   </button>
               </auth>
-              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu'">
+              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">
                   <button class="btn btn-primary pull-left e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">
                       {{ 'kyselykerta.uusi_kyselykerta' | i18n }}&nbsp;
                       <span class="glyphicon glyphicon-plus"></span>
