@@ -35,8 +35,8 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
           });
           modalInstance.result.then(function () {
             Kysely.julkaise(kysely.kyselyid)
-            .success(function() {
-              kysely.tila = 'julkaistu';
+            .success(function(response) {
+              _.assign(kysely, response);
               ilmoitus.onnistuminen(i18n.hae('kysely.julkaisu_onnistui'));
             })
             .error(function() {

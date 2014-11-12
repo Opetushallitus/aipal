@@ -46,16 +46,13 @@
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"
   [kyselyid]
-  (->
-    (sql/select* taulut/kysely)
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
-                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                :kysely.selite_fi :kysely.selite_sv
-                :kysely.tila)
-    (sql/where (= :kyselyid kyselyid))
-
-    sql/exec
-    first))
+  (first
+    (sql/select taulut/kysely
+      (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
+                  :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
+                  :kysely.selite_fi :kysely.selite_sv
+                  :kysely.tila :kysely.kaytettavissa)
+      (sql/where (= :kyselyid kyselyid)))))
 
 (defn hae-organisaatiotieto
   "Hakee kyselyn luoneen organisaation tiedot"
@@ -86,7 +83,9 @@
 (defn julkaise-kysely [kyselyid]
   (sql/update taulut/kysely
     (sql/set-fields {:tila "julkaistu"})
-    (sql/where {:kyselyid kyselyid})))
+    (sql/where {:kyselyid kyselyid}))
+  ;; haetaan kysely, jotta saadaan myös kaytettavissa tieto mukaan paluuarvona
+  (hae kyselyid))
 
 (defn sulje-kysely [kyselyid]
   (sql/update taulut/kysely
