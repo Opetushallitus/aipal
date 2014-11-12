@@ -19,8 +19,6 @@
                       {{ 'kysely.muokkaa' | i18n }}&nbsp;
                       <span class="glyphicon glyphicon-pencil"></span>
                   </a>
-              </auth>
-              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']" ng-if="kysely.tila === 'luonnos'">
                   <button class="btn btn-primary pull-left" ng-click="julkaiseKyselyModal(kysely)" ng-disabled="kysely.kysymysryhmien_lkm === 0">
                       {{ 'kysely.julkaise' | i18n }}&nbsp;
                       <span class="glyphicon glyphicon-upload"></span>
