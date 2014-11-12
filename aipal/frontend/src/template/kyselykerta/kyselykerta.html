@@ -75,11 +75,7 @@
                         {{'i18n.vastaajatunnus.vastausprosentti'|i18n}}
                     </td>
                     <td>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}" aria-valuemin="0" aria-valuemax="100" style="width: {{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%;">
-                                <span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span>
-                            </div>
-                        </div>
+                        <progressbar value="getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0"><span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span></progressbar>
                     </td>
                     <td></td>
                 </tr>
@@ -114,11 +110,7 @@
         <div class="yhteenveto">
             <h2>Vastauksia</h2>
             <h1>{{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h1>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="{{getVastausProsentti() | number:0}}" aria-valuemin="0" aria-valuemax="100" style="width: {{getVastausProsentti() | number:0}}%;">
-                    <span>{{getVastausProsentti() | number:0}}%</span>
-                </div>
-            </div>
+            <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
         </div>
     </div>
 </div>
