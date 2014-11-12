@@ -24,9 +24,13 @@ fieldset[disabled] .btn{
 table span.glyphicon{
   color: $darker-gray;
 }
-
 table span.glyphicon:hover {
   color: $primary-color;
+}
+
+table a.btn-primary span.glyphicon,
+table a.btn-primary span.glyphicon:hover{
+  color: white;
 }
 
 /* Modal */
