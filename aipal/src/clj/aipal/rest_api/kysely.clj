@@ -75,8 +75,14 @@
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/kysymysryhmat" [kyselyid]
     (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))
 
-  (cu/defapi :kysely-julkaisu kyselyid :put "/julkaise/:kyselyid" [kyselyid]
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/julkaise/:kyselyid" [kyselyid]
     (let [kyselyid (Integer/parseInt kyselyid)]
       (if (> (arkisto/laske-kysymysryhmat kyselyid) 0)
         (json-response (arkisto/julkaise-kysely kyselyid))
-        {:status 403}))))
+        {:status 403})))
+
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/sulje/:kyselyid" [kyselyid]
+    (arkisto/sulje-kysely (Integer/parseInt kyselyid)))
+
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta/:kyselyid" [kyselyid]
+    (arkisto/julkaise-kysely (Integer/parseInt kyselyid))))

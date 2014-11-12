@@ -31,6 +31,12 @@ angular.module('rest.kysely', [])
       },
       julkaise: function(id) {
         return $http.put('api/kysely/julkaise/' + id);
+      },
+      sulje: function(id) {
+        return $http.put('api/kysely/sulje/' + id);
+      },
+      palauta: function(id) {
+        return $http.put('api/kysely/palauta/' + id);
       }
     };
   }]);

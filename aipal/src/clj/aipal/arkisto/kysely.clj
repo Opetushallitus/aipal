@@ -88,6 +88,11 @@
     (sql/set-fields {:tila "julkaistu"})
     (sql/where {:kyselyid kyselyid})))
 
+(defn sulje-kysely [kyselyid]
+  (sql/update taulut/kysely
+    (sql/set-fields {:tila "poistettu"})
+    (sql/where {:kyselyid kyselyid})))
+
 (defn hae-kysymysryhmat [kyselyid]
   (->
     (sql/select* taulut/kysymysryhma)

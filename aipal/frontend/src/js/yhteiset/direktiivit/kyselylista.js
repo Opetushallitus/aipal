@@ -48,6 +48,30 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
         $scope.uusiKyselykerta = function (kysely) {
           $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
         };
+
+        $scope.suljeKyselyModal = function(kysely) {
+          var modalInstance = $modal.open({
+            templateUrl: 'template/kysely/sulje-kysely.html',
+            controller: 'SuljeKyselyModalController',
+            resolve: { kysely: function() { return kysely; } }
+          });
+          modalInstance.result.then(function() {
+            $scope.suljeKysely(kysely);
+          });
+        };
+
+        $scope.suljeKysely = function(kysely) {
+          Kysely.sulje(kysely.kyselyid).success(function() {
+            kysely.tila = 'poistettu';
+            ilmoitus.onnistuminen(i18n.hae('kysely.sulkeminen_onnistui'));
+          });
+        };
+        $scope.palautaKysely = function(kysely) {
+          Kysely.palauta(kysely.kyselyid).success(function() {
+            kysely.tila = 'julkaistu';
+            ilmoitus.onnistuminen(i18n.hae('kysely.palautus_onnistui'));
+          });
+        };
       }]
     };
   }])
@@ -57,4 +81,12 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
 
     $scope.julkaise = $modalInstance.close;
     $scope.cancel = $modalInstance.dismiss;
-  }]);
+  }])
+
+  .controller('SuljeKyselyModalController', ['$modalInstance', '$scope', 'kysely',  function($modalInstance, $scope, kysely) {
+    $scope.kysely = kysely;
+
+    $scope.sulje = $modalInstance.close;
+    $scope.cancel = $modalInstance.dismiss;
+  }])
+;
