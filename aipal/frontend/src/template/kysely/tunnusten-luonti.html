@@ -26,7 +26,7 @@
             <label>{{i18n.yleiset.rahoitusmuoto}}*
                <select ng-required="true" ng-options="rahoitusmuoto.rahoitusmuotoid as rahoitusmuoto.rahoitusmuoto |enumArvo:'rahoitusmuoto' for rahoitusmuoto in rahoitusmuodot"
                         ng-model="vastaajatunnus.rahoitusmuotoid"
-                        class="form-control"
+                        class="form-control e2e-vastaajatunnuksen-rahoitusmuoto"
                         ng-show="rahoitusmuodot.length > 0">
                    <option value=""></option>
                </select>
@@ -34,7 +34,7 @@
         </div>
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer e2e-vastaustunnusten-luonti-dialogi">
     <small class="pull-right ">
         <pakollisia-kenttia></pakollisia-kenttia>
     </small>

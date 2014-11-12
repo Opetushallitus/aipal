@@ -28,7 +28,7 @@ angular.module('yhteiset.direktiivit.tallenna', ['yhteiset.palvelut.apicallinter
         formiValidi : '=',
         teksti : '@'
       },
-      template : '<button class="btn btn-primary" ng-disabled="tallennusDisabloitu">{{teksti}}&nbsp;&nbsp;<span ng-if="icon" ng-class="icon"></span></button>',
+      template : '<button class="btn btn-primary e2e-direktiivit-tallenna" ng-disabled="tallennusDisabloitu">{{teksti}}&nbsp;&nbsp;<span ng-if="icon" ng-class="icon"></span></button>',
       replace : true,
       link : function(scope, element, attrs) {
         var idt = scope.$eval(scope.disabloiPyyntojenAjaksi);

@@ -10,7 +10,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="kyselykerta_nimi" class="pakollinen"><span>{{i18n.kyselykerta.kyselykerran_nimi}}</span></label>
-                <input id="kyselykerta_nimi" type="text" ng-model="kyselykerta.nimi" class="form-control"
+                <input id="kyselykerta_nimi" type="text" ng-model="kyselykerta.nimi" class="form-control e2e-kyselykerta-nimi"
                        ng-required="true"/>
             </div>
         </div>
@@ -43,7 +43,7 @@
 
 <div ng-if="!uusi">
     <h2>{{i18n.vastaajatunnus.lista}}</h2>
-    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi()">
+    <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()">
         {{i18n.vastaajatunnus.luonti}}&nbsp;&nbsp;
         <span class="glyphicon glyphicon-plus"></span>
     </button>
@@ -83,7 +83,7 @@
             <tbody>
                 <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
                     ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.kaytettavissa, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
-                    <td>{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
+                    <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
                     <td class="nowrap actions">
                         <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">

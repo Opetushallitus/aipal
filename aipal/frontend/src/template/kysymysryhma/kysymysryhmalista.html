@@ -27,7 +27,7 @@
       </auth>
       &nbsp;&nbsp;
       <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
-        <button class="btn btn-primary btn-sm" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0">
+        <button class="btn btn-primary btn-sm e2e-julkaise-kysymysryhma" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0">
           {{ 'yleiset.julkaise' | i18n }}&nbsp;
           <span class="glyphicon glyphicon-share-alt"></span>
         </button>

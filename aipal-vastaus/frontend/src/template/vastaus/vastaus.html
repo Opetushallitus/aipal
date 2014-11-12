@@ -63,5 +63,5 @@
   </div>
     <br />
     <small class="pull-right" ng-bind="i18n.yleiset.pakolliset"></small>
-  <button ng-show="!preview" id="submit" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
+  <button ng-show="!preview" id="submit" class="e2e-tallenna-vastaukset" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
 </form>

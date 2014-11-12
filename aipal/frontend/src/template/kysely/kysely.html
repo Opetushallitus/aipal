@@ -5,7 +5,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label ng-class="{pakollinen: !kysely.nimi_sv}"><span>{{i18n.kysely.nimi_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</span>
-                    <input type="text" class="form-control" ng-model="kysely.nimi_fi" ng-required="!kysely.nimi_sv"/>
+                    <input type="text" class="form-control e2e-kysely-nimi-fi" ng-model="kysely.nimi_fi" ng-required="!kysely.nimi_sv"/>
                 </label>
             </div>
 
@@ -58,7 +58,7 @@
             {{i18n.kysely.lisaa_kyselypohja}}&nbsp;
             <span class="glyphicon glyphicon-plus"></span>
         </button>
-        <button class="btn btn-primary" ng-click="lisaaKysymysryhmaModal()">
+        <button class="btn btn-primary e2e-lisaa-kysymysryhma" ng-click="lisaaKysymysryhmaModal()">
             {{i18n.kysely.lisaa_kysymysryhma}}&nbsp;
             <span class="glyphicon glyphicon-plus"></span>
         </button>
@@ -92,7 +92,7 @@
     <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{'i18n.yleiset.tallennataan' | i18n}}" virheviesti="{{'i18n.yleiset.tallennus_epaonnistui' | i18n}}" yrita-uudelleen="tallenna()">
       <br>
       <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid" ng-click="tallenna()">
-          {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
+          {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk e2e-tallenna-kysely"></span>
       </button>
         <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid" ng-click="esikatseleModal()">
             {{'i18n.yleiset.esikatsele'| i18n}}&nbsp;<span class="glyphicon glyphicon-search"></span>
