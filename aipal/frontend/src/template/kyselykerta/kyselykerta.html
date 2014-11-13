@@ -83,7 +83,7 @@
             <tbody>
                 <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
                     ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.kaytettavissa, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
-                    <td>{{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}</td>
+                    <td>{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
                     <td class="nowrap actions">
                         <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
@@ -95,7 +95,7 @@
                             </a>
                         </span>
                         &nbsp;
-                        <a href="mailto:?subject= {{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/#/vastaus/{{tunnus.tunnus}}"
+                        <a href="mailto:?subject= {{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/{{tunnus.tunnus}}"
                            title="{{i18n.vastaajatunnus.laheta}}">
                             <span class="glyphicon glyphicon-envelope"></span>
                         </a>
