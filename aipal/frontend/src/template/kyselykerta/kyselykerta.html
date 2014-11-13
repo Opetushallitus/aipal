@@ -63,7 +63,7 @@
             <tfoot>
                 <tr>
                     <td>
-                        Vastauksia
+                        {{'vastaajatunnus.vastauksia'|i18n}}
                     </td>
                     <td>
                         <strong>{{getVastaustenLkm(rahoitusmuodot.rahoitusmuotoid)}} / {{getVastaajienLkm(rahoitusmuodot.rahoitusmuotoid)}}</strong>
@@ -108,7 +108,7 @@
 
     <div class="center-block" ng-show="tunnukset.length>0">
         <div class="yhteenveto">
-            <h2>Vastauksia</h2>
+            <h2>{{'vastaajatunnus.vastauksia'|i18n}}</h2>
             <h1>{{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h1>
             <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
         </div>
