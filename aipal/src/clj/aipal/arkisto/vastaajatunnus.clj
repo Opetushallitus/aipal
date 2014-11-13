@@ -43,30 +43,45 @@
     sql/exec
     first))
 
-(defn luo-tunnus
-  "Luo yksilöllisen tunnuksen. "
-  ([pituus]
+(defn luo-satunnainen-tunnus
+  [pituus]
   {:post [(and
             (string? %)
             (= pituus (.length %)))]}
   (apply str (take pituus (repeatedly #(rand-nth sallitut-url-merkit)))))
-  ([pituus luodut-tunnukset]
-    (first (drop-while #(contains? luodut-tunnukset %)
-      (take 10000 (repeatedly #(luo-tunnus pituus)))))))
+
+(defn luo-tunnuksia
+  "Luo keskenään uniikkeja satunnaisia määritellyn pituisia tunnuksia."
+  [pituus]
+  (distinct
+    (take 10000 (repeatedly #(luo-satunnainen-tunnus pituus)))))
+
+(defn vastaajatunnus-olemassa?
+  [vastaajatunnus]
+  (first
+    (sql/select taulut/vastaajatunnus
+      (sql/fields :tunnus)
+      (sql/where {:tunnus vastaajatunnus}))))
+
+(defn tallenna-vastaajatunnus!
+  [vastaajatunnus]
+  (-> (sql/insert taulut/vastaajatunnus
+        (sql/values vastaajatunnus))
+    :vastaajatunnusid
+    hae))
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
-  (letfn [(lisaa-1! [vastaajatunnus]
-            (-> (sql/insert taulut/vastaajatunnus
-                  (sql/values (-> vastaajatunnus
-                                (dissoc :henkilokohtainen)
-                                (assoc :tunnus (luo-tunnus 6)))))
-              :vastaajatunnusid
-              hae))]
-    (if (:henkilokohtainen vastaajatunnus)
-      (doall (map lisaa-1! (repeat (:vastaajien_lkm vastaajatunnus)
-                                   (assoc vastaajatunnus :vastaajien_lkm 1))))
-      [(lisaa-1! vastaajatunnus)])))
+  (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
+        vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
+        vastaajatunnus (-> vastaajatunnus
+                         (dissoc :henkilokohtainen)
+                         (assoc :vastaajien_lkm vastaajien-lkm))]
+    (doall
+      (take tunnusten-lkm
+        (for [tunnus (luo-tunnuksia 6)]
+          (when-not (vastaajatunnus-olemassa? tunnus)
+            (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))))
 
 (defn lukitse! [kyselykertaid vastaajatunnusid lukitse]
   (sql/update taulut/vastaajatunnus

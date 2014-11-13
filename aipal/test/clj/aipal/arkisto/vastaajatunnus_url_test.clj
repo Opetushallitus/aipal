@@ -2,16 +2,17 @@
     (:require [aipal.arkisto.vastaajatunnus :refer :all])
     (:use clojure.test))
 
-(deftest tunnukset-ovat-yksilollisia
+(deftest tunnukset-ovat-keskenaan-yksilollisia
   []
-  (testing "Tarkistetaan että funktio osaa tarkastaa oikein jo luotujen tunnusten joukon."
-    ;  Z on ainoa mahdollinen joka ei ole jo luotujen tunnusten joukossa
-    (let [viimeinen-sallittu (take-last 1 sallitut-url-merkit)
-          rajoitettu-joukko (drop-last sallitut-url-merkit)]
-      (is viimeinen-sallittu (luo-tunnus 1 (set (map str rajoitettu-joukko)))))))
+  (testing "Tarkistetaan että funktio osaa luoda vain keskenään uniikkien tunnusten joukon kun mahdolliset merkit loppuvat."
+    (let [merkkien-lkm (count sallitut-url-merkit)
+          haetut-tunnukset (take (+ 1 merkkien-lkm) (luo-tunnuksia 1))]
+      (is (distinct? haetut-tunnukset))
+      (is (= merkkien-lkm (count haetut-tunnukset))))))
 
 (deftest luonti-lopettaa-aina
   []
-  (testing  "Tunnuksen luonti ei jää ikuiseen silmukkaan jos kaikki mahdolliset tunnukset on jo luotu."
-    (is (nil? (luo-tunnus 1 (set (map str sallitut-url-merkit)))))))
-
+  (testing  "Tunnuksien luonti ei jää ikuiseen silmukkaan jos kaikki mahdolliset tunnukset on jo luotu."
+    (let [merkkien-lkm (count sallitut-url-merkit)]
+      (is (= (count (take (+ 1 merkkien-lkm) (luo-tunnuksia 1)))
+             merkkien-lkm)))))
