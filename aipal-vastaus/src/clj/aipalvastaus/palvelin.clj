@@ -25,6 +25,7 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
+            [ring.util.response :as response]
             [cheshire.generate :as json-gen]
             schema.core
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
@@ -48,6 +49,8 @@
     (c/context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
     (c/context "/api/vastaus" [] aipalvastaus.rest-api.vastaus/reitit)
     (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
+    (c/GET ["/:tunnus" :tunnus #"[0-9a-zA-Z]{6,13}"] [tunnus]
+           (response/redirect (str (-> asetukset :server :base-url) "/#/vastaus/" tunnus)))
     (r/not-found "Not found")))
 
 (defn sammuta [palvelin]
