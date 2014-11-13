@@ -64,6 +64,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       Vastaus.tallenna($scope.tunnus, keraaVastausdata($scope.data), function() {
         $location.url('/kiitos');
         $scope.vastausForm.$setPristine();
+        scrollTo(0,0);
       }, function(){
         $scope.tallennaNappiDisabloitu = false;
         ilmoitus.virhe(i18n.hae('palvelinvirhe.teksti'));
