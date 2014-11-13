@@ -23,3 +23,10 @@
 (defn poista! [vastaajaid]
   (sql/delete vastaaja
     (sql/where {:vastaajaid vastaajaid})))
+
+(defn hae-vastaajat-vastaajatunnukselle [vastaajatunnusid]
+  (->
+    (sql/select* vastaaja)
+    (sql/fields :vastaajaid)
+    (sql/where {:vastaajatunnusid vastaajatunnusid})
+    sql/exec))

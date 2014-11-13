@@ -12,22 +12,19 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal-e2e.arkisto.vastaajatunnus
+(ns aipalvastaus-e2e.data-util
   (:require [korma.core :as sql]
+            [korma.db :as db]
+            [aipal-e2e.arkisto.vastaaja :as vastaaja-arkisto]
+            [aipal-e2e.arkisto.vastaajatunnus :as vastaajatunnus-arkisto]
+            [aipal-e2e.arkisto.vastaus :as vastaus-arkisto]
             [aipal-e2e.arkisto.sql.korma :refer :all]))
 
-(defn lisaa! [tiedot]
-  (sql/insert vastaajatunnus
-    (sql/values tiedot)))
-
-(defn poista! [vastaajatunnusid]
-  (sql/delete vastaajatunnus
-    (sql/where {:vastaajatunnusid vastaajatunnusid})))
-
-(defn hae-vastaajatunnus [tunnus]
-  (->
-    (sql/select* :vastaajatunnus)
-    (sql/fields :vastaajatunnusid)
-    (sql/where {:tunnus tunnus})
-    sql/exec
-    first))
+(defn poista-vastaajat-ja-vastaukset-vastaustunnukselta! [tunnus]
+  (let [vastaajatunnusid (:vastaajatunnusid
+                           (vastaajatunnus-arkisto/hae-vastaajatunnus tunnus))
+        vastaajat (vastaaja-arkisto/hae-vastaajat-vastaajatunnukselle vastaajatunnusid)]
+    (doseq [vastaaja vastaajat]
+      (vastaus-arkisto/poista-vastaajan-vastaukset! (:vastaajaid vastaaja))
+      (vastaaja-arkisto/poista! (:vastaajaid vastaaja)))
+    (vastaajatunnus-arkisto/poista! vastaajatunnusid)))

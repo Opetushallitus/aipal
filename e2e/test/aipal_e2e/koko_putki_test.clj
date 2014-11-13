@@ -18,6 +18,7 @@
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
+            [aipalvastaus-e2e.data-util :refer [poista-vastaajat-ja-vastaukset-vastaustunnukselta!]]
             [aitu-e2e.util :refer :all]))
 
 (def kyselyt-sivu "/#/kyselyt")
@@ -55,6 +56,7 @@
       (w/click {:css ".e2e-luo-uusi-kysely"})
       (syota-kenttaan "kysely.nimi_fi" "Uusi kysely")
       (w/click {:css ".e2e-lisaa-kysymysryhma"})
+      (odota-angular-pyyntoa)
       (w/select-by-text ".e2e-valittavat-kysymysryhmat" "Uusi kysymysryhmä")
       (w/click {:css ".e2e-lisaa-valittu-kysymysryhma"})
       (w/click {:css ".e2e-tallenna-kysely"})
@@ -63,6 +65,7 @@
       ;; julkaise kysely
       (w/click {:css ".e2e-kysely-nimi"})
       (w/click {:css ".e2e-julkaise-kysely"})
+      (odota-angular-pyyntoa)
       (w/click {:css ".e2e-vahvista-kyselyn-julkaisu"})
       (odota-angular-pyyntoa)
 
@@ -80,8 +83,11 @@
 
       ;; vastaa kyselyyn
       (let [vastaajatunnus-url (w/text (w/find-element {:css ".e2e-vastaajatunnus-url"}))]
-        (w/to vastaajatunnus-url))
-      (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
-      (w/click {:css ".e2e-tallenna-vastaukset"})
+        (w/to vastaajatunnus-url)
+        (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
+        (w/click {:css ".e2e-tallenna-vastaukset"})
 
-      (is (.contains (sivun-sisalto) "Kiitos vastauksestanne")))))
+        (is (.contains (sivun-sisalto) "Kiitos vastauksestanne"))
+
+        (poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))
+

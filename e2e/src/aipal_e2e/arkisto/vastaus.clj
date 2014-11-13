@@ -23,3 +23,7 @@
 (defn poista! [vastausid]
   (sql/delete vastaus
     (sql/where {:vastausid vastausid})))
+
+(defn poista-vastaajan-vastaukset! [vastaajaid]
+  (sql/delete vastaus
+    (sql/where {:vastaajaid vastaajaid})))

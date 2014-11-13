@@ -14,7 +14,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus-e2e.util
-  (:require [aitu-e2e.util :refer [avaa-url]]))
+  (:require [aitu-e2e.util :refer [avaa-url]]
+            [aipalvastaus-e2e.data-util :as data-util]))
 
 (defn vastaus-url [polku]
   (str (or (System/getenv "VASTAUS_URL")
@@ -23,3 +24,10 @@
 
 (defn avaa [polku]
   (avaa-url (vastaus-url polku)))
+
+(defn vastaajatunnus-url->tunnus [url]
+ (re-find #"[a-zA-Z0-9]*$" url))
+
+(defn poista-vastaajat-ja-vastaukset-vastaustunnukselta! [vastaustunnus-url]
+  (data-util/poista-vastaajat-ja-vastaukset-vastaustunnukselta!
+    (vastaajatunnus-url->tunnus vastaustunnus-url)))
