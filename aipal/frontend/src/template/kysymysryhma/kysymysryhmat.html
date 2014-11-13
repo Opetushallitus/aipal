@@ -12,36 +12,14 @@
 
 <div class="loader" ng-show="!latausValmis"></div>
 
-<table class="table table-striped kysymysryhmat-taulukko" ng-show="latausValmis">
-    <thead>
-    <tr>
-        <th>{{'i18n.kysymysryhma.nimi' | i18n}}</th>
-        <th>{{'i18n.kysymysryhma.selite' | i18n}}</th>
-        <th>{{'i18n.kysymysryhma.valtakunnallinen' | i18n}}</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="k in kysymysryhmat">
-        <td>{{ k | lokalisoiKentta:'nimi' }}</td>
-        <td>{{ k | lokalisoiKentta:'selite' }}</td>
-        <td>
-            <span ng-show="k.valtakunnallinen" class="glyphicon glyphicon-ok"></span>
-        </td>
-        <td class="actions nowrap">
-            <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
-                <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}" class="e2e-muokkaa-kysymysryhmaa">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-            </auth>
-            &nbsp;&nbsp;
-            <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
-                <button class="btn btn-primary btn-sm" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0">
-                    {{ 'yleiset.julkaise' | i18n }}&nbsp;
-                    <span class="glyphicon glyphicon-share-alt"></span>
-                </button>
-            </auth>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<h2>{{i18n.kysymysryhma.luonnokset}}</h2>
+
+<div ng-repeat="tila in ['luonnos']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
+
+<h2>{{i18n.kysymysryhma.julkaistut}}</h2>
+
+<div ng-repeat="tila in ['julkaistu']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
+
+<h2>{{i18n.kysymysryhma.poistetut}}</h2>
+
+<div ng-repeat="tila in ['poistettu']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
