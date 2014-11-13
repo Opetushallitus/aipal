@@ -17,9 +17,7 @@
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]))
 
-(def sallitut-url-merkit
-  "Merkit, joista vastaajatunnus muodostetaan. Ei erikoismerkkejä, koska näistä tulee samalla URL-osoite vastaajan selainta varten."
-  "ACEFHJKLMNPRTWXY347")
+(def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 
 (def kyselykerta-select
   (-> (sql/select* taulut/vastaajatunnus)
@@ -48,13 +46,13 @@
   {:post [(and
             (string? %)
             (= pituus (.length %)))]}
-  (apply str (take pituus (repeatedly #(rand-nth sallitut-url-merkit)))))
+  (apply str (take pituus (repeatedly #(rand-nth sallitut-merkit)))))
 
 (defn luo-tunnuksia
   "Luo keskenään uniikkeja satunnaisia määritellyn pituisia tunnuksia."
   [pituus]
   (distinct
-    (take 10000 (repeatedly #(luo-satunnainen-tunnus pituus)))))
+    (repeatedly 10000 #(luo-satunnainen-tunnus pituus))))
 
 (defn vastaajatunnus-olemassa?
   [vastaajatunnus]
