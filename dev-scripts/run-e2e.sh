@@ -11,7 +11,7 @@
 # Parametrit:
 #     -e              Jos annettu, käyttää edellisen testiajon alustamaa tietokantaa.
 
-set -eu
+set -u
 
 use_existing_e2e_database=no
 while getopts 'e' o; do
