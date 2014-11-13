@@ -242,6 +242,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     }
 
     $scope.tallennaKysymysryhma = function() {
+      $scope.poistaKysymykset();
       if (uusi) {
         luoUusiKysymysryhma();
       } else {
@@ -257,7 +258,13 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       $scope.muokkaustila = true;
     };
 
-    $scope.poistaKysymys = function(index) {
-      $scope.kysymysryhma.kysymykset.splice(index, 1);
+    $scope.poistaKysymys = function(kysymys) {
+      kysymys.poistettava=!kysymys.poistettava;
+    };
+
+    $scope.poistaKysymykset = function(){
+      $scope.kysymysryhma.kysymykset = _.filter($scope.kysymysryhma.kysymykset, function (kysymys) {
+        return !kysymys.poistettava;
+      });
     };
   }]);

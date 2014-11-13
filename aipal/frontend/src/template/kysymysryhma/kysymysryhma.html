@@ -48,16 +48,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="kysymys in kysymysryhma.kysymykset">
+                    <tr ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys-{{$index}}" ng-class="{removed: kysymys.poistettava}">
                         <td>{{ kysymys | lokalisoiKentta:'kysymys' }}</td>
                         <td class="nowrap">{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}</td>
                         <td class="nowrap">
                             <span ng-show="kysymys.pakollinen" class="glyphicon glyphicon-ok"></span>
-                        </td class="nowrap">
-                        <td class="nowrap">
-                            <span class="glyphicon glyphicon-pencil e2e-muokkaa-kysymysta" style="cursor: pointer" ng-click="muokkaa(kysymys)"></span>
-                            &nbsp;&nbsp;
-                            <span class="glyphicon glyphicon-trash" style="cursor: pointer" ng-click="poistaKysymys($index)"></span>
+                        </td>
+                        <td class="actions nowrap">
+                            <span class="glyphicon glyphicon-pencil e2e-muokkaa-kysymysta" style="cursor: pointer" ng-click="muokkaa(kysymys)"></span>&nbsp;
+                            <span class="glyphicon glyphicon-trash" style="cursor: pointer" ng-click="poistaKysymys(kysymys)"></span>
                         </td>
                     </tr>
                 </tbody>

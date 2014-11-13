@@ -52,7 +52,8 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $httpBackend.expectPOST('api/kysymysryhma', {nimi_fi: 'foo',
                                                  nimi_sv: 'fåå',
                                                  selite_fi: 'bar',
-                                                 selite_sv: 'bår'}).respond(200);
+                                                 selite_sv: 'bår',
+                                                 kysymykset: []}).respond(200);
     $scope.kysymysryhma = {};
     $scope.kysymysryhma.nimi_fi = 'foo';
     $scope.kysymysryhma.nimi_sv = 'fåå';
@@ -104,15 +105,32 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
 
   it('ainoan kysymyksen poisto', function() {
     alustaController();
-    $scope.kysymysryhma.kysymykset = [{foo: 'bar'}];
-    $scope.poistaKysymys(0);
+    var kysymys =  {foo: 'bar'};
+    $scope.kysymysryhma.kysymykset = [kysymys];
+    $scope.poistaKysymys(kysymys);
+    $scope.poistaKysymykset();
     expect($scope.kysymysryhma.kysymykset).toEqual([]);
   });
 
   it('kysymyksen poisto', function() {
     alustaController();
-    $scope.kysymysryhma.kysymykset = [{foo: 'bar'}, {bar: 'baz'}];
-    $scope.poistaKysymys(1);
+    var kysymys1 = {foo: 'bar'},
+        kysymys2 = {bar: 'baz'};
+
+    var kysymykset =  [kysymys1,kysymys2];
+
+    $scope.kysymysryhma.kysymykset = kysymykset;
+    $scope.poistaKysymys(kysymys2);
+    $scope.poistaKysymykset();
+    expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar'}]);
+  });
+
+  it('kysymyksen palautus', function() {
+    alustaController();
+    $scope.kysymysryhma.kysymykset = [{foo: 'bar'}];
+    $scope.poistaKysymys({});
+    $scope.poistaKysymys({});
+    $scope.poistaKysymykset();
     expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar'}]);
   });
 
