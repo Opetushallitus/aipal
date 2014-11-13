@@ -107,7 +107,7 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     alustaController();
     var kysymys =  {foo: 'bar'};
     $scope.kysymysryhma.kysymykset = [kysymys];
-    $scope.poistaKysymys(kysymys);
+    $scope.poistaTahiPalautaKysymys(kysymys);
     $scope.poistaKysymykset();
     expect($scope.kysymysryhma.kysymykset).toEqual([]);
   });
@@ -120,18 +120,19 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     var kysymykset =  [kysymys1,kysymys2];
 
     $scope.kysymysryhma.kysymykset = kysymykset;
-    $scope.poistaKysymys(kysymys2);
+    $scope.poistaTahiPalautaKysymys(kysymys2);
     $scope.poistaKysymykset();
     expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar'}]);
   });
 
   it('kysymyksen palautus', function() {
     alustaController();
-    $scope.kysymysryhma.kysymykset = [{foo: 'bar'}];
-    $scope.poistaKysymys({});
-    $scope.poistaKysymys({});
+    var kysymys =  {foo: 'bar'};
+    $scope.kysymysryhma.kysymykset = [kysymys];
+    $scope.poistaTahiPalautaKysymys(kysymys);
+    $scope.poistaTahiPalautaKysymys(kysymys);
     $scope.poistaKysymykset();
-    expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar'}]);
+    expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar', poistettava: false}]);
   });
 
 });

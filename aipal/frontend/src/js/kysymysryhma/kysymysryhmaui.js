@@ -258,7 +258,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       $scope.muokkaustila = true;
     };
 
-    $scope.poistaKysymys = function(kysymys) {
+    $scope.poistaTahiPalautaKysymys = function(kysymys) {
       kysymys.poistettava=!kysymys.poistettava;
     };
 
