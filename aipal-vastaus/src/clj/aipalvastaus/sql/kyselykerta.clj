@@ -13,7 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus.sql.kyselykerta
-  (:require [korma.core :as sql]))
+  (:require [korma.core :as sql]
+            [aipalvastaus.sql.korma :refer [vastaajatunnus-where]]))
 
 (defn hae-kysymysryhmat [tunnus]
   (sql/select :kysymysryhma
@@ -23,7 +24,7 @@
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
                 :kysymysryhma.nimi_sv)
-    (sql/where {:vastaajatunnus.tunnus tunnus})
+    (vastaajatunnus-where tunnus)
     (sql/order :kysely_kysymysryhma.jarjestys)))
 
 (defn hae-kysymysryhmien-kysymykset [tunnus]
@@ -46,7 +47,7 @@
                 :jatkokysymys.ei_teksti_fi
                 :jatkokysymys.ei_teksti_sv
                 [:jatkokysymys.max_vastaus :ei_max_vastaus])
-    (sql/where {:vastaajatunnus.tunnus tunnus})
+    (vastaajatunnus-where tunnus)
     (sql/order :kysymys.jarjestys)))
 
 (defn hae-kysymysten-monivalintavaihtoehdot [tunnus]
@@ -59,7 +60,7 @@
                 :monivalintavaihtoehto.kysymysid
                 :monivalintavaihtoehto.teksti_fi
                 :monivalintavaihtoehto.teksti_sv)
-    (sql/where {:vastaajatunnus.tunnus tunnus})
+    (vastaajatunnus-where tunnus)
     (sql/order :monivalintavaihtoehto.jarjestys)))
 
 (defn hae-kyselyn-tiedot [tunnus]
@@ -75,7 +76,7 @@
                   :tutkinto.tutkintotunnus
                   [:tutkinto.nimi_fi :tutkinto_nimi_fi]
                   [:tutkinto.nimi_sv :tutkinto_nimi_sv])
-      (sql/where {:vastaajatunnus.tunnus tunnus}))))
+      (vastaajatunnus-where tunnus))))
 
 (defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
   (let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]

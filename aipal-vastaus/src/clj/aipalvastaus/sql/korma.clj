@@ -1,5 +1,6 @@
 (ns aipalvastaus.sql.korma
   (:require korma.db
+            [korma.core :as sql]
             [aipalvastaus.sql.korma-auth :as korma-auth]))
 
 (defn korma-asetukset
@@ -30,3 +31,8 @@
     (korma.db/create-db {:make-pool? false
                          :delimiters ""
                          :datasource (bonecp-datasource db-asetukset)})))
+
+(defn vastaajatunnus-where
+  "Käytetään vastaajatunnuksella tehtäviin hakuihin. Vertailee tunnusta merkistökoosta riippumatta."
+  [query tunnus]
+  (sql/where query {(sql/sqlfn :upper :vastaajatunnus.tunnus) (clojure.string/upper-case tunnus)}))

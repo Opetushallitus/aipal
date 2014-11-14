@@ -13,14 +13,15 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus.sql.vastaaja
-  (:require [korma.core :as sql]))
+  (:require [korma.core :as sql]
+            [aipalvastaus.sql.korma :refer [vastaajatunnus-where]]))
 
 (defn vastaajatunnus-voimassa?
   [vastaajatunnus]
   (->
     (sql/select :vastaajatunnus
       (sql/fields :kaytettavissa)
-      (sql/where {:tunnus vastaajatunnus}))
+      (vastaajatunnus-where vastaajatunnus))
     first
     :kaytettavissa))
 
@@ -30,7 +31,7 @@
                        (sql/fields :vastaajien_lkm [(sql/subselect :vastaaja
                                                       (sql/aggregate (count :*) :vastaajia)
                                                       (sql/where {:vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajia])
-                       (sql/where {:tunnus vastaajatunnus})))]
+                       (vastaajatunnus-where vastaajatunnus)))]
     (> (:vastaajien_lkm tulos) (:vastaajia tulos))))
 
 (defn validoi-vastaajatunnus
@@ -43,7 +44,7 @@
   ;; uusien vastausten tallentamisen vaikka sivun olisi aiemmin jättänyt auki selaimeen
   (when (vastaajatunnus-voimassa? tunnus)
     (let [vastaajatunnus (first (sql/select :vastaajatunnus
-                                  (sql/where {:tunnus tunnus})))]
+                                  (vastaajatunnus-where tunnus)))]
       (sql/insert :vastaaja
         (sql/values {:kyselykertaid (:kyselykertaid vastaajatunnus)
                      :vastaajatunnusid (:vastaajatunnusid vastaajatunnus)})))))
