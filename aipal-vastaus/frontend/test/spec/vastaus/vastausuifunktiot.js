@@ -99,17 +99,17 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
                 kysymysid: 2,
                 vastaustyyppi: 'monivalinta',
                 monivalinta_max: 1,
-                vastaus: 2,
+                vastaus: 0,
                 monivalintavaihtoehdot: [
-                  { jarjestys: 1 },
-                  { jarjestys: 2 }
+                  { jarjestys: 0 },
+                  { jarjestys: 1 }
                 ]
               }
             ]
           }
         ]
       };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[2]}]});
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[0]}]});
     });
     it('Monivalintakysymys, jossa molemmat vaihtoehdot valittu. Tuloksena vastaus, jossa valitut vaihtoehdot', function() {
       var vastausdata = {
@@ -121,15 +121,15 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
                 vastaustyyppi: 'monivalinta',
                 monivalinta_max: 3,
                 monivalintavaihtoehdot: [
-                  { jarjestys: 1, valittu: true },
-                  { jarjestys: 2, valittu: true }
+                  { jarjestys: 0, valittu: true },
+                  { jarjestys: 1, valittu: true }
                 ]
               }
             ]
           }
         ]
       };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1,2]}]});
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[0,1]}]});
     });
     it('Monivalintakysymys, jossa valittu yksi vaihtoehto. Tuloksena vastaus, jossa valittu vaihtoehto', function() {
       var vastausdata = {
@@ -141,15 +141,15 @@ describe('vastaus.vastausui.VastausControllerFunktiot', function() {
                 vastaustyyppi: 'monivalinta',
                 monivalinta_max: 3,
                 monivalintavaihtoehdot: [
-                  { jarjestys: 1, valittu: true },
-                  { jarjestys: 2, valittu: false }
+                  { jarjestys: 0, valittu: true },
+                  { jarjestys: 1, valittu: false }
                 ]
               }
             ]
           }
         ]
       };
-      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[1]}]});
+      expect(f.keraaVastausdata(vastausdata)).toEqual({vastaukset: [{kysymysid:2,vastaus:[0]}]});
     });
     it('Eri kysymysryhmien vastatuista kysymyksistä saadaan vastaukset', function() {
       var vastausdata = {
