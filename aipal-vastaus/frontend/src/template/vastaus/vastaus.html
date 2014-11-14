@@ -1,8 +1,7 @@
 <h1>{{data | lokalisoiKentta:'nimi'}}</h1>
-<small class="pull-right" ng-bind="i18n.yleiset.pakolliset"></small>
 <p class="tutkinto" ng-if="data.tutkintotunnus">{{data.tutkintotunnus}} {{data | lokalisoiKentta:'tutkinto_nimi'}}</p>
 <p class="kyselykerta-selite">{{data | lokalisoiKentta:'selite'}}</p>
-
+<small class="pull-right" ng-bind="i18n.yleiset.pakolliset"></small>
 <form name="vastausForm" ng-show="data">
   <div ng-repeat="kysymysryhma in data.kysymysryhmat" class="kysymysryhma">
     <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
