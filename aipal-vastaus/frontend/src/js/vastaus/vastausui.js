@@ -48,7 +48,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
             }
             vastaus.vastaus.push(kysymysdata.vastaus);
           }
-          else if (kysymysdata.vastaus) {
+          else if (kysymysdata.vastaus !== undefined) {
             vastaus.vastaus.push(kysymysdata.vastaus);
           }
           if (!_.isEmpty(vastaus.vastaus)) {
