@@ -4,8 +4,8 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="pakollinen" for="kyselyn_nimi">{{i18n.kysely.nimi_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
-                <input type="text" class="form-control" ng-model="kysely.nimi_fi" id="kyselyn_nimi" ng-required="true"/>
+                <label ng-class="{pakollinen: !kysely.nimi_sv}" for="kyselyn_nimi"><span>{{i18n.kysely.nimi_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</span></label>
+                <input type="text" class="form-control" ng-model="kysely.nimi_fi" id="kyselyn_nimi" ng-required="!kysely.nimi_sv"/>
             </div>
 
             <div class="form-group">
@@ -15,8 +15,8 @@
         </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label for="kyselyn_nimi_sv">{{i18n.kysely.nimi_ruotsiksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
-          <input type="text" class="form-control" ng-model="kysely.nimi_sv" id="kyselyn_nimi_sv"/>
+          <label ng-class="{pakollinen: !kysely.nimi_fi}" for="kyselyn_nimi_sv"><span>{{i18n.kysely.nimi_ruotsiksi}} ({{i18n.kysely.nakyy_vastaajalle}})</span></label>
+          <input type="text" class="form-control" ng-model="kysely.nimi_sv" id="kyselyn_nimi_sv" ng-required="!kysely.nimi_fi"/>
         </div>
 
         <div class="form-group">

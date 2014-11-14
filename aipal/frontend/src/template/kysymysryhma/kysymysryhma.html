@@ -11,10 +11,9 @@
               </label>
             </div>
 
-            <label>{{i18n.kysymysryhma.nimi_fi}} *
-                <input type="text" class="form-control e2e-kysymysryhma-nimi-fi" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus />
+            <label ng-class="{pakollinen: !kysymysryhma.nimi_sv}"><span>{{i18n.kysymysryhma.nimi_fi}}</span>
+                <input type="text" class="form-control e2e-kysymysryhma-nimi-fi" ng-model="kysymysryhma.nimi_fi" size="80" maxlength="200" autofocus ng-required="!kysymysryhma.nimi_sv"/>
             </label>
-
             <label>{{i18n.kysymysryhma.selite_fi}}
                 <input type="text" class="form-control" ng-model="kysymysryhma.selite_fi" size="80" maxlength="200" />
             </label>
@@ -22,8 +21,8 @@
             <br>
             <br>
 
-            <label>{{i18n.kysymysryhma.nimi_sv}}
-                <input type="text" class="form-control" ng-model="kysymysryhma.nimi_sv" size="80" maxlength="200" />
+            <label ng-class="{pakollinen: !kysymysryhma.nimi_fi}"><span>{{i18n.kysymysryhma.nimi_sv}}</span>
+                <input type="text" class="form-control" ng-model="kysymysryhma.nimi_sv" size="80" maxlength="200" ng-required="!kysymysryhma.nimi_fi"/>
             </label>
 
             <label>{{i18n.kysymysryhma.selite_sv}}
@@ -62,7 +61,7 @@
                 </tbody>
             </table>
 
-            <div ng-show="muokkaustila" class="panel panel-primary">
+            <div ng-if="muokkaustila" class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title" ng-show="aktiivinenKysymys.uusi">{{i18n.kysymysryhma.luo_uusi_kysymys}}</h4>
                     <h4 class="panel-title" ng-show="!aktiivinenKysymys.uusi">{{i18n.kysymysryhma.muokkaa_kysymysta}}</h4>
@@ -82,13 +81,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label>{{i18n.kysymys.kysymys_suomeksi}}
+                            <label ng-class="{pakollinen: !aktiivinenKysymys.kysymys_sv}"><span>{{i18n.kysymys.kysymys_suomeksi}}</span>
                                 <input class="form-control e2e-kysymys-suomeksi" type="text" ng-model="aktiivinenKysymys.kysymys_fi" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_sv"/>
                             </label>
                         </div>
 
                         <div class="form-group">
-                            <label>{{i18n.kysymys.kysymys_ruotsiksi}}
+                            <label ng-class="{pakollinen: !aktiivinenKysymys.kysymys_fi}"><span>{{i18n.kysymys.kysymys_ruotsiksi}}</span>
                                 <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_sv" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_fi"/>
                             </label>
                         </div>
@@ -121,7 +120,7 @@
     <div class="col-md-12">
         <div class="row clearfix">
             <div>
-                <button ng-click="tallennaKysymysryhma()" class="btn btn-primary e2e-tallenna-kysymysryhma" ng-disabled="!kysymysryhma.nimi_fi || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
+                <button ng-click="tallennaKysymysryhma()" class="btn btn-primary e2e-tallenna-kysymysryhma" ng-disabled="!form.$valid || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
                 <button ng-click="peruuta()" class="btn btn-default">{{i18n.yleiset.peruuta}}</button>
             </div>
         </div>

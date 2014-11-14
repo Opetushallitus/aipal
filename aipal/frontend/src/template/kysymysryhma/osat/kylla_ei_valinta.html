@@ -9,13 +9,13 @@
     <div ng-show="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys">
       <div class="panel well">
           <div class="form-group">
-            <label>{{i18n.kysymys.kysymys_suomeksi}}
+            <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_sv}"><span>{{i18n.kysymys.kysymys_suomeksi}}</span>
                 <input type="text" class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.kylla_teksti_fi" size="80" maxlength="200" ng-required="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys && !aktiivinenKysymys.jatkokysymys.kylla_teksti_sv"/>
             </label>
           </div>
 
           <div class="form-group">
-              <label>{{i18n.kysymys.kysymys_ruotsiksi}}
+              <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_fi}"><span>{{i18n.kysymys.kysymys_ruotsiksi}}</span>
                   <input type="text" class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.kylla_teksti_sv" size="80" maxlength="200" ng-required="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys && !aktiivinenKysymys.jatkokysymys.kylla_teksti_fi"/>
               </label>
           </div>
@@ -33,13 +33,13 @@
     <div ng-show="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys">
         <div class="panel well">
             <div class="form-group">
-                <label>{{i18n.kysymys.kysymys_suomeksi}}
+                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_sv}"><span>{{i18n.kysymys.kysymys_suomeksi}}</span>
                     <input type="text" class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.ei_teksti_fi" size="80" maxlength="200" ng-required="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys && !aktiivinenKysymys.jatkokysymys.ei_teksti_sv"/>
                 </label>
             </div>
 
             <div class="form-group">
-                <label>{{i18n.kysymys.kysymys_ruotsiksi}}
+                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_fi}"><span>{{i18n.kysymys.kysymys_ruotsiksi}}</span>
                     <input type="text" class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.ei_teksti_sv" size="80" maxlength="200" ng-required="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys && !aktiivinenKysymys.jatkokysymys.ei_teksti_fi"/>
                 </label>
             </div>
