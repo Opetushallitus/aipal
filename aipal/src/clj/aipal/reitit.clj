@@ -12,6 +12,7 @@
             aipal.rest-api.kyselykerta
             aipal.rest-api.kyselypohja
             aipal.rest-api.kysymysryhma
+            aipal.rest-api.ohje
             aipal.rest-api.rahoitusmuoto
             aipal.rest-api.raportti.kyselykerta
             aipal.rest_api.js-log
@@ -50,6 +51,7 @@
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (c/context "/api/kyselykerta" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselykerta/reitit))
     (c/context "/api/kyselypohja" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselypohja/reitit))
+    (c/context "/api/ohje" [] (wrap-tarkasta-csrf-token aipal.rest-api.ohje/reitit))
     (c/context "/api/rahoitusmuoto" [] (wrap-tarkasta-csrf-token aipal.rest-api.rahoitusmuoto/reitit))
     (c/context "/api/raportti/kyselykerta" [] (wrap-tarkasta-csrf-token aipal.rest-api.raportti.kyselykerta/reitit))
     (c/context "/api/kysely" [] (wrap-tarkasta-csrf-token aipal.rest-api.kysely/reitit))
