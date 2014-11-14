@@ -59,7 +59,7 @@
   (first
     (sql/select taulut/vastaajatunnus
       (sql/fields :tunnus)
-      (sql/where {:tunnus vastaajatunnus}))))
+      (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)}))))
 
 (defn tallenna-vastaajatunnus!
   [vastaajatunnus]
