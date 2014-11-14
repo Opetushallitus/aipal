@@ -184,6 +184,8 @@
     :impersonointi yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
+    :ohjeet_luku aipal-kayttaja?
+    :ohje_muokkaus yllapitaja?
     :rahoitusmuoto aipal-kayttaja?
     :omat_tiedot aipal-kayttaja?})
 
