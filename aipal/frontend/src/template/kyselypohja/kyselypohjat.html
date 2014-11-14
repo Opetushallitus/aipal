@@ -1,1 +1,16 @@
 <h1>{{i18n.kyselypohja.breadcrumb_kyselypohja}} <ohje tunniste="kyselypohjat"></ohje></h1>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>Nimi</th>
+    <th>Voimassa</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="kyselypohja in kyselypohjat">
+      <td>{{kyselypohja |lokalisoiKentta:'nimi'}}</td>
+      <td><span class="glyphicon glyphicon-ok" ng-show="kyselypohja.voimassa"></span></td>
+    </tr>
+  </tbody>
+</table>

@@ -25,6 +25,8 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
   }])
 
-  .controller('KyselypohjaController',
-    function() { }
-  );
+  .controller('KyselypohjaController', ['$scope', 'Kyselypohja', function($scope, Kyselypohja) {
+    Kyselypohja.haeKaikki().success(function(kyselypohjat) {
+      $scope.kyselypohjat = kyselypohjat;
+    });
+  }]);
