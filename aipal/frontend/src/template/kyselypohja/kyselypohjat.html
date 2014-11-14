@@ -19,7 +19,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="kyselypohja in kyselypohjat |filter:hakuehto.teksti">
-      <td>{{kyselypohja |lokalisoiKentta:'nimi'}}</td>
+      <td><a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}">{{kyselypohja |lokalisoiKentta:'nimi'}}</a></td>
       <td><span class="glyphicon glyphicon-ok" ng-show="kyselypohja.voimassa"></span></td>
     </tr>
   </tbody>

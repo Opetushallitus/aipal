@@ -22,7 +22,18 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         controller: 'KyselypohjatController',
         templateUrl: 'template/kyselypohja/kyselypohjat.html',
         label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
-      });
+      })
+      .when('/kyselypohjat/kyselypohja/uusi', {
+        controller: 'KyselypohjaController',
+        templateUrl: 'template/kyselypohja/kyselypohja.html',
+        label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
+      })
+      .when('/kyselypohjat/kyselypohja/:kyselypohjaid', {
+        controller: 'KyselypohjaController',
+        templateUrl: 'template/kyselypohja/kyselypohja.html',
+        label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
+      })
+    ;
   }])
 
   .controller('KyselypohjatController', ['$location', '$scope', 'Kyselypohja', function($location, $scope, Kyselypohja) {
@@ -33,4 +44,8 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     Kyselypohja.haeKaikki().success(function(kyselypohjat) {
       $scope.kyselypohjat = kyselypohjat;
     });
-  }]);
+  }])
+
+  .controller('KyselypohjaController', ['$routeParams', '$scope', 'Kyselypohja', function($routeParams, $scope, Kyselypohja) {
+  }])
+;
