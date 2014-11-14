@@ -108,7 +108,7 @@
 
                         <div>
                             <button ng-show="aktiivinenKysymys.uusi" class="btn btn-primary e2e-lisaa-kysymys" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.kysymysryhma.lisaa_kysymys}}</button>
-                            <button ng-show="!aktiivinenKysymys.uusi" class="btn btn-primary" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.yleiset.tallenna}}</button>
+                            <button ng-show="!aktiivinenKysymys.uusi" class="btn btn-primary e2e-tallenna-kysymys" ng-click="tallenna()" ng-disabled="kysymysForm.$error.required">{{i18n.yleiset.tallenna}}</button>
                             <button ng-click="peruutaKysymysTallennus()" class="btn btn-default">{{i18n.yleiset.peruuta}}</button>
                         </div>
                     </ng-form>
