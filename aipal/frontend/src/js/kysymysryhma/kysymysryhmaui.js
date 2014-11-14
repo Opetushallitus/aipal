@@ -32,7 +32,17 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         templateUrl: 'template/kysymysryhma/kysymysryhma.html',
         label: 'i18n.kysymysryhma.luo_uusi',
         resolve: {
-          uusi: function() { return true; }
+          uusi: function() { return true; },
+          kopioi: function() { return false; }
+        }
+      })
+      .when('/kysymysryhmat/kysymysryhma/:kysymysryhmaid/kopioi', {
+        controller: 'KysymysryhmaController',
+        templateUrl: 'template/kysymysryhma/kysymysryhma.html',
+        label: 'i18n.kysymysryhma.luo_uusi',
+        resolve: {
+          uusi: function() { return true; },
+          kopioi: function() { return true; }
         }
       })
       .when('/kysymysryhmat/kysymysryhma/:kysymysryhmaid', {
@@ -40,7 +50,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         templateUrl: 'template/kysymysryhma/kysymysryhma.html',
         label: 'i18n.kysymysryhma.muokkaa',
         resolve: {
-          uusi: function() { return false; }
+          uusi: function() { return false; },
+          kopioi: function() { return false; }
         }
       });
   }])
@@ -144,8 +155,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
   }])
 
-  .controller('KysymysryhmaController', ['$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi',
-                                             function($routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi) {
+  .controller('KysymysryhmaController', ['$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi', 'kopioi',
+                                             function($routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi, kopioi) {
     $scope.$watch('form', function(form) {
       tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
     });
@@ -155,10 +166,13 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.kysymysryhma = {
       kysymykset: []
     };
-    if (!uusi) {
+    if (kopioi || !uusi) {
       Kysymysryhma.hae($routeParams.kysymysryhmaid)
       .success(function(kysymysryhma) {
         $scope.kysymysryhma = kysymysryhma;
+        if(kopioi) {
+          delete $scope.kysymysryhma.kysymysryhmaid;
+        }
       });
     }
 

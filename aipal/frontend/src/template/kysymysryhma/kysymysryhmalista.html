@@ -20,6 +20,11 @@
           <span class="glyphicon glyphicon-pencil"></span>
         </a>
       </auth>
+      <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="!k.valtakunnallinen">
+        <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}/kopioi" class="e2e-kopioi-kysymysryhma">
+          <span class="glyphicon glyphicon-file"></span>
+        </a>
+      </auth>
       &nbsp;&nbsp;
       <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
         <button class="btn btn-primary btn-sm" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0">

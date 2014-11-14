@@ -34,6 +34,7 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
                 virhe: jasmine.createSpy('virhe')};
     $provide.value('ilmoitus', ilmoitus);
     $provide.value('uusi', true);
+    $provide.value('kopioi', false);
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
@@ -132,7 +133,7 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $scope.poistaTahiPalautaKysymys(kysymys);
     $scope.poistaTahiPalautaKysymys(kysymys);
     $scope.poistaKysymykset();
-    expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar', poistettava: false}]);
+    expect($scope.kysymysryhma.kysymykset).toEqual([{foo: 'bar', poistetaan_kysymysryhmasta: false}]);
   });
 
 });
