@@ -1,0 +1,22 @@
+<h1>Kyselypohja</h1>
+
+<form name="kyselypohjaForm">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="pakollinen">Kyselypohjan nimi suomeksi</label>
+        <input type="text" class="form-control" ng-model="kyselypohja.nimi_fi" ng-required="true"/>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label>Kyselypohjan nimi ruotsiksi</label>
+        <input type="text" class="form-control" ng-model="kyselypohja.nimi_sv">
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary pull-left" ng-disabled="!kyselypohjaForm.$valid" ng-click="tallenna()">
+    {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
+  </button>
+</form>
