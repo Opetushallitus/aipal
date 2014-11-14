@@ -98,6 +98,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           kysymys_sv: '',
           pakollinen: true,
           poistettava: false,
+          poistetaan_kysymysryhmasta: false,
           vastaustyyppi: 'asteikko',
           muokattava: true,
           jatkokysymys: {max_vastaus: 500},
@@ -248,12 +249,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
 
     $scope.poistaTahiPalautaKysymys = function(kysymys) {
-      kysymys.poistettava=!kysymys.poistettava;
+      kysymys.poistetaan_kysymysryhmasta = !kysymys.poistetaan_kysymysryhmasta;
     };
 
     $scope.poistaKysymykset = function(){
-      $scope.kysymysryhma.kysymykset = _.filter($scope.kysymysryhma.kysymykset, function (kysymys) {
-        return !kysymys.poistettava;
-      });
+      $scope.kysymysryhma.kysymykset = _.reject($scope.kysymysryhma.kysymykset, 'poistetaan_kysymysryhmasta');
     };
   }]);
