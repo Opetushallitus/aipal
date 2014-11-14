@@ -85,10 +85,10 @@
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))
     (is (= [true] (map :voimassa (hae-kyselypohjat (:ytunnus koulutustoimija)))))))
 
-(deftest ^:integraatio kyselypohja-on-poistettu
+(deftest ^:integraatio kyselypohja-on-suljettu
   (let [koulutustoimija (lisaa-koulutustoimija!)]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
-                                          :tila "poistettu"
+                                          :tila "suljettu"
                                           :voimassa_alkupvm (time/minus (time/today) (time/days 1))
                                           :voimassa_loppupvm (time/plus (time/today) (time/days 1))
                                           :koulutustoimija (:ytunnus koulutustoimija)}]))

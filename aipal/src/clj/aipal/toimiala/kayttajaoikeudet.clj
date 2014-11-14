@@ -96,7 +96,7 @@
              kyselyid))))
 
 (defn kysely-tilamuutos?
-  "Onko kyselyn tilan muutos (luonnos/julkaistu/poistettu) sallittu."
+  "Onko kyselyn tilan muutos (luonnos/julkaistu/suljettu) sallittu."
   [kyselyid]
   (or (yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-PAAKAYTTAJA"

@@ -58,8 +58,8 @@
                                    (sql/fields :kyselykerta.kaytettavissa)
                                    (sql/where {:kyselykertaid (:kyselykertaid kyselykerta)})))))))))
 
-(deftest ^:integraatio kyselykerran-tilat-kun-kysely-poistettu-test
-  (let [kysely (lisaa-kysely! {:tila "poistettu"})
+(deftest ^:integraatio kyselykerran-tilat-kun-kysely-suljettu-test
+  (let [kysely (lisaa-kysely! {:tila "suljettu"})
         lukittu-kyselykerta (lisaa-kyselykerta! {:lukittu true} kysely)
         kyselykerta (lisaa-kyselykerta! {:lukittu false} kysely)]
     (testing "lukittu kyselykerta ei ole käytettävissä"
@@ -73,8 +73,8 @@
                                    (sql/fields :kyselykerta.kaytettavissa)
                                    (sql/where {:kyselykertaid (:kyselykertaid kyselykerta)})))))))))
 
-(deftest ^:integraatio vastaajatunnus-ei-kaytettavissa-kun-kysely-poistettu-test
-  (let [kysely (lisaa-kysely! {:tila "poistettu"})
+(deftest ^:integraatio vastaajatunnus-ei-kaytettavissa-kun-kysely-suljettu-test
+  (let [kysely (lisaa-kysely! {:tila "suljettu"})
         kyselykerta (lisaa-kyselykerta! {:lukittu false} kysely)
         vastaatunnus (lisaa-vastaajatunnus! {:lukittu false} kyselykerta)]
     (is (not (:kaytettavissa
@@ -135,19 +135,19 @@
 
 (deftest ^:integraatio kyselyn-tilat-test
   (let [luonnos-kysely (lisaa-kysely! {:tila "luonnos"})
-        poistettu-kysely (lisaa-kysely! {:tila "poistettu"})]
+        suljettu-kysely (lisaa-kysely! {:tila "suljettu"})]
     (are [tulos kyselyid] (= tulos (:kaytettavissa (first
                                                      (sql/select :kysely
                                                        (sql/fields :kysely.kaytettavissa)
                                                        (sql/where {:kyselyid kyselyid})))))
          false (:kyselyid luonnos-kysely)
-         false (:kyselyid poistettu-kysely))))
+         false (:kyselyid suljettu-kysely))))
 
 (deftest ^:integraatio kysymysryhma-lisattavissa-test
   (let [koulutustoimija (anna-koulutustoimija!)
         luonnos-kysymysryhma (lisaa-kysymysryhma! {:tila "luonnos"} koulutustoimija)
         julkaistu-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"} koulutustoimija)
-        poistettu-kysymysryhma (lisaa-kysymysryhma! {:tila "poistettu"} koulutustoimija)
+        suljettu-kysymysryhma (lisaa-kysymysryhma! {:tila "suljettu"} koulutustoimija)
         voimassaoleva-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"
                                                          :voimassa_alkupvm (time/minus (time/today) (time/days 1))
                                                          :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
@@ -166,7 +166,7 @@
                                                             (sql/where {:kysymysryhmaid kysymysryhmaid})))))
          false (:kysymysryhmaid luonnos-kysymysryhma)
          true (:kysymysryhmaid julkaistu-kysymysryhma)
-         false (:kysymysryhmaid poistettu-kysymysryhma)
+         false (:kysymysryhmaid suljettu-kysymysryhma)
          true (:kysymysryhmaid voimassaoleva-kysymysryhma)
          false (:kysymysryhmaid voimaantuleva-kysymysryhma)
          false (:kysymysryhmaid vanhentunut-kysymysryhma))))
@@ -175,7 +175,7 @@
   (let [koulutustoimija (anna-koulutustoimija!)
         luonnos-kyselypohja (lisaa-kyselypohja! {:tila "luonnos"} koulutustoimija)
         julkaistu-kyselypohja (lisaa-kyselypohja! {:tila "julkaistu"} koulutustoimija)
-        poistettu-kyselypohja (lisaa-kyselypohja! {:tila "poistettu"} koulutustoimija)
+        suljettu-kyselypohja (lisaa-kyselypohja! {:tila "suljettu"} koulutustoimija)
         voimassaoleva-kyselypohja (lisaa-kyselypohja! {:tila "julkaistu"
                                                        :voimassa_alkupvm (time/minus (time/today) (time/days 1))
                                                        :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
@@ -194,7 +194,7 @@
                                                             (sql/where {:kyselypohjaid kyselypohjaid})))))
          false (:kyselypohjaid luonnos-kyselypohja)
          true (:kyselypohjaid julkaistu-kyselypohja)
-         false (:kyselypohjaid poistettu-kyselypohja)
+         false (:kyselypohjaid suljettu-kyselypohja)
          true (:kyselypohjaid voimassaoleva-kyselypohja)
          false (:kyselypohjaid voimaantuleva-kyselypohja)
          false (:kyselypohjaid vanhentunut-kyselypohja))))
