@@ -11,6 +11,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // European Union Public Licence for more details.
+'use strict';
 
 angular.module('yhteiset.direktiivit.ohjeet', [])
 
@@ -40,11 +41,11 @@ angular.module('yhteiset.direktiivit.ohjeet', [])
         scope.ohje = {};
         scope.nayta = false;
         scope.muokkaus = false;
-        scope.ohjeteksti = "";
+        scope.ohjeteksti = '';
         scope.i18n = i18n;
 
         scope.naytaOhje = function(){
-          naytaOhje()
+          naytaOhje();
         };
         scope.piilotaOhje = function(){
           scope.nayta = false;
