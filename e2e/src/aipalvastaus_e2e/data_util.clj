@@ -20,7 +20,7 @@
             [aipal-e2e.arkisto.vastaus :as vastaus-arkisto]
             [aipal-e2e.arkisto.sql.korma :refer :all]))
 
-(defn poista-vastaajat-ja-vastaukset-vastaustunnukselta! [tunnus]
+(defn poista-vastaajat-ja-vastaukset-vastaustunnukselta*! [tunnus]
   (let [vastaajatunnusid (:vastaajatunnusid
                            (vastaajatunnus-arkisto/hae-vastaajatunnus tunnus))
         vastaajat (vastaaja-arkisto/hae-vastaajat-vastaajatunnukselle vastaajatunnusid)]

@@ -29,5 +29,5 @@
  (re-find #"[a-zA-Z0-9]*$" url))
 
 (defn poista-vastaajat-ja-vastaukset-vastaustunnukselta! [vastaustunnus-url]
-  (data-util/poista-vastaajat-ja-vastaukset-vastaustunnukselta!
+  (data-util/poista-vastaajat-ja-vastaukset-vastaustunnukselta*!
     (vastaajatunnus-url->tunnus vastaustunnus-url)))

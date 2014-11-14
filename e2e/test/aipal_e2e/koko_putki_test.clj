@@ -18,7 +18,7 @@
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
-            [aipalvastaus-e2e.data-util :refer [poista-vastaajat-ja-vastaukset-vastaustunnukselta!]]
+            [aipalvastaus-e2e.util :as aipalvastaus]
             [aitu-e2e.util :refer :all]))
 
 (def kyselyt-sivu "/#/kyselyt")
@@ -83,11 +83,14 @@
 
       ;; vastaa kyselyyn
       (let [vastaajatunnus-url (w/text (w/find-element {:css ".e2e-vastaajatunnus-url"}))]
-        (w/to vastaajatunnus-url)
+        (w/wait-until (fn []
+                        (w/to vastaajatunnus-url)
+                        (.contains (sivun-sisalto) "UUSI KYSELY")) 10000 500)
+
         (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
         (w/click {:css ".e2e-tallenna-vastaukset"})
 
         (is (.contains (sivun-sisalto) "Kiitos vastauksestanne"))
 
-        (poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))
+        (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))
 
