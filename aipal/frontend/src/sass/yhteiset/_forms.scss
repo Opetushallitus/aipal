@@ -17,8 +17,10 @@ label {
 
   & ~ p, & ~ input, & ~ a {display: block;}
 
-  &.pakollinen:after {
-    content : " (*)";
+  &.pakollinen {
+    span:after {
+        content : " *";
+    }
   }
 }
 
