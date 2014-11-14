@@ -27,7 +27,7 @@ angular.module('yhteiset.direktiivit.ohjeet', [])
     });
   }])
 
-  .directive('ohje', ['ohjeetResource', '$timeout', '$filter', function(ohjeetResource, $timeout, $filter) {
+  .directive('ohje', ['ohjeetResource', '$timeout', '$filter', 'i18n', function(ohjeetResource, $timeout, $filter, i18n) {
     return {
       restrict: 'E',
       scope : {
@@ -41,6 +41,7 @@ angular.module('yhteiset.direktiivit.ohjeet', [])
         scope.nayta = false;
         scope.muokkaus = false;
         scope.ohjeteksti = "";
+        scope.i18n = i18n;
 
         scope.naytaOhje = function(){
           naytaOhje()
