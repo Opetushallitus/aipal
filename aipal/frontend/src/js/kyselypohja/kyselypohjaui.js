@@ -20,7 +20,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     $routeProvider
       .when('/kyselypohjat', {
         controller: 'KyselypohjaController',
-        templateUrl: 'template/kyselypohja/kyselypohja.html',
+        templateUrl: 'template/kyselypohja/kyselypohjat.html',
         label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
       });
   }])
