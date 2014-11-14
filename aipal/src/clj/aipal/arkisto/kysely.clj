@@ -145,7 +145,6 @@
   (sql/insert taulut/kysely_kysymysryhma
     (sql/values {:kyselyid kyselyid
                  :kysymysryhmaid (:kysymysryhmaid ryhma)
-                 :kyselypohjaid (:kyselypohjaid ryhma)
                  :jarjestys (:jarjestys ryhma)})))
 
 (defn lisaa-kysymys!

@@ -1,0 +1,1 @@
+alter table kysely_kysymysryhma drop column kyselypohjaid;
