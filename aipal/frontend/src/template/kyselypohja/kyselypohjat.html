@@ -1,5 +1,15 @@
 <h1>{{i18n.kyselypohja.breadcrumb_kyselypohja}} <ohje tunniste="kyselypohjat"></ohje></h1>
 
+<fieldset class="luo-uusi-kysely">
+  <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="{{i18n.kyselypohja.etsi}}">
+  <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+    <button class="btn btn-primary pull-right" ng-click="luoUusiKyselypohja()">
+      {{ 'kyselypohja.luo_uusi' | i18n }}&nbsp;
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
+  </auth>
+</fieldset>
+
 <table class="table table-striped">
   <thead>
   <tr>
@@ -8,7 +18,7 @@
   </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="kyselypohja in kyselypohjat">
+    <tr ng-repeat="kyselypohja in kyselypohjat |filter:hakuehto.teksti">
       <td>{{kyselypohja |lokalisoiKentta:'nimi'}}</td>
       <td><span class="glyphicon glyphicon-ok" ng-show="kyselypohja.voimassa"></span></td>
     </tr>
