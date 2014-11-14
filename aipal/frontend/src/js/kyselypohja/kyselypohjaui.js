@@ -19,13 +19,13 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/kyselypohjat', {
-        controller: 'KyselypohjaController',
+        controller: 'KyselypohjatController',
         templateUrl: 'template/kyselypohja/kyselypohjat.html',
         label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
       });
   }])
 
-  .controller('KyselypohjaController', ['$location', '$scope', 'Kyselypohja', function($location, $scope, Kyselypohja) {
+  .controller('KyselypohjatController', ['$location', '$scope', 'Kyselypohja', function($location, $scope, Kyselypohja) {
     $scope.luoUusiKyselypohja = function() {
       $location.url('/kyselypohjat/kyselypohja/uusi');
     };
