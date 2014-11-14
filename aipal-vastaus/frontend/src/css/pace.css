@@ -1,0 +1,66 @@
+.pace {
+    -webkit-pointer-events: none;
+    pointer-events: none;
+
+    z-index: 2000;
+    position: fixed;
+    height: 5em;
+    width: 5em;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.pace.pace-inactive .pace-activity {
+    opacity: 0;
+    transition: all .5s ease-in-out;
+}
+
+.pace .pace-activity {
+    transition: all .5s ease-in-out;
+    opacity: 1;
+    position: fixed;
+    z-index: 2000;
+    display: block;
+    position: absolute;
+    left: -30px;
+    top: -30px;
+    height: 100px;
+    width: 100px;
+    display: block;
+    border-width: 17px;
+    border-style: dashed;
+    border-color: #e600b6;
+    border-radius: 50%;
+
+    -webkit-animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    -o-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(359deg);
+    }
+}
+
+@-moz-keyframes spin {
+    100% {
+        -moz-transform: rotate(359deg);
+    }
+}
+
+@-o-keyframes spin {
+    100% {
+        -moz-transform: rotate(359deg);
+    }
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(359deg);
+    }
+}
