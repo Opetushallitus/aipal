@@ -24,8 +24,8 @@ angular.module('rest.kyselypohja', [])
         return $http.get('api/kyselypohja', {params: {nocache: Date.now(),
                                                       voimassa: 'true'}});
       },
-      hae: function(id) {
-        return $http.get('api/kyselypohja/' + id, {params: {nocache: Date.now()}});
+      haeKysymysryhmat: function(id) {
+        return $http.get('api/kyselypohja/' + id + "/kysymysryhmat", {params: {nocache: Date.now()}});
       }
     };
   }]);
