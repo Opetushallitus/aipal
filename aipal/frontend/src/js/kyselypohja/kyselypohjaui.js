@@ -47,5 +47,10 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
   }])
 
   .controller('KyselypohjaController', ['$routeParams', '$scope', 'Kyselypohja', function($routeParams, $scope, Kyselypohja) {
+    if ($routeParams.kyselypohjaid) {
+      Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
+        $scope.kyselypohja = kyselypohja;
+      });
+    }
   }])
 ;
