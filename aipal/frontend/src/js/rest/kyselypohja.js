@@ -27,6 +27,9 @@ angular.module('rest.kyselypohja', [])
       hae: function(id) {
         return $http.get('api/kyselypohja/' + id, {params: {nocache: Date.now()}});
       },
+      luoUusi: function(kyselypohja) {
+        return $http.post('api/kyselypohja', kyselypohja);
+      },
       muokkaa: function(kyselypohja) {
         return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid, kyselypohja);
       },
