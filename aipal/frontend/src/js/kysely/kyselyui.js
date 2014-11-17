@@ -30,12 +30,26 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       .when('/kyselyt/kysely/uusi', {
         controller: 'KyselyController',
         templateUrl: 'template/kysely/kysely.html',
-        label: 'i18n.kysely.breadcrumb_uusi_kysely'
+        label: 'i18n.kysely.breadcrumb_uusi_kysely',
+        resolve: {
+          kopioi: function() { return false; }
+        }
       })
       .when('/kyselyt/kysely/:kyselyid', {
         controller: 'KyselyController',
         templateUrl: 'template/kysely/kysely.html',
-        label: 'i18n.kysely.breadcrumb_muokkaa_kyselya'
+        label: 'i18n.kysely.breadcrumb_muokkaa_kyselya',
+        resolve: {
+          kopioi: function() { return false; }
+        }
+      })
+      .when('/kyselyt/kysely/:kyselyid/kopioi', {
+        controller: 'KyselyController',
+        templateUrl: 'template/kysely/kysely.html',
+        label: 'i18n.kysely.breadcrumb_kopioi_kysely',
+        resolve: {
+          kopioi: function() { return true; }
+        }
       });
   }])
 
@@ -91,9 +105,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta',
-    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta) {
-      var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta', 'kopioi',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta, kopioi) {
+      var tallennusFn;
       $scope.$watch('kyselyForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
@@ -103,6 +117,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         Kysely.haeId($routeParams.kyselyid)
           .success(function(kysely) {
             $scope.kysely = kysely;
+            if(kopioi) {
+              tallennusFn = Kysely.luoUusi;
+              $scope.kysely.tila = 'luonnos';
+              delete $scope.kysely.kyselyid;
+            } else {
+              tallennusFn = Kysely.tallenna;
+            }
           })
           .error(function() {
             ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
@@ -113,6 +134,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           kysymysryhmat: [],
           voimassa_alkupvm: new Date().toISOString().slice(0, 10)
         };
+        tallennusFn = Kysely.luoUusi;
       }
 
       $scope.tallenna = function () {

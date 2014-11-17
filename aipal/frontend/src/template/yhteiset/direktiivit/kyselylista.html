@@ -42,6 +42,12 @@
                   <span class="glyphicon glyphicon-ok"></span>
                 </button>
               </auth>
+              <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+                <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}/kopioi" class="btn btn-primary pull-left">
+                    {{ 'kysely.kopioi' | i18n }}&nbsp;
+                    <span class="glyphicon glyphicon-file"></span>
+                </a>
+              </auth>
           </div>
 
           <div class="kyselykerrat" ng-if="kysely.tila !== 'luonnos'">

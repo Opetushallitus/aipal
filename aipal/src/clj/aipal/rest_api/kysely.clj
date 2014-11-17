@@ -58,8 +58,8 @@
       (json-response
         (let [{:keys [kyselyid]}
               (arkisto/lisaa! (-> kysely
-                                (assoc :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))
-                                (dissoc :kysymysryhmat)))]
+                                (select-keys [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila])
+                                (assoc :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))))]
           (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
