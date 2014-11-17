@@ -46,12 +46,15 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     });
   }])
 
-  .controller('KyselypohjaController', ['$location', '$routeParams', '$scope', 'Kyselypohja', function($location, $routeParams, $scope, Kyselypohja) {
+  .controller('KyselypohjaController', ['$location', '$routeParams', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', function($location, $routeParams, $scope, Kyselypohja, i18n, ilmoitus) {
     $scope.tallenna = function() {
       if ($routeParams.kyselypohjaid) {
-        Kyselypohja.muokkaa($scope.kyselypohja);
+        Kyselypohja.muokkaa($scope.kyselypohja).success(function(kyselypohja) {
+          ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
+        });
       } else {
         Kyselypohja.luoUusi($scope.kyselypohja).success(function(kyselypohja) {
+          ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
           $location.url('/kyselypohjat/kyselypohja/' + kyselypohja.kyselypohjaid);
         });
       }
