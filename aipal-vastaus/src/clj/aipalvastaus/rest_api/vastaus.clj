@@ -92,10 +92,10 @@
 (defn validoi-ja-tallenna-vastaukset
   [vastaajaid vastaukset kysymykset]
   (when (some-> vastaukset
-    (validoi-vastaukset kysymykset)
-    (tallenna-vastaukset! vastaajaid kysymykset))
+          (validoi-vastaukset kysymykset)
+          (tallenna-vastaukset! vastaajaid kysymykset))
     (vastaaja/paivata-vastaaja! vastaajaid)
-  true))
+    true))
 
 (c/defroutes reitit
   (c/POST "/:vastaajatunnus" [vastaajatunnus vastaukset]
