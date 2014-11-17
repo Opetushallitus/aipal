@@ -38,16 +38,18 @@
     (sql/select taulut/kyselypohja
       (sql/where {:kyselypohjaid kyselypohjaid}))))
 
+(def muokattavat-kentat [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm])
+
 (defn tallenna-kyselypohja
   [kyselypohjaid kyselypohja]
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
-    (sql/set-fields (select-keys kyselypohja [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm]))))
+    (sql/set-fields (select-keys kyselypohja muokattavat-kentat))))
 
 (defn luo-kyselypohja
   [kyselypohja]
   (sql/insert taulut/kyselypohja
-    (sql/values (select-keys kyselypohja [:koulutustoimija :nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm]))))
+    (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija)))))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]
