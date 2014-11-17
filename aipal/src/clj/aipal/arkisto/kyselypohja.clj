@@ -37,6 +37,12 @@
     (sql/select :kyselypohja
       (sql/where {:kyselypohjaid kyselypohjaid}))))
 
+(defn tallenna-kyselypohja
+  [kyselypohjaid kyselypohja]
+  (sql/update :kyselypohja
+    (sql/where {:kyselypohjaid kyselypohjaid})
+    (sql/set-fields (select-keys kyselypohja [:nimi_fi :nimi_sv :selite_fi :selite_sv]))))
+
 (defn hae-organisaatiotieto
   [kyselypohjaid]
   (first

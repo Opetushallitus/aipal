@@ -28,5 +28,8 @@
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid" [kyselypohjaid]
     (json-response (arkisto/hae-kyselypohja (Integer/parseInt kyselypohjaid))))
 
+  (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid" [kyselypohjaid & kyselypohja]
+    (json-response (arkisto/tallenna-kyselypohja (Integer/parseInt kyselypohjaid) kyselypohja)))
+
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid/kysymysryhmat" [kyselypohjaid]
     (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))
