@@ -16,6 +16,7 @@
   (:require [compojure.core :as c]
             [korma.db :as db]
             [schema.core :as schema]
+            [clojure.tools.logging :as log]
             [oph.common.util.http-util :refer [json-response-nocache]]
             [aipalvastaus.sql.vastaus :as arkisto]
             [aipalvastaus.sql.kyselykerta :as kysely-arkisto]
@@ -54,13 +55,14 @@
 
 (defn validoi-vastaukset
   [vastaukset kysymykset]
-  (when (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
-                        (for [vastaus vastaukset
-                              :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
-                          (when (and kysymys
-                                     (jatkovastaus-validi? vastaus kysymys))
-                            true))))
-    vastaukset))
+  (if (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
+                      (for [vastaus vastaukset
+                            :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
+                        (when (and kysymys
+                                   (jatkovastaus-validi? vastaus kysymys))
+                          true))))
+    vastaukset
+    (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia.")))
 
 (defn tallenna-jatkovastaus!
   [vastaus]
@@ -84,15 +86,16 @@
                             :numerovalinta (when (#{"monivalinta" "asteikko"} vastaustyyppi) arvo)
                             :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
                             :vaihtoehto (when (= "kylla_ei_valinta" vastaustyyppi) arvo)})))
+    (log/info (str "Vastaukset (" vastaajaid  ") tallennettu onnistuneesti."))
     true))
 
 (defn validoi-ja-tallenna-vastaukset
   [vastaajaid vastaukset kysymykset]
   (when (some-> vastaukset
-          (validoi-vastaukset kysymykset)
-          (tallenna-vastaukset! vastaajaid kysymykset))
+    (validoi-vastaukset kysymykset)
+    (tallenna-vastaukset! vastaajaid kysymykset))
     (vastaaja/paivata-vastaaja! vastaajaid)
-    true))
+  true))
 
 (c/defroutes reitit
   (c/POST "/:vastaajatunnus" [vastaajatunnus vastaukset]
@@ -103,5 +106,6 @@
                  (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus)))
           (json-response-nocache "OK")
           (do
+            (log/error (str "Vastausten (" vastaajatunnus ") tallentaminen epäonnistui."))
             (db/rollback)
             {:status 403}))))))

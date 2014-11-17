@@ -31,6 +31,7 @@
             [aitu.infra.print-wrapper :refer [log-request-wrapper]]
             [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
+            [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [stencil.core :as s]
             [aipalvastaus.rest-api.i18n]
             aipalvastaus.sql.korma
@@ -77,7 +78,8 @@
                                    wrap-params
                                    wrap-content-type
                                    (wrap-frame-options :deny)
-                                   log-request-wrapper)
+                                   log-request-wrapper
+                                   wrap-poikkeusten-logitus)
                                  {:port portti})
           _ (log/info "Palvelin käynnistetty")]
       {:sammuta sammuta})
