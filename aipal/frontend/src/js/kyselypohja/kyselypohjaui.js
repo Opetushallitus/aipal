@@ -71,6 +71,10 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
         $scope.kyselypohja = kyselypohja;
       });
+    } else {
+      $scope.kyselypohja = {
+        voimassa_alkupvm: new Date().toISOString().slice(0, 10)
+      };
     }
   }])
 ;
