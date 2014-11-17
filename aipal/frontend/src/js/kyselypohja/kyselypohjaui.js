@@ -61,6 +61,9 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         });
       }
     };
+    $scope.peruuta = function() {
+      $location.url('/kyselypohjat');
+    };
 
     $scope.$watch('kyselypohjaForm', function(form) {
       // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
