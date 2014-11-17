@@ -14,7 +14,8 @@
 
 (ns aipal.arkisto.kyselypohja
   (:import java.sql.Date)
-  (:require [korma.core :as sql]))
+  (:require [korma.core :as sql]
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kyselypohjat
   ([organisaatio vain-voimassaolevat]
@@ -39,14 +40,14 @@
 
 (defn tallenna-kyselypohja
   [kyselypohjaid kyselypohja]
-  (sql/update :kyselypohja
+  (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
-    (sql/set-fields (select-keys kyselypohja [:nimi_fi :nimi_sv :selite_fi :selite_sv]))))
+    (sql/set-fields (select-keys kyselypohja [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm]))))
 
 (defn luo-kyselypohja
   [kyselypohja]
-  (sql/insert :kyselypohja
-    (sql/values (select-keys kyselypohja [:koulutustoimija :nimi_fi :nimi_sv :selite_fi :selite_sv]))))
+  (sql/insert taulut/kyselypohja
+    (sql/values (select-keys kyselypohja [:koulutustoimija :nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm]))))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]
