@@ -31,5 +31,8 @@
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid" [kyselypohjaid & kyselypohja]
     (json-response (arkisto/tallenna-kyselypohja (Integer/parseInt kyselypohjaid) kyselypohja)))
 
+  (cu/defapi :kyselypohja-luonti nil :post "/" [& kyselypohja]
+    (json-response (arkisto/luo-kyselypohja (assoc kyselypohja :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)))))
+
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid/kysymysryhmat" [kyselypohjaid]
     (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))

@@ -152,6 +152,10 @@
           "OPL-VASTUUKAYTTAJA"}
         kyselypohjaid)))
 
+(defn kyselypohja-luonti? []
+  (or (yllapitaja?)
+      (paakayttaja-tai-vastuukayttaja?)))
+
 (defn kyselypohja-listaaminen? []
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
@@ -193,6 +197,7 @@
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?
     :kyselypohja-muokkaus kyselypohja-muokkaus?
+    :kyselypohja-luonti kyselypohja-luonti?
     :impersonointi yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?

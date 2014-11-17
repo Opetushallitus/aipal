@@ -43,6 +43,11 @@
     (sql/where {:kyselypohjaid kyselypohjaid})
     (sql/set-fields (select-keys kyselypohja [:nimi_fi :nimi_sv :selite_fi :selite_sv]))))
 
+(defn luo-kyselypohja
+  [kyselypohja]
+  (sql/insert :kyselypohja
+    (sql/values (select-keys kyselypohja [:koulutustoimija :nimi_fi :nimi_sv :selite_fi :selite_sv]))))
+
 (defn hae-organisaatiotieto
   [kyselypohjaid]
   (first
