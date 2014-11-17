@@ -32,6 +32,7 @@ describe('kysely.kyselyui.KyselyController', function(){
     $location = {path: jasmine.createSpy('path')};
     $provide.value('$location', $location);
     $provide.value('i18n', {hae: function(){return '';}});
+    $provide.value('kopioi', false);
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$modal_, _$q_){
