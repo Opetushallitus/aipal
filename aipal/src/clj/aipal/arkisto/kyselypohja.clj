@@ -35,7 +35,7 @@
 (defn hae-kyselypohja
   [kyselypohjaid]
   (first
-    (sql/select :kyselypohja
+    (sql/select taulut/kyselypohja
       (sql/where {:kyselypohjaid kyselypohjaid}))))
 
 (defn tallenna-kyselypohja
