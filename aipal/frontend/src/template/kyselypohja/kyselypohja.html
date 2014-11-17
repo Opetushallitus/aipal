@@ -15,6 +15,43 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label>Kyselypohjan kuvaus suomeksi</label>
+        <input type="text" class="form-control" ng-model="kyselypohja.selite_fi">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label>Kyselypohjan kuvaus ruotsiksi</label>
+        <input type="text" class="form-control" ng-model="kyselypohja.selite_sv">
+      </div>
+    </div>
+  </div>
+
+  <h3>{{i18n.yleiset.voimassa}}</h3>
+
+  <pvm-valitsin
+          otsikko="{{i18n.yleiset.alkaen}}"
+          oletus-pvm="kyselypohja.voimassa_alkupvm"
+          valittu-pvm="kyselypohja.voimassa_alkupvm"
+          min-pvm="'2000-01-01'"
+          max-pvm="kyselypohja.voimassa_loppupvm"
+          ng-model="kyselypohja.voimassa_alkupvm"
+          pakollinen="true">
+  </pvm-valitsin>
+  <pvm-valitsin
+          otsikko="{{i18n.yleiset.asti}}"
+          oletus-pvm="kyselypohja.voimassa_loppupvm"
+          valittu-pvm="kyselypohja.voimassa_loppupvm"
+          min-pvm="kyselypohja.voimassa_alkupvm"
+          max-pvm="'2099-12-31'"
+          ng-model="kyselypohja.voimassa_loppupvm"
+          pakollinen="false">
+  </pvm-valitsin>
+
+  <div class="row"><br /></div>
 
   <button class="btn btn-primary pull-left" ng-disabled="!kyselypohjaForm.$valid" ng-click="tallenna()">
     {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
