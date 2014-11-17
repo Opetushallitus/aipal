@@ -26,12 +26,12 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       .when('/kyselypohjat/kyselypohja/uusi', {
         controller: 'KyselypohjaController',
         templateUrl: 'template/kyselypohja/kyselypohja.html',
-        label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
+        label: 'i18n.kyselypohja.breadcrumb_uusi_kyselypohja'
       })
       .when('/kyselypohjat/kyselypohja/:kyselypohjaid', {
         controller: 'KyselypohjaController',
         templateUrl: 'template/kyselypohja/kyselypohja.html',
-        label: 'i18n.kyselypohja.breadcrumb_kyselypohja'
+        label: 'i18n.kyselypohja.breadcrumb_muokkaa_kyselypohjaa'
       })
     ;
   }])
