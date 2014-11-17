@@ -25,5 +25,8 @@
   (cu/defapi :kyselypohja-listaaminen nil :get "/" [voimassa]
     (json-response (arkisto/hae-kyselypohjat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
 
+  (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid" [kyselypohjaid]
+    (json-response (arkisto/hae-kyselypohja (Integer/parseInt kyselypohjaid))))
+
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid/kysymysryhmat" [kyselypohjaid]
     (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))

@@ -31,6 +31,12 @@
   ([organisaatio]
     (hae-kyselypohjat organisaatio false)))
 
+(defn hae-kyselypohja
+  [kyselypohjaid]
+  (first
+    (sql/select :kyselypohja
+      (sql/where {:kyselypohjaid kyselypohjaid}))))
+
 (defn hae-organisaatiotieto
   [kyselypohjaid]
   (first
