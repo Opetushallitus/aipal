@@ -46,19 +46,26 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     });
   }])
 
-  .controller('KyselypohjaController', ['$location', '$routeParams', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', function($location, $routeParams, $scope, Kyselypohja, i18n, ilmoitus) {
+  .controller('KyselypohjaController', ['$location', '$routeParams', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'tallennusMuistutus', function($location, $routeParams, $scope, Kyselypohja, i18n, ilmoitus, tallennusMuistutus) {
     $scope.tallenna = function() {
       if ($routeParams.kyselypohjaid) {
         Kyselypohja.muokkaa($scope.kyselypohja).success(function(kyselypohja) {
+          $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
         });
       } else {
         Kyselypohja.luoUusi($scope.kyselypohja).success(function(kyselypohja) {
+          $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
           $location.url('/kyselypohjat/kyselypohja/' + kyselypohja.kyselypohjaid);
         });
       }
     };
+
+    $scope.$watch('kyselypohjaForm', function(form) {
+      // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
+      tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
+    });
 
     if ($routeParams.kyselypohjaid) {
       Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
