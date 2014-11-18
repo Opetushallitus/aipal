@@ -137,7 +137,16 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         tallennusFn = Kysely.luoUusi;
       }
 
+      $scope.poistaTaiPalautaKysymysryhma = function(kysymysryhma) {
+        kysymysryhma.poistetaan_kyselysta = !kysymysryhma.poistetaan_kyselysta;
+      };
+
+      function poistaKysymysryhmat() {
+        $scope.kysely.kysymysryhmat = _.reject($scope.kysely.kysymysryhmat, 'poistetaan_kyselysta');
+      }
+
       $scope.tallenna = function () {
+        poistaKysymysryhmat();
         seuranta.asetaLatausIndikaattori(tallennusFn($scope.kysely), 'kyselynTallennus')
         .success(function () {
           $scope.kyselyForm.$setPristine();
