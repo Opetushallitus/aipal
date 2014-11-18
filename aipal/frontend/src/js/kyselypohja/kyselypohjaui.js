@@ -52,12 +52,13 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         Kyselypohja.muokkaa($scope.kyselypohja).success(function() {
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
+          $location.url('/kyselypohjat');
         });
       } else {
-        Kyselypohja.luoUusi($scope.kyselypohja).success(function(kyselypohja) {
+        Kyselypohja.luoUusi($scope.kyselypohja).success(function() {
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
-          $location.url('/kyselypohjat/kyselypohja/' + kyselypohja.kyselypohjaid);
+          $location.url('/kyselypohjat');
         });
       }
     };
