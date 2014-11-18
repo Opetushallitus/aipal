@@ -93,6 +93,10 @@
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
+(defn wrap-expires [handler]
+  (fn [request]
+    (assoc-in (handler request) [:headers "Expires"] "-1")))
+
 (defn app
   "Ring-wrapperit ja compojure-reitit ilman HTTP-palvelinta"
   [asetukset]
@@ -109,6 +113,7 @@
       (auth-removeticket asetukset)
       wrap-params
       wrap-content-type
+      wrap-expires
 
       wrap-kayttaja
       log-request-wrapper
