@@ -46,7 +46,22 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     });
   }])
 
-  .controller('KyselypohjaController', ['$location', '$routeParams', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'tallennusMuistutus', function($location, $routeParams, $scope, Kyselypohja, i18n, ilmoitus, tallennusMuistutus) {
+  .controller('KyselypohjaController', ['$location', '$modal', '$routeParams', '$scope', 'Kyselypohja', 'Kysymysryhma', 'i18n', 'ilmoitus', 'tallennusMuistutus', function($location, $modal, $routeParams, $scope, Kyselypohja, Kysymysryhma, i18n, ilmoitus, tallennusMuistutus) {
+    $scope.lisaaKysymysryhmaModal = function() {
+      var modalInstance = $modal.open({
+        templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
+        controller: 'LisaaKysymysryhmaModalController'
+      });
+      modalInstance.result.then(function (kysymysryhmaid) {
+        Kysymysryhma.hae(kysymysryhmaid)
+          .success(function(kysymysryhma) {
+            _.assign($scope.kyselypohja, { kysymysryhmat: _($scope.kyselypohja.kysymysryhmat.concat(kysymysryhma)).uniq('kysymysryhmaid').value() });
+
+            $scope.kyselypohjaForm.$setDirty();
+          });
+      });
+    };
+
     $scope.tallenna = function() {
       if ($routeParams.kyselypohjaid) {
         Kyselypohja.muokkaa($scope.kyselypohja).success(function() {
@@ -78,9 +93,13 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     if ($routeParams.kyselypohjaid) {
       Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
         $scope.kyselypohja = kyselypohja;
+        Kyselypohja.haeKysymysryhmat($routeParams.kyselypohjaid).success(function(kysymysryhmat) {
+          $scope.kyselypohja.kysymysryhmat = kysymysryhmat;
+        });
       });
     } else {
       $scope.kyselypohja = {
+        kysymysryhmat: [],
         voimassa_alkupvm: new Date().toISOString().slice(0, 10)
       };
     }

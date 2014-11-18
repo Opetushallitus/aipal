@@ -59,6 +59,26 @@
 
   <div class="row"><br /></div>
 
+  <div>
+    <button class="btn btn-primary" ng-click="lisaaKysymysryhmaModal()">
+      {{i18n.kysely.lisaa_kysymysryhma}}&nbsp;
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
+  </div>
+
+  <accordion close-others="true">
+    <accordion-group ng-repeat="kysymysryhma in kyselypohja.kysymysryhmat" is-open="group.open">
+      <accordion-heading>
+        {{kysymysryhma | lokalisoiKentta:'nimi' }} <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': group.open, 'glyphicon-chevron-right': !group.open}"></i>
+      </accordion-heading>
+      <ol class="kysymykset">
+        <li ng-repeat="kysymys in kysymysryhma.kysymykset">
+          <span ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}}</span>&nbsp;
+        </li>
+      </ol>
+    </accordion-group>
+  </accordion>
+
   <button class="btn btn-primary pull-left" ng-disabled="!kyselypohjaForm.$valid" ng-click="tallenna()">
     {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
   </button>
