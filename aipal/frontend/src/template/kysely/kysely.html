@@ -4,24 +4,28 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label ng-class="{pakollinen: !kysely.nimi_sv}" for="kyselyn_nimi"><span>{{i18n.kysely.nimi_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</span></label>
-                <input type="text" class="form-control" ng-model="kysely.nimi_fi" id="kyselyn_nimi" ng-required="!kysely.nimi_sv"/>
+                <label ng-class="{pakollinen: !kysely.nimi_sv}"><span>{{i18n.kysely.nimi_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</span>
+                    <input type="text" class="form-control" ng-model="kysely.nimi_fi" ng-required="!kysely.nimi_sv"/>
+                </label>
             </div>
 
             <div class="form-group">
-                <label for="kyselyn_kuvaus">{{i18n.kysely.kuvaus_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
-                <textarea type="text" class="form-control" ng-model="kysely.selite_fi" id="kyselyn_kuvaus" rows="5" cols="80"></textarea>
+                <label>{{i18n.kysely.kuvaus_suomeksi}} ({{i18n.kysely.nakyy_vastaajalle}})
+                    <textarea type="text" class="form-control" ng-model="kysely.selite_fi" rows="5" cols="80"></textarea>
+                </label>
             </div>
         </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label ng-class="{pakollinen: !kysely.nimi_fi}" for="kyselyn_nimi_sv"><span>{{i18n.kysely.nimi_ruotsiksi}} ({{i18n.kysely.nakyy_vastaajalle}})</span></label>
-          <input type="text" class="form-control" ng-model="kysely.nimi_sv" id="kyselyn_nimi_sv" ng-required="!kysely.nimi_fi"/>
+          <label ng-class="{pakollinen: !kysely.nimi_fi}"><span>{{i18n.kysely.nimi_ruotsiksi}} ({{i18n.kysely.nakyy_vastaajalle}})</span>
+            <input type="text" class="form-control" ng-model="kysely.nimi_sv" ng-required="!kysely.nimi_fi"/>
+          </label>
         </div>
 
         <div class="form-group">
-          <label for="kyselyn_kuvaus_sv">{{i18n.kysely.kuvaus_ruotsiksi}} ({{i18n.kysely.nakyy_vastaajalle}})</label>
-          <textarea type="text" class="form-control" ng-model="kysely.selite_sv" id="kyselyn_kuvaus_sv" rows="5" cols="80"></textarea>
+          <label>{{i18n.kysely.kuvaus_ruotsiksi}} ({{i18n.kysely.nakyy_vastaajalle}})
+            <textarea type="text" class="form-control" ng-model="kysely.selite_sv" rows="5" cols="80"></textarea>
+          </label>
         </div>
       </div>
     </div>
