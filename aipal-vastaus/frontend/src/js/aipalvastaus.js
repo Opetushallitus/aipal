@@ -20,7 +20,8 @@ angular.module('aipalvastaus', [
     'yhteiset.direktiivit.copyright',
     'yhteiset.palvelut.i18n',
     'yhteiset.palvelut.lokalisointi',
-    'ngRoute'
+    'ngRoute',
+    'ngPostMessage'
   ])
 
   .controller('AipalvastausController', ['$scope', '$window', 'i18n', function($scope, $window, i18n){

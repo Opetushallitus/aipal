@@ -105,9 +105,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta', 'kopioi',
-    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta, kopioi) {
-      var tallennusFn;
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta', '$timeout', 'kopioi',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta, $timeout, kopioi) {
+      var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
       $scope.$watch('kyselyForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
@@ -187,6 +187,28 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         });
       };
 
+      $scope.esikatseleModal = function() {
+
+        /* Send 'kysely' to Aipalvastaus via PostMessage */
+        window.doneLoading = function(){
+          $timeout(function () {
+            var iframe = document.getElementById('previewiframe').contentWindow;
+            iframe.postMessage('connect', '*');
+            var message = JSON.stringify({message: $scope.kysely});
+            iframe.postMessage(message, '*');
+          }, 1000);
+        };
+
+        $modal.open({
+          templateUrl: 'template/kysely/esikatsele.html',
+          controller: 'AvaaEsikatseluModalController',
+          windowClass: 'preview-modal-window',
+          resolve: {vastausBaseUrl: function(){
+            return $scope.vastausBaseUrl;
+          }}
+        });
+      };
+
       $scope.poistaKysymys = function (kysymys) {
         kysymys.poistettu = true;
       };
@@ -215,6 +237,15 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     });
     $scope.tallenna = function (kysymysryhmaid) {
       $modalInstance.close(kysymysryhmaid);
+    };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  }])
+
+  .controller('AvaaEsikatseluModalController', ['$modalInstance', '$scope', 'vastausBaseUrl', '$sce', function ($modalInstance, $scope, vastausBaseUrl, $sce) {
+    $scope.getVastausBaseUrl = function(){
+      return $sce.trustAsResourceUrl(vastausBaseUrl+'/#/preview/');
     };
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');

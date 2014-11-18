@@ -46,7 +46,8 @@ angular.module('aipal', [
   'ngRoute',
   'ui.select2',
   'ng-breadcrumbs',
-  'placeholderShim'
+  'placeholderShim',
+  'ngPostMessage'
 ])
 
   .config(['$httpProvider', 'asetukset', function ($httpProvider, asetukset) {

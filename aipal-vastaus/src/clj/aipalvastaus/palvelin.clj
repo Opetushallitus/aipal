@@ -77,7 +77,7 @@
                                    (wrap-resource "public/app")
                                    wrap-params
                                    wrap-content-type
-                                   (wrap-frame-options :deny)
+                                   (wrap-frame-options {:allow-from  (:aipal-base-url luetut-asetukset)})
                                    log-request-wrapper
                                    wrap-poikkeusten-logitus)
                                  {:port portti})

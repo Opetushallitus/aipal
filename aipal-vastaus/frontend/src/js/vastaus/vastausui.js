@@ -14,6 +14,10 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       .when('/kiitos', {
         templateUrl: 'template/vastaus/kiitos.html'
       })
+      .when('/preview', {
+        controller: 'PreviewController',
+        templateUrl: 'template/vastaus/vastaus.html'
+      })
     ;
   }])
 
@@ -80,6 +84,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
   .controller('VastausController', [
     '$http', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus',
     function($http, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus) {
+      $scope.preview = false;
       $scope.$watch('vastausForm', function(vastausForm) {
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(vastausForm);
       });
@@ -110,6 +115,16 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       })
       .error(function() {
         $location.path('/vastausaika-loppunut');
+      });
+    }
+  ])
+  .controller('PreviewController', [
+    '$http', '$routeParams', '$scope', '$location',
+    function($http, $routeParams, $scope) {
+      $scope.preview = true;
+      $scope.messages = [];
+      $scope.$on('$messageIncoming', function (event, data){
+        $scope.data = angular.fromJson(data.message);
       });
     }
   ]);
