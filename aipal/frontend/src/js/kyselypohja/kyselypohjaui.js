@@ -53,12 +53,16 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
           $location.url('/kyselypohjat');
+        }).error(function() {
+          ilmoitus.virhe(i18n.hae('kyselypohja.tallennus_epaonnistui'));
         });
       } else {
         Kyselypohja.luoUusi($scope.kyselypohja).success(function() {
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
           $location.url('/kyselypohjat');
+        }).error(function() {
+          ilmoitus.virhe(i18n.hae('kyselypohja.tallennus_epaonnistui'));
         });
       }
     };
