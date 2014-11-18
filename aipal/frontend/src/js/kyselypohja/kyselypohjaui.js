@@ -93,9 +93,6 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     if ($routeParams.kyselypohjaid) {
       Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
         $scope.kyselypohja = kyselypohja;
-        Kyselypohja.haeKysymysryhmat($routeParams.kyselypohjaid).success(function(kysymysryhmat) {
-          $scope.kyselypohja.kysymysryhmat = kysymysryhmat;
-        });
       });
     } else {
       $scope.kyselypohja = {
