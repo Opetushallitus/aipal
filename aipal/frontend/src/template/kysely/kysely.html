@@ -79,8 +79,8 @@
                 <ol class="kysymykset">
                     <li ng-repeat="kysymys in kysymysryhma.kysymykset">
                         <span ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}}</span>&nbsp;
-                        <a ng-click="poistaKysymys(kysymys)" ng-if="kysymys.poistettava && !kysymys.poistettu">Poista</a>
-                        <a ng-click="palautaKysymys(kysymys)" ng-if="kysymys.poistettu">Palauta</a>
+                        <a ng-click="poistaKysymys(kysymys)" ng-if="kysymys.poistettava && !kysymys.poistettu">{{i18n.yleiset.poista}}</a>
+                        <a ng-click="palautaKysymys(kysymys)" ng-if="kysymys.poistettu">{{i18n.yleiset.palauta}}</a>
                     </li>
                 </ol>
             </accordion-group>
