@@ -34,7 +34,7 @@ angular.module('rest.kyselypohja', [])
         return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid, kyselypohja);
       },
       haeKysymysryhmat: function(id) {
-        return $http.get('api/kyselypohja/' + id + "/kysymysryhmat", {params: {nocache: Date.now()}});
+        return $http.get('api/kyselypohja/' + id + '/kysymysryhmat', {params: {nocache: Date.now()}});
       }
     };
   }]);

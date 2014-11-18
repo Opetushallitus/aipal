@@ -49,7 +49,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
   .controller('KyselypohjaController', ['$location', '$routeParams', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'tallennusMuistutus', function($location, $routeParams, $scope, Kyselypohja, i18n, ilmoitus, tallennusMuistutus) {
     $scope.tallenna = function() {
       if ($routeParams.kyselypohjaid) {
-        Kyselypohja.muokkaa($scope.kyselypohja).success(function(kyselypohja) {
+        Kyselypohja.muokkaa($scope.kyselypohja).success(function() {
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
         });
