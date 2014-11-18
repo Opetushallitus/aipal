@@ -41,6 +41,10 @@
   (let [koulutustoimija (:koulutustoimija (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid)))]
     (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
 
+(defn kayttajalla-on-jokin-rooleista-kyselypohjassa? [roolit kyselypohjaid]
+  (let [koulutustoimija (:koulutustoimija (kyselypohja-arkisto/hae-organisaatiotieto (->int kyselypohjaid)))]
+    (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
+
 (defn hae-kyselyn-tila [kyselyid]
   (:tila (kysely-arkisto/hae (->int kyselyid))))
 
@@ -141,6 +145,17 @@
               "OPL-VASTUUKAYTTAJA"}
             kysymysryhmaid))))
 
+(defn kyselypohja-muokkaus? [kyselypohjaid]
+  (or (yllapitaja?)
+      (kayttajalla-on-jokin-rooleista-kyselypohjassa?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"}
+        kyselypohjaid)))
+
+(defn kyselypohja-luonti? []
+  (or (yllapitaja?)
+      (paakayttaja-tai-vastuukayttaja?)))
+
 (defn kyselypohja-listaaminen? []
   (or (yllapitaja?)
       (paakayttaja-tai-vastuukayttaja?)))
@@ -181,6 +196,8 @@
     :kysymysryhma-julkaisu kysymysryhma-muokkaus?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?
+    :kyselypohja-muokkaus kyselypohja-muokkaus?
+    :kyselypohja-luonti kyselypohja-luonti?
     :impersonointi yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?

@@ -19,11 +19,23 @@
             [aipal.arkisto.kyselypohja :as arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [oph.common.util.http-util :refer [json-response]]))
+            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
 (c/defroutes reitit
   (cu/defapi :kyselypohja-listaaminen nil :get "/" [voimassa]
     (json-response (arkisto/hae-kyselypohjat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
 
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid" [kyselypohjaid]
+    (json-response (arkisto/hae-kyselypohja (Integer/parseInt kyselypohjaid))))
+
+  (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid" [kyselypohjaid & kyselypohja]
+    (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (json-response (arkisto/tallenna-kyselypohja (Integer/parseInt kyselypohjaid) kyselypohja))))
+
+  (cu/defapi :kyselypohja-luonti nil :post "/" [& kyselypohja]
+    (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (json-response (arkisto/luo-kyselypohja (assoc kyselypohja :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))))))
+
+  (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid/kysymysryhmat" [kyselypohjaid]
     (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))
