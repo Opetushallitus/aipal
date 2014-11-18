@@ -176,7 +176,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           controller: 'LisaaKysymysryhmaModalController'
         });
         modalInstance.result.then(function (kysymysryhmaid) {
-          Kysymysryhma.hae(kysymysryhmaid)
+          Kysymysryhma.haeEsikatselulle(kysymysryhmaid)
           .success(function(kysymysryhma) {
             apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhma);
             $scope.kyselyForm.$setDirty();

@@ -139,6 +139,14 @@
     (= "monivalinta" (:vastaustyyppi kysymys)) taydenna-monivalintakysymys
     (jatkokysymys? kysymys) taydenna-jatkokysymys))
 
+(defn taydenna-kysymysryhman-monivalintakysymykset
+  [kysymysryhma]
+  (let [kysymykset (for [kysymys (:kysymykset kysymysryhma)]
+                     (if (= "monivalinta" (:vastaustyyppi kysymys))
+                       (taydenna-monivalintakysymys kysymys)
+                       kysymys))]
+    (assoc kysymysryhma :kysymykset kysymykset)))
+
 (defn taydenna-kysymysryhman-kysymykset
   [kysymysryhma]
   (update-in kysymysryhma [:kysymykset] #(doall (map taydenna-kysymys %))))
@@ -165,18 +173,42 @@
           taydenna-kysymysryhman-kysymykset)
         kysymysryhma))))
 
+(def kysymysryhma-esikatselulle-select
+  (->
+    (sql/select* taulut/kysymysryhma)
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
+    (sql/with taulut/kysymys
+      (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen :vastaustyyppi :monivalinta_max
+                  :jatkokysymys.jatkokysymysid :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
+      (sql/join :left :jatkokysymys (= :kysymys.jatkokysymysid :jatkokysymys.jatkokysymysid))
+      (sql/order :kysymys.jarjestys))))
+
+(defn vaihda-kysymysavain [kysymysryhma]
+  (clojure.set/rename-keys kysymysryhma {:kysymys :kysymykset}))
+
+(defn hae-esikatselulle
+  [kysymysryhmaid]
+  (->
+    kysymysryhma-esikatselulle-select
+    (sql/where {:kysymysryhmaid kysymysryhmaid})
+    (sql/join taulut/kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
+    (sql/order :kysely_kysymysryhma.jarjestys)
+    sql/exec
+    first
+    vaihda-kysymysavain
+    taydenna-kysymysryhman-monivalintakysymykset))
+
 (defn hae-kyselypohjasta
   "Hakee kyselypohjan kyselyryhmät, jotka ovat lisättävissä kyselyyn"
   [kyselypohjaid]
-  (-> kysymysryhma-select
+  (-> kysymysryhma-esikatselulle-select
     (sql/join :inner taulut/kysymysryhma-kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
-    (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid)
+    (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid :kysymysryhma_kyselypohja.jarjestys)
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid
                 :kysymysryhma.lisattavissa true})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
     sql/exec
-    (->> (map taydenna-kysymysryhma))
-    doall))
+    (->> (map (comp taydenna-kysymysryhman-monivalintakysymykset vaihda-kysymysavain)))))
 
 (defn hae-organisaatiotieto
   [kysymysryhmaid]

@@ -116,4 +116,7 @@
         {:status 403})))
 
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
-    (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid)))))
+    (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid))))
+
+  (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid/esikatselu" [kysymysryhmaid]
+    (json-response (arkisto/hae-esikatselulle (Integer/parseInt kysymysryhmaid)))))
