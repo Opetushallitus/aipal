@@ -137,10 +137,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         tallennusFn = Kysely.luoUusi;
       }
 
-      $scope.poistaTaiPalautaKysymysryhma = function(kysymysryhma) {
-        kysymysryhma.poistetaan_kyselysta = !kysymysryhma.poistetaan_kyselysta;
-      };
-
       function poistaKysymysryhmat() {
         $scope.kysely.kysymysryhmat = _.reject($scope.kysely.kysymysryhmat, 'poistetaan_kyselysta');
       }
@@ -216,13 +212,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
             return $scope.vastausBaseUrl;
           }}
         });
-      };
-
-      $scope.poistaKysymys = function (kysymys) {
-        kysymys.poistettu = true;
-      };
-      $scope.palautaKysymys = function (kysymys) {
-        kysymys.poistettu = false;
       };
     }
   ])
