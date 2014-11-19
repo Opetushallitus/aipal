@@ -83,7 +83,8 @@
       (paakayttaja-tai-vastuukayttaja?)
       (kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
-          "OPL-KATSELIJA"})))
+          "OPL-KATSELIJA"
+          "OPH-KATSELIJA"})))
 
 (defn kysely-luonti? []
   (or (yllapitaja?)
@@ -112,7 +113,8 @@
         #{"OPL-PAAKAYTTAJA"
           "OPL-VASTUUKAYTTAJA"
           "OPL-KAYTTAJA"
-          "OPL-KATSELIJA"}
+          "OPL-KATSELIJA"
+          "OPH-KATSELIJA"}
         kyselyid)))
 
 (defn kyselykerta-luku? [kyselykertaid]
@@ -124,7 +126,8 @@
       (paakayttaja-tai-vastuukayttaja?)
       (kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
-          "OPL-KATSELIJA"})))
+          "OPL-KATSELIJA"
+          "OPH-KATSELIJA"})))
 
 (defn kysymysryhma-luku? [kysymysryhmaid]
   (or (yllapitaja?)
