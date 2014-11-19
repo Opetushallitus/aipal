@@ -19,7 +19,10 @@
   </thead>
   <tbody>
     <tr ng-repeat="kyselypohja in kyselypohjat |filter:hakuehto.teksti">
-      <td><a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}">{{kyselypohja |lokalisoiKentta:'nimi'}}</a></td>
+      <td>
+        <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="!kyselypohja.valtakunnallinen || yllapitaja">{{kyselypohja |lokalisoiKentta:'nimi'}}</a>
+        <span ng-if="kyselypohja.valtakunnallinen && !yllapitaja">{{kyselypohja |lokalisoiKentta:'nimi'}}</span>
+      </td>
       <td><span ng-if="kyselypohja.valtakunnallinen" class="glyphicon glyphicon-ok"></span></td>
     </tr>
   </tbody>
