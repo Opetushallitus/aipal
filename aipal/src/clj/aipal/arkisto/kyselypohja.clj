@@ -21,7 +21,7 @@
   ([organisaatio vain-voimassaolevat]
     (-> (sql/select* :kyselypohja)
       (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
-      (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv
+      (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.valtakunnallinen
                   [:kyselypohja.kaytettavissa :voimassa])
       (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
                      {:kyselypohja_organisaatio_view.valtakunnallinen true}))

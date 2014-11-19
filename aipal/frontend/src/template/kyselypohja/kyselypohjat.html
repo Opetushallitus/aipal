@@ -14,11 +14,13 @@
   <thead>
   <tr>
     <th>Nimi</th>
+    <th>Valtakunnallinen</th>
   </tr>
   </thead>
   <tbody>
     <tr ng-repeat="kyselypohja in kyselypohjat |filter:hakuehto.teksti">
       <td><a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}">{{kyselypohja |lokalisoiKentta:'nimi'}}</a></td>
+      <td><span ng-if="kyselypohja.valtakunnallinen" class="glyphicon glyphicon-ok"></span></td>
     </tr>
   </tbody>
 </table>
