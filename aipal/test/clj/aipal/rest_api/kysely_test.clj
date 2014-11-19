@@ -37,7 +37,7 @@
     (let [kyselyid 99
           kysymysryhmaid 88]
       (aseta-fake-kannan-kysymysryhma! kysymysryhmaid [{:kysymysid 2}])
-      (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymys [{:kysymysid 2}]})
+      (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymykset [{:kysymysid 2}]})
       (is (= (@kysely->kysymys kyselyid) #{2}))
       (is (= (@kysely->kysymysryhma kyselyid)  #{kysymysryhmaid})))))
 
@@ -46,7 +46,7 @@
     (let [kyselyid 99
           kysymysryhmaid 88]
       (aseta-fake-kannan-kysymysryhma! kysymysryhmaid [{:kysymysid 2}])
-      (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymys [{:kysymysid 2}{:kysymysid 3}]})
+      (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymykset [{:kysymysid 2}{:kysymysid 3}]})
       (is (= (@kysely->kysymys kyselyid) #{2}))
       (is (= (@kysely->kysymysryhma kyselyid)  #{kysymysryhmaid})))))
 
@@ -55,7 +55,7 @@
     (let [kyselyid 99
           kysymysryhmaid 88]
       (aseta-fake-kannan-kysymysryhma! kysymysryhmaid [{:kysymysid 2 :poistettava true} {:kysymysid 3 :poistettava true}])
-      (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymys [{:kysymysid 2 :poistettu true}{:kysymysid 3}]})
+      (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymykset [{:kysymysid 2 :poistettu true}{:kysymysid 3}]})
       (is (= (@kysely->kysymys kyselyid) #{3})))))
 
 (deftest kysymysryhma-lisays-vaara-poistettu-kysymys
@@ -65,7 +65,7 @@
       (aseta-fake-kannan-kysymysryhma! kysymysryhmaid [{:kysymysid 2 :poistettava false} {:kysymysid 3}])
       (is (thrown?
             Throwable
-            (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymys [{:kysymysid 2 :poistettu true}{:kysymysid 3}]}))))))
+            (lisaa-kysymysryhma! kyselyid {:kysymysryhmaid kysymysryhmaid :kysymykset [{:kysymysid 2 :poistettu true}{:kysymysid 3}]}))))))
 
 (deftest kysely-paivitys-uusia-kysymyksia
   (testing "kyselyn kysymykset päivittyvät käyttäjän syötteen mukaiseksi"
@@ -73,7 +73,7 @@
       (aseta-fake-kannan-kysymysryhma! 88 [{:kysymysid 2} {:kysymysid 3}])
       (reset! kysely->kysymys {kyselyid #{1 2 3}})
       (reset! kysely->kysymysryhma {kyselyid #{1 2}})
-      (paivita-kysely! {:kyselyid kyselyid :kysymysryhmat [{:kysymysryhmaid 88 :kysymys [{:kysymysid 2} {:kysymysid 3}]}]})
+      (paivita-kysely! {:kyselyid kyselyid :kysymysryhmat [{:kysymysryhmaid 88 :kysymykset [{:kysymysid 2} {:kysymysid 3}]}]})
       (is (= (@kysely->kysymys kyselyid) #{2 3}))
       (is (= (@kysely->kysymysryhma kyselyid) #{88})))))
 
