@@ -3,6 +3,13 @@
 <div ng-show="kyselypohja">
 
 <form name="kyselypohjaForm">
+  <div ng-if="yllapitaja" class="checkbox">
+    <label>
+      <input type="checkbox" ng-model="kyselypohja.valtakunnallinen">
+      {{i18n.yleiset.valtakunnallinen}}
+    </label>
+  </div>
+
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
