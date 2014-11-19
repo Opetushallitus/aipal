@@ -6,18 +6,22 @@
 #
 # Käyttö:
 #
-#     ./run-e2e.sh [-e]
+#     ./run-e2e.sh [-ei]
 #
 # Parametrit:
 #     -e              Jos annettu, käyttää edellisen testiajon alustamaa tietokantaa.
+#     -i              Ajaa testit IE:tä vasten (vaatii selenium serverin asentamisen windows-koneelle).
 
 set -u
 
 use_existing_e2e_database=no
-while getopts 'e' o; do
+use_remote_ie=no
+while getopts 'ei' o; do
     case $o in
         e)
             use_existing_e2e_database=yes
+            ;;
+        i)  use_remote_ie=yes
             ;;
     esac
 done
@@ -30,7 +34,13 @@ export AIPAL_DB_HOST=192.168.50.61
 export AIPAL_DB_PORT=5432
 export AIPAL_DB_USER=aipal_user
 export AIPAL_DB_PASSWORD=aipal
-#export REMOTE_URL="http://127.0.0.1:5555/wd/hub" # for IE testing
+
+if [ "$use_remote_ie" = "yes" ]; then
+    export REMOTE_URL="http://127.0.0.1:5555/wd/hub" # for IE testing
+    lein_options=":ie"
+else
+    lein_options=""
+fi
 
 cd $repo_path
 dev-scripts/copy-db.sh aipal aipal_e2e_backup
@@ -41,7 +51,7 @@ else
 fi
 
 cd $repo_path/e2e
-lein test
+lein test $lein_options
 
 cd $repo_path
 dev-scripts/copy-db.sh aipal aipal_e2e
