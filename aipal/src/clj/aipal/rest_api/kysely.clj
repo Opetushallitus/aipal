@@ -27,7 +27,7 @@
 
 (defn lisaa-kysymysryhma!
   [kyselyid kysymysryhma]
-  (let [kayttajan-kysymykset (map-by :kysymysid (:kysymys kysymysryhma))]
+  (let [kayttajan-kysymykset (map-by :kysymysid (:kysymykset kysymysryhma))]
     (doseq [kysymys (arkisto/hae-kysymysten-poistettavuus (:kysymysryhmaid kysymysryhma))
             :let [kysymysid (:kysymysid kysymys)
                   kayttajan-kysymys (get kayttajan-kysymykset kysymysid)]
