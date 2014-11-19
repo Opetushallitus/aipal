@@ -69,16 +69,22 @@
   </div>
 
   <accordion close-others="true">
-    <accordion-group ng-repeat="kysymysryhma in kyselypohja.kysymysryhmat" is-open="group.open">
-      <accordion-heading>
-        {{kysymysryhma | lokalisoiKentta:'nimi' }} <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': group.open, 'glyphicon-chevron-right': !group.open}"></i>
-      </accordion-heading>
-      <ol class="kysymykset">
-        <li ng-repeat="kysymys in kysymysryhma.kysymykset">
-          <span ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}}</span>&nbsp;
-        </li>
-      </ol>
-    </accordion-group>
+    <div ng-repeat="kysymysryhma in kyselypohja.kysymysryhmat">
+      <a href="" class="pull-right" ng-click="poistaTaiPalautaKysymysryhma(kysymysryhma)">
+        <span class="glyphicon glyphicon-trash"></span>
+      </a>
+      <accordion-group is-open="group.open">
+        <accordion-heading>
+          <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': group.open, 'glyphicon-chevron-right': !group.open}"></i>
+          <span ng-class="{removed: kysymysryhma.poistetaan_kyselysta}">{{kysymysryhma | lokalisoiKentta:'nimi' }}</span>
+        </accordion-heading>
+        <ol class="kysymykset">
+          <li ng-repeat="kysymys in kysymysryhma.kysymykset">
+            <span ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}}</span>&nbsp;
+          </li>
+        </ol>
+      </accordion-group>
+    </div>
   </accordion>
 
   <button class="btn btn-primary pull-left" ng-disabled="!kyselypohjaForm.$valid" ng-click="tallenna()">

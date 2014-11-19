@@ -62,7 +62,16 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
     };
 
+    $scope.poistaTaiPalautaKysymysryhma = function(kysymysryhma) {
+      kysymysryhma.poistetaan_kyselysta = !kysymysryhma.poistetaan_kyselysta;
+    };
+
+    function poistaKysymysryhmat() {
+      $scope.kyselypohja.kysymysryhmat = _.reject($scope.kyselypohja.kysymysryhmat, 'poistetaan_kyselysta');
+    }
+
     $scope.tallenna = function() {
+      poistaKysymysryhmat();
       if ($routeParams.kyselypohjaid) {
         Kyselypohja.muokkaa($scope.kyselypohja).success(function() {
           $scope.kyselypohjaForm.$setPristine();
