@@ -1,5 +1,7 @@
 <h1>{{i18n.kyselypohja.kyselypohja}}</h1>
 
+<div ng-show="kyselypohja">
+
 <form name="kyselypohjaForm">
   <div class="row">
     <div class="col-md-4">
@@ -59,8 +61,19 @@
 
   <div class="row"><br /></div>
 
+  <div>
+    <button class="btn btn-primary" ng-click="lisaaKysymysryhmaModal()">
+      {{i18n.kysely.lisaa_kysymysryhma}}&nbsp;
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
+  </div>
+
+  <kysymysryhma-accordion kysymysryhmat="kyselypohja.kysymysryhmat" kysymysten-poisto="false"></kysymysryhma-accordion>
+
   <button class="btn btn-primary pull-left" ng-disabled="!kyselypohjaForm.$valid" ng-click="tallenna()">
     {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
   </button>
   <button class="btn btn-default pull-left" ng-click="peruuta()">{{'i18n.yleiset.peruuta' | i18n}}</button>
 </form>
+
+</div>

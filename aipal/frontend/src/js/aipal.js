@@ -34,6 +34,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.navigaatio',
   'yhteiset.direktiivit.popup-ikkuna',
   'yhteiset.direktiivit.pvm-valitsin',
+  'yhteiset.direktiivit.kysymysryhma-accordion',
   'yhteiset.direktiivit.latausindikaattori',
   'yhteiset.direktiivit.ohjeet',
   'yhteiset.direktiivit.pakollisia-kenttia',

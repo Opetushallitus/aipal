@@ -40,16 +40,29 @@
 
 (def muokattavat-kentat [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm])
 
+(defn tallenna-kyselypohjan-kysymysryhmat
+  [kyselypohjaid kysymysryhmat]
+  (sql/delete :kysymysryhma_kyselypohja
+              (sql/where {:kyselypohjaid kyselypohjaid}))
+  (doseq [[index kysymysryhma] (map-indexed vector kysymysryhmat)]
+    (sql/insert :kysymysryhma_kyselypohja
+      (sql/values {:kyselypohjaid kyselypohjaid
+                   :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
+                   :jarjestys index}))))
+
 (defn tallenna-kyselypohja
   [kyselypohjaid kyselypohja]
+  (tallenna-kyselypohjan-kysymysryhmat kyselypohjaid (:kysymysryhmat kyselypohja))
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
     (sql/set-fields (select-keys kyselypohja muokattavat-kentat))))
 
 (defn luo-kyselypohja
   [kyselypohja]
-  (sql/insert taulut/kyselypohja
-    (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija)))))
+  (let [luotu-kyselypohja (sql/insert taulut/kyselypohja
+                      (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))))]
+    (tallenna-kyselypohjan-kysymysryhmat (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
+    luotu-kyselypohja))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]

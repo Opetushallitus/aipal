@@ -27,7 +27,10 @@
     (json-response (arkisto/hae-kyselypohjat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
 
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid" [kyselypohjaid]
-    (json-response (arkisto/hae-kyselypohja (Integer/parseInt kyselypohjaid))))
+    (let [kyselypohjaid (Integer/parseInt kyselypohjaid)
+          kyselypohja (arkisto/hae-kyselypohja kyselypohjaid)
+          kysymysryhmat (kysymysryhma-arkisto/hae-kyselypohjasta kyselypohjaid)]
+      (json-response (assoc kyselypohja :kysymysryhmat kysymysryhmat))))
 
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid" [kyselypohjaid & kyselypohja]
     (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
