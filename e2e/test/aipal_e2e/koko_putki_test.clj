@@ -30,8 +30,7 @@
 (defn valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto []
   (w/select (nth (w/find-elements {:tag :radio}) 0)))
 
-; Disabloitu väliaikaisesti
-#_(deftest koko-putki-test
+(deftest koko-putki-test
   (with-webdriver
     (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
                 :rooli_organisaatio [{:organisaatio "0000000-0"
