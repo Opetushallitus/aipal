@@ -37,7 +37,7 @@
            ~@body)
          (do 
            (log/error "Käyttöoikeudet eivät riitä. Toiminto estetty.")
-           (throw (RuntimeException. "Käyttöoikeudet eivät riitä.")))))))
+           (throw (ex-info "Käyttöoikeudet eivät riitä." {:cause :kayttooikeudet})))))))
 
 
 (defmacro autorisoitu-transaktio

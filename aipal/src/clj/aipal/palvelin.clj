@@ -98,6 +98,17 @@
   (fn [request]
     (assoc-in (handler request) [:headers "Expires"] "-1")))
 
+(defn wrap-kayttooikeudet-forbidden [handler]
+  (fn [request]
+    (try
+      (handler request)
+      (catch clojure.lang.ExceptionInfo e
+        (if (= :kayttooikeudet (-> e ex-data :cause))
+          {:status 403
+           :headers {"Content-Type" "text/plain; charset=utf-8"}
+           :body "Käyttöoikeudet eivät riitä"}
+          (throw e))))))
+
 (defn app
   "Ring-wrapperit ja compojure-reitit ilman HTTP-palvelinta"
   [asetukset]
@@ -127,6 +138,7 @@
                                     :path (service-path(get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
       (wrap-cas-single-sign-out session-store)
+      wrap-kayttooikeudet-forbidden
       wrap-poikkeusten-logitus)))
 
 (defn kaynnista-eraajon-ajastimet! [asetukset]
