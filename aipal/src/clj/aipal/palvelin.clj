@@ -24,7 +24,6 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.resource :refer [wrap-resource]]
-            [ring.middleware.not-modified :refer [wrap-not-modified]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
             [ring.middleware.content-type :refer [wrap-content-type]]
@@ -114,7 +113,6 @@
       (auth-removeticket asetukset)
       wrap-params
       wrap-content-type
-      wrap-not-modified
       wrap-expires
 
       wrap-kayttaja
