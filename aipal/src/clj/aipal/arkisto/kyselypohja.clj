@@ -38,7 +38,7 @@
     (sql/select taulut/kyselypohja
       (sql/where {:kyselypohjaid kyselypohjaid}))))
 
-(def muokattavat-kentat [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm])
+(def muokattavat-kentat [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :valtakunnallinen])
 
 (defn tallenna-kyselypohjan-kysymysryhmat
   [kyselypohjaid kysymysryhmat]

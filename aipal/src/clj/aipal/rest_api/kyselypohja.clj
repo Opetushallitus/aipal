@@ -20,6 +20,7 @@
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
+            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
 (c/defroutes reitit
@@ -33,12 +34,18 @@
       (json-response (assoc kyselypohja :kysymysryhmat kysymysryhmat))))
 
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid" [kyselypohjaid & kyselypohja]
-    (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (arkisto/tallenna-kyselypohja (Integer/parseInt kyselypohjaid) kyselypohja))))
+    (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
+          valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
+      (json-response (arkisto/tallenna-kyselypohja (Integer/parseInt kyselypohjaid) (assoc kyselypohja :valtakunnallinen valtakunnallinen)))))
 
   (cu/defapi :kyselypohja-luonti nil :post "/" [& kyselypohja]
-    (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (arkisto/luo-kyselypohja (assoc kyselypohja :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))))))
+    (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
+          valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
+      (json-response
+        (arkisto/luo-kyselypohja
+          (assoc kyselypohja
+                 :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)
+                 :valtakunnallinen valtakunnallinen)))))
 
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid/kysymysryhmat" [kyselypohjaid]
     (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))
