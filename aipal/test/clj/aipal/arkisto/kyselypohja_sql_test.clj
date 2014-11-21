@@ -44,9 +44,11 @@
 (deftest ^:integraatio hae-kyselypohjat-valtakunnalliset
   (let [koulutustoimija (lisaa-koulutustoimija!)]
     (sql/insert kyselypohja (sql/values [{:nimi_fi "a"
-                                          :valtakunnallinen true}
+                                          :valtakunnallinen true
+                                          :tila "julkaistu"}
                                          {:nimi_fi "b"
-                                          :valtakunnallinen true}]))
+                                          :valtakunnallinen true
+                                          :tila "julkaistu"}]))
     (is (= #{"a" "b"} (set (map :nimi_fi (hae-kyselypohjat (:ytunnus koulutustoimija))))))))
 
 ;; tarkastetaan ettei haku duplikoi organisaatiolla olevia valtakunnallisia pohjia
