@@ -200,6 +200,7 @@
     :kyselykerta-raportti kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
     :kyselykerta-muokkaus kyselykerta-muokkaus?
+    :kyselykerta-tilamuutos kyselykerta-muokkaus?
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
