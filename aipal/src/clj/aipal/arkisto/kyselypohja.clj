@@ -24,7 +24,8 @@
       (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.valtakunnallinen :kyselypohja.tila
                   [:kyselypohja.kaytettavissa :voimassa])
       (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
-                     {:kyselypohja_organisaatio_view.valtakunnallinen true}))
+                     {:kyselypohja_organisaatio_view.valtakunnallinen true
+                      :kyselypohja.tila "julkaistu"}))
       (cond->
         vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
       (sql/order :muutettuaika :desc)
