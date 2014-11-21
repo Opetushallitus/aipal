@@ -59,3 +59,15 @@
     (-> result
         first
         :kyselyid)))
+
+(defn lukitse!
+  [kyselykertaid]
+  (sql/update taulut/kyselykerta
+    (sql/set-fields {:lukittu true})
+    (sql/where {:kyselykertaid kyselykertaid})))
+
+(defn avaa!
+  [kyselykertaid]
+  (sql/update taulut/kyselykerta
+    (sql/set-fields {:lukittu false})
+    (sql/where {:kyselykertaid kyselykertaid})))
