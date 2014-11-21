@@ -3,6 +3,7 @@
   <tr>
     <th>Nimi</th>
     <th>Valtakunnallinen</th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -12,6 +13,12 @@
       <span ng-if="kyselypohja.valtakunnallinen && !yllapitaja">{{kyselypohja |lokalisoiKentta:'nimi'}}</span>
     </td>
     <td><span ng-if="kyselypohja.valtakunnallinen" class="glyphicon glyphicon-ok"></span></td>
+    <td class="actions">
+      <button class="btn btn-primary btn-sm" ng-click="julkaiseKyselypohja(kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+        {{ 'yleiset.julkaise' | i18n }}&nbsp;
+        <span class="glyphicon glyphicon-share-alt"></span>
+      </button>
+    </td>
   </tr>
   </tbody>
 </table>
