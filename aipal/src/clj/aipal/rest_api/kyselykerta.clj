@@ -17,7 +17,7 @@
             [korma.db :as db]
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
-            [aipal.arkisto.kyselykerta :as kyselykerta]
+            [aipal.arkisto.kyselykerta :as arkisto]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
@@ -26,15 +26,15 @@
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
-    (json-response (kyselykerta/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
+    (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
   (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
-    (json-response (kyselykerta/hae-yksi (Integer/parseInt kyselykertaid))))
+    (json-response (arkisto/hae-yksi (Integer/parseInt kyselykertaid))))
 
   (cu/defapi :kyselykerta-luonti kyselyid :post "/" [kyselyid kyselykerta]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (kyselykerta/lisaa! kyselyid kyselykerta-parsittu))))
+      (json-response (arkisto/lisaa! kyselyid kyselykerta-parsittu))))
 
   (cu/defapi :kyselykerta-muokkaus kyselykertaid :post "/:kyselykertaid" [kyselykertaid & kyselykerta]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (kyselykerta/paivita! (Integer/parseInt kyselykertaid) kyselykerta-parsittu)))))
+      (json-response (arkisto/paivita! (Integer/parseInt kyselykertaid) kyselykerta-parsittu))))
