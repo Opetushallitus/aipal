@@ -38,3 +38,9 @@
   (cu/defapi :kyselykerta-muokkaus kyselykertaid :post "/:kyselykertaid" [kyselykertaid & kyselykerta]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
       (json-response (arkisto/paivita! (Integer/parseInt kyselykertaid) kyselykerta-parsittu))))
+
+  (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/lukitse/:kyselykertaid" [kyselykertaid]
+    (json-response (arkisto/lukitse! (Integer/parseInt kyselykertaid))))
+
+  (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/avaa/:kyselykertaid" [kyselykertaid]
+    (json-response (arkisto/avaa! (Integer/parseInt kyselykertaid)))))
