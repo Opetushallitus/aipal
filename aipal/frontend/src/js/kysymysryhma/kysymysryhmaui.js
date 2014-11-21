@@ -85,6 +85,17 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         });
       });
     };
+
+    $scope.suljeKysymysryhma = function(kysymysryhma) {
+      Kysymysryhma.sulje(kysymysryhma)
+        .success(function(uusiKysymysryhma) {
+          _.assign(kysymysryhma, uusiKysymysryhma);
+          ilmoitus.onnistuminen(i18n.hae('kysymysryhma.sulkeminen_onnistui'));
+        })
+        .error(function() {
+          ilmoitus.virhe(i18n.hae('kysymysryhma.sulkeminen_epaonnistui'));
+        });
+    };
   }])
 
   .controller('JulkaiseKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function ($modalInstance, $scope, kysymysryhma) {
