@@ -64,11 +64,15 @@
     (tallenna-kyselypohjan-kysymysryhmat (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
 
-(defn julkaise-kyselypohja
-  [kyselypohjaid]
+(defn aseta-kyselypohjan-tila
+  [kyselypohjaid tila]
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
-    (sql/set-fields {:tila "julkaistu"})))
+    (sql/set-fields {:tila tila})))
+
+(defn julkaise-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "julkaistu"))
+
+(defn sulje-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "suljettu"))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]
