@@ -21,10 +21,11 @@
   ([organisaatio vain-voimassaolevat]
     (-> (sql/select* :kyselypohja)
       (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
-      (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.valtakunnallinen
+      (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.valtakunnallinen :kyselypohja.tila
                   [:kyselypohja.kaytettavissa :voimassa])
       (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
-                     {:kyselypohja_organisaatio_view.valtakunnallinen true}))
+                     {:kyselypohja_organisaatio_view.valtakunnallinen true
+                      :kyselypohja.tila "julkaistu"}))
       (cond->
         vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
       (sql/order :muutettuaika :desc)
@@ -63,6 +64,16 @@
                       (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))))]
     (tallenna-kyselypohjan-kysymysryhmat (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
+
+(defn aseta-kyselypohjan-tila
+  [kyselypohjaid tila]
+  (sql/update taulut/kyselypohja
+    (sql/where {:kyselypohjaid kyselypohjaid})
+    (sql/set-fields {:tila tila})))
+
+(defn julkaise-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "julkaistu"))
+
+(defn sulje-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "suljettu"))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]

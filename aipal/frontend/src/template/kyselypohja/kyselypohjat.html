@@ -10,20 +10,14 @@
   </auth>
 </fieldset>
 
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th>Nimi</th>
-    <th>Valtakunnallinen</th>
-  </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="kyselypohja in kyselypohjat |filter:hakuehto.teksti">
-      <td>
-        <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="!kyselypohja.valtakunnallinen || yllapitaja">{{kyselypohja |lokalisoiKentta:'nimi'}}</a>
-        <span ng-if="kyselypohja.valtakunnallinen && !yllapitaja">{{kyselypohja |lokalisoiKentta:'nimi'}}</span>
-      </td>
-      <td><span ng-if="kyselypohja.valtakunnallinen" class="glyphicon glyphicon-ok"></span></td>
-    </tr>
-  </tbody>
-</table>
+<h2>{{i18n.kyselypohja.luonnokset}}</h2>
+
+<ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['luonnos']"></ng-include>
+
+<h2>{{i18n.kyselypohja.julkaistut}}</h2>
+
+<ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['julkaistu']"></ng-include>
+
+<h2>{{i18n.kyselypohja.suljetut}}</h2>
+
+<ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['suljettu']"></ng-include>

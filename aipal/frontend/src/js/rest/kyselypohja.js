@@ -33,6 +33,12 @@ angular.module('rest.kyselypohja', [])
       muokkaa: function(kyselypohja) {
         return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid, kyselypohja);
       },
+      julkaise: function(kyselypohja) {
+        return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid + '/julkaise', {params: {nocache: Date.now()}});
+      },
+      sulje: function(kyselypohja) {
+        return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid + '/sulje', {params: {nocache: Date.now()}});
+      },
       haeKysymysryhmat: function(id) {
         return $http.get('api/kyselypohja/' + id + '/kysymysryhmat', {params: {nocache: Date.now()}});
       }

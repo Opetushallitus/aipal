@@ -36,9 +36,27 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     ;
   }])
 
-  .controller('KyselypohjatController', ['$location', '$scope', 'Kyselypohja', function($location, $scope, Kyselypohja) {
+  .controller('KyselypohjatController', ['$location', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', function($location, $scope, Kyselypohja, i18n, ilmoitus) {
     $scope.luoUusiKyselypohja = function() {
       $location.url('/kyselypohjat/kyselypohja/uusi');
+    };
+
+    $scope.julkaiseKyselypohja = function(kyselypohja) {
+      Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
+        ilmoitus.onnistuminen(i18n.hae('kyselypohja.julkaistu'));
+        _.assign(kyselypohja, uusiKyselypohja);
+      }).error(function() {
+        ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
+      });
+    };
+
+    $scope.suljeKyselypohja = function(kyselypohja) {
+      Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {
+        ilmoitus.onnistuminen(i18n.hae('kyselypohja.suljettu'));
+        _.assign(kyselypohja, uusiKyselypohja);
+      }).error(function() {
+        ilmoitus.onnistuminen(i18n.hae('kyselypohja.sulkeminen_epaonnistui'));
+      });
     };
 
     Kyselypohja.haeKaikki().success(function(kyselypohjat) {
