@@ -109,7 +109,7 @@
     (json-response
       (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid (Integer/parseInt kysymysryhmaid)))))
 
-  (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/julkaise/:kysymysryhmaid" [kysymysryhmaid]
+  (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/:kysymysryhmaid/julkaise" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
       (if (pos? (arkisto/laske-kysymykset kysymysryhmaid))
         (json-response (arkisto/julkaise! kysymysryhmaid))

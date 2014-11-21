@@ -75,7 +75,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         }
       });
       modalInstance.result.then(function () {
-        Kysymysryhma.julkaise(kysymysryhma.kysymysryhmaid)
+        Kysymysryhma.julkaise(kysymysryhma)
         .success(function() {
           kysymysryhma.tila = 'julkaistu';
           ilmoitus.onnistuminen(i18n.hae('kysymysryhma.julkaisu_onnistui'));
