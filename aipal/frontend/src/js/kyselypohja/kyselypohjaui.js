@@ -50,6 +50,15 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
     };
 
+    $scope.suljeKyselypohja = function(kyselypohja) {
+      Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {
+        ilmoitus.onnistuminen(i18n.hae('kyselypohja.suljettu'));
+        _.assign(kyselypohja, uusiKyselypohja);
+      }).error(function() {
+        ilmoitus.onnistuminen(i18n.hae('kyselypohja.sulkeminen_epaonnistui'));
+      });
+    };
+
     Kyselypohja.haeKaikki().success(function(kyselypohjat) {
       $scope.kyselypohjat = kyselypohjat;
     });
