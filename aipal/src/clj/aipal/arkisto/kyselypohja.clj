@@ -64,6 +64,12 @@
     (tallenna-kyselypohjan-kysymysryhmat (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
 
+(defn julkaise-kyselypohja
+  [kyselypohjaid]
+  (sql/update taulut/kyselypohja
+    (sql/where {:kyselypohjaid kyselypohjaid})
+    (sql/set-fields {:tila "julkaistu"})))
+
 (defn hae-organisaatiotieto
   [kyselypohjaid]
   (first
