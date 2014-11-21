@@ -148,6 +148,13 @@
               "OPL-VASTUUKAYTTAJA"}
             kysymysryhmaid))))
 
+(defn kysymysryhma-sulkeminen? [kysymysryhmaid]
+  (or (yllapitaja?)
+      (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
+        #{"OPL-PAAKAYTTAJA"
+          "OPL-VASTUUKAYTTAJA"}
+        kysymysryhmaid)))
+
 (defn kyselypohja-muokkaus? [kyselypohjaid]
   (or (yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselypohjassa?
@@ -198,6 +205,7 @@
     :kysymysryhma-luonti kysymysryhma-luonti?
     :kysymysryhma-muokkaus kysymysryhma-muokkaus?
     :kysymysryhma-julkaisu kysymysryhma-muokkaus?
+    :kysymysryhma-sulkeminen kysymysryhma-sulkeminen?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?
     :kyselypohja-muokkaus kyselypohja-muokkaus?

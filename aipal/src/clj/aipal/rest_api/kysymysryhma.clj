@@ -115,6 +115,10 @@
         (json-response (arkisto/julkaise! kysymysryhmaid))
         {:status 403})))
 
+  (cu/defapi :kysymysryhma-sulkeminen kysymysryhmaid :put "/:kysymysryhmaid/sulje" [kysymysryhmaid]
+    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
+      (json-response (arkisto/sulje! kysymysryhmaid))))
+
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
     (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid))))
 

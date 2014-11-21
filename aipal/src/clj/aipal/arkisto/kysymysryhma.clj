@@ -243,11 +243,19 @@
     taulut/jatkokysymys
     (sql/where {:jatkokysymysid jatkokysymysid})))
 
+(defn aseta-tila!
+  [kysymysryhmaid tila]
+  (sql/update taulut/kysymysryhma
+    (sql/set-fields {:tila tila})
+    (sql/where {:kysymysryhmaid kysymysryhmaid})))
+
 (defn julkaise!
   [kysymysryhmaid]
-  (sql/update taulut/kysymysryhma
-    (sql/set-fields {:tila "julkaistu"})
-    (sql/where {:kysymysryhmaid kysymysryhmaid})))
+  (aseta-tila! kysymysryhmaid "julkaistu"))
+
+(defn sulje!
+  [kysymysryhmaid]
+  (aseta-tila! kysymysryhmaid "suljettu"))
 
 (defn laske-kysymykset
   [kysymysryhmaid]
