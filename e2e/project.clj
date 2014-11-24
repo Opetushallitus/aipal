@@ -16,7 +16,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [korma "0.3.2"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
-                 [solita/opetushallitus-aitu-e2e "0.15.0"]
+                 [solita/opetushallitus-aitu-e2e "0.18.1"]
                  [clj-time "0.6.0"]]
   :plugins [[test2junit "1.0.1"]]
 
