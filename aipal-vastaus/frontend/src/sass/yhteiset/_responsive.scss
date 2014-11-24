@@ -1,15 +1,18 @@
 @media screen and (max-width: 550px) {
-  h1 {
-    font-size: 1.8em;
+  h1, header h1 {
+    font-size: 1.6em;
   }
   h2 {
-    font-size: 1.5em;
+    font-size: 1.4em;
   }
   h3 {
     font-size: 1.2em;
   }
   label {
     font-size: 1.1em;
+    vertical-align: middle;
+    line-height: 1.3em;
+    padding: .2em 0 !important;
   }
   textarea {
     width: 90%;
@@ -24,6 +27,13 @@
     padding: .7em 0em;
     font-size: 1.4em;
     width: 100%;
+  }
+
+  input {
+    height: 1.3em;
+    width: 1.3em;
+    line-height: 1.3em;
+    vertical-align: middle;
   }
 
   .main-nav {
