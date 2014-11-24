@@ -26,7 +26,7 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
         haku: '='
       },
       templateUrl : 'template/yhteiset/direktiivit/kyselylista.html',
-      controller: ['$scope', '$modal', '$location', 'Kysely', 'ilmoitus', 'i18n', function($scope, $modal, $location, Kysely, ilmoitus, i18n) {
+      controller: ['$scope', '$modal', '$location', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', function($scope, $modal, $location, Kysely, Kyselykerta, ilmoitus, i18n) {
         $scope.julkaiseKyselyModal = function(kysely) {
           var modalInstance = $modal.open({
             templateUrl: 'template/kysely/julkaise-kysely.html',
@@ -71,6 +71,19 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
             _.assign(kysely, uusiKysely);
             ilmoitus.onnistuminen(i18n.hae('kysely.palautus_onnistui'));
           });
+        };
+        $scope.lukitseKyselykerta = function(kyselykerta) {
+          Kyselykerta.lukitse(kyselykerta.kyselykertaid)
+            .success(function(uusiKyselykerta) {
+              _.assign(kyselykerta, uusiKyselykerta);
+              ilmoitus.onnistuminen(i18n.hae('kyselykerta.lukitseminen_onnistui'));
+            });
+        };
+        $scope.avaaKyselykerta = function(kyselykerta) {
+          Kyselykerta.avaa(kyselykerta.kyselykertaid)
+            .success(function(uusiKyselykerta) {
+              _.assign(kyselykerta, uusiKyselykerta);
+            });
         };
       }]
     };

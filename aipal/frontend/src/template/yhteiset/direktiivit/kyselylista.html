@@ -53,12 +53,21 @@
           <div class="kyselykerrat" ng-if="kysely.tila !== 'luonnos'">
               <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in kysely.kyselykerrat" class="kyselykerrat-container">
                   <h3 class="e2e-kyselykerta-nimi">{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta.nimi}}</h3>
-                  <span class="text-muted">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
+                  <span class="text-muted" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
+                  <span class="text-muted" ng-if="kyselykerta.lukittu">{{ 'yleiset.lukittu' | i18n }}</span>
                   <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA']">
-                      <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
+                      <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left" ng-if="!kyselykerta.lukittu">
                           {{ 'kyselykerta.hallitse' | i18n }}&nbsp;
                           <span class="glyphicon glyphicon-pencil"></span>
                       </a>
+                      <button class="btn btn-primary pull-left" ng-click="lukitseKyselykerta(kyselykerta)" ng-if="!kyselykerta.lukittu">
+                          {{ 'yleiset.lukitse' | i18n }}
+                          <span class="glyphicon glyphicon-remove"></span>
+                      </button>
+                      <button class="btn btn-primary pull-left" ng-click="avaaKyselykerta(kyselykerta)" ng-if="kyselykerta.lukittu">
+                          {{ 'yleiset.avaa' | i18n }}
+                          <span class="glyphicon glyphicon-remove"></span>
+                      </button>
                   </auth>
                   <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']">
                       <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
