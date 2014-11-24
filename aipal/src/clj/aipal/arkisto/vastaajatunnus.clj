@@ -85,4 +85,6 @@
   (sql/update taulut/vastaajatunnus
     (sql/set-fields {:lukittu lukitse})
     (sql/where {:kyselykertaid kyselykertaid
-                :vastaajatunnusid vastaajatunnusid})))
+                :vastaajatunnusid vastaajatunnusid}))
+  ;; haetaan vastaajatunnus, jotta saadaan kaytettavissa arvo
+  (hae vastaajatunnusid))
