@@ -69,7 +69,7 @@
       (w/click {:css ".e2e-kysely-nimi"})
       (w/click {:css ".e2e-julkaise-kysely"})
       (odota-angular-pyyntoa)
-      (w/click {:css ".e2e-vahvista-kyselyn-julkaisu"})
+      (w/click {:css ".e2e-palvelut-varmistus-vahvista"})
       (odota-angular-pyyntoa)
 
       ;; luo kyselykerta
