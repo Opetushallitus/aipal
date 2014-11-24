@@ -56,8 +56,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       });
   }])
 
-  .controller('KysymysryhmatController', ['$scope', '$modal', 'Kysymysryhma', 'i18n', 'ilmoitus',
-                                          function($scope, $modal, Kysymysryhma, i18n, ilmoitus) {
+  .controller('KysymysryhmatController', ['$filter', '$scope', '$modal', 'Kysymysryhma', 'i18n', 'ilmoitus', 'varmistus',
+                                          function($filter, $scope, $modal, Kysymysryhma, i18n, ilmoitus, varmistus) {
     $scope.latausValmis = false;
     Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
@@ -87,14 +87,16 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
 
     $scope.suljeKysymysryhma = function(kysymysryhma) {
-      Kysymysryhma.sulje(kysymysryhma)
-        .success(function(uusiKysymysryhma) {
-          _.assign(kysymysryhma, uusiKysymysryhma);
-          ilmoitus.onnistuminen(i18n.hae('kysymysryhma.sulkeminen_onnistui'));
-        })
-        .error(function() {
-          ilmoitus.virhe(i18n.hae('kysymysryhma.sulkeminen_epaonnistui'));
-        });
+      varmistus.varmista(i18n.hae('kysymysryhma.sulje'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.sulje_teksti'), i18n.hae('kysymysryhma.sulje')).then(function() {
+        Kysymysryhma.sulje(kysymysryhma)
+          .success(function(uusiKysymysryhma) {
+            _.assign(kysymysryhma, uusiKysymysryhma);
+            ilmoitus.onnistuminen(i18n.hae('kysymysryhma.sulkeminen_onnistui'));
+          })
+          .error(function() {
+            ilmoitus.virhe(i18n.hae('kysymysryhma.sulkeminen_epaonnistui'));
+          });
+      });
     };
   }])
 
