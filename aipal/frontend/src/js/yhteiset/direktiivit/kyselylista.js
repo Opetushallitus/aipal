@@ -26,22 +26,17 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
         haku: '='
       },
       templateUrl : 'template/yhteiset/direktiivit/kyselylista.html',
-      controller: ['$scope', '$modal', '$location', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', function($scope, $modal, $location, Kysely, Kyselykerta, ilmoitus, i18n) {
+      controller: ['$filter', '$scope', '$location', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', 'varmistus', function($filter, $scope, $location, Kysely, Kyselykerta, ilmoitus, i18n, varmistus) {
         $scope.julkaiseKyselyModal = function(kysely) {
-          var modalInstance = $modal.open({
-            templateUrl: 'template/kysely/julkaise-kysely.html',
-            controller: 'JulkaiseKyselyModalController',
-            resolve: { kysely: function() { return kysely; } }
-          });
-          modalInstance.result.then(function () {
+          varmistus.varmista(i18n.hae('kysely.julkaise'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.julkaise_ohjeistus'), i18n.hae('kysely.julkaise')).then(function() {
             Kysely.julkaise(kysely.kyselyid)
-            .success(function(response) {
-              _.assign(kysely, response);
-              ilmoitus.onnistuminen(i18n.hae('kysely.julkaisu_onnistui'));
-            })
-            .error(function() {
-              ilmoitus.virhe(i18n.hae('kysely.julkaisu_epaonnistui'));
-            });
+              .success(function(response) {
+                _.assign(kysely, response);
+                ilmoitus.onnistuminen(i18n.hae('kysely.julkaisu_onnistui'));
+              })
+              .error(function() {
+                ilmoitus.virhe(i18n.hae('kysely.julkaisu_epaonnistui'));
+              });
           });
         };
 
@@ -50,12 +45,7 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
         };
 
         $scope.suljeKyselyModal = function(kysely) {
-          var modalInstance = $modal.open({
-            templateUrl: 'template/kysely/sulje-kysely.html',
-            controller: 'SuljeKyselyModalController',
-            resolve: { kysely: function() { return kysely; } }
-          });
-          modalInstance.result.then(function() {
+          varmistus.varmista(i18n.hae('kysely.sulje'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.sulje_ohjeistus'), i18n.hae('kysely.sulje')).then(function() {
             $scope.suljeKysely(kysely);
           });
         };
@@ -87,19 +77,5 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
         };
       }]
     };
-  }])
-
-  .controller('JulkaiseKyselyModalController', ['$modalInstance', '$scope', 'kysely', function ($modalInstance, $scope, kysely) {
-    $scope.kysely = kysely;
-
-    $scope.julkaise = $modalInstance.close;
-    $scope.cancel = $modalInstance.dismiss;
-  }])
-
-  .controller('SuljeKyselyModalController', ['$modalInstance', '$scope', 'kysely',  function($modalInstance, $scope, kysely) {
-    $scope.kysely = kysely;
-
-    $scope.sulje = $modalInstance.close;
-    $scope.cancel = $modalInstance.dismiss;
   }])
 ;
