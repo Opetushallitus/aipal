@@ -22,7 +22,9 @@
   (sql/select taulut/kyselykerta
     (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
-    (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm)
+    (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
+                :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+                :kyselykerta.lukittu)
     (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
     (sql/order :kyselykerta.kyselykertaid :ASC)))
 
