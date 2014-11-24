@@ -18,6 +18,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
                                                'yhteiset.palvelut.i18n',
                                                'yhteiset.palvelut.ilmoitus',
                                                'yhteiset.palvelut.tallennusMuistutus',
+                                               'yhteiset.palvelut.varmistus',
                                                'yhteiset.suodattimet.numerot'])
 
   .config(['$routeProvider', function($routeProvider) {
