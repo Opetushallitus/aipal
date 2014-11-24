@@ -31,7 +31,7 @@
   (w/select (nth (w/find-elements {:tag :radio}) 0)))
 
 ; Disabloitu väliaikaisesti
-#_(deftest koko-putki-test
+(deftest koko-putki-test
   (with-webdriver
     (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
                 :rooli_organisaatio [{:organisaatio "0000000-0"
@@ -59,7 +59,9 @@
       (w/click {:css ".e2e-lisaa-kysymysryhma"})
       (odota-angular-pyyntoa)
       (w/select-by-text ".e2e-valittavat-kysymysryhmat" "Uusi kysymysryhmä")
+      (odota-kunnes (w/enabled? {:css ".e2e-lisaa-valittu-kysymysryhma"}))
       (w/click {:css ".e2e-lisaa-valittu-kysymysryhma"})
+      (odota-angular-pyyntoa)
       (w/click {:css ".e2e-tallenna-kysely"})
       (odota-angular-pyyntoa)
 
@@ -77,6 +79,7 @@
       (odota-angular-pyyntoa)
 
       ;; luo vastaajatunnuksia
+      (odota-kunnes (w/present? {:css ".e2e-luo-vastaajatunnuksia"}))
       (w/click {:css ".e2e-luo-vastaajatunnuksia"})
       (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" "Oppisopimus")
       (w/click (w/find-element-under {:css ".e2e-vastaustunnusten-luonti-dialogi"} {:css ".e2e-direktiivit-tallenna"}))
@@ -89,8 +92,11 @@
                         (.contains (sivun-sisalto) "UUSI KYSELY")) 10000 500)
 
         (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
+
+        (odota-kunnes (w/enabled? {:css ".e2e-tallenna-vastaukset"}))
         (w/click {:css ".e2e-tallenna-vastaukset"})
 
+        (odota-angular-pyyntoa)
         (is (.contains (sivun-sisalto) "Kiitos vastauksestanne"))
 
         (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))
