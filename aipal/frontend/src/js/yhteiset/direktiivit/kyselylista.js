@@ -46,16 +46,13 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
 
         $scope.suljeKyselyModal = function(kysely) {
           varmistus.varmista(i18n.hae('kysely.sulje'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.sulje_ohjeistus'), i18n.hae('kysely.sulje')).then(function() {
-            $scope.suljeKysely(kysely);
+            Kysely.sulje(kysely.kyselyid).success(function(uusiKysely) {
+              _.assign(kysely, uusiKysely);
+              ilmoitus.onnistuminen(i18n.hae('kysely.sulkeminen_onnistui'));
+            });
           });
         };
 
-        $scope.suljeKysely = function(kysely) {
-          Kysely.sulje(kysely.kyselyid).success(function(uusiKysely) {
-            _.assign(kysely, uusiKysely);
-            ilmoitus.onnistuminen(i18n.hae('kysely.sulkeminen_onnistui'));
-          });
-        };
         $scope.palautaKysely = function(kysely) {
           Kysely.palauta(kysely.kyselyid).success(function(uusiKysely) {
             _.assign(kysely, uusiKysely);
