@@ -19,11 +19,11 @@
     [aipal.arkisto.vastaajatunnus :as vastaajatunnus]))
 
 (c/defroutes reitit
-  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
+  (cu/defapi :vastaajatunnus-luonti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
     (json-response (vastaajatunnus/lisaa!
                      (assoc vastaajatunnus :kyselykertaid (Integer/parseInt kyselykertaid)))))
 
-  (cu/defapi :vastaajatunnus nil :post "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" [kyselykertaid vastaajatunnusid lukitse]
+  (cu/defapi :vastaajatunnus-tilamuutos kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" [kyselykertaid vastaajatunnusid lukitse]
     (json-response (vastaajatunnus/lukitse! (Integer/parseInt kyselykertaid) (Integer/parseInt vastaajatunnusid) lukitse)))
 
   (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid" [kyselykertaid]

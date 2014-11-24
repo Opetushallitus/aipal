@@ -199,6 +199,8 @@
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
+    :vastaajatunnus-tilamuutos kyselykerta-muokkaus?
+    :vastaajatunnus-luonti kyselykerta-muokkaus?
     :kysely kyselyiden-listaaminen?
     :kysely-luonti kysely-luonti?
     :kysely-luku kysely-luku?
