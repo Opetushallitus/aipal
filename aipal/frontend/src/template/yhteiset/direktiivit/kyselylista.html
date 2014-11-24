@@ -60,11 +60,11 @@
                           {{ 'kyselykerta.hallitse' | i18n }}&nbsp;
                           <span class="glyphicon glyphicon-pencil"></span>
                       </a>
-                      <button class="btn btn-primary pull-left" ng-click="lukitseKyselykerta(kyselykerta)" ng-if="!kyselykerta.lukittu">
+                      <button class="btn btn-primary pull-left" ng-click="lukitseKyselykerta(kyselykerta)" ng-if="!kyselykerta.lukittu && kysely.kaytettavissa">
                           {{ 'yleiset.lukitse' | i18n }}
                           <span class="glyphicon glyphicon-remove"></span>
                       </button>
-                      <button class="btn btn-primary pull-left" ng-click="avaaKyselykerta(kyselykerta)" ng-if="kyselykerta.lukittu">
+                      <button class="btn btn-primary pull-left" ng-click="avaaKyselykerta(kyselykerta)" ng-if="kyselykerta.lukittu && kysely.kaytettavissa">
                           {{ 'yleiset.avaa' | i18n }}
                           <span class="glyphicon glyphicon-remove"></span>
                       </button>
