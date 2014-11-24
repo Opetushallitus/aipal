@@ -39,7 +39,10 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
   .controller('KyselykerratController', [
     'Kyselykerta', '$scope',
     function(Kyselykerta, $scope) {
-      $scope.kyselykerrat = Kyselykerta.hae();
+      Kyselykerta.hae()
+        .success(function(kyselykerrat) {
+          $scope.kyselykerrat = kyselykerrat;
+        });
     }
   ])
 

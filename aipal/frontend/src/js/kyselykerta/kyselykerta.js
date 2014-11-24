@@ -85,11 +85,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
       if (!$scope.uusi) {
         $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
-        Kyselykerta.haeYksi($scope.kyselykertaid, function(kyselykerta) {
-          $scope.kyselykerta = kyselykerta;
-        }, function() {
-          $location.url('/');
-        });
+        Kyselykerta.haeYksi($scope.kyselykertaid)
+          .success(function(kyselykerta) {
+            $scope.kyselykerta = kyselykerta;
+          })
+          .error(function() {
+            $location.url('/');
+          });
       }
 
       $scope.getVastaustenLkm = function(rahoitusmuotoid){
@@ -113,17 +115,20 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
       $scope.tallenna = function() {
         if ($scope.uusi) {
-          Kyselykerta.luoUusi(parseInt($routeParams.kyselyid, 10), $scope.kyselykerta, function(kyselykerta) {
-            $scope.kyselykertaForm.$setPristine();
-            $location.url('/kyselyt/' + $routeParams.kyselyid + '/kyselykerta/' + kyselykerta.kyselykertaid);
-          });
+          Kyselykerta.luoUusi(parseInt($routeParams.kyselyid, 10), $scope.kyselykerta)
+            .success(function(kyselykerta) {
+              $scope.kyselykertaForm.$setPristine();
+              $location.url('/kyselyt/' + $routeParams.kyselyid + '/kyselykerta/' + kyselykerta.kyselykertaid);
+            });
         } else {
-          Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta, function() {
-            $scope.kyselykertaForm.$setPristine();
-            ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
-          }, function() {
-            ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
-          });
+          Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta)
+            .success(function() {
+              $scope.kyselykertaForm.$setPristine();
+              ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
+            })
+            .error(function() {
+              ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
+            });
         }
       };
 

@@ -14,47 +14,20 @@
 
 'use strict';
 
-angular.module('rest.kyselykerta', ['ngResource'])
-  .factory('Kyselykerta', ['$resource', function($resource) {
-    var resource = $resource(null, null, {
-      haku: {
-        method: 'GET',
-        params: {
-          nocache: function() {return Date.now();}
-        },
-        isArray: true,
-        url: 'api/kyselykerta/'
-      },
-      haeYksi: {
-        method: 'GET',
-        params: {
-          nocache: function() {return Date.now();}
-        },
-        url: 'api/kyselykerta/:id'
-      },
-      luoUusi: {
-        method: 'POST',
-        url: 'api/kyselykerta/',
-        id: 'tallenna-kyselykerta'
-      },
-      tallenna: {
-        method: 'POST',
-        url: 'api/kyselykerta/:id'
-      }
-    });
-
+angular.module('rest.kyselykerta', [])
+  .factory('Kyselykerta', ['$http', function($http) {
     return {
-      hae: function(successCallback, errorCallback) {
-        return resource.haku({}, successCallback, errorCallback);
+      hae: function() {
+        return $http.get('api/kyselykerta', {params: {nocache: Date.now()}});
       },
-      haeYksi: function(id, successCallback, errorCallback) {
-        return resource.haeYksi({id: id}, successCallback, errorCallback);
+      haeYksi: function(id) {
+        return $http.get('api/kyselykerta/' + id, {params: {nocache: Date.now()}});
       },
-      luoUusi: function(kyselyId, kyselykerta, successCallback, errorCallback) {
-        return resource.luoUusi({}, {kyselyid: kyselyId, kyselykerta: kyselykerta}, successCallback, errorCallback);
+      luoUusi: function(kyselyId, kyselykerta) {
+        return $http.post('api/kyselykerta', {kyselyid: kyselyId, kyselykerta: kyselykerta});
       },
-      tallenna: function(kyselykertaId, kyselykerta, successCallback, errorCallback) {
-        return resource.tallenna({id: kyselykertaId}, kyselykerta, successCallback, errorCallback);
+      tallenna: function(kyselykertaId, kyselykerta) {
+        return $http.post('api/kyselykerta/' + kyselykertaId, kyselykerta);
       }
     };
   }]);
