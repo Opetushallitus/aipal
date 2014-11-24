@@ -183,7 +183,15 @@
                "OPL-KAYTTAJA"}
              kyselyid))))
 
+(defn kyselykerta-lukittu? [kyselykertaid]
+  (:lukittu (kyselykerta-arkisto/hae-yksi (->int kyselykertaid))))
+
 (defn kyselykerta-muokkaus? [kyselykertaid]
+  (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
+    (and (kyselykerta-luonti? kyselyid)
+         (not (kyselykerta-lukittu? kyselykertaid)))))
+
+(defn kyselykerta-tilamuutos? [kyselykertaid]
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
     (kyselykerta-luonti? kyselyid)))
 
@@ -200,7 +208,7 @@
     :kyselykerta-raportti kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
     :kyselykerta-muokkaus kyselykerta-muokkaus?
-    :kyselykerta-tilamuutos kyselykerta-muokkaus?
+    :kyselykerta-tilamuutos kyselykerta-tilamuutos?
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
