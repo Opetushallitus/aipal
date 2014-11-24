@@ -30,7 +30,7 @@ angular.module('yhteiset.palvelut.varmistus', [])
                 alaotsikko: alaotsikko,
                 teksti: teksti,
                 vahvistusnappi: vahvistusnappi
-              }
+              };
             }
           }
         });
@@ -43,7 +43,7 @@ angular.module('yhteiset.palvelut.varmistus', [])
 
         return deferred.promise;
       }
-    }
+    };
   }])
 
   .controller('VarmistusModalController', ['$modalInstance', '$scope', 'i18n', 'tekstit', function($modalInstance, $scope, i18n, tekstit) {
