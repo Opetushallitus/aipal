@@ -20,6 +20,15 @@
 
 <div ng-repeat="tila in ['julkaistu']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
 
-<h2>{{i18n.kysymysryhma.suljetut}}</h2>
+<div>
+  <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
+    <span ng-if="!naytaSuljetut">{{i18n.kysymysryhma.nayta_suljetut}}</span>
+    <span ng-if="naytaSuljetut">{{i18n.kysymysryhma.piilota_suljetut}}</span>
+  </button>
+</div>
 
-<div ng-repeat="tila in ['suljettu']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
+<div ng-if="naytaSuljetut">
+  <h2>{{i18n.kysymysryhma.suljetut}}</h2>
+
+  <div ng-repeat="tila in ['suljettu']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
+</div>
