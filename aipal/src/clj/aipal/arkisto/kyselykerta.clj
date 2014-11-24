@@ -41,9 +41,8 @@
   [kyselykertaid]
   (->
     (sql/select* taulut/kyselykerta)
-    (sql/fields :kyselyid :kyselykertaid :nimi :voimassa_alkupvm :voimassa_loppupvm)
+    (sql/fields :kyselyid :kyselykertaid :nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu)
     (sql/where (= :kyselykertaid kyselykertaid))
-    (sql/order :kyselykerta.kyselykertaid :ASC)
     sql/exec
     first))
 
