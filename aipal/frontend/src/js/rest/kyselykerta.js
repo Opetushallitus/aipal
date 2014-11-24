@@ -30,10 +30,10 @@ angular.module('rest.kyselykerta', [])
         return $http.post('api/kyselykerta/' + kyselykertaId, kyselykerta);
       },
       lukitse: function(kyselykertaId) {
-        return $http.put('api/kyselykerta/lukitse/' + kyselykertaId);
+        return $http.put('api/kyselykerta/' + kyselykertaId + '/lukitse');
       },
       avaa: function(kyselykertaId) {
-        return $http.put('api/kyselykerta/avaa/' + kyselykertaId);
+        return $http.put('api/kyselykerta/' + kyselykertaId + '/avaa');
       }
     };
   }]);
