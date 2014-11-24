@@ -36,17 +36,19 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     ;
   }])
 
-  .controller('KyselypohjatController', ['$location', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', function($location, $scope, Kyselypohja, i18n, ilmoitus) {
+  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $location, $scope, Kyselypohja, i18n, ilmoitus, varmistus) {
     $scope.luoUusiKyselypohja = function() {
       $location.url('/kyselypohjat/kyselypohja/uusi');
     };
 
     $scope.julkaiseKyselypohja = function(kyselypohja) {
-      Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
-        ilmoitus.onnistuminen(i18n.hae('kyselypohja.julkaistu'));
-        _.assign(kyselypohja, uusiKyselypohja);
-      }).error(function() {
-        ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
+      varmistus.varmista(i18n.hae('kyselypohja.julkaise'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.julkaise_teksti'), i18n.hae('kyselypohja.julkaise')).then(function() {
+        Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
+          ilmoitus.onnistuminen(i18n.hae('kyselypohja.julkaistu'));
+          _.assign(kyselypohja, uusiKyselypohja);
+        }).error(function() {
+          ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
+        });
       });
     };
 
