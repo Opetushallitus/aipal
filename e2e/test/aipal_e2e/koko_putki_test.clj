@@ -89,7 +89,8 @@
       (let [vastaajatunnus-url (w/text (w/find-element {:css ".e2e-vastaajatunnus-url"}))]
         (w/wait-until (fn []
                         (w/to vastaajatunnus-url)
-                        (.contains (sivun-sisalto) "UUSI KYSELY")) 10000 500)
+                        (odota-angular-pyyntoa)
+                        (.contains (sivun-sisalto) "UUSI KYSELY")) 10000 1000)
 
         (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
 
