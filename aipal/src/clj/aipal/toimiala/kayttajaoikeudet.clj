@@ -188,7 +188,8 @@
 
 (defn kyselykerta-muokkaus? [kyselykertaid]
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
-    (and (kyselykerta-luonti? kyselyid)
+    (and (kysely-on-julkaistu? kyselyid)
+         (kyselykerta-luonti? kyselyid)
          (not (kyselykerta-lukittu? kyselykertaid)))))
 
 (defn kyselykerta-tilamuutos? [kyselykertaid]
