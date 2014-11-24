@@ -49,7 +49,7 @@
 
         <ul id="current-user" ng-class="{impersonoitu : impersonoitu}">
           <li>
-              <a href="">{{currentuser}}</a>
+              <a href="" class="username" ng-class="{long:currentuser.length>30}">{{currentuser}}</a>
                   <ul ng-if="yllapitaja || impersonoitu">
                       <li ng-if="!impersonoitu"><a href="" ng-click="valitse()">{{i18n.impersonointi.vaihda_avustettavaksi_kayttajaksi}}</a></li>
                       <li ng-if="impersonoitu"><a href="" ng-click="lopetaImpersonointi()">{{i18n.impersonointi.lopeta_avustus}}</a></li>
