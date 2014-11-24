@@ -28,6 +28,12 @@ angular.module('rest.kyselykerta', [])
       },
       tallenna: function(kyselykertaId, kyselykerta) {
         return $http.post('api/kyselykerta/' + kyselykertaId, kyselykerta);
+      },
+      lukitse: function(kyselykertaId) {
+        return $http.put('api/kyselykerta/lukitse/' + kyselykertaId);
+      },
+      avaa: function(kyselykertaId) {
+        return $http.put('api/kyselykerta/avaa/' + kyselykertaId);
       }
     };
   }]);
