@@ -54,8 +54,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselytController', [
-    '$location', '$modal', '$scope', 'ilmoitus', 'Kysely', 'Kyselykerta', 'i18n', 'seuranta',
-    function ($location, $modal, $scope, ilmoitus, Kysely, Kyselykerta, i18n, seuranta) {
+    '$location', '$scope', 'ilmoitus', 'Kysely', 'i18n', 'seuranta',
+    function ($location, $scope, ilmoitus, Kysely, i18n, seuranta) {
       $scope.naytaLuonti = false;
 
       $scope.status = {};
