@@ -60,11 +60,13 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
           });
         };
         $scope.lukitseKyselykerta = function(kyselykerta) {
-          Kyselykerta.lukitse(kyselykerta.kyselykertaid)
-            .success(function(uusiKyselykerta) {
-              _.assign(kyselykerta, uusiKyselykerta);
-              ilmoitus.onnistuminen(i18n.hae('kyselykerta.lukitseminen_onnistui'));
-            });
+          varmistus.varmista(i18n.hae('kyselykerta.lukitse'), kyselykerta.nimi, i18n.hae('kyselykerta.lukitse_teksti'), i18n.hae('kyselykerta.lukitse')).then(function() {
+            Kyselykerta.lukitse(kyselykerta.kyselykertaid)
+              .success(function(uusiKyselykerta) {
+                _.assign(kyselykerta, uusiKyselykerta);
+                ilmoitus.onnistuminen(i18n.hae('kyselykerta.lukitseminen_onnistui'));
+              });
+          });
         };
         $scope.avaaKyselykerta = function(kyselykerta) {
           Kyselykerta.avaa(kyselykerta.kyselykertaid)
