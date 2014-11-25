@@ -177,16 +177,14 @@ header {
   }
 
   /* Jos pitkä käyttäjänimi, niin pakotetaan rivittymään */
-  a.username {
-    .long {
-      text-transform: none;
-      font-size: 1em;
-      padding: 0;
-      margin: 0;
-      line-height: 1em;
-      width: 25em;
-      font-weight: 100;
-    }
+  a.username.long {
+    text-transform: none;
+    font-size: 1em;
+    padding: 0;
+    margin: 0;
+    line-height: 1em;
+    width: 25em;
+    font-weight: 100;
   }
 
   #logout {
