@@ -91,13 +91,13 @@
                         (odota-angular-pyyntoa)
                         (.contains (sivun-sisalto) "UUSI KYSELY")) 10000 1000)
 
-        (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
+        (try
+          (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
 
-        (odota-kunnes (w/enabled? {:css ".e2e-tallenna-vastaukset"}))
-        (w/click {:css ".e2e-tallenna-vastaukset"})
+          (odota-kunnes (w/enabled? {:css ".e2e-tallenna-vastaukset"}))
+          (w/click {:css ".e2e-tallenna-vastaukset"})
 
-        (odota-angular-pyyntoa)
-        (is (.contains (sivun-sisalto) "Kiitos vastauksestanne"))
-
-        (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))
-
+          (odota-angular-pyyntoa)
+          (is (.contains (sivun-sisalto) "Kiitos vastauksestanne"))
+          (finally
+            (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))))
