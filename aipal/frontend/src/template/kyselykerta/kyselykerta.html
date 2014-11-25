@@ -82,11 +82,11 @@
             </tfoot>
             <tbody>
                 <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
-                    ng-class="{lukittu: tunnus.lukittu, vanhentunut: !tunnus.kaytettavissa, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
+                    ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
                     <td class="nowrap actions">
-                        <span ng-if="tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
+                        <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
                             <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
                                 <span class="glyphicon glyphicon-lock"></span>
                             </a>
