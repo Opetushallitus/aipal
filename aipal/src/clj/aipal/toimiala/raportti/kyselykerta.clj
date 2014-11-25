@@ -250,7 +250,16 @@
   (suodata-raportin-kentat
     (muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))
 
-(defn muodosta-raportti [kyselykertaid]
+(defn muodosta-raportti-perustiedot [kyselykertaid]
   {:kyselykerta (hae-kyselykerta kyselykertaid)
-   :luontipvm (time/today)
-   :raportti (muodosta-raportti-kyselykerrasta kyselykertaid)})
+   :luontipvm (time/today)})
+
+(defn muodosta-raportti [kyselykertaid]
+  (assoc (muodosta-raportti-perustiedot kyselykertaid) :raportti (muodosta-raportti-kyselykerrasta kyselykertaid)))
+
+(defn laske-vastaajat [kyselykertaid]
+  (-> (sql/select :vastaaja
+        (sql/aggregate (count :*) :vastaajia)
+        (sql/where {:kyselykertaid kyselykertaid}))
+      first
+      :vastaajia))
