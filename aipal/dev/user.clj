@@ -46,6 +46,7 @@
   (->
     @(ns-resolve 'aipal.asetukset 'oletusasetukset)
     (assoc :development-mode true
+           :raportointi-minimivastaajat -1
            :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
                              :unsafe-https true
                              :enabled true})

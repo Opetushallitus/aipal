@@ -40,6 +40,7 @@
    :organisaatiopalvelu {:url s/Str}
    :eraajo Boolean
    :development-mode Boolean
+   :raportointi-minimivastaajat s/Int
    :logback {:properties-file s/Str}})
 
 (def oletusasetukset
@@ -63,6 +64,7 @@
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :eraajo false
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
+   :raportointi-minimivastaajat 5
    :logback {:properties-file "resources/logback.xml"}})
 
 (defn hae-asetukset

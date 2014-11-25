@@ -24,7 +24,7 @@
   (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (db/transaction
       (let [kyselykertaid (Integer/parseInt kyselykertaid)
-            vaaditut-vastaajat (if (:development-mode @asetukset) -1 5)]
+            vaaditut-vastaajat (:raportointi-minimivastaajat @asetukset)]
             (json-response
               (if (> (laske-vastaajat kyselykertaid) vaaditut-vastaajat)
                 (muodosta-raportti kyselykertaid)
