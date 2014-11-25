@@ -29,7 +29,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       .when('/kyselyt/:kyselyid/kyselykerta/:kyselykertaid', {
         controller: 'KyselykertaController',
         templateUrl: 'template/kyselykerta/kyselykerta.html',
-        label: 'i18n.kysely.breadcrumb_muokkaa_kyselykertaa',
+        label: 'i18n.kysely.breadcrumb_kyselykerta',
         resolve: {
           uusi: function() { return false; }
         }
@@ -38,6 +38,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
   .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Rahoitusmuoto', 'Vastaajatunnus', 'tallennusMuistutus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi',
     function(Kyselykerta, Kysely, Rahoitusmuoto, Vastaajatunnus, tallennusMuistutus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi) {
+      $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
@@ -76,6 +77,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = kysely;
+        if(!kysely.kaytettavissa) { $scope.muokkaustila = false; }
       }).error(function() {
         $location.url('/');
       });
@@ -85,6 +87,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         Kyselykerta.haeYksi($scope.kyselykertaid)
           .success(function(kyselykerta) {
             $scope.kyselykerta = kyselykerta;
+            if (kyselykerta.lukittu) { $scope.muokkaustila = false; }
           })
           .error(function() {
             $location.url('/');

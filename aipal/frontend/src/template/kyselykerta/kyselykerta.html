@@ -1,5 +1,7 @@
-<h1 ng-if="!uusi">{{i18n.kyselykerta.hallitse}}</h1>
-<h1 ng-if="uusi">{{i18n.kyselykerta.uusi_kyselykerta}}</h1>
+<div ng-show="kysely && kyselykerta">
+<h1 ng-if="!uusi && muokkaustila">{{'kyselykerta.hallitse' | i18n}}</h1>
+<h1 ng-if="!muokkaustila">{{'kyselykerta.nayta' | i18n}}</h1>
+<h1 ng-if="uusi">{{'kyselykerta.uusi_kyselykerta' | i18n}}</h1>
 
 <h2>{{i18n.yleiset.kysely}}: {{ kysely | lokalisoiKentta:'nimi' }}</h2>
 
@@ -8,43 +10,52 @@
 <form name="kyselykertaForm">
     <div class="row">
         <div class="col-md-4">
-            <div class="form-group">
-                <label for="kyselykerta_nimi" class="pakollinen"><span>{{i18n.kyselykerta.kyselykerran_nimi}}</span></label>
+            <div class="form-group" ng-if="muokkaustila">
+                <label for="kyselykerta_nimi" class="pakollinen"><span>{{'kyselykerta.kyselykerran_nimi' | i18n }}</span></label>
                 <input id="kyselykerta_nimi" type="text" ng-model="kyselykerta.nimi" class="form-control e2e-kyselykerta-nimi"
                        ng-required="true"/>
+            </div>
+            <div ng-if="!muokkaustila">
+                <label><span>{{'kyselykerta.kyselykerran_nimi' | i18n }}</span></label>
+                <span>{{kyselykerta.nimi}}</span>
             </div>
         </div>
     </div>
 
     <div>
-        <h3>{{i18n.kyselykerta.vastausaika}}</h3>
-        <pvm-valitsin
-                otsikko="{{i18n.yleiset.alkaen}}"
-                oletus-pvm="kysely.voimassa_alkupvm"
-                valittu-pvm="kyselykerta.voimassa_alkupvm"
-                min-pvm="kysely.voimassa_alkupvm"
-                max-pvm="kyselykerta.voimassa_loppupvm"
-                ng-model="kyselykerta.voimassa_alkupvm"
-                pakollinen="true">
-        </pvm-valitsin>
-        <pvm-valitsin
-                otsikko="{{i18n.yleiset.asti}}"
-                oletus-pvm="kyselykerta.voimassa_loppupvm"
-                valittu-pvm="kyselykerta.voimassa_loppupvm"
-                min-pvm="kyselykerta.voimassa_alkupvm"
-                max-pvm="kysely.voimassa_loppupvm"
-                ng-model="kyselykerta.voimassa_loppupvm"
-                pakollinen="false">
-        </pvm-valitsin>
+        <h3>{{'kyselykerta.vastausaika' | i18n}}</h3>
+        <span ng-if="!muokkaustila">
+            {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
+        </span>
+        <span ng-if="muokkaustila">
+            <pvm-valitsin
+                    otsikko="{{i18n.yleiset.alkaen}}"
+                    oletus-pvm="kysely.voimassa_alkupvm"
+                    valittu-pvm="kyselykerta.voimassa_alkupvm"
+                    min-pvm="kysely.voimassa_alkupvm"
+                    max-pvm="kyselykerta.voimassa_loppupvm"
+                    ng-model="kyselykerta.voimassa_alkupvm"
+                    pakollinen="true">
+            </pvm-valitsin>
+            <pvm-valitsin
+                    otsikko="{{i18n.yleiset.asti}}"
+                    oletus-pvm="kyselykerta.voimassa_loppupvm"
+                    valittu-pvm="kyselykerta.voimassa_loppupvm"
+                    min-pvm="kyselykerta.voimassa_alkupvm"
+                    max-pvm="kysely.voimassa_loppupvm"
+                    ng-model="kyselykerta.voimassa_loppupvm"
+                    pakollinen="false">
+            </pvm-valitsin>
+        </span>
     </div>
     <tallenna formi-validi="kyselykertaForm.$valid" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"
-              icon="fa fa-save"></tallenna>
+              icon="fa fa-save" ng-if="muokkaustila"></tallenna>
 </form>
 
 <div ng-if="!uusi">
-    <h2>{{i18n.vastaajatunnus.lista}}</h2>
-    <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()">
-        {{i18n.vastaajatunnus.luonti}}&nbsp;&nbsp;
+    <h2>{{'vastaajatunnus.lista' | i18n}}</h2>
+    <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()" ng-if="muokkaustila">
+        {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
     <br/>
@@ -86,7 +97,7 @@
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
                     <td class="nowrap actions">
-                        <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
+                        <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm && muokkaustila">
                             <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
                                 <span class="fa fa-lock"></span>
                             </a>
@@ -113,4 +124,5 @@
             <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
         </div>
     </div>
+</div>
 </div>
