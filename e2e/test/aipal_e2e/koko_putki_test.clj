@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
+            [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
@@ -40,12 +41,12 @@
       ;; luo kysymysryhma
       (kysymysryhmat-sivu/avaa-sivu)
       (kysymysryhmat-sivu/luo-uusi)
-      (syota-kenttaan "kysymysryhma.nimi_fi" "Uusi kysymysryhmä")
-      (w/click {:css ".e2e-luo-uusi-kysymys"})
-      (syota-kenttaan "aktiivinenKysymys.kysymys_fi" "Uusi kysymys")
-      (w/click {:css ".e2e-lisaa-kysymys"})
-      (w/click {:css ".e2e-tallenna-kysymysryhma"})
-      (odota-angular-pyyntoa)
+
+      (kysymysryhma-sivu/aseta-kysymysryhman-nimi-suomeksi "Uusi kysymysryhmä")
+      (kysymysryhma-sivu/luo-uusi-kysymys)
+      (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
+      (kysymysryhma-sivu/lisaa-kysymys)
+      (kysymysryhma-sivu/tallenna-kysymysryhma)
 
       ;; julkaise kysymysryhmä
       (kysymysryhmat-sivu/julkaise)
