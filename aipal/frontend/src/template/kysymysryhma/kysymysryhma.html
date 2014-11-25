@@ -34,7 +34,7 @@
                 <h3 class="pull-left" ng-show="!muokkaustila">{{i18n.kysymysryhma.kysymykset}}</h3>
                 <button ng-click="lisaaKysymys()" class="pull-right btn btn-primary e2e-luo-uusi-kysymys" ng-show="!muokkaustila" style="margin-right: 0px;">
                     {{i18n.kysymysryhma.luo_uusi_kysymys}}&nbsp;
-                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="fa fa-plus"></span>
                 </button>
 
             <table class="table table-striped kysymys-taulukko" ng-show="!muokkaustila">
@@ -51,11 +51,15 @@
                         <td>{{ kysymys | lokalisoiKentta:'kysymys' }}</td>
                         <td class="nowrap">{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}</td>
                         <td class="nowrap">
-                            <span ng-show="kysymys.pakollinen" class="glyphicon glyphicon-ok"></span>
+                            <span ng-show="kysymys.pakollinen" class="fa fa-check"></span>
                         </td>
                         <td class="actions nowrap">
-                            <span class="glyphicon glyphicon-pencil e2e-muokkaa-kysymysta" style="cursor: pointer" ng-click="muokkaa(kysymys)"></span>&nbsp;
-                            <span class="glyphicon glyphicon-trash" style="cursor: pointer" ng-click="poistaTahiPalautaKysymys(kysymys)"></span>
+                            <a href="" ng-click="muokkaa(kysymys)" class="e2e-muokkaa-kysymysta">
+                                <span class="fa fa-pencil"></span>
+                            </a>
+                            <a href="" ng-click="poistaTahiPalautaKysymys(kysymys)">
+                                <span class="fa fa-trash"></span>
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -120,7 +124,7 @@
     <div class="col-md-12">
         <div class="row clearfix">
             <div>
-                <button ng-click="tallennaKysymysryhma()" class="btn btn-primary e2e-tallenna-kysymysryhma" ng-disabled="!form.$valid || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span></button>
+                <button ng-click="tallennaKysymysryhma()" class="btn btn-primary e2e-tallenna-kysymysryhma" ng-disabled="!form.$valid || muokkaustila">{{i18n.yleiset.tallenna}}&nbsp;<span class="fa fa-save"></span></button>
                 <button ng-click="peruuta()" class="btn btn-default">{{i18n.yleiset.peruuta}}</button>
             </div>
         </div>

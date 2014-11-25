@@ -19,6 +19,7 @@
     "angular-ui-select2": "0.0.5",
     "select2": "3.4.8",
     "ng-breadcrumbs": "0.1.2",
-    "angular-post-message": "1.1.1"
+    "angular-post-message": "1.1.1",
+    "fontawesome": "4.2.0"
   }
 }

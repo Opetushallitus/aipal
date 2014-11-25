@@ -56,11 +56,11 @@
     <div>
         <button class="btn btn-primary" ng-click="lisaaKyselypohjaModal()">
             {{i18n.kysely.lisaa_kyselypohja}}&nbsp;
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="fa fa-plus"></span>
         </button>
         <button class="btn btn-primary e2e-lisaa-kysymysryhma" ng-click="lisaaKysymysryhmaModal()">
             {{i18n.kysely.lisaa_kysymysryhma}}&nbsp;
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="fa fa-plus"></span>
         </button>
     </div>
 
@@ -73,10 +73,10 @@
     <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{'i18n.yleiset.tallennataan' | i18n}}" virheviesti="{{'i18n.yleiset.tallennus_epaonnistui' | i18n}}" yrita-uudelleen="tallenna()">
       <br>
       <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid" ng-click="tallenna()">
-          {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="glyphicon glyphicon-floppy-disk e2e-tallenna-kysely"></span>
+          {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="fa fa-save e2e-tallenna-kysely"></span>
       </button>
         <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid" ng-click="esikatseleModal()">
-            {{'i18n.yleiset.esikatsele'| i18n}}&nbsp;<span class="glyphicon glyphicon-search"></span>
+            {{'i18n.yleiset.esikatsele'| i18n}}&nbsp;<span class="fa fa-search"></span>
         </button>
       <button class="btn btn-default pull-left" ng-click="peruuta()">{{'i18n.yleiset.peruuta' | i18n}}</button>
     </div>

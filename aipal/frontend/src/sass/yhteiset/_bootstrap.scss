@@ -20,14 +20,15 @@ fieldset[disabled] .btn{
   opacity: .4;
 }
 
-/* Glyph */
-table a:not(.btn) span.glyphicon{
+/* Glyphicons and Font-awesome */
+table a:not(.btn) span.glyphicon,
+table a:not(.btn) span.fa{
   color: $darker-gray;
 }
-table a:not(.btn) span.glyphicon:hover {
+table a:not(.btn) span.glyphicon:hover,
+table a:not(.btn) span.fa:hover{
   color: $primary-color;
 }
-
 
 /* Modal */
 .modal-dialog {

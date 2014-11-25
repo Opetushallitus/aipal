@@ -38,14 +38,14 @@
         </pvm-valitsin>
     </div>
     <tallenna formi-validi="kyselykertaForm.$valid" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"
-              icon="glyphicon glyphicon-floppy-disk"></tallenna>
+              icon="fa fa-save"></tallenna>
 </form>
 
 <div ng-if="!uusi">
     <h2>{{i18n.vastaajatunnus.lista}}</h2>
     <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()">
         {{i18n.vastaajatunnus.luonti}}&nbsp;&nbsp;
-        <span class="glyphicon glyphicon-plus"></span>
+        <span class="fa fa-plus"></span>
     </button>
     <br/>
 
@@ -88,15 +88,15 @@
                     <td class="nowrap actions">
                         <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
                             <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
-                                <span class="glyphicon glyphicon-lock"></span>
+                                <span class="fa fa-lock"></span>
                             </a>
                             <a ng-if="!tunnus.lukittu" ng-click="lukitseTunnus(tunnus, true)">
-                                <span class="glyphicon glyphicon-ok"></span>
+                                <span class="fa fa-unlock"></span>
                             </a>
                             &nbsp;
                             <a href="mailto:?subject={{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/{{tunnus.tunnus}}"
                                title="{{i18n.vastaajatunnus.laheta}}">
-                                <span class="glyphicon glyphicon-envelope"></span>
+                                <span class="fa fa-envelope"></span>
                             </a>
                         </span>
                     </td>

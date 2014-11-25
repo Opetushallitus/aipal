@@ -20,7 +20,7 @@
                 <input class="form-control" type="text" ng-model="vaihtoehto.teksti_sv" size="80" maxlength="200" ng-required="!vaihtoehto.teksti_fi"/>
               </label>
               <button class="btn btn-icon delete" ng-show="aktiivinenKysymys.monivalintavaihtoehdot.length > 2" ng-click="poistaVaihtoehto(aktiivinenKysymys,$index)">
-                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="fa fa-close"></span>
               </button>
             </div>
         </div>
@@ -28,6 +28,6 @@
   </ol>
   <button class="btn btn-primary pull-right" ng-click="lisaaVaihtoehto(aktiivinenKysymys)">
     {{i18n.kysymys.lisaa_vaihtoehto}}
-    <span class="glyphicon glyphicon-plus"></span>
+    <span class="fa fa-plus"></span>
   </button>
 </section>

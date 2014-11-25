@@ -12,28 +12,28 @@
     <td>{{ k | lokalisoiKentta:'nimi' }}</td>
     <td>{{ k | lokalisoiKentta:'selite' }}</td>
     <td>
-      <span ng-show="k.valtakunnallinen" class="glyphicon glyphicon-ok"></span>
+      <span ng-show="k.valtakunnallinen" class="fa fa-check"></span>
     </td>
     <td class="actions nowrap">
       <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
         <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}" class="e2e-muokkaa-kysymysryhmaa">
-          <span class="glyphicon glyphicon-pencil"></span>
+          <span class="fa fa-pencil"></span>
         </a>
       </auth>
       <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="!k.valtakunnallinen">
         <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}/kopioi" class="e2e-kopioi-kysymysryhma">
-          <span class="glyphicon glyphicon-file"></span>
+          <span class="fa fa-copy"></span>
         </a>
       </auth>
       &nbsp;&nbsp;
       <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']"  ng-if="yllapitaja || !k.valtakunnallinen">
         <button class="btn btn-primary btn-sm e2e-julkaise-kysymysryhma" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0" ng-if="k.tila === 'luonnos'">
           {{ 'yleiset.julkaise' | i18n }}&nbsp;
-          <span class="glyphicon glyphicon-share-alt"></span>
+          <span class="fa fa-share"></span>
         </button>
         <button class="btn btn-primary btn-sm" ng-click="suljeKysymysryhma(k)" ng-if="k.tila === 'julkaistu'">
           {{ 'yleiset.sulje' | i18n }}&nbsp;
-          <span class="glyphicon glyphicon-remove"></span>
+          <span class="fa fa-close"></span>
         </button>
       </auth>
     </td>
