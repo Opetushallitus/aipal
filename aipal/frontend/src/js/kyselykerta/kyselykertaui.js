@@ -74,9 +74,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
       });
 
-      $scope.tunnukset = [];
-      $scope.kyselykerta = {};
-      $scope.kysely = {};
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = kysely;
       }).error(function() {
@@ -92,6 +89,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
           .error(function() {
             $location.url('/');
           });
+      }
+      else {
+        $scope.tunnukset = [];
+        $scope.kyselykerta = {};
       }
 
       $scope.getVastaustenLkm = function(rahoitusmuotoid){
