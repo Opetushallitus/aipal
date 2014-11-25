@@ -17,6 +17,8 @@
     [schema.core :as s]
     [oph.common.infra.asetukset :refer [lue-asetukset]]))
 
+(def asetukset (promise))
+
 (def Asetukset
   {:server {:port s/Int
             :base-url s/Str}

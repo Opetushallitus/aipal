@@ -42,7 +42,7 @@
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.korma]
 
-            [aipal.asetukset :refer [oletusasetukset hae-asetukset]]
+            [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset] :rename {asetukset asetukset-promise}]
             [aipal.reitit :refer [build-id]]
             [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
@@ -149,6 +149,7 @@
   (try
     (log/info "Käynnistetään Aipal, versio " @build-id)
     (let [asetukset (hae-asetukset alkuasetukset)
+          _ (deliver asetukset-promise asetukset)
           _ (konfiguroi-lokitus asetukset)
           _ (oph.korma.korma/luo-db (:db asetukset))
           sammuta (hs/run-server (app asetukset)

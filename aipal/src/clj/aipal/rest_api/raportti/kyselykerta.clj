@@ -17,13 +17,15 @@
             [aipal.compojure-util :as cu]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response]]
+            [aipal.asetukset :refer [asetukset]]
             [aipal.toimiala.raportti.kyselykerta :refer [laske-vastaajat muodosta-raportti muodosta-raportti-perustiedot]]))
 
 (c/defroutes reitit
   (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (db/transaction
-      (let [kyselykertaid (Integer/parseInt kyselykertaid)]
+      (let [kyselykertaid (Integer/parseInt kyselykertaid)
+            vaaditut-vastaajat (if (:development-mode @asetukset) -1 5)]
             (json-response
-              (if (> (laske-vastaajat kyselykertaid) 5)
+              (if (> (laske-vastaajat kyselykertaid) vaaditut-vastaajat)
                 (muodosta-raportti kyselykertaid)
                 (assoc (muodosta-raportti-perustiedot kyselykertaid) :virhe "ei-riittavasti-vastaajia")))))))
