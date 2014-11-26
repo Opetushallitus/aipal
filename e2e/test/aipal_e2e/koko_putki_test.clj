@@ -21,16 +21,11 @@
             [aipal-e2e.sivu.kyselyt :as kyselyt-sivu]
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
+            [aipalvastaus-e2e.sivu.vastaus :as vastaus-sivu]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
             [aipalvastaus-e2e.util :as aipalvastaus]
             [aitu-e2e.util :refer :all]))
-
-(defn sivun-sisalto []
-  (w/text (w/find-element {:css "body"})))
-
-(defn valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto []
-  (w/select (nth (w/find-elements {:tag :radio}) 0)))
 
 (deftest koko-putki-test
   (with-webdriver
@@ -82,18 +77,13 @@
 
       ;; vastaa kyselyyn
       (let [vastaajatunnus-url (kyselykerta-sivu/ensimmaisen-vastaajatunnuksen-url)]
-        (w/wait-until (fn []
-                        (w/to vastaajatunnus-url)
-                        (odota-angular-pyyntoa)
-                        (.contains (sivun-sisalto) "UUSI KYSELY")) 10000 1000)
+        (vastaus-sivu/avaa-sivu vastaajatunnus-url "UUSI KYSELY")
 
         (try
-          (valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
+          (vastaus-sivu/valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
+          (vastaus-sivu/tallenna-vastaukset)
 
-          (odota-kunnes (w/enabled? {:css ".e2e-tallenna-vastaukset"}))
-          (w/click {:css ".e2e-tallenna-vastaukset"})
+          (is (.contains (vastaus-sivu/sivun-sisalto) "Kiitos vastauksestanne"))
 
-          (odota-angular-pyyntoa)
-          (is (.contains (sivun-sisalto) "Kiitos vastauksestanne"))
           (finally
             (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))))
