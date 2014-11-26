@@ -17,9 +17,9 @@ kohde=$2
 # psql:ää monta kertaa.
 script=$(cat<<EOF
 cd /tmp
-sudo -u postgres psql -q -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$kohde' AND pid <> pg_backend_pid();"
+sudo -u postgres psql -q -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$kohde' AND pid <> pg_backend_pid();"  > /dev/null
 sudo -u postgres psql -q -c "DROP DATABASE IF EXISTS $kohde"
-sudo -u postgres psql -q -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$lahde' AND pid <> pg_backend_pid();"
+sudo -u postgres psql -q -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$lahde' AND pid <> pg_backend_pid();"  > /dev/null
 sudo -u postgres psql -q -c "CREATE DATABASE $kohde WITH TEMPLATE $lahde;"
 EOF
 )
