@@ -22,10 +22,8 @@
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
             [aipalvastaus-e2e.sivu.vastaus :as vastaus-sivu]
-            [aipal-e2e.tietokanta.yhteys :as tietokanta]
-            [aipal-e2e.util :refer :all]
             [aipalvastaus-e2e.util :as aipalvastaus]
-            [aitu-e2e.util :refer :all]))
+            [aitu-e2e.util :refer [with-webdriver]]))
 
 (deftest koko-putki-test
   (with-webdriver
