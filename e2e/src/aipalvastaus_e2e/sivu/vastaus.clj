@@ -31,7 +31,7 @@
 (defn sivun-sisalto []
   (w/text (w/find-element {:css "body"})))
 
-(defn valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto []
+(defn valitse-ensimmaisen-kysymyksen-ensimmainen-vaihtoehto []
   (w/select (nth (w/find-elements {:tag :radio}) 0)))
 
 (defn tallenna-vastaukset []

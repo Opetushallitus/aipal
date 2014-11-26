@@ -21,6 +21,7 @@
             [aipal-e2e.sivu.kyselyt :as kyselyt-sivu]
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
+            [aipal-e2e.sivu.kyselykertaraportti :as kyselykertaraportti-sivu]
             [aipalvastaus-e2e.sivu.vastaus :as vastaus-sivu]
             [aipalvastaus-e2e.util :as aipalvastaus]
             [aitu-e2e.util :refer [with-webdriver]]))
@@ -78,10 +79,15 @@
         (vastaus-sivu/avaa-sivu vastaajatunnus-url "UUSI KYSELY")
 
         (try
-          (vastaus-sivu/valitse-ainoan-kysymyksen-ensimmainen-vaihtoehto)
+          (vastaus-sivu/valitse-ensimmaisen-kysymyksen-ensimmainen-vaihtoehto)
           (vastaus-sivu/tallenna-vastaukset)
 
           (is (.contains (vastaus-sivu/sivun-sisalto) "Kiitos vastauksestanne"))
+
+          (kyselyt-sivu/avaa-sivu)
+          (kyselyt-sivu/nayta-raportti)
+          (is (= (kyselykertaraportti-sivu/ensimmaisen-kysymyksen-ensimmaisen-vaihtoehdon-vastausten-lukumaara)
+                 "1") )
 
           (finally
             (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))))

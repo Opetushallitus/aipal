@@ -38,3 +38,6 @@
 
 (defn luo-uusi-kyselykerta []
   (w/click {:css ".e2e-uusi-kyselykerta"}))
+
+(defn nayta-raportti []
+  (w/click ".e2e-nayta-raportti"))
