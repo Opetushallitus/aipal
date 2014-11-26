@@ -63,6 +63,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
       $scope.latausValmis = true;
+    }).error(function() {
+      $scope.latausValmis = true;
     });
 
     $scope.julkaiseKysymysryhmaModal = function(kysymysryhma) {
