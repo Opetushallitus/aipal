@@ -87,9 +87,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           $scope.kyselyt = data;
           avaaMuistetutKyselyt();
           muistaAvattavatKyselyt();
-        })
-        .error(function() {
-          ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
         });
       };
       $scope.haeKyselyt();
