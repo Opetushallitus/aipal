@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
+            [aipal-e2e.sivu.kysely :as kysely-sivu]
             [aipal-e2e.sivu.kyselyt :as kyselyt-sivu]
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
@@ -54,15 +55,13 @@
       ;; luo kysely
       (kyselyt-sivu/avaa-sivu)
       (kyselyt-sivu/luo-uusi-kysely)
-      (syota-kenttaan "kysely.nimi_fi" "Uusi kysely")
-      (w/click {:css ".e2e-lisaa-kysymysryhma"})
-      (odota-angular-pyyntoa)
-      (w/select-by-text ".e2e-valittavat-kysymysryhmat" "Uusi kysymysryhmä")
-      (odota-kunnes (w/enabled? {:css ".e2e-lisaa-valittu-kysymysryhma"}))
-      (w/click {:css ".e2e-lisaa-valittu-kysymysryhma"})
-      (odota-angular-pyyntoa)
-      (w/click {:css ".e2e-tallenna-kysely"})
-      (odota-angular-pyyntoa)
+
+      (kysely-sivu/aseta-kyselyn-nimi-suomeksi "Uusi kysely")
+
+      (kysely-sivu/lisaa-kysymysryhma)
+      (kysely-sivu/valitse-kysymysryhma "Uusi kysymysryhmä")
+      (kysely-sivu/lisaa-valittu-kysymysryhma)
+      (kysely-sivu/tallenna-kysely)
 
       ;; julkaise kysely
       (kyselyt-sivu/avaa-ensimmainen-kysely)
