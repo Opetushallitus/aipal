@@ -14,7 +14,9 @@
 
 'use strict';
 
-angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'yhteiset.palvelut.ilmoitus'])
+angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute',
+                                             'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
+                                             'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
