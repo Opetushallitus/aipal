@@ -29,6 +29,7 @@ angular.module('aipal', [
   'yhteiset.palvelut.virheLogitus',
   'yhteiset.palvelut.seuranta',
   'yhteiset.palvelut.kayttooikeudet',
+  'yhteiset.palvelut.palvelinvirhe',
   'yhteiset.palvelut.varmistus',
   'yhteiset.direktiivit.auth',
   'yhteiset.direktiivit.copyright',
