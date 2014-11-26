@@ -16,14 +16,13 @@
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
+            [aipal-e2e.sivu.kyselyt :as kyselyt-sivu]
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
             [aipalvastaus-e2e.util :as aipalvastaus]
             [aitu-e2e.util :refer :all]))
-
-(def kyselyt-sivu "/#/kyselyt")
 
 (defn sivun-sisalto []
   (w/text (w/find-element {:css "body"})))
@@ -53,8 +52,8 @@
       (kysymysryhmat-sivu/vahvista-julkaisu)
 
       ;; luo kysely
-      (avaa kyselyt-sivu)
-      (w/click {:css ".e2e-luo-uusi-kysely"})
+      (kyselyt-sivu/avaa-sivu)
+      (kyselyt-sivu/luo-uusi-kysely)
       (syota-kenttaan "kysely.nimi_fi" "Uusi kysely")
       (w/click {:css ".e2e-lisaa-kysymysryhma"})
       (odota-angular-pyyntoa)
@@ -66,14 +65,12 @@
       (odota-angular-pyyntoa)
 
       ;; julkaise kysely
-      (w/click {:css ".e2e-kysely-nimi"})
-      (w/click {:css ".e2e-julkaise-kysely"})
-      (odota-angular-pyyntoa)
-      (w/click {:css ".e2e-palvelut-varmistus-vahvista"})
-      (odota-angular-pyyntoa)
+      (kyselyt-sivu/avaa-ensimmainen-kysely)
+      (kyselyt-sivu/julkaise-kysely)
+      (kyselyt-sivu/vahvista-kyselyn-julkaisu)
 
       ;; luo kyselykerta
-      (w/click {:css ".e2e-uusi-kyselykerta"})
+      (kyselyt-sivu/luo-uusi-kyselykerta)
       (syota-kenttaan "kyselykerta.nimi" "Uusi kyselykerta")
       (w/click {:css ".e2e-direktiivit-tallenna"})
       (odota-angular-pyyntoa)
