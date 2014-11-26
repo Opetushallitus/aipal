@@ -25,4 +25,5 @@
 (defn avaa [polku]
   (avaa-url (aipal-url polku) yhteys/testikayttaja-uid)
   (w/execute-script "angular.element(document.documentElement).data('$injector').get('$animate').enabled(false);")
+  (w/execute-script "angular.element(document.documentElement).data('$injector').get('ilmoitus').asetaAikarajat({onnistuminen: 100});")
   (w/execute-script "$('body').addClass('disable-all-animations');"))
