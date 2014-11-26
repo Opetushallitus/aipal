@@ -23,3 +23,17 @@
 (defn tallenna-kyselykerta []
   (w/click {:css ".e2e-direktiivit-tallenna"})
   (odota-angular-pyyntoa))
+
+(defn luo-vastaajatunnuksia []
+  (odota-kunnes (w/present? {:css ".e2e-luo-vastaajatunnuksia"}))
+  (w/click {:css ".e2e-luo-vastaajatunnuksia"}))
+
+(defn valitse-vastaajatunnuksen-rahoitusmuoto [rahoitusmuoto]
+  (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" rahoitusmuoto))
+
+(defn lisaa-vastaajatunnukset []
+  (w/click (w/find-element-under {:css ".e2e-vastaustunnusten-luonti-dialogi"} {:css ".e2e-direktiivit-tallenna"}))
+  (odota-angular-pyyntoa))
+
+(defn ensimmaisen-vastaajatunnuksen-url []
+  (w/text (w/find-element {:css ".e2e-vastaajatunnus-url"})))

@@ -76,14 +76,12 @@
       (kyselykerta-sivu/tallenna-kyselykerta)
 
       ;; luo vastaajatunnuksia
-      (odota-kunnes (w/present? {:css ".e2e-luo-vastaajatunnuksia"}))
-      (w/click {:css ".e2e-luo-vastaajatunnuksia"})
-      (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" "Oppisopimus")
-      (w/click (w/find-element-under {:css ".e2e-vastaustunnusten-luonti-dialogi"} {:css ".e2e-direktiivit-tallenna"}))
-      (odota-angular-pyyntoa)
+      (kyselykerta-sivu/luo-vastaajatunnuksia)
+      (kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
+      (kyselykerta-sivu/lisaa-vastaajatunnukset)
 
       ;; vastaa kyselyyn
-      (let [vastaajatunnus-url (w/text (w/find-element {:css ".e2e-vastaajatunnus-url"}))]
+      (let [vastaajatunnus-url (kyselykerta-sivu/ensimmaisen-vastaajatunnuksen-url)]
         (w/wait-until (fn []
                         (w/to vastaajatunnus-url)
                         (odota-angular-pyyntoa)
