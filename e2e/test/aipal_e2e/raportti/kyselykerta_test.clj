@@ -230,7 +230,7 @@
           "avoimen kysymyksen vastaukset"
           (let [kysymys (nth (kysymykset) 2)]
             (is (= (kysymyksen-teksti kysymys) "3. Kysymys 3"))
-            (is (= (vapaatekstit-kysymykselle kysymys) ["Vapaa teksti 1" "Vapaa teksti 2"]))))
+            (is (= (set (vapaatekstit-kysymykselle kysymys)) #{"Vapaa teksti 1" "Vapaa teksti 2"}))))
         (testing
           "väittämän vastausten jakauma"
           (let [kysymys (nth (kysymykset) 3)]
