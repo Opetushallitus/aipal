@@ -17,6 +17,7 @@
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.sivu.kysely :as kysely-sivu]
+            [aipal-e2e.sivu.kyselykerta :as kyselykerta-sivu]
             [aipal-e2e.sivu.kyselyt :as kyselyt-sivu]
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
@@ -70,9 +71,9 @@
 
       ;; luo kyselykerta
       (kyselyt-sivu/luo-uusi-kyselykerta)
-      (syota-kenttaan "kyselykerta.nimi" "Uusi kyselykerta")
-      (w/click {:css ".e2e-direktiivit-tallenna"})
-      (odota-angular-pyyntoa)
+
+      (kyselykerta-sivu/aseta-kyselykerran-nimi "Uusi kyselykerta")
+      (kyselykerta-sivu/tallenna-kyselykerta)
 
       ;; luo vastaajatunnuksia
       (odota-kunnes (w/present? {:css ".e2e-luo-vastaajatunnuksia"}))
