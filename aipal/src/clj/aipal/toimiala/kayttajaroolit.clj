@@ -22,7 +22,6 @@
 
 ;; roolit joilla on koulutustoimijaorganisaatio
 (def organisaatio-roolit {:oppilaitos-vastuukayttaja "OPL-VASTUUKAYTTAJA"
-                          :oppilaitos-paakayttaja "OPL-PAAKAYTTAJA"
                           :oppilaitos-kayttaja "OPL-KAYTTAJA"
                           :oppilaitos-katselija "OPL-KATSELIJA"})
 

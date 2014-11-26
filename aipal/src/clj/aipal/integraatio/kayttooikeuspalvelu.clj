@@ -29,10 +29,10 @@
                                         (:katselija ldap-roolit) :oph-katselija
                                         nil)
     :else (condp = ldap-rooli
-            (:paakayttaja ldap-roolit) :oppilaitos-paakayttaja
             (:vastuukayttaja ldap-roolit) :oppilaitos-vastuukayttaja
             (:katselija ldap-roolit) :oppilaitos-katselija
-            (:kayttaja ldap-roolit) :oppilaitos-kayttaja)))
+            (:kayttaja ldap-roolit) :oppilaitos-kayttaja
+            nil)))
 
 (defn ryhma-cn-filter [ldap-rooli]
   {:filter (str "cn=APP_AIPAL_AIPAL_" ldap-rooli "_*")})
@@ -54,8 +54,9 @@
                       kayttaja-dnt (if (string? kayttaja-dnt)
                                      [kayttaja-dnt]
                                      kayttaja-dnt)]
-                :when (or organisaatio
-                          (not (get organisaatio-roolit rooli)))
+                :when (and rooli
+                           (or organisaatio
+                              (not (get organisaatio-roolit rooli))))
                 kayttaja-dn kayttaja-dnt
                 :let [kayttaja (ldap/get yhteys kayttaja-dn)
                       _ (assert kayttaja)
