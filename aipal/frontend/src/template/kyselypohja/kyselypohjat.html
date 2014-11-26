@@ -2,7 +2,7 @@
 
 <fieldset class="luo-uusi-kysely">
   <input type="text" class="icon search-icon-input" ng-model="hakuehto.teksti" placeholder="{{i18n.kyselypohja.etsi}}">
-  <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-PAAKAYTTAJA']">
+  <auth roolit="['OPL-VASTUUKAYTTAJA']">
     <button class="btn btn-primary pull-right" ng-click="luoUusiKyselypohja()">
       {{ 'kyselypohja.luo_uusi' | i18n }}&nbsp;
       <span class="fa fa-plus"></span>
