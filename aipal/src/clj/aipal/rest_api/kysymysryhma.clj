@@ -94,13 +94,16 @@
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" [voimassa]
     (json-response (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
 
-  (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset]
+  (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset taustakysymykset]
     (lisaa-kysymysryhma! {:nimi_fi nimi_fi
                           :selite_fi selite_fi
                           :nimi_sv nimi_sv
                           :selite_sv selite_sv
                           :valtakunnallinen (if (yllapitaja?)
                                               (true? valtakunnallinen)
+                                              false)
+                          :taustakysymykset (if (yllapitaja?)
+                                              (true? taustakysymykset)
                                               false)
                           :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
                          kysymykset))
@@ -110,7 +113,8 @@
       (paivita-kysymysryhma!
         (assoc kysymysryhma
                :kysymysryhmaid (Integer/parseInt kysymysryhmaid)
-               :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)))))
+               :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)
+               :taustakysymykset (if (yllapitaja?) (true? (:taustakysymykset kysymysryhma)) false)))))
 
   (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/:kysymysryhmaid/julkaise" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
