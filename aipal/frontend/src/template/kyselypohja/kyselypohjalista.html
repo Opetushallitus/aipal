@@ -9,8 +9,8 @@
   <tbody>
   <tr ng-repeat="kyselypohja in kyselypohjat |filter:{tila: tila} |filter:hakuehto.teksti">
     <td>
-      <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="!kyselypohja.valtakunnallinen || yllapitaja">{{kyselypohja |lokalisoiKentta:'nimi'}}</a>
-      <span ng-if="kyselypohja.valtakunnallinen && !yllapitaja">{{kyselypohja |lokalisoiKentta:'nimi'}}</span>
+      <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="kyselypohja.tila !== 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja)">{{kyselypohja |lokalisoiKentta:'nimi'}}</a>
+      <span ng-if="kyselypohja.tila === 'suljettu' || (kyselypohja.valtakunnallinen && !yllapitaja)">{{kyselypohja |lokalisoiKentta:'nimi'}}</span>
     </td>
     <td><span ng-if="kyselypohja.valtakunnallinen" class="fa fa-check"></span></td>
     <td class="actions">
