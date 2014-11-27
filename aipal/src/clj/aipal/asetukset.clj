@@ -19,6 +19,10 @@
 
 (def asetukset (promise))
 
+(def ^:private Palvelu {:url s/Str
+                        :user s/Str
+                        :password s/Str})
+
 (def Asetukset
   {:server {:port s/Int
             :base-url s/Str}
@@ -32,6 +36,7 @@
    :cas-auth-server {:url s/Str
                      :unsafe-https Boolean
                      :enabled Boolean}
+   :aitu Palvelu
    :ldap-auth-server {:host s/Str
                       :port s/Int
                       :user (s/maybe s/Str)
@@ -56,6 +61,9 @@
    :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
                      :unsafe-https false
                      :enabled true}
+   :aitu {:url "http://192.168.50.1:8080/"
+          :user "T-1001"
+          :password "T-1001"}
    :ldap-auth-server {:host "localhost"
                       :port 10389
                       :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
