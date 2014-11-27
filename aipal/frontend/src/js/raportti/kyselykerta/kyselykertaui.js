@@ -47,9 +47,15 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
   ])
 
   .controller('KyselykertaRaporttiController', [
-    'kaavioApurit', 'KyselykertaRaportti', '$routeParams', '$scope',
-    function(kaavioApurit, KyselykertaRaportti, $routeParams, $scope) {
-      $scope.tulos = KyselykertaRaportti.hae($routeParams.kyselykertaid);
+    'kaavioApurit', 'KyselykertaRaportti', '$location', '$routeParams', '$scope',
+    function(kaavioApurit, KyselykertaRaportti, $location, $routeParams, $scope) {
+      KyselykertaRaportti.hae($routeParams.kyselykertaid, function(tulos) {
+        $scope.tulos = tulos;
+      }, function(value) {
+        if (value.status !== 500) {
+          $location.url('/');
+        }
+      });
 
       $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
     }

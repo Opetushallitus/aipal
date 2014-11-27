@@ -251,11 +251,15 @@
     (muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
-  {:kyselykerta (hae-kyselykerta kyselykertaid)
-   :luontipvm (time/today)})
+  (let [kyselykerta (hae-kyselykerta kyselykertaid)]
+    (when kyselykerta
+      {:kyselykerta kyselykerta
+       :luontipvm (time/today)})))
 
 (defn muodosta-raportti [kyselykertaid]
-  (assoc (muodosta-raportti-perustiedot kyselykertaid) :raportti (muodosta-raportti-kyselykerrasta kyselykertaid)))
+  (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]
+    (when perustiedot
+      (assoc perustiedot :raportti (muodosta-raportti-kyselykerrasta kyselykertaid)))))
 
 (defn laske-vastaajat [kyselykertaid]
   (-> (sql/select :vastaaja
