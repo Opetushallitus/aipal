@@ -107,7 +107,10 @@
 
   (cu/defapi :kysymysryhma-muokkaus kysymysryhmaid :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
     (json-response
-      (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid (Integer/parseInt kysymysryhmaid)))))
+      (paivita-kysymysryhma!
+        (assoc kysymysryhma
+               :kysymysryhmaid (Integer/parseInt kysymysryhmaid)
+               :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)))))
 
   (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/:kysymysryhmaid/julkaise" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
