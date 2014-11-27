@@ -124,6 +124,10 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     if ($routeParams.kyselypohjaid) {
       Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
         $scope.kyselypohja = kyselypohja;
+      }).error(function(data, status) {
+        if (status !== 500) {
+          $location.url('/kyselypohjat');
+        }
       });
     } else {
       $scope.kyselypohja = {

@@ -31,7 +31,8 @@
     (let [kyselypohjaid (Integer/parseInt kyselypohjaid)
           kyselypohja (arkisto/hae-kyselypohja kyselypohjaid)
           kysymysryhmat (kysymysryhma-arkisto/hae-kyselypohjasta kyselypohjaid)]
-      (json-response (assoc kyselypohja :kysymysryhmat kysymysryhmat))))
+      (when kyselypohja
+        (json-response (assoc kyselypohja :kysymysryhmat kysymysryhmat)))))
 
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/julkaise" [kyselypohjaid]
     (json-response (arkisto/julkaise-kyselypohja (Integer/parseInt kyselypohjaid))))
