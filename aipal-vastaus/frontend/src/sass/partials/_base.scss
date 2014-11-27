@@ -34,3 +34,33 @@ body { display:table; width: 100%; height: 100%;
 small {
   color: $gray-color;
 }
+
+.required-notice{
+  overflow: auto;
+  position: relative;
+  a {
+    cursor: pointer !important;
+    font-size: .85714285714286em;
+    display: block;
+    padding: 0em 1em;
+    &:hover{
+      background-color: $lighter-primary;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    &:before{
+      content: "- ";
+    }
+  }
+  div div {
+    height: auto;
+  }
+  background-color: $lightest-gray;
+  padding: 1em;
+  h4 {
+    margin: 0px;
+    border-bottom: 1px solid $primary-color;
+    margin-bottom: .3em;
+  }
+
+}

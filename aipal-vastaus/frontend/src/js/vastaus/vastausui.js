@@ -82,12 +82,24 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
   }])
 
   .controller('VastausController', [
-    '$http', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus',
-    function($http, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus) {
+    '$http', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus', '$anchorScroll', '$timeout',
+    function($http, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus, $anchorScroll, $timeout) {
       $scope.preview = false;
       $scope.$watch('vastausForm', function(vastausForm) {
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(vastausForm);
       });
+
+      $scope.gotoQuestion = function(kysymysid) {
+        var old = $location.hash();
+        $location.hash('k' + kysymysid);
+        $anchorScroll();
+        $location.hash(old);
+        angular.element(document.getElementById('k' + kysymysid)).addClass('highlight');
+
+        $timeout(function(){
+          angular.element(document.getElementById('k' + kysymysid)).removeClass('highlight');
+        },2000);
+      };
 
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
@@ -97,7 +109,9 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         f.tallenna($scope);
       };
 
-      $scope.vaihdaMonivalinta = function(vaihtoehto, kysymysid) {
+      $scope.vaihdaMonivalinta = function(vaihtoehto, kysymys) {
+        var kysymysid = kysymys.kysymysid;
+
         if (_.isUndefined($scope.monivalinta[kysymysid])) {
           $scope.monivalinta[kysymysid] = 0;
         }
@@ -106,6 +120,12 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         }
         else {
           $scope.monivalinta[kysymysid]--;
+        }
+
+        if(_.isUndefined($scope.monivalinta[kysymysid]) || $scope.monivalinta[kysymysid] === 0){
+          kysymys.vastaus = false;
+        }else{
+          kysymys.vastaus = true;
         }
       };
 

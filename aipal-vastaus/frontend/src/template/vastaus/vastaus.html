@@ -6,7 +6,7 @@
   <div ng-repeat="kysymysryhma in data.kysymysryhmat" class="kysymysryhma">
     <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
 
-    <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
+    <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys" id="k{{kysymys.kysymysid}}">
       <ng-form name="kysymysForm">
         <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
@@ -51,7 +51,7 @@
               <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto.jarjestys" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
             </span>
             <span ng-if="kysymys.monivalinta_max > 1">
-              <input type="checkbox" ng-model="vaihtoehto.valittu" ng-change="vaihdaMonivalinta(vaihtoehto, kysymys.kysymysid)"
+              <input type="checkbox" ng-model="vaihtoehto.valittu" ng-change="vaihdaMonivalinta(vaihtoehto, kysymys)"
                 ng-disabled="monivalinta[kysymys.kysymysid] === kysymys.monivalinta_max && !vaihtoehto.valittu"
                 name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen && (!monivalinta[kysymys.kysymysid] || monivalinta[kysymys.kysymysid] === 0)">
             </span>
@@ -61,7 +61,18 @@
       </ng-form>
     </div>
   </div>
-    <br />
-    <small class="pull-right" ng-bind="i18n.yleiset.pakolliset"></small>
+  <br />
+
+
+
+  <small class="pull-right" ></small>
   <button ng-show="!preview" id="submit" class="e2e-tallenna-vastaukset" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
+    <div class="required-notice" ng-if="vastausForm.$error.required">
+        <h4 ng-bind="i18n.yleiset.vastaa_viela"></h4>
+        <div ng-repeat="kysymysryhma in data.kysymysryhmat">
+            <div ng-repeat="kysymys in kysymysryhma.kysymykset" ng-if="kysymys.pakollinen && !kysymys.vastaus">
+                <a href="" ng-click="gotoQuestion(kysymys.kysymysid)">{{kysymys | lokalisoiKentta:'kysymys'}}</a>
+            </div>
+        </div>
+    </div>
 </form>
