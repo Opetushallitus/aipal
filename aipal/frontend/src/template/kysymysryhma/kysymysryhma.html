@@ -5,10 +5,18 @@
     <div class="row">
         <div class="col-md-5">
             <div ng-if="yllapitaja" class="checkbox">
-              <label>
-                  <input type="checkbox" ng-model="kysymysryhma.valtakunnallinen">
-                  {{i18n.kysymysryhma.valtakunnallinen}}
-              </label>
+                <div>
+                  <label>
+                      <input type="checkbox" ng-model="kysymysryhma.valtakunnallinen">
+                      {{i18n.kysymysryhma.valtakunnallinen}}
+                  </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" ng-model="kysymysryhma.taustakysymykset">
+                        {{i18n.kysymysryhma.taustakysymykset}}
+                    </label>
+                </div>
             </div>
 
             <label ng-class="{pakollinen: !kysymysryhma.nimi_sv}"><span>{{i18n.kysymysryhma.nimi_fi}}</span>
