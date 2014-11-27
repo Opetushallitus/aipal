@@ -167,11 +167,12 @@
                          (sql/where {:kysymysryhmaid kysymysryhmaid})
                          sql/exec
                          first)]
-      (if hae-kysymykset
-        (-> kysymysryhma
-          taydenna-kysymysryhma
-          taydenna-kysymysryhman-kysymykset)
-        kysymysryhma))))
+      (when kysymysryhma
+        (if hae-kysymykset
+          (-> kysymysryhma
+              taydenna-kysymysryhma
+              taydenna-kysymysryhman-kysymykset)
+          kysymysryhma)))))
 
 (def kysymysryhma-esikatselulle-select
   (->

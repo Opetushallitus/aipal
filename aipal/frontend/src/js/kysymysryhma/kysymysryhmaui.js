@@ -189,6 +189,11 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           if (kopioi) {
             delete $scope.kysymysryhma.kysymysryhmaid;
           }
+        })
+        .error(function(data, status) {
+          if (status !== 500) {
+            $location.url('/kysymysryhmat');
+          }
         });
     }
 
