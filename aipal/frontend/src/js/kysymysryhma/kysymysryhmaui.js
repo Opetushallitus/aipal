@@ -184,12 +184,12 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
     if (kopioi || !uusi) {
       Kysymysryhma.hae($routeParams.kysymysryhmaid)
-      .success(function(kysymysryhma) {
-        $scope.kysymysryhma = kysymysryhma;
-        if(kopioi) {
-          delete $scope.kysymysryhma.kysymysryhmaid;
-        }
-      });
+        .success(function(kysymysryhma) {
+          $scope.kysymysryhma = kysymysryhma;
+          if (kopioi) {
+            delete $scope.kysymysryhma.kysymysryhmaid;
+          }
+        });
     }
 
     $scope.muokkaustila = false;
