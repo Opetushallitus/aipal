@@ -28,7 +28,8 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
     $scope.raportti = {};
 
     $scope.muodostaRaportti = function() {
-      Raportti.muodosta($scope.raportti).success(function() {
+      Raportti.muodosta($scope.raportti).success(function(tulos) {
+        $scope.tulos = tulos;
       });
     };
   }])
