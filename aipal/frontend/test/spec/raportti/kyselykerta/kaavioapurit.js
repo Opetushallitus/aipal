@@ -15,36 +15,36 @@
 'use strict';
 
 describe('Palvelu: kaavioApurit', function () {
-  beforeEach(module('raportti.kyselykerta.kaavioapurit'));
+  beforeEach(module('raportti.kyselykerta.kaavioapurit', 'yhteiset.palvelut.lokalisointi'));
 
   var kaavioApurit;
   beforeEach(inject(function(_kaavioApurit_) {
     kaavioApurit = _kaavioApurit_;
   }));
 
-  describe('jaaTeksti:', function() {
-    var jaaTeksti = function (teksti, odotettuTulos, kuvaus) {
+  describe('jaaLokalisoituTeksti:', function() {
+    var jaaLokalisoituTeksti = function (data, odotettuTulos, kuvaus) {
       it('pitäisi jakaa ' + kuvaus, function () {
-        var rivit = kaavioApurit.jaaTeksti(teksti);
+        var rivit = kaavioApurit.jaaLokalisoituTeksti('a', data);
         expect(rivit).toEqual(odotettuTulos);
       });
     };
 
     var testitapaukset = [
-      // teksti, odotettu tulos, kuvaus
-      [ 'abc', [ 'abc' ], 'yksi sana' ],
-      [ 'abcdefghi', [ 'abcdefghi' ], 'pitkä sana' ],
-      [ 'abc def', [ 'abc', 'def' ], 'kaksi sanaa' ],
-      [ 'abc def ghi', [ 'abc def', 'ghi' ], 'kolme sanaa' ],
-      [ 'abc def ghi jkl', [ 'abc def', 'ghi jkl' ], 'neljä sanaa' ],
-      [ 'abcde fgh', [ 'abcde', 'fgh' ], 'eripituiset sanat' ],
-      [ 'abcdefghijkl mno pqr', [ 'abcdefghijkl mno', 'pqr' ], 'pitkä ja kaksi lyhyttä' ],
-      [ 'abc ', [ 'abc', '' ], 'välilyönti lopussa' ],
-      [ ' abc', [ '', 'abc' ], 'välilyönti alussa' ],
-      [ 'abc\tdef', [ 'abc', 'def' ], 'sarkain' ]
+      // data, odotettu tulos, kuvaus
+      [ {a_fi:'abc'}, [ 'abc' ], 'yksi sana' ],
+      [ {a_fi:'abcdefghi'}, [ 'abcdefghi' ], 'pitkä sana' ],
+      [ {a_fi:'abc def'}, [ 'abc', 'def' ], 'kaksi sanaa' ],
+      [ {a_fi:'abc def ghi'}, [ 'abc def', 'ghi' ], 'kolme sanaa' ],
+      [ {a_fi:'abc def ghi jkl'}, [ 'abc def', 'ghi jkl' ], 'neljä sanaa' ],
+      [ {a_fi:'abcde fgh'}, [ 'abcde', 'fgh' ], 'eripituiset sanat' ],
+      [ {a_fi:'abcdefghijkl mno pqr'}, [ 'abcdefghijkl mno', 'pqr' ], 'pitkä ja kaksi lyhyttä' ],
+      [ {a_fi:'abc '}, [ 'abc', '' ], 'välilyönti lopussa' ],
+      [ {a_fi:' abc'}, [ '', 'abc' ], 'välilyönti alussa' ],
+      [ {a_fi:'abc\tdef'}, [ 'abc', 'def' ], 'sarkain' ]
     ];
 
-    _.forEach(testitapaukset, function(tapaus) {jaaTeksti.apply(null, tapaus);});
+    _.forEach(testitapaukset, function(tapaus) {jaaLokalisoituTeksti.apply(null, tapaus);});
   });
 
   describe('maksimi:', function() {
