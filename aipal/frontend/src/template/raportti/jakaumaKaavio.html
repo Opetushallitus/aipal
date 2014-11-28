@@ -4,36 +4,36 @@
 
   <line ng-repeat="osa in [0, 0.25, 0.5, 0.75, 1.0]"
     class="jakauma-kaavio-viiva"
-    ng-attr-x1="{{otsikoilleTilaa(jakauma) + 480 * osa}}"
+    ng-attr-x1="{{tekstinPituus + 480 * osa}}"
     ng-attr-y1="0"
-    ng-attr-x2="{{otsikoilleTilaa(jakauma) + 480 * osa}}"
+    ng-attr-x2="{{tekstinPituus + 480 * osa}}"
     ng-attr-y2="{{40*jakauma.length}}" />
   <text ng-repeat="otsikko in otsikot"
     class="jakauma-kaavio-viivan-otsikko"
-    ng-attr-x="{{otsikoilleTilaa(jakauma) +  480 * otsikko.x}}"
+    ng-attr-x="{{tekstinPituus +  480 * otsikko.x}}"
     ng-attr-y="{{40*jakauma.length + 20}}">
     {{otsikko.teksti}}
   </text>
   <text class="jakauma-kaavio-viivan-otsikko"
-    ng-attr-x="{{otsikoilleTilaa(jakauma) +  513}}"
+    ng-attr-x="{{tekstinPituus +  513}}"
     ng-attr-y="{{40*jakauma.length + 20}}">
     ({{lukumaaratYhteensa(jakauma)}})
   </text>
 
   <text ng-repeat-start="data in jakauma"
     class="jakauma-kaavio-otsikko"
-    ng-attr-x="{{otsikoilleTilaa(jakauma) - 10}}"
+    ng-attr-x="{{tekstinPituus - 10}}"
     ng-attr-y="{{40 * $index + 18}}">
-    <tspan ng-attr-dy="{{ $first ? '0' : '1em'}}" ng-repeat="osa in jaaTeksti(data.vaihtoehto)" text-anchor="end" ng-attr-x="{{otsikoilleTilaa(jakauma) - 10}}">{{osa}}</tspan>
+    <tspan ng-attr-dy="{{ $first ? '0' : '1em'}}" ng-repeat="osa in jaaTeksti(data)" text-anchor="end" ng-attr-x="{{tekstinPituus - 10}}">{{osa}}</tspan>
   </text>
   <rect ng-attr-width="{{palkinPituus(data.lukumaara, jakauma)}}"
     ng-attr-height="{{24}}"
-    ng-attr-x="{{otsikoilleTilaa(jakauma)}}"
+    ng-attr-x="{{tekstinPituus}}"
     ng-attr-y="{{40 * $index + 8}}"
     ng-attr-fill="{{palkinVari($index)}}">
   </rect>
   <text ng-repeat-end
-    ng-attr-x="{{otsikoilleTilaa(jakauma) + palkinPituus(data.lukumaara, jakauma) + 10}}"
+    ng-attr-x="{{tekstinPituus + palkinPituus(data.lukumaara, jakauma) + 10}}"
     ng-attr-y="{{40 * $index + 24}}">
     {{data.osuus}}% ({{data.lukumaara}})
   </text>

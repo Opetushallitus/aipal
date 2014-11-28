@@ -14,8 +14,8 @@
 
 'use strict';
 
-angular.module('raportti.kyselykerta.kaavioapurit', [])
-  .factory('kaavioApurit', [function() {
+angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n'])
+  .factory('kaavioApurit', ['$filter', 'i18n', function($filter, i18n) {
     var varit = ['#43b1d5', '#ffad33', '#d633ad', '#6cc555'];
 
     var lukumaaratYhteensa = function (jakauma) {
@@ -23,16 +23,28 @@ angular.module('raportti.kyselykerta.kaavioapurit', [])
       return _.reduce(lukumaarat, function (sum, n) {return sum + n;});
     };
 
-    return {
-      jaaTeksti: function (teksti) {
-        var sanat = teksti.split(/\s/);
-        var sanojaPerRivi = Math.ceil(sanat.length / 2);
+    var jaaTeksti = function(teksti) {
+      var sanat = teksti.split(/\s/);
+      var sanojaPerRivi = Math.ceil(sanat.length / 2);
 
-        var rivit = [];
-        while (sanat.length > 0) {
-          rivit.push(sanat.splice(0, sanojaPerRivi).join(' '));
-        }
-        return rivit;
+      var rivit = [];
+      while (sanat.length > 0) {
+        rivit.push(sanat.splice(0, sanojaPerRivi).join(' '));
+      }
+      return rivit;
+    };
+
+    return {
+      jaaLokalisoituTeksti: function (avain, data) {
+        var teksti = $filter('lokalisoiKentta')(data, avain);
+
+        return jaaTeksti(teksti);
+      },
+
+      jaaLokalisointiavain: function (lokalisaatioAvain, dataAvain, data) {
+        var teksti = i18n.hae(lokalisaatioAvain + '.' + data[dataAvain]);
+
+        return jaaTeksti(teksti);
       },
 
       maksimi: function (jakauma) {

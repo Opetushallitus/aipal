@@ -23,11 +23,11 @@
 
 <div ng-repeat="kysymys in tulos.raportti">
   <p>
-    <h3>{{$index + 1}}. {{kysymys.kysymys_fi}}</h3>
+    <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
 
     <jakauma-kaavio
       ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'"
-      jakauma="kysymys.jakauma">
+      jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi">
     </jakauma-kaavio>
 
     <vaittama-kaavio
@@ -38,14 +38,15 @@
     <table class="report-table" ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'">
       <thead>
         <tr>
-          <th class="report-table-question">{{kysymys.kysymys_fi}}</th>
+          <th class="report-table-question">{{kysymys | lokalisoiKentta:'kysymys'}}</th>
           <th class="report-table-percentage-field">Vast%</th>
           <th class="report-table-amount-header">n={{lukumaaratYhteensa(kysymys.jakauma)}}</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="alkio in kysymys.jakauma">
-          <td>{{alkio.vaihtoehto}}</td>
+          <td ng-if="kysymys.vastaustyyppi !== 'monivalinta'">{{'kysymys.' + kysymys.vastaustyyppi + '.' + alkio['vaihtoehto-avain'] | i18n}}</td>
+          <td ng-if="kysymys.vastaustyyppi === 'monivalinta'">{{alkio | lokalisoiKentta:'vaihtoehto' }}</td>
           <td class="report-table-percentage-field">{{alkio.osuus}}%</td>
           <td class="report-table-amount-field e2e-vastausten-lukumaara">{{alkio.lukumaara}}</td>
         </tr>
@@ -55,12 +56,12 @@
     <div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">
       <h3>{{$index + 1}}. {{i18n.raportit.jatkokysymykset}}</h3>
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
-        <h4>{{kysymys.jatkovastaukset.kylla.kysymys_fi}}</h4>
+        <h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>
         <vaittama-kaavio jakauma="kysymys.jatkovastaukset.kylla.jakauma">
         </vaittama-kaavio>
       </div>
       <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
-        <h4>{{kysymys.jatkovastaukset.ei.kysymys_fi}}</h4>
+        <h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>
         <table class="report-table">
           <thead>
             <tr><th>Vastaukset:</th></tr>

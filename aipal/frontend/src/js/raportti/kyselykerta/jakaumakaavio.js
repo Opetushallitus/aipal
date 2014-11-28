@@ -20,7 +20,8 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
       restrict: 'E',
       replace: true,
       scope: {
-        jakauma: '='
+        jakauma: '=',
+        vastaustyyppi: '='
       },
       templateUrl: 'template/raportti/jakaumaKaavio.html',
       link: function(scope) {
@@ -31,9 +32,16 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
           tekstinMaksimiPituus: 80
         };
 
-        _.assign(scope, _.pick(kaavioApurit, ['jaaTeksti', 'maksimi', 'lukumaaratYhteensa', 'palkinVari']));
+        _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
         scope.otsikoilleTilaa = _.partial(kaavioApurit.otsikoilleTilaa, asetukset);
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
+        if (scope.vastaustyyppi === 'kylla_ei_valinta') {
+          scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.kylla_ei_valinta', 'vaihtoehto-avain');
+        }
+        else {
+          scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisoituTeksti, 'vaihtoehto');
+        }
+        scope.tekstinPituus = 150;
         scope.otsikot = [
           {x: 0, teksti: ''},
           {x: 0.25, teksti: '25%'},

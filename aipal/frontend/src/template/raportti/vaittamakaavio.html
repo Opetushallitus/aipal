@@ -33,7 +33,7 @@
     class="vaittama-kaavio-vaihtoehto"
     ng-attr-x="{{(2.75*36 * $index + 42) + 0.5*36}}"
     ng-attr-y="{{320}}">
-    {{data.vaihtoehto}}
+    {{'kysymys.asteikko.' + data['vaihtoehto-avain'] | i18n}}
   </text>
 
   <rect ng-attr-width="{{36}}"

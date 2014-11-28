@@ -136,25 +136,25 @@
 (defn muodosta-asteikko-jakauman-esitys
   [jakauma]
   (let [yhteensa (reduce + (vals jakauma))
-        tiedot-vaihtoehdolle (fn [kuvaus lukumaara]
-                               {:vaihtoehto kuvaus
+        tiedot-vaihtoehdolle (fn [avain lukumaara]
+                               {:vaihtoehto-avain avain
                                 :lukumaara lukumaara
                                 :osuus (prosentteina
                                          (laske-osuus lukumaara yhteensa))})]
-    [(tiedot-vaihtoehdolle "Ei / en lainkaan" (jakauma 1))
-     (tiedot-vaihtoehdolle "Hieman" (jakauma 2))
-     (tiedot-vaihtoehdolle "Jonkin verran" (jakauma 3))
-     (tiedot-vaihtoehdolle "Melko paljon" (jakauma 4))
-     (tiedot-vaihtoehdolle "Erittäin paljon" (jakauma 5))]))
+    [(tiedot-vaihtoehdolle "1" (jakauma 1))
+     (tiedot-vaihtoehdolle "2" (jakauma 2))
+     (tiedot-vaihtoehdolle "3" (jakauma 3))
+     (tiedot-vaihtoehdolle "4" (jakauma 4))
+     (tiedot-vaihtoehdolle "5" (jakauma 5))]))
 
 (defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]
   (let [yhteensa (+ (:kylla jakauma) (:ei jakauma))]
-    [{:vaihtoehto "Kyllä"
+    [{:vaihtoehto-avain "kylla"
       :lukumaara (:kylla jakauma)
       :osuus (prosentteina
                (laske-osuus (:kylla jakauma) yhteensa))}
-     {:vaihtoehto "Ei"
+     {:vaihtoehto-avain "ei"
       :lukumaara (:ei jakauma)
       :osuus (prosentteina
                (laske-osuus (:ei jakauma) yhteensa))}]))
@@ -172,7 +172,8 @@
            (let [lukumaara (or (jakauma (:jarjestys vaihtoehto))
                                0)
                  osuus (laske-osuus lukumaara yhteensa)]
-             {:vaihtoehto (:teksti_fi vaihtoehto)
+             {:vaihtoehto_fi (:teksti_fi vaihtoehto)
+              :vaihtoehto_sv (:teksti_sv vaihtoehto)
               :lukumaara lukumaara
               :osuus (prosentteina osuus)}))
          vaihtoehdot)))
