@@ -1,0 +1,18 @@
+<h3>{{ 'raportit.aikavali' | i18n }}</h3>
+
+<pvm-valitsin
+        otsikko="{{i18n.raportit.vertailujakso_alkaa}}"
+        oletus-pvm="raportti.vertailujakso_alkupvm"
+        valittu-pvm="raportti.vertailujakso_alkupvm"
+        max-pvm="raportti.vertailujakso_loppupvm"
+        ng-model="raportti.vertailujakso_alkupvm"
+        pakollinen="true">
+</pvm-valitsin>
+<pvm-valitsin
+        otsikko="{{i18n.raportit.vertailujakso_loppuu}}"
+        oletus-pvm="raportti.vertailujakso_loppupvm"
+        valittu-pvm="raportti.vertailujakso_loppupvm"
+        min-pvm="raportti.vertailujakso_alkupvm"
+        ng-model="raportti.vertailujakso_loppupvm"
+        pakollinen="true">
+</pvm-valitsin>

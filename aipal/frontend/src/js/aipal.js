@@ -22,6 +22,7 @@ angular.module('aipal', [
   'kysymysryhma.kysymysryhmaui',
   'kyselykerta.kyselykertaui',
   'raportti.kyselykerta.kyselykertaui',
+  'raportti.raporttiui',
   'yhteiset.palvelut.i18n',
   'yhteiset.palvelut.apicallinterceptor',
   'yhteiset.palvelut.lokalisointi',
