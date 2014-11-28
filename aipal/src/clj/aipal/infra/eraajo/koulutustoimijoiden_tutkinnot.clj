@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.infra.eraajo.kayttajat
+(ns aipal.infra.eraajo.koulutustoimijoiden-tutkinnot
   (:require [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
             [aipal.integraatio.aitu :as aitu]

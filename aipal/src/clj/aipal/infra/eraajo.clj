@@ -25,7 +25,7 @@
             aipal.infra.eraajo.koulutustoimijoiden-tutkinnot)
   (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
-           aipal.infra.eraajo.koulutustoimijoiden-tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob))
+           aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob))
 
 (defn kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
