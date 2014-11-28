@@ -130,6 +130,15 @@ accordion {
   .panel-body {
     padding: 10px;
   }
+  .trash .fa-trash{
+    color: $darker-gray;
+    font-size: 2em;
+    margin-left: .2em;
+    margin-top: .2em;
+    &:hover{
+      color: $primary-color;
+    }
+  }
 }
 
 .panel, .well{
