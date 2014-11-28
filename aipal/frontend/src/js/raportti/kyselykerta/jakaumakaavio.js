@@ -33,7 +33,6 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
         };
 
         _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
-        scope.otsikoilleTilaa = _.partial(kaavioApurit.otsikoilleTilaa, asetukset);
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
         if (scope.vastaustyyppi === 'kylla_ei_valinta') {
           scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.kylla_ei_valinta', 'vaihtoehto-avain');

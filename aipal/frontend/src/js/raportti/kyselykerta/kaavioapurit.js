@@ -52,14 +52,6 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n'])
         return _.max(lukumaarat);
       },
 
-      otsikoilleTilaa: function (asetukset, jakauma) {
-        var vaihtoehdot = _.pluck(jakauma, 'vaihtoehto');
-        var pituudet = _.map(vaihtoehdot, function (v) {return v.length;});
-        return asetukset.maksimitilaOtsikolle *
-          _.max(pituudet) / asetukset.tekstinMaksimiPituus +
-          asetukset.otsikoidenSisennys;
-      },
-
       lukumaaratYhteensa: lukumaaratYhteensa,
 
       palkinPituus: function (asetukset, lukumaara, jakauma) {

@@ -54,37 +54,6 @@ describe('Palvelu: kaavioApurit', function () {
     });
   });
 
-  describe('otsikoilleTilaa:', function() {
-    var asetukset = {
-      maksimitilaOtsikolle: 100,
-      otsikoidenSisennys: 5,
-      tekstinMaksimiPituus: 10
-    };
-    var otsikoilleTilaa = function (kuvaus, jakauma, odotettuTulos) {
-      it('pitäisi antaa ' + kuvaus, function () {
-        var tilaa = kaavioApurit.otsikoilleTilaa(asetukset, jakauma);
-        expect(tilaa).toBe(odotettuTulos);
-      });
-    };
-
-    var testitapaukset = [
-      ['vähän tilaa tyhjälle vaihtoehdolle', [{vaihtoehto: ''}], 5],
-      ['hieman enemmän tilaa keskipituiselle vaihtoehdolle', [{
-        vaihtoehto: '12345'
-      }], 55],
-      ['paljon tilaa pitkälle vaihtoehdolle', [{
-        vaihtoehto: '1234567890'
-      }], 105],
-      ['tilaa pisimmäin vaihtoehdon mukaan', [
-        {vaihtoehto: ''},
-        {vaihtoehto: '1234567890'}
-      ], 105]
-    ];
-
-    _.forEach(testitapaukset, function(tapaus) {otsikoilleTilaa.apply(null, tapaus);});
-
-  });
-
   describe('lukumäärät yhteensä:', function() {
     it('pitäisi laskea jakauman lukumäärien summa', function () {
       var summa = kaavioApurit.lukumaaratYhteensa([{lukumaara: 1}, {lukumaara: 2}]);
