@@ -21,9 +21,11 @@
             [clojurewerkz.quartzite.schedule.cron :as cron]
             [clojure.tools.logging :as log]
             aipal.infra.eraajo.kayttajat
-            aipal.infra.eraajo.organisaatiot)
+            aipal.infra.eraajo.organisaatiot
+            aipal.infra.eraajo.koulutustoimijoiden-tutkinnot)
   (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
-           aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob))
+           aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
+           aipal.infra.eraajo.koulutustoimijoiden-tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob))
 
 (defn kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
@@ -49,6 +51,15 @@
                             (t/with-identity "daily3")
                             (t/start-now)
                             (t/with-schedule (cron/schedule
-                                              (cron/cron-schedule "0 0 3 * * ?"))))]
+                                              (cron/cron-schedule "0 0 3 * * ?"))))
+        koul-job (j/build
+                   (j/of-type PaivitaKoulutustoimijoidenTutkinnotJob)
+                   (j/with-identity "paivita-koulutustoimijoiden-tutkinnot"))
+        koul-trigger-daily (t/build
+                             (t/with-identity "daily5")
+                             (t/start-now)
+                             (t/with-schedule (cron/schedule
+                                               (cron/cron-schedule "0 0 5 * * ?"))))]
     (qs/schedule ldap-job ldap-trigger-daily)
-    (qs/schedule org-job org-trigger-daily)))
+    (qs/schedule org-job org-trigger-daily)
+    (qs/schedule koul-job koul-trigger-daily)))

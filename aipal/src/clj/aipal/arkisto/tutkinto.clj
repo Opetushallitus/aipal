@@ -31,3 +31,8 @@
   []
   (sql/select taulut/tutkinto
     (sql/order :tutkintotunnus)))
+
+(defn hae
+  [tutkintotunnus]
+  (first (sql/select taulut/tutkinto
+           (sql/where {:tutkintotunnus tutkintotunnus}))))

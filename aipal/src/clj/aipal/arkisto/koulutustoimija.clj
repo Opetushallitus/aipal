@@ -28,6 +28,11 @@
     (sql/set-fields tiedot)
     (sql/where {:ytunnus y-tunnus})))
 
+(defn hae
+  [y-tunnus]
+  (first (sql/select taulut/koulutustoimija
+           (sql/where {:ytunnus y-tunnus}))))
+
 (defn hae-kaikki
   []
   (->
@@ -40,3 +45,13 @@
   (sql/select taulut/koulutustoimija
     (sql/fields :oid :ytunnus)
     (sql/where (not= :oid nil))))
+
+(defn lisaa-koulutustoimijalle-tutkinto!
+  [y-tunnus tutkintotunnus]
+  (sql/insert taulut/koulutustoimija-ja-tutkinto
+    (sql/values {:koulutustoimija y-tunnus
+                 :tutkinto tutkintotunnus})))
+
+(defn poista-kaikki-koulutustoimijoiden-tutkinnot!
+  []
+  (sql/delete taulut/koulutustoimija-ja-tutkinto))
