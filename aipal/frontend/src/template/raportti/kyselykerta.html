@@ -3,16 +3,18 @@
 </div>
 
 <div class="raportti-kyselykerta-tiedot">
-  <div>
-    {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.kyselykerta.nimi}}</span>
+  <div ng-if="tulos.kyselykerta">
+    <div>
+      {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.kyselykerta.nimi}}</span>
+    </div>
+    <div>
+      {{'yleiset.kysely' | i18n }}: <span>{{tulos.kyselykerta.kyselyid}}</span>
+    </div>
+    <div>
+      {{'yleiset.voimassa' | i18n }}: <span>{{tulos.kyselykerta.voimassa_alkupvm | voimassaoloAika: tulos.kyselykerta.voimassa_loppupvm}}</span>
+    </div>
+    <hr>
   </div>
-  <div>
-    {{'yleiset.kysely' | i18n }}: <span>{{tulos.kyselykerta.kyselyid}}</span>
-  </div>
-  <div>
-    {{'yleiset.voimassa' | i18n }}: <span>{{tulos.kyselykerta.voimassa_alkupvm | voimassaoloAika: tulos.kyselykerta.voimassa_loppupvm}}</span>
-  </div>
-  <hr>
   <div>
     {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
   </div>
