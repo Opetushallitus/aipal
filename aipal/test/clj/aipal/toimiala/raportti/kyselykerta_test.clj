@@ -94,19 +94,19 @@
   (testing
     "muodosta asteikko-jakauman esitys:"
     (let [esitys (fn [lkm-1 osuus-1 lkm-2 osuus-2 lkm-3 osuus-3 lkm-4 osuus-4 lkm-5 osuus-5]
-                   [{:vaihtoehto "Ei / en lainkaan"
+                   [{:vaihtoehto-avain "1"
                      :lukumaara lkm-1
                      :osuus osuus-1}
-                    {:vaihtoehto "Hieman"
+                    {:vaihtoehto-avain "2"
                      :lukumaara lkm-2
                      :osuus osuus-2}
-                    {:vaihtoehto "Jonkin verran"
+                    {:vaihtoehto-avain "3"
                      :lukumaara lkm-3
                      :osuus osuus-3}
-                    {:vaihtoehto "Melko paljon"
+                    {:vaihtoehto-avain "4"
                      :lukumaara lkm-4
                      :osuus osuus-4}
-                    {:vaihtoehto "Erittäin paljon"
+                    {:vaihtoehto-avain "5"
                      :lukumaara lkm-5
                      :osuus osuus-5}])]
       (are [kuvaus jakauma odotettu-tulos]
@@ -120,10 +120,10 @@
   (testing
     "muodosta kyllä/ei jakauman esitys:"
     (let [esitys (fn [kylla-lkm kylla-osuus ei-lkm ei-osuus]
-                   [{:vaihtoehto "Kyllä"
+                   [{:vaihtoehto-avain "kylla"
                      :lukumaara kylla-lkm
                      :osuus kylla-osuus}
-                    {:vaihtoehto "Ei"
+                    {:vaihtoehto-avain "ei"
                      :lukumaara ei-lkm
                      :osuus ei-osuus}])]
       (are [kuvaus jakauma odotettu-tulos]
@@ -140,10 +140,12 @@
     (let [vaihtoehdot [{:jarjestys 1 :teksti_fi "vaihtoehto 1"}
                        {:jarjestys 2 :teksti_fi "vaihtoehto 2"}]
           esitys (fn [lukumaara-1 osuus-1 lukumaara-2 osuus-2]
-                   [{:vaihtoehto "vaihtoehto 1"
+                   [{:vaihtoehto_fi "vaihtoehto 1"
+                     :vaihtoehto_sv nil
                      :lukumaara lukumaara-1
                      :osuus osuus-1}
-                    {:vaihtoehto "vaihtoehto 2"
+                    {:vaihtoehto_fi "vaihtoehto 2"
+                     :vaihtoehto_sv nil
                      :lukumaara lukumaara-2
                      :osuus osuus-2}])]
       (are [kuvaus jakauma odotettu-tulos]
