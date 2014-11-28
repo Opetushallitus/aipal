@@ -14,22 +14,12 @@
 
 'use strict';
 
-angular.module('raportti.raporttiui', ['rest.raportti'])
-  .config(['$routeProvider', function($routeProvider) {
-    $routeProvider
-      .when('/raportit', {
-        controller: 'RaportitController',
-        templateUrl: 'template/raportti/raportit.html',
-        label: 'i18n.raportit.breadcrumb_raportit'
-      });
-  }])
-
-  .controller('RaportitController', ['$scope', 'Raportti', function($scope, Raportti) {
-    $scope.raportti = {};
-
-    $scope.muodostaRaportti = function() {
-      Raportti.muodosta($scope.raportti).success(function() {
-      });
+angular.module('rest.raportti', [])
+  .factory('Raportti', ['$http', function($http) {
+    return {
+      muodosta: function(raportti) {
+        return $http.post('api/raportti/valtakunnallinen', raportti);
+      }
     };
   }])
 ;
