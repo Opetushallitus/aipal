@@ -13,7 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.ohje
-  (:require [korma.core :as sql]))
+  (:require 
+    [korma.core :as sql]
+    [aipal.auditlog :as auditlog]))
 
 (defn hae
   "Hakee ohjeen id:n perusteella."
@@ -25,6 +27,7 @@
 (defn muokkaa-tai-luo-uusi!
   "Muokkaa ohjetta tai luo uuden jos tunnisteelle ei löydy ohjetta"
   [uusi-ohje]
+  (auditlog/ohje-paivitys! (:ohjetunniste uusi-ohje))
   (if-let [olemassa-oleva (hae (:ohjetunniste uusi-ohje))]
     (sql/update :ohje
       (sql/set-fields uusi-ohje)
