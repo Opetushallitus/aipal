@@ -235,14 +235,14 @@
     (= (:vastaustyyppi kysymys) "vapaateksti") lisaa-vastausten-vapaateksti
     :else (fn [kysymys vastaukset] kysymys)))
 
-(defn ^:private muodosta-raportti-vastauksista
+(defn muodosta-raportti-vastauksista
   [kysymykset vastaukset]
   (map (fn [kysymys]
          ((kysymyksen-kasittelija kysymys) kysymys
                                            (kysymyksen-vastaukset kysymys vastaukset)))
        kysymykset))
 
-(defn ^:private suodata-raportin-kentat
+(defn suodata-raportin-kentat
   [raportti]
   (map #(select-keys % [:kysymys_fi :kysymys_sv :jakauma :vastaukset :jatkovastaukset :vastaustyyppi])
        raportti))

@@ -12,7 +12,34 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.toimiala.raportti.valtakunnallinen)
+(ns aipal.toimiala.raportti.valtakunnallinen
+  (:require [korma.core :as sql]
+            [aipal.toimiala.raportti.kyselykerta :as kyselykerta-raportti]
+            [clj-time.core :as time]))
+
+(defn ^:private hae-kysymykset []
+  (sql/select :kysymys
+    (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+    (sql/where {:kysymysryhma.taustakysymykset true
+                :kysymysryhma.valtakunnallinen true})
+    (sql/fields :kysymys.kysymysid
+                :kysymys.kysymys_fi
+                :kysymys.kysymys_sv
+                :kysymys.vastaustyyppi)))
+
+(defn ^:private hae-vastaukset []
+  (sql/select :vastaus
+    (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
+    (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+    (sql/where {:kysymysryhma.taustakysymykset true
+                :kysymysryhma.valtakunnallinen true})
+    (sql/fields :vastaus.vastaajaid
+                :vastaus.kysymysid
+                :vastaus.numerovalinta
+                :vastaus.vaihtoehto
+                :vastaus.vapaateksti)))
 
 (defn muodosta [parametrit]
-  {})
+  {:luontipvm (time/today)
+   :raportti (kyselykerta-raportti/suodata-raportin-kentat
+    (kyselykerta-raportti/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset)))})
