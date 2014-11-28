@@ -26,6 +26,6 @@
       (let [kyselykertaid (Integer/parseInt kyselykertaid)
             vaaditut-vastaajat (:raportointi-minimivastaajat @asetukset)]
             (json-response
-              (if (> (laske-vastaajat kyselykertaid) vaaditut-vastaajat)
+              (if (>= (laske-vastaajat kyselykertaid) vaaditut-vastaajat)
                 (muodosta-raportti kyselykertaid)
                 (assoc (muodosta-raportti-perustiedot kyselykertaid) :virhe "ei-riittavasti-vastaajia")))))))
