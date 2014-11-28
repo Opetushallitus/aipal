@@ -20,6 +20,6 @@
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]))
 
 (c/defroutes reitit
-  (cu/defapi :valtakunnallinen-raportti nil :post "/" [parametrit]
+  (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
     (db/transaction
       (json-response (raportti/muodosta parametrit)))))

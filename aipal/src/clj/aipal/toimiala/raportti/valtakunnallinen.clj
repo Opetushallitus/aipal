@@ -15,7 +15,9 @@
 (ns aipal.toimiala.raportti.valtakunnallinen
   (:require [korma.core :as sql]
             [aipal.toimiala.raportti.kyselykerta :as kyselykerta-raportti]
-            [clj-time.core :as time]))
+            [clj-time.core :as time]
+            [oph.common.util.http-util :refer [parse-iso-date]]
+            [oph.korma.korma :refer [joda-date->sql-date]]))
 
 (defn ^:private hae-kysymykset []
   (sql/select :kysymys
@@ -27,12 +29,14 @@
                 :kysymys.kysymys_sv
                 :kysymys.vastaustyyppi)))
 
-(defn ^:private hae-vastaukset []
+(defn ^:private hae-vastaukset [alkupvm loppupvm]
   (sql/select :vastaus
     (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (sql/where {:kysymysryhma.taustakysymykset true
                 :kysymysryhma.valtakunnallinen true})
+    (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
+    (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
     (sql/fields :vastaus.vastaajaid
                 :vastaus.kysymysid
                 :vastaus.numerovalinta
@@ -40,6 +44,8 @@
                 :vastaus.vapaateksti)))
 
 (defn muodosta [parametrit]
-  {:luontipvm (time/today)
-   :raportti (kyselykerta-raportti/suodata-raportin-kentat
-    (kyselykerta-raportti/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset)))})
+  (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
+        loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))]
+    {:luontipvm (time/today)
+     :raportti  (kyselykerta-raportti/suodata-raportin-kentat
+                  (kyselykerta-raportti/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset alkupvm loppupvm)))}))
