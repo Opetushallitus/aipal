@@ -1,2 +1,3 @@
 *.swp
 ansible/aipal_vagrant/salasanat/
+/e2e/screenshot-*.png
