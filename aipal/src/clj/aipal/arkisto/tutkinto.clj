@@ -36,3 +36,11 @@
   [tutkintotunnus]
   (first (sql/select taulut/tutkinto
            (sql/where {:tutkintotunnus tutkintotunnus}))))
+
+(defn hae-koulutustoimijan-tutkinnot
+  [y-tunnus]
+  (sql/select taulut/koulutustoimija-ja-tutkinto
+    (sql/join taulut/tutkinto
+              (= :tutkinto.tutkintotunnus :koulutustoimija_ja_tutkinto.tutkinto))
+    (sql/where {:koulutustoimija y-tunnus})
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)))
