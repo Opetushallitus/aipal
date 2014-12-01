@@ -151,7 +151,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
-  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot', 
+  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot',
                                               function($modalInstance, $scope, $filter, rahoitusmuodot, tutkinnot) {
     $scope.vastaajatunnus = {
       vastaajien_lkm: 1
@@ -173,5 +173,4 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         return tutkinto;
       }
     };
-  }])
-;
+  }]);

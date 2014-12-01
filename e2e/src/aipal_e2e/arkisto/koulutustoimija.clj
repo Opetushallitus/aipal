@@ -23,3 +23,12 @@
 (defn poista! [y-tunnus]
   (sql/delete koulutustoimija
     (sql/where {:ytunnus y-tunnus})))
+
+(defn lisaa-tutkinto! [koulutustoimijan-tutkinto]
+  (sql/insert koulutustoimija_ja_tutkinto
+    (sql/values koulutustoimijan-tutkinto)))
+
+(defn poista-tutkinto! [y-tunnus tutkintotunnus]
+  (sql/delete koulutustoimija_ja_tutkinto
+    (sql/where {:koulutustoimija y-tunnus
+                :tutkinto tutkintotunnus})))

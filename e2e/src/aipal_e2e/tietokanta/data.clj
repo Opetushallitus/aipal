@@ -27,7 +27,10 @@
                        "kysely_kysymys"
                        "monivalintavaihtoehto"
                        "rooli_organisaatio"
+                       "koulutusala"
+                       "opintoala"
                        "tutkinto"
+                       "koulutustoimija_ja_tutkinto"
                        "vastaajatunnus"
                        "vastaaja"
                        "vastaus"])

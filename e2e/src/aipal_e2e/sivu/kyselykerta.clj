@@ -31,6 +31,11 @@
 (defn valitse-vastaajatunnuksen-rahoitusmuoto [rahoitusmuoto]
   (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" rahoitusmuoto))
 
+(defn valitse-vastaajatunnuksen-tutkinto [tutkinto]
+  (syota-kenttaan "vastaajatunnus.tutkinto" tutkinto)
+  (odota-angular-pyyntoa)
+  (w/click {:css "ul.dropdown-menu li.active"}))
+
 (defn lisaa-vastaajatunnukset []
   (w/click (w/find-element-under {:css ".e2e-vastaustunnusten-luonti-dialogi"} {:css ".e2e-direktiivit-tallenna"}))
   (odota-angular-pyyntoa))

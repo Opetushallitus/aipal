@@ -38,6 +38,7 @@ describe('kysely.kyselyui.KyselykertaController', function(){
     $scope.kyselykertaForm = { $setDirty: function() {}, $setPristine: function() {} };
     $httpBackend.whenGET(/api\/rahoitusmuoto\?nocache=.*/).respond([]);
     $httpBackend.whenGET(/api\/vastaajatunnus\/.*/).respond([]);
+    $httpBackend.whenGET(/api\/tutkinto\/koulutustoimija.*/).respond([]);
     $controller('KyselykertaController', {$scope: $scope});
   }
 

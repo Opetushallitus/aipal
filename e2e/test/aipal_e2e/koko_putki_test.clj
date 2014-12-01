@@ -32,7 +32,15 @@
                 :rooli_organisaatio [{:organisaatio "0000000-0"
                                       :rooli "OPL-VASTUUKAYTTAJA"
                                       :kayttaja "OID.AIPAL-E2E"
-                                      :voimassa true}]}
+                                      :voimassa true}]
+                :koulutusala [{:koulutusalatunnus "1"}]
+                :opintoala [{:opintoalatunnus "123"
+                             :koulutusala "1"}]
+                :tutkinto [{:tutkintotunnus "123456"
+                            :nimi_fi "Tutkinto"
+                            :opintoala "123"}]
+                :koulutustoimija_ja_tutkinto [{:koulutustoimija "0000000-0"
+                                               :tutkinto "123456"}]}
       ;; luo kysymysryhma
       (kysymysryhmat-sivu/avaa-sivu)
       (kysymysryhmat-sivu/luo-uusi)
@@ -72,6 +80,7 @@
       ;; luo vastaajatunnuksia
       (kyselykerta-sivu/luo-vastaajatunnuksia)
       (kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
+      (kyselykerta-sivu/valitse-vastaajatunnuksen-tutkinto "Tutkinto")
       (kyselykerta-sivu/lisaa-vastaajatunnukset)
 
       ;; vastaa kyselyyn

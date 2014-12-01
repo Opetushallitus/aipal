@@ -92,3 +92,4 @@
 (defentity vastaaja)
 (defentity vastaus)
 (defentity koulutustoimija)
+(defentity koulutustoimija_ja_tutkinto)

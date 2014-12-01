@@ -86,6 +86,20 @@
                                                 :teksti_fi (str "monivalintavaihtoehto " i)
                                                 :teksti_sv (str "monivalintavaihtoehto (sv) " i)})})
 
+(def ^:private koulutusala-tiedot {:luo-fn #(sql/insert :koulutusala (sql/values %))
+                                 :poista-fn #(sql/delete :koulutusala (sql/where {:koulutusalatunnus (:koulutusalatunnus %)}))
+                                 :default (for [i (iterate inc 1)]
+                                            {:koulutusalatunnus (str i)
+                                             :nimi_fi (str "koulutusala " i)
+                                             :nimi_sv (str "koulutusala (sv) " i)})})
+
+(def ^:private opintoala-tiedot {:luo-fn #(sql/insert :opintoala (sql/values %))
+                                 :poista-fn #(sql/delete :opintoala (sql/where {:opintoalatunnus (:opintoalatunnus %)}))
+                                 :default (for [i (iterate inc 1)]
+                                            {:opintoalatunnus (str i)
+                                             :nimi_fi (str "opintoala " i)
+                                             :nimi_sv (str "opintoala (sv) " i)})})
+
 (def ^:private tutkinto-tiedot {:luo-fn tutkinto/lisaa!
                                 :poista-fn #(tutkinto/poista! (:tutkintotunnus %))
                                 :default (for [i (iterate inc 1)]
@@ -111,7 +125,11 @@
                                           {})})
 
 (def ^:private rooli_organisaatio-tiedot {:luo-fn #(sql/insert :rooli_organisaatio (sql/values %))
-                                         :default (repeat {})})
+                                          :default (repeat {})})
+
+(def ^:private koulutustoimija_ja_tutkinto-tiedot {:luo-fn koulutustoimija/lisaa-tutkinto!
+                                                   :poista-fn #(koulutustoimija/poista-tutkinto! (:koulutustoimija %) (:tutkinto %))
+                                                   :default (repeat {})})
 
 (def ^:private entity-tiedot {:koulutustoimija koulutustoimija-tiedot
                               :kysely kysely-tiedot
@@ -123,10 +141,13 @@
                               :kysely-kysymysryhma kysely-kysymysryhma-tiedot
                               :monivalintavaihtoehto monivalintavaihtoehto-tiedot
                               :tutkinto tutkinto-tiedot
+                              :koulutusala koulutusala-tiedot
+                              :opintoala opintoala-tiedot
                               :vastaajatunnus vastaajatunnus-tiedot
                               :vastaaja vastaaja-tiedot
                               :vastaus vastaus-tiedot
-                              :rooli_organisaatio rooli_organisaatio-tiedot})
+                              :rooli_organisaatio rooli_organisaatio-tiedot
+                              :koulutustoimija_ja_tutkinto koulutustoimija_ja_tutkinto-tiedot})
 
 (def ^:private taulut [:koulutustoimija
                        :kysely
@@ -138,7 +159,10 @@
                        :kysely-kysymys
                        :monivalintavaihtoehto
                        :rooli_organisaatio
+                       :koulutusala
+                       :opintoala
                        :tutkinto
+                       :koulutustoimija_ja_tutkinto
                        :vastaajatunnus
                        :vastaaja
                        :vastaus])
