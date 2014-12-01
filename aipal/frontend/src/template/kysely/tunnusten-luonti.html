@@ -32,6 +32,16 @@
                </select>
             </label>
         </div>
+        <div class="form-group">
+            <label>{{i18n.yleiset.tutkinto}}*
+               <select ng-required="true"
+                        ng-model="vastaajatunnus.tutkintotunnus"
+                        class="form-control e2e-vastaajatunnuksen-tutkinto">
+                   <option value=""></option>
+                   <option ng-repeat="tutkinto in tutkinnot | orderByLokalisoitu:'nimi'" value="{{tutkinto.tutkintotunnus}}">{{tutkinto | lokalisoiKentta:'nimi'}}</option>
+               </select>
+            </label>
+        </div>
 </div>
 
 <div class="modal-footer e2e-vastaustunnusten-luonti-dialogi">
