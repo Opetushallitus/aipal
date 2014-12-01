@@ -61,7 +61,7 @@
         <h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>
         <table class="report-table">
           <thead>
-            <tr><th>Vastaukset:</th></tr>
+            <tr><th>{{'raportti.vastaukset' |i18n}}:</th></tr>
           </thead>
           <tbody>
             <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vastaukset">
@@ -74,7 +74,7 @@
 
     <table class="report-table" ng-if="kysymys.vastaustyyppi === 'vapaateksti'">
       <thead>
-        <tr><th>Vastaukset:</th></tr>
+        <tr><th>{{'raportti.vastaukset' |i18n}}:</th></tr>
       </thead>
       <tbody>
         <tr ng-repeat="vastaus in kysymys.vastaukset">
