@@ -159,6 +159,7 @@
   (cond
     (= (:vastaustyyppi kysymys) "asteikko") lisaa-asteikon-jakauma
     (= (:vastaustyyppi kysymys) "kylla_ei_valinta") lisaa-vaihtoehtojen-jakauma
+    (= (:vastaustyyppi kysymys) "likert_asteikko") lisaa-asteikon-jakauma
     (= (:vastaustyyppi kysymys) "monivalinta") lisaa-monivalinnan-jakauma
     (= (:vastaustyyppi kysymys) "vapaateksti") lisaa-vastausten-vapaateksti
     :else (fn [kysymys vastaukset] kysymys)))

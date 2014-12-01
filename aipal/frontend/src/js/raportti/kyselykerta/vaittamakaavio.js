@@ -20,7 +20,8 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
       restrict: 'E',
       replace: true,
       scope: {
-        jakauma: '='
+        jakauma: '=',
+        vastaustyyppi: '='
       },
       templateUrl: 'template/raportti/vaittamakaavio.html',
       link: function(scope) {
@@ -33,7 +34,7 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
 
         _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
-        scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.asteikko', 'vaihtoehto-avain');
+        scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.' + scope.vastaustyyppi, 'vaihtoehto-avain');
         scope.otsikot = [
           {x: 0, teksti: ''},
           {x: 0.2, teksti: '20%'},

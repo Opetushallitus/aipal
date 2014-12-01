@@ -33,11 +33,11 @@
     </jakauma-kaavio>
 
     <vaittama-kaavio
-      ng-if="kysymys.vastaustyyppi === 'asteikko'"
-      jakauma="kysymys.jakauma">
+      ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'likert_asteikko'"
+      jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi">
     </vaittama-kaavio>
 
-    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'">
+    <table class="report-table" ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'likert_asteikko' || kysymys.vastaustyyppi === 'monivalinta'">
       <thead>
         <tr>
           <th class="report-table-question">{{kysymys | lokalisoiKentta:'kysymys'}}</th>
