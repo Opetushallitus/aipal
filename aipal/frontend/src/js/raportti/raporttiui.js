@@ -24,8 +24,13 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Raportti', function($scope, Raportti) {
+  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', function($scope, Kysymysryhma, Raportti) {
     $scope.raportti = {};
+
+    Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat) {
+      $scope.taustakysymysryhmat = _.filter(kysymysryhmat, 'taustakysymykset');
+      $scope.raportti.taustakysymysryhmaid = $scope.taustakysymysryhmat[0].kysymysryhmaid;
+    });
 
     $scope.muodostaRaportti = function() {
       Raportti.muodosta($scope.raportti).success(function(tulos) {

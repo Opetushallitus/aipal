@@ -1,0 +1,6 @@
+<div>
+  <h3>{{ 'raportit.taustakysymykset' | i18n }}</h3>
+  <select ng-model="raportti.taustakysymysryhmaid">
+    <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">{{ ryhma |lokalisoiKentta:'nimi' }}</option>
+  </select>
+</div>

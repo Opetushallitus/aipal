@@ -3,12 +3,14 @@
 
   <tabset>
     <tab heading="{{ 'raportit.vertailuraportti' | i18n }}">
+      <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include src="'template/raportti/osat/aikavali.html'"></ng-include>
     </tab>
     <tab heading="{{ 'raportit.kehitysraportti' | i18n }}">
-
+      <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
     </tab>
     <tab heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}">
+      <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include src="'template/raportti/osat/aikavali.html'"></ng-include>
     </tab>
   </tabset>

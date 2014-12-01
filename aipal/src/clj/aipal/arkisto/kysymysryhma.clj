@@ -26,7 +26,7 @@
       (cond->
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
-                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen
+                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
                   :kysymysryhma.lisattavissa :kysymysryhma.tila
                   [(sql/subselect taulut/kysymys
                      (sql/aggregate (count :*) :lkm)
