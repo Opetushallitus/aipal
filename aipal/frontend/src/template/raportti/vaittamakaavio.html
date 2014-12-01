@@ -32,8 +32,9 @@
   <text ng-repeat-start="data in jakauma"
     class="vaittama-kaavio-vaihtoehto"
     ng-attr-x="{{(2.75*36 * $index + 42) + 0.5*36}}"
-    ng-attr-y="{{320}}">
-    {{'kysymys.asteikko.' + data['vaihtoehto-avain'] | i18n}}
+    ng-attr-y="{{320}}"
+    text-anchor="middle">
+    <tspan ng-attr-dy="{{ $first ? '0' : '1em'}}" ng-repeat="osa in jaaTeksti(data)" ng-attr-x="{{(2.75*36 * $parent.$index + 42) + 0.5*36}}">{{osa}}</tspan>
   </text>
 
   <rect ng-attr-width="{{36}}"
