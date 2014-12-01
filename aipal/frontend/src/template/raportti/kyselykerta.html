@@ -4,20 +4,17 @@
 
 <div class="raportti-kyselykerta-tiedot">
   <div>
-    Kyselykerta: <span>{{tulos.kyselykerta.kyselykertaid}}</span>
+    {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.kyselykerta.nimi}}</span>
   </div>
   <div>
-    Kysely: <span>{{tulos.kyselykerta.kyselyid}}</span>
+    {{'yleiset.kysely' | i18n }}: <span>{{tulos.kyselykerta.kyselyid}}</span>
   </div>
   <div>
-    Nimi: <span>{{tulos.kyselykerta.nimi}}</span>
-  </div>
-  <div>
-    Voimassa: <span>{{tulos.kyselykerta.voimassa_alkupvm | voimassaoloAika: tulos.kyselykerta.voimassa_loppupvm}}</span>
+    {{'yleiset.voimassa' | i18n }}: <span>{{tulos.kyselykerta.voimassa_alkupvm | voimassaoloAika: tulos.kyselykerta.voimassa_loppupvm}}</span>
   </div>
   <hr>
   <div>
-    Raportin luontipäivä: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
+    {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
   </div>
 </div>
 
