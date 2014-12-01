@@ -101,9 +101,9 @@ button.open-datepicker{
 }
 
 /* Dropdown on typeahead */
-ul.dropdown-menu {
+ul[typeahead-popup].dropdown-menu {
   height: 13em;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin: -1px 0 0;
   min-width: 200px;
 }
@@ -111,8 +111,8 @@ ul.dropdown-menu {
 label .fa.fa-sort-desc{
   color: $primary-color;
   position: absolute;
-  bottom: .9em;
-  right: 1.5em;
+  bottom: 0.5em;
+  right: 0.6em;
 }
 
 input.form-control.with-icon{

@@ -15,6 +15,7 @@ label {
   display: inline-block;
   vertical-align: middle;
   width: 100%;
+  position: relative;
 
   & ~ p, & ~ input, & ~ a {display: block;}
 
