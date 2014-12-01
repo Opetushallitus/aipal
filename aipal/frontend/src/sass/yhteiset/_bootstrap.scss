@@ -108,6 +108,17 @@ ul.dropdown-menu {
   min-width: 200px;
 }
 
+label .fa.fa-sort-desc{
+  color: $primary-color;
+  position: absolute;
+  bottom: .9em;
+  right: 1.5em;
+}
+
+input.form-control.with-icon{
+  padding-right: 2em;
+}
+
 /* Accordion */
 accordion {
   .panel-heading {
