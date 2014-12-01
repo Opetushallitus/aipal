@@ -24,8 +24,8 @@ angular.module('aipal')
       require:'ngModel',
       link:function (originalScope, element, attrs, modelCtrl) {
 
-        element.bind('focus', function (evt) {
-          if (typeof modelCtrl.$viewValue === "undefined" || modelCtrl.$viewValue === '') {
+        element.bind('focus', function () {
+          if (typeof modelCtrl.$viewValue === 'undefined' || modelCtrl.$viewValue === '') {
             modelCtrl.$setViewValue(' ');
           }
         });
@@ -271,7 +271,7 @@ angular.module('aipal')
           }
 
           // if there's nothing selected (i.e. focusFirst) and enter is hit, don't do anything
-          if (scope.activeIdx == -1 && (evt.which === 13 || evt.which === 9)) {
+          if (scope.activeIdx === -1 && (evt.which === 13 || evt.which === 9)) {
             return;
           }
 
@@ -298,7 +298,7 @@ angular.module('aipal')
           }
         });
 
-        element.bind('blur', function (evt) {
+        element.bind('blur', function () {
           hasFocus = false;
         });
 
