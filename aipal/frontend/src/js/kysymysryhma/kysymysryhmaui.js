@@ -201,6 +201,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.vastaustyypit = [
       'asteikko',
       'kylla_ei_valinta',
+      'likert_asteikko',
       'monivalinta',
       'vapaateksti'
     ];
