@@ -21,7 +21,12 @@
 (defn ^:private hae-kyselykerta [kyselykertaid]
   (->
     (sql/select* kyselykerta)
-    (sql/fields :kyselyid :kyselykertaid :nimi :voimassa_alkupvm :voimassa_loppupvm)
+    (sql/join :inner :kysely_organisaatio_view
+              (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
+    (sql/join :inner :koulutustoimija
+              (= :koulutustoimija.ytunnus :kysely_organisaatio_view.koulutustoimija))
+    (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+                [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     (sql/where {:kyselykertaid kyselykertaid})
 
     sql/exec

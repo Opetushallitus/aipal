@@ -13,6 +13,9 @@
     <div>
       {{'yleiset.voimassa' | i18n }}: <span>{{tulos.kyselykerta.voimassa_alkupvm | voimassaoloAika: tulos.kyselykerta.voimassa_loppupvm}}</span>
     </div>
+    <div>
+      {{'raportti.koulutuksen_jarjestaja' | i18n}}: <span>{{tulos.kyselykerta | lokalisoiKentta:'koulutustoimija'}}</span>
+    </div>
     <hr>
   </div>
   <div>
