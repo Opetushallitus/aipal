@@ -142,6 +142,19 @@
                 :vapaateksti nil
                 :vaihtoehto nil}})))))
 
+(deftest likert-asteikko-vastaus
+  (testing "vastaus tallentuu numerovalinta kenttään"
+    (let [kysymykset [{:kysymysid 1 :vastaustyyppi "likert_asteikko"}]
+          vastaukset [{:kysymysid 1 :vastaus [2]} ]]
+      (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
+      (is (= (@vastaaja->vastaus vastaajaid)
+             #{{:kysymysid 1
+                :vastaajaid vastaajaid
+                :jatkovastausid nil
+                :numerovalinta 2
+                :vapaateksti nil
+                :vaihtoehto nil}})))))
+
 (deftest jatkokysymyksen-kylla-vastauksen-validointi
   (are [tulos vastaus kysymys] (= tulos (v/kylla-jatkovastaus-validi? vastaus kysymys))
        true {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus"} {:jatkokysymysid 1 :kylla_teksti_fi "kysymys"} ; validi kyllä vastaus
