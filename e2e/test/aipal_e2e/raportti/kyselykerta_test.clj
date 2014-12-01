@@ -51,17 +51,10 @@
                      (.repeater "kysymys in tulos.raportti"))))
 
 (defn kysymyksen-teksti [kysymys-elementti]
-  (sisemman-elementin-kentan-teksti kysymys-elementti "kysymys.kysymys_fi"))
+  (sisemman-elementin-kentan-teksti kysymys-elementti "kysymys"))
 
 (defn ^:private taulukon-kysymysteksti-kysymykselle [kysymys-elementti]
   (w/text (w/find-element-under kysymys-elementti {:css ".report-table-question"})))
-
-(defn ^:private hae-jakauman-sarake-kysymykselle [sarake kysymys-elementti]
-  (map w/text
-       (w/find-elements-under kysymys-elementti
-                              (-> *ng*
-                                (.repeater "alkio in kysymys.jakauma")
-                                (.column sarake)))))
 
 (defn ^:private vapaatekstit-kysymykselle [kysymys-elementti]
   (map w/text
@@ -70,14 +63,18 @@
                                 (.repeater "vastaus in kysymys.vastaukset")
                                 (.column "teksti")))))
 
+(defn css-sarakkeet-kysymykselle [css-luokka kysymys-elementti]
+  (map w/text
+       (w/find-elements-under kysymys-elementti {:css css-luokka})))
+
 (defn vaihtoehdot-kysymykselle [kysymys-elementti]
-  (hae-jakauman-sarake-kysymykselle "alkio.vaihtoehto" kysymys-elementti))
+  (css-sarakkeet-kysymykselle ".e2e-vaihtoehto" kysymys-elementti))
 
 (defn osuudet-kysymykselle [kysymys-elementti]
-  (hae-jakauman-sarake-kysymykselle "alkio.osuus" kysymys-elementti))
+  (css-sarakkeet-kysymykselle ".e2e-osuus" kysymys-elementti))
 
 (defn lukumaarat-kysymykselle [kysymys-elementti]
-  (hae-jakauman-sarake-kysymykselle "alkio.lukumaara" kysymys-elementti))
+  (css-sarakkeet-kysymykselle ".e2e-vastausten-lukumaara" kysymys-elementti))
 
 (defn ^:private lukumaarat-yhteensa-kysymykselle [kysymys-elementti]
   (w/text (w/find-element-under kysymys-elementti {:css ".report-table-amount-header"})))
