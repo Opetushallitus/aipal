@@ -21,25 +21,36 @@
 
 (def kyselykerta-select
   (-> (sql/select* taulut/vastaajatunnus)
-    (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa)
+    (sql/join :left taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+    (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa
+                :tutkinto.nimi_fi :tutkinto.nimi_sv)
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
                                :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
     (sql/order :luotuaika :DESC)))
 
+(defn ^:private erota-tutkinto
+  [vastaajatunnus]
+  (let [tutkinto (select-keys vastaajatunnus [:nimi_fi :nimi_sv :tutkintotunnus])]
+    (some-> vastaajatunnus
+      (dissoc :nimi_fi :nimi_sv :tutkintotunnus)
+      (assoc :tutkinto tutkinto))))
+
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]
   (-> kyselykerta-select
     (sql/where (= :kyselykertaid kyselykertaid))
-    sql/exec))
+    sql/exec
+    (->> (map erota-tutkinto))))
 
 (defn hae [id]
   (-> kyselykerta-select
     (sql/where {:vastaajatunnusid id})
     sql/exec
-    first))
+    first
+    erota-tutkinto))
 
 (defn luo-satunnainen-tunnus
   [pituus]
@@ -72,9 +83,11 @@
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
+        tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
         vastaajatunnus (-> vastaajatunnus
-                         (dissoc :henkilokohtainen)
-                         (assoc :vastaajien_lkm vastaajien-lkm))]
+                         (dissoc :henkilokohtainen :tutkinto)
+                         (assoc :vastaajien_lkm vastaajien-lkm
+                                :tutkintotunnus tutkintotunnus))]
     (doall
       (take tunnusten-lkm
         (for [tunnus (luo-tunnuksia 6)]

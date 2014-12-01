@@ -151,7 +151,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
-  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', 'rahoitusmuodot', 'tutkinnot', function($modalInstance, $scope, rahoitusmuodot, tutkinnot) {
+  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot', 
+                                              function($modalInstance, $scope, $filter, rahoitusmuodot, tutkinnot) {
     $scope.vastaajatunnus = {
       vastaajien_lkm: 1
     };
@@ -164,6 +165,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     };
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
+    };
+    $scope.lokalisoiNimi = function(tutkinto) {
+      if(typeof tutkinto === 'object') {
+        return $filter('lokalisoiKentta')(tutkinto, 'nimi');
+      } else {
+        return tutkinto;
+      }
     };
   }])
 ;

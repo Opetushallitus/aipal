@@ -67,6 +67,7 @@
             <thead>
             <tr>
                 <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
+                <th>{{'i18n.vastaajatunnus.tutkinto'|i18n}}</th>
                 <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
                 <th></th>
             </tr>
@@ -95,6 +96,7 @@
                 <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
                     ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
+                    <td>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
                     <td class="nowrap actions">
                         <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm && muokkaustila">

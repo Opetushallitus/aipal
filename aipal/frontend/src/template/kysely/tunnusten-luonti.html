@@ -34,12 +34,12 @@
         </div>
         <div class="form-group">
             <label>{{i18n.yleiset.tutkinto}}*
-               <select ng-required="true"
-                        ng-model="vastaajatunnus.tutkintotunnus"
-                        class="form-control e2e-vastaajatunnuksen-tutkinto">
-                   <option value=""></option>
-                   <option ng-repeat="tutkinto in tutkinnot | orderByLokalisoitu:'nimi'" value="{{tutkinto.tutkintotunnus}}">{{tutkinto | lokalisoiKentta:'nimi'}}</option>
-               </select>
+              <input type="text"
+                     class="form-control"
+                     ng-model="vastaajatunnus.tutkinto"
+                     typeahead="tutkinto as (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot | filter:$viewValue | orderByLokalisoitu:'nimi'"
+                     typeahead-input-formatter="lokalisoiNimi($model)"
+                     typeahead-wait-ms="200">
             </label>
         </div>
 </div>
