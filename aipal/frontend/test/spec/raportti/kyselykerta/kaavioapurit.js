@@ -15,7 +15,7 @@
 'use strict';
 
 describe('Palvelu: kaavioApurit', function () {
-  beforeEach(module('raportti.kyselykerta.kaavioapurit', 'yhteiset.palvelut.lokalisointi'));
+  beforeEach(module('raportti.kyselykerta.kaavioapurit'));
 
   var kaavioApurit;
   beforeEach(inject(function(_kaavioApurit_) {

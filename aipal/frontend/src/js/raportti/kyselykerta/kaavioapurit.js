@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n'])
+angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.lokalisointi'])
   .factory('kaavioApurit', ['$filter', 'i18n', function($filter, i18n) {
     var varit = ['#43b1d5', '#ffad33', '#d633ad', '#6cc555'];
 
