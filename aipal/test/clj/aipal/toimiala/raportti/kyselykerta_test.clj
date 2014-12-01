@@ -14,7 +14,8 @@
 
 (ns aipal.toimiala.raportti.kyselykerta-test
   (:require [clojure.test :refer [are deftest is testing]]
-            [aipal.toimiala.raportti.kyselykerta :refer :all]))
+            [aipal.toimiala.raportti.kyselykerta :refer :all]
+            [aipal.toimiala.raportti.raportointi :refer :all]))
 
 (deftest jaottele-asteikko-test
  (testing
@@ -65,10 +66,10 @@
           lisaa-monivalinnan-jakauma (fn [kysymys vastaukset] kysymys)
           lisaa-vaihtoehtojen-jakauma (fn [kysymys vastaukset] kysymys)
           lisaa-vapaatekstit (fn [kysymys vastaukset] kysymys)]
-      (with-redefs [aipal.toimiala.raportti.kyselykerta/lisaa-asteikon-jakauma lisaa-asteikon-jakauma
-                    aipal.toimiala.raportti.kyselykerta/lisaa-monivalinnan-jakauma lisaa-monivalinnan-jakauma
-                    aipal.toimiala.raportti.kyselykerta/lisaa-vaihtoehtojen-jakauma lisaa-vaihtoehtojen-jakauma
-                    aipal.toimiala.raportti.kyselykerta/lisaa-vastausten-vapaateksti lisaa-vapaatekstit]
+      (with-redefs [aipal.toimiala.raportti.raportointi/lisaa-asteikon-jakauma lisaa-asteikon-jakauma
+                    aipal.toimiala.raportti.raportointi/lisaa-monivalinnan-jakauma lisaa-monivalinnan-jakauma
+                    aipal.toimiala.raportti.raportointi/lisaa-vaihtoehtojen-jakauma lisaa-vaihtoehtojen-jakauma
+                    aipal.toimiala.raportti.raportointi/lisaa-vastausten-vapaateksti lisaa-vapaatekstit]
         (testing
           "valitsee oikean funktion:"
           (are [kuvaus kysymys odotettu-tulos]

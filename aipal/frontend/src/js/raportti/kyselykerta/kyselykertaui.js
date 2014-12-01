@@ -31,7 +31,7 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
       })
       .when('/raportit/kyselykerrat/kyselykerta/:kyselykertaid', {
         controller: 'KyselykertaRaporttiController',
-        templateUrl: 'template/raportti/kyselykerta.html',
+        templateUrl: 'template/raportti/raportti.html',
         label: 'i18n.raportit.breadcrumb_raportti'
       });
   }])
