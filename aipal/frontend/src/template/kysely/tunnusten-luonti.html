@@ -35,11 +35,14 @@
         <div class="form-group">
             <label>{{i18n.yleiset.tutkinto}}*
               <input type="text"
-                     class="form-control"
+                     class="form-control with-icon"
                      ng-model="vastaajatunnus.tutkinto"
                      typeahead="tutkinto as (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot | filter:$viewValue | orderByLokalisoitu:'nimi'"
                      typeahead-input-formatter="lokalisoiNimi($model)"
-                     typeahead-wait-ms="200">
+                     typeahead-wait-ms="200"
+                     typeahead-editable="false"
+                     ng-required="true">
+              <span class="fa fa-sort-desc"></span>
             </label>
         </div>
 </div>
