@@ -14,7 +14,7 @@
 
 (ns aipal.toimiala.raportti.valtakunnallinen
   (:require [korma.core :as sql]
-            [aipal.toimiala.raportti.kyselykerta :as kyselykerta-raportti]
+            [aipal.toimiala.raportti.raportointi :as raportointi]
             [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.korma.korma :refer [joda-date->sql-date]]))
@@ -47,5 +47,5 @@
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))]
     {:luontipvm (time/today)
-     :raportti  (kyselykerta-raportti/suodata-raportin-kentat
-                  (kyselykerta-raportti/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset alkupvm loppupvm)))}))
+     :raportti  (raportointi/suodata-raportin-kentat
+                  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset alkupvm loppupvm)))}))
