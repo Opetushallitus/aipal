@@ -19,7 +19,8 @@
                  [com.googlecode.flyway/flyway-core "2.2"]
                  [org.clojure/java.jdbc "0.3.0-alpha5"]
                  [postgresql "9.1-901.jdbc4"]
-                 [org.clojure/tools.cli "0.3.0"]]
+                 [org.clojure/tools.cli "0.3.0"]
+                 [clojure-csv "2.0.1"]]
   :profiles {:uberjar {:aot :all}}
   :resource-paths ["resources"]
   :main aipal-db.core

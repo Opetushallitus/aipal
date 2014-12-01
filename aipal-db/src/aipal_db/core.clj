@@ -32,11 +32,14 @@
     (println (str stm ";")))
   (apply jdbc/do-commands sql))
 
-(defn sql-resurssista
+(defn sql-tiedostosta
   "Palauttaa vektorin, jossa on SQL-statementteja.
    TODO: parseri ei ole mitenkään täydellinen.."
   [nimi]
-   (clojure.string/split (slurp (io/resource nimi)) #";"))
+  (clojure.string/split (slurp nimi) #";"))
+
+(defn sql-resurssista [nimi]
+  (sql-tiedostosta (io/resource nimi)))
 
 (defn run-sql [sql]
   (doseq [stmt sql]
@@ -59,24 +62,6 @@
 
 (defn prefix [s n]
   (.substring s 0 (min (.length s) n)))
-
-(defn luo-toimikuntakayttajat! [db-spec]
-  (doseq [{koulutustoimijan-nimi :nimi_fi
-           koulutustoimijan-y-tunnus :ytunnus} (jdbc/query db-spec ["SELECT * FROM koulutustoimija WHERE char_length(ytunnus) = 9"])
-          [rooli roolin-nimi] {"OPL-VASTUUKAYTTAJA" "Vastuukäyttäjä"
-                               "OPL-KAYTTAJA" "Käyttäjä"}
-          :let [kayttajan-oid (str "OID." koulutustoimijan-y-tunnus "." rooli)
-                etunimi roolin-nimi
-                sukunimi (prefix koulutustoimijan-nimi 99)]]
-    (println "Luodaan" etunimi sukunimi)
-    (jdbc/insert! db-spec :kayttaja {:oid kayttajan-oid
-                                     :etunimi etunimi
-                                     :sukunimi sukunimi
-                                     :voimassa true})
-    (jdbc/insert! db-spec :rooli_organisaatio {:organisaatio koulutustoimijan-y-tunnus
-                                               :rooli rooli
-                                               :kayttaja kayttajan-oid
-                                               :voimassa true})))
 
 (defn aseta-oikeudet-sovelluskayttajalle
   [username]
@@ -126,6 +111,8 @@
    [nil "--target-version VERSION" "Tehdään migrate annettuun versioon saakka"]
    ["-t" nil "Testikäyttäjien luonti"
     :id :testikayttajat]
+   ["-s" "--sql SQL" "Tiedosto, jonka sisältämät SQL-lauseet suoritetaan migraation päätteeksi"
+    :assoc-fn #(update-in %1 [%2] (fnil conj []) %3)]
    ["-u" "--username USER" "Tietokantakäyttäjä"
     :default "aipal_user"]
    ["-h" "--help" "Käyttöohje"]])
@@ -181,7 +168,7 @@
                               nil
                               (catch FlywayException e
                                 e))]
-      (try 
+      (try
         (jdbc/with-connection db-spec
           (println "Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista epäonnistuisi.")
           (aseta-oikeudet-sovelluskayttajalle (:username options))
@@ -192,8 +179,9 @@
             (luo-kayttajat!))
           (when (:testikayttajat options)
             (println "luodaan testikäyttäjät")
-            (luo-toimikuntakayttajat! db-spec)
-            (luo-testikayttajat!)))
+            (luo-testikayttajat!))
+          (doseq [s (:sql options)]
+            (run-sql (sql-tiedostosta s))))
         (finally
           (when migraatiopoikkeus
             (println "!!!! TAPAHTUI VIRHE !!!")
