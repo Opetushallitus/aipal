@@ -128,8 +128,13 @@
                              :vastaustyyppi "monivalinta"}
                             {:kysymysid 6
                              :kysymysryhmaid 1
-                             :kysymys_fi "Kysymys 6: ei mukana kyselyssä"
+                             :kysymys_fi "Kysymys 6"
                              :jarjestys 6
+                             :vastaustyyppi "likert_asteikko"}
+                            {:kysymysid 99
+                             :kysymysryhmaid 1
+                             :kysymys_fi "Kysymys 99: ei mukana kyselyssä"
+                             :jarjestys 99
                              :vastaustyyppi "kylla_ei_valinta"}]
                   :kysely-kysymysryhma [{:kyselyid 1
                                          :kysymysryhmaid 1
@@ -138,7 +143,8 @@
                                    {:kyselyid 1 :kysymysid 2}
                                    {:kyselyid 1 :kysymysid 3}
                                    {:kyselyid 1 :kysymysid 4}
-                                   {:kyselyid 1 :kysymysid 5}]
+                                   {:kyselyid 1 :kysymysid 5}
+                                   {:kyselyid 1 :kysymysid 6}]
                   :monivalintavaihtoehto [{:kysymysid 5
                                            :jarjestys 1
                                            :teksti_fi "Jotain"}
@@ -192,7 +198,15 @@
                             {:vastausid 10
                              :kysymysid 5
                              :vastaajaid 2
-                             :numerovalinta 2}]}
+                             :numerovalinta 2}
+                            {:vastausid 11
+                             :kysymysid 6
+                             :vastaajaid 1
+                             :numerovalinta 3}
+                            {:vastausid 12
+                             :kysymysid 6
+                             :vastaajaid 2
+                             :numerovalinta 4}]}
         (avaa (kyselykertaraportti-sivu 1))
         (testing
           "kyselykerran tiedot"
@@ -248,5 +262,19 @@
             (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
+          "Likert-asteikon väittämän vastausten jakauma"
+          (let [kysymys (nth (kysymykset) 5)]
+            (is (= (kysymyksen-teksti kysymys) "6. Kysymys 6"))
+            (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 6"))
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Täysin eri mieltä"
+                                                       "Jokseenkin eri mieltä"
+                                                       "Ei samaa eikä eri mieltä"
+                                                       "Jokseenkin samaa mieltä"
+                                                       "Täysin samaa mieltä"]))
+            (is (= (osuudet-kysymykselle kysymys) ["0%" "0%" "50%" "50%" "0%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "0" "1" "1" "0"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
+            (is (= (count (hae-vaittamakaavio-kysymykselle kysymys)) 1))))
+        (testing
           "sisältää vain kyselyyn valitut kysymykset"
-          (is (= (count (kysymykset)) 5)))))))
+          (is (= (count (kysymykset)) 6)))))))

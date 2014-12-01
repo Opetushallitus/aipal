@@ -76,6 +76,7 @@
                (is (= (kysymyksen-kasittelija kysymys) odotettu-tulos) kuvaus)
                "asteikko" {:vastaustyyppi "asteikko"} lisaa-asteikon-jakauma
                "kyllä/ei valinta" {:vastaustyyppi "kylla_ei_valinta"} lisaa-vaihtoehtojen-jakauma
+               "likert-asteikko" {:vastaustyyppi "likert_asteikko"} lisaa-asteikon-jakauma
                "monivalinta" {:vastaustyyppi "monivalinta"} lisaa-monivalinnan-jakauma
                "vapaateksti" {:vastaustyyppi "vapaateksti"} lisaa-vapaatekstit))))))
 
