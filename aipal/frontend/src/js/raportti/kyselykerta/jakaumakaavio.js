@@ -26,12 +26,12 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
       templateUrl: 'template/raportti/jakaumaKaavio.html',
       link: function(scope) {
         var asetukset = {
-          maksimitilaOtsikolle: 300,
+          palkinLeveys: 60,
           palkinMaksimiPituus: 480,
-          otsikoidenSisennys: 50,
-          tekstinMaksimiPituus: 80
+          tekstinPituus: 180
         };
 
+        scope.asetukset = asetukset;
         _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
         if (scope.vastaustyyppi === 'kylla_ei_valinta') {
@@ -40,7 +40,6 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
         else {
           scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisoituTeksti, 'vaihtoehto');
         }
-        scope.tekstinPituus = 150;
         scope.otsikot = [
           {x: 0, teksti: ''},
           {x: 0.25, teksti: '25%'},
