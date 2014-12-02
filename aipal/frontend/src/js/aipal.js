@@ -51,7 +51,9 @@ angular.module('aipal', [
   'ui.select2',
   'ng-breadcrumbs',
   'placeholderShim',
-  'ngPostMessage'
+  'ngPostMessage',
+  'ui.select',
+  'ngSanitize'
 ])
 
   .config(['$httpProvider', 'asetukset', function ($httpProvider, asetukset) {

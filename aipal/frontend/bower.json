@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "angular": "1.2.12",
-    "angular-animate": "1.2.12",
-    "angular-cookies": "1.2.12",
-    "angular-mocks": "1.2.12",
-    "angular-route": "1.2.12",
-    "angular-resource": "1.2.12",
+    "angular": "1.2.27",
+    "angular-animate": "1.2.27",
+    "angular-cookies": "1.2.27",
+    "angular-mocks": "1.2.27",
+    "angular-route": "1.2.27",
+    "angular-resource": "1.2.27",
+    "angular-sanitize": "1.2.27",
     "angular-bootstrap": "0.12.0",
     "angular-placeholder-shim": "0.3.0",
     "jquery": "2.1.0",
@@ -20,6 +21,7 @@
     "select2": "3.4.8",
     "ng-breadcrumbs": "0.1.2",
     "angular-post-message": "1.1.1",
-    "fontawesome": "4.2.0"
+    "fontawesome": "4.2.0",
+    "angular-ui-select": "0.8.3"
   }
 }

@@ -100,23 +100,20 @@ button.open-datepicker{
   }
 }
 
-/* Dropdown on typeahead */
-ul[typeahead-popup].dropdown-menu {
-  height: 13em;
-  overflow-y: auto;
-  margin: -1px 0 0;
-  min-width: 200px;
-}
-
-label .fa.fa-sort-desc{
-  color: $primary-color;
-  position: absolute;
-  bottom: 0.5em;
-  right: 0.6em;
-}
-
-input.form-control.with-icon{
-  padding-right: 2em;
+/* Dropdown on ui-select-bootstrap */
+.ui-select-bootstrap.dropdown{
+  margin: 0;
+  padding: 0;
+  span.text-muted{
+    font-size: 1em;
+    font-weight: 400;
+  }
+  button.btn{
+    border: 1px solid $primary-color;
+    padding: 2px 5px;
+    margin: 0;
+    font-weight: 400 !important;
+  }
 }
 
 /* Accordion */
