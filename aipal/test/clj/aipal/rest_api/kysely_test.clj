@@ -1,5 +1,6 @@
 (ns aipal.rest-api.kysely-test
-  (:require [aipal.rest-api.kysely :refer [lisaa-kysymysryhma! paivita-kysely!]])
+  (:require [aipal.rest-api.kysely :refer [lisaa-kysymysryhma! paivita-kysely!]]
+            aipal.toimiala.kayttajaoikeudet)
   (:use clojure.test))
 
 (def kysely->kysymys (atom {}))
@@ -23,7 +24,8 @@
                                                              (swap! kysely->kysymysryhma dissoc kyselyid))
                 aipal.arkisto.kysely/hae-kysymysten-poistettavuus (fn [kysymysryhmaid] (@kysymysryhma->kysymys kysymysryhmaid))
                 aipal.arkisto.kysely/muokkaa-kyselya! identity
-                aipal.toimiala.kayttajaoikeudet/kysymysryhma-luku? (constantly true)]
+                aipal.toimiala.kayttajaoikeudet/kysymysryhma-luku? (constantly true)
+                aipal.toimiala.kayttajaoikeudet/kysymysryhma-on-julkaistu? (constantly true)]
     (f)))
 
 (defn aseta-fake-kannan-kysymysryhma! [kysymysryhmaid kysymykset]

@@ -18,7 +18,8 @@
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysely :as arkisto]
-            [aipal.toimiala.kayttajaoikeudet :refer [kysymysryhma-luku?]]
+            [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
+            [aipal.toimiala.kayttajaoikeudet :refer [kysymysryhma-luku? kysymysryhma-on-julkaistu?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
@@ -44,6 +45,7 @@
   (arkisto/poista-kysymykset! (:kyselyid kysely))
   (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
     (assert (kysymysryhma-luku? (:kysymysryhmaid kysymysryhma)))
+    (assert (kysymysryhma-on-julkaistu? (:kysymysryhmaid kysymysryhma)))
     (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
   (arkisto/muokkaa-kyselya! kysely))
 

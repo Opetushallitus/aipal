@@ -80,7 +80,6 @@
       ;; luo vastaajatunnuksia
       (kyselykerta-sivu/luo-vastaajatunnuksia)
       (kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
-      (kyselykerta-sivu/valitse-vastaajatunnuksen-tutkinto "Tutkinto")
       (kyselykerta-sivu/lisaa-vastaajatunnukset)
 
       ;; vastaa kyselyyn
