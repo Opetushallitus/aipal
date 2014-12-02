@@ -220,6 +220,7 @@
     :ohjeet_luku aipal-kayttaja?
     :ohje_muokkaus yllapitaja?
     :rahoitusmuoto aipal-kayttaja?
+    :tutkinto aipal-kayttaja?
     :valtakunnallinen-raportti yllapitaja?
     :omat_tiedot aipal-kayttaja?})
 
