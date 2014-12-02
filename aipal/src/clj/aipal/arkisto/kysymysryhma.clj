@@ -14,6 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
+            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kysymysryhmat
@@ -22,7 +23,8 @@
       (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
       (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
                      (and {:kysymysryhma_organisaatio_view.valtakunnallinen true}
-                          {:kysymysryhma.lisattavissa true})))
+                          (or {:kysymysryhma.lisattavissa true}
+                              (yllapitaja?)))))
       (cond->
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
