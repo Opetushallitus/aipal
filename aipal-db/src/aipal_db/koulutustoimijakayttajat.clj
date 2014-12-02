@@ -42,7 +42,8 @@
 (defn hae-koulutustoimijat [db-spec]
   (jdbc/query db-spec [(str "SELECT DISTINCT ytunnus, nimi_fi "
                             "FROM kysely_organisaatio_view "
-                            "INNER JOIN koulutustoimija ON ytunnus = koulutustoimija ")]))
+                            "INNER JOIN koulutustoimija ON ytunnus = koulutustoimija "
+                            "WHERE char_length(ytunnus) = 9")]))
 
 (def roolit {"OPL-VASTUUKAYTTAJA" "Vastuukäyttäjä"
              "OPL-KAYTTAJA" "Käyttäjä"})
