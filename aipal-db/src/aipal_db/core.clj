@@ -96,7 +96,7 @@
 (defn alusta-flywaylla!
   "Alustaa tietokannan Flywayn avulla."
   [datasource options]
-  (let [flyway (Flyway.)       
+  (let [flyway (Flyway.)
         kantaversio (:target-version options)
         tyhjenna (:clear options)]
     (.setDataSource flyway datasource)
