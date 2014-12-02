@@ -119,15 +119,29 @@
   (or (kayttaja/yllapitaja?)
       (kayttaja/vastuukayttaja?)))
 
+(defn kysymysryhma-on-tilassa? [tila kysymysryhmaid]
+  (= tila (:tila (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false))))
+
 (defn kysymysryhma-on-luonnostilassa? [kysymysryhmaid]
-  (= "luonnos" (:tila (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false))))
+  (kysymysryhma-on-tilassa? "luonnos" kysymysryhmaid))
+
+(defn kysymysryhma-on-suljettu? [kysymysryhmaid]
+  (kysymysryhma-on-tilassa? "suljettu" kysymysryhmaid))
 
 (defn kysymysryhma-muokkaus? [kysymysryhmaid]
   (and (kysymysryhma-on-luonnostilassa? kysymysryhmaid)
        (or (kayttaja/yllapitaja?)
-          (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
-            #{"OPL-VASTUUKAYTTAJA"}
-            kysymysryhmaid))))
+           (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
+             #{"OPL-VASTUUKAYTTAJA"}
+             kysymysryhmaid))))
+
+(defn kysymysryhma-julkaisu? [kysymysryhmaid]
+  (and (or (kysymysryhma-on-suljettu? kysymysryhmaid)
+           (kysymysryhma-on-luonnostilassa? kysymysryhmaid))
+       (or (kayttaja/yllapitaja?)
+           (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
+             #{"OPL-VASTUUKAYTTAJA"}
+             kysymysryhmaid))))
 
 (defn kysymysryhma-sulkeminen? [kysymysryhmaid]
   (or (kayttaja/yllapitaja?)
@@ -194,7 +208,7 @@
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
     :kysymysryhma-muokkaus kysymysryhma-muokkaus?
-    :kysymysryhma-julkaisu kysymysryhma-muokkaus?
+    :kysymysryhma-julkaisu kysymysryhma-julkaisu?
     :kysymysryhma-sulkeminen kysymysryhma-sulkeminen?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?

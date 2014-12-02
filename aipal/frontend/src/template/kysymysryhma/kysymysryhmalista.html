@@ -35,6 +35,10 @@
           {{ 'yleiset.sulje' | i18n }}&nbsp;
           <span class="fa fa-close"></span>
         </button>
+        <button class="btn btn-primary btn-sm" ng-click="palautaKysymysryhmaJulkaistuksi(k)" ng-if="k.tila === 'suljettu'">
+          {{ 'yleiset.palauta_julkaistuksi' | i18n }}&nbsp;
+          <span class="fa fa-reply"></span>
+        </button>
       </auth>
     </td>
   </tr>

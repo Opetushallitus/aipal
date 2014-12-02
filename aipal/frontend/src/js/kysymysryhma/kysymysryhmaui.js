@@ -101,6 +101,19 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           });
       });
     };
+
+    $scope.palautaKysymysryhmaJulkaistuksi = function(kysymysryhma) {
+      varmistus.varmista(i18n.hae('kysymysryhma.palauta_julkaistuksi'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.palauta_julkaistuksi_teksti'), i18n.hae('kysymysryhma.palauta_julkaistuksi')).then(function() {
+        Kysymysryhma.julkaise(kysymysryhma)
+          .success(function(uusiKysymysryhma) {
+            _.assign(kysymysryhma, uusiKysymysryhma);
+            ilmoitus.onnistuminen(i18n.hae('kysymysryhma.palautus_julkaistuksi_onnistui'));
+          })
+          .error(function() {
+            ilmoitus.virhe(i18n.hae('kysymysryhma.palautus_julkaistuksi_epaonnistui'));
+          });
+      });
+    };
   }])
 
   .controller('JulkaiseKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function ($modalInstance, $scope, kysymysryhma) {
