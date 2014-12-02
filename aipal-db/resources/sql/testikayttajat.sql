@@ -88,3 +88,23 @@ values ('7654321-2', 'OPL-KATSELIJA', 'OID.6502', true);
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values ('7654321-2', 'OPL-KAYTTAJA', 'OID.68000', true);
+
+-- Tutkinnot testikäyttöä varten
+
+insert into koulutusala (koulutusalatunnus, nimi_fi, nimi_sv) values
+	('X', 'Testikoulutusala', 'Testikoulutusala (sv)');
+
+insert into opintoala (opintoalatunnus, koulutusala, nimi_fi, nimi_sv) values
+	('X00', 'X', 'Testiopintoala', 'Testiopintoala (sv)');
+
+insert into tutkinto (tutkintotunnus, opintoala, nimi_fi, nimi_sv) values
+	('X00001', 'X00', 'Maanviljelyalan testitutkinto', 'Maanviljelyalan testitutkinto (sv)'),
+	('X00002', 'X00', 'Metsätalousalan testitutkinto', 'Metsätalousalan testitutkinto (sv)'),
+	('X00003', 'X00', 'Viulunhionnan testitutkinto', 'Viulunhionnan testitutkinto (sv)'),
+	('X00004', 'X00', 'Viulunhionnan erikoistestitutkinto', 'Viulunhionnan erikoistestitutkinto (sv)');
+
+insert into koulutustoimija_ja_tutkinto (koulutustoimija, tutkinto) values
+	('2345678-0', 'X00001'),
+	('2345678-0', 'X00002'),
+	('7654321-2', 'X00003'),
+	('7654321-2', 'X00004');
