@@ -9,7 +9,7 @@
       <div class="kysymys-otsikko">{{ kysymys |lokalisoiKentta:'kysymys' }}</div>
 
       <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" ng-show="kysymys.vastaustyyppi === 'monivalinta'">
-        <input type="checkbox"> {{ vaihtoehto |lokalisoiKentta:'teksti' }}
+        <input type="checkbox" ng-model="raportti.kysymykset[kysymys.kysymysid].monivalinnat[vaihtoehto.monivalintavaihtoehtoid]"> {{ vaihtoehto |lokalisoiKentta:'teksti' }}
       </div>
     </div>
   </div>

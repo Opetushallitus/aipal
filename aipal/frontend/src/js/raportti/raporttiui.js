@@ -30,6 +30,11 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
     var haeTaustakysymykset = function(kysymysryhmaid) {
       Kysymysryhma.hae(kysymysryhmaid).success(function(kysymysryhma) {
         $scope.kysymysryhma = kysymysryhma;
+
+        $scope.raportti.kysymykset = {};
+        _.forEach(kysymysryhma.kysymykset, function(kysymys) {
+          $scope.raportti.kysymykset[kysymys.kysymysid] = { monivalinnat: {} };
+        });
       });
     };
 
