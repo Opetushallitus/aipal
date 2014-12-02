@@ -40,8 +40,7 @@
                      typeahead="tutkinto as (tutkinto | lokalisoiKentta:'nimi') for tutkinto in tutkinnot | filter:$viewValue | orderByLokalisoitu:'nimi'"
                      typeahead-input-formatter="lokalisoiNimi($model)"
                      typeahead-wait-ms="200"
-                     typeahead-editable="false"
-                     ng-required="true">
+                     typeahead-editable="false">
               <span class="fa fa-sort-desc"></span>
             </label>
         </div>
