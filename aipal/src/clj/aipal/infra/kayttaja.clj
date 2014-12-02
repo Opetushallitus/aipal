@@ -1,5 +1,6 @@
 (ns aipal.infra.kayttaja
-  (:require [clojure.tools.logging :as log]))
+  (:require [clojure.tools.logging :as log]
+            clojure.set))
 
 (def ^:dynamic *kayttaja*)
 
