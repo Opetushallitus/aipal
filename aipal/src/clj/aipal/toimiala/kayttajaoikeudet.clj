@@ -128,8 +128,18 @@
 (defn kysymysryhma-on-suljettu? [kysymysryhmaid]
   (kysymysryhma-on-tilassa? "suljettu" kysymysryhmaid))
 
+(defn kysymysryhma-on-julkaistu? [kysymysryhmaid]
+  (kysymysryhma-on-tilassa? "julkaistu" kysymysryhmaid))
+
 (defn kysymysryhma-muokkaus? [kysymysryhmaid]
   (and (kysymysryhma-on-luonnostilassa? kysymysryhmaid)
+       (or (kayttaja/yllapitaja?)
+           (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
+             #{"OPL-VASTUUKAYTTAJA"}
+             kysymysryhmaid))))
+
+(defn kysymysryhma-palautus-luonnokseksi? [kysymysryhmaid]
+  (and (kysymysryhma-on-julkaistu? kysymysryhmaid)
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
              #{"OPL-VASTUUKAYTTAJA"}
@@ -210,6 +220,7 @@
     :kysymysryhma-muokkaus kysymysryhma-muokkaus?
     :kysymysryhma-julkaisu kysymysryhma-julkaisu?
     :kysymysryhma-sulkeminen kysymysryhma-sulkeminen?
+    :kysymysryhma-palautus-luonnokseksi kysymysryhma-palautus-luonnokseksi?
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?
     :kyselypohja-muokkaus kyselypohja-muokkaus?

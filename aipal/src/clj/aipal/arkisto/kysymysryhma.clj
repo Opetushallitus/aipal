@@ -32,7 +32,9 @@
                   :kysymysryhma.lisattavissa :kysymysryhma.tila
                   [(sql/subselect taulut/kysymys
                      (sql/aggregate (count :*) :lkm)
-                     (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm])
+                     (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
+                  [(sql/sqlfn exists (sql/subselect taulut/kysely_kysymysryhma
+                                       (sql/where {:kysely_kysymysryhma.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselyyn])
       (sql/order :muutettuaika :desc)
       sql/exec))
   ([organisaatio]
@@ -260,10 +262,23 @@
   [kysymysryhmaid]
   (aseta-tila! kysymysryhmaid "suljettu"))
 
+(defn palauta-luonnokseksi!
+  [kysymysryhmaid]
+  (aseta-tila! kysymysryhmaid "luonnos"))
+
 (defn laske-kysymykset
   [kysymysryhmaid]
   (->
     (sql/select taulut/kysymys
+      (sql/aggregate (count :*) :lkm)
+      (sql/where {:kysymysryhmaid kysymysryhmaid}))
+    first
+    :lkm))
+
+(defn laske-kyselyt
+  [kysymysryhmaid]
+  (->
+    (sql/select taulut/kysely_kysymysryhma
       (sql/aggregate (count :*) :lkm)
       (sql/where {:kysymysryhmaid kysymysryhmaid}))
     first

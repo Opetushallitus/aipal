@@ -31,6 +31,10 @@
           {{ 'yleiset.julkaise' | i18n }}&nbsp;
           <span class="fa fa-share"></span>
         </button>
+        <button class="btn btn-primary btn-sm" ng-click="palautaKysymysryhmaLuonnokseksi(k)" ng-if="k.tila === 'julkaistu' && !k.lisatty_kyselyyn">
+          {{ 'yleiset.palauta_luonnokseksi' | i18n }}&nbsp;
+          <span class="fa fa-reply"></span>
+        </button>
         <button class="btn btn-primary btn-sm" ng-click="suljeKysymysryhma(k)" ng-if="k.tila === 'julkaistu'">
           {{ 'yleiset.sulje' | i18n }}&nbsp;
           <span class="fa fa-close"></span>

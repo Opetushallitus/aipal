@@ -121,6 +121,12 @@
         (json-response (arkisto/julkaise! kysymysryhmaid))
         {:status 403})))
 
+  (cu/defapi :kysymysryhma-palautus-luonnokseksi kysymysryhmaid :put "/:kysymysryhmaid/palauta" [kysymysryhmaid]
+    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
+      (if (zero? (arkisto/laske-kyselyt kysymysryhmaid))
+        (json-response (arkisto/palauta-luonnokseksi! kysymysryhmaid))
+        {:status 403})))
+
   (cu/defapi :kysymysryhma-sulkeminen kysymysryhmaid :put "/:kysymysryhmaid/sulje" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
       (json-response (arkisto/sulje! kysymysryhmaid))))
