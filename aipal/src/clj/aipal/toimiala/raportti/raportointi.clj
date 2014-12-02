@@ -124,7 +124,8 @@
   (when (:kylla_kysymys kysymys)
     {:kysymys_fi (:kylla_teksti_fi kysymys)
      :kysymys_sv (:kylla_teksti_sv kysymys)
-     :jakauma (muodosta-asteikko-jakauman-esitys (jaottele-jatkokysymys-asteikko vastaukset))}))
+     :jakauma (muodosta-asteikko-jakauman-esitys (jaottele-jatkokysymys-asteikko vastaukset))
+     :vastaustyyppi "asteikko"}))
 
 (defn keraa-ei-jatkovastaukset
   [kysymys vastaukset]
@@ -132,7 +133,8 @@
     (let [ei-vastaukset (keep :ei_vastausteksti vastaukset)]
       {:kysymys_fi (:ei_teksti_fi kysymys)
        :kysymys_sv (:ei_teksti_sv kysymys)
-       :vastaukset (for [v ei-vastaukset] {:teksti v})})))
+       :vastaukset (for [v ei-vastaukset] {:teksti v})
+       :vastaustyyppi "vapaateksti"})))
 
 (defn keraa-jatkovastaukset
   [kysymys vastaukset]

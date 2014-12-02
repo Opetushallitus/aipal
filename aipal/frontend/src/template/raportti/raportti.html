@@ -59,7 +59,7 @@
       <h3>{{$index + 1}}. {{i18n.raportit.jatkokysymykset}}</h3>
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
         <h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>
-        <vaittama-kaavio jakauma="kysymys.jatkovastaukset.kylla.jakauma">
+        <vaittama-kaavio jakauma="kysymys.jatkovastaukset.kylla.jakauma" vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi">
         </vaittama-kaavio>
       </div>
       <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
