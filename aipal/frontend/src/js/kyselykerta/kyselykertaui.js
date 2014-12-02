@@ -80,7 +80,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
       });
 
-      $scope.tutkinnot = Tutkinto.koulutustoimijanTutkinnot();
+      Tutkinto.koulutustoimijanTutkinnot().success(function(tutkinnot) {
+        $scope.tutkinnot = tutkinnot;
+      });
 
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = kysely;

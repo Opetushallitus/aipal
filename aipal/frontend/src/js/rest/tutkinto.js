@@ -15,22 +15,10 @@
 'use strict';
 
 angular.module('rest.tutkinto', [])
-  .factory('Tutkinto', ['$resource', function($resource) {
-    var resource = $resource(null, null, {
-      koulutustoimijanTutkinnot: {
-        method: 'GET',
-        params: {
-          nocache: function() {return Date.now();},
-        },
-        url: 'api/tutkinto/koulutustoimija',
-        isArray: true
-      }
-    });
-
+  .factory('Tutkinto', ['$http', function($http) {
     return {
-      koulutustoimijanTutkinnot: function(successCallback, errorCallback) {
-        return resource.koulutustoimijanTutkinnot({}, successCallback, errorCallback);
+      koulutustoimijanTutkinnot: function() {
+      	return $http.get('api/tutkinto/koulutustoimija', {params: {nocache: Date.now()}});
       }
     };
-  }]);
-  
+}]);
