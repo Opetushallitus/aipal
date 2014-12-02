@@ -16,12 +16,12 @@
   (:require [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]))
 
-(defn lisaa!
+(defn ^:integration-api lisaa!
   [tiedot]
   (sql/insert taulut/koulutusala
     (sql/values tiedot)))
 
-(defn paivita!
+(defn ^:integration-api paivita!
   [koulutusalatunnus tiedot]
   (sql/update taulut/koulutusala
     (sql/set-fields tiedot)

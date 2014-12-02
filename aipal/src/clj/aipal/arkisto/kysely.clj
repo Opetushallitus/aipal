@@ -16,7 +16,8 @@
   (:require [korma.core :as sql]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.arkisto.kysymysryhma :as kysymysryhma]
-            [aipal.integraatio.sql.korma :as taulut]))
+            [aipal.integraatio.sql.korma :as taulut]
+            [aipal.auditlog :as auditlog]))
 
 (defn hae-kyselyt
   "Hae koulutustoimijan kyselyt"
@@ -70,7 +71,8 @@
   (sql/insert taulut/kysely
     (sql/values tiedot)))
 
-(defn muokkaa-kyselya [kyselydata]
+(defn muokkaa-kyselya! [kyselydata]
+  (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
   (->
     (sql/update* taulut/kysely)
     (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila]))
@@ -81,7 +83,7 @@
   [kysymysryhmat]
   (map #(clojure.set/rename-keys % {:kysymys :kysymykset}) kysymysryhmat))
 
-(defn julkaise-kysely [kyselyid]
+(defn julkaise-kysely! [kyselyid]
   (sql/update taulut/kysely
     (sql/set-fields {:tila "julkaistu"})
     (sql/where {:kyselyid kyselyid}))

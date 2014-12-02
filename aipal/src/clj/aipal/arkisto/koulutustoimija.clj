@@ -17,12 +17,12 @@
             [aipal.integraatio.sql.korma :as taulut])
   (:use [aipal.integraatio.sql.korma]))
 
-(defn lisaa!
+(defn ^:integration-api lisaa!
   [tiedot]
   (sql/insert taulut/koulutustoimija
     (sql/values tiedot)))
 
-(defn paivita!
+(defn ^:integration-api paivita!
   [y-tunnus tiedot]
   (sql/update taulut/koulutustoimija
     (sql/set-fields tiedot)
@@ -46,12 +46,12 @@
     (sql/fields :oid :ytunnus)
     (sql/where (not= :oid nil))))
 
-(defn lisaa-koulutustoimijalle-tutkinto!
+(defn ^:integration-api lisaa-koulutustoimijalle-tutkinto!
   [y-tunnus tutkintotunnus]
   (sql/insert taulut/koulutustoimija-ja-tutkinto
     (sql/values {:koulutustoimija y-tunnus
                  :tutkinto tutkintotunnus})))
 
-(defn poista-kaikki-koulutustoimijoiden-tutkinnot!
+(defn ^:integration-api poista-kaikki-koulutustoimijoiden-tutkinnot!
   []
   (sql/delete taulut/koulutustoimija-ja-tutkinto))

@@ -22,7 +22,7 @@
                 aipal.arkisto.kysely/poista-kysymysryhmat! (fn [kyselyid]
                                                              (swap! kysely->kysymysryhma dissoc kyselyid))
                 aipal.arkisto.kysely/hae-kysymysten-poistettavuus (fn [kysymysryhmaid] (@kysymysryhma->kysymys kysymysryhmaid))
-                aipal.arkisto.kysely/muokkaa-kyselya identity
+                aipal.arkisto.kysely/muokkaa-kyselya! identity
                 aipal.toimiala.kayttajaoikeudet/kysymysryhma-luku? (constantly true)]
     (f)))
 

@@ -45,7 +45,7 @@
   (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
     (assert (kysymysryhma-luku? (:kysymysryhmaid kysymysryhma)))
     (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
-  (arkisto/muokkaa-kyselya kysely))
+  (arkisto/muokkaa-kyselya! kysely))
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
@@ -78,11 +78,11 @@
   (cu/defapi :kysely-tilamuutos kyselyid :put "/julkaise/:kyselyid" [kyselyid]
     (let [kyselyid (Integer/parseInt kyselyid)]
       (if (> (arkisto/laske-kysymysryhmat kyselyid) 0)
-        (json-response (arkisto/julkaise-kysely kyselyid))
+        (json-response (arkisto/julkaise-kysely! kyselyid))
         {:status 403})))
 
   (cu/defapi :kysely-tilamuutos kyselyid :put "/sulje/:kyselyid" [kyselyid]
     (json-response (arkisto/sulje-kysely (Integer/parseInt kyselyid))))
 
   (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta/:kyselyid" [kyselyid]
-    (json-response (arkisto/julkaise-kysely (Integer/parseInt kyselyid)))))
+    (json-response (arkisto/julkaise-kysely! (Integer/parseInt kyselyid)))))

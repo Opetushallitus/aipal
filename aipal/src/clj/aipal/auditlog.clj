@@ -41,3 +41,8 @@
   [ohjetunniste]
   (kirjoita! :ohje :paivitys
     {:ohjetunniste ohjetunniste}))
+
+(defn kysely-muokkaus!
+  [kyselyid]
+  (kirjoita! :kysely :paivitys {:kyselyid kyselyid}))
+
