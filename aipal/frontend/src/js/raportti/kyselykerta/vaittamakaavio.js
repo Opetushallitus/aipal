@@ -26,12 +26,13 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
       templateUrl: 'template/raportti/vaittamakaavio.html',
       link: function(scope) {
         var asetukset = {
-          maksimitilaOtsikolle: 300,
+          palkinLeveys: 40,
           palkinMaksimiPituus: 300,
-          otsikoidenSisennys: 10,
-          tekstinMaksimiPituus: 40
+          palkkienSiirtyma: 44,
+          viivastonLeveys: 14.33*40
         };
 
+        scope.asetukset = asetukset;
         _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
         scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.' + scope.vastaustyyppi, 'vaihtoehto-avain');
