@@ -1,6 +1,6 @@
 (ns aipal.toimiala.kayttajaoikeudet-test
   (:require [clojure.test :refer :all]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [aipal.infra.kayttaja :refer [*kayttaja* sisaltaa-jonkin-rooleista?]]
             [aipal.toimiala.kayttajaoikeudet :refer :all]))
 
 (deftest sisaltaa-jonkin-rooleista?-sisaltaa

@@ -4,8 +4,7 @@
             [aipal.compojure-util :as cu]
             [clojure.tools.logging :as log]
             [aipal.arkisto.kysymysryhma :as arkisto]
-            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]))
 
 (defn lisaa-jarjestys [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))

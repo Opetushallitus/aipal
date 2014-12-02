@@ -18,12 +18,12 @@
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysely :as arkisto]
-            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja? kysymysryhma-luku?]]
+            [aipal.toimiala.kayttajaoikeudet :refer [kysymysryhma-luku?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]))
 
 (defn lisaa-kysymysryhma!
   [kyselyid kysymysryhma]

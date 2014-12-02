@@ -15,7 +15,7 @@
 (ns aipal.arkisto.kyselypohja
   (:import java.sql.Date)
   (:require [korma.core :as sql]
-            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
+            [aipal.infra.kayttaja :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kyselypohjat

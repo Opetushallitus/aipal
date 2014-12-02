@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
-            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
+            [aipal.infra.kayttaja :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kysymysryhmat

@@ -18,9 +18,8 @@
             [korma.db :as db]
             [aipal.arkisto.kyselypohja :as arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
-            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
 (c/defroutes reitit

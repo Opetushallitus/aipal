@@ -6,7 +6,7 @@
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.arkisto.kyselypohja :as kyselypohja-arkisto]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja :as kayttaja :refer [*kayttaja*]]))
 
 (defn ->int
   "Merkkijono numeroksi tai numero sellaisenaan."
@@ -23,15 +23,9 @@
   ([]
     true))
 
-(defn sisaltaa-jonkin-rooleista? [roolit roolirivit]
-  (not (empty? (clojure.set/select roolit (set (map :rooli roolirivit))))))
-
-(defn kayttajalla-on-jokin-rooleista? [roolit]
-  (sisaltaa-jonkin-rooleista? roolit (:aktiiviset-roolit *kayttaja*)))
-
 (defn kayttajalla-on-jokin-rooleista-koulutustoimijassa? [roolit koulutustoimija]
   (let [roolit-koulutustoimijassa (filter #(= koulutustoimija (:organisaatio %)) (:aktiiviset-roolit *kayttaja*))]
-    (sisaltaa-jonkin-rooleista? roolit roolit-koulutustoimijassa)))
+    (kayttaja/sisaltaa-jonkin-rooleista? roolit roolit-koulutustoimijassa)))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))]
@@ -64,36 +58,28 @@
     (or (:valtakunnallinen organisaatiotieto)
         (= (:koulutustoimija organisaatiotieto) (:aktiivinen-koulutustoimija *kayttaja*)))))
 
-(defn yllapitaja? []
-  (kayttajalla-on-jokin-rooleista?
-    #{"YLLAPITAJA"}))
-
-(defn vastuukayttaja? []
-  (kayttajalla-on-jokin-rooleista?
-    #{"OPL-VASTUUKAYTTAJA"}))
-
 (defn impersonoiva-yllapitaja? []
   (not= (:oid *kayttaja*) (:aktiivinen-oid *kayttaja*)))
 
 (defn kyselyiden-listaaminen?
   "Onko kyselyiden listaaminen sallittua yleisesti toimintona?"
   []
-  (or (yllapitaja?)
-      (vastuukayttaja?)
-      (kayttajalla-on-jokin-rooleista?
+  (or (kayttaja/yllapitaja?)
+      (kayttaja/vastuukayttaja?)
+      (kayttaja/kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
           "OPL-KATSELIJA"
           "OPH-KATSELIJA"})))
 
 (defn kysely-luonti? []
-  (or (yllapitaja?)
-      (vastuukayttaja?)))
+  (or (kayttaja/yllapitaja?)
+      (kayttaja/vastuukayttaja?)))
 
 (defn kysely-muokkaus?
   "Onko kyselyn muokkaus sallittu."
   [kyselyid]
   (and (kysely-on-luonnostilassa? kyselyid)
-       (or (yllapitaja?)
+       (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kyselyssa?
              #{"OPL-VASTUUKAYTTAJA"}
              kyselyid))))
@@ -101,11 +87,11 @@
 (defn kysely-tilamuutos?
   "Onko kyselyn tilan muutos (luonnos/julkaistu/suljettu) sallittu."
   [kyselyid]
-  (or (yllapitaja?)
+  (or (kayttaja/yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-VASTUUKAYTTAJA"} kyselyid)))
 
 (defn kysely-luku? [kyselyid]
-  (or (yllapitaja?)
+  (or (kayttaja/yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselyssa?
         #{"OPL-VASTUUKAYTTAJA"
           "OPL-KAYTTAJA"
@@ -118,58 +104,58 @@
     (kysely-luku? (:kyselyid kyselykerta))))
 
 (defn kysymysryhma-listaaminen? []
-  (or (yllapitaja?)
-      (vastuukayttaja?)
-      (kayttajalla-on-jokin-rooleista?
+  (or (kayttaja/yllapitaja?)
+      (kayttaja/vastuukayttaja?)
+      (kayttaja/kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
           "OPL-KATSELIJA"
           "OPH-KATSELIJA"})))
 
 (defn kysymysryhma-luku? [kysymysryhmaid]
-  (or (yllapitaja?)
+  (or (kayttaja/yllapitaja?)
       (kayttajalla-on-lukuoikeus-kysymysryhmaan? kysymysryhmaid)))
 
 (defn kysymysryhma-luonti? []
-  (or (yllapitaja?)
-      (vastuukayttaja?)))
+  (or (kayttaja/yllapitaja?)
+      (kayttaja/vastuukayttaja?)))
 
 (defn kysymysryhma-on-luonnostilassa? [kysymysryhmaid]
   (= "luonnos" (:tila (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false))))
 
 (defn kysymysryhma-muokkaus? [kysymysryhmaid]
   (and (kysymysryhma-on-luonnostilassa? kysymysryhmaid)
-       (or (yllapitaja?)
+       (or (kayttaja/yllapitaja?)
           (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
             #{"OPL-VASTUUKAYTTAJA"}
             kysymysryhmaid))))
 
 (defn kysymysryhma-sulkeminen? [kysymysryhmaid]
-  (or (yllapitaja?)
+  (or (kayttaja/yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
         #{"OPL-VASTUUKAYTTAJA"}
         kysymysryhmaid)))
 
 (defn kyselypohja-muokkaus? [kyselypohjaid]
-  (or (yllapitaja?)
+  (or (kayttaja/yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselypohjassa?
         #{"OPL-VASTUUKAYTTAJA"}
         kyselypohjaid)))
 
 (defn kyselypohja-luonti? []
-  (or (yllapitaja?)
-      (vastuukayttaja?)))
+  (or (kayttaja/yllapitaja?)
+      (kayttaja/vastuukayttaja?)))
 
 (defn kyselypohja-listaaminen? []
-  (or (yllapitaja?)
-      (vastuukayttaja?)))
+  (or (kayttaja/yllapitaja?)
+      (kayttaja/vastuukayttaja?)))
 
 (defn kyselypohja-luku? [kyselypohjaid]
-  (or (yllapitaja?)
+  (or (kayttaja/yllapitaja?)
       (kayttajalla-on-lukuoikeus-kyselypohjaan? kyselypohjaid)))
 
 (defn kyselykerta-luonti? [kyselyid]
   (and (kysely-on-julkaistu? kyselyid)
-       (or (yllapitaja?)
+       (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kyselyssa?
              #{"OPL-VASTUUKAYTTAJA"
                "OPL-KAYTTAJA"}
@@ -214,14 +200,14 @@
     :kyselypohja-luku kyselypohja-luku?
     :kyselypohja-muokkaus kyselypohja-muokkaus?
     :kyselypohja-luonti kyselypohja-luonti?
-    :impersonointi yllapitaja?
+    :impersonointi kayttaja/yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
     :kayttajan_tiedot aipal-kayttaja?
     :ohjeet_luku aipal-kayttaja?
-    :ohje_muokkaus yllapitaja?
+    :ohje_muokkaus kayttaja/yllapitaja?
     :rahoitusmuoto aipal-kayttaja?
     :tutkinto aipal-kayttaja?
-    :valtakunnallinen-raportti yllapitaja?
+    :valtakunnallinen-raportti kayttaja/yllapitaja?
     :omat_tiedot aipal-kayttaja?})
 
 (def toiminnot kayttajatoiminnot)
