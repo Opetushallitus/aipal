@@ -60,7 +60,7 @@
   [kysymysid]
   (->
     (sql/select* :monivalintavaihtoehto)
-    (sql/fields :jarjestys :teksti_fi :teksti_sv)
+    (sql/fields :monivalintavaihtoehtoid :jarjestys :teksti_fi :teksti_sv)
     (sql/order :jarjestys)
     (sql/where {:kysymysid kysymysid})
     (sql/exec)))
