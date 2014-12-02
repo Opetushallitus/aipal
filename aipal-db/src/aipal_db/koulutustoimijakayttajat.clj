@@ -77,10 +77,12 @@
   (let [kt (koulutustoimijakayttajat db-uri)
         sqlt (map first kt)
         csvt (map second kt)]
-    (binding [*out* (io/writer sql-polku)]
-      (doall (map print sqlt)))
-    (binding [*out* (io/writer csv-polku)]
-      (print (csv/write-csv csvt)))))
+    (with-open [w (io/writer sql-polku)]
+      (binding [*out* w]
+        (doall (map print sqlt))))
+    (with-open [w (io/writer csv-polku)]
+      (binding [*out* w]
+        (print (csv/write-csv csvt))))))
 
 (comment
   (kirjoita-koulutustoimijakayttajat
