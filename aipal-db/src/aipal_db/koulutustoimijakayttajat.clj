@@ -67,7 +67,9 @@
                   etunimi roolin-nimi
                   sukunimi (prefix koulutustoimijan-nimi 99)]]
         [(str "INSERT INTO kayttaja (oid, uid, etunimi, sukunimi, voimassa) "
-              "VALUES ('" oid "', '" uid "', '" etunimi "', '" sukunimi "', " true ");")
+              "VALUES ('" oid "', '" uid "', '" etunimi "', '" sukunimi "', true);\n"
+              "INSERT INTO rooli_organisaatio (organisaatio, rooli, kayttaja, voimassa) "
+              "VALUES ('" koulutustoimijan-y-tunnus "', '" rooli "', '" oid "', true);\n")
          [koulutustoimijan-nimi roolin-nimi uid]]))))
 
 (defn kirjoita-koulutustoimijakayttajat [db-uri sql-polku csv-polku]
@@ -75,9 +77,9 @@
         sqlt (map first kt)
         csvt (map second kt)]
     (binding [*out* (io/writer sql-polku)]
-      (doall (map println sqlt)))
+      (doall (map print sqlt)))
     (binding [*out* (io/writer csv-polku)]
-      (doall (print (csv/write-csv csvt))))))
+      (print (csv/write-csv csvt)))))
 
 (comment
   (kirjoita-koulutustoimijakayttajat
