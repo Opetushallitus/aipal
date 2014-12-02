@@ -1,6 +1,16 @@
-<div>
+<div class="taustakysymykset">
   <h3>{{ 'raportit.taustakysymykset' | i18n }}</h3>
   <select ng-model="raportti.taustakysymysryhmaid">
     <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">{{ ryhma |lokalisoiKentta:'nimi' }}</option>
   </select>
+
+  <div class="kysymykset">
+    <div ng-repeat="kysymys in kysymysryhma.kysymykset">
+      <div class="kysymys-otsikko">{{ kysymys |lokalisoiKentta:'kysymys' }}</div>
+
+      <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" ng-show="kysymys.vastaustyyppi === 'monivalinta'">
+        <input type="checkbox"> {{ vaihtoehto |lokalisoiKentta:'teksti' }}
+      </div>
+    </div>
+  </div>
 </div>
