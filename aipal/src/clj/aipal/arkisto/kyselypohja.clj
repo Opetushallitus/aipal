@@ -15,6 +15,7 @@
 (ns aipal.arkisto.kyselypohja
   (:import java.sql.Date)
   (:require [korma.core :as sql]
+            [aipal.toimiala.kayttajaoikeudet :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-kyselypohjat
@@ -24,8 +25,9 @@
       (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.valtakunnallinen :kyselypohja.tila
                   [:kyselypohja.kaytettavissa :voimassa])
       (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
-                     {:kyselypohja_organisaatio_view.valtakunnallinen true
-                      :kyselypohja.tila "julkaistu"}))
+                     (and {:kyselypohja_organisaatio_view.valtakunnallinen true}
+                          (or {:kyselypohja.tila "julkaistu"}
+                              (yllapitaja?)))))
       (cond->
         vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
       (sql/order :muutettuaika :desc)
