@@ -32,6 +32,14 @@
     sql/exec
     first))
 
+(defn hae-vastaajatunnusten-tutkinnot [kyselykertaid]
+  (sql/select :vastaajatunnus
+    (sql/join :left :tutkinto
+              (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+    (sql/modifier "distinct")
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
+    (sql/where {:kyselykertaid kyselykertaid})))
+
 (defn ^:private hae-kysymykset [kyselykertaid]
   (sql/select :kyselykerta
     (sql/join :inner :kysely
@@ -98,10 +106,9 @@
     (raportointi/muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
-  (let [kyselykerta (hae-kyselykerta kyselykertaid)]
-    (when kyselykerta
-      {:kyselykerta kyselykerta
-       :luontipvm (time/today)})))
+  (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
+    {:kyselykerta (assoc kyselykerta :tutkinnot (hae-vastaajatunnusten-tutkinnot kyselykertaid))
+     :luontipvm (time/today)}))
 
 (defn muodosta-raportti [kyselykertaid]
   (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]
