@@ -34,13 +34,14 @@
         </div>
         <div class="form-group">
             <label>{{i18n.yleiset.tutkinto}}
-                <ui-select ng-model="vastaajatunnus.tutkinto" ng-disabled="disabled">
+                <ui-select ng-if="tutkinnot.length>0" ng-model="vastaajatunnus.tutkinto" ng-disabled="disabled">
                     <ui-select-match placeholder="Valitse tutkinto">{{$select.selected.nimi_fi}}</ui-select-match>
                     <ui-select-choices repeat="tutkinto in tutkinnot | filter: $select.search | orderByLokalisoitu:'nimi'">
                         <div ng-bind-html="tutkinto | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
             </label>
+            <span class="text-muted" ng-if="tutkinnot.length==0">{{i18n.vastaajatunnus.ei_tutkintoja}}</span>
         </div>
 </div>
 
