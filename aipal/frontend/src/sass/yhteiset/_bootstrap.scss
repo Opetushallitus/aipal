@@ -104,6 +104,11 @@ button.open-datepicker{
 .ui-select-bootstrap.dropdown{
   margin: 0;
   padding: 0;
+
+  label.placeholder{
+    display: none !important;
+  }
+
   span.text-muted{
     font-size: 1em;
     font-weight: 400;
