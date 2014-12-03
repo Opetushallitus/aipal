@@ -52,6 +52,17 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
     };
 
+    $scope.palautaKyselypohjaJulkaistuksi = function(kyselypohja) {
+      varmistus.varmista(i18n.hae('kyselypohja.palauta_julkaistuksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_julkaistuksi_teksti'), i18n.hae('kyselypohja.palauta_julkaistuksi')).then(function() {
+        Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
+          ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_julkaistuksi_onnistui'));
+          _.assign(kyselypohja, uusiKyselypohja);
+        }).error(function() {
+          ilmoitus.virhe(i18n.hae('kyselypohja.palautus_julkaistuksi_epaonnistui'));
+        });
+      });
+    };
+
     $scope.suljeKyselypohja = function(kyselypohja) {
       varmistus.varmista(i18n.hae('kyselypohja.sulje'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.sulje_teksti'), i18n.hae('kyselypohja.sulje')).then(function() {
         Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {
