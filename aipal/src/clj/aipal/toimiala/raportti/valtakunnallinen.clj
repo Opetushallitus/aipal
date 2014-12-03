@@ -29,11 +29,31 @@
                 :kysymys.kysymys_sv
                 :kysymys.vastaustyyppi)))
 
-(defn ^:private hae-vastaukset [alkupvm loppupvm]
+(defn generoi-joinit [query ehdot]
+  (reduce (fn [query {:keys [id arvot]}]
+            (sql/where query (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
+                                                               (sql/where {:v1.vastaajaid :vastaus.vastaajaid
+                                                                           :v1.kysymysid id
+                                                                           :v1.numerovalinta [in arvot]})))))
+          query
+          ehdot))
+
+(defn ->int [arvo]
+  (if (integer? arvo) arvo (Integer/parseInt arvo)))
+
+(defn konvertoi-ehdot [ehdot]
+  (for [[kysymysid valinnat] ehdot
+        :let [monivalinnat (:monivalinnat valinnat)
+              arvot (keys (filter #(second %) monivalinnat))]
+        :when (seq arvot)]
+    {:id (->int kysymysid) :arvot (map #(->int %) arvot)}))
+
+(defn ^:private hae-vastaukset [rajaukset alkupvm loppupvm]
   (->
     (sql/select* :vastaus)
     (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+    (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where {:kysymysryhma.taustakysymykset true
                 :kysymysryhma.valtakunnallinen true})
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
@@ -47,7 +67,8 @@
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
-        loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))]
+        loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
+        rajaukset (:kysymykset parametrit)]
     {:luontipvm (time/today)
      :raportti  (raportointi/suodata-raportin-kentat
-                  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset alkupvm loppupvm)))}))
+                  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset rajaukset alkupvm loppupvm)))}))
