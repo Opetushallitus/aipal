@@ -26,7 +26,7 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
       templateUrl: 'template/raportti/jakaumaKaavio.html',
       link: function(scope) {
         var asetukset = {
-          palkinLeveys: 60,
+          palkinLeveys: 40,
           palkinMaksimiPituus: 480,
           tekstinPituus: 180
         };
