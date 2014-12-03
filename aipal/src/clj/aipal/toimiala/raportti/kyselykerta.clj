@@ -36,9 +36,12 @@
   (sql/select :vastaajatunnus
     (sql/join :left :tutkinto
               (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-    (sql/modifier "distinct")
+    (sql/join :left :vastaaja
+              (= :vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid))
+    (sql/aggregate (count :vastaaja.vastaajaid) :vastaajien_lkm)
     (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
-    (sql/where {:kyselykertaid kyselykertaid})))
+    (sql/where {:kyselykertaid kyselykertaid})
+    (sql/group :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)))
 
 (defn ^:private hae-kysymykset [kyselykertaid]
   (sql/select :kyselykerta
