@@ -30,7 +30,8 @@
                 :kysymys.vastaustyyppi)))
 
 (defn ^:private hae-vastaukset [alkupvm loppupvm]
-  (sql/select :vastaus
+  (->
+    (sql/select* :vastaus)
     (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (sql/where {:kysymysryhma.taustakysymykset true
@@ -41,7 +42,8 @@
                 :vastaus.kysymysid
                 :vastaus.numerovalinta
                 :vastaus.vaihtoehto
-                :vastaus.vapaateksti)))
+                :vastaus.vapaateksti)
+    sql/exec))
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
