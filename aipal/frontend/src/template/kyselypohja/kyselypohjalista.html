@@ -17,6 +17,10 @@
             <span class="fa fa-pencil"></span>
         </a>&nbsp;
 
+        <button class="btn btn-primary btn-sm" ng-click="palautaKyselypohjaLuonnokseksi(kyselypohja)" ng-if="kyselypohja.tila == 'julkaistu' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+            {{ 'yleiset.palauta_luonnokseksi' | i18n }}&nbsp;
+            <span class="fa fa-reply"></span>
+        </button>
         <button class="btn btn-primary btn-sm" ng-click="palautaKyselypohjaJulkaistuksi(kyselypohja)" ng-if="kyselypohja.tila == 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja)">
             {{ 'yleiset.palauta_julkaistuksi' | i18n }}&nbsp;
             <span class="fa fa-reply"></span>

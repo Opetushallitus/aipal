@@ -36,6 +36,9 @@
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/julkaise" [kyselypohjaid]
     (json-response (arkisto/julkaise-kyselypohja (Integer/parseInt kyselypohjaid))))
 
+  (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/palauta" [kyselypohjaid]
+    (json-response (arkisto/palauta-kyselypohja-luonnokseksi (Integer/parseInt kyselypohjaid))))
+
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/sulje" [kyselypohjaid]
     (json-response (arkisto/sulje-kyselypohja (Integer/parseInt kyselypohjaid))))
 

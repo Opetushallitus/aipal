@@ -63,6 +63,17 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
     };
 
+    $scope.palautaKyselypohjaLuonnokseksi= function(kyselypohja) {
+      varmistus.varmista(i18n.hae('kyselypohja.palauta_luonnokseksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_luonnokseksi_teksti'), i18n.hae('kyselypohja.palauta_luonnokseksi')).then(function() {
+        Kyselypohja.palautaLuonnokseksi(kyselypohja).success(function(uusiKyselypohja) {
+          ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_luonnokseksi_onnistui'));
+          _.assign(kyselypohja, uusiKyselypohja);
+        }).error(function() {
+          ilmoitus.virhe(i18n.hae('kyselypohja.palautus_luonnokseksi_epaonnistui'));
+        });
+      });
+    };
+
     $scope.suljeKyselypohja = function(kyselypohja) {
       varmistus.varmista(i18n.hae('kyselypohja.sulje'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.sulje_teksti'), i18n.hae('kyselypohja.sulje')).then(function() {
         Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {

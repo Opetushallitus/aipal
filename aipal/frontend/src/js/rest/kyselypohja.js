@@ -36,6 +36,9 @@ angular.module('rest.kyselypohja', [])
       julkaise: function(kyselypohja) {
         return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid + '/julkaise', {params: {nocache: Date.now()}});
       },
+      palautaLuonnokseksi: function(kyselypohja) {
+        return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid + '/palauta');
+      },
       sulje: function(kyselypohja) {
         return $http.put('api/kyselypohja/' + kyselypohja.kyselypohjaid + '/sulje', {params: {nocache: Date.now()}});
       },

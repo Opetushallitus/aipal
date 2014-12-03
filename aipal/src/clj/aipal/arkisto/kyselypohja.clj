@@ -75,6 +75,8 @@
 
 (defn julkaise-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "julkaistu"))
 
+(defn palauta-kyselypohja-luonnokseksi [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "luonnos"))
+
 (defn sulje-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "suljettu"))
 
 (defn hae-organisaatiotieto
