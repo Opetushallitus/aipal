@@ -23,6 +23,8 @@
   (sql/select :kysymys
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/order :kysymysryhma.kysymysryhmaid :ASC)
+    (sql/order :kysymys.jarjestys :ASC)
     (sql/fields :kysymys.kysymysid
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
