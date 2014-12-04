@@ -28,12 +28,14 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'src/bower_components/jquery/dist/jquery.js',
+      'src/bower_components/jquery-ui/jquery-ui.js',
       'src/bower_components/angular/angular.js',
       'src/bower_components/select2/select2.js',
       'src/bower_components/ng-breadcrumbs/dist/ng-breadcrumbs.js',
       'src/bower_components/angular-animate/angular-animate.js',
       'src/bower_components/angular-ui-select2/src/select2.js',
       'src/bower_components/angular-ui-select/dist/select.js',
+      'src/bower_components/angular-ui-sortable/sortable.js',
       'src/bower_components/angular-cookies/angular-cookies.js',
       'src/bower_components/angular-route/angular-route.js',
       'src/bower_components/angular-resource/angular-resource.js',

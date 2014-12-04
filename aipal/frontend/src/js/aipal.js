@@ -53,7 +53,8 @@ angular.module('aipal', [
   'placeholderShim',
   'ngPostMessage',
   'ui.select',
-  'ngSanitize'
+  'ngSanitize',
+  'ui.sortable'
 ])
 
   .config(['$httpProvider', 'asetukset', function ($httpProvider, asetukset) {
@@ -121,6 +122,22 @@ angular.module('aipal', [
     $scope.unohdaAvoimetKyselyt = function() {
       sessionStorage.removeItem('avoimetKyselyt');
     };
+
+    /* UI Sorting defaults */
+    $scope.sortableOptions = {
+      forceHelperSize: true,
+      forcePlaceholderSize: true,
+      helper: function(e, tr){
+        var $originals = tr.children();
+        var $helper = tr.clone();
+        $helper.children().each(function(index){
+          $(this).width($originals.eq(index).width());
+          $originals.eq(index).width($(this).width());
+        });
+        return $helper;
+      }
+    };
+
   }])
 
   .controller('ImpersonointiModalController', ['$modalInstance', '$scope', 'i18n', function($modalInstance, $scope, i18n) {

@@ -3,7 +3,7 @@
 
 <form name="form" role="form" novalidate>
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-4">
             <div ng-if="yllapitaja" class="checkbox">
                 <div>
                   <label>
@@ -38,7 +38,7 @@
             </label>
         </div>
 
-        <div class="col-md-7">
+        <div class="col-md-8">
                 <h3 class="pull-left" ng-show="!muokkaustila">{{i18n.kysymysryhma.kysymykset}}</h3>
                 <button ng-click="lisaaKysymys()" class="pull-right btn btn-primary e2e-luo-uusi-kysymys" ng-show="!muokkaustila" style="margin-right: 0px;">
                     {{i18n.kysymysryhma.luo_uusi_kysymys}}&nbsp;
@@ -54,7 +54,7 @@
                     <th></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody ui-sortable="sortableOptions" ng-model="kysymysryhma.kysymykset">
                     <tr ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys-{{$index}}" ng-class="{removed: kysymys.poistetaan_kysymysryhmasta}">
                         <td>{{ kysymys | lokalisoiKentta:'kysymys' }}</td>
                         <td class="nowrap">{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}</td>
