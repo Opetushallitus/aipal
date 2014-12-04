@@ -46,6 +46,7 @@
       arkisto/lisaa-monivalintavaihtoehto!)))
 
 (defn lisaa-kysymys! [kysymys kysymysryhmaid]
+  (assert (not= (:vastaustyyppi kysymys) "asteikko"))
   (let [jatkokysymysid (some-> kysymys
                          muodosta-jatkokysymys
                          arkisto/lisaa-jatkokysymys!

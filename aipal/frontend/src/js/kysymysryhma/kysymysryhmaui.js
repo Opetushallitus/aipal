@@ -152,7 +152,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           pakollinen: true,
           poistettava: false,
           poistetaan_kysymysryhmasta: false,
-          vastaustyyppi: 'asteikko',
+          vastaustyyppi: 'likert_asteikko',
           muokattava: true,
           jatkokysymys: {max_vastaus: 500},
           max_vastaus: 500,
@@ -211,10 +211,17 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     if (kopioi || !uusi) {
       Kysymysryhma.hae($routeParams.kysymysryhmaid)
         .success(function(kysymysryhma) {
-          $scope.kysymysryhma = kysymysryhma;
           if (kopioi) {
-            delete $scope.kysymysryhma.kysymysryhmaid;
+            delete kysymysryhma.kysymysryhmaid;
+            var kysymystenMaara = kysymysryhma.kysymykset.length;
+            kysymysryhma.kysymykset = _.filter(kysymysryhma.kysymykset, function(k) {
+              return k.vastaustyyppi !== 'asteikko';
+            });
+            if (kysymystenMaara > kysymysryhma.kysymykset.length) {
+                ilmoitus.virhe(i18n.hae('kysymysryhma.asteikkokysymyksen_kopiointi'));
+            }
           }
+          $scope.kysymysryhma = kysymysryhma;
         })
         .error(function(data, status) {
           if (status !== 500) {
@@ -225,14 +232,13 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
 
     $scope.muokkaustila = false;
     $scope.vastaustyypit = [
-      'asteikko',
       'kylla_ei_valinta',
       'likert_asteikko',
       'monivalinta',
       'vapaateksti'
     ];
     $scope.vapaateksti_maksimit = [500,1000,1500,2000,2500,3000];
-    $scope.aktiivinenKysymys = {vastaustyyppi: 'asteikko'};
+    $scope.aktiivinenKysymys = {vastaustyyppi: 'likert_asteikko'};
 
     $scope.lisaaKysymys = function() {
       $scope.kysymysryhma.kysymykset.push(apu.uusiKysymys());
