@@ -166,14 +166,35 @@
     (= (:vastaustyyppi kysymys) "vapaateksti") lisaa-vastausten-vapaateksti
     :else (fn [kysymys vastaukset] kysymys)))
 
-(defn muodosta-raportti-vastauksista
+(defn valitse-kysymyksen-kentat
+  [kysymys]
+  (select-keys kysymys [:kysymys_fi
+                        :kysymys_sv
+                        :jakauma
+                        :vastaukset
+                        :jatkovastaukset
+                        :vastaustyyppi]))
+
+(defn kasittele-kysymykset
   [kysymykset vastaukset]
   (map (fn [kysymys]
-         ((kysymyksen-kasittelija kysymys) kysymys
-          (kysymyksen-vastaukset kysymys vastaukset)))
+         (valitse-kysymyksen-kentat
+           ((kysymyksen-kasittelija kysymys) kysymys
+                                            (kysymyksen-vastaukset kysymys vastaukset))))
        kysymykset))
+
+(defn kasittele-kysymysryhmat
+  [kysymysryhmat vastaukset]
+  (map (fn [kysymysryhma]
+         (update-in kysymysryhma
+                    [:kysymykset]
+                    (fn [kysymykset] (kasittele-kysymykset kysymykset vastaukset))))
+       kysymysryhmat))
+
+(defn muodosta-raportti-vastauksista
+  [kysymysryhmat vastaukset]
+  (kasittele-kysymysryhmat kysymysryhmat vastaukset))
 
 (defn suodata-raportin-kentat
   [raportti]
-  (map #(select-keys % [:kysymys_fi :kysymys_sv :jakauma :vastaukset :jatkovastaukset :vastaustyyppi])
-       raportti))
+  (map valitse-kysymyksen-kentat raportti))

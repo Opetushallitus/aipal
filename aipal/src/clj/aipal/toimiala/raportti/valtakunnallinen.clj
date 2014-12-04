@@ -19,7 +19,7 @@
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.korma.korma :refer [joda-date->sql-date]]))
 
-(defn ^:private hae-kysymykset []
+(defn ^:private hae-valtakunnalliset-kysymykset []
   (sql/select :kysymys
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (sql/where {:kysymysryhma.valtakunnallinen true})
@@ -28,7 +28,30 @@
     (sql/fields :kysymys.kysymysid
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
+                :kysymys.kysymysryhmaid
                 :kysymys.vastaustyyppi)))
+
+(defn ryhmittele-kysymykset-kysymysryhmittain [kysymykset]
+  (group-by :kysymysryhmaid kysymykset))
+
+(defn hae-valtakunnalliset-kysymysryhmat []
+  (sql/select
+    :kysymysryhma
+    (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/order :kysymysryhma.kysymysryhmaid :ASC)
+    (sql/fields :kysymysryhmaid
+                :nimi_fi
+                :nimi_sv)))
+
+(defn hae-kysymysryhmat-ja-niiden-kysymykset []
+  (let [kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
+        kysymysryhmien-kysymykset (ryhmittele-kysymykset-kysymysryhmittain
+                                    (hae-valtakunnalliset-kysymykset))]
+    (map
+      (fn [kysymysryhma] (assoc kysymysryhma
+                                :kysymykset
+                                (get kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))))
+      kysymysryhmat)))
 
 (defn generoi-joinit [query ehdot]
   (reduce (fn [query {:keys [id arvot]}]
@@ -69,8 +92,8 @@
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
         rajaukset (:kysymykset parametrit)
+        kysymysryhmat (hae-kysymysryhmat-ja-niiden-kysymykset)
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm)]
     {:luontipvm (time/today)
-     :raportti  (raportointi/suodata-raportin-kentat
-                  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset) vastaukset))
+     :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat vastaukset)
      :vastaajien-lkm (count (group-by :vastaajaid vastaukset))}))
