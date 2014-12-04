@@ -22,8 +22,7 @@
 (defn ^:private hae-kysymykset []
   (sql/select :kysymys
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
-    (sql/where {:kysymysryhma.taustakysymykset true
-                :kysymysryhma.valtakunnallinen true})
+    (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/fields :kysymys.kysymysid
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
@@ -54,8 +53,7 @@
     (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (generoi-joinit (konvertoi-ehdot rajaukset))
-    (sql/where {:kysymysryhma.taustakysymykset true
-                :kysymysryhma.valtakunnallinen true})
+    (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
     (sql/fields :vastaus.vastaajaid
