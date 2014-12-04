@@ -41,7 +41,8 @@
     (sql/aggregate (count :vastaaja.vastaajaid) :vastaajien_lkm)
     (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
     (sql/where {:kyselykertaid kyselykertaid})
-    (sql/group :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)))
+    (sql/group :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
+    (sql/order :tutkinto.tutkintotunnus)))
 
 (defn ^:private hae-kysymykset [kyselykertaid]
   (sql/select :kyselykerta
