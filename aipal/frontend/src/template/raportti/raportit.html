@@ -1,28 +1,21 @@
 <div class="raportit">
-  <div><a href="#/raportit/kyselykerrat">Kyselykertaraportit</a></div>
-
   <tabset>
     <tab heading="{{ 'raportit.vertailuraportti' | i18n }}">
       <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include src="'template/raportti/osat/aikavali.html'"></ng-include>
+      <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
     <tab heading="{{ 'raportit.kehitysraportti' | i18n }}">
       <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
+      <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
     <tab heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}">
       <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include src="'template/raportti/osat/aikavali.html'"></ng-include>
+      <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
+    </tab>
+    <tab heading="{{ 'raportit.kyselykertaraportit' | i18n }}">
+      <ng-include src="'template/raportti/kyselykerrat.html'" ng-controller="KyselykerratController"></ng-include>
     </tab>
   </tabset>
-
-  <div>
-    <button class="btn btn-primary" ng-click="muodostaRaportti(raportti)">
-      {{ 'raportit.muodosta_raportti' | i18n }}
-      <span class="fa fa-print"></span>
-    </button>
-  </div>
-
-  <div ng-if="tulos">
-    <ng-include src="'template/raportti/raportti.html'"></ng-include>
-  </div>
 </div>

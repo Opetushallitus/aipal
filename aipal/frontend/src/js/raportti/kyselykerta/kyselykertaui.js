@@ -24,11 +24,6 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
                                                       'ngResource'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/raportit/kyselykerrat', {
-        controller: 'KyselykerratController',
-        templateUrl: 'template/raportti/kyselykerrat.html',
-        label: 'i18n.raportit.breadcrumb_raportit'
-      })
       .when('/raportit/kyselykerrat/kyselykerta/:kyselykertaid', {
         controller: 'KyselykertaRaporttiController',
         templateUrl: 'template/raportti/raportti.html',
