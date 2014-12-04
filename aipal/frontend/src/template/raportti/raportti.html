@@ -16,6 +16,21 @@
     <div>
       {{'raportti.koulutuksen_jarjestaja' | i18n}}: <span>{{tulos.kyselykerta | lokalisoiKentta:'koulutustoimija'}}</span>
     </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{'yleiset.tutkinto' | i18n}}</th>
+          <th>{{'yleiset.vastaajia' | i18n}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="tutkinto in tulos.kyselykerta.tutkinnot">
+          <td ng-if="tutkinto.tutkintotunnus">{{tutkinto.tutkintotunnus}}, {{tutkinto | lokalisoiKentta:'nimi'}}</td>
+          <td ng-if="!tutkinto.tutkintotunnus">{{'raportti.ei_tutkintotietoa' | i18n}}</td>
+          <td>{{tutkinto.vastaajien_lkm}}</td>
+        </tr>
+      </tbody>
+    </table>
     <hr>
   </div>
   <div>
