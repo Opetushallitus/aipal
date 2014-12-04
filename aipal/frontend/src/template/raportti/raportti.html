@@ -38,8 +38,10 @@
   </div>
 </div>
 
-<div ng-repeat="kysymys in tulos.raportti">
-  <p>
+<div ng-repeat="kysymysryhma in tulos.raportti">
+  <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
+
+  <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
 
     <jakauma-kaavio
@@ -102,5 +104,5 @@
         </tr>
       </tbody>
     </table>
-  </p>
+  </div>
 </div>
