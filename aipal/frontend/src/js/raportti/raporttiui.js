@@ -27,8 +27,24 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
   .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', function($scope, Kysymysryhma, Raportti) {
     $scope.raportti = {};
 
+    var haeTaustakysymykset = function(kysymysryhmaid) {
+      Kysymysryhma.hae(kysymysryhmaid).success(function(kysymysryhma) {
+        $scope.kysymysryhma = kysymysryhma;
+
+        $scope.raportti.kysymykset = {};
+        _.forEach(kysymysryhma.kysymykset, function(kysymys) {
+          $scope.raportti.kysymykset[kysymys.kysymysid] = { monivalinnat: {} };
+        });
+      });
+    };
+
     Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat) {
       $scope.taustakysymysryhmat = _.filter(kysymysryhmat, 'taustakysymykset');
+
+      $scope.$watch('raportti.taustakysymysryhmaid', function(kysymysryhmaid) {
+        haeTaustakysymykset(kysymysryhmaid);
+      });
+
       $scope.raportti.taustakysymysryhmaid = $scope.taustakysymysryhmat[0].kysymysryhmaid;
     });
 

@@ -1,0 +1,15 @@
+.raportit .taustakysymykset .kysymykset {
+  -moz-column-count: 5;
+  -webkit-column-count: 5;
+  column-count: 5;
+  counter-reset: kysymys-counter;
+
+  & .kysymys-otsikko {
+    font-weight: bold;
+
+    &:before {
+      content: counter(kysymys-counter) ". ";
+      counter-increment: kysymys-counter;
+    }
+  }
+}
