@@ -24,7 +24,7 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', function($scope, Kysymysryhma, Raportti) {
+  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', 'i18n', 'ilmoitus', function($scope, Kysymysryhma, Raportti, i18n, ilmoitus) {
     $scope.raportti = {};
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
@@ -51,6 +51,10 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
     $scope.muodostaRaportti = function() {
       Raportti.muodosta($scope.raportti).success(function(tulos) {
         $scope.tulos = tulos;
+      }).error(function(data, status) {
+        if (status !== 500) {
+          ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
+        }
       });
     };
   }])
