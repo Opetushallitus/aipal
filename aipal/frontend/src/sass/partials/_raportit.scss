@@ -1,15 +1,43 @@
 .raportit .taustakysymykset .kysymykset {
-  -moz-column-count: 5;
-  -webkit-column-count: 5;
-  column-count: 5;
-  counter-reset: kysymys-counter;
+  overflow: auto;
+  font-size: .9em;
 
-  & .kysymys-otsikko {
-    font-weight: bold;
+  & .kysymys {
+    counter-increment: kysymys-counter;
+    display: inline-block;
+    float: left;
+    max-width: 19%;
+    min-width: 5%;
+    margin-left: 0%;
+    margin-right: 4%;
 
-    &:before {
-      content: counter(kysymys-counter) ". ";
-      counter-increment: kysymys-counter;
+    & .checkbox {
+      margin-top: 0em;
+      margin-bottom: 0em;
+
+      &:hover{
+        background-color: $lightest-primary;
+      }
+
+      & label{
+        line-height: 1.1em;
+        display: inline-block;
+        margin: 0px;
+        padding-top: .1em;
+        padding-bottom: .3em;
+      }
+
+      & input{
+        margin-left: -16px;
+      }
+    }
+
+    & .kysymys-otsikko {
+      font-weight: bold;
+      line-height: 1.3em;
+      &:before {
+        content: counter(kysymys-counter) ". ";
+      }
     }
   }
 }

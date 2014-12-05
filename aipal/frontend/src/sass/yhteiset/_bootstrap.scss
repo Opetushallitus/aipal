@@ -87,6 +87,29 @@ button.open-datepicker{
   float: none;
 }
 
+/* Tabs */
+.nav-tabs {
+  border-bottom: 1px solid $primary-color;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus {
+  border: 1px solid $primary-color;
+  border-bottom: 1px solid transparent;
+  outline: 0;
+  color: $primary-color;
+}
+
+.nav-tabs>li>a{
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-bottom: 0px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: $darker-gray;
+}
+
+
 /* Progress */
 .progress{
   background-color: $lightest-gray;
