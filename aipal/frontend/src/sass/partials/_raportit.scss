@@ -2,6 +2,25 @@
   width: auto;
 }
 
+.raportit .vertailu-valitsin {
+  border: 1px solid $primary-color;
+  max-height: 20em;
+  overflow: auto;
+
+  & ul {
+    list-style-type: none;
+    padding-left: 1em;
+    margin-top: 0;
+  }
+
+  & .koulutusalat, .opintoalat {
+    font-weight: bold;
+  }
+  & .tutkinnot {
+    font-weight: normal;
+  }
+}
+
 .raportit .taustakysymykset .kysymykset {
   overflow: auto;
   font-size: .9em;

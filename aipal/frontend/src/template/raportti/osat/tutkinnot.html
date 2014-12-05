@@ -8,4 +8,18 @@
     <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'opintoala'">{{ 'raportit.opintoala' | i18n }}</label>
     <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>
   </div>
+
+  <div class="vertailu-valitsin">
+    <ul class="koulutusalat">
+      <li ng-repeat="koulutusala in koulutusalat">{{koulutusala |lokalisoiKentta:'koulutusala_nimi'}}
+        <ul class="opintoalat" ng-show="raportti.vertailutyyppi !== 'koulutusala'">
+          <li ng-repeat="opintoala in koulutusala.opintoalat">{{opintoala|lokalisoiKentta:'opintoala_nimi'}}
+            <ul class="tutkinnot" ng-show="raportti.vertailutyyppi === 'tutkinto'">
+              <li ng-repeat="tutkinto in opintoala.tutkinnot">{{tutkinto|lokalisoiKentta:'nimi'}}</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </div>
