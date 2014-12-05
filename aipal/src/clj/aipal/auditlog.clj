@@ -67,8 +67,16 @@
   (kirjoita! :kysymys :paivitys {:kysymysid kysymysid}))
 
 (defn kyselykerta-muokkaus!
-  [kyselykertaid]
-  (kirjoita! :kyselykerta :paivitys {:kyselykertaid kyselykertaid}))
+  ([kyselykertaid]
+    (kirjoita! :kyselykerta :paivitys {:kyselykertaid kyselykertaid}))
+  ([kyselykertaid tilamuutos]
+    (kirjoita! :kyselykerta :paivitys {:kyselykertaid kyselykertaid
+                                       :tila tilamuutos})))
+
+(defn kyselykerta-luonti!
+  [kyselyid nimi]
+  (kirjoita! :kyselykerta :lisays {:kyselyid kyselyid
+                                   :nimi nimi}))
 
 (defn vastaajatunnus-luonti!
   [kyselykertaid]

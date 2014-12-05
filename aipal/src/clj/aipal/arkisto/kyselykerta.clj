@@ -14,7 +14,8 @@
 
 (ns aipal.arkisto.kyselykerta
   (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :as taulut]))
+            [aipal.integraatio.sql.korma :as taulut]
+            [aipal.auditlog :as auditlog]))
 
 (defn hae-kaikki
   "Hae kaikki koulutustoimijan kyselykerrat"
@@ -30,11 +31,13 @@
 
 (defn lisaa!
   [kyselyid kyselykerta-data]
-  (sql/insert taulut/kyselykerta
-    (sql/values
-      (assoc
-        (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
-        :kyselyid kyselyid))))
+  (let [kyselykerta (sql/insert taulut/kyselykerta
+                      (sql/values
+                        (assoc
+                          (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
+                          :kyselyid kyselyid)))]
+    (auditlog/kyselykerta-luonti! kyselyid (:nimi kyselykerta-data))
+    kyselykerta))
 
 (defn hae-yksi
   "Hae kyselykerta tunnuksella"
@@ -48,6 +51,7 @@
 
 (defn paivita!
   [kyselykertaid kyselykertadata]
+  (auditlog/kyselykerta-muokkaus! kyselykertaid)
   (sql/update taulut/kyselykerta
     (sql/set-fields (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu]))
     (sql/where {:kyselykertaid kyselykertaid})))
@@ -63,12 +67,14 @@
 
 (defn lukitse!
   [kyselykertaid]
+  (auditlog/kyselykerta-muokkaus! kyselykertaid :lukittu)
   (sql/update taulut/kyselykerta
     (sql/set-fields {:lukittu true})
     (sql/where {:kyselykertaid kyselykertaid})))
 
 (defn avaa!
   [kyselykertaid]
+  (auditlog/kyselykerta-muokkaus! kyselykertaid :avattu)
   (sql/update taulut/kyselykerta
     (sql/set-fields {:lukittu false})
     (sql/where {:kyselykertaid kyselykertaid})))
