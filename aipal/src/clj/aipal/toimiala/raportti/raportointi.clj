@@ -191,18 +191,8 @@
                     (fn [kysymykset] (kasittele-kysymykset kysymykset vastaukset))))
        kysymysryhmat))
 
-(defn hae-valtakunnalliset-kysymysryhmat []
-  (sql/select
-    :kysymysryhma
-    (sql/where {:kysymysryhma.valtakunnallinen true})
-    (sql/order :kysymysryhma.kysymysryhmaid :ASC)
-    (sql/fields :kysymysryhmaid
-                :nimi_fi
-                :nimi_sv)))
-
-(defn ryhmittele-kysymykset-kysymysryhmittain [kysymykset]
-  (let [kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
-        kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
+(defn ryhmittele-kysymykset-kysymysryhmittain [kysymykset kysymysryhmat]
+  (let [kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
     (map
       (fn [kysymysryhma] (assoc kysymysryhma
                                 :kysymykset
@@ -210,5 +200,6 @@
       kysymysryhmat)))
 
 (defn muodosta-raportti-vastauksista
-  [kysymykset vastaukset]
-  (kasittele-kysymysryhmat (ryhmittele-kysymykset-kysymysryhmittain kysymykset) vastaukset))
+  [kysymysryhmat kysymykset vastaukset]
+  (kasittele-kysymysryhmat (ryhmittele-kysymykset-kysymysryhmittain kysymykset kysymysryhmat)
+                           vastaukset))

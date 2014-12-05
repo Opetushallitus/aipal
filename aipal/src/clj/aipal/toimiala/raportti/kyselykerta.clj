@@ -81,6 +81,15 @@
                 :jatkokysymys.ei_teksti_fi
                 :jatkokysymys.ei_teksti_sv)))
 
+(defn hae-valtakunnalliset-kysymysryhmat []
+  (sql/select
+    :kysymysryhma
+    (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/order :kysymysryhma.kysymysryhmaid :ASC)
+    (sql/fields :kysymysryhmaid
+                :nimi_fi
+                :nimi_sv)))
+
 (defn ^:private hae-vastaukset [kyselykertaid]
   (sql/select :kyselykerta
     (sql/join :inner :vastaaja
@@ -106,7 +115,9 @@
                 :jatkovastaus.ei_vastausteksti)))
 
 (defn ^:private muodosta-raportti-kyselykerrasta [kyselykertaid]
-  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid)))
+  (raportointi/muodosta-raportti-vastauksista (hae-valtakunnalliset-kysymysryhmat)
+                                              (hae-kysymykset kyselykertaid)
+                                              (hae-vastaukset kyselykertaid)))
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]

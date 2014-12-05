@@ -31,6 +31,15 @@
                 :kysymys.kysymysryhmaid
                 :kysymys.vastaustyyppi)))
 
+(defn hae-valtakunnalliset-kysymysryhmat []
+  (sql/select
+    :kysymysryhma
+    (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/order :kysymysryhma.kysymysryhmaid :ASC)
+    (sql/fields :kysymysryhmaid
+                :nimi_fi
+                :nimi_sv)))
+
 (defn generoi-joinit [query ehdot]
   (reduce (fn [query {:keys [id arvot]}]
             (sql/where query (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
@@ -70,8 +79,9 @@
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
         rajaukset (:kysymykset parametrit)
+        kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
         kysymykset (hae-valtakunnalliset-kysymykset)
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm)]
     {:luontipvm (time/today)
-     :raportti  (raportointi/muodosta-raportti-vastauksista kysymykset vastaukset)
+     :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
      :vastaajien-lkm (count (group-by :vastaajaid vastaukset))}))
