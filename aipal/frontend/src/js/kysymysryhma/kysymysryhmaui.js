@@ -232,6 +232,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
 
     $scope.muokkaustila = false;
     $scope.vastaustyypit = [
+      'arvosana',
       'kylla_ei_valinta',
       'likert_asteikko',
       'monivalinta',
