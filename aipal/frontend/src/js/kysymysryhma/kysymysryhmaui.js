@@ -218,7 +218,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
               return k.vastaustyyppi !== 'asteikko';
             });
             if (kysymystenMaara > kysymysryhma.kysymykset.length) {
-                ilmoitus.virhe(i18n.hae('kysymysryhma.asteikkokysymyksen_kopiointi'));
+              ilmoitus.varoitus(i18n.hae('kysymysryhma.asteikkokysymyksen_kopiointi'));
             }
           }
           $scope.kysymysryhma = kysymysryhma;
