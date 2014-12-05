@@ -68,7 +68,9 @@
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
-        rajaukset (:kysymykset parametrit)]
+        rajaukset (:kysymykset parametrit)
+        vastaukset (hae-vastaukset rajaukset alkupvm loppupvm)]
     {:luontipvm (time/today)
      :raportti  (raportointi/suodata-raportin-kentat
-                  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset) (hae-vastaukset rajaukset alkupvm loppupvm)))}))
+                  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset) vastaukset))
+     :vastaajien-lkm (count (group-by :vastaajaid vastaukset))}))
