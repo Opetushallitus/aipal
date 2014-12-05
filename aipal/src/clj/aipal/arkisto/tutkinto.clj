@@ -44,3 +44,12 @@
               (= :tutkinto.tutkintotunnus :koulutustoimija_ja_tutkinto.tutkinto))
     (sql/where {:koulutustoimija y-tunnus})
     (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)))
+
+(defn hae-tutkinnot
+  []
+  (sql/select taulut/tutkinto
+    (sql/join :inner taulut/opintoala (= :opintoala.opintoalatunnus :tutkinto.opintoala))
+    (sql/join :inner taulut/koulutusala (= :koulutusala.koulutusalatunnus :opintoala.koulutusala))
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm
+                :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv]
+                :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv])))
