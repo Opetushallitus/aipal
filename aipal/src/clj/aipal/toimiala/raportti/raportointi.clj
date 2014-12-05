@@ -159,6 +159,7 @@
 (defn kysymyksen-kasittelija
   [kysymys]
   (cond
+    (= (:vastaustyyppi kysymys) "arvosana") lisaa-asteikon-jakauma
     (= (:vastaustyyppi kysymys) "asteikko") lisaa-asteikon-jakauma
     (= (:vastaustyyppi kysymys) "kylla_ei_valinta") lisaa-vaihtoehtojen-jakauma
     (= (:vastaustyyppi kysymys) "likert_asteikko") lisaa-asteikon-jakauma
