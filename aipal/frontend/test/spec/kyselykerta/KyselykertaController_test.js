@@ -39,6 +39,7 @@ describe('kysely.kyselyui.KyselykertaController', function(){
     $httpBackend.whenGET(/api\/rahoitusmuoto\?nocache=.*/).respond([]);
     $httpBackend.whenGET(/api\/vastaajatunnus\/.*/).respond([]);
     $httpBackend.whenGET(/api\/tutkinto\/koulutustoimija.*/).respond([]);
+    $httpBackend.whenGET(/api\/koulutustoimija.*/).respond([]);
     $controller('KyselykertaController', {$scope: $scope});
   }
 
