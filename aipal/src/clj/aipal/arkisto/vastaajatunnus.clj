@@ -84,10 +84,12 @@
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
+        valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
         vastaajatunnus (-> vastaajatunnus
-                         (dissoc :henkilokohtainen :tutkinto)
+                         (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja)
                          (assoc :vastaajien_lkm vastaajien-lkm
-                                :tutkintotunnus tutkintotunnus))]
+                                :tutkintotunnus tutkintotunnus
+                                :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja))]
     (doall
       (take tunnusten-lkm
         (for [tunnus (luo-tunnuksia 6)]

@@ -20,6 +20,7 @@
             aipal.rest-api.vastaajatunnus
             aipal.rest-api.kayttaja
             aipal.rest-api.tutkinto
+            aipal.rest-api.koulutustoimija
             [aipal.infra.kayttaja :refer [*kayttaja*]]
 
             [aitu.infra.status :refer [status]]))
@@ -62,4 +63,5 @@
     (c/context "/api/vastaajatunnus" [] (wrap-tarkasta-csrf-token aipal.rest-api.vastaajatunnus/reitit))
     (c/context "/api/kayttaja" [] (wrap-tarkasta-csrf-token aipal.rest-api.kayttaja/reitit))
     (c/context "/api/tutkinto" [] (wrap-tarkasta-csrf-token aipal.rest-api.tutkinto/reitit))
+    (c/context "/api/koulutustoimija" [] (wrap-tarkasta-csrf-token aipal.rest-api.koulutustoimija/reitit))
     (r/not-found "Not found")))

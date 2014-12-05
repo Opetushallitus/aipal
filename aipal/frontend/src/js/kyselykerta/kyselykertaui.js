@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.tutkinto',
+angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.tutkinto', 'rest.koulutustoimija',
                                              'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
                                              'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus'])
 
@@ -38,8 +38,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'tallennusMuistutus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi',
-    function(Kyselykerta, Kysely, Rahoitusmuoto, Tutkinto, Vastaajatunnus, tallennusMuistutus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi',
+    function(Kyselykerta, Kysely, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi) {
       $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -57,6 +57,12 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
             },
             tutkinnot: function() {
               return $scope.tutkinnot;
+            },
+            koulutustoimijat: function() {
+              return $scope.koulutustoimijat;
+            },
+            aktiivinenKoulutustoimija: function() {
+              return $scope.aktiivinenKoulutustoimija;
             }
           }
         });
@@ -82,6 +88,14 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
       Tutkinto.koulutustoimijanTutkinnot().success(function(tutkinnot) {
         $scope.tutkinnot = tutkinnot;
+      });
+
+      Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
+        $scope.koulutustoimijat = koulutustoimijat;
+      });
+
+      Koulutustoimija.haeAktiivinen().success(function(koulutustoimija) {
+        $scope.aktiivinenKoulutustoimija = koulutustoimija;
       });
 
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
@@ -153,14 +167,17 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
-  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot',
-                                              function($modalInstance, $scope, $filter, rahoitusmuodot, tutkinnot) {
+  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'aktiivinenKoulutustoimija',
+                                              function($modalInstance, $scope, $filter, rahoitusmuodot, tutkinnot, koulutustoimijat, aktiivinenKoulutustoimija) {
     $scope.vastaajatunnus = {
-      vastaajien_lkm: 1
+      vastaajien_lkm: 1,
+      koulutuksen_jarjestaja: aktiivinenKoulutustoimija
     };
     $scope.rahoitusmuodot = rahoitusmuodot;
 
     $scope.tutkinnot = tutkinnot;
+
+    $scope.koulutustoimijat = koulutustoimijat;
 
     $scope.luoTunnuksia = function(vastaajatunnus) {
       $modalInstance.close(vastaajatunnus);
