@@ -83,7 +83,7 @@
         (arkisto/tallenna! {:kysymysid (:kysymysid vastaus)
                             :vastaajaid vastaajaid
                             :jatkovastausid (:jatkovastausid jatkovastaus)
-                            :numerovalinta (when (#{"monivalinta" "asteikko" "likert_asteikko"} vastaustyyppi) arvo)
+                            :numerovalinta (when (#{"monivalinta" "arvosana" "asteikko" "likert_asteikko"} vastaustyyppi) arvo)
                             :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
                             :vaihtoehto (when (= "kylla_ei_valinta" vastaustyyppi) arvo)})))
     (log/info (str "Vastaukset (" vastaajaid  ") tallennettu onnistuneesti."))
