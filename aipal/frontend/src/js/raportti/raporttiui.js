@@ -64,6 +64,22 @@ angular.module('raportti.raporttiui', ['rest.raportti', 'raportti.kyselykerta.ka
 
     });
 
+    $scope.valitseKoulutusala = function(koulutusala) {
+      if ($scope.raportti.vertailutyyppi === 'koulutusala') {
+        $scope.raportti.koulutusalatunnus = koulutusala.koulutusalatunnus;
+      }
+    };
+    $scope.valitseOpintoala = function(opintoala) {
+      if ($scope.raportti.vertailutyyppi === 'opintoala') {
+        $scope.raportti.opintoalatunnus = opintoala.opintoalatunnus;
+      }
+    };
+    $scope.valitseTutkinto = function(tutkinto) {
+      if ($scope.raportti.vertailutyyppi === 'tutkinto') {
+        $scope.raportti.tutkintotunnus = tutkinto.tutkintotunnus;
+      }
+    };
+
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulos) {
         $scope.tulos = tulos;
