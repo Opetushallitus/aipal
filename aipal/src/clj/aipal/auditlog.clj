@@ -43,6 +43,39 @@
     {:ohjetunniste ohjetunniste}))
 
 (defn kysely-muokkaus!
-  [kyselyid]
-  (kirjoita! :kysely :paivitys {:kyselyid kyselyid}))
+  ([kyselyid]
+    (kirjoita! :kysely :paivitys {:kyselyid kyselyid}))
+  ([kyselyid tilamuutos]
+    (kirjoita! :kysely :paivitys {:kyselyid kyselyid
+                                  :tila tilamuutos})))
+
+(defn kysely-luonti!
+  [kyselyid nimi_fi]
+  (kirjoita! :kysely :lisays {:kyselyid kyselyid
+                              :nimi_fi nimi_fi}))
+
+(defn kyselypohja-muokkaus!
+  [kyselypohjaid]
+  (kirjoita! :kyselypohja :paivitys {:kyselypohjaid kyselypohjaid}))
+
+(defn kysymysryhma-muokkaus!
+  [kysymysryhmaid]
+  (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid}))
+
+(defn kysymys-muokkaus!
+  [kysymysid]
+  (kirjoita! :kysymys :paivitys {:kysymysid kysymysid}))
+
+(defn kyselykerta-muokkaus!
+  [kyselykertaid]
+  (kirjoita! :kyselykerta :paivitys {:kyselykertaid kyselykertaid}))
+
+(defn vastaajatunnus-luonti!
+  [kyselykertaid]
+  (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid}))
+
+(defn vastaajatunnus-lukitus!
+  [kyselykertaid]
+  (kirjoita! :vastaajatunnus :paivitys {:kyselykertaid kyselykertaid}))
+
 

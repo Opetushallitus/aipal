@@ -68,8 +68,10 @@
 (defn lisaa!
   "Lisää uuden kyselyn"
   [tiedot]
-  (sql/insert taulut/kysely
-    (sql/values tiedot)))
+  (let [kysely (sql/insert taulut/kysely
+                 (sql/values tiedot))]
+    (auditlog/kysely-luonti! (:nimi_fi kysely) (:kyselyid kysely))
+    kysely))
 
 (defn muokkaa-kyselya! [kyselydata]
   (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
@@ -84,13 +86,15 @@
   (map #(clojure.set/rename-keys % {:kysymys :kysymykset}) kysymysryhmat))
 
 (defn julkaise-kysely! [kyselyid]
+  (auditlog/kysely-muokkaus! kyselyid :julkaistu)
   (sql/update taulut/kysely
     (sql/set-fields {:tila "julkaistu"})
     (sql/where {:kyselyid kyselyid}))
   ;; haetaan kysely, jotta saadaan myös kaytettavissa tieto mukaan paluuarvona
   (hae kyselyid))
 
-(defn sulje-kysely [kyselyid]
+(defn sulje-kysely! [kyselyid]
+  (auditlog/kysely-muokkaus! kyselyid :suljettu)
   (sql/update taulut/kysely
     (sql/set-fields {:tila "suljettu"})
     (sql/where {:kyselyid kyselyid}))
@@ -138,16 +142,19 @@
 
 (defn poista-kysymykset!
   [kyselyid]
+  (auditlog/kysely-muokkaus! kyselyid)
   (sql/delete taulut/kysely_kysymys
     (sql/where {:kyselyid kyselyid})))
 
 (defn poista-kysymysryhmat!
   [kyselyid]
+  (auditlog/kysely-muokkaus! kyselyid)
   (sql/delete taulut/kysely_kysymysryhma
     (sql/where {:kyselyid kyselyid})))
 
 (defn lisaa-kysymysryhma!
   [kyselyid ryhma]
+  (auditlog/kysely-muokkaus! kyselyid)
   (sql/insert taulut/kysely_kysymysryhma
     (sql/values {:kyselyid kyselyid
                  :kysymysryhmaid (:kysymysryhmaid ryhma)
@@ -155,6 +162,7 @@
 
 (defn lisaa-kysymys!
   [kyselyid kysymysid]
+  (auditlog/kysely-muokkaus! kyselyid)
   (sql/insert taulut/kysely_kysymys
     (sql/values {:kyselyid kyselyid
                  :kysymysid kysymysid})))

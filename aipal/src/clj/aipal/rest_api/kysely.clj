@@ -84,7 +84,7 @@
         {:status 403})))
 
   (cu/defapi :kysely-tilamuutos kyselyid :put "/sulje/:kyselyid" [kyselyid]
-    (json-response (arkisto/sulje-kysely (Integer/parseInt kyselyid))))
+    (json-response (arkisto/sulje-kysely! (Integer/parseInt kyselyid))))
 
   (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta/:kyselyid" [kyselyid]
     (json-response (arkisto/julkaise-kysely! (Integer/parseInt kyselyid)))))
