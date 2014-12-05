@@ -9,7 +9,7 @@ cd $REPO_PATH/vagrant
 vagrant ssh aipal-db -c 'cd /env && ./pgload.sh /dumps/aipal-dump.db dev-db.pgpass aipal aipal_adm 127.0.0.1 5432'
 
 cd $REPO_PATH/aipal-db
-ktsql='../../oph-env/koulutustoimijakayttajat/koulutustoimijakayttajat.sql'
+ktsql='../../oph-env/demo_kayttajat/koulutustoimijakayttajat.sql'
 if [[ -e $ktsql ]]; then
     ktargs="-s $ktsql"
 else
