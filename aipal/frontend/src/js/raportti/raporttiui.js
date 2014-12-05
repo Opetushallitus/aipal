@@ -24,7 +24,7 @@ angular.module('raportti.raporttiui', ['rest.raportti', 'raportti.kyselykerta.ka
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', 'kaavioApurit', 'i18n', 'ilmoitus', function($scope, Kysymysryhma, Raportti, kaavioApurit, i18n, ilmoitus) {
+  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Kysymysryhma, Raportti, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
@@ -49,7 +49,7 @@ angular.module('raportti.raporttiui', ['rest.raportti', 'raportti.kyselykerta.ka
     });
 
     $scope.muodostaRaportti = function() {
-      Raportti.muodosta($scope.raportti).success(function(tulos) {
+      seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulos) {
         $scope.tulos = tulos;
       }).error(function(data, status) {
         if (status !== 500) {
