@@ -44,7 +44,7 @@
                                 :nimi_fi "Kysymysryhmä"
                                 :koulutustoimija "0000000-0"}]
                 :kysymys [{:kysymysryhmaid 1000
-                           :vastaustyyppi "asteikko"
+                           :vastaustyyppi "likert_asteikko"
                            :kysymys_fi "Kysymys suomeksi"}]}
       (testing
         "kysymysryhman kopiointi:"
