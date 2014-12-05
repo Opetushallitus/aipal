@@ -17,14 +17,13 @@
             [aipal.compojure-util :as cu]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response]]
-            [aipal.asetukset :refer [asetukset]]
             [aipal.toimiala.raportti.kyselykerta :refer [laske-vastaajat muodosta-raportti muodosta-raportti-perustiedot]]))
 
-(c/defroutes reitit
+(defn reitit [asetukset]
   (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (db/transaction
       (let [kyselykertaid (Integer/parseInt kyselykertaid)
-            vaaditut-vastaajat (:raportointi-minimivastaajat @asetukset)]
+            vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
         (json-response
           (if (>= (laske-vastaajat kyselykertaid) vaaditut-vastaajat)
             (muodosta-raportti kyselykertaid)
