@@ -31,9 +31,6 @@
                 :kysymys.kysymysryhmaid
                 :kysymys.vastaustyyppi)))
 
-(defn ryhmittele-kysymykset-kysymysryhmittain [kysymykset]
-  (group-by :kysymysryhmaid kysymykset))
-
 (defn hae-valtakunnalliset-kysymysryhmat []
   (sql/select
     :kysymysryhma
@@ -43,10 +40,9 @@
                 :nimi_fi
                 :nimi_sv)))
 
-(defn hae-kysymysryhmat-ja-niiden-kysymykset []
+(defn ryhmittele-kysymykset-kysymysryhmittain [kysymykset]
   (let [kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
-        kysymysryhmien-kysymykset (ryhmittele-kysymykset-kysymysryhmittain
-                                    (hae-valtakunnalliset-kysymykset))]
+        kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
     (map
       (fn [kysymysryhma] (assoc kysymysryhma
                                 :kysymykset
@@ -92,7 +88,7 @@
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
         rajaukset (:kysymykset parametrit)
-        kysymysryhmat (hae-kysymysryhmat-ja-niiden-kysymykset)
+        kysymysryhmat (ryhmittele-kysymykset-kysymysryhmittain (hae-valtakunnalliset-kysymykset))
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm)]
     {:luontipvm (time/today)
      :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat vastaukset)
