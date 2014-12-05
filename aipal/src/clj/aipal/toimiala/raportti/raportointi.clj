@@ -212,7 +212,3 @@
 (defn muodosta-raportti-vastauksista
   [kysymykset vastaukset]
   (kasittele-kysymysryhmat (ryhmittele-kysymykset-kysymysryhmittain kysymykset) vastaukset))
-
-(defn suodata-raportin-kentat
-  [raportti]
-  (map valitse-kysymyksen-kentat raportti))

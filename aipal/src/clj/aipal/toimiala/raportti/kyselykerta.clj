@@ -106,8 +106,7 @@
                 :jatkovastaus.ei_vastausteksti)))
 
 (defn ^:private muodosta-raportti-kyselykerrasta [kyselykertaid]
-  (raportointi/suodata-raportin-kentat
-    (raportointi/muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid))))
+  (raportointi/muodosta-raportti-vastauksista (hae-kysymykset kyselykertaid) (hae-vastaukset kyselykertaid)))
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
