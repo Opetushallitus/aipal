@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('raportti.raporttiui', ['rest.raportti'])
+angular.module('raportti.raporttiui', ['rest.raportti', 'raportti.kyselykerta.kaavioapurit'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/raportit', {
@@ -24,7 +24,7 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', 'i18n', 'ilmoitus', function($scope, Kysymysryhma, Raportti, i18n, ilmoitus) {
+  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', 'kaavioApurit', 'i18n', 'ilmoitus', function($scope, Kysymysryhma, Raportti, kaavioApurit, i18n, ilmoitus) {
     $scope.raportti = {};
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
@@ -57,5 +57,7 @@ angular.module('raportti.raporttiui', ['rest.raportti'])
         }
       });
     };
+
+    $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
   }])
 ;
