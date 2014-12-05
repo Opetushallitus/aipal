@@ -17,9 +17,15 @@
             [aipal.compojure-util :as cu]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response]]
+            [aipal.asetukset :refer [asetukset]]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]))
 
 (c/defroutes reitit
   (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
     (db/transaction
-      (json-response (raportti/muodosta parametrit)))))
+      (let [raportti (raportti/muodosta parametrit)
+            vaaditut-vastaajat (:raportointi-minimivastaajat @asetukset)]
+        (json-response
+          (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+            raportti
+            (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia")))))))
