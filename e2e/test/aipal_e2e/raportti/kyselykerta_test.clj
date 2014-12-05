@@ -48,7 +48,7 @@
 
 (defn kysymykset []
   (w/find-elements (-> *ng*
-                     (.repeater "kysymys in tulos.raportti"))))
+                     (.repeater "kysymys in kysymysryhma.kysymykset"))))
 
 (defn kysymyksen-teksti [kysymys-elementti]
   (sisemman-elementin-kentan-teksti kysymys-elementti "kysymys"))
