@@ -17,6 +17,9 @@
 angular.module('rest.tutkinto', [])
   .factory('Tutkinto', ['$http', function($http) {
     return {
+      haeTutkinnot: function() {
+        return $http.get('api/tutkinto', {params: {nocache: Date.now()}});
+      },
       koulutustoimijanTutkinnot: function() {
         return $http.get('api/tutkinto/koulutustoimija', {params: {nocache: Date.now()}});
       }
