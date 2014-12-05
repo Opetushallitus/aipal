@@ -69,9 +69,19 @@
   [kysymysryhmaid]
   (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid}))
 
+(defn kysymysryhma-luonti!
+  [kysymysryhmaid nimi]
+  (kirjoita! :kysymysryhma :lisays {:kysymysryhmaid kysymysryhmaid
+                                    :nimi nimi}))
+
 (defn kysymys-muokkaus!
   [kysymysid]
   (kirjoita! :kysymys :paivitys {:kysymysid kysymysid}))
+
+(defn kysymys-luonti!
+  [kysymysryhmaid kysymysid]
+  (kirjoita! :kysymys :lisays {:kysymysid kysymysid
+                               :kysymysryhmaid kysymysryhmaid}))
 
 (defn kyselykerta-muokkaus!
   ([kyselykertaid]

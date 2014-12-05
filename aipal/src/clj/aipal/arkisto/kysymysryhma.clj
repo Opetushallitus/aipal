@@ -15,7 +15,8 @@
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
             [aipal.infra.kayttaja :refer [yllapitaja?]]
-            [aipal.integraatio.sql.korma :as taulut]))
+            [aipal.integraatio.sql.korma :as taulut]
+            [aipal.auditlog :as auditlog]))
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
@@ -41,12 +42,16 @@
     (hae-kysymysryhmat organisaatio false)))
 
 (defn lisaa-kysymysryhma! [k]
-  (sql/insert taulut/kysymysryhma
-    (sql/values k)))
+  (let [kysymysryhma (sql/insert taulut/kysymysryhma
+                       (sql/values k))]
+    (auditlog/kysymysryhma-luonti! (:kysymysryhmaid kysymysryhma) (:nimi_fi kysymysryhma))
+    kysymysryhma))
 
 (defn lisaa-kysymys! [k]
-  (sql/insert taulut/kysymys
-    (sql/values k)))
+  (let [kysymys  (sql/insert taulut/kysymys
+                   (sql/values k))]
+    (auditlog/kysymys-luonti! (:kysymysryhmaid kysymys) (:kysymysid kysymys))
+    kysymys))
 
 (defn lisaa-jatkokysymys! [k]
   (sql/insert :jatkokysymys
