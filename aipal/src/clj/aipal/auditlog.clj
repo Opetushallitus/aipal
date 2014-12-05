@@ -55,8 +55,15 @@
                               :nimi_fi nimi_fi}))
 
 (defn kyselypohja-muokkaus!
-  [kyselypohjaid]
-  (kirjoita! :kyselypohja :paivitys {:kyselypohjaid kyselypohjaid}))
+  ([kyselypohjaid]
+    (kirjoita! :kyselypohja :paivitys {:kyselypohjaid kyselypohjaid}))
+  ([kyselypohjaid tilamuutos]
+    (kirjoita! :kyselypohja :paivitys {:kyselypohjaid kyselypohjaid
+                                       :tila tilamuutos})))
+
+(defn kyselypohja-luonti!
+  [nimi]
+  (kirjoita! :kyselypohja :lisays {:nimi nimi}))
 
 (defn kysymysryhma-muokkaus!
   [kysymysryhmaid]

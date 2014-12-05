@@ -34,24 +34,24 @@
         (json-response (assoc kyselypohja :kysymysryhmat kysymysryhmat)))))
 
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/julkaise" [kyselypohjaid]
-    (json-response (arkisto/julkaise-kyselypohja (Integer/parseInt kyselypohjaid))))
+    (json-response (arkisto/julkaise-kyselypohja! (Integer/parseInt kyselypohjaid))))
 
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/palauta" [kyselypohjaid]
-    (json-response (arkisto/palauta-kyselypohja-luonnokseksi (Integer/parseInt kyselypohjaid))))
+    (json-response (arkisto/palauta-kyselypohja-luonnokseksi! (Integer/parseInt kyselypohjaid))))
 
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/sulje" [kyselypohjaid]
-    (json-response (arkisto/sulje-kyselypohja (Integer/parseInt kyselypohjaid))))
+    (json-response (arkisto/sulje-kyselypohja! (Integer/parseInt kyselypohjaid))))
 
   (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid" [kyselypohjaid & kyselypohja]
     (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
           valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
-      (json-response (arkisto/tallenna-kyselypohja (Integer/parseInt kyselypohjaid) (assoc kyselypohja :valtakunnallinen valtakunnallinen)))))
+      (json-response (arkisto/tallenna-kyselypohja! (Integer/parseInt kyselypohjaid) (assoc kyselypohja :valtakunnallinen valtakunnallinen)))))
 
   (cu/defapi :kyselypohja-luonti nil :post "/" [& kyselypohja]
     (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
           valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
       (json-response
-        (arkisto/luo-kyselypohja
+        (arkisto/luo-kyselypohja!
           (assoc kyselypohja
                  :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)
                  :valtakunnallinen valtakunnallinen)))))

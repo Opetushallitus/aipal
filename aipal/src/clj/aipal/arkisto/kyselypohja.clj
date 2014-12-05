@@ -16,7 +16,8 @@
   (:import java.sql.Date)
   (:require [korma.core :as sql]
             [aipal.infra.kayttaja :refer [yllapitaja?]]
-            [aipal.integraatio.sql.korma :as taulut]))
+            [aipal.integraatio.sql.korma :as taulut]
+            [aipal.auditlog :as auditlog]))
 
 (defn hae-kyselypohjat
   ([organisaatio vain-voimassaolevat]
@@ -43,7 +44,7 @@
 
 (def muokattavat-kentat [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :valtakunnallinen])
 
-(defn tallenna-kyselypohjan-kysymysryhmat
+(defn tallenna-kyselypohjan-kysymysryhmat!
   [kyselypohjaid kysymysryhmat]
   (sql/delete :kysymysryhma_kyselypohja
               (sql/where {:kyselypohjaid kyselypohjaid}))
@@ -53,31 +54,34 @@
                    :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
                    :jarjestys index}))))
 
-(defn tallenna-kyselypohja
+(defn tallenna-kyselypohja!
   [kyselypohjaid kyselypohja]
-  (tallenna-kyselypohjan-kysymysryhmat kyselypohjaid (:kysymysryhmat kyselypohja))
+  (auditlog/kyselypohja-muokkaus! kyselypohjaid)
+  (tallenna-kyselypohjan-kysymysryhmat! kyselypohjaid (:kysymysryhmat kyselypohja))
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
     (sql/set-fields (select-keys kyselypohja muokattavat-kentat))))
 
-(defn luo-kyselypohja
+(defn luo-kyselypohja!
   [kyselypohja]
   (let [luotu-kyselypohja (sql/insert taulut/kyselypohja
                       (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))))]
-    (tallenna-kyselypohjan-kysymysryhmat (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
+    (auditlog/kyselypohja-luonti! (:nimi_fi kyselypohja))
+    (tallenna-kyselypohjan-kysymysryhmat! (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
 
-(defn aseta-kyselypohjan-tila
+(defn aseta-kyselypohjan-tila!
   [kyselypohjaid tila]
+  (auditlog/kyselypohja-muokkaus! kyselypohjaid tila)
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
     (sql/set-fields {:tila tila})))
 
-(defn julkaise-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "julkaistu"))
+(defn julkaise-kyselypohja! [kyselypohjaid] (aseta-kyselypohjan-tila! kyselypohjaid "julkaistu"))
 
-(defn palauta-kyselypohja-luonnokseksi [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "luonnos"))
+(defn palauta-kyselypohja-luonnokseksi! [kyselypohjaid] (aseta-kyselypohjan-tila! kyselypohjaid "luonnos"))
 
-(defn sulje-kyselypohja [kyselypohjaid] (aseta-kyselypohjan-tila kyselypohjaid "suljettu"))
+(defn sulje-kyselypohja! [kyselypohjaid] (aseta-kyselypohjan-tila! kyselypohjaid "suljettu"))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]
