@@ -136,7 +136,7 @@
              (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
       oid->ytunnus)))
 
-(defn ^:private paivita-koulutustoimijat! [koodit]
+(defn ^:private ^:integration-api paivita-koulutustoimijat! [koodit]
   (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki)
                            (map-by :ytunnus))]
     (doseq [koodi (vals (map-by y-tunnus koodit)) ;; Poistetaan duplikaatit
@@ -152,7 +152,7 @@
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
                                   (koulutustoimija-arkisto/paivita! y-tunnus uusi-kt))))))
 
-(defn ^:private paivita-oppilaitokset! [koodit koulutustoimijakoodit]
+(defn ^:private ^:integration-api paivita-oppilaitokset! [koodit koulutustoimijakoodit]
   (let [oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit koodit)
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
@@ -174,7 +174,7 @@
                                                   (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos))))))
 
 
-(defn ^:private paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
+(defn ^:private ^:integration-api paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
   (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
                                          [(:oid o) (:oppilaitosKoodi o)]))
         oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
@@ -198,7 +198,7 @@
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                                     (toimipaikka-arkisto/paivita! toimipaikkakoodi uusi-toimipaikka))))))
 
-(defn paivita-organisaatiot!
+(defn ^:integration-api paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
   (let [kaikki-koodit (hae-kaikki (get asetukset "url"))

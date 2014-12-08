@@ -182,19 +182,19 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (merge {:tutkintotunnus tutkintotunnus}
           (uudet-arvot muutos))))
 
-(defn tallenna-uudet-koulutusalat! [koulutusalat]
+(defn ^:integration-api tallenna-uudet-koulutusalat! [koulutusalat]
   (doseq [ala koulutusalat]
     (log/info "Lisätään koulutusala " (:koulutusalatunnus ala))
     (koulutusala-arkisto/lisaa! ala)))
 
-(defn tallenna-muuttuneet-koulutusalat! [koulutusalat]
+(defn ^:integration-api tallenna-muuttuneet-koulutusalat! [koulutusalat]
   (doseq [ala koulutusalat
           :let [tunnus (:koulutusalatunnus ala)
                 ala (dissoc ala :koulutusalatunnus)]]
     (log/info "Päivitetään koulutusala " tunnus ", muutokset: " ala)
     (koulutusala-arkisto/paivita! tunnus ala)))
 
-(defn tallenna-koulutusalat! [koulutusalat]
+(defn ^:integration-api tallenna-koulutusalat! [koulutusalat]
   (let [uudet (for [[alakoodi ala] koulutusalat
                     :when (and (vector? ala) (first ala))]
                 (first ala))
@@ -204,19 +204,19 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (tallenna-uudet-koulutusalat! uudet)
     (tallenna-muuttuneet-koulutusalat! muuttuneet)))
 
-(defn tallenna-uudet-opintoalat! [opintoalat]
+(defn ^:integration-api tallenna-uudet-opintoalat! [opintoalat]
   (doseq [ala opintoalat]
     (log/info "Lisätään opintoala " (:opintoalatunnus ala))
     (opintoala-arkisto/lisaa! ala)))
 
-(defn tallenna-muuttuneet-opintoalat! [opintoalat]
+(defn ^:integration-api tallenna-muuttuneet-opintoalat! [opintoalat]
   (doseq [ala opintoalat
           :let [tunnus (:opintoalatunnus ala)
                 ala (dissoc ala :opintoalatunnus)]]
     (log/info "Päivitetään opintoala " tunnus ", muutokset: " ala)
     (opintoala-arkisto/paivita! tunnus ala)))
 
-(defn tallenna-opintoalat! [opintoalat]
+(defn ^:integration-api tallenna-opintoalat! [opintoalat]
   (let [uudet (for [[alakoodi ala] opintoalat
                     :when (and (vector? ala) (first ala))]
                 (first ala))
@@ -226,19 +226,19 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (tallenna-uudet-opintoalat! (filter :koulutusala uudet))
     (tallenna-muuttuneet-opintoalat! (filter :koulutusala muuttuneet))))
 
-(defn tallenna-uudet-tutkinnot! [tutkinnot]
+(defn ^:integration-api tallenna-uudet-tutkinnot! [tutkinnot]
   (doseq [tutkinto tutkinnot]
     (log/info "Lisätään tutkinto " (:tutkintotunnus tutkinto))
     (tutkinto-arkisto/lisaa! tutkinto)))
 
-(defn tallenna-muuttuneet-tutkinnot! [tutkinnot]
+(defn ^:integration-api tallenna-muuttuneet-tutkinnot! [tutkinnot]
   (doseq [tutkinto tutkinnot
           :let [tunnus (:tutkintotunnus tutkinto)
                 tutkintotunnus (dissoc tutkinto :tutkintotunnus)]]
     (log/info "Päivitetään tutkinto " tunnus ", muutokset: " tutkinto)
     (tutkinto-arkisto/paivita! tunnus tutkinto)))
 
-(defn tallenna-tutkinnot! [tutkinnot]
+(defn ^:integration-api tallenna-tutkinnot! [tutkinnot]
   (let [uudet (for [[tunnus tutkinto] tutkinnot
                     :when (and (vector? tutkinto) (first tutkinto))]
                 (first tutkinto))
@@ -248,7 +248,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (tallenna-uudet-tutkinnot! (filter :opintoala uudet))
     (tallenna-muuttuneet-tutkinnot! (filter :opintoala muuttuneet))))
 
-(defn paivita-tutkinnot! [asetukset]
+(defn ^:integration-api paivita-tutkinnot! [asetukset]
   (try
     (db/transaction
       (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")
