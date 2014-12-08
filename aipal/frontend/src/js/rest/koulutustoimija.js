@@ -21,7 +21,7 @@ angular.module('rest.koulutustoimija', [])
         return $http.get('api/koulutustoimija');
       },
       haeAktiivinen: function() {
-      	return $http.get('api/koulutustoimija/aktiivinen');
+        return $http.get('api/koulutustoimija/aktiivinen', {params: {nocache: Date.now()}});
       }
     };
   }]);

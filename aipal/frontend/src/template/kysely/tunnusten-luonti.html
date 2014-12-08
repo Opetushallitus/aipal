@@ -35,7 +35,7 @@
         <div class="form-group">
             <label>{{i18n.yleiset.tutkinto}}
                 <ui-select ng-if="tutkinnot.length>0" ng-model="vastaajatunnus.tutkinto" ng-disabled="disabled">
-                    <ui-select-match placeholder="Valitse tutkinto">{{$select.selected.nimi_fi}}</ui-select-match>
+                    <ui-select-match placeholder="Valitse tutkinto">{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
                     <ui-select-choices repeat="tutkinto in tutkinnot | filter: $select.search | orderByLokalisoitu:'nimi'">
                         <div ng-bind-html="tutkinto | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
                     </ui-select-choices>
@@ -46,7 +46,7 @@
         <div class="form-group">
             <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}}
                 <ui-select ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled">
-                    <ui-select-match>{{$select.selected.nimi_fi}}</ui-select-match>
+                    <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
                     <ui-select-choices repeat="koulutustoimija in koulutustoimijat | filter: $select.search | orderByLokalisoitu:'nimi'">
                         <div ng-bind-html="koulutustoimija | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
                     </ui-select-choices>
