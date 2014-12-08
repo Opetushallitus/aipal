@@ -59,11 +59,16 @@
         :when (seq arvot)]
     {:id (->int kysymysid) :arvot (map #(->int %) arvot)}))
 
-(defn ^:private hae-vastaukset [rajaukset alkupvm loppupvm]
+(defn ^:private hae-vastaukset [rajaukset alkupvm loppupvm tutkintotunnus]
   (->
     (sql/select* :vastaus)
     (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+    (cond->
+      tutkintotunnus (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
+      tutkintotunnus (sql/join :inner :vastaajatunnus (and
+                                                        (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid)
+                                                        (= :vastaajatunnus.tutkintotunnus tutkintotunnus))))
     (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
@@ -79,9 +84,10 @@
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
         rajaukset (:kysymykset parametrit)
+        tutkintotunnus (when (= "tutkinto" (:vertailutyyppi parametrit)) (:tutkintotunnus parametrit))
         kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        vastaukset (hae-vastaukset rajaukset alkupvm loppupvm)]
+        vastaukset (hae-vastaukset rajaukset alkupvm loppupvm tutkintotunnus)]
     {:luontipvm (time/today)
      :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
      :vastaajien-lkm (count (group-by :vastaajaid vastaukset))}))
