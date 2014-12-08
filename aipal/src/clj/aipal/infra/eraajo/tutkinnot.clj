@@ -21,7 +21,7 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
-(defn paivita-tutkinnot! [asetukset]
+(defn ^:integration-api paivita-tutkinnot! [asetukset]
   (with-kayttaja integraatio-uid
     (org/paivita-tutkinnot! asetukset)))
 

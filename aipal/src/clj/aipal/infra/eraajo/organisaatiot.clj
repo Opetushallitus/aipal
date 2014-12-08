@@ -21,7 +21,7 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
-(defn paivita-organisaatiot! [asetukset]
+(defn ^:integration-api paivita-organisaatiot! [asetukset]
   (with-kayttaja integraatio-uid nil
     (log/info "Päivitetään organisaatiot organisaatiopalvelusta")
     (org/paivita-organisaatiot! asetukset)
