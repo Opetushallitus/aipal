@@ -78,7 +78,7 @@
                              (sql/values vastaajatunnus))
                          :vastaajatunnusid
                          hae)]
-    (auditlog/vastaajatunnus-luonti! vastaajatunnus (:kyselykertaid vastaajatunnus))
+    (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
     vastaajatunnus))
 
 
