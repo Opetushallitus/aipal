@@ -85,7 +85,7 @@
     (sql/select* taulut/kysymys)
     (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
     (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
-                :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi
+                :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi :kysymys.eos_vastaus_sallittu
                 :kysymys.max_vastaus :kysymys.monivalinta_max
                 :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
                 :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv

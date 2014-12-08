@@ -86,6 +86,12 @@
                             </label>
                         </div>
 
+                        <div class="checkbox" ng-if="aktiivinenKysymys.pakollinen">
+                            <label>
+                                <input type="checkbox" ng-model="aktiivinenKysymys.eos_vastaus_sallittu"> {{i18n.kysymys.eos_vastaus_sallittu}}
+                            </label>
+                        </div>
+
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" ng-model="aktiivinenKysymys.poistettava"> {{i18n.kysymys.poistettava}}

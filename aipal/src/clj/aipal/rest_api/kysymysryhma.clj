@@ -9,8 +9,12 @@
 (defn lisaa-jarjestys [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))
 
+(defn korjaa-eos-vastaus-sallittu [{:keys [eos_vastaus_sallittu pakollinen] :as kysymys}]
+  (assoc kysymys :eos_vastaus_sallittu (and eos_vastaus_sallittu pakollinen)))
+
 (defn valitse-kysymyksen-kentat [kysymys]
   (select-keys kysymys [:pakollinen
+                        :eos_vastaus_sallittu
                         :poistettava
                         :vastaustyyppi
                         :kysymys_fi
@@ -53,6 +57,7 @@
                          :jatkokysymysid)
         kysymysid (-> kysymys
                     valitse-kysymyksen-kentat
+                    korjaa-eos-vastaus-sallittu
                     (assoc :kysymysryhmaid kysymysryhmaid
                            :jatkokysymysid jatkokysymysid)
                     arkisto/lisaa-kysymys!
@@ -111,10 +116,11 @@
   (cu/defapi :kysymysryhma-muokkaus kysymysryhmaid :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
     (json-response
       (paivita-kysymysryhma!
-        (assoc kysymysryhma
-               :kysymysryhmaid (Integer/parseInt kysymysryhmaid)
-               :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)
-               :taustakysymykset (if (yllapitaja?) (true? (:taustakysymykset kysymysryhma)) false)))))
+        (-> kysymysryhma
+          korjaa-eos-vastaus-sallittu
+          (assoc :kysymysryhmaid (Integer/parseInt kysymysryhmaid)
+                 :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)
+                 :taustakysymykset (if (yllapitaja?) (true? (:taustakysymykset kysymysryhma)) false))))))
 
   (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/:kysymysryhmaid/julkaise" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
