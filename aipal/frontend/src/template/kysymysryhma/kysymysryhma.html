@@ -106,10 +106,7 @@
 
                         <div class="form-group">
                             <label>{{i18n.kysymys.vastaustapa}}
-                            <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control">
-                                <option ng-repeat="tyyppi in vastaustyypit" ng-selected="{{aktiivinenKysymys.vastaustyyppi === tyyppi}}" value="{{tyyppi}}">
-                                    {{i18n.kysymys.tyyppi[tyyppi]}}
-                                </option>
+                            <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control" ng-options="'kysymys.tyyppi.' + tyyppi | i18n for tyyppi in vastaustyypit">
                             </select>
                             </label>
                         </div>
