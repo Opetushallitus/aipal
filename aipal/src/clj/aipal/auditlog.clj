@@ -66,13 +66,28 @@
   (kirjoita! :kyselypohja :lisays {:nimi nimi}))
 
 (defn kysymysryhma-muokkaus!
-  [kysymysryhmaid]
-  (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid}))
+  ([kysymysryhmaid]
+    (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid}))
+  ([kysymysryhmaid tilamuutos]
+    (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid
+                                        :tila tilamuutos})))
 
 (defn kysymysryhma-luonti!
   [kysymysryhmaid nimi]
   (kirjoita! :kysymysryhma :lisays {:kysymysryhmaid kysymysryhmaid
                                     :nimi nimi}))
+(defn kysymys-poisto!
+  [kysymysid]
+  (kirjoita! :kysymys :poisto {:kysymysid kysymysid}))
+
+(defn kysymys-monivalinnat-poisto!
+  [kysymysid]
+  (kirjoita! :kysymys :poisto {:kysymysid kysymysid
+                               :monivalinnat true}))
+
+(defn jatkokysymys-poisto!
+  [jatkokysymysid]
+  (kirjoita! :jatkokysymys :poisto {:jatkokysymysid jatkokysymysid}))
 
 (defn kysymys-muokkaus!
   [kysymysid]

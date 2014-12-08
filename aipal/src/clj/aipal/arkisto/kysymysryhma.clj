@@ -229,6 +229,7 @@
 
 (defn paivita!
   [kysymysryhma]
+  (auditlog/kysymysryhma-muokkaus! (:kysymysryhmaid kysymysryhma))
   (->
     (sql/update* taulut/kysymysryhma)
     (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :selite_fi :selite_sv :valtakunnallinen :koulutustoimija :taustakysymykset]))
@@ -237,24 +238,28 @@
 
 (defn poista-kysymys!
   [kysymysid]
+  (auditlog/kysymys-poisto! kysymysid)
   (sql/delete
     taulut/kysymys
     (sql/where {:kysymysid kysymysid})))
 
 (defn poista-kysymyksen-monivalintavaihtoehdot!
   [kysymysid]
+  (auditlog/kysymys-monivalinnat-poisto! kysymysid)
   (sql/delete
     :monivalintavaihtoehto
     (sql/where {:kysymysid kysymysid})))
 
 (defn poista-jatkokysymys!
   [jatkokysymysid]
+  (auditlog/jatkokysymys-poisto! jatkokysymysid)
   (sql/delete
     taulut/jatkokysymys
     (sql/where {:jatkokysymysid jatkokysymysid})))
 
 (defn aseta-tila!
   [kysymysryhmaid tila]
+  (auditlog/kysymysryhma-muokkaus! kysymysryhmaid tila)
   (sql/update taulut/kysymysryhma
     (sql/set-fields {:tila tila})
     (sql/where {:kysymysryhmaid kysymysryhmaid})))
