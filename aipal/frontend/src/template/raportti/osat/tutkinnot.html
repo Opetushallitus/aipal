@@ -9,8 +9,8 @@
     <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>
   </div>
 
-  <div ng-show="raportti.vertailutyyppi === 'tutkinto'">
-    <input type="text" ng-model="tutkintoFilter" placeholder="{{ 'raportit.hae_tutkintoja' | i18n }}">
+  <div>
+    <input type="text" ng-model="tutkintoFilter" placeholder="{{ 'raportit.hae_tutkintoja_tai_aloja' | i18n }}">
   </div>
 
   <div class="vertailu-valitsin">
