@@ -20,11 +20,11 @@
         <span class="fa fa-check" ng-if="raportti.vertailutyyppi == 'koulutusala' && raportti.koulutusalatunnus == koulutusala.koulutusalatunnus"></span>
         <ul class="opintoalat" ng-show="raportti.vertailutyyppi !== 'koulutusala'">
           <li ng-repeat="opintoala in koulutusala.opintoalat |filter:tutkintoFilter">
-            <span ng-click="valitseOpintoala(opintoala)">{{opintoala|lokalisoiKentta:'opintoala_nimi'}}</span>
+            <span ng-click="valitseOpintoala(opintoala)">{{opintoala |lokalisoiKentta:'opintoala_nimi'}}</span>
             <span class="fa fa-check" ng-if="raportti.vertailutyyppi == 'opintoala' && raportti.opintoalatunnus == opintoala.opintoalatunnus"></span>
             <ul class="tutkinnot" ng-show="raportti.vertailutyyppi === 'tutkinto'">
               <li ng-repeat="tutkinto in opintoala.tutkinnot |filter:tutkintoFilter" ng-click="valitseTutkinto(tutkinto)">
-                <span>{{tutkinto|lokalisoiKentta:'nimi'}}</span>
+                <span>{{tutkinto |lokalisoiKentta:'nimi'}}</span>
                 <span class="fa fa-check" ng-if="raportti.tutkintotunnus == tutkinto.tutkintotunnus"></span></li>
             </ul>
           </li>
