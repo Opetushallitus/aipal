@@ -80,7 +80,7 @@
                          hae)]
     (auditlog/vastaajatunnus-luonti! vastaajatunnus (:kyselykertaid vastaajatunnus))
     vastaajatunnus))
-        
+
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
