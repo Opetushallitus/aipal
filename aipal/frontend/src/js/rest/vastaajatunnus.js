@@ -15,36 +15,16 @@
 'use strict';
 
 angular.module('rest.vastaajatunnus', ['ngResource'])
-  .factory('Vastaajatunnus', ['$resource', function($resource) {
-    var resource = $resource(null, null, {
-      haku: {
-        method: 'GET',
-        params: {
-          nocache: function() {return Date.now();},
-        },
-        url: 'api/vastaajatunnus/:kyselykertaid',
-        isArray: true
-      },
-      luoUusia: {
-        method: 'POST',
-        url: 'api/vastaajatunnus/:kyselykertaid',
-        isArray: true
-      },
-      lukitse: {
-        method: 'POST',
-        url: 'api/vastaajatunnus/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse'
-      }
-    });
-
+  .factory('Vastaajatunnus', ['$http', function($http) {
     return {
-      hae: function(kyselykertaid, successCallback, errorCallback) {
-        return resource.haku({kyselykertaid: kyselykertaid}, successCallback, errorCallback);
+      hae: function(kyselykertaid) {
+        return $http.get('api/vastaajatunnus/' + kyselykertaid, {params: {nocache: Date.now()}});
       },
-      luoUusia: function(kyselykertaid, vastaajatunnus, successCallback, errorCallback) {
-        return resource.luoUusia({kyselykertaid: kyselykertaid}, vastaajatunnus, successCallback, errorCallback);
+      luoUusia: function(kyselykertaid, vastaajatunnus) {
+        return $http.post('api/vastaajatunnus/' + kyselykertaid, vastaajatunnus);
       },
-      lukitse: function(kyselykertaid, vastaajatunnusid, lukitse, successCallback, errorCallback) {
-        return resource.lukitse({kyselykertaid: kyselykertaid, vastaajatunnusid: vastaajatunnusid}, {lukitse: lukitse}, successCallback, errorCallback);
+      lukitse: function(kyselykertaid, vastaajatunnusid, lukitse) {
+        return $http.post('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + vastaajatunnusid + '/lukitse', {lukitse: lukitse});
       }
     };
   }]);

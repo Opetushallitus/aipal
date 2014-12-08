@@ -68,13 +68,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         });
 
         modalInstance.result.then(function(vastaajatunnus) {
-          Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus, function(uudetTunnukset) {
+          Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus).success(function(uudetTunnukset) {
             _.forEach(uudetTunnukset, function(tunnus) {
               tunnus.new = true;
               $scope.tunnukset.unshift(tunnus);
             });
             ilmoitus.onnistuminen(i18n.hae('vastaajatunnus.tallennus_onnistui'));
-          }, function() {
+          }).error(function() {
             ilmoitus.virhe(i18n.hae('vastaajatunnus.tallennus_epaonnistui'));
           });
         });
@@ -106,7 +106,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
 
       if (!$scope.uusi) {
-        $scope.tunnukset = Vastaajatunnus.hae($routeParams.kyselykertaid);
+        Vastaajatunnus.hae($routeParams.kyselykertaid)
+          .success(function(tunnukset) {
+            $scope.tunnukset = tunnukset;
+          });
         Kyselykerta.haeYksi($scope.kyselykertaid)
           .success(function(kyselykerta) {
             $scope.kyselykerta = kyselykerta;
@@ -160,7 +163,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       };
 
       $scope.lukitseTunnus = function(tunnus, lukitse) {
-        Vastaajatunnus.lukitse($routeParams.kyselykertaid, tunnus.vastaajatunnusid, lukitse, function(uusiTunnus) {
+        Vastaajatunnus.lukitse($routeParams.kyselykertaid, tunnus.vastaajatunnusid, lukitse).success(function(uusiTunnus) {
           _.assign(tunnus, uusiTunnus);
         });
       };
