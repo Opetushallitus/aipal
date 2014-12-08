@@ -46,6 +46,7 @@
 
 (defn tallenna-kyselypohjan-kysymysryhmat!
   [kyselypohjaid kysymysryhmat]
+  (auditlog/kyselypohja-muokkaus! kyselypohjaid)
   (sql/delete :kysymysryhma_kyselypohja
               (sql/where {:kyselypohjaid kyselypohjaid}))
   (doseq [[index kysymysryhma] (map-indexed vector kysymysryhmat)]
@@ -70,18 +71,23 @@
     (tallenna-kyselypohjan-kysymysryhmat! (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
 
-(defn aseta-kyselypohjan-tila!
+(defn ^:private aseta-kyselypohjan-tila!
   [kyselypohjaid tila]
-  (auditlog/kyselypohja-muokkaus! kyselypohjaid tila)
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
     (sql/set-fields {:tila tila})))
 
-(defn julkaise-kyselypohja! [kyselypohjaid] (aseta-kyselypohjan-tila! kyselypohjaid "julkaistu"))
+(defn julkaise-kyselypohja! [kyselypohjaid] 
+  (auditlog/kyselypohja-muokkaus! kyselypohjaid :julkaistu)
+  (aseta-kyselypohjan-tila! kyselypohjaid "julkaistu"))
 
-(defn palauta-kyselypohja-luonnokseksi! [kyselypohjaid] (aseta-kyselypohjan-tila! kyselypohjaid "luonnos"))
+(defn palauta-kyselypohja-luonnokseksi! [kyselypohjaid] 
+  (auditlog/kyselypohja-muokkaus! kyselypohjaid :luonnos)
+  (aseta-kyselypohjan-tila! kyselypohjaid "luonnos"))
 
-(defn sulje-kyselypohja! [kyselypohjaid] (aseta-kyselypohjan-tila! kyselypohjaid "suljettu"))
+(defn sulje-kyselypohja! [kyselypohjaid] 
+  (auditlog/kyselypohja-muokkaus! kyselypohjaid :suljettu)
+  (aseta-kyselypohjan-tila! kyselypohjaid "suljettu"))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]

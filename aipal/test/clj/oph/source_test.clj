@@ -96,6 +96,9 @@
   "test-api ja integraatioiden käyttämät arkistofunktiot eivät ole auditlokituksen piirissä"
   (defn-without-meta? muoto #{:test-api :integration-api}))
 
+(defn public-function? [form]  
+  (defn-without-meta? form #{:private}))
+  
 (defn sivuvaikutuksellinen-funktio? [muoto]
   "Jos funktion nimi loppuu huutomerkkiin, tulkitaan että sillä on sivuvaikutuksia."
   (and
@@ -111,9 +114,16 @@
     (when (and
             (ei-audit-logitettava-funktio? muoto)
             (sivuvaikutuksellinen-funktio? muoto)
+            (public-function? muoto)
             (not sisaltaa-audit-kutsun?))
       (println "! AUDITLOG kutsu puuttuu: " (nth muoto 1))
       (str (nth muoto 1)))))
+
+(deftest audit-log-kutsut-ovat-olemassa
+  (is (empty? (vastaavat-muodot "src/clj" audit-log-kutsu-puuttuu? 
+                :ohita ["src/clj/aipal/auditlog.clj"
+                        "src/clj/aipal/rest_api/kysely.clj"
+                        "src/clj/aipal/rest_api/kysymysryhma.clj"]))))
 
 (deftest js-debug-test
   (is (empty? (vastaavat-rivit "resources/public/js"

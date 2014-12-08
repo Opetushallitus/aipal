@@ -73,7 +73,7 @@
       (sql/fields :tunnus)
       (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)}))))
 
-(defn tallenna-vastaajatunnus! [vastaajatunnus]
+(defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                              (sql/values vastaajatunnus))
                          :vastaajatunnusid
@@ -84,6 +84,7 @@
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
+  (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])

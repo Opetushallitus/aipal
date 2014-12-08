@@ -54,10 +54,13 @@
     kysymys))
 
 (defn lisaa-jatkokysymys! [k]
-  (sql/insert :jatkokysymys
-    (sql/values k)))
+  (let [jatkokysymys (sql/insert :jatkokysymys
+                       (sql/values k))]
+    (auditlog/jatkokysymys-luonti! (:jatkokysymysid jatkokysymys))
+    jatkokysymys))
 
 (defn lisaa-monivalintavaihtoehto! [v]
+  (auditlog/kysymys-monivalinnat-luonti! (:kysymysid v))
   (sql/insert :monivalintavaihtoehto
     (sql/values v)))
 
@@ -257,23 +260,25 @@
     taulut/jatkokysymys
     (sql/where {:jatkokysymysid jatkokysymysid})))
 
-(defn aseta-tila!
+(defn ^:private aseta-tila!
   [kysymysryhmaid tila]
-  (auditlog/kysymysryhma-muokkaus! kysymysryhmaid tila)
   (sql/update taulut/kysymysryhma
     (sql/set-fields {:tila tila})
     (sql/where {:kysymysryhmaid kysymysryhmaid})))
 
 (defn julkaise!
   [kysymysryhmaid]
+  (auditlog/kysymysryhma-muokkaus! kysymysryhmaid :julkaistu)
   (aseta-tila! kysymysryhmaid "julkaistu"))
 
 (defn sulje!
   [kysymysryhmaid]
+  (auditlog/kysymysryhma-muokkaus! kysymysryhmaid :suljettu)
   (aseta-tila! kysymysryhmaid "suljettu"))
 
 (defn palauta-luonnokseksi!
   [kysymysryhmaid]
+  (auditlog/kysymysryhma-muokkaus! kysymysryhmaid :luonnos)
   (aseta-tila! kysymysryhmaid "luonnos"))
 
 (defn laske-kysymykset

@@ -85,9 +85,18 @@
   (kirjoita! :kysymys :poisto {:kysymysid kysymysid
                                :monivalinnat true}))
 
+(defn kysymys-monivalinnat-luonti!
+  [kysymysid]
+  (kirjoita! :kysymys :lisays {:kysymysid kysymysid
+                               :monivalinnat true}))
+
 (defn jatkokysymys-poisto!
   [jatkokysymysid]
   (kirjoita! :jatkokysymys :poisto {:jatkokysymysid jatkokysymysid}))
+
+(defn jatkokysymys-luonti!
+  [jatkokysymysid]
+  (kirjoita! :jatkokysymys :lisays {:jatkokysymysid jatkokysymysid}))
 
 (defn kysymys-muokkaus!
   [kysymysid]
@@ -111,9 +120,11 @@
                                    :nimi nimi}))
 
 (defn vastaajatunnus-luonti!
-  [vastaajatunnus kyselykertaid]
-  (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid
-                                      :tunnus vastaajatunnus}))
+  ([kyselykertaid]
+    (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid}))
+  ([vastaajatunnus kyselykertaid]
+    (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid
+                                        :tunnus vastaajatunnus})))
 
 (defn vastaajatunnus-muokkaus!
   [vastaajatunnusid kyselykertaid lukittu-tila]
