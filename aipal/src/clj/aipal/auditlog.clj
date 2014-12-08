@@ -111,11 +111,14 @@
                                    :nimi nimi}))
 
 (defn vastaajatunnus-luonti!
-  [kyselykertaid]
-  (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid}))
+  [vastaajatunnus kyselykertaid]
+  (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid
+                                      :tunnus vastaajatunnus}))
 
-(defn vastaajatunnus-lukitus!
-  [kyselykertaid]
-  (kirjoita! :vastaajatunnus :paivitys {:kyselykertaid kyselykertaid}))
+(defn vastaajatunnus-muokkaus!
+  [vastaajatunnusid kyselykertaid lukittu-tila]
+  (kirjoita! :vastaajatunnus :paivitys {:kyselykertaid kyselykertaid
+                                        :vastaajatunnusid vastaajatunnusid
+                                        :lukittu lukittu-tila}))
 
 

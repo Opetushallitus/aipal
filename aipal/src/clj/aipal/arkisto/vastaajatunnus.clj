@@ -15,7 +15,8 @@
 (ns aipal.arkisto.vastaajatunnus
   (:require [clojure.string :as st]
             [korma.core :as sql]
-            [aipal.integraatio.sql.korma :as taulut]))
+            [aipal.integraatio.sql.korma :as taulut]
+            [aipal.auditlog :as auditlog]))
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 
@@ -72,12 +73,14 @@
       (sql/fields :tunnus)
       (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)}))))
 
-(defn tallenna-vastaajatunnus!
-  [vastaajatunnus]
-  (-> (sql/insert taulut/vastaajatunnus
-        (sql/values vastaajatunnus))
-    :vastaajatunnusid
-    hae))
+(defn tallenna-vastaajatunnus! [vastaajatunnus]
+  (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
+                             (sql/values vastaajatunnus))
+                         :vastaajatunnusid
+                         hae)]
+    (auditlog/vastaajatunnus-luonti! vastaajatunnus (:kyselykertaid vastaajatunnus))
+    vastaajatunnus))
+        
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
@@ -96,7 +99,8 @@
           (when-not (vastaajatunnus-olemassa? tunnus)
             (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))))
 
-(defn lukitse! [kyselykertaid vastaajatunnusid lukitse]
+(defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
+  (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
   (sql/update taulut/vastaajatunnus
     (sql/set-fields {:lukittu lukitse})
     (sql/where {:kyselykertaid kyselykertaid
