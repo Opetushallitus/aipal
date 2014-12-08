@@ -21,8 +21,28 @@
     </rollingPolicy>
   </appender>
 
+
+  <appender name="AUDITLOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--See http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+    <!--and http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy-->
+    <!--for further documentation-->
+    <File>logs/aipal-audit.log</File>
+    <encoding>UTF-8</encoding>
+    <encoder>
+      <pattern>%d{ISO8601} %-5p %c: %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/aipal-audit.log.%d{yyyy-MM-dd}</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+  
+
   <logger name="aitu.infra.print-wrapper" level="INFO"/>
   <logger name="com.mchange.v2" level="WARN"/>
+
+  <logger name="aipal.auditlog" level="INFO" additivity="false">
+    <appender-ref ref="AUDITLOGFILE"></appender-ref>
+  </logger>
 
   <root level="INFO">
     <appender-ref ref="CONSOLE"/>
