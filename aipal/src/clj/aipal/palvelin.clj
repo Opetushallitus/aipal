@@ -141,11 +141,11 @@
       wrap-kayttooikeudet-forbidden
       wrap-poikkeusten-logitus)))
 
-(defn kaynnista-eraajon-ajastimet! [asetukset]
+(defn ^:integration-api kaynnista-eraajon-ajastimet! [asetukset]
   (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
     (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset))))
 
-(defn kaynnista! [alkuasetukset]
+(defn ^:integration-api kaynnista! [alkuasetukset]
   (try
     (log/info "Käynnistetään Aipal, versio " @build-id)
     (let [asetukset (hae-asetukset alkuasetukset)

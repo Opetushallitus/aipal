@@ -96,7 +96,7 @@
 
 (def validationquery "select count(*) from kayttajarooli")
 
-(defn validate-connection!
+(defn ^:test-api validate-connection!
   []
   (first
     (sql/select validationquery)))

@@ -27,7 +27,7 @@
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
            aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob))
 
-(defn kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
+(defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
   (qs/initialize)
   (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")

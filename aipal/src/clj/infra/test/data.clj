@@ -40,12 +40,12 @@
    "koulutustoimija"
    "kayttaja"])
 
-(defn tyhjenna-testidata!
+(defn ^:test-api tyhjenna-testidata!
   [oid]
   (doseq [taulu taulut]
     (sql/exec-raw (str "delete from " taulu " where luotu_kayttaja = '" oid "'"))))
 
-(defn luo-testikayttaja!
+(defn ^:test-api luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
   (with-kayttaja jarjestelma-uid nil
     (when-not (first (sql/select kayttaja
@@ -66,7 +66,7 @@
   ([testikayttaja-oid testikayttaja-uid]
     (luo-testikayttaja! testikayttaja-oid testikayttaja-uid (:paakayttaja kayttajaroolit))))
 
-(defn poista-testikayttaja!
+(defn ^:test-api poista-testikayttaja!
   [testikayttaja-oid]
   (sql/exec-raw (str "delete from rooli_organisaatio where kayttaja = '" testikayttaja-oid "'"))
   (sql/exec-raw (str "delete from kayttaja where oid = '" testikayttaja-oid "'")))

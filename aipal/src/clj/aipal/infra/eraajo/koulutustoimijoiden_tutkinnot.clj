@@ -22,7 +22,7 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
-(defn paivita-koulutustoimijoiden-tutkinnot! []
+(defn ^:integration-api paivita-koulutustoimijoiden-tutkinnot! []
   (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Aitusta")
   (db/transaction
     (with-kayttaja integraatio-uid nil
