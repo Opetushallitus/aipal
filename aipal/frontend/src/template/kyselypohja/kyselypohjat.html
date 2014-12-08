@@ -12,13 +12,11 @@
     </div>
 </div>
 
-<h2>{{i18n.kyselypohja.luonnokset}}</h2>
-
-<ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['luonnos']"></ng-include>
-
 <h2>{{i18n.kyselypohja.julkaistut}}</h2>
-
 <ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['julkaistu']"></ng-include>
+
+<h2>{{i18n.kyselypohja.luonnokset}}</h2>
+<ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['luonnos']"></ng-include>
 
 <div>
   <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
