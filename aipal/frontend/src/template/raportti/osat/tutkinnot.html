@@ -1,12 +1,13 @@
 <h3>{{ 'raportit.vertailtavat_tutkinnot' | i18n }}</h3>
 
 <div ng-show="tutkinnot">
-  <h4>{{ 'raportit.vertailutyyppi' | i18n }}</h4>
-
-  <div class="btn-group vertailutyyppi">
-    <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'koulutusala'">{{ 'raportit.koulutusala' | i18n }}</label>
-    <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'opintoala'">{{ 'raportit.opintoala' | i18n }}</label>
-    <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>
+  <div>
+    {{ 'raportit.vertailutyyppi' | i18n }}
+    <div class="btn-group vertailutyyppi">
+      <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'koulutusala'">{{ 'raportit.koulutusala' | i18n }}</label>
+      <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'opintoala'">{{ 'raportit.opintoala' | i18n }}</label>
+      <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>
+    </div>
   </div>
 
   <div>
