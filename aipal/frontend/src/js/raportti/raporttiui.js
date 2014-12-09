@@ -24,7 +24,23 @@ angular.module('raportti.raporttiui', ['rest.raportti', 'raportti.kyselykerta.ka
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
+  .factory('RaporttiFunktiot', [function() {
+    return {
+      tutkinnotHierarkiaksi: function(tutkinnot) {
+        var tutkinnotOpintoaloittain = _.groupBy(tutkinnot, 'opintoalatunnus');
+
+        var opintoalatKoulutusaloittain = _(tutkinnot).map(function(tutkinto) {
+          return _.assign(_.pick(tutkinto, ['opintoalatunnus', 'opintoala_nimi_fi', 'opintoala_nimi_sv', 'koulutusalatunnus']), {tutkinnot: tutkinnotOpintoaloittain[tutkinto.opintoalatunnus]});
+        }).sortBy('opintoalatunnus').uniq(true, 'opintoalatunnus').groupBy('koulutusalatunnus').value();
+
+        return _(tutkinnot).map(function(tutkinto) {
+          return _.assign(_.pick(tutkinto, ['koulutusalatunnus', 'koulutusala_nimi_fi', 'koulutusala_nimi_sv']), {opintoalat: opintoalatKoulutusaloittain[tutkinto.koulutusalatunnus]});
+        }).sortBy('koulutusalatunnus').uniq(true, 'koulutusalatunnus').value();
+      }
+    };
+  }])
+
+  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'RaporttiFunktiot', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Kysymysryhma, RaporttiFunktiot, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
     $scope.raportti.vertailutyyppi = 'tutkinto';
 
@@ -52,15 +68,7 @@ angular.module('raportti.raporttiui', ['rest.raportti', 'raportti.kyselykerta.ka
     Tutkinto.haeTutkinnot().success(function(tutkinnot) {
       $scope.tutkinnot = tutkinnot;
 
-      var tutkinnotOpintoaloittain = _.groupBy(tutkinnot, 'opintoalatunnus');
-
-      var opintoalatKoulutusaloittain = _(tutkinnot).map(function(tutkinto) {
-        return _.assign(_.pick(tutkinto, ['opintoalatunnus', 'opintoala_nimi_fi', 'opintoala_nimi_sv', 'koulutusalatunnus']), {tutkinnot: tutkinnotOpintoaloittain[tutkinto.opintoalatunnus]});
-      }).sortBy('opintoalatunnus').uniq(true, 'opintoalatunnus').groupBy('koulutusalatunnus').value();
-
-      $scope.koulutusalat = _(tutkinnot).map(function(tutkinto) {
-        return _.assign(_.pick(tutkinto, ['koulutusalatunnus', 'koulutusala_nimi_fi', 'koulutusala_nimi_sv']), {opintoalat: opintoalatKoulutusaloittain[tutkinto.koulutusalatunnus]});
-      }).sortBy('koulutusalatunnus').uniq(true, 'koulutusalatunnus').value();
+      $scope.koulutusalat = RaporttiFunktiot.tutkinnotHierarkiaksi(tutkinnot);
 
     });
 
