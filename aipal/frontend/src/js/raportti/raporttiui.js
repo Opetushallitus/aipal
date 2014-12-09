@@ -40,7 +40,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'RaporttiFunktiot', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Kysymysryhma, RaporttiFunktiot, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'RaporttiFunktiot', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, RaporttiFunktiot, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
     $scope.raportti.vertailutyyppi = 'tutkinto';
 
@@ -63,6 +63,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
 
       $scope.raportti.taustakysymysryhmaid = $scope.taustakysymysryhmat[0].kysymysryhmaid;
+    });
+
+    Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
+      $scope.koulutustoimijat = koulutustoimijat;
     });
 
     Tutkinto.haeTutkinnot().success(function(tutkinnot) {
