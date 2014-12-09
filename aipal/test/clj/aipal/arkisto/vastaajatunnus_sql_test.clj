@@ -52,26 +52,26 @@
                :henkilokohtainen false
                :vastaajien_lkm 3})
       (is (= (map :vastaajien_lkm (hae-kyselykerralla k))
-             [3]))))
+             [3])))))
 
-  (testing "olemassaolevien vastaajatunnusten tilalle generoidaan uudet"
-    (with-redefs [luo-tunnuksia (constantly (range))
-                  vastaajatunnus-olemassa? #{2 4 6}]
-      (let [k (:kyselykertaid (lisaa-kyselykerta!))]
-        (is (= (map :tunnus (lisaa! {:kyselykertaid k
-                                     :henkilokohtainen true
-                                     :vastaajien_lkm 6}))
-               ["0" "1" "3" "5" "7" "8"])))))
+(deftest ^:integraatio olemassaolevien-vastaajatunnusten-tilalle-generoidaan-uudet
+  (with-redefs [luo-tunnuksia (constantly (range))
+                vastaajatunnus-olemassa? #{2 4 6}]
+    (let [k (:kyselykertaid (lisaa-kyselykerta!))]
+      (is (= (map :tunnus (lisaa! {:kyselykertaid k
+                                   :henkilokohtainen true
+                                   :vastaajien_lkm 6}))
+             ["0" "1" "3" "5" "7" "8"])))))
 
-  (testing "vastaajatunnuksia tallennetaan vain haluttu määrä chunkingista riippumatta"
-    ;; Vaihdetaan luo-tunnuksia palauttamaan sekvenssi jossa on chunking
-    (with-redefs [luo-tunnuksia (constantly (range))]
-      (let [k (:kyselykertaid (lisaa-kyselykerta!))]
-        (lisaa! {:kyselykertaid k
-                 :henkilokohtainen true
-                 :vastaajien_lkm 6})
-        (is (= (count (hae-kyselykerralla k))
-               6))))))
+(deftest ^:integraatio vastaajatunnuksia-tallennetaan-vain-haluttu-maara-chunkingista-riippumatta
+  ;; Vaihdetaan luo-tunnuksia palauttamaan sekvenssi jossa on chunking
+  (with-redefs [luo-tunnuksia (constantly (range))]
+    (let [k (:kyselykertaid (lisaa-kyselykerta!))]
+      (lisaa! {:kyselykertaid k
+               :henkilokohtainen true
+               :vastaajien_lkm 6})
+      (is (= (count (hae-kyselykerralla k))
+             6)))))
 
 (defn vastaajatunnus-gen [kyselykertaid]
   (gen/hash-map :kyselykertaid (gen/return kyselykertaid)
