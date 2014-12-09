@@ -9,8 +9,10 @@
 (defn lisaa-jarjestys [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))
 
-(defn korjaa-eos-vastaus-sallittu [{:keys [eos_vastaus_sallittu pakollinen] :as kysymys}]
-  (assoc kysymys :eos_vastaus_sallittu (and eos_vastaus_sallittu pakollinen)))
+(defn korjaa-eos-vastaus-sallittu [{:keys [eos_vastaus_sallittu pakollinen vastaustyyppi] :as kysymys}]
+  (assoc kysymys :eos_vastaus_sallittu (and eos_vastaus_sallittu
+                                            pakollinen
+                                            (not= vastaustyyppi "vapaateksti"))))
 
 (defn valitse-kysymyksen-kentat [kysymys]
   (select-keys kysymys [:pakollinen

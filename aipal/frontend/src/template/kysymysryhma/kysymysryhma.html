@@ -86,7 +86,7 @@
                             </label>
                         </div>
 
-                        <div class="checkbox" ng-if="aktiivinenKysymys.pakollinen">
+                        <div class="checkbox" ng-if="aktiivinenKysymys.pakollinen && aktiivinenKysymys.vastaustyyppi !== 'vapaateksti'">
                             <label>
                                 <input type="checkbox" ng-model="aktiivinenKysymys.eos_vastaus_sallittu"> {{i18n.kysymys.eos_vastaus_sallittu}}
                             </label>
