@@ -61,3 +61,17 @@
     }
   }
 }
+
+.raportit .koulutustoimijat {
+  & .koulutustoimijat-valitsin {
+    border: 1px solid $primary-color;
+    height: 20em;
+    overflow: auto;
+
+    & ul {
+      list-style-type: none;
+      padding-left: 1em;
+      margin-top: 0;
+    }
+  }
+}

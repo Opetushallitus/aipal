@@ -1,0 +1,11 @@
+<div class="koulutustoimijat" ng-show="koulutustoimijat">
+  <h3>{{ 'raportit.koulutustoimijat' | i18n }}</h3>
+
+  <input type="text" ng-model="koulutustoimijaFilter" placeholder="{{ 'raportit.hae_koulutustoimijoita' | i18n }}">
+
+  <div class="koulutustoimijat-valitsin">
+    <ul class="koulutustoimijat-lista">
+      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:koulutustoimijaFilter">{{ koulutustoimija | lokalisoiKentta:'nimi' }}</li>
+    </ul>
+  </div>
+</div>
