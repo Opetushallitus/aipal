@@ -11,8 +11,8 @@
 <table class="table table-striped raportit-taulukko">
     <thead>
     <tr>
-        <th>id</th>
-        <th>Nimi</th>
+        <th>{{i18n.raportit.kyselykerta.id}}</th>
+        <th>{{i18n.yleiset.nimi_otsikko}}</th>
         <th></th>
     </tr>
     </thead>
@@ -22,7 +22,7 @@
             <td>{{kyselykerta.nimi}}</td>
             <td>
                 <a class="btn btn-primary btn-sm pull-right" ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}">
-                    Näytä raportti
+                    {{i18n.raportit.kyselykerta.nayta}}
                     <span class="glyphicon glyphicon-stats"></span>
                 </a>
             </td>
