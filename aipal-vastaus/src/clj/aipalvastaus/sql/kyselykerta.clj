@@ -41,6 +41,7 @@
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.pakollinen
+                :kysymys.eos_vastaus_sallittu
                 :jatkokysymys.jatkokysymysid
                 :jatkokysymys.kylla_teksti_fi
                 :jatkokysymys.kylla_teksti_sv

@@ -72,6 +72,14 @@
             {{vaihtoehto | lokalisoiKentta:'teksti'}}
           </label>
         </div>
+
+        <div ng-if="kysymys.pakollinen && kysymys.eos_vastaus_sallittu" class="vastaus_valinnat eos">
+          <label>
+            <input type="radio" ng-model="kysymys.vastaus" value="EOS" name="kysymys_{{kysymys.kysymysid}}"
+              ng-disabled="kysymys.vastaustyyppi === 'monivalinta' && kysymys.monivalinta_max > 1 && monivalinta[kysymys.kysymysid] > 0">
+            {{ i18n.yleiset.en_osaa_sanoa }}
+          </label>
+        </div>
       </ng-form>
     </div>
   </div>
