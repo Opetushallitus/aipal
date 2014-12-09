@@ -25,6 +25,9 @@ angular.module('rest.vastaajatunnus', ['ngResource'])
       },
       lukitse: function(kyselykertaid, vastaajatunnusid, lukitse) {
         return $http.post('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + vastaajatunnusid + '/lukitse', {lukitse: lukitse});
+      },
+      haeViimeisinTutkinto: function(kyselykertaid) {
+        return $http.get('api/vastaajatunnus/' + kyselykertaid + '/tutkinto', {params: {nocache: Date.now()}});
       }
     };
   }]);
