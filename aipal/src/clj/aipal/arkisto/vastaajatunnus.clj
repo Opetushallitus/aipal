@@ -46,6 +46,19 @@
     sql/exec
     (->> (map erota-tutkinto))))
 
+(defn hae-viimeisin-tutkinto
+  "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
+  [kyselykertaid koulutustoimija]
+  (-> (sql/select taulut/vastaajatunnus
+        (sql/join :inner taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+        (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
+        (sql/where (and (= :vastaajatunnus.kyselykertaid kyselykertaid)
+                        [(sql/sqlfn :exists (sql/subselect :koulutustoimija_ja_tutkinto
+                                              (sql/where {:koulutustoimija_ja_tutkinto.tutkinto :tutkinto.tutkintotunnus
+                                                          :koulutustoimija_ja_tutkinto.koulutustoimija koulutustoimija})))]))
+        (sql/order :vastaajatunnus.luotuaika :desc))
+    first))
+
 (defn hae [id]
   (-> kyselykerta-select
     (sql/where {:vastaajatunnusid id})

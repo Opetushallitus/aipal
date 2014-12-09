@@ -16,7 +16,8 @@
   (:require [compojure.core :as c]
             [aipal.compojure-util :as cu]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
-            [aipal.arkisto.vastaajatunnus :as vastaajatunnus]))
+            [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (c/defroutes reitit
   (cu/defapi :vastaajatunnus-luonti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
@@ -27,4 +28,9 @@
     (json-response (vastaajatunnus/aseta-lukittu! (Integer/parseInt kyselykertaid) (Integer/parseInt vastaajatunnusid) lukitse)))
 
   (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid" [kyselykertaid]
-    (json-response (vastaajatunnus/hae-kyselykerralla (java.lang.Integer/parseInt kyselykertaid)))))
+    (json-response (vastaajatunnus/hae-kyselykerralla (java.lang.Integer/parseInt kyselykertaid))))
+
+  (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid/tutkinto" [kyselykertaid]
+    (if-let [tutkinto (vastaajatunnus/hae-viimeisin-tutkinto (java.lang.Integer/parseInt kyselykertaid) (:aktiivinen-koulutustoimija *kayttaja*))]
+      (json-response tutkinto)
+      {:status 200})))
