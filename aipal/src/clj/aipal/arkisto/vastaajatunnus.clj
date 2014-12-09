@@ -108,10 +108,10 @@
                                 :tutkintotunnus tutkintotunnus
                                 :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja))]
     (doall
-      (take tunnusten-lkm
-        (for [tunnus (luo-tunnuksia 6)]
-          (when-not (vastaajatunnus-olemassa? tunnus)
-            (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))))
+      (for [tunnus (->> (luo-tunnuksia 6)
+                     (remove vastaajatunnus-olemassa?)
+                     (take tunnusten-lkm))]
+        (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
