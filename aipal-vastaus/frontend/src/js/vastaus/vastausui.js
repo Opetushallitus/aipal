@@ -33,9 +33,13 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
           };
           vastaus.vastaus = [];
           if (kysymysdata.vastaustyyppi === 'monivalinta' && kysymysdata.monivalinta_max > 1) {
-            for (var vaihtoehto in kysymysdata.monivalintavaihtoehdot) {
-              if (kysymysdata.monivalintavaihtoehdot[vaihtoehto].valittu) {
-                vastaus.vastaus.push(kysymysdata.monivalintavaihtoehdot[vaihtoehto].jarjestys);
+            if(kysymysdata.vastaus === 'EOS') {
+              vastaus.vastaus.push('EOS');
+            } else {
+              for (var vaihtoehto in kysymysdata.monivalintavaihtoehdot) {
+                if (kysymysdata.monivalintavaihtoehdot[vaihtoehto].valittu) {
+                  vastaus.vastaus.push(kysymysdata.monivalintavaihtoehdot[vaihtoehto].jarjestys);
+                }
               }
             }
           }
@@ -45,7 +49,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
                 vastaus.jatkokysymysid = kysymysdata.jatkokysymysid;
                 vastaus.jatkovastaus_kylla = kysymysdata.jatkovastaus_kylla;
               }
-              else if (kysymysdata.jatkovastaus_ei) {
+              else if (kysymysdata.vastaus === 'ei' && kysymysdata.jatkovastaus_ei) {
                 vastaus.jatkokysymysid = kysymysdata.jatkokysymysid;
                 vastaus.jatkovastaus_ei = kysymysdata.jatkovastaus_ei;
               }

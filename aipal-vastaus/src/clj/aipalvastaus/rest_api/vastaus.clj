@@ -78,14 +78,16 @@
             :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
                   vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
                   vastaus-arvot (:vastaus vastaus)
-                  jatkovastaus (tallenna-jatkovastaus! vastaus)]]
-      (doseq [arvo vastaus-arvot]
-        (arkisto/tallenna! {:kysymysid (:kysymysid vastaus)
-                            :vastaajaid vastaajaid
-                            :jatkovastausid (:jatkovastausid jatkovastaus)
-                            :numerovalinta (when (#{"monivalinta" "arvosana" "asteikko" "likert_asteikko"} vastaustyyppi) arvo)
-                            :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
-                            :vaihtoehto (when (= "kylla_ei_valinta" vastaustyyppi) arvo)})))
+                  jatkovastaus (tallenna-jatkovastaus! vastaus)
+                  en-osaa-sanoa (and (= vastaus-arvot ["EOS"]) (not= vastaustyyppi "vapaateksti"))]
+            arvo vastaus-arvot]
+      (arkisto/tallenna! {:kysymysid (:kysymysid vastaus)
+                          :vastaajaid vastaajaid
+                          :jatkovastausid (:jatkovastausid jatkovastaus)
+                          :en_osaa_sanoa en-osaa-sanoa
+                          :numerovalinta (when (and (not en-osaa-sanoa) (#{"monivalinta" "arvosana" "asteikko" "likert_asteikko"} vastaustyyppi)) arvo)
+                          :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
+                          :vaihtoehto (when (and (not en-osaa-sanoa) (= "kylla_ei_valinta" vastaustyyppi)) arvo)}))
     (log/info (str "Vastaukset (" vastaajaid  ") tallennettu onnistuneesti."))
     true))
 

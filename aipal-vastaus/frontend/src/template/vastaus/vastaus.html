@@ -67,7 +67,7 @@
             <span ng-if="kysymys.monivalinta_max > 1">
               <input type="checkbox" ng-model="vaihtoehto.valittu" ng-change="vaihdaMonivalinta(vaihtoehto, kysymys)"
                 ng-disabled="monivalinta[kysymys.kysymysid] === kysymys.monivalinta_max && !vaihtoehto.valittu"
-                name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen && (!monivalinta[kysymys.kysymysid] || monivalinta[kysymys.kysymysid] === 0)">
+                name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen && kysymys.vastaus !== 'EOS' && (!monivalinta[kysymys.kysymysid] || monivalinta[kysymys.kysymysid] === 0)">
             </span>
             {{vaihtoehto | lokalisoiKentta:'teksti'}}
           </label>
