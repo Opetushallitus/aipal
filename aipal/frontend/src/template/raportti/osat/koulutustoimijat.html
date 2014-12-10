@@ -5,7 +5,7 @@
 
   <div class="koulutustoimijat-valitsin">
     <ul class="koulutustoimijat-lista">
-      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:koulutustoimijaFilter" ng-click="valitseKoulutustoimija(koulutustoimija)">
+      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:koulutustoimijaFilter" ng-click="valitseTaiPoistaKoulutustoimija(koulutustoimija)">
         {{ koulutustoimija | lokalisoiKentta:'nimi' }}
         <span class="fa fa-check" ng-show="koulutustoimija.valittu"></span>
       </li>
@@ -14,7 +14,7 @@
 
   <div class="koulutustoimijat-valitut">
     <ul>
-      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:{valittu: true}" ng-click="valitseKoulutustoimija(koulutustoimija)">
+      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:{valittu: true}" ng-click="valitseTaiPoistaKoulutustoimija(koulutustoimija)">
         <div class="btn btn-primary">
           {{ koulutustoimija | lokalisoiKentta:'nimi' }}
           <span class="fa fa-remove"></span>
