@@ -28,7 +28,9 @@
     (let [oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
       (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
       (kayttajaoikeus-arkisto/paivita-kaikki!
-        (mapcat #(kop/kayttajat kayttooikeuspalvelu % oid->ytunnus) (vals ldap-roolit)))
+        (apply concat
+               (for [ldap-rooli ldap-roolit]
+                 (kop/kayttajat kayttooikeuspalvelu ldap-rooli oid->ytunnus))))
       (log/info "Käyttäjien ja käyttäjien roolien päivitys valmis."))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
