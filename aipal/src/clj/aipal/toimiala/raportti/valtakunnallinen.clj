@@ -96,7 +96,7 @@
         tutkintotunnus (when (= "tutkinto" (:vertailutyyppi parametrit)) (:tutkintotunnus parametrit))
         opintoalatunnus (when (= "opintoala" (:vertailutyyppi parametrit)) (:opintoalatunnus parametrit))
         koulutusalatunnus (when (= "koulutusala" (:vertailutyyppi parametrit)) (:koulutusalatunnus parametrit))
-        koulutustoimijat (:koulutustoimijat parametrit)
+        koulutustoimijat (not-empty (:koulutustoimijat parametrit))
         kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
         kysymykset (hae-valtakunnalliset-kysymykset)
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
