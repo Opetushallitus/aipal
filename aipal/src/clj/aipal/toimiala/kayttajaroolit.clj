@@ -15,36 +15,15 @@
 (ns aipal.toimiala.kayttajaroolit
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330")
 
-(def ^:private roolit {:paakayttaja {:ldap-rooli "OPHPAAKAYTTAJA"
-                                     :aipal-rooli "YLLAPITAJA"}
-                       :oph-katselija {:ldap-rooli "OPHKATSELIJA"
-                                       :aipal-rooli "OPH-KATSELIJA"}
-                       :oppilaitos-vastuukayttaja {:ldap-rooli "KTVASTUUKAYTTAJA"
-                                                   :aipal-rooli "OPL-VASTUUKAYTTAJA"}
-                       :oppilaitos-kayttaja {:ldap-rooli "KTKAYTTAJA"
-                                             :aipal-rooli "OPL-KAYTTAJA"}
-                       :oppilaitos-katselija {:ldap-rooli "KTKATSELIJA"
-                                              :aipal-rooli "OPL-KATSELIJA"}
-                       :katselija {:ldap-rooli "YLKATSELIJA"
-                                   :aipal-rooli "KATSELIJA"}
-                       :toimikuntakatselija {:ldap-rooli "TKTKATSELIJA"
-                                             :aipal-rooli "TTK-KATSELIJA"}})
+(def ldap-ryhma->rooli {"OPHPAAKAYTTAJA" "YLLAPITAJA"
+                        "OPHKATSELIJA" "OPH-KATSELIJA"
+                        "KTVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
+                        "KTKAYTTAJA" "OPL-KAYTTAJA"
+                        "KTKATSELIJA" "OPL-KATSELIJA"
+                        "YLKATSELIJA" "KATSELIJA"
+                        "TKTKATSELIJA" "TTK-KATSELIJA"})
 
-(defn roolityypin-roolit [tyyppi]
-  (into {} (for [[avain tyypit] roolit]
-             {avain (tyyppi tyypit)})))
+;; roolit jotka liittyvät koulutustoimijaan
+(def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})
 
-(def ldap-roolit (roolityypin-roolit :ldap-rooli))
-
-;; roolit joilla on koulutustoimijaorganisaatio
-(def organisaatio-roolit (select-keys (roolityypin-roolit :aipal-rooli)
-                                      [:oppilaitos-vastuukayttaja :oppilaitos-kayttaja :oppilaitos-katselija]))
-
-(def toimikunta-roolit (select-keys (roolityypin-roolit :aipal-rooli)
-                                    [:toimikuntakatselija]))
-
-(def oph-roolit (select-keys (roolityypin-roolit :aipal-rooli)
-                             [:paakayttaja :oph-katselija]))
-
-;; kayttajarooli-taulun arvot
-(def kayttajaroolit (roolityypin-roolit :aipal-rooli))
+(def oph-roolit #{"YLLAPITAJA" "OPH-KATSELIJA"})

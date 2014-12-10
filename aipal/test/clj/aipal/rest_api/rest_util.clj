@@ -7,7 +7,6 @@
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]
 

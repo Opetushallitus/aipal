@@ -16,7 +16,6 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [aipal.integraatio.sql.korma :refer [kayttaja rooli-organisaatio]]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-uid]]))
 
@@ -64,7 +63,7 @@
                        :kayttaja testikayttaja-oid
                        :rooli roolitunnus}))))))
   ([testikayttaja-oid testikayttaja-uid]
-    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid (:paakayttaja kayttajaroolit))))
+    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid "YLLAPITAJA")))
 
 (defn ^:test-api poista-testikayttaja!
   [testikayttaja-oid]

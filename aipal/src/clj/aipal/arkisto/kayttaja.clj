@@ -17,7 +17,6 @@
             [korma.db :as db]
             [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot
@@ -69,7 +68,7 @@
                                 (sql/sqlfn "not exists"
                                   (sql/subselect taulut/rooli_organisaatio
                                     (sql/fields :rooli_organisaatio_id)
-                                    (sql/where {:rooli (:paakayttaja kayttajaroolit)
+                                    (sql/where {:rooli "YLLAPITAJA"
                                                 :kayttaja :kayttaja.oid})))
                                 {:oid [not-in [jarjestelma-oid konversio-oid integraatio-oid vastaaja-oid]]})))
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]

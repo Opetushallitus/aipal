@@ -16,7 +16,6 @@
   (:require [compojure.core :as c]
             [aipal.arkisto.kayttaja :as arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [oph.common.util.http-util :refer [json-response]]
             [aipal.toimiala.kayttajaoikeudet :as ko]
             [aipal.compojure-util :as cu]

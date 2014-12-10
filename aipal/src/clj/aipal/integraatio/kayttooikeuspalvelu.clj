@@ -16,40 +16,36 @@
   (:require [clojure.string :as s]
             [clojure.tools.logging :as log]
             [clj-ldap.client :as ldap]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit
-                                                   organisaatio-roolit
-                                                   oph-roolit
-                                                   ldap-roolit]]))
+            [aipal.toimiala.kayttajaroolit :refer [koulutustoimija-roolit
+                                                   oph-roolit]]))
 
-(def oph-organisaatio {:ytunnus "0829731-2"})
+(def oph-koulutustoimija {:ytunnus "0829731-2"})
 
-(defn ryhma-cn-filter [ldap-rooli]
-  {:filter (str "cn=APP_AIPAL_" (val ldap-rooli) "_*")})
+(defn ryhma-cn-filter [ldap-ryhma]
+  {:filter (str "cn=APP_AIPAL_" ldap-ryhma "_*")})
 
 (def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
 
-(defn kayttajat [kayttooikeuspalvelu ldap-rooli oid->ytunnus]
+(defn kayttajat [kayttooikeuspalvelu ldap-ryhma rooli oid->ytunnus]
   (with-open [yhteys (kayttooikeuspalvelu)]
-    (let [cn-filter (ryhma-cn-filter ldap-rooli)]
+    (let [cn-filter (ryhma-cn-filter ldap-ryhma)]
       (if-let [ryhmat (ldap/search yhteys ryhma-base cn-filter)]
         (doall
           (for [ryhma ryhmat
-                :let [rooliavain (key ldap-rooli)
-                      organisaatio-oid (last (s/split (:cn ryhma) #"_"))
-                      ;; OPH:n oid ei ole välttämättä sama joka ympäristössä, joten organisaatio kytketään roolin perusteella
-                      organisaatio (or (oid->ytunnus organisaatio-oid)
-                                       (when (rooliavain oph-roolit)
-                                         oph-organisaatio))
-                      rooli (rooliavain kayttajaroolit)
+                :let [koulutustoimija-oid (last (s/split (:cn ryhma) #"_"))
+                      ;; OPH:n oid ei ole välttämättä sama joka ympäristössä, joten koulutustoimija kytketään roolin perusteella
+                      koulutustoimija (or (oid->ytunnus koulutustoimija-oid)
+                                          (when (contains? oph-roolit rooli)
+                                            oph-koulutustoimija))
                       kayttaja-dnt (:uniqueMember ryhma)
                       ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
                       ;; palauttaa arvon (stringin) eikä vektoria arvoista.
                       kayttaja-dnt (if (string? kayttaja-dnt)
                                      [kayttaja-dnt]
                                      kayttaja-dnt)]
-                :when (and rooli
-                           (or organisaatio
-                              (not (rooliavain organisaatio-roolit))))
+                ;; ei haeta koulutustoimijakäyttäjiä, joiden koulutustoimija ei ole tiedossa
+                :when (or koulutustoimija
+                          (not (contains? koulutustoimija-roolit rooli)))
                 kayttaja-dn kayttaja-dnt
                 :let [kayttaja (ldap/get yhteys kayttaja-dn)
                       _ (assert kayttaja)
@@ -61,8 +57,8 @@
              :sukunimi (or sukunimi "")
              :voimassa true
              :rooli rooli
-             :organisaatio (:ytunnus organisaatio)}))
-        (log/warn "Roolin" ldap-rooli "ryhmää ei löytynyt, ei lueta roolin käyttäjiä")))))
+             :organisaatio (:ytunnus koulutustoimija)}))
+        (log/warn "Roolin" rooli "ldap-ryhmää" ldap-ryhma "ei löytynyt, ei lueta roolin käyttäjiä")))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []

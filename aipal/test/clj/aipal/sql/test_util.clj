@@ -20,7 +20,6 @@
             [infra.test.data :as testdata]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :refer [kayttaja]]
-            [aipal.toimiala.kayttajaroolit :refer [kayttajaroolit]]
             [aipal.toimiala.kayttajaoikeudet :as ko]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
 

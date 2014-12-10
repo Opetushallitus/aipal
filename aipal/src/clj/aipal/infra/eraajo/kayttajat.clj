@@ -18,7 +18,7 @@
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
-            [aipal.toimiala.kayttajaroolit :refer [ldap-roolit]]
+            [aipal.toimiala.kayttajaroolit :refer [ldap-ryhma->rooli]]
             [oph.common.util.util :refer [map-by]]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
@@ -29,8 +29,8 @@
       (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
       (kayttajaoikeus-arkisto/paivita-kaikki!
         (apply concat
-               (for [ldap-rooli ldap-roolit]
-                 (kop/kayttajat kayttooikeuspalvelu ldap-rooli oid->ytunnus))))
+               (for [[ldap-ryhma rooli] ldap-ryhma->rooli]
+                 (kop/kayttajat kayttooikeuspalvelu ldap-ryhma rooli oid->ytunnus))))
       (log/info "Käyttäjien ja käyttäjien roolien päivitys valmis."))))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
