@@ -8,7 +8,7 @@ CREATE TABLE rahoitusmuoto_tmp
     rahoitusmuotoid   INT NOT NULL ,
     rahoitusmuoto     VARCHAR(80) NOT NULL
   );
-  
+
 insert into rahoitusmuoto_tmp (rahoitusmuotoid, rahoitusmuoto) values (1, 'valtionosuus');
 insert into rahoitusmuoto_tmp (rahoitusmuotoid, rahoitusmuoto) values (2, 'oppisopimus');
 insert into rahoitusmuoto_tmp (rahoitusmuotoid, rahoitusmuoto) values (3, 'tyovoimapoliittinen');
@@ -21,4 +21,7 @@ insert into rahoitusmuoto (rahoitusmuotoid, rahoitusmuoto)
 
 drop table rahoitusmuoto_tmp;
 
-  
+-- Opetushallitukselle organisaatio
+insert into koulutustoimija (ytunnus, nimi_fi)
+  select '0829731-2', 'Opetushallitus'
+  where not exists (select 1 from koulutustoimija where ytunnus = '0829731-2');
