@@ -20,7 +20,7 @@
 (deftest jaottele-asteikko-test
  (testing
    "jaottele asteikko:"
-   (let [tyhja-jakauma {1 0 2 0 3 0 4 0 5 0}]
+   (let [tyhja-jakauma {1 0 2 0 3 0 4 0 5 0 :eos 0}]
      (are [kuvaus vastaukset odotettu-tulos]
           (is (= (jaottele-asteikko vastaukset) odotettu-tulos) kuvaus)
           "ei vastauksia" [] tyhja-jakauma
@@ -53,11 +53,11 @@
    "jaottele vaihtoehdot:"
    (are [kuvaus vastaukset odotettu-tulos]
         (is (= (jaottele-vaihtoehdot vastaukset) odotettu-tulos) kuvaus)
-        "ei vastauksia" [] {:kylla 0 :ei 0}
-        "kyllä-vastaus" [{:vaihtoehto "kylla"}] {:kylla 1 :ei 0}
-        "ei-vastaus" [{:vaihtoehto "ei"}] {:kylla 0 :ei 1}
-        "molempia valintoja" [{:vaihtoehto "kylla"} {:vaihtoehto "ei"}] {:kylla 1 :ei 1}
-        "joku muu vastaus" [{:vaihtoehto "jokumuu"}] {:jokumuu 1 :kylla 0 :ei 0})))
+        "ei vastauksia" [] {:kylla 0 :ei 0 :eos 0}
+        "kyllä-vastaus" [{:vaihtoehto "kylla"}] {:kylla 1 :ei 0 :eos 0}
+        "ei-vastaus" [{:vaihtoehto "ei"}] {:kylla 0 :ei 1 :eos 0}
+        "molempia valintoja" [{:vaihtoehto "kylla"} {:vaihtoehto "ei"}] {:kylla 1 :ei 1 :eos 0}
+        "joku muu vastaus" [{:vaihtoehto "jokumuu"}] {:jokumuu 1 :kylla 0 :ei 0 :eos 0})))
 
 (deftest kysymyksen-kasittelija-test
   (testing
@@ -95,8 +95,11 @@
 (deftest muodosta-asteikko-jakauman-esitys-test
   (testing
     "muodosta asteikko-jakauman esitys:"
-    (let [esitys (fn [lkm-1 osuus-1 lkm-2 osuus-2 lkm-3 osuus-3 lkm-4 osuus-4 lkm-5 osuus-5]
-                   [{:vaihtoehto-avain "1"
+    (let [esitys (fn [lkm-eos osuus-eos lkm-1 osuus-1 lkm-2 osuus-2 lkm-3 osuus-3 lkm-4 osuus-4 lkm-5 osuus-5]
+                   [{:vaihtoehto-avain "eos"
+                     :lukumaara lkm-eos
+                     :osuus osuus-eos}
+                    {:vaihtoehto-avain "1"
                      :lukumaara lkm-1
                      :osuus osuus-1}
                     {:vaihtoehto-avain "2"
@@ -113,16 +116,20 @@
                      :osuus osuus-5}])]
       (are [kuvaus jakauma odotettu-tulos]
            (is (= (muodosta-asteikko-jakauman-esitys jakauma) odotettu-tulos) kuvaus)
-           "ei vastauksia" {1 0 2 0 3 0 4 0 5 0} (esitys 0 0 0 0 0 0 0 0 0 0)
-           "yksi vastaus" {1 1 2 0 3 0 4 0 5 0} (esitys 1 100 0 0 0 0 0 0 0 0)
-           "monta vastausta, sama vaihtoehto" {1 2 2 0 3 0 4 0 5 0} (esitys 2 100 0 0 0 0 0 0 0 0)
-           "monta vastausta, eri vaihtoehto" {1 1 2 1 3 0 4 0 5 0} (esitys 1 50 1 50 0 0 0 0 0 0)))))
+           "ei vastauksia" {1 0 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0)
+           "yksi vastaus" {1 1 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 1 100 0 0 0 0 0 0 0 0)
+           "monta vastausta, sama vaihtoehto" {1 2 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 2 100 0 0 0 0 0 0 0 0)
+           "monta vastausta, eri vaihtoehto" {1 1 2 1 3 0 4 0 5 0 :eos 0} (esitys 0 0 1 50 1 50 0 0 0 0 0 0)
+           "EOS-vastaus" {1 0 2 0 3 0 4 0 5 0 :eos 1} (esitys 1 100 0 0 0 0 0 0 0 0 0 0)))))
 
 (deftest muodosta-kylla-ei-jakauman-esitys-test
   (testing
     "muodosta kyllä/ei jakauman esitys:"
-    (let [esitys (fn [kylla-lkm kylla-osuus ei-lkm ei-osuus]
-                   [{:vaihtoehto-avain "kylla"
+    (let [esitys (fn [eos-lkm eos-osuus kylla-lkm kylla-osuus ei-lkm ei-osuus]
+                   [{:vaihtoehto-avain "eos"
+                     :lukumaara eos-lkm
+                     :osuus eos-osuus}
+                    {:vaihtoehto-avain "kylla"
                      :lukumaara kylla-lkm
                      :osuus kylla-osuus}
                     {:vaihtoehto-avain "ei"
@@ -130,11 +137,12 @@
                      :osuus ei-osuus}])]
       (are [kuvaus jakauma odotettu-tulos]
            (is (= (muodosta-kylla-ei-jakauman-esitys jakauma) odotettu-tulos) kuvaus)
-           "ei vastauksia" {:kylla 0 :ei 0} (esitys 0 0 0 0)
-           "yksi vastaus: kyllä" {:kylla 1 :ei 0} (esitys 1 100 0 0)
-           "yksi vastaus: ei" {:kylla 0 :ei 1} (esitys 0 0 1 100)
-           "monta vastausta, sama vaihtoehto" {:kylla 2 :ei 0} (esitys 2 100 0 0)
-           "monta vastausta, eri vaihtoehto" {:kylla 1 :ei 1} (esitys 1 50 1 50)))))
+           "ei vastauksia" {:kylla 0 :ei 0 :eos 0} (esitys 0 0 0 0 0 0)
+           "yksi vastaus: kyllä" {:kylla 1 :ei 0 :eos 0} (esitys 0 0 1 100 0 0)
+           "yksi vastaus: ei" {:kylla 0 :ei 1 :eos 0} (esitys 0 0 0 0 1 100)
+           "monta vastausta, sama vaihtoehto" {:kylla 2 :ei 0 :eos 0} (esitys 0 0 2 100 0 0)
+           "monta vastausta, eri vaihtoehto" {:kylla 1 :ei 1 :eos 0} (esitys 0 0 1 50 1 50)
+           "EOS-vastaus" {:kylla 0 :ei 0 :eos 1} (esitys 1 100 0 0 0 0)))))
 
 (deftest muodosta-monivalinta-jakauman-esitys-test
   (testing
@@ -145,11 +153,13 @@
                    [{:vaihtoehto_fi "vaihtoehto 1"
                      :vaihtoehto_sv nil
                      :lukumaara lukumaara-1
-                     :osuus osuus-1}
+                     :osuus osuus-1
+                     :jarjestys 1}
                     {:vaihtoehto_fi "vaihtoehto 2"
                      :vaihtoehto_sv nil
                      :lukumaara lukumaara-2
-                     :osuus osuus-2}])]
+                     :osuus osuus-2
+                     :jarjestys 2}])]
       (are [kuvaus jakauma odotettu-tulos]
            (is (= (muodosta-monivalinta-jakauman-esitys vaihtoehdot jakauma) odotettu-tulos) kuvaus)
            "ei vastauksia" {} (esitys 0 0 0 0)
