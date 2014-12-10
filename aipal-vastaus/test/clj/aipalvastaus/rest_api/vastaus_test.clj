@@ -66,7 +66,8 @@
                 :jatkovastausid nil
                 :numerovalinta 1
                 :vapaateksti nil
-                :vaihtoehto nil}}))))
+                :vaihtoehto nil
+                :en_osaa_sanoa false}}))))
   (testing "kaksi valintaa tuottaa kaksi vastausta samalle kysymykselle"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
           vastaukset [{:kysymysid 1 :vastaus [1 2]} ]]
@@ -77,13 +78,15 @@
                 :jatkovastausid nil
                 :numerovalinta 1
                 :vapaateksti nil
-                :vaihtoehto nil}
+                :vaihtoehto nil
+                :en_osaa_sanoa false}
                {:kysymysid 1
                 :vastaajaid vastaajaid
                 :jatkovastausid nil
                 :numerovalinta 2
                 :vapaateksti nil
-                :vaihtoehto nil}})))))
+                :vaihtoehto nil
+                :en_osaa_sanoa false}})))))
 
 (deftest kylla-ei-vastaus
   (testing "Valinta tuottaa saman vastauksen"
@@ -96,7 +99,8 @@
                 :jatkovastausid nil
                 :numerovalinta nil
                 :vapaateksti nil
-                :vaihtoehto "kylla"}})))))
+                :vaihtoehto "kylla"
+                :en_osaa_sanoa false}})))))
 
 (deftest kylla-jatkovastaus-tallentuu
   (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta" :jatkokysymysid 2 :kylla_teksti_fi "kysymys?"}]
@@ -127,7 +131,8 @@
                 :jatkovastausid nil
                 :numerovalinta nil
                 :vapaateksti "vapaateksti"
-                :vaihtoehto nil}})))))
+                :vaihtoehto nil
+                :en_osaa_sanoa false}})))))
 
 (deftest asteikko-vastaus
   (testing "vastaus tallentuu numerovalinta kenttään"
@@ -140,7 +145,8 @@
                 :jatkovastausid nil
                 :numerovalinta 2
                 :vapaateksti nil
-                :vaihtoehto nil}})))))
+                :vaihtoehto nil
+                :en_osaa_sanoa false}})))))
 
 (deftest likert-asteikko-vastaus
   (testing "vastaus tallentuu numerovalinta kenttään"
@@ -153,7 +159,8 @@
                 :jatkovastausid nil
                 :numerovalinta 2
                 :vapaateksti nil
-                :vaihtoehto nil}})))))
+                :vaihtoehto nil
+                :en_osaa_sanoa false}})))))
 
 (deftest jatkokysymyksen-kylla-vastauksen-validointi
   (are [tulos vastaus kysymys] (= tulos (v/kylla-jatkovastaus-validi? vastaus kysymys))
