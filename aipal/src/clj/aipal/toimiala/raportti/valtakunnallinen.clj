@@ -59,13 +59,13 @@
         :when (seq arvot)]
     {:id (->int kysymysid) :arvot (map #(->int %) arvot)}))
 
-(defn ^:private hae-vastaukset [rajaukset alkupvm loppupvm koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn ^:private hae-vastaukset [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaus)
     (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (cond->
-      (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
+      (or tutkintotunnus opintoalatunnus koulutusalatunnus koulutustoimijat) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus (and
                                                         (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid)
                                                         (or (nil? tutkintotunnus) (= :vastaajatunnus.tutkintotunnus tutkintotunnus))))
@@ -73,7 +73,11 @@
                                                    (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus)
                                                    (or (nil? opintoalatunnus) (= :tutkinto.opintoala opintoalatunnus))))
       koulutusalatunnus (sql/join :inner :opintoala {:opintoala.opintoalatunnus :tutkinto.opintoala
-                                                     :opintoala.koulutusala koulutusalatunnus}))
+                                                     :opintoala.koulutusala koulutusalatunnus})
+      koulutustoimijat (->
+                         (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaaja.kyselykertaid))
+                         (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+                         (sql/where {:kysely.koulutustoimija [in koulutustoimijat]})))
     (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
@@ -92,9 +96,10 @@
         tutkintotunnus (when (= "tutkinto" (:vertailutyyppi parametrit)) (:tutkintotunnus parametrit))
         opintoalatunnus (when (= "opintoala" (:vertailutyyppi parametrit)) (:opintoalatunnus parametrit))
         koulutusalatunnus (when (= "koulutusala" (:vertailutyyppi parametrit)) (:koulutusalatunnus parametrit))
+        koulutustoimijat (:koulutustoimijat parametrit)
         kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutusalatunnus opintoalatunnus tutkintotunnus)]
+        vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
     {:luontipvm (time/today)
      :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
      :vastaajien-lkm (count (group-by :vastaajaid vastaukset))}))
