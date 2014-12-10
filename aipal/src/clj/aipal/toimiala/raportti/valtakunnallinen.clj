@@ -76,8 +76,8 @@
                                                      :opintoala.koulutusala koulutusalatunnus})
       koulutustoimijat (->
                          (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaaja.kyselykertaid))
-                         (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
-                         (sql/where {:kysely.koulutustoimija [in koulutustoimijat]})))
+                         (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
+                         (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
     (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
