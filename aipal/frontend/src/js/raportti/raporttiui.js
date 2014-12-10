@@ -101,9 +101,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         delete koulutustoimija.valittu;
       }
     };
-    $scope.onkoKoulutustoimijaValittu = function(koulutustoimija) {
-      return $scope.raportti.koulutustoimijat.indexOf(koulutustoimija.ytunnus) != -1;
-    };
 
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulos) {
