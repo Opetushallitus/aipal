@@ -92,6 +92,16 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
     };
 
+    $scope.raportti.koulutustoimijat = [];
+    $scope.valitseKoulutustoimija = function(koulutustoimija) {
+      if (_.remove($scope.raportti.koulutustoimijat, function(ytunnus) { return ytunnus === koulutustoimija.ytunnus; }).length == 0) {
+        $scope.raportti.koulutustoimijat.push(koulutustoimija.ytunnus);
+      }
+    };
+    $scope.onkoKoulutustoimijaValittu = function(koulutustoimija) {
+      return $scope.raportti.koulutustoimijat.indexOf(koulutustoimija.ytunnus) != -1;
+    };
+
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulos) {
         $scope.tulos = tulos;
