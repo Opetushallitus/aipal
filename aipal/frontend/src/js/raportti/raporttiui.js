@@ -40,7 +40,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Kysymysryhma', 'RaporttiFunktiot', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Kysymysryhma, RaporttiFunktiot, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'RaporttiFunktiot', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, RaporttiFunktiot, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
     $scope.raportti.vertailutyyppi = 'tutkinto';
 
@@ -65,6 +65,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.raportti.taustakysymysryhmaid = $scope.taustakysymysryhmat[0].kysymysryhmaid;
     });
 
+    Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
+      $scope.koulutustoimijat = koulutustoimijat;
+    });
+
     Tutkinto.haeTutkinnot().success(function(tutkinnot) {
       $scope.tutkinnot = tutkinnot;
 
@@ -85,6 +89,16 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.valitseTutkinto = function(tutkinto) {
       if ($scope.raportti.vertailutyyppi === 'tutkinto') {
         $scope.raportti.tutkintotunnus = tutkinto.tutkintotunnus;
+      }
+    };
+
+    $scope.raportti.koulutustoimijat = [];
+    $scope.valitseTaiPoistaKoulutustoimija = function(koulutustoimija) {
+      if (_.remove($scope.raportti.koulutustoimijat, function(ytunnus) { return ytunnus === koulutustoimija.ytunnus; }).length === 0) {
+        koulutustoimija.valittu = true;
+        $scope.raportti.koulutustoimijat.push(koulutustoimija.ytunnus);
+      } else {
+        delete koulutustoimija.valittu;
       }
     };
 
