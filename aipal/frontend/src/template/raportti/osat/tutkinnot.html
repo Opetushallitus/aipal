@@ -1,35 +1,34 @@
 <div ng-show="tutkinnot">
 
   <div class="row">
-
-      <div class="col-md-3">
-          <div class="btn-group vertailutyyppi">
-              <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>
-              <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'opintoala'">{{ 'raportit.opintoala' | i18n }}</label>
-              <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'koulutusala'">{{ 'raportit.koulutusala' | i18n }}</label>
-          </div>
+    <div class="col-md-3">
+      <div class="btn-group vertailutyyppi">
+        <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>
+        <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'opintoala'">{{ 'raportit.opintoala' | i18n }}</label>
+        <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'koulutusala'">{{ 'raportit.koulutusala' | i18n }}</label>
       </div>
+    </div>
   </div>
 
   <div class="well">
-        <input type="text" class="form-control icon search-icon-input" ng-model="tutkintoFilter" placeholder="{{ 'raportit.hae_tutkintoja_tai_aloja' | i18n }}">
+    <input type="text" class="form-control icon search-icon-input" ng-model="tutkintoFilter" placeholder="{{ 'raportit.hae_tutkintoja_tai_aloja' | i18n }}">
 
-        <ul class="vertailu-valitsin {{raportti.vertailutyyppi}}">
-          <li ng-repeat="koulutusala in koulutusalat |filter:tutkintoFilter" ng-click="valitseKoulutusala(koulutusala)" ng-class="{selected: raportti.vertailutyyppi == 'koulutusala' && raportti.koulutusalatunnus == koulutusala.koulutusalatunnus}">
-            <span ng-class="{otsikko: raportti.vertailutyyppi !== 'koulutusala'}">{{koulutusala |lokalisoiKentta:'koulutusala_nimi'}}</span>
-            <span class="fa fa-check" ng-if="raportti.vertailutyyppi == 'koulutusala' && raportti.koulutusalatunnus == koulutusala.koulutusalatunnus"></span>
-            <ul class="opintoalat" ng-show="raportti.vertailutyyppi !== 'koulutusala'">
-              <li ng-repeat="opintoala in koulutusala.opintoalat |filter:tutkintoFilter" ng-click="valitseOpintoala(opintoala)" ng-class="{selected: raportti.vertailutyyppi == 'opintoala' && raportti.opintoalatunnus == opintoala.opintoalatunnus}">
-                <span ng-class="{otsikko: raportti.vertailutyyppi !== 'opintoala'}">{{opintoala |lokalisoiKentta:'opintoala_nimi'}}</span>
-                <span class="fa fa-check" ng-if="raportti.vertailutyyppi == 'opintoala' && raportti.opintoalatunnus == opintoala.opintoalatunnus"></span>
-                <ul class="tutkinnot" ng-show="raportti.vertailutyyppi === 'tutkinto'">
-                  <li ng-repeat="tutkinto in opintoala.tutkinnot |filter:tutkintoFilter" ng-click="valitseTutkinto(tutkinto)" ng-class="{selected: raportti.tutkintotunnus == tutkinto.tutkintotunnus}">
-                    <span>{{tutkinto |lokalisoiKentta:'nimi'}}</span>
-                    <span class="fa fa-check" ng-if="raportti.tutkintotunnus == tutkinto.tutkintotunnus"></span></li>
-                </ul>
-              </li>
+    <ul class="vertailu-valitsin {{raportti.vertailutyyppi}}">
+      <li ng-repeat="koulutusala in koulutusalat |filter:tutkintoFilter" ng-click="valitseKoulutusala(koulutusala)" ng-class="{selected: raportti.vertailutyyppi == 'koulutusala' && raportti.koulutusalatunnus == koulutusala.koulutusalatunnus}">
+        <span ng-class="{otsikko: raportti.vertailutyyppi !== 'koulutusala'}">{{koulutusala |lokalisoiKentta:'koulutusala_nimi'}}</span>
+        <span class="fa fa-check" ng-if="raportti.vertailutyyppi == 'koulutusala' && raportti.koulutusalatunnus == koulutusala.koulutusalatunnus"></span>
+        <ul class="opintoalat" ng-show="raportti.vertailutyyppi !== 'koulutusala'">
+          <li ng-repeat="opintoala in koulutusala.opintoalat |filter:tutkintoFilter" ng-click="valitseOpintoala(opintoala)" ng-class="{selected: raportti.vertailutyyppi == 'opintoala' && raportti.opintoalatunnus == opintoala.opintoalatunnus}">
+            <span ng-class="{otsikko: raportti.vertailutyyppi !== 'opintoala'}">{{opintoala |lokalisoiKentta:'opintoala_nimi'}}</span>
+            <span class="fa fa-check" ng-if="raportti.vertailutyyppi == 'opintoala' && raportti.opintoalatunnus == opintoala.opintoalatunnus"></span>
+            <ul class="tutkinnot" ng-show="raportti.vertailutyyppi === 'tutkinto'">
+              <li ng-repeat="tutkinto in opintoala.tutkinnot |filter:tutkintoFilter" ng-click="valitseTutkinto(tutkinto)" ng-class="{selected: raportti.tutkintotunnus == tutkinto.tutkintotunnus}">
+                <span>{{tutkinto |lokalisoiKentta:'nimi'}}</span>
+                <span class="fa fa-check" ng-if="raportti.tutkintotunnus == tutkinto.tutkintotunnus"></span></li>
             </ul>
           </li>
         </ul>
+      </li>
+    </ul>
   </div>
 </div>
