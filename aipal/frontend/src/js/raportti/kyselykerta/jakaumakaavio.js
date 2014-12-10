@@ -15,7 +15,7 @@
 'use strict';
 
 angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaavioapurit'])
-  .directive('jakaumaKaavio', ['kaavioApurit', function(kaavioApurit) {
+  .directive('jakaumaKaavio', ['kaavioApurit', 'i18n', function(kaavioApurit, i18n) {
     return {
       restrict: 'E',
       replace: true,
@@ -38,7 +38,13 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
           scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.kylla_ei_valinta', 'vaihtoehto-avain');
         }
         else {
-          scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisoituTeksti, 'vaihtoehto');
+          scope.jaaTeksti = function(data) {
+            if(data.jarjestys === 'eos') {
+              return kaavioApurit.jaaTeksti(i18n.hae('kysymys.monivalinta.eos'));
+            } else {
+              return kaavioApurit.jaaLokalisoituTeksti('vaihtoehto', data);
+            }
+          };
         }
         scope.otsikot = [
           {x: 0, teksti: ''},

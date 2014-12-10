@@ -35,6 +35,8 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', '
     };
 
     return {
+      jaaTeksti: jaaTeksti,
+
       jaaLokalisoituTeksti: function (avain, data) {
         var teksti = $filter('lokalisoiKentta')(data, avain);
 

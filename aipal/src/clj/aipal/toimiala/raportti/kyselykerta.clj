@@ -117,6 +117,7 @@
                 :vastaus.numerovalinta
                 :vastaus.vaihtoehto
                 :vastaus.vapaateksti
+                :vastaus.en_osaa_sanoa
                 :jatkovastaus.jatkovastausid
                 :jatkovastaus.jatkokysymysid
                 :jatkovastaus.kylla_asteikko

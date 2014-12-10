@@ -20,8 +20,13 @@
     (sql/select* :monivalintavaihtoehto)
     (sql/fields :jarjestys :teksti_fi :teksti_sv)
     (sql/where {:kysymysid kysymysid})
-
     sql/exec))
+
+(defn aseta-eos [vastaukset kentta]
+  (for [vastaus vastaukset]
+    (if (:en_osaa_sanoa vastaus)
+      (assoc vastaus kentta :eos)
+      vastaus)))
 
 (defn ^:private kysymyksen-vastaukset
   [kysymys vastaukset]
@@ -30,7 +35,7 @@
 
 (defn jaottele-asteikko
   [vastaukset]
-  (merge {1 0 2 0 3 0 4 0 5 0}
+  (merge {1 0, 2 0, 3 0, 4 0, 5 0, :eos 0}
          (frequencies (map :numerovalinta vastaukset))))
 
 (defn jaottele-jatkokysymys-asteikko
@@ -48,7 +53,7 @@
                                            (fn [n] (if (number? n)
                                                      (inc n)
                                                      1))))
-          {:kylla 0 :ei 0}
+          {:kylla 0, :ei 0, :eos 0}
           vastaukset))
 
 (defn ^:private laske-osuus
@@ -69,7 +74,8 @@
                                 :lukumaara lukumaara
                                 :osuus (prosentteina
                                          (laske-osuus lukumaara yhteensa))})]
-    [(tiedot-vaihtoehdolle "1" (jakauma 1))
+    [(tiedot-vaihtoehdolle "eos" (jakauma :eos))
+     (tiedot-vaihtoehdolle "1" (jakauma 1))
      (tiedot-vaihtoehdolle "2" (jakauma 2))
      (tiedot-vaihtoehdolle "3" (jakauma 3))
      (tiedot-vaihtoehdolle "4" (jakauma 4))
@@ -77,8 +83,12 @@
 
 (defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]
-  (let [yhteensa (+ (:kylla jakauma) (:ei jakauma))]
-    [{:vaihtoehto-avain "kylla"
+  (let [yhteensa (+ (:kylla jakauma) (:ei jakauma) (:eos jakauma))]
+    [{:vaihtoehto-avain "eos"
+      :lukumaara (:eos jakauma)
+      :osuus (prosentteina
+               (laske-osuus (:eos jakauma) yhteensa))}
+     {:vaihtoehto-avain "kylla"
       :lukumaara (:kylla jakauma)
       :osuus (prosentteina
                (laske-osuus (:kylla jakauma) yhteensa))}
@@ -91,7 +101,8 @@
   [kysymys]
   (->>
     (hae-monivalintavaihtoehdot (:kysymysid kysymys))
-    (sort-by :jarjestys)))
+    (sort-by :jarjestys)
+    (cons {:jarjestys :eos})))
 
 (defn muodosta-monivalinta-jakauman-esitys
   [vaihtoehdot jakauma]
@@ -103,21 +114,24 @@
              {:vaihtoehto_fi (:teksti_fi vaihtoehto)
               :vaihtoehto_sv (:teksti_sv vaihtoehto)
               :lukumaara lukumaara
-              :osuus (prosentteina osuus)}))
+              :osuus (prosentteina osuus)
+              :jarjestys (:jarjestys vaihtoehto)}))
          vaihtoehdot)))
 
 (defn ^:private lisaa-asteikon-jakauma
   [kysymys vastaukset]
-  (assoc kysymys :jakauma
-         (muodosta-asteikko-jakauman-esitys
-           (jaottele-asteikko vastaukset))))
+  (let [vastaukset (aseta-eos vastaukset :numerovalinta)]
+    (assoc kysymys :jakauma
+           (muodosta-asteikko-jakauman-esitys
+             (jaottele-asteikko vastaukset)))))
 
 (defn ^:private lisaa-monivalinnan-jakauma
   [kysymys vastaukset]
-  (assoc kysymys :jakauma
-         (muodosta-monivalinta-jakauman-esitys
-           (muodosta-monivalintavaihtoehdot kysymys)
-           (jaottele-monivalinta vastaukset))))
+  (let [vastaukset (aseta-eos vastaukset :numerovalinta)]
+    (assoc kysymys :jakauma
+           (muodosta-monivalinta-jakauman-esitys
+             (muodosta-monivalintavaihtoehdot kysymys)
+             (jaottele-monivalinta vastaukset)))))
 
 (defn keraa-kylla-jatkovastaukset
   [kysymys vastaukset]
@@ -144,12 +158,13 @@
 
 (defn ^:private lisaa-vaihtoehtojen-jakauma
   [kysymys vastaukset]
-  (assoc kysymys
-         :jakauma
-         (muodosta-kylla-ei-jakauman-esitys
-           (jaottele-vaihtoehdot vastaukset))
-         :jatkovastaukset
-         (keraa-jatkovastaukset kysymys vastaukset)))
+  (let [vastaukset (aseta-eos vastaukset :vaihtoehto)]
+    (assoc kysymys
+           :jakauma
+           (muodosta-kylla-ei-jakauman-esitys
+             (jaottele-vaihtoehdot vastaukset))
+           :jatkovastaukset
+           (keraa-jatkovastaukset kysymys vastaukset))))
 
 (defn ^:private lisaa-vastausten-vapaateksti
   [kysymys vastaukset]

@@ -65,7 +65,10 @@
       <tbody>
         <tr ng-repeat="alkio in kysymys.jakauma">
           <td class="e2e-vaihtoehto" ng-if="kysymys.vastaustyyppi !== 'monivalinta'">{{'kysymys.' + kysymys.vastaustyyppi + '.' + alkio['vaihtoehto-avain'] | i18n}}</td>
-          <td class="e2e-vaihtoehto" ng-if="kysymys.vastaustyyppi === 'monivalinta'">{{alkio | lokalisoiKentta:'vaihtoehto' }}</td>
+          <td class="e2e-vaihtoehto" ng-if="kysymys.vastaustyyppi === 'monivalinta'">
+            <span ng-if="alkio.jarjestys === 'eos'">{{'kysymys.monivalinta.eos' | i18n}}</span>
+            <span ng-if="alkio.jarjestys !== 'eos'">{{alkio | lokalisoiKentta:'vaihtoehto' }}</span>
+          </td>
           <td class="report-table-percentage-field e2e-osuus">{{alkio.osuus}}%</td>
           <td class="report-table-amount-field e2e-vastausten-lukumaara">{{alkio.lukumaara}}</td>
         </tr>

@@ -28,7 +28,7 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
         var asetukset = {
           palkinLeveys: 40,
           palkinMaksimiPituus: 300,
-          viivastonLeveys: 5*3*40
+          viivastonLeveys: 6*3*40
         };
 
         scope.asetukset = asetukset;
