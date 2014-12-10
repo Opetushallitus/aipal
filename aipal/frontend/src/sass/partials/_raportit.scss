@@ -2,19 +2,76 @@
   width: auto;
 }
 
-.raportit .vertailu-valitsin {
-  border: 1px solid $primary-color;
-  height: 20em;
-  overflow: auto;
 
-  & ul {
+.raportit .vertailu-valitsin {
+  max-height: 20em;
+  overflow: auto;
+  list-style-type: none;
+  margin-left: 0em;
+  padding-left: 0em;
+  margin-top: 0;
+  padding-top: 0;
+  ul {
+    margin-top: 0;
+    padding-top: 0;
     list-style-type: none;
     padding-left: 1em;
-    margin-top: 0;
+    margin-left: 0em;
   }
-
+  li{
+    padding-left: .5em;
+  }
   & .otsikko {
     font-weight: bold;
+  }
+}
+
+li.selected{
+  background-color: $lightest-primary;
+}
+
+.raportit ul.vertailu-valitsin.tutkinto {
+  li li li{
+    cursor: pointer;
+    &:hover{
+      background-color: $lightest-gray;
+    }
+  }
+}
+
+.raportit ul.vertailu-valitsin.opintoala {
+  li li{
+    cursor: pointer;
+    &:hover{
+      background-color: $lightest-gray;
+    }
+  }
+}
+
+.raportit ul.vertailu-valitsin.koulutusala {
+  li{
+    cursor: pointer;
+    &:hover{
+      background-color: $lightest-gray;
+    }
+  }
+}
+
+.vertailutyyppi {
+  &.btn-group .btn{
+    margin-bottom: -2px;
+    border-color: #E3E3E3;
+  }
+  &.btn-group > .btn:active,
+  &.btn-group-vertical > .btn:active,
+  &.btn-group > .btn.active,
+  &.btn-group-vertical > .btn.active {
+    z-index: 2;
+    background-color: #F5F5F5;
+    color: $darker-gray;
+    border-bottom: 0px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
   }
 }
 
@@ -36,7 +93,7 @@
       margin-bottom: 0em;
 
       &:hover{
-        background-color: $lightest-primary;
+        background-color: $lightest-gray;
       }
 
       & label{
