@@ -11,4 +11,13 @@
       </li>
     </ul>
   </div>
+
+  <div class="koulutustoimijat-valitut">
+    <ul>
+      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:{valittu: true}" ng-click="valitseKoulutustoimija(koulutustoimija)">
+        {{ koulutustoimija | lokalisoiKentta:'nimi' }}
+        <span class="fa fa-remove"></span>
+      </li>
+    </ul>
+  </div>
 </div>

@@ -95,7 +95,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.raportti.koulutustoimijat = [];
     $scope.valitseKoulutustoimija = function(koulutustoimija) {
       if (_.remove($scope.raportti.koulutustoimijat, function(ytunnus) { return ytunnus === koulutustoimija.ytunnus; }).length == 0) {
+        koulutustoimija.valittu = true;
         $scope.raportti.koulutustoimijat.push(koulutustoimija.ytunnus);
+      } else {
+        delete koulutustoimija.valittu;
       }
     };
     $scope.onkoKoulutustoimijaValittu = function(koulutustoimija) {
