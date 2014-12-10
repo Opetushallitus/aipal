@@ -49,12 +49,10 @@
 
 (defn jaottele-vaihtoehdot
   [vastaukset]
-  (reduce (fn [jakauma vastaus] (update-in jakauma [(keyword (:vaihtoehto vastaus))]
-                                           (fn [n] (if (number? n)
-                                                     (inc n)
-                                                     1))))
-          {:kylla 0, :ei 0, :eos 0}
-          vastaukset))
+  (->> vastaukset
+    (map (comp keyword :vaihtoehto))
+    frequencies
+    (merge {:kylla 0, :ei 0, :eos 0})))
 
 (defn ^:private laske-osuus
   [lukumaara yhteensa]
@@ -107,16 +105,14 @@
 (defn muodosta-monivalinta-jakauman-esitys
   [vaihtoehdot jakauma]
   (let [yhteensa (reduce + (vals jakauma))]
-    (map (fn [vaihtoehto]
-           (let [lukumaara (or (jakauma (:jarjestys vaihtoehto))
-                               0)
-                 osuus (laske-osuus lukumaara yhteensa)]
-             {:vaihtoehto_fi (:teksti_fi vaihtoehto)
-              :vaihtoehto_sv (:teksti_sv vaihtoehto)
-              :lukumaara lukumaara
-              :osuus (prosentteina osuus)
-              :jarjestys (:jarjestys vaihtoehto)}))
-         vaihtoehdot)))
+    (for [vaihtoehto vaihtoehdot
+          :let [lukumaara (or (jakauma (:jarjestys vaihtoehto)) 0)
+                osuus (laske-osuus lukumaara yhteensa)]]
+      {:vaihtoehto_fi (:teksti_fi vaihtoehto)
+       :vaihtoehto_sv (:teksti_sv vaihtoehto)
+       :lukumaara lukumaara
+       :osuus (prosentteina osuus)
+       :jarjestys (:jarjestys vaihtoehto)})))
 
 (defn ^:private lisaa-asteikon-jakauma
   [kysymys vastaukset]
@@ -173,14 +169,13 @@
 
 (defn kysymyksen-kasittelija
   [kysymys]
-  (cond
-    (= (:vastaustyyppi kysymys) "arvosana") lisaa-asteikon-jakauma
-    (= (:vastaustyyppi kysymys) "asteikko") lisaa-asteikon-jakauma
-    (= (:vastaustyyppi kysymys) "kylla_ei_valinta") lisaa-vaihtoehtojen-jakauma
-    (= (:vastaustyyppi kysymys) "likert_asteikko") lisaa-asteikon-jakauma
-    (= (:vastaustyyppi kysymys) "monivalinta") lisaa-monivalinnan-jakauma
-    (= (:vastaustyyppi kysymys) "vapaateksti") lisaa-vastausten-vapaateksti
-    :else (fn [kysymys vastaukset] kysymys)))
+  (case (:vastaustyyppi kysymys)
+    "arvosana" lisaa-asteikon-jakauma
+    "asteikko" lisaa-asteikon-jakauma
+    "kylla_ei_valinta" lisaa-vaihtoehtojen-jakauma
+    "likert_asteikko" lisaa-asteikon-jakauma
+    "monivalinta" lisaa-monivalinnan-jakauma
+    "vapaateksti" lisaa-vastausten-vapaateksti))
 
 (defn valitse-kysymyksen-kentat
   [kysymys]
@@ -193,27 +188,21 @@
 
 (defn kasittele-kysymykset
   [kysymykset vastaukset]
-  (map (fn [kysymys]
-         (valitse-kysymyksen-kentat
-           ((kysymyksen-kasittelija kysymys) kysymys
-                                            (kysymyksen-vastaukset kysymys vastaukset))))
-       kysymykset))
+  (for [kysymys kysymykset]
+    (valitse-kysymyksen-kentat
+      ((kysymyksen-kasittelija kysymys) kysymys
+                                        (kysymyksen-vastaukset kysymys vastaukset)))))
 
 (defn kasittele-kysymysryhmat
   [kysymysryhmat vastaukset]
-  (map (fn [kysymysryhma]
-         (update-in kysymysryhma
-                    [:kysymykset]
-                    (fn [kysymykset] (kasittele-kysymykset kysymykset vastaukset))))
-       kysymysryhmat))
+  (for [kysymysryhma kysymysryhmat]
+    (update-in kysymysryhma [:kysymykset] #(kasittele-kysymykset % vastaukset))))
 
 (defn ryhmittele-kysymykset-kysymysryhmittain [kysymykset kysymysryhmat]
   (let [kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
-    (map
-      (fn [kysymysryhma] (assoc kysymysryhma
-                                :kysymykset
-                                (get kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))))
-      kysymysryhmat)))
+    (for [kysymysryhma kysymysryhmat
+          :let [kysymykset (get kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))]]
+      (assoc kysymysryhma :kysymykset kysymykset))))
 
 (defn muodosta-raportti-vastauksista
   [kysymysryhmat kysymykset vastaukset]
