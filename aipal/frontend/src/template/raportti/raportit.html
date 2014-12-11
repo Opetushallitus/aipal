@@ -1,6 +1,6 @@
 <div class="raportit">
   <tabset>
-    <tab heading="{{ 'raportit.vertailuraportti' | i18n }}" select="raportti.tyyppi = 'vertailu'">
+    <tab heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu')">
       <h2>{{ 'raportit.vertailtavat_tutkinnot' | i18n }}</h2>
       <ng-include src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
@@ -8,14 +8,14 @@
       <ng-include src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
-    <tab heading="{{ 'raportit.kehitysraportti' | i18n }}" select="raportti.tyyppi = 'kehitys'">
+    <tab heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys')">
       <h2>{{ 'raportit.tarkasteltava_tutkinto' | i18n }}</h2>
       <ng-include src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
-    <tab heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}" select="raportti.tyyppi = 'koulutustoimijat'">
+    <tab heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}" select="vaihdaTyyppi('koulutustoimijat')">
       <h2>{{ 'raportit.vertaa_koulutustoimijoita_otsikko' | i18n }}</h2>
       <ng-include src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
       <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>

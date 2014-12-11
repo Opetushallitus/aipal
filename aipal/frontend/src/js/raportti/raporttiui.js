@@ -45,6 +45,37 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.vertailutyyppi = 'tutkinto';
 
+    var poistaKoulutusalaValinnat = function() {
+      _.forEach($scope.koulutusalat, function(koulutusala) {
+        delete koulutusala.valittu;
+      });
+    };
+    var poistaOpintoalaValinnat = function() {
+      _.forEach($scope.koulutusalat, function(koulutusala) {
+        _.forEach(koulutusala.opintoalat, function(opintoala) {
+          delete opintoala.valittu;
+        });
+      });
+    };
+    var poistaTutkintoValinnat = function() {
+      _.forEach($scope.koulutusalat, function(koulutusala) {
+        _.forEach(koulutusala.opintoalat, function(opintoala) {
+          _.forEach(opintoala.tutkinnot, function(tutkinto) {
+            delete tutkinto.valittu;
+          });
+        });
+      });
+    };
+
+    $scope.vaihdaTyyppi = function(tyyppi) {
+      $scope.raportti.tyyppi = tyyppi;
+
+      // Vain vertailuraportilla voi valita useamman tutkinnon/alan, joten tyhjennä valinnat raportin tyypin vaihtuessa
+      poistaKoulutusalaValinnat();
+      poistaOpintoalaValinnat();
+      poistaTutkintoValinnat();
+    };
+
     var haeTaustakysymykset = function(kysymysryhmaid) {
       Kysymysryhma.hae(kysymysryhmaid).success(function(kysymysryhma) {
         $scope.kysymysryhma = kysymysryhma;
@@ -77,19 +108,35 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     });
 
+    $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
       if ($scope.raportti.vertailutyyppi === 'koulutusala') {
-        $scope.raportti.koulutusalatunnus = koulutusala.koulutusalatunnus;
+        // Vain vertailuraportilla voi valita useamman
+        if ($scope.raportti.tyyppi !== 'vertailu' && !koulutusala.valittu) {
+          poistaKoulutusalaValinnat();
+        }
+        koulutusala.valittu = !koulutusala.valittu;
+        $scope.raportti.koulutusalat = _.xor($scope.raportti.koulutusalat, [koulutusala.koulutusalatunnus]);
       }
     };
+    $scope.raportti.opintoalat = [];
     $scope.valitseOpintoala = function(opintoala) {
       if ($scope.raportti.vertailutyyppi === 'opintoala') {
-        $scope.raportti.opintoalatunnus = opintoala.opintoalatunnus;
+        if ($scope.raportti.tyyppi !== 'vertailu' && !opintoala.valittu) {
+          poistaOpintoalaValinnat();
+        }
+        opintoala.valittu = !opintoala.valittu;
+        $scope.raportti.opintoalat = _.xor($scope.raportti.opintoalat, [opintoala.opintoalatunnus]);
       }
     };
+    $scope.raportti.tutkinnot = [];
     $scope.valitseTutkinto = function(tutkinto) {
       if ($scope.raportti.vertailutyyppi === 'tutkinto') {
-        $scope.raportti.tutkintotunnus = tutkinto.tutkintotunnus;
+        if ($scope.raportti.tyyppi !== 'vertailu' && !tutkinto.valittu) {
+          poistaTutkintoValinnat();
+        }
+        tutkinto.valittu = !tutkinto.valittu;
+        $scope.raportti.tutkinnot = _.xor($scope.raportti.tutkinnot, [tutkinto.tutkintotunnus]);
       }
     };
 
