@@ -29,7 +29,7 @@
           "eri vastaukset" [{:numerovalinta 1} {:numerovalinta 2}] (merge tyhja-jakauma {1 1 2 1})))))
 
 (deftest jaottele-jatkokysymys-asteikko-test
- (let [tyhja-jakauma {1 0 2 0 3 0 4 0 5 0}]
+ (let [tyhja-jakauma {1 0 2 0 3 0 4 0 5 0 :eos 0}]
    (are [kuvaus vastaukset odotettu-tulos] (is (= (jaottele-jatkokysymys-asteikko vastaukset) odotettu-tulos) kuvaus)
         "ei vastauksia" [] tyhja-jakauma
         "tyhja vastaus" [nil] tyhja-jakauma

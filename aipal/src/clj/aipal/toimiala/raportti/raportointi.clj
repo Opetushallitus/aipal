@@ -40,7 +40,7 @@
 
 (defn jaottele-jatkokysymys-asteikko
   [vastaukset]
-  (merge {1 0 2 0 3 0 4 0 5 0}
+  (merge {1 0, 2 0, 3 0, 4 0, 5 0, :eos 0}
          (frequencies (keep :kylla_asteikko vastaukset))))
 
 (defn jaottele-monivalinta
@@ -71,7 +71,7 @@
                                {:vaihtoehto-avain avain
                                 :lukumaara lukumaara
                                 :osuus (prosentteina
-                                         (laske-osuus lukumaara yhteensa))})]
+                                         (laske-osuus (or lukumaara 0) yhteensa))})]
     [(tiedot-vaihtoehdolle "eos" (jakauma :eos))
      (tiedot-vaihtoehdolle "1" (jakauma 1))
      (tiedot-vaihtoehdolle "2" (jakauma 2))
@@ -116,10 +116,10 @@
 
 (defn ^:private lisaa-asteikon-jakauma
   [kysymys vastaukset]
-  (let [vastaukset (aseta-eos vastaukset :numerovalinta)]
+  (let [vastaukset (aseta-eos vastaukset :numerovalinta) ]
     (assoc kysymys :jakauma
            (muodosta-asteikko-jakauman-esitys
-             (jaottele-asteikko vastaukset)))))
+                  (jaottele-asteikko vastaukset)))))
 
 (defn ^:private lisaa-monivalinnan-jakauma
   [kysymys vastaukset]
@@ -134,7 +134,7 @@
   (when (:kylla_kysymys kysymys)
     {:kysymys_fi (:kylla_teksti_fi kysymys)
      :kysymys_sv (:kylla_teksti_sv kysymys)
-     :jakauma (muodosta-asteikko-jakauman-esitys (jaottele-jatkokysymys-asteikko vastaukset))
+     :jakauma (rest (muodosta-asteikko-jakauman-esitys (jaottele-jatkokysymys-asteikko vastaukset)))
      :vastaustyyppi "asteikko"}))
 
 (defn keraa-ei-jatkovastaukset
@@ -184,14 +184,17 @@
                         :jakauma
                         :vastaukset
                         :jatkovastaukset
-                        :vastaustyyppi]))
+                        :vastaustyyppi
+                        :eos_vastaus_sallittu]))
 
 (defn kasittele-kysymykset
   [kysymykset vastaukset]
-  (for [kysymys kysymykset]
+  (for [kysymys kysymykset
+        :let [kasitelty-kysymys ((kysymyksen-kasittelija kysymys) kysymys (kysymyksen-vastaukset kysymys vastaukset))]]
     (valitse-kysymyksen-kentat
-      ((kysymyksen-kasittelija kysymys) kysymys
-                                        (kysymyksen-vastaukset kysymys vastaukset)))))
+      (if (:eos_vastaus_sallittu kysymys)
+        kasitelty-kysymys
+        (update-in kasitelty-kysymys [:jakauma] rest))))) ;; EOS-vastaus on aina jakauman ensimmäinen
 
 (defn kasittele-kysymysryhmat
   [kysymysryhmat vastaukset]

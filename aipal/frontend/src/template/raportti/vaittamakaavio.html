@@ -1,12 +1,12 @@
 <svg class="vaittama-kaavio"
-  ng-attr-width="{{asetukset.viivastonLeveys + 100}}" ng-attr-height="{{asetukset.palkinMaksimiPituus + 80}}">
+  ng-attr-width="{{viivastonLeveys(eos_vastaus_sallittu) + 100}}" ng-attr-height="{{asetukset.palkinMaksimiPituus + 80}}">
 
   <g transform="translate(50, 20)">
     <line ng-repeat="osa in [0, 0.2, 0.4, 0.6, 0.8, 1.0]"
       class="vaittama-kaavio-viiva"
       ng-attr-x1="{{0}}"
       ng-attr-y1="{{asetukset.palkinMaksimiPituus * (1 - osa)}}"
-      ng-attr-x2="{{asetukset.viivastonLeveys}}"
+      ng-attr-x2="{{viivastonLeveys(eos_vastaus_sallittu)}}"
       ng-attr-y2="{{asetukset.palkinMaksimiPituus * (1 - osa)}}" />
     <line class="vaittama-kaavio-viiva"
       ng-attr-x1="{{0}}"
@@ -14,9 +14,9 @@
       ng-attr-x2="{{0}}"
       ng-attr-y2="{{asetukset.palkinMaksimiPituus}}" />
     <line class="vaittama-kaavio-viiva"
-      ng-attr-x1="{{asetukset.viivastonLeveys}}"
+      ng-attr-x1="{{viivastonLeveys(eos_vastaus_sallittu)}}"
       ng-attr-y1="{{0}}"
-      ng-attr-x2="{{asetukset.viivastonLeveys}}"
+      ng-attr-x2="{{viivastonLeveys(eos_vastaus_sallittu)}}"
       ng-attr-y2="{{asetukset.palkinMaksimiPituus}}" />
 
     <text ng-repeat="otsikko in otsikot"
@@ -26,7 +26,7 @@
       {{otsikko.teksti}}
     </text>
     <text class="vaittama-kaavio-yhteensa"
-      ng-attr-x="{{asetukset.viivastonLeveys + 10}}"
+      ng-attr-x="{{viivastonLeveys(eos_vastaus_sallittu) + 10}}"
       ng-attr-y="{{5}}">
       ({{lukumaaratYhteensa(jakauma)}})
     </text>

@@ -73,6 +73,7 @@
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.vastaustyyppi
+                :kysymys.eos_vastaus_sallittu
                 :jatkokysymys.jatkokysymysid
                 :jatkokysymys.kylla_kysymys
                 :jatkokysymys.kylla_teksti_fi
