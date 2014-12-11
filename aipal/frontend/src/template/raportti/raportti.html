@@ -29,8 +29,13 @@
           <td ng-if="!tutkinto.tutkintotunnus">{{'raportti.ei_tutkintotietoa' | i18n}}</td>
           <td>{{tutkinto.vastaajien_lkm}}</td>
         </tr>
+        <tr>
+          <td>Yhteensä</td>
+          <td>{{kaikkienVastaajienLukumaara}}
+        </tr>
       </tbody>
     </table>
+    Kohderyhmän koko: {{tulos.kyselykerta.vastaajien_maksimimaara}}
     <hr>
   </div>
   <div>
