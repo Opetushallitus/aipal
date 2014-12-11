@@ -14,6 +14,7 @@
 
 (ns aipal.arkisto.vastaajatunnus
   (:require [clojure.string :as st]
+            [clojure.set :refer [rename-keys]]
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
@@ -23,8 +24,9 @@
 (def kyselykerta-select
   (-> (sql/select* taulut/vastaajatunnus)
     (sql/join :left taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+    (sql/join :left taulut/koulutustoimija (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa
-                :tutkinto.nimi_fi :tutkinto.nimi_sv)
+                :tutkinto.nimi_fi :tutkinto.nimi_sv :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv])
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
@@ -38,13 +40,23 @@
       (dissoc :nimi_fi :nimi_sv :tutkintotunnus)
       (assoc :tutkinto tutkinto))))
 
+(defn ^:private erota-koulutustoimija
+  [vastaajatunnus]
+  (let [koulutustoimija (rename-keys
+                          (select-keys vastaajatunnus [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv])
+                          {:koulutustoimija_nimi_fi :nimi_fi
+                           :koulutustoimija_nimi_sv :nimi_sv})]
+    (some-> vastaajatunnus
+      (dissoc :ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv)
+      (assoc :valmistavan_koulutuksen_jarjestaja koulutustoimija))))
+
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]
   (-> kyselykerta-select
     (sql/where (= :kyselykertaid kyselykertaid))
     sql/exec
-    (->> (map erota-tutkinto))))
+    (->> (map erota-tutkinto) (map erota-koulutustoimija))))
 
 (defn hae-viimeisin-tutkinto
   "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
