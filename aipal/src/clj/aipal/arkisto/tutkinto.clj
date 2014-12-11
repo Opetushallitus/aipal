@@ -47,9 +47,16 @@
 
 (defn hae-tutkinnot
   []
-  (sql/select taulut/tutkinto
-    (sql/join :inner taulut/opintoala (= :opintoala.opintoalatunnus :tutkinto.opintoala))
-    (sql/join :inner taulut/koulutusala (= :koulutusala.koulutusalatunnus :opintoala.koulutusala))
-    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv
-                :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv]
-                :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv])))
+  (let [tutkinnot (sql/select taulut/tutkinto
+                    (sql/join :inner taulut/opintoala (= :opintoala.opintoalatunnus :tutkinto.opintoala))
+                    (sql/join :inner taulut/koulutusala (= :koulutusala.koulutusalatunnus :opintoala.koulutusala))
+                    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv
+                                :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv]
+                                :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv]))
+        opintoalatMap (group-by #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv]) tutkinnot)
+        opintoalat (for [[opintoala tutkinnot] opintoalatMap]
+                     (assoc opintoala :tutkinnot (map #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot)))
+        koulutusalatMap (group-by #(select-keys % [:koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv]) opintoalat)
+        koulutusalat (for [[koulutusala opintoalat] koulutusalatMap]
+                       (assoc koulutusala :opintoalat (sort-by :opintoalatunnus (map #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :tutkinnot]) opintoalat))))]
+    (sort-by :koulutusalatunnus koulutusalat)))
