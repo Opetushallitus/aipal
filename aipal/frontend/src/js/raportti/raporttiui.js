@@ -85,7 +85,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.koulutustoimijat = koulutustoimijat;
     });
 
-    Tutkinto.haeTutkinnot().success(function(koulutusalat) {
+    Tutkinto.haeTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.koulutusalat = koulutusalat;
     });
 
