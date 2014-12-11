@@ -48,6 +48,9 @@
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
+    <p>
+      Vastaajien määrä: {{kysymys.vastaajien_lukumaara}}/{{tulos.kyselykerta.vastaajien_maksimimaara}}
+    </p>
 
     <jakauma-kaavio
       ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'"
