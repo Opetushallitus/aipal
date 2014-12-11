@@ -103,3 +103,14 @@ body.disable-all-animations *{
 .error {
   background-color: #ffbaba;
 }
+
+
+/* Things that are draggable */
+.ui-sortable-handle,
+.ui-sortable-handle .panel-title a{
+  cursor: ns-resize !important;
+}
+
+.accordion-toggle i{
+  cursor: pointer;
+}
