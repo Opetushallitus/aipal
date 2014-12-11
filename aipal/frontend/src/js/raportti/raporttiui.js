@@ -24,23 +24,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
   }])
 
-  .factory('RaporttiFunktiot', [function() {
-    return {
-      tutkinnotHierarkiaksi: function(tutkinnot) {
-        var tutkinnotOpintoaloittain = _.groupBy(tutkinnot, 'opintoalatunnus');
-
-        var opintoalatKoulutusaloittain = _(tutkinnot).map(function(tutkinto) {
-          return _.assign(_.pick(tutkinto, ['opintoalatunnus', 'opintoala_nimi_fi', 'opintoala_nimi_sv', 'koulutusalatunnus']), {tutkinnot: tutkinnotOpintoaloittain[tutkinto.opintoalatunnus]});
-        }).sortBy('opintoalatunnus').uniq(true, 'opintoalatunnus').groupBy('koulutusalatunnus').value();
-
-        return _(tutkinnot).map(function(tutkinto) {
-          return _.assign(_.pick(tutkinto, ['koulutusalatunnus', 'koulutusala_nimi_fi', 'koulutusala_nimi_sv']), {opintoalat: opintoalatKoulutusaloittain[tutkinto.koulutusalatunnus]});
-        }).sortBy('koulutusalatunnus').uniq(true, 'koulutusalatunnus').value();
-      }
-    };
-  }])
-
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'RaporttiFunktiot', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, RaporttiFunktiot, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
     $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.vertailutyyppi = 'tutkinto';
@@ -101,11 +85,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.koulutustoimijat = koulutustoimijat;
     });
 
-    Tutkinto.haeTutkinnot().success(function(tutkinnot) {
-      $scope.tutkinnot = tutkinnot;
-
-      $scope.koulutusalat = RaporttiFunktiot.tutkinnotHierarkiaksi(tutkinnot);
-
+    Tutkinto.haeTutkinnotHierarkiassa().success(function(koulutusalat) {
+      $scope.koulutusalat = koulutusalat;
     });
 
     $scope.raportti.koulutusalat = [];

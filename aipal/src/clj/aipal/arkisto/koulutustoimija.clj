@@ -37,6 +37,7 @@
   []
   (->
     (sql/select* taulut/koulutustoimija)
+    (sql/fields :ytunnus :nimi_fi :nimi_sv)
     (sql/order :ytunnus :DESC)
     sql/exec))
 
