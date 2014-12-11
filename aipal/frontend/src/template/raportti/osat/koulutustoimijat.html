@@ -1,25 +1,26 @@
 <div class="koulutustoimijat" ng-show="koulutustoimijat">
   <h3>{{ 'raportit.koulutustoimijat' | i18n }}</h3>
 
-  <input type="text" ng-model="koulutustoimijaFilter" placeholder="{{ 'raportit.hae_koulutustoimijoita' | i18n }}">
+  <div class="well">
+    <input type="text" class="form-control icon search-icon-input" ng-model="koulutustoimijaFilter" placeholder="{{ 'raportit.hae_koulutustoimijoita' | i18n }}">
 
-  <div class="koulutustoimijat-valitsin">
-    <ul class="koulutustoimijat-lista">
+    <ul class="valitsin">
       <li ng-repeat="koulutustoimija in koulutustoimijat | filter:koulutustoimijaFilter" ng-click="valitseTaiPoistaKoulutustoimija(koulutustoimija)">
         {{ koulutustoimija | lokalisoiKentta:'nimi' }}
         <span class="fa fa-check" ng-show="koulutustoimija.valittu"></span>
       </li>
     </ul>
-  </div>
 
-  <div class="koulutustoimijat-valitut">
-    <ul>
-      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:{valittu: true}" ng-click="valitseTaiPoistaKoulutustoimija(koulutustoimija)">
-        <div class="btn btn-primary">
-          {{ koulutustoimija | lokalisoiKentta:'nimi' }}
-          <span class="fa fa-remove"></span>
-        </div>
-      </li>
-    </ul>
+    <div class="koulutustoimijat-valitut">
+      <ul>
+        <li ng-repeat="koulutustoimija in koulutustoimijat | filter:{valittu: true}" ng-click="valitseTaiPoistaKoulutustoimija(koulutustoimija)">
+          <div class="btn btn-primary">
+            {{ koulutustoimija | lokalisoiKentta:'nimi' }}
+            <span class="fa fa-remove"></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </div>

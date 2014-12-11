@@ -1,7 +1,7 @@
 <div ng-show="koulutusalat">
 
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-12">
       <div class="btn-group vertailutyyppi">
         <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>
         <label class="btn btn-primary" ng-model="raportti.vertailutyyppi" btn-radio="'opintoala'">{{ 'raportit.opintoala' | i18n }}</label>
@@ -13,7 +13,7 @@
   <div class="well">
     <input type="text" class="form-control icon search-icon-input" ng-model="tutkintoFilter" placeholder="{{ 'raportit.hae_tutkintoja_tai_aloja' | i18n }}">
 
-    <ul class="vertailu-valitsin {{raportti.vertailutyyppi}}">
+    <ul class="valitsin {{raportti.vertailutyyppi}}">
       <li ng-repeat="koulutusala in koulutusalat |filter:tutkintoFilter" ng-click="valitseKoulutusala(koulutusala)" ng-class="{selected: raportti.vertailutyyppi == 'koulutusala' && koulutusala.valittu}">
         <span ng-class="{otsikko: raportti.vertailutyyppi !== 'koulutusala'}">{{koulutusala |lokalisoiKentta:'koulutusala_nimi'}}</span>
         <span class="fa fa-check" ng-if="raportti.vertailutyyppi == 'koulutusala' && koulutusala.valittu"></span>

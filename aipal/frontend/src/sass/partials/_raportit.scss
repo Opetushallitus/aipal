@@ -3,14 +3,17 @@
 }
 
 
-.raportit .vertailu-valitsin {
+.raportit .valitsin {
   max-height: 20em;
   overflow: auto;
   list-style-type: none;
   margin-left: 0em;
   padding-left: 0em;
   margin-top: 0;
-  padding-top: 0;
+  padding-top: .5em;
+  border: 1px solid $lightest-gray;
+  border-top: 0;
+  background-color: #ffffff;
   ul {
     margin-top: 0;
     padding-top: 0;
@@ -30,7 +33,7 @@ li.selected{
   background-color: $lightest-primary;
 }
 
-.raportit ul.vertailu-valitsin.tutkinto {
+.raportit ul.valitsin.tutkinto {
   li li li{
     cursor: pointer;
     &:hover{
@@ -39,7 +42,7 @@ li.selected{
   }
 }
 
-.raportit ul.vertailu-valitsin.opintoala {
+.raportit ul.valitsin.opintoala {
   li li{
     cursor: pointer;
     &:hover{
@@ -48,7 +51,7 @@ li.selected{
   }
 }
 
-.raportit ul.vertailu-valitsin.koulutusala {
+.raportit ul.valitsin.koulutusala {
   li{
     cursor: pointer;
     &:hover{
@@ -62,8 +65,6 @@ li.selected{
     margin-bottom: -2px;
     border-color: #E3E3E3;
   }
-  &.btn-group > .btn:active,
-  &.btn-group-vertical > .btn:active,
   &.btn-group > .btn.active,
   &.btn-group-vertical > .btn.active {
     z-index: 2;
