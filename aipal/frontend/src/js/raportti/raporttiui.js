@@ -42,6 +42,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
   .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'RaporttiFunktiot', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, RaporttiFunktiot, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
+    $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.vertailutyyppi = 'tutkinto';
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
