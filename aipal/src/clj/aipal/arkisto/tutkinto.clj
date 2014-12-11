@@ -49,7 +49,7 @@
   [tutkinnot]
   (let [opintoalatMap (group-by #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv]) tutkinnot)
         opintoalat (for [[opintoala tutkinnot] opintoalatMap]
-                     (assoc opintoala :tutkinnot (map #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot)))
+                     (assoc opintoala :tutkinnot (sort-by :tutkintotunnus (map #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot))))
         koulutusalatMap (group-by #(select-keys % [:koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv]) opintoalat)
         koulutusalat (for [[koulutusala opintoalat] koulutusalatMap]
                        (assoc koulutusala :opintoalat (sort-by :opintoalatunnus (map #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :tutkinnot]) opintoalat))))]
