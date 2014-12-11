@@ -221,9 +221,9 @@
           (let [kysymys (nth (kysymykset) 0)]
             (is (= (kysymyksen-teksti kysymys) "1. Kysymys 1"))
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 1"))
-            (is (= (vaihtoehdot-kysymykselle kysymys) ["En osaa sanoa" "Kyllä" "Ei"]))
-            (is (= (osuudet-kysymykselle kysymys) ["0%" "50%" "50%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "1" "1"]))
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
+            (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
             (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
@@ -231,9 +231,9 @@
           (let [kysymys (nth (kysymykset) 1)]
             (is (= (kysymyksen-teksti kysymys) "2. Kysymys 2"))
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 2"))
-            (is (= (vaihtoehdot-kysymykselle kysymys) ["En osaa sanoa" "Kyllä" "Ei"]))
-            (is (= (osuudet-kysymykselle kysymys) ["0%" "0%" "100%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "0" "2"]))
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
+            (is (= (osuudet-kysymykselle kysymys) ["0%" "100%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))
             (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
@@ -246,9 +246,9 @@
           (let [kysymys (nth (kysymykset) 3)]
             (is (= (kysymyksen-teksti kysymys) "4. Kysymys 4"))
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 4"))
-            (is (= (vaihtoehdot-kysymykselle kysymys) ["En osaa sanoa" "Ei / en lainkaan" "Hieman" "Jonkin verran" "Melko paljon" "Erittäin paljon"]))
-            (is (= (osuudet-kysymykselle kysymys) ["0%" "50%" "50%" "0%" "0%" "0%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "1" "1" "0" "0" "0"]))
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Ei / en lainkaan" "Hieman" "Jonkin verran" "Melko paljon" "Erittäin paljon"]))
+            (is (= (osuudet-kysymykselle kysymys) ["50%" "50%" "0%" "0%" "0%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1" "0" "0" "0"]))
             (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-vaittamakaavio-kysymykselle kysymys)) 1))))
         (testing
@@ -256,9 +256,9 @@
           (let [kysymys (nth (kysymykset) 4)]
             (is (= (kysymyksen-teksti kysymys) "5. Kysymys 5"))
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 5"))
-            (is (= (vaihtoehdot-kysymykselle kysymys) ["En osaa sanoa" "Jotain" "Muuta"]))
-            (is (= (osuudet-kysymykselle kysymys) ["0%" "50%" "50%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "1" "1"]))
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Jotain" "Muuta"]))
+            (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
             (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
@@ -266,14 +266,13 @@
           (let [kysymys (nth (kysymykset) 5)]
             (is (= (kysymyksen-teksti kysymys) "6. Kysymys 6"))
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 6"))
-            (is (= (vaihtoehdot-kysymykselle kysymys) ["En osaa sanoa"
-                                                       "Täysin eri mieltä"
+            (is (= (vaihtoehdot-kysymykselle kysymys) ["Täysin eri mieltä"
                                                        "Jokseenkin eri mieltä"
                                                        "Ei samaa eikä eri mieltä"
                                                        "Jokseenkin samaa mieltä"
                                                        "Täysin samaa mieltä"]))
-            (is (= (osuudet-kysymykselle kysymys) ["0%" "0%" "0%" "50%" "50%" "0%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "0" "0" "1" "1" "0"]))
+            (is (= (osuudet-kysymykselle kysymys) ["0%" "0%" "50%" "50%" "0%"]))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "0" "1" "1" "0"]))
             (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
             (is (= (count (hae-vaittamakaavio-kysymykselle kysymys)) 1))))
         (testing

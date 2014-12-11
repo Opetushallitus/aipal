@@ -94,7 +94,7 @@
 
           (kyselyt-sivu/avaa-sivu)
           (kyselyt-sivu/nayta-raportti)
-          (is (= (kyselykertaraportti-sivu/ensimmaisen-kysymyksen-toisen-vaihtoehdon-vastausten-lukumaara)
+          (is (= (kyselykertaraportti-sivu/ensimmaisen-kysymyksen-ensimmaisen-vaihtoehdon-vastausten-lukumaara)
                  "1") )
 
           (finally

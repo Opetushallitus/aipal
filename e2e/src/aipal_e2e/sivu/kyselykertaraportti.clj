@@ -15,5 +15,5 @@
 (ns aipal-e2e.sivu.kyselykertaraportti
   (:require [clj-webdriver.taxi :as w]))
 
-(defn ensimmaisen-kysymyksen-toisen-vaihtoehdon-vastausten-lukumaara []
-  (w/text (second (w/find-elements {:css ".e2e-vastausten-lukumaara"}))))
+(defn ensimmaisen-kysymyksen-ensimmaisen-vaihtoehdon-vastausten-lukumaara []
+  (w/text (w/element ".e2e-vastausten-lukumaara")))
