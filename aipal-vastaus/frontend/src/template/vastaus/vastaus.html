@@ -52,8 +52,8 @@
           </label>
         </div>
 
-        <div ng-if="kysymys.vastaustyyppi === 'arvosana'" class="vastaus_valinnat">
-          <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
+        <div ng-if="kysymys.vastaustyyppi === 'arvosana'" class="vastaus_valinnat arvosana">
+          <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block" ng-class="{checked: kysymys.vastaus == vaihtoehto}">
             <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
             {{ vaihtoehto }}
           </label>

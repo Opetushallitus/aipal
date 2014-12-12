@@ -30,6 +30,50 @@
     &.eos {
       margin-top: .8em;
     }
+
+    &.arvosana{
+      overflow: auto;
+      label {
+        font-size: 1.65em;
+        line-height: 100%;
+        background-color: $lightest-gray;
+        float: left;
+        border-radius: 50%;
+        height: 2em;
+        width: 2em;
+        vertical-align: top;
+        text-align: center;
+        padding: .5em 0px 0px 0px !important;
+        margin-right: .3em;
+        color: $gray-color;
+        position: relative;
+        &.checked{
+          background-color: $primary-color;
+          color: white;
+          &:hover{
+            background-color: $primary-color !important;
+            color: #ffffff;
+          }
+        }
+
+        &:active{
+          background-color: $primary-color !important;
+        }
+
+        &:hover {
+          background-color: $lighter-gray !important;
+          color: $darker-gray;
+        }
+
+        input {
+          visibility: hidden;
+          position: absolute;
+          z-index: -100;
+          top: 0;
+          left: 0;
+        }
+      }
+    }
   }
 }
 
@@ -43,3 +87,4 @@
     border-bottom: 0;
   }
 }
+
