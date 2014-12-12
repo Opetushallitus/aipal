@@ -26,21 +26,19 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
       },
       templateUrl: 'template/raportti/vaittamakaavio.html',
       link: function(scope) {
+        var viivastonLeveys;
+        if(scope.eos) {
+          viivastonLeveys = 6*3*40;
+        } else {
+          viivastonLeveys = 5*3*40;
+        }
         var asetukset = {
           palkinLeveys: 40,
           palkinMaksimiPituus: 300,
-          viivastonLeveys: 5*3*40,  
-          viivastonLeveysEos: 6*3*40
+          viivastonLeveys: viivastonLeveys
         };
 
         scope.asetukset = asetukset;
-        scope.viivastonLeveys = function() {
-          if(scope.eos) {
-            return asetukset.viivastonLeveysEos;
-          } else {
-            return asetukset.viivastonLeveys;
-          }
-        };
         _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
         scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.' + scope.vastaustyyppi, 'vaihtoehto-avain');
