@@ -35,7 +35,7 @@
         </tr>
       </tbody>
     </table>
-    Kohderyhmän koko: {{tulos.kyselykerta.vastaajien_maksimimaara}}
+    Kohderyhmän koko: {{tulos.vastaajien_maksimimaara}}
     <hr>
   </div>
   <div>
@@ -49,7 +49,7 @@
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
     <p>
-      Vastaajien määrä: {{kysymys.vastaajien_lukumaara}}/{{tulos.kyselykerta.vastaajien_maksimimaara}}
+      Vastaajien määrä: {{kysymys.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
     </p>
 
     <jakauma-kaavio

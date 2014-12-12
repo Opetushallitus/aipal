@@ -140,10 +140,9 @@
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
-    {:kyselykerta (-> kyselykerta
-                    (assoc :tutkinnot (hae-vastaajatunnusten-tutkinnot kyselykertaid))
-                    (assoc :vastaajien_maksimimaara (hae-vastaajien-maksimimaara kyselykertaid)))
-     :luontipvm (time/today)}))
+    {:kyselykerta (assoc kyselykerta :tutkinnot (hae-vastaajatunnusten-tutkinnot kyselykertaid))
+     :luontipvm (time/today)
+     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara kyselykertaid)}))
 
 (defn muodosta-raportti [kyselykertaid]
   (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]
