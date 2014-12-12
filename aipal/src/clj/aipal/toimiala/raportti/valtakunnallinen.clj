@@ -100,7 +100,13 @@
                                  (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus)
                                  (= :tutkinto.opintoala opintoalatunnus)))))
 
-(defn hae-vastaajien-maksimimaara [koulutustoimijat opintoalatunnus tutkintotunnus]
+(defn rajaa-vastaajatunnukset-koulutusalalle [query koulutusalatunnus]
+  (-> query
+    (sql/join :inner :tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+    (sql/join :inner :opintoala {:opintoala.opintoalatunnus :tutkinto.opintoala
+                                 :opintoala.koulutusala koulutusalatunnus})))
+
+(defn hae-vastaajien-maksimimaara [koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaajatunnus)
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
@@ -109,6 +115,7 @@
     (cond->
       tutkintotunnus (sql/where {:vastaajatunnus.tutkintotunnus tutkintotunnus})
       opintoalatunnus (rajaa-vastaajatunnukset-opintoalalle opintoalatunnus)
+      koulutusalatunnus (rajaa-vastaajatunnukset-koulutusalalle koulutusalatunnus)
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
@@ -132,4 +139,4 @@
     {:luontipvm (time/today)
      :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
      :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
-     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat opintoalatunnus tutkintotunnus)}))
+     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)}))
