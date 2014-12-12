@@ -40,11 +40,6 @@
                 :nimi_fi
                 :nimi_sv)))
 
-(defn rajaa-kyselykerrat-koulutustoimijoihin [query koulutustoimijat]
-  (-> query
-    (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
-    (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
-
 (defn generoi-joinit [query ehdot]
   (reduce (fn [query {:keys [id arvot]}]
             (sql/where query (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
@@ -105,6 +100,11 @@
     (sql/join :inner :tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
     (sql/join :inner :opintoala {:opintoala.opintoalatunnus :tutkinto.opintoala
                                  :opintoala.koulutusala koulutusalatunnus})))
+
+(defn rajaa-kyselykerrat-koulutustoimijoihin [query koulutustoimijat]
+  (-> query
+    (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
+    (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
 
 (defn hae-vastaajien-maksimimaara [koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
