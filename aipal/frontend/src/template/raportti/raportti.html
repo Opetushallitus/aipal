@@ -2,7 +2,7 @@
   {{'raportit.liian_vahan_vastaajia' | i18n}}
 </div>
 
-<div class="raportti-kyselykerta-tiedot">
+<div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div ng-if="tulos.kyselykerta">
     <div>
       {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.kyselykerta.nimi}}</span>
@@ -35,11 +35,15 @@
         </tr>
       </tbody>
     </table>
-    Kohderyhmän koko: {{tulos.vastaajien_maksimimaara}}
-    <hr>
   </div>
   <div>
-    {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
+    <div>
+      Kohderyhmän koko: {{tulos.vastaajien_maksimimaara}}
+    </div>
+    <hr>
+    <div>
+      {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
+    </div>
   </div>
 </div>
 
