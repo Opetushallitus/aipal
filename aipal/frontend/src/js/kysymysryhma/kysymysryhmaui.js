@@ -312,6 +312,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.muokkaa = function(kysymys) {
       originals = angular.copy($scope.kysymysryhma.kysymykset);
       kysymys.muokattava = true;
+
       $scope.aktiivinenKysymys = kysymys;
       $scope.muokkaustila = true;
     };
@@ -323,4 +324,18 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     $scope.poistaKysymykset = function(){
       $scope.kysymysryhma.kysymykset = _.reject($scope.kysymysryhma.kysymykset, 'poistetaan_kysymysryhmasta');
     };
+
+    function sisaltaaAsteikkokysymyksen(){
+        return _.any($scope.kysymysryhma.kysymykset, function(k){
+          return k.vastaustyyppi === 'asteikko';
+        });
+    }
+
+    _(['form.$valid', 'muokkaustila', 'kysymysryhma.kysymykset']).each(function(m){
+      $scope.$watch(m, function(){
+        $scope.tallennusSallittu = !($scope.form.$valid === false ||
+                                     $scope.muokkaustila ||
+                                     sisaltaaAsteikkokysymyksen());
+      }, true);
+    });
   }]);
