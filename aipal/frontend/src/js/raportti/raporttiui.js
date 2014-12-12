@@ -85,6 +85,18 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.koulutustoimijat = koulutustoimijat;
     });
 
+    $scope.rajoite = {
+      koulutustoimijat: 20
+    };
+
+    $scope.naytaLisaa = function(elem) {
+      $scope.rajoite[elem] += 5;
+    };
+
+    $scope.nollaaRajoite = function(elem) {
+      $scope.rajoite[elem] = 20;
+    };
+
     Tutkinto.haeTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.koulutusalat = koulutusalat;
     });
