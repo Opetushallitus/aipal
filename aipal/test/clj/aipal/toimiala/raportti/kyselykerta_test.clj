@@ -96,10 +96,7 @@
   (testing
     "muodosta asteikko-jakauman esitys:"
     (let [esitys (fn [lkm-eos osuus-eos lkm-1 osuus-1 lkm-2 osuus-2 lkm-3 osuus-3 lkm-4 osuus-4 lkm-5 osuus-5]
-                   [{:vaihtoehto-avain "eos"
-                     :lukumaara lkm-eos
-                     :osuus osuus-eos}
-                    {:vaihtoehto-avain "1"
+                   [{:vaihtoehto-avain "1"
                      :lukumaara lkm-1
                      :osuus osuus-1}
                     {:vaihtoehto-avain "2"
@@ -113,7 +110,10 @@
                      :osuus osuus-4}
                     {:vaihtoehto-avain "5"
                      :lukumaara lkm-5
-                     :osuus osuus-5}])]
+                     :osuus osuus-5}
+                    {:vaihtoehto-avain "eos"
+                     :lukumaara lkm-eos
+                     :osuus osuus-eos}])]
       (are [kuvaus jakauma odotettu-tulos]
            (is (= (muodosta-asteikko-jakauman-esitys jakauma) odotettu-tulos) kuvaus)
            "ei vastauksia" {1 0 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0)
@@ -126,15 +126,15 @@
   (testing
     "muodosta kyllä/ei jakauman esitys:"
     (let [esitys (fn [eos-lkm eos-osuus kylla-lkm kylla-osuus ei-lkm ei-osuus]
-                   [{:vaihtoehto-avain "eos"
-                     :lukumaara eos-lkm
-                     :osuus eos-osuus}
-                    {:vaihtoehto-avain "kylla"
+                   [{:vaihtoehto-avain "kylla"
                      :lukumaara kylla-lkm
                      :osuus kylla-osuus}
                     {:vaihtoehto-avain "ei"
                      :lukumaara ei-lkm
-                     :osuus ei-osuus}])]
+                     :osuus ei-osuus}
+                    {:vaihtoehto-avain "eos"
+                     :lukumaara eos-lkm
+                     :osuus eos-osuus}])]
       (are [kuvaus jakauma odotettu-tulos]
            (is (= (muodosta-kylla-ei-jakauman-esitys jakauma) odotettu-tulos) kuvaus)
            "ei vastauksia" {:kylla 0 :ei 0 :eos 0} (esitys 0 0 0 0 0 0)

@@ -72,35 +72,33 @@
                                 :lukumaara lukumaara
                                 :osuus (prosentteina
                                          (laske-osuus (or lukumaara 0) yhteensa))})]
-    [(tiedot-vaihtoehdolle "eos" (jakauma :eos))
-     (tiedot-vaihtoehdolle "1" (jakauma 1))
+    [(tiedot-vaihtoehdolle "1" (jakauma 1))
      (tiedot-vaihtoehdolle "2" (jakauma 2))
      (tiedot-vaihtoehdolle "3" (jakauma 3))
      (tiedot-vaihtoehdolle "4" (jakauma 4))
-     (tiedot-vaihtoehdolle "5" (jakauma 5))]))
+     (tiedot-vaihtoehdolle "5" (jakauma 5))
+     (tiedot-vaihtoehdolle "eos" (jakauma :eos))]))
 
 (defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]
   (let [yhteensa (+ (:kylla jakauma) (:ei jakauma) (:eos jakauma))]
-    [{:vaihtoehto-avain "eos"
-      :lukumaara (:eos jakauma)
-      :osuus (prosentteina
-               (laske-osuus (:eos jakauma) yhteensa))}
-     {:vaihtoehto-avain "kylla"
+    [{:vaihtoehto-avain "kylla"
       :lukumaara (:kylla jakauma)
       :osuus (prosentteina
                (laske-osuus (:kylla jakauma) yhteensa))}
      {:vaihtoehto-avain "ei"
       :lukumaara (:ei jakauma)
       :osuus (prosentteina
-               (laske-osuus (:ei jakauma) yhteensa))}]))
+               (laske-osuus (:ei jakauma) yhteensa))}
+     {:vaihtoehto-avain "eos"
+      :lukumaara (:eos jakauma)
+      :osuus (prosentteina
+               (laske-osuus (:eos jakauma) yhteensa))}]))
 
 (defn ^:private muodosta-monivalintavaihtoehdot
   [kysymys]
-  (->>
-    (hae-monivalintavaihtoehdot (:kysymysid kysymys))
-    (sort-by :jarjestys)
-    (cons {:jarjestys :eos})))
+  (let [vaihtoehdot (hae-monivalintavaihtoehdot (:kysymysid kysymys))]
+    (concat (sort-by :jarjestys vaihtoehdot) [{:jarjestys :eos}])))
 
 (defn muodosta-monivalinta-jakauman-esitys
   [vaihtoehdot jakauma]
@@ -116,10 +114,10 @@
 
 (defn ^:private lisaa-asteikon-jakauma
   [kysymys vastaukset]
-  (let [vastaukset (aseta-eos vastaukset :numerovalinta) ]
+  (let [vastaukset (aseta-eos vastaukset :numerovalinta)]
     (assoc kysymys :jakauma
            (muodosta-asteikko-jakauman-esitys
-                  (jaottele-asteikko vastaukset)))))
+             (jaottele-asteikko vastaukset)))))
 
 (defn ^:private lisaa-monivalinnan-jakauma
   [kysymys vastaukset]
@@ -134,7 +132,7 @@
   (when (:kylla_kysymys kysymys)
     {:kysymys_fi (:kylla_teksti_fi kysymys)
      :kysymys_sv (:kylla_teksti_sv kysymys)
-     :jakauma (rest (muodosta-asteikko-jakauman-esitys (jaottele-jatkokysymys-asteikko vastaukset)))
+     :jakauma (butlast (muodosta-asteikko-jakauman-esitys (jaottele-jatkokysymys-asteikko vastaukset))) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
      :vastaustyyppi "asteikko"}))
 
 (defn keraa-ei-jatkovastaukset
@@ -194,7 +192,7 @@
     (valitse-kysymyksen-kentat
       (if (:eos_vastaus_sallittu kysymys)
         kasitelty-kysymys
-        (update-in kasitelty-kysymys [:jakauma] rest))))) ;; EOS-vastaus on aina jakauman ensimmäinen
+        (update-in kasitelty-kysymys [:jakauma] butlast))))) ;; EOS-vastaus on aina jakauman viimeinen
 
 (defn kasittele-kysymysryhmat
   [kysymysryhmat vastaukset]
