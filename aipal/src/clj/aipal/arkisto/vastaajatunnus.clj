@@ -76,7 +76,8 @@
     (sql/where {:vastaajatunnusid id})
     sql/exec
     first
-    erota-tutkinto))
+    erota-tutkinto
+    erota-koulutustoimija))
 
 (defn luo-satunnainen-tunnus
   [pituus]
