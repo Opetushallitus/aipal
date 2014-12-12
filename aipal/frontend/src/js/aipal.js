@@ -44,6 +44,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.tallenna',
   'yhteiset.direktiivit.hakuvalitsin',
   'yhteiset.direktiivit.kyselylista',
+  'yhteiset.direktiivit.rullaus',
   'yhteiset.suodattimet.enumarvo',
   'yhteiset.suodattimet.i18n',
   'ui.bootstrap',
