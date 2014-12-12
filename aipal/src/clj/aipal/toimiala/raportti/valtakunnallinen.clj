@@ -40,6 +40,11 @@
                 :nimi_fi
                 :nimi_sv)))
 
+(defn rajaa-kyselykerrat-koulutustoimijoihin [query koulutustoimijat]
+  (-> query
+    (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
+    (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
+
 (defn generoi-joinit [query ehdot]
   (reduce (fn [query {:keys [id arvot]}]
             (sql/where query (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
@@ -89,12 +94,14 @@
                 :vastaus.vapaateksti)
     sql/exec))
 
-(defn hae-vastaajien-maksimimaara []
+(defn hae-vastaajien-maksimimaara [koulutustoimijat]
   (->
     (sql/select* :vastaajatunnus)
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
     (sql/join :inner :kysely_kysymysryhma (= :kysely_kysymysryhma.kyselyid :kyselykerta.kyselyid))
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
+    (cond->
+      koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
@@ -117,4 +124,4 @@
     {:luontipvm (time/today)
      :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
      :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
-     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara)}))
+     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat)}))
