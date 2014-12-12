@@ -94,7 +94,13 @@
                 :vastaus.vapaateksti)
     sql/exec))
 
-(defn hae-vastaajien-maksimimaara [koulutustoimijat tutkintotunnus]
+(defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]
+  (-> query
+    (sql/join :inner :tutkinto (and
+                                 (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus)
+                                 (= :tutkinto.opintoala opintoalatunnus)))))
+
+(defn hae-vastaajien-maksimimaara [koulutustoimijat opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaajatunnus)
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
@@ -102,6 +108,7 @@
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
     (cond->
       tutkintotunnus (sql/where {:vastaajatunnus.tutkintotunnus tutkintotunnus})
+      opintoalatunnus (rajaa-vastaajatunnukset-opintoalalle opintoalatunnus)
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
@@ -125,4 +132,4 @@
     {:luontipvm (time/today)
      :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
      :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
-     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat tutkintotunnus)}))
+     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat opintoalatunnus tutkintotunnus)}))
