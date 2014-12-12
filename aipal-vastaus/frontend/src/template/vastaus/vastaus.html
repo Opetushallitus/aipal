@@ -75,7 +75,7 @@
 
         <div ng-if="kysymys.pakollinen && kysymys.eos_vastaus_sallittu" class="vastaus_valinnat eos">
           <label>
-            <input type="radio" ng-model="kysymys.vastaus" value="EOS" name="kysymys_{{kysymys.kysymysid}}"
+            <input type="radio" ng-required="kysymys.pakollinen" ng-model="kysymys.vastaus" value="EOS" name="kysymys_{{kysymys.kysymysid}}"
               ng-disabled="kysymys.vastaustyyppi === 'monivalinta' && kysymys.monivalinta_max > 1 && monivalinta[kysymys.kysymysid] > 0">
             {{ i18n.yleiset.eikokemusta }}
           </label>
@@ -92,7 +92,7 @@
     <div class="required-notice" ng-if="vastausForm.$error.required">
         <h4 ng-bind="i18n.yleiset.vastaa_viela"></h4>
         <div ng-repeat="kysymysryhma in data.kysymysryhmat">
-            <div ng-repeat="kysymys in kysymysryhma.kysymykset" ng-if="kysymys.pakollinen && !kysymys.vastaus">
+            <div ng-repeat="kysymys in kysymysryhma.kysymykset" ng-if="kysymys.pakollinen && (kysymys.vastaus === undefined || kysymys.vastaus === false)">
                 <a href="" ng-click="gotoQuestion(kysymys.kysymysid)">{{kysymys | lokalisoiKentta:'kysymys'}}</a>
             </div>
         </div>
