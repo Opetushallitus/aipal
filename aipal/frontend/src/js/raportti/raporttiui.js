@@ -33,6 +33,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       _.forEach($scope.koulutusalat, function(koulutusala) {
         delete koulutusala.valittu;
       });
+      $scope.raportti.koulutusalat = [];
     };
     var poistaOpintoalaValinnat = function() {
       _.forEach($scope.koulutusalat, function(koulutusala) {
@@ -40,6 +41,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           delete opintoala.valittu;
         });
       });
+      $scope.raportti.opintoalat = [];
     };
     var poistaTutkintoValinnat = function() {
       _.forEach($scope.koulutusalat, function(koulutusala) {
@@ -49,6 +51,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           });
         });
       });
+      $scope.raportti.tutkinnot = [];
     };
 
     var tyhjaaTaustakysymysvalinnat = function() {
