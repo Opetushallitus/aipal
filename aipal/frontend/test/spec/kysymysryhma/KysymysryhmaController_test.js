@@ -238,4 +238,28 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     expect(ilmoitus.varoitus).toHaveBeenCalled();
   });
 
+  it('kopioi vain likert-tyyppiset kyllä-jatkokysymykset', function(){
+    $httpBackend
+    .whenGET(/api\/kysymysryhma\/1234.*/)
+    .respond(200, {kysymysryhmaid: 1234,
+                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k1',
+                                  kylla_vastaustyyppi: 'likert_asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k2',
+                                  kylla_vastaustyyppi: 'asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {ei_kysymys_fi: 'k3'}}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(_.map($scope.kysymysryhma.kysymykset, 'jatkokysymys'))
+    .toEqual([{kylla_kysymys_fi: 'k1',
+               kylla_vastaustyyppi: 'likert_asteikko'},
+              undefined,
+              {ei_kysymys_fi: 'k3'}]);
+  });
+
 });

@@ -214,12 +214,23 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
           if (kopioi) {
             delete kysymysryhma.kysymysryhmaid;
             var kysymystenMaara = kysymysryhma.kysymykset.length;
+            // Poistetaan asteikko-tyyppiset kysymykset
             kysymysryhma.kysymykset = _.filter(kysymysryhma.kysymykset, function(k) {
               return k.vastaustyyppi !== 'asteikko';
             });
             if (kysymystenMaara > kysymysryhma.kysymykset.length) {
               ilmoitus.varoitus(i18n.hae('kysymysryhma.asteikkokysymyksen_kopiointi'));
             }
+            // Poistetaan asteikko-tyyppiset jatkokysymykset
+            kysymysryhma.kysymykset = _.map(kysymysryhma.kysymykset, function(k){
+              if (k.jatkokysymys && k.jatkokysymys.kylla_vastaustyyppi === 'asteikko') {
+                var k2 = _.clone(k);
+                delete k2.jatkokysymys;
+                return k2;
+              } else {
+                return k;
+              }
+            });
           }
           $scope.kysymysryhma = kysymysryhma;
         })
