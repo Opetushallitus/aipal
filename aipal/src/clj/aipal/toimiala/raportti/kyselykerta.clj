@@ -44,6 +44,15 @@
     (sql/group :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
     (sql/order :tutkinto.tutkintotunnus)))
 
+(defn hae-vastaajien-maksimimaara [kyselykertaid]
+  (->
+    (sql/select* :vastaajatunnus)
+    (sql/aggregate (sum :vastaajien_lkm) :vastaajien_maksimimaara)
+    (sql/where {:kyselykertaid kyselykertaid})
+    sql/exec
+    first
+    :vastaajien_maksimimaara))
+
 (defn ^:private hae-kysymykset [kyselykertaid]
   (sql/select :kyselykerta
     (sql/join :inner :kysely
@@ -132,7 +141,8 @@
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
     {:kyselykerta (assoc kyselykerta :tutkinnot (hae-vastaajatunnusten-tutkinnot kyselykertaid))
-     :luontipvm (time/today)}))
+     :luontipvm (time/today)
+     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara kyselykertaid)}))
 
 (defn muodosta-raportti [kyselykertaid]
   (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]

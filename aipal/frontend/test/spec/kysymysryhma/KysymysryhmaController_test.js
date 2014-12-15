@@ -21,6 +21,7 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
   var $controller;
   var $location;
   var ilmoitus;
+  var $routeParams;
 
   beforeEach(module('kysymysryhma.kysymysryhmaui'));
 
@@ -28,9 +29,13 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $location = {path: jasmine.createSpy('path')};
     $provide.value('$location', $location);
 
+    $routeParams = {};
+    $provide.value('$routeParams', $routeParams);
+
     $provide.value('i18n', {hae: function(){return '';}});
 
     ilmoitus = {onnistuminen: jasmine.createSpy('onnistuminen'),
+                varoitus: jasmine.createSpy('varoitus'),
                 virhe: jasmine.createSpy('virhe')};
     $provide.value('ilmoitus', ilmoitus);
     $provide.value('uusi', true);
@@ -43,9 +48,14 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $controller = _$controller_;
   }));
 
-  function alustaController() {
-    $controller('KysymysryhmaController', {$scope: $scope});
+  function alustaController(injektiot) {
+    $controller('KysymysryhmaController', _.assign({$scope: $scope}, injektiot));
     $scope.form = { $setPristine: function() {} };
+  }
+
+  function alustaControllerKopioimaan(kysymysryhmaid) {
+    $routeParams.kysymysryhmaid = kysymysryhmaid;
+    alustaController({kopioi: true});
   }
 
   it('lähettää kysymysryhmän tiedot backendiin, kun luontinappia painetaan', function(){
@@ -177,6 +187,111 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $scope.kysymysryhma.kysymykset[0].vastaustyyppi = 'likert_asteikko';
     $scope.$digest();
     expect($scope.tallennusSallittu).toBe(true);
+  });
+
+  it('hakee kopioitavan ryhmän tiedot palvelimelta', function(){
+    $httpBackend.whenGET(/api\/kysymysryhma\/1234.*/)
+                .respond(200, {kysymysryhmaid: 1234,
+                               kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
+                                            {vastaustyyppi: 'likert_asteikko'},
+                                            {vastaustyyppi: 'monivalinta'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect($scope.kysymysryhma)
+    .toEqual({kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
+                           {vastaustyyppi: 'likert_asteikko'},
+                           {vastaustyyppi: 'monivalinta'}]});
+  });
+
+  it('ei kopioi asteikko-tyyppisiä kysymyksiä', function(){
+    $httpBackend.whenGET(/api\/kysymysryhma\/1234.*/)
+                .respond(200, {kysymysryhmaid: 1234,
+                               kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
+                                            {vastaustyyppi: 'asteikko'},
+                                            {vastaustyyppi: 'monivalinta'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect($scope.kysymysryhma)
+    .toEqual({kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
+                           {vastaustyyppi: 'monivalinta'}]});
+  });
+
+  it('ei näytä varoitusta, jos kaikki kysymykset ovat kopioitavissa', function(){
+    $httpBackend.whenGET(/api\/kysymysryhma\/1234.*/)
+                .respond(200, {kysymysryhmaid: 1234,
+                               kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
+                                            {vastaustyyppi: 'likert_asteikko'},
+                                            {vastaustyyppi: 'monivalinta'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).not.toHaveBeenCalled();
+  });
+
+  it('näyttää varoituksen, jos jokin kysymys ei ole kopioitavissa', function(){
+    $httpBackend.whenGET(/api\/kysymysryhma\/1234.*/)
+                .respond(200, {kysymysryhmaid: 1234,
+                               kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
+                                            {vastaustyyppi: 'asteikko'},
+                                            {vastaustyyppi: 'monivalinta'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).toHaveBeenCalled();
+  });
+
+  it('kopioi vain likert-tyyppiset kyllä-jatkokysymykset', function(){
+    $httpBackend
+    .whenGET(/api\/kysymysryhma\/1234.*/)
+    .respond(200, {kysymysryhmaid: 1234,
+                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k1',
+                                  kylla_vastaustyyppi: 'likert_asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k2',
+                                  kylla_vastaustyyppi: 'asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {ei_kysymys_fi: 'k3'}}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(_.map($scope.kysymysryhma.kysymykset, 'jatkokysymys'))
+    .toEqual([{kylla_kysymys_fi: 'k1',
+               kylla_vastaustyyppi: 'likert_asteikko'},
+              undefined,
+              {ei_kysymys_fi: 'k3'}]);
+  });
+
+  it('ei näytä varoitusta, jos kaikki jatkokysymykset ovat kopioitavissa', function(){
+    $httpBackend
+    .whenGET(/api\/kysymysryhma\/1234.*/)
+    .respond(200, {kysymysryhmaid: 1234,
+                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k1',
+                                  kylla_vastaustyyppi: 'likert_asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {ei_kysymys_fi: 'k4'}}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).not.toHaveBeenCalled();
+  });
+
+  it('näyttää varoituksen, jos jokin jatkokysymys ei ole kopioitavissa', function(){
+    $httpBackend
+    .whenGET(/api\/kysymysryhma\/1234.*/)
+    .respond(200, {kysymysryhmaid: 1234,
+                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k1',
+                                  kylla_vastaustyyppi: 'asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {ei_kysymys_fi: 'k4'}}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).toHaveBeenCalled();
   });
 
 });

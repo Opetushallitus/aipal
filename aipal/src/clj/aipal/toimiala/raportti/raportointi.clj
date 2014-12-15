@@ -175,24 +175,38 @@
     "monivalinta" lisaa-monivalinnan-jakauma
     "vapaateksti" lisaa-vastausten-vapaateksti))
 
+(defn suodata-eos-vastaukset [kysymys]
+  (if (:eos_vastaus_sallittu kysymys)
+    kysymys
+    (update-in kysymys [:jakauma] butlast))) ;; EOS-vastaus on aina jakauman viimeinen
+
 (defn valitse-kysymyksen-kentat
   [kysymys]
   (select-keys kysymys [:kysymys_fi
                         :kysymys_sv
                         :jakauma
                         :vastaukset
+                        :vastaajien_lukumaara
                         :jatkovastaukset
                         :vastaustyyppi
                         :eos_vastaus_sallittu]))
 
+(defn vastaajien-lukumaara [vastaukset]
+  (->> vastaukset
+    (map :vastaajaid)
+    distinct
+    count))
+
 (defn kasittele-kysymykset
   [kysymykset vastaukset]
   (for [kysymys kysymykset
-        :let [kasitelty-kysymys ((kysymyksen-kasittelija kysymys) kysymys (kysymyksen-vastaukset kysymys vastaukset))]]
-    (valitse-kysymyksen-kentat
-      (if (:eos_vastaus_sallittu kysymys)
-        kasitelty-kysymys
-        (update-in kasitelty-kysymys [:jakauma] butlast))))) ;; EOS-vastaus on aina jakauman viimeinen
+        :let [vastaukset-kysymykseen (kysymyksen-vastaukset kysymys vastaukset)
+              vastaajia (vastaajien-lukumaara vastaukset-kysymykseen)
+              kasitelty-kysymys ((kysymyksen-kasittelija kysymys) kysymys vastaukset-kysymykseen)]]
+    (-> kasitelty-kysymys
+      (assoc :vastaajien_lukumaara vastaajia)
+      suodata-eos-vastaukset
+      valitse-kysymyksen-kentat)))
 
 (defn kasittele-kysymysryhmat
   [kysymysryhmat vastaukset]

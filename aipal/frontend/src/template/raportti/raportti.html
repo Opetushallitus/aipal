@@ -2,7 +2,7 @@
   {{'raportit.liian_vahan_vastaajia' | i18n}}
 </div>
 
-<div class="raportti-kyselykerta-tiedot">
+<div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div ng-if="tulos.kyselykerta">
     <div>
       {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.kyselykerta.nimi}}</span>
@@ -29,12 +29,21 @@
           <td ng-if="!tutkinto.tutkintotunnus">{{'raportti.ei_tutkintotietoa' | i18n}}</td>
           <td>{{tutkinto.vastaajien_lkm}}</td>
         </tr>
+        <tr>
+          <td>{{'raportti.yhteensa' | i18n }}</td>
+          <td>{{kaikkienVastaajienLukumaara}}
+        </tr>
       </tbody>
     </table>
-    <hr>
   </div>
   <div>
-    {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
+    <div>
+      {{'raportti.kohderyhman_koko' | i18n }}: {{tulos.vastaajien_maksimimaara}}
+    </div>
+    <hr>
+    <div>
+      {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
+    </div>
   </div>
 </div>
 
@@ -43,6 +52,9 @@
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
+    <p>
+      {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
+    </p>
 
     <jakauma-kaavio
       ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'"

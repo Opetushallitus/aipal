@@ -213,12 +213,28 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
         .success(function(kysymysryhma) {
           if (kopioi) {
             delete kysymysryhma.kysymysryhmaid;
+            // Poistetaan asteikko-tyyppiset kysymykset
             var kysymystenMaara = kysymysryhma.kysymykset.length;
             kysymysryhma.kysymykset = _.filter(kysymysryhma.kysymykset, function(k) {
               return k.vastaustyyppi !== 'asteikko';
             });
             if (kysymystenMaara > kysymysryhma.kysymykset.length) {
               ilmoitus.varoitus(i18n.hae('kysymysryhma.asteikkokysymyksen_kopiointi'));
+            }
+            // Poistetaan asteikko-tyyppiset jatkokysymykset
+            var alkuperaisetJatkokysymykset = _.map(kysymysryhma.kysymykset, 'jatkokysymys');
+            kysymysryhma.kysymykset = _.map(kysymysryhma.kysymykset, function(k){
+              if (k.jatkokysymys && k.jatkokysymys.kylla_vastaustyyppi === 'asteikko') {
+                var k2 = _.clone(k);
+                delete k2.jatkokysymys;
+                return k2;
+              } else {
+                return k;
+              }
+            });
+            var suodatetutJatkokysymykset = _.map(kysymysryhma.kysymykset, 'jatkokysymys');
+            if (!_.isEqual(suodatetutJatkokysymykset, alkuperaisetJatkokysymykset)) {
+              ilmoitus.varoitus(i18n.hae('kysymysryhma.asteikkojatkokysymyksen_kopiointi'));
             }
           }
           $scope.kysymysryhma = kysymysryhma;

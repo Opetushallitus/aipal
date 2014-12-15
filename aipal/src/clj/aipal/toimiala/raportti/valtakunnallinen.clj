@@ -89,6 +89,42 @@
                 :vastaus.vapaateksti)
     sql/exec))
 
+(defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]
+  (-> query
+    (sql/join :inner :tutkinto (and
+                                 (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus)
+                                 (= :tutkinto.opintoala opintoalatunnus)))))
+
+(defn rajaa-vastaajatunnukset-koulutusalalle [query koulutusalatunnus]
+  (-> query
+    (sql/join :inner :tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+    (sql/join :inner :opintoala {:opintoala.opintoalatunnus :tutkinto.opintoala
+                                 :opintoala.koulutusala koulutusalatunnus})))
+
+(defn rajaa-kyselykerrat-koulutustoimijoihin [query koulutustoimijat]
+  (-> query
+    (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
+    (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
+
+(defn hae-vastaajien-maksimimaara [koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+  (->
+    (sql/select* :vastaajatunnus)
+    (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
+    (sql/join :inner :kysely_kysymysryhma (= :kysely_kysymysryhma.kyselyid :kyselykerta.kyselyid))
+    (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid))
+    (cond->
+      tutkintotunnus (sql/where {:vastaajatunnus.tutkintotunnus tutkintotunnus})
+      opintoalatunnus (rajaa-vastaajatunnukset-opintoalalle opintoalatunnus)
+      koulutusalatunnus (rajaa-vastaajatunnukset-koulutusalalle koulutusalatunnus)
+      koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
+    (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
+    (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
+    sql/exec
+    (->>
+      (map :vastaajien_lkm)
+      (reduce +))))
+
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
@@ -102,4 +138,5 @@
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
     {:luontipvm (time/today)
      :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
-     :vastaajien-lkm (count (group-by :vastaajaid vastaukset))}))
+     :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
+     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)}))

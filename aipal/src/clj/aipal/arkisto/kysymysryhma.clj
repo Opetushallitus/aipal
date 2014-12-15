@@ -89,6 +89,7 @@
                 :kysymys.max_vastaus :kysymys.monivalinta_max
                 :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
                 :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv
+                :jatkokysymys.kylla_vastaustyyppi
                 [:jatkokysymys.max_vastaus :jatkokysymys_max_vastaus])
     (sql/order :kysymys.jarjestys)))
 
@@ -99,7 +100,8 @@
 
 (def kylla-jatkokysymykset-kentat
   [:kylla_teksti_fi
-   :kylla_teksti_sv])
+   :kylla_teksti_sv
+   :kylla_vastaustyyppi])
 
 (def ei-jatkokysymykset-kentat
   [:ei_teksti_fi

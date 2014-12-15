@@ -28,7 +28,7 @@
             <h4>{{kysymys | lokalisoiKentta:'kylla_teksti'}}</h4>
             <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
               <input type="radio" ng-model="kysymys.jatkovastaus_kylla" ng-value="vaihtoehto" name="kysymys_kylla_{{kysymys.kysymysid}}">
-              {{ i18n.yleiset.asteikko[vaihtoehto] }}
+              {{ i18n.yleiset[kysymys.kylla_vastaustyyppi][vaihtoehto] }}
             </label>
           </div>
           <div class="jatkokysymys" ng-if="kysymys.vastaus === 'ei' && kysymys.ei_teksti_fi">
