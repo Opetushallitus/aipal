@@ -4,14 +4,21 @@
 (ns aipal.infra.kayttaja.vaihto
   (:require [clojure.tools.logging :as log]
             [korma.core :as sql]
+            [aipal.asetukset :refer [asetukset]]
+            [oph.common.util.util :refer [map-by]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [aipal.infra.kayttaja.vakiot :refer [jarjestelma-oid]]
+            [aipal.infra.kayttaja.vakiot :refer [jarjestelma-oid integraatio-uid]]
+            [aipal.toimiala.kayttajaroolit :refer [ldap-ryhma->rooli]]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
-            [aipal.infra.kayttaja.sql :refer [with-sql-kayttaja]]))
+            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
+            [aipal.infra.kayttaja.sql :refer [with-sql-kayttaja]]
+            [aipal.integraatio.kayttooikeuspalvelu :as kayttooikeuspalvelu]))
 
 (defn kayttajan-nimi [k]
   (str (:etunimi k) " " (:sukunimi k)))
+
+(declare hae-kayttaja-ldapista)
 
 (defn with-kayttaja* [uid impersonoitu-oid f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
@@ -31,7 +38,18 @@
         (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
         (with-sql-kayttaja (:oid k)
           (f))))
-    (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid)))))
+    (if (hae-kayttaja-ldapista uid)
+      (recur uid impersonoitu-oid f)
+      (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid))))))
 
 (defmacro with-kayttaja [uid impersonoitu-oid & body]
   `(with-kayttaja* ~uid ~impersonoitu-oid (fn [] ~@body)))
+
+(defn hae-kayttaja-ldapista [uid]
+  (with-kayttaja integraatio-uid nil
+    (let [kop (kayttooikeuspalvelu/tee-kayttooikeuspalvelu (:ldap-auth-server @asetukset))
+          oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))
+          kayttaja (kayttooikeuspalvelu/kayttaja kop uid oid->ytunnus ldap-ryhma->rooli)]
+      (when kayttaja
+        (kayttajaoikeus-arkisto/paivita-kayttaja! kayttaja)
+        (kayttaja-arkisto/hae-voimassaoleva uid)))))

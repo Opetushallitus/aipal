@@ -18,7 +18,8 @@
 ;; with-kayttaja heittää IllegalStateExceptionin jos UIDilla ei löydy
 ;; voimassaolevaa käyttäjää.
 (deftest with-kayttaja-ei-voimassaolevaa-kayttajaa
-  (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly nil)]
+  (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly nil)
+                hae-kayttaja-ldapista (constantly nil)]
     (is (thrown? IllegalStateException (with-kayttaja "uid" nil)))))
 
 ;; Jos UIDilla löytyy voimassaoleva käyttäjä, with-kayttaja ajaa annetun koodin

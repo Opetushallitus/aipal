@@ -87,3 +87,14 @@
             kayttaja (dissoc k :rooli :organisaatio)]
         (kayttaja-arkisto/paivita-kayttaja! kayttaja)
         (paivita-rooli! rooli)))))
+
+(defn ^:integration-api paivita-kayttaja!
+  "Päivittää yhden käyttäjän käyttäjätauluun"
+  [k]
+  {:pre [(= (:uid *kayttaja*) integraatio-uid)]}
+  (db/transaction
+    (let [kayttaja (dissoc k :roolit)]
+      (kayttaja-arkisto/paivita-kayttaja! kayttaja)
+      (doseq [r (:roolit k)
+              :let [rooli (assoc r :kayttaja (:oid kayttaja))]]
+        (paivita-rooli! rooli)))))

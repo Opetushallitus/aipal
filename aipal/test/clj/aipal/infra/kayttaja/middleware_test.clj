@@ -4,9 +4,14 @@
             [aipal.sql.test-util :refer [tietokanta-fixture]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [aipal.infra.kayttaja.middleware :refer :all]))
+            [aipal.infra.kayttaja.middleware :refer :all]
+            aipal.infra.kayttaja.vaihto))
 
-(use-fixtures :each tietokanta-fixture)
+(defn ldap-fixture [f]
+  (with-redefs [aipal.infra.kayttaja.vaihto/hae-kayttaja-ldapista (constantly nil)]
+    (f)))
+
+(use-fixtures :each (compose-fixtures tietokanta-fixture ldap-fixture))
 
 ;; wrap-kayttaja palauttaa 403, jos CAS-käyttäjä ei ole voimassaoleva Aipal-käyttäjä.
 (deftest ^:integraatio wrap-kayttaja-403
