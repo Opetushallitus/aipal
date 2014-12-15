@@ -207,10 +207,16 @@
       suodata-eos-vastaukset
       valitse-kysymyksen-kentat)))
 
+(defn kysymysryhmaan-vastanneiden-lukumaara [kysymysryhma]
+  (vastaajien-lukumaara (reduce concat (map :vastaukset (:kysymykset kysymysryhma)))))
+
 (defn kasittele-kysymysryhmat
   [kysymysryhmat]
-  (for [kysymysryhma kysymysryhmat]
-    (update-in kysymysryhma [:kysymykset] kasittele-kysymykset)))
+  (for [kysymysryhma kysymysryhmat
+        :let [vastaajia (kysymysryhmaan-vastanneiden-lukumaara kysymysryhma)]]
+    (-> kysymysryhma
+      (assoc :vastaajien_lukumaara vastaajia)
+      (update-in [:kysymykset] kasittele-kysymykset))))
 
 (defn liita-kysymyksiin-vastaukset [kysymykset kaikki-vastaukset]
   (for [kysymys kysymykset]
