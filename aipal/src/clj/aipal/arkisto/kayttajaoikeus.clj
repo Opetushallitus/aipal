@@ -34,10 +34,10 @@
     (hae-oikeudet (:oid *kayttaja*))))
 
 (defn hae-rooli [rooli kayttaja organisaatio]
-  (sql/select taulut/rooli-organisaatio
-    (sql/where {:rooli rooli
-                :kayttaja kayttaja
-                :organisaatio organisaatio})))
+  (first (sql/select taulut/rooli-organisaatio
+           (sql/where {:rooli rooli
+                       :kayttaja kayttaja
+                       :organisaatio organisaatio}))))
 
 (defn hae-roolit [oid]
   (sql/select taulut/rooli-organisaatio
