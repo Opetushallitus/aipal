@@ -15,6 +15,7 @@
 (defproject aipal "0.1.0-SNAPSHOT"
   :description "AIPAL"
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [org.clojure/core.cache "0.6.4"]
                  [ring/ring-core "1.2.1"]
                  [http-kit "2.1.18"]
 
@@ -48,6 +49,8 @@
 
                  [robert/hooke "1.3.0"]
                  [peridot "0.3.0"]
+                 
+                 [clj-gatling "0.4.1"]
 
                  [stencil "0.3.2"]]
   :plugins [[test2junit "1.0.1"]]
@@ -64,8 +67,9 @@
   :java-source-paths ["src/java"]
   :test-paths ["test/clj"]
   :test-selectors {:kaikki (constantly true)
-                   :default (complement :integraatio)
-                   :integraatio :integraatio}
+                   :default  (complement (some-fn :integraatio :performance))
+                   :integraatio :integraatio
+                   :performance :performance}
   :jar-name "aipal.jar"
   :uberjar-name "aipal-standalone.jar"
   :main aipal.palvelin
