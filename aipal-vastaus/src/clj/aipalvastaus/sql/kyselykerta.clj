@@ -45,6 +45,7 @@
                 :jatkokysymys.jatkokysymysid
                 :jatkokysymys.kylla_teksti_fi
                 :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.kylla_vastaustyyppi
                 :jatkokysymys.ei_teksti_fi
                 :jatkokysymys.ei_teksti_sv
                 [:jatkokysymys.max_vastaus :ei_max_vastaus])
