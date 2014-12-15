@@ -87,6 +87,7 @@
                 :jatkokysymys.kylla_kysymys
                 :jatkokysymys.kylla_teksti_fi
                 :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.kylla_vastaustyyppi
                 :jatkokysymys.ei_kysymys
                 :jatkokysymys.ei_teksti_fi
                 :jatkokysymys.ei_teksti_sv)))
