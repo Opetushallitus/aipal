@@ -198,28 +198,30 @@
     count))
 
 (defn kasittele-kysymykset
-  [kysymykset vastaukset]
+  [kysymykset]
   (for [kysymys kysymykset
-        :let [vastaukset-kysymykseen (kysymyksen-vastaukset kysymys vastaukset)
-              vastaajia (vastaajien-lukumaara vastaukset-kysymykseen)
-              kasitelty-kysymys ((kysymyksen-kasittelija kysymys) kysymys vastaukset-kysymykseen)]]
+        :let [vastaajia (vastaajien-lukumaara (:vastaukset kysymys))
+              kasitelty-kysymys ((kysymyksen-kasittelija kysymys) kysymys (:vastaukset kysymys))]]
     (-> kasitelty-kysymys
       (assoc :vastaajien_lukumaara vastaajia)
       suodata-eos-vastaukset
       valitse-kysymyksen-kentat)))
 
 (defn kasittele-kysymysryhmat
-  [kysymysryhmat vastaukset]
+  [kysymysryhmat]
   (for [kysymysryhma kysymysryhmat]
-    (update-in kysymysryhma [:kysymykset] #(kasittele-kysymykset % vastaukset))))
+    (update-in kysymysryhma [:kysymykset] kasittele-kysymykset)))
 
-(defn ryhmittele-kysymykset-kysymysryhmittain [kysymykset kysymysryhmat]
+(defn liita-kysymyksiin-vastaukset [kysymykset kaikki-vastaukset]
+  (for [kysymys kysymykset]
+    (assoc kysymys :vastaukset (kysymyksen-vastaukset kysymys kaikki-vastaukset))))
+
+(defn ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain [kysymykset vastaukset kysymysryhmat]
   (let [kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
     (for [kysymysryhma kysymysryhmat
           :let [kysymykset (get kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))]]
-      (assoc kysymysryhma :kysymykset kysymykset))))
+      (assoc kysymysryhma :kysymykset (liita-kysymyksiin-vastaukset kysymykset vastaukset)))))
 
 (defn muodosta-raportti-vastauksista
   [kysymysryhmat kysymykset vastaukset]
-  (kasittele-kysymysryhmat (ryhmittele-kysymykset-kysymysryhmittain kysymykset kysymysryhmat)
-                           vastaukset))
+  (kasittele-kysymysryhmat (ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain kysymykset vastaukset kysymysryhmat)))
