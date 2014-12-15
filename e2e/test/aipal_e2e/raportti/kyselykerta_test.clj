@@ -60,7 +60,7 @@
   (map w/text
        (w/find-elements-under kysymys-elementti
                               (-> *ng*
-                                (.repeater "vastaus in kysymys.vastaukset")
+                                (.repeater "vastaus in kysymys.vapaatekstivastaukset")
                                 (.column "teksti")))))
 
 (defn css-sarakkeet-kysymykselle [css-luokka kysymys-elementti]

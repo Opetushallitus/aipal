@@ -170,7 +170,7 @@
 
 (deftest keraa-ei-jatkovastaukset-test
   (let [ei-kysymys {:ei_kysymys true :ei_teksti_fi "kysymys"}]
-    (are [kuvaus vastaukset odotettu-tulos] (is (= (:vastaukset (keraa-ei-jatkovastaukset ei-kysymys vastaukset)) odotettu-tulos) kuvaus)
+    (are [kuvaus vastaukset odotettu-tulos] (is (= (:vapaatekstivastaukset (keraa-ei-jatkovastaukset ei-kysymys vastaukset)) odotettu-tulos) kuvaus)
          "ei vastauksia" [] []
          "yksi vastaus" [{:ei_vastausteksti "vastaus1"}] [{:teksti "vastaus1"}]
          "useampi vastaus" [{:ei_vastausteksti "vastaus1"} {:ei_vastausteksti "vastaus2"}] [{:teksti "vastaus1"} {:teksti "vastaus2"}]

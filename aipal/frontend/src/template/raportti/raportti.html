@@ -101,7 +101,7 @@
             <tr><th>{{'raportti.vastaukset' |i18n}}:</th></tr>
           </thead>
           <tbody>
-            <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vastaukset">
+            <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vapaatekstivastaukset">
               <td>{{vastaus.teksti}}</td>
             </tr>
           </tbody>
@@ -114,7 +114,7 @@
         <tr><th>{{'raportti.vastaukset' |i18n}}:</th></tr>
       </thead>
       <tbody>
-        <tr ng-repeat="vastaus in kysymys.vastaukset">
+        <tr ng-repeat="vastaus in kysymys.vapaatekstivastaukset">
           <td>{{vastaus.teksti}}</td>
         </tr>
       </tbody>

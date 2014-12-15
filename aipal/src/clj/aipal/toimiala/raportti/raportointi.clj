@@ -141,7 +141,7 @@
     (let [ei-vastaukset (keep :ei_vastausteksti vastaukset)]
       {:kysymys_fi (:ei_teksti_fi kysymys)
        :kysymys_sv (:ei_teksti_sv kysymys)
-       :vastaukset (for [v ei-vastaukset] {:teksti v})
+       :vapaatekstivastaukset (for [v ei-vastaukset] {:teksti v})
        :vastaustyyppi "vapaateksti"})))
 
 (defn keraa-jatkovastaukset
@@ -162,7 +162,7 @@
 
 (defn ^:private lisaa-vastausten-vapaateksti
   [kysymys vastaukset]
-  (assoc kysymys :vastaukset
+  (assoc kysymys :vapaatekstivastaukset
          (for [v vastaukset] {:teksti (:vapaateksti v)})))
 
 (defn kysymyksen-kasittelija
@@ -185,7 +185,7 @@
   (select-keys kysymys [:kysymys_fi
                         :kysymys_sv
                         :jakauma
-                        :vastaukset
+                        :vapaatekstivastaukset
                         :vastaajien_lukumaara
                         :jatkovastaukset
                         :vastaustyyppi
