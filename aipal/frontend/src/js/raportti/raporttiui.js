@@ -51,6 +51,12 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
     };
 
+    var tyhjaaTaustakysymysvalinnat = function() {
+      _.forEach($scope.raportti.kysymykset, function (kysymys) {
+        kysymys.monivalinnat = {};
+      });
+    };
+
     $scope.vaihdaTyyppi = function(tyyppi) {
       $scope.raportti.tyyppi = tyyppi;
 
@@ -58,6 +64,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       poistaKoulutusalaValinnat();
       poistaOpintoalaValinnat();
       poistaTutkintoValinnat();
+      tyhjaaTaustakysymysvalinnat();
     };
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
