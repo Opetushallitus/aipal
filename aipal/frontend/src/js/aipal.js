@@ -47,6 +47,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.rullaus',
   'yhteiset.suodattimet.enumarvo',
   'yhteiset.suodattimet.i18n',
+  'pasvaz.bindonce',
   'ui.bootstrap',
   'ngRoute',
   'ui.select2',
