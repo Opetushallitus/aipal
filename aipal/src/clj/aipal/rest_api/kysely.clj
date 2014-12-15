@@ -70,6 +70,12 @@
                                       [:voimassa_alkupvm :voimassa_loppupvm]
                                       parse-iso-date))))
 
+  (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid" [kyselyid]
+    (let [kyselyid (Integer/parseInt kyselyid)]
+      (if (= (:tila (arkisto/hae kyselyid)) "luonnos")
+        (arkisto/poista-kysely! kyselyid)
+        {:status 403})))
+
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (when-let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
                      (assoc kysely :kysymysryhmat (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))))

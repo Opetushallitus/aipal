@@ -37,6 +37,9 @@ angular.module('rest.kysely', [])
       },
       palauta: function(id) {
         return $http.put('api/kysely/palauta/' + id);
+      },
+      poista: function(id) {
+        return $http.delete('api/kysely/' + id);
       }
     };
   }]);

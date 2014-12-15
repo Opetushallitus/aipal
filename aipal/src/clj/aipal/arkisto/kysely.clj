@@ -100,6 +100,15 @@
     (sql/where {:kyselyid kyselyid}))
   (hae kyselyid))
 
+(defn poista-kysely! [kyselyid]
+  (auditlog/kysely-poisto! kyselyid)
+  (sql/delete taulut/kysely_kysymysryhma
+    (sql/where {:kyselyid kyselyid}))
+  (sql/delete taulut/kysely_kysymys
+    (sql/where {:kyselyid kyselyid}))
+  (sql/delete taulut/kysely
+    (sql/where {:kyselyid kyselyid})))
+
 (defn hae-kysymysryhmat [kyselyid]
   (->
     (sql/select* taulut/kysymysryhma)

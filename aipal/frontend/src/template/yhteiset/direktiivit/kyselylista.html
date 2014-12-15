@@ -23,6 +23,10 @@
                       {{ 'kysely.julkaise' | i18n }}&nbsp;
                       <span class="fa fa-share"></span>
                   </button>
+                  <button class="btn btn-primary pull-left e2e-poista-kysely" ng-click="poistaKyselyModal(kyselyt, kysely)">
+                      {{ 'kysely.poista' | i18n }}&nbsp;
+                      <span class="fa fa-remove"></span>
+                  </button>
               </auth>
               <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">
                   <button class="btn btn-primary pull-left e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">

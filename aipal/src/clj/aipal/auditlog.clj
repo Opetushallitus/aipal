@@ -49,6 +49,10 @@
     (kirjoita! :kysely :paivitys {:kyselyid kyselyid
                                   :tila tilamuutos})))
 
+(defn kysely-poisto!
+  [kyselyid]
+  (kirjoita! :kysely :poisto {:kyselyid kyselyid}))
+
 (defn kysely-luonti!
   [kyselyid nimi_fi]
   (kirjoita! :kysely :lisays {:kyselyid kyselyid

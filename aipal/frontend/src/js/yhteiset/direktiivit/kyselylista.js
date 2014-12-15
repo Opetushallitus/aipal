@@ -40,6 +40,21 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
           });
         };
 
+        $scope.poistaKyselyModal = function(kyselylista, kysely) {
+          varmistus.varmista(i18n.hae('kysely.poista'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.poista_ohjeistus'), i18n.hae('kysely.poista')).then(function() {
+            var kyselyid = kysely.kyselyid;
+            var kyselyindex = _.findIndex(kyselylista, {kyselyid: kyselyid});
+            Kysely.poista(kyselyid)
+              .success(function() {
+                kyselylista.splice(kyselyindex, 1);
+                ilmoitus.onnistuminen(i18n.hae('kysely.poisto_onnistui'));
+              })
+              .error(function() {
+                ilmoitus.virhe(i18n.hae('kysely.poisto_epaonnistui'));
+              });
+          });
+        };
+
         $scope.uusiKyselykerta = function (kysely) {
           $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
         };
