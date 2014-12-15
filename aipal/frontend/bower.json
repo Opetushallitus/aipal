@@ -11,7 +11,7 @@
     "angular-resource": "1.2.27",
     "angular-sanitize": "1.2.27",
     "angular-bootstrap": "0.12.0",
-    "angular-placeholder-shim": "0.3.0",
+    "angular-placeholder-tai": "1.0.1",
     "jquery": "2.1.0",
     "lodash": "2.4.1",
     "angular-loading-bar": "0.4.3",
@@ -23,6 +23,7 @@
     "angular-post-message": "1.1.1",
     "fontawesome": "4.2.0",
     "angular-ui-select": "~0.9.1",
-    "angular-ui-sortable": "0.13.1"
+    "angular-ui-sortable": "0.13.1",
+    "angular-bindonce": "0.3.3"
   }
 }

@@ -1,29 +1,34 @@
 <div class="taustakysymykset">
-    <div class="row">
-        <div class="col-md-4">
-            <h3>{{ 'raportit.taustakysymykset' | i18n }}</h3>
-            <select ng-model="raportti.taustakysymysryhmaid" class="form-control">
-                <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">{{ ryhma
-                    |lokalisoiKentta:'nimi' }}
-                </option>
-            </select>
+    <h3 ng-click="taustakysymyksetAvattu = taustakysymyksetAvattu ? !taustakysymyksetAvattu : true">
+        {{ 'raportit.taustakysymykset' | i18n }}
+        <span class="pull-left fa" ng-class="{'fa-caret-up': taustakysymyksetAvattu, 'fa-caret-down': !taustakysymyksetAvattu}"></span>
+    </h3>
+    <div ng-if="taustakysymyksetAvattu">
+        <div class="row">
+            <div class="col-md-4">
+                <select ng-model="raportti.taustakysymysryhmaid" class="form-control">
+                    <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">{{ ryhma
+                        |lokalisoiKentta:'nimi' }}
+                    </option>
+                </select>
+            </div>
         </div>
-    </div>
-    <br/>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="well well-lg">
-                <div class="kysymykset">
-                    <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
-                        <div class="kysymys-otsikko">{{ kysymys |lokalisoiKentta:'kysymys' }}</div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-lg">
+                    <div class="kysymykset">
+                        <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
+                            <div class="kysymys-otsikko">{{ kysymys |lokalisoiKentta:'kysymys' }}</div>
 
-                        <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot"
-                             ng-show="kysymys.vastaustyyppi === 'monivalinta'" class="checkbox">
-                            <label>
-                                <input type="checkbox"
-                                       ng-model="raportti.kysymykset[kysymys.kysymysid].monivalinnat[vaihtoehto.jarjestys]">
-                                {{ vaihtoehto |lokalisoiKentta:'teksti' }}
-                            </label>
+                            <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot"
+                                 ng-show="kysymys.vastaustyyppi === 'monivalinta'" class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           ng-model="raportti.kysymykset[kysymys.kysymysid].monivalinnat[vaihtoehto.jarjestys]">
+                                    {{ vaihtoehto |lokalisoiKentta:'teksti' }}
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>

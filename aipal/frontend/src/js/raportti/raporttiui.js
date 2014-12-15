@@ -51,6 +51,12 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
     };
 
+    var tyhjaaTaustakysymysvalinnat = function() {
+      _.forEach($scope.raportti.kysymykset, function (kysymys) {
+        kysymys.monivalinnat = {};
+      });
+    };
+
     $scope.vaihdaTyyppi = function(tyyppi) {
       $scope.raportti.tyyppi = tyyppi;
 
@@ -58,6 +64,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       poistaKoulutusalaValinnat();
       poistaOpintoalaValinnat();
       poistaTutkintoValinnat();
+      tyhjaaTaustakysymysvalinnat();
     };
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
@@ -84,6 +91,18 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
       $scope.koulutustoimijat = koulutustoimijat;
     });
+
+    $scope.rajoite = {
+      koulutustoimijat: 20
+    };
+
+    $scope.naytaLisaa = function(elem) {
+      $scope.rajoite[elem] += 5;
+    };
+
+    $scope.nollaaRajoite = function(elem) {
+      $scope.rajoite[elem] = 20;
+    };
 
     Tutkinto.haeTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.koulutusalat = koulutusalat;
