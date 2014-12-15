@@ -262,4 +262,36 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
               {ei_kysymys_fi: 'k3'}]);
   });
 
+  it('ei näytä varoitusta, jos kaikki jatkokysymykset ovat kopioitavissa', function(){
+    $httpBackend
+    .whenGET(/api\/kysymysryhma\/1234.*/)
+    .respond(200, {kysymysryhmaid: 1234,
+                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k1',
+                                  kylla_vastaustyyppi: 'likert_asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {ei_kysymys_fi: 'k4'}}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).not.toHaveBeenCalled();
+  });
+
+  it('näyttää varoituksen, jos jokin jatkokysymys ei ole kopioitavissa', function(){
+    $httpBackend
+    .whenGET(/api\/kysymysryhma\/1234.*/)
+    .respond(200, {kysymysryhmaid: 1234,
+                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {kylla_kysymys_fi: 'k1',
+                                  kylla_vastaustyyppi: 'asteikko'}},
+                                {vastaustyyppi: 'kylla_ei_valinta',
+                                 jatkokysymys:
+                                 {ei_kysymys_fi: 'k4'}}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).toHaveBeenCalled();
+  });
+
 });
