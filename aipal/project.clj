@@ -59,6 +59,7 @@
                                   [clj-webdriver "0.6.0"]
                                   [clj-http "0.7.6"]
                                   [ring-mock "0.1.5"]
+                                  [clj-gatling "0.4.1"]
                                   [org.clojure/test.check "0.5.9"]]}
              :uberjar {:main aipal.palvelin
                        :aot :all}
