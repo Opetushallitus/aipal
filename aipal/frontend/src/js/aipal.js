@@ -52,7 +52,7 @@ angular.module('aipal', [
   'ngRoute',
   'ui.select2',
   'ng-breadcrumbs',
-  'placeholderShim',
+  'taiPlaceholder',
   'ngPostMessage',
   'ui.select',
   'ngSanitize',
