@@ -24,7 +24,15 @@
 (defn ryhma-cn-filter [ldap-ryhma]
   {:filter (str "cn=APP_AIPAL_" ldap-ryhma "_*")})
 
+(defn jasen-filter [jasen-dn]
+  {:filter (str "uniqueMember=" jasen-dn)})
+
+(defn kayttaja-dn [uid]
+  (str "uid=" uid ",ou=People,dc=opintopolku,dc=fi"))
+
 (def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
+
+(def kayttaja-base "ou=People,dc=opintopolku,dc=fi")
 
 (defn kayttajat [kayttooikeuspalvelu ldap-ryhma rooli oid->ytunnus]
   (with-open [yhteys (kayttooikeuspalvelu)]
@@ -59,6 +67,29 @@
              :rooli rooli
              :organisaatio (:ytunnus koulutustoimija)}))
         (log/warn "Roolin" rooli "ldap-ryhmää" ldap-ryhma "ei löytynyt, ei lueta roolin käyttäjiä")))))
+
+(defn kayttaja [kayttooikeuspalvelu uid oid->ytunnus ryhma->rooli]
+  (with-open [yhteys (kayttooikeuspalvelu)]
+    (when-let [kayttaja (ldap/get yhteys (kayttaja-dn uid))]
+      (let [etunimi (first (s/split (:cn kayttaja) #" "))
+            sukunimi (:sn kayttaja)
+            ryhmat (ldap/search yhteys ryhma-base (jasen-filter (kayttaja-dn uid)))]
+        {:oid (:employeeNumber kayttaja)
+         :uid (:uid kayttaja)
+         :etunimi etunimi
+         :sukunimi (or sukunimi "")
+         :voimassa true
+         :roolit (for [ldap-ryhma ryhmat
+                       :let [koulutustoimija-oid (last (s/split (:cn ldap-ryhma) #"_"))
+                             ryhma (second (re-matches #"APP_AIPAL_(.*)_[\d.]+" (:cn ldap-ryhma)))
+                             rooli (ryhma->rooli ryhma)
+                             koulutustoimija (or (oid->ytunnus koulutustoimija-oid)
+                                                 (when (contains? oph-roolit rooli)
+                                                   oph-koulutustoimija))]
+                       :when rooli]
+                   {:rooli rooli
+                    :organisaatio (:ytunnus koulutustoimija)
+                    :voimassa true})}))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []
