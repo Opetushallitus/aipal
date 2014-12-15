@@ -27,7 +27,7 @@
   (let [base-url (or (System/getenv "AIPAL_URL") "http://192.168.50.1:8082")
         userid (or (System/getenv "AIPAL_UID")  "T-1001")
         basic-auth (or (System/getenv "AIPAL_AUTH") "pfft:thx")
-        test-ids (doall (map :kyselykertaid (take 4 (kyselykerta-arkisto/hae-kaikki))))
+        test-ids (doall (map :kyselykertaid (take 100 (kyselykerta-arkisto/hae-kaikki))))
         test-reqv (mapv #(kyselekertaid->perf-fn base-url %1 userid basic-auth) test-ids)]
     (println test-ids)
     (run-simulation
