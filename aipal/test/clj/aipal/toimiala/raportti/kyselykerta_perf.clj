@@ -26,5 +26,5 @@
         test-reqv (mapv #(kyselekertaid->perf-fn base-url %1) test-ids)]
     (println test-ids)
     (run-simulation
-      [{:name "Localhost kyselykerta test"
+      [{:name "Satunnaistettu kyselykerta raportin suorituskykytesti"
         :requests test-reqv}] 4)))
