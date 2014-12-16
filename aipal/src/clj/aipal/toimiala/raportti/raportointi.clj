@@ -208,8 +208,11 @@
       valitse-kysymyksen-kentat)))
 
 (defn kysymysryhmaan-vastanneiden-lukumaara [kysymysryhma]
-  (count (reduce into #{} (map (fn [kysymys] (map :vastaajaid (:vastaukset kysymys)))
-                               (:kysymykset kysymysryhma)))))
+  (->> (:kysymykset kysymysryhma)
+    (mapcat :vastaukset)
+    (map :vastaajaid)
+    distinct
+    count))
 
 (defn kasittele-kysymysryhmat
   [kysymysryhmat]
@@ -219,9 +222,11 @@
       (assoc :vastaajien_lukumaara vastaajia)
       (update-in [:kysymykset] kasittele-kysymykset))))
 
-(defn liita-kysymyksiin-vastaukset [kysymykset kaikki-vastaukset]
-  (for [kysymys kysymykset]
-    (assoc kysymys :vastaukset (kysymyksen-vastaukset kysymys kaikki-vastaukset))))
+(defn liita-kysymyksiin-vastaukset [kysymykset vastaukset]
+  (let [kysymysten-vastaukset (group-by :kysymysid vastaukset)]
+    (for [kysymys kysymykset
+          :let [vastaukset (get kysymysten-vastaukset (:kysymysid kysymys))]]
+      (assoc kysymys :vastaukset vastaukset))))
 
 (defn ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain [kysymykset vastaukset kysymysryhmat]
   (let [kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
