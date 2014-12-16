@@ -2,6 +2,8 @@
   {{'raportit.liian_vahan_vastaajia' | i18n}}
 </div>
 
+<div ng-controller="RaporttiVaihtoController" ng-show="tulokset.length > 1"><button ng-click="seuraavaRaportti()">Seuraava raportti {{valittuRaportti + 1}}/{{tulokset.length}}</button></div>
+
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div ng-if="tulos.kyselykerta">
     <div>

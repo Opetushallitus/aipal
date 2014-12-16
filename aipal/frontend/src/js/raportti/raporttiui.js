@@ -154,8 +154,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     $scope.muodostaRaportti = function() {
-      seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulos) {
-        $scope.tulos = tulos[0];
+      seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulokset) {
+        $scope.tulokset = tulokset;
+        $scope.tulos = tulokset[0];
       }).error(function(data, status) {
         if (status !== 500) {
           ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
@@ -165,4 +166,21 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
-  }]);
+  }])
+
+  .controller('RaporttiVaihtoController', ['$scope', function($scope) {
+    $scope.$watch('tulokset', function(tulokset) {
+      if (tulokset !== undefined && $scope.valittuRaportti >= tulokset.length) {
+        $scope.valittuRaportti = 0;
+      }
+    });
+    $scope.valittuRaportti = 0;
+    $scope.seuraavaRaportti = function() {
+      $scope.valittuRaportti++;
+      if ($scope.valittuRaportti >= $scope.tulokset.length) {
+        $scope.valittuRaportti = 0;
+      }
+      $scope.$parent.tulos = $scope.tulokset[$scope.valittuRaportti];
+    };
+  }])
+;
