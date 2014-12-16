@@ -129,21 +129,24 @@
       (map :vastaajien_lkm)
       (reduce +))))
 
+(defn ^:private nimet [juttu]
+  (select-keys juttu [:nimi_fi :nimi_sv]))
+
 (defn ^:private vertailutyyppi-otsikko [parametrit]
   (case (:vertailutyyppi parametrit)
     "tutkinto" (let [tutkintotunnus (first (:tutkinnot parametrit))]
-                 (select-keys (tutkinto-arkisto/hae tutkintotunnus) [:nimi_fi :nimi_sv]))
+                 (nimet (tutkinto-arkisto/hae tutkintotunnus)))
     "opintoala" (let [opintoalatunnus (first (:opintoalat parametrit))]
-                  (select-keys (opintoala-arkisto/hae opintoalatunnus) [:nimi_fi :nimi_sv]))
+                  (nimet (opintoala-arkisto/hae opintoalatunnus)))
     "koulutusala" (let [koulutusalatunnus (first (:koulutusalat parametrit))]
-                    (select-keys (koulutusala-arkisto/hae koulutusalatunnus) [:nimi_fi :nimi_sv]))))
+                    (nimet (koulutusala-arkisto/hae koulutusalatunnus)))))
 
 (defn ^:private raportin-otsikko [parametrit]
   (case (:tyyppi parametrit)
     "vertailu" (vertailutyyppi-otsikko parametrit)
     "kehitys" (vertailutyyppi-otsikko parametrit)
     "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
-                         (select-keys (koulutustoimija-arkisto/hae ytunnus) [:nimi_fi :nimi_sv]))))
+                         (nimet (koulutustoimija-arkisto/hae ytunnus)))))
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
