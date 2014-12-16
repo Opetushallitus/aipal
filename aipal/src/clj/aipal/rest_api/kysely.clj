@@ -78,7 +78,7 @@
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (when-let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
-                     (assoc kysely :kysymysryhmat (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))))
+                     (assoc kysely :kysymysryhmat (kysymysryhma-arkisto/hae-kyselysta (Integer/parseInt kyselyid))))))
 
   (cu/defapi :kysely-tilamuutos kyselyid :put "/julkaise/:kyselyid" [kyselyid]
     (let [kyselyid (Integer/parseInt kyselyid)]

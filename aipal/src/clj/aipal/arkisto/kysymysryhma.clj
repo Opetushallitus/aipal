@@ -189,15 +189,22 @@
               taydenna-kysymysryhman-kysymykset)
           kysymysryhma)))))
 
-(def kysymysryhma-esikatselulle-select
-  (->
-    (sql/select* taulut/kysymysryhma)
-    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
-    (sql/with taulut/kysymys
-      (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
-                  :jatkokysymys.jatkokysymysid :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
-      (sql/join :left :jatkokysymys (= :kysymys.jatkokysymysid :jatkokysymys.jatkokysymysid))
-      (sql/order :kysymys.jarjestys))))
+(defn kysymysryhma-esikatselulle-select
+  ([kyselyid]
+    (->
+      (sql/select* taulut/kysymysryhma)
+      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
+      (sql/with taulut/kysymys
+        (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
+                    :jatkokysymys.jatkokysymysid :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
+        (cond->
+          kyselyid (->
+                     (sql/fields [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
+                     (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid)
+                                                          (= :kysely_kysymys.kyselyid kyselyid)))))
+        (sql/join :left :jatkokysymys (= :kysymys.jatkokysymysid :jatkokysymys.jatkokysymysid))
+        (sql/order :kysymys.jarjestys))))
+  ([] (kysymysryhma-esikatselulle-select nil)))
 
 (defn vaihda-kysymysavain [kysymysryhma]
   (clojure.set/rename-keys kysymysryhma {:kysymys :kysymykset}))
@@ -205,7 +212,7 @@
 (defn hae-esikatselulle
   [kysymysryhmaid]
   (->
-    kysymysryhma-esikatselulle-select
+    (kysymysryhma-esikatselulle-select)
     (sql/where {:kysymysryhmaid kysymysryhmaid})
     (sql/join taulut/kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
     (sql/order :kysely_kysymysryhma.jarjestys)
@@ -217,12 +224,22 @@
 (defn hae-kyselypohjasta
   "Hakee kyselypohjan kyselyryhmät, jotka ovat lisättävissä kyselyyn"
   [kyselypohjaid]
-  (-> kysymysryhma-esikatselulle-select
+  (-> (kysymysryhma-esikatselulle-select)
     (sql/join :inner taulut/kysymysryhma-kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid :kysymysryhma_kyselypohja.jarjestys)
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid
                 :kysymysryhma.lisattavissa true})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
+    sql/exec
+    (->> (map (comp taydenna-kysymysryhman-monivalintakysymykset vaihda-kysymysavain)))))
+
+(defn hae-kyselysta
+  "Hakee kyselyn kysymysryhmät"
+  [kyselyid]
+  (-> (kysymysryhma-esikatselulle-select kyselyid)
+    (sql/join :inner taulut/kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
+    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
+    (sql/order :kysely_kysymysryhma.jarjestys)
     sql/exec
     (->> (map (comp taydenna-kysymysryhman-monivalintakysymykset vaihda-kysymysavain)))))
 
