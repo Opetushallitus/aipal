@@ -111,11 +111,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.koulutusalat = koulutusalat;
     });
 
+    var voikoValitaUseita = function() {
+      return $scope.raportti.tyyppi === 'vertailu';
+    };
     $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
       if ($scope.raportti.vertailutyyppi === 'koulutusala') {
         // Vain vertailuraportilla voi valita useamman
-        if ($scope.raportti.tyyppi !== 'vertailu' && !koulutusala.valittu) {
+        if (!voikoValitaUseita() && !koulutusala.valittu) {
           poistaKoulutusalaValinnat();
         }
         koulutusala.valittu = !koulutusala.valittu;
@@ -125,7 +128,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.raportti.opintoalat = [];
     $scope.valitseOpintoala = function(opintoala) {
       if ($scope.raportti.vertailutyyppi === 'opintoala') {
-        if ($scope.raportti.tyyppi !== 'vertailu' && !opintoala.valittu) {
+        if (!voikoValitaUseita() && !opintoala.valittu) {
           poistaOpintoalaValinnat();
         }
         opintoala.valittu = !opintoala.valittu;
@@ -135,7 +138,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.raportti.tutkinnot = [];
     $scope.valitseTutkinto = function(tutkinto) {
       if ($scope.raportti.vertailutyyppi === 'tutkinto') {
-        if ($scope.raportti.tyyppi !== 'vertailu' && !tutkinto.valittu) {
+        if (!voikoValitaUseita() && !tutkinto.valittu) {
           poistaTutkintoValinnat();
         }
         tutkinto.valittu = !tutkinto.valittu;
