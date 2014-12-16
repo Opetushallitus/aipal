@@ -16,41 +16,72 @@
 
 (def alkuajat ["2013-11-05T22:00:00.000Z" "2012-11-05T22:00:00.000Z" "2014-01-05T22:00:00.000Z"])
 
-(defn muodosta-vertailuraportin-parametri-json []
-  (generate-string {:tyyppi "vertailu"
-                    :vertailutyyppi "tutkinto"
-                    :koulutusalat []
-                    :opintoalat []
-                    :tutkinnot [(rand-nth tutkinnot)]
-                    :koulutustoimijat []
-                    :taustakysymysryhmaid 1
-                    :kysymykset {"280" {"monivalinnat" {}}
-                                 "289" {"monivalinnat" {}}
-                                 "301" {"monivalinnat" {}}
-                                 "319" {"monivalinnat" {}}
-                                 "343" {"monivalinnat" {}}
-                                 "379" {"monivalinnat" {}}}
-                    :vertailujakso_alkupvm (rand-nth alkuajat)}))
+(def koulutustoimijat ["0128756-8" "0212371-7" "2107936-0" "0871305-6" "1958694-5" "0796234-1" "0222804-1"
+                       "0172730-8" "2162576-3" "0205303-4" "0204964-1" "0932749-9" "0213834-5" "0166055-3"])
 
-(defn valtakunnallinen-perf-fn [base-url userid basic-auth]
+(defn muodosta-tutkintovertailuraportin-parametrit
+  "Otetaan satunnainen aikajakso ja tutkinto vertailua varten"
+  []
+  {:tyyppi "vertailu"
+   :vertailutyyppi "tutkinto"
+   :koulutusalat []
+   :opintoalat []
+   :tutkinnot [(rand-nth tutkinnot)]
+   :koulutustoimijat []
+   :taustakysymysryhmaid 1
+   :kysymykset {"280" {"monivalinnat" {}}
+                "289" {"monivalinnat" {}}
+                "301" {"monivalinnat" {}}
+                "319" {"monivalinnat" {}}
+                "343" {"monivalinnat" {}}
+                "379" {"monivalinnat" {}}}
+   :vertailujakso_alkupvm (rand-nth alkuajat)})
+
+
+(defn muodosta-koulutustoimijavertailuraportin-parametrit
+  "Otetaan 2-4kpl satunnaisia koulutustoimijoita vertailua varten"
+  []
+  (let [base-map (muodosta-tutkintovertailuraportin-parametrit)
+        toimija-lkm (+ 2 (rand 2))]
+    (merge base-map
+      {:tutkinnot []
+       :koulutustoimijat (vec (take toimija-lkm (repeatedly #(rand-nth koulutustoimijat))))})))
+
+(defn tutkintovertailu-perf-fn [base-url userid basic-auth]
   (let [url (str base-url "/api/raportti/valtakunnallinen")
-        json (muodosta-vertailuraportin-parametri-json)
+        json (generate-string (muodosta-tutkintovertailuraportin-parametrit))
         requ-fn (partial async-http-json-requ url userid basic-auth json)
-        requ {:name "valtakunnallinen, vertailu" :fn requ-fn}]
+        requ {:name "valtakunnallinen, tutkintovertailu" :fn requ-fn}]
     requ))
- 
+
+(defn toimijavertailu-perf-fn [base-url userid basic-auth]
+  (let [url (str base-url "/api/raportti/valtakunnallinen")
+        json (generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))
+        requ-fn (partial async-http-json-requ url userid basic-auth json)
+        requ {:name "valtakunnallinen, koulutustoimijavertailu" :fn requ-fn}]
+    requ))
+
 (deftest ^:performance vertailuraportti-raportti []
   (let [config (get-configuration)
-        test-reqv (take 35 (repeatedly #(valtakunnallinen-perf-fn (:base-url config) 
-                                          (:userid config) 
-                                          (:basic-auth config))))]
+        raportti-lkm 36
+        tutkinto-reqs (take raportti-lkm (repeatedly #(tutkintovertailu-perf-fn (:base-url config) 
+                                              (:userid config) 
+                                              (:basic-auth config))))
+        toimija-reqs (take raportti-lkm (repeatedly #(toimijavertailu-perf-fn (:base-url config)
+                                             (:userid config)
+                                             (:basic-auth config))))
+        test-reqv (concat tutkinto-reqs toimija-reqs)]
     (run-simulation
       [{:name "Satunnaistettu vertailuraportin suorituskykytesti"
         :requests test-reqv}]
       3 {:root "target/perf-report/valtakunnallinen-vertailu"
          :timeout-in-ms 20000})))
 
+; yksittäisen tutkinnon vertailu
 ; http://localhost:8082/api/raportti/valtakunnallinen
 ; {"tyyppi":"vertailu","vertailutyyppi":"tutkinto","koulutusalat":[],"opintoalat":[],"tutkinnot":["351301"],"koulutustoimijat":[],"taustakysymysryhmaid":1,"kysymykset":{"280":{"monivalinnat":{}},"289":{"monivalinnat":{}},"301":{"monivalinnat":{}},"319":{"monivalinnat":{}},"343":{"monivalinnat":{}},"379":{"monivalinnat":{}}},"vertailujakso_alkupvm":"2013-11-05T22:00:00.000Z"}
 ; Content-Type:application/json;charset=UTF-8
 
+
+; koulutustoimijoiden vertailu
+; {"tyyppi":"koulutustoimijat","vertailutyyppi":"tutkinto","koulutusalat":[],"opintoalat":[],"tutkinnot":[],"koulutustoimijat":["9090160-2","0868699-1","0871202-9"],"taustakysymysryhmaid":1,"kysymykset":{"280":{"monivalinnat":{}},"289":{"monivalinnat":{}},"301":{"monivalinnat":{}},"319":{"monivalinnat":{}},"343":{"monivalinnat":{}},"379":{"monivalinnat":{}}},"vertailujakso_alkupvm":"2013-11-05T22:00:00.000Z"}
