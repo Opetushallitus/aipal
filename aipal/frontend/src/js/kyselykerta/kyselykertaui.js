@@ -186,7 +186,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
 
     $scope.koulutustoimijat = koulutustoimijat;
     $scope.naytaLisaa = function() {
-      $scope.rullausrajoite +=5;
+      $scope.rullausrajoite += 5;
     };
     $scope.nollaaRajoite = function() {
       $scope.rullausrajoite = 20;
