@@ -43,9 +43,14 @@ describe('kysely.kyselyui.KyselyController', function(){
     $q = _$q_;
   }));
 
-  function alustaController() {
+  function alustaController(injektiot) {
     $scope.kyselyForm = { $setDirty: function() {}, $setPristine: function() {} };
-    $controller('KyselyController', {$scope: $scope});
+    $controller('KyselyController', _.assign({$scope: $scope}, injektiot));
+  }
+
+  function alustaControllerKopioimaan(kyselyid) {
+    $routeParams.kyselyid = kyselyid;
+    alustaController({kopioi: true});
   }
 
   it('pitäisi ilman id:tä tultaessa jättää kysely tyhjäksi', function(){
@@ -91,4 +96,16 @@ describe('kysely.kyselyui.KyselyController', function(){
 
     expect($scope.kysely.kysymysryhmat).toContain({kysymysryhmaid: 123});
   });
+
+  it('hakee kopioitavan kyselyn tiedot palvelimelta', function(){
+    $httpBackend.whenGET(/api\/kysely\/1234.*/)
+                .respond(200, {kysymysryhmat: [{nimi_fi: 'kr1'},
+                                               {nimi_fi: 'kr2'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect($scope.kysely).toEqual({kysymysryhmat: [{nimi_fi: 'kr1'},
+                                                   {nimi_fi: 'kr2'}],
+                                   tila: 'luonnos'});
+  });
+
 });
