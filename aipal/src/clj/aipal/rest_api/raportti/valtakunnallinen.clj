@@ -21,7 +21,7 @@
 
 (defn luo-raportit [parametrit]
   (case (:tyyppi parametrit)
-    "vertailu" (case (:vertailutyyppi parametrit)
+    "vertailu" (case (:tutkintorakennetaso parametrit)
                  "tutkinto" (for [tutkinto (:tutkinnot parametrit)] (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
                  "opintoala" (for [opintoala (:opintoalat parametrit)] (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
                  "koulutusala" (for [koulutusala (:koulutusalat parametrit)] (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala]))))

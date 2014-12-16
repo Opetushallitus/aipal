@@ -27,7 +27,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
   .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
     $scope.raportti.tyyppi = 'vertailu';
-    $scope.raportti.vertailutyyppi = 'tutkinto';
+    $scope.raportti.tutkintorakennetaso = 'tutkinto';
 
     var poistaKoulutusalaValinnat = function() {
       _.forEach($scope.koulutusalat, function(koulutusala) {
@@ -116,7 +116,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
     $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
-      if ($scope.raportti.vertailutyyppi === 'koulutusala') {
+      if ($scope.raportti.tutkintorakennetaso === 'koulutusala') {
         // Vain vertailuraportilla voi valita useamman
         if (!voikoValitaUseita() && !koulutusala.valittu) {
           poistaKoulutusalaValinnat();
@@ -127,7 +127,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
     $scope.raportti.opintoalat = [];
     $scope.valitseOpintoala = function(opintoala) {
-      if ($scope.raportti.vertailutyyppi === 'opintoala') {
+      if ($scope.raportti.tutkintorakennetaso === 'opintoala') {
         if (!voikoValitaUseita() && !opintoala.valittu) {
           poistaOpintoalaValinnat();
         }
@@ -137,7 +137,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
     $scope.raportti.tutkinnot = [];
     $scope.valitseTutkinto = function(tutkinto) {
-      if ($scope.raportti.vertailutyyppi === 'tutkinto') {
+      if ($scope.raportti.tutkintorakennetaso === 'tutkinto') {
         if (!voikoValitaUseita() && !tutkinto.valittu) {
           poistaTutkintoValinnat();
         }

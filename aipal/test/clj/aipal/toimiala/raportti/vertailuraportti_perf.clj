@@ -23,7 +23,7 @@
   "Otetaan satunnainen aikajakso ja tutkinto vertailua varten"
   []
   {:tyyppi "vertailu"
-   :vertailutyyppi "tutkinto"
+   :tutkintorakennetaso "tutkinto"
    :koulutusalat []
    :opintoalat []
    :tutkinnot [(rand-nth tutkinnot)]
@@ -79,9 +79,9 @@
 
 ; yksittäisen tutkinnon vertailu
 ; http://localhost:8082/api/raportti/valtakunnallinen
-; {"tyyppi":"vertailu","vertailutyyppi":"tutkinto","koulutusalat":[],"opintoalat":[],"tutkinnot":["351301"],"koulutustoimijat":[],"taustakysymysryhmaid":1,"kysymykset":{"280":{"monivalinnat":{}},"289":{"monivalinnat":{}},"301":{"monivalinnat":{}},"319":{"monivalinnat":{}},"343":{"monivalinnat":{}},"379":{"monivalinnat":{}}},"vertailujakso_alkupvm":"2013-11-05T22:00:00.000Z"}
+; {"tyyppi":"vertailu","tutkintorakennetaso":"tutkinto","koulutusalat":[],"opintoalat":[],"tutkinnot":["351301"],"koulutustoimijat":[],"taustakysymysryhmaid":1,"kysymykset":{"280":{"monivalinnat":{}},"289":{"monivalinnat":{}},"301":{"monivalinnat":{}},"319":{"monivalinnat":{}},"343":{"monivalinnat":{}},"379":{"monivalinnat":{}}},"vertailujakso_alkupvm":"2013-11-05T22:00:00.000Z"}
 ; Content-Type:application/json;charset=UTF-8
 
 
 ; koulutustoimijoiden vertailu
-; {"tyyppi":"koulutustoimijat","vertailutyyppi":"tutkinto","koulutusalat":[],"opintoalat":[],"tutkinnot":[],"koulutustoimijat":["9090160-2","0868699-1","0871202-9"],"taustakysymysryhmaid":1,"kysymykset":{"280":{"monivalinnat":{}},"289":{"monivalinnat":{}},"301":{"monivalinnat":{}},"319":{"monivalinnat":{}},"343":{"monivalinnat":{}},"379":{"monivalinnat":{}}},"vertailujakso_alkupvm":"2013-11-05T22:00:00.000Z"}
+; {"tyyppi":"koulutustoimijat","tutkintorakennetaso":"tutkinto","koulutusalat":[],"opintoalat":[],"tutkinnot":[],"koulutustoimijat":["9090160-2","0868699-1","0871202-9"],"taustakysymysryhmaid":1,"kysymykset":{"280":{"monivalinnat":{}},"289":{"monivalinnat":{}},"301":{"monivalinnat":{}},"319":{"monivalinnat":{}},"343":{"monivalinnat":{}},"379":{"monivalinnat":{}}},"vertailujakso_alkupvm":"2013-11-05T22:00:00.000Z"}

@@ -132,8 +132,8 @@
 (defn ^:private nimet [juttu]
   (select-keys juttu [:nimi_fi :nimi_sv]))
 
-(defn ^:private vertailutyyppi-otsikko [parametrit]
-  (case (:vertailutyyppi parametrit)
+(defn ^:private tutkintorakenne-otsikko [parametrit]
+  (case (:tutkintorakennetaso parametrit)
     "tutkinto" (let [tutkintotunnus (first (:tutkinnot parametrit))]
                  (nimet (tutkinto-arkisto/hae tutkintotunnus)))
     "opintoala" (let [opintoalatunnus (first (:opintoalat parametrit))]
@@ -143,8 +143,8 @@
 
 (defn ^:private raportin-otsikko [parametrit]
   (case (:tyyppi parametrit)
-    "vertailu" (vertailutyyppi-otsikko parametrit)
-    "kehitys" (vertailutyyppi-otsikko parametrit)
+    "vertailu" (tutkintorakenne-otsikko parametrit)
+    "kehitys" (tutkintorakenne-otsikko parametrit)
     "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
                          (nimet (koulutustoimija-arkisto/hae ytunnus)))))
 
@@ -152,9 +152,9 @@
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
         rajaukset (:kysymykset parametrit)
-        tutkintotunnus (when (= "tutkinto" (:vertailutyyppi parametrit)) (first (:tutkinnot parametrit)))
-        opintoalatunnus (when (= "opintoala" (:vertailutyyppi parametrit)) (first (:opintoalat parametrit)))
-        koulutusalatunnus (when (= "koulutusala" (:vertailutyyppi parametrit)) (first (:koulutusalat parametrit)))
+        tutkintotunnus (when (= "tutkinto" (:tutkintorakennetaso parametrit)) (first (:tutkinnot parametrit)))
+        opintoalatunnus (when (= "opintoala" (:tutkintorakennetaso parametrit)) (first (:opintoalat parametrit)))
+        koulutusalatunnus (when (= "koulutusala" (:tutkintorakennetaso parametrit)) (first (:koulutusalat parametrit)))
         koulutustoimijat (not-empty (:koulutustoimijat parametrit))
         kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
         kysymykset (hae-valtakunnalliset-kysymykset)
