@@ -80,9 +80,6 @@
     (json-response (when-let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
                      (assoc kysely :kysymysryhmat (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))))
 
-  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/kysymysryhmat" [kyselyid]
-    (json-response (arkisto/hae-kysymysryhmat (Integer/parseInt kyselyid))))
-
   (cu/defapi :kysely-tilamuutos kyselyid :put "/julkaise/:kyselyid" [kyselyid]
     (let [kyselyid (Integer/parseInt kyselyid)]
       (if (> (arkisto/laske-kysymysryhmat kyselyid) 0)
