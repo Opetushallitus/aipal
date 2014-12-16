@@ -164,5 +164,5 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
-  }])
-;
+    $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
+  }]);

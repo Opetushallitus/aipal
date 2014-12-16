@@ -51,12 +51,14 @@
   <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
   <p>
     {{'raportti.vastaajien_maara' | i18n }}: {{kysymysryhma.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
+    {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymysryhma.vastaajien_lukumaara, tulos.vastaajien_maksimimaara)}}%
   </p>
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
     <p>
       {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
+      {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymys.vastaajien_lukumaara, tulos.vastaajien_maksimimaara)}}%
     </p>
 
     <jakauma-kaavio

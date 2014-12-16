@@ -56,6 +56,7 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
       });
 
       $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
+      $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
     }
   ]);
 

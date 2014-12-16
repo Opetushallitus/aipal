@@ -56,6 +56,10 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', '
 
       lukumaaratYhteensa: lukumaaratYhteensa,
 
+      prosenttiosuus: function prosenttiosuus(a, b) {
+        return Math.round(100 * a / b);
+      },
+
       palkinPituus: function (asetukset, lukumaara, jakauma) {
         var yhteensa = lukumaaratYhteensa(jakauma);
         if (Math.abs(yhteensa) > 0.01) {
