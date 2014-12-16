@@ -15,7 +15,6 @@
 (ns aipal.arkisto.kysely
   (:require [korma.core :as sql]
             [aipal.arkisto.kyselykerta :as kyselykerta]
-            [aipal.arkisto.kysymysryhma :as kysymysryhma]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.korma.korma :refer [select-unique-or-nil select-unique]]
             [aipal.auditlog :as auditlog]))
@@ -80,10 +79,6 @@
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
 
-(defn uudelleennimea-kysymys-kentta
-  [kysymysryhmat]
-  (map #(clojure.set/rename-keys % {:kysymys :kysymykset}) kysymysryhmat))
-
 (defn julkaise-kysely! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :julkaistu)
   (sql/update taulut/kysely
@@ -107,25 +102,6 @@
     (sql/where {:kyselyid kyselyid}))
   (sql/delete taulut/kysely
     (sql/where {:kyselyid kyselyid})))
-
-(defn hae-kysymysryhmat [kyselyid]
-  (->
-    (sql/select* taulut/kysymysryhma)
-    ;; Käyttöliittymässä estetään vanhojen valtakunnallisten kysymysryhmien
-    ;; kopiointi uuteen kyselyyn.
-    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :tila)
-    (sql/join taulut/kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
-    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
-    (sql/order :kysely_kysymysryhma.jarjestys)
-    (sql/with taulut/kysymys
-      (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu] :vastaustyyppi :monivalinta_max
-                  :jatkokysymys.jatkokysymysid :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv)
-      (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid) (= :kysely_kysymys.kyselyid kyselyid)))
-      (sql/join :left :jatkokysymys (= :kysymys.jatkokysymysid :jatkokysymys.jatkokysymysid))
-      (sql/order :kysymys.jarjestys))
-    sql/exec
-    uudelleennimea-kysymys-kentta
-    (->> (map kysymysryhma/taydenna-kysymysryhman-monivalintakysymykset))))
 
 (defn laske-kysymysryhmat [kyselyid]
   (->
