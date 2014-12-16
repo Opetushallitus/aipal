@@ -208,7 +208,8 @@
       valitse-kysymyksen-kentat)))
 
 (defn kysymysryhmaan-vastanneiden-lukumaara [kysymysryhma]
-  (vastaajien-lukumaara (reduce concat (map :vastaukset (:kysymykset kysymysryhma)))))
+  (count (reduce into #{} (map (fn [kysymys] (map :vastaajaid (:vastaukset kysymys)))
+                               (:kysymykset kysymysryhma)))))
 
 (defn kasittele-kysymysryhmat
   [kysymysryhmat]
