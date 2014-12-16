@@ -20,10 +20,13 @@
             [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value]]
             [clojure.tools.logging :as log]))
 
+(defn halutut-kentat [koodi]
+  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid]))
+
 (defn hae-kaikki [url]
   (let [oids (get-json-from-url url)]
     (for [oid oids]
-      (get-json-from-url (str url oid)))))
+      (halutut-kentat (get-json-from-url (str url oid))))))
 
 
 ;; Koodistopalvelun oppilaitostyyppikoodistosta
@@ -129,12 +132,15 @@
   (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
                                  [(:oid kt) (y-tunnus kt)]))
          oppilaitoskoodit oppilaitoskoodit]
-    (if (seq oppilaitoskoodit)
-      (recur (into oid->ytunnus (for [o oppilaitoskoodit
-                                      :when (contains? oid->ytunnus (:parentOid o))]
-                                  [(:oid o) (oid->ytunnus (:parentOid o))]))
-             (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
-      oid->ytunnus)))
+    (let [uudet (for [o oppilaitoskoodit
+                      :when (contains? oid->ytunnus (:parentOid o))]
+                  [(:oid o) (oid->ytunnus (:parentOid o))])]
+      (if (seq uudet)
+        (recur (into oid->ytunnus uudet) (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
+        (do
+          (doseq [oppilaitos oppilaitoskoodit]
+            (log/warn "Oppilaitos ilman parenttia:" (:oppilaitoskoodi oppilaitos)))
+          oid->ytunnus)))))
 
 (defn ^:private ^:integration-api paivita-koulutustoimijat! [koodit]
   (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki)
