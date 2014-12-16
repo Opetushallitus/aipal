@@ -12,9 +12,8 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.toimiala.raportti.kyselykerta-test
+(ns aipal.toimiala.raportti.raportointi-test
   (:require [clojure.test :refer [are deftest is testing]]
-            [aipal.toimiala.raportti.kyselykerta :refer :all]
             [aipal.toimiala.raportti.raportointi :refer :all]))
 
 (deftest jaottele-asteikko-test
