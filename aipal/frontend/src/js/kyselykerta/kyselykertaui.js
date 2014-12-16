@@ -185,6 +185,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     $scope.tutkinnot = tutkinnot;
 
     $scope.koulutustoimijat = koulutustoimijat;
+    $scope.naytaLisaa = function() {
+      $scope.rullausrajoite +=5;
+    };
+    $scope.nollaaRajoite = function() {
+      $scope.rullausrajoite = 20;
+    };
+    $scope.nollaaRajoite();
 
     $scope.luoTunnuksia = function(vastaajatunnus) {
       $modalInstance.close(vastaajatunnus);

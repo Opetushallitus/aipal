@@ -45,9 +45,9 @@
         </div>
         <div class="form-group">
             <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}}
-                <ui-select ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled">
+                <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled">
                     <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
-                    <ui-select-choices repeat="koulutustoimija in koulutustoimijat | filter: $select.search | orderByLokalisoitu:'nimi'">
+                    <ui-select-choices rullaus="naytaLisaa()" repeat="koulutustoimija in koulutustoimijat | filter: { nimi_fi: $select.search } | orderByLokalisoitu:'nimi' | limitTo: rullausrajoite">
                         <div ng-bind-html="koulutustoimija | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
