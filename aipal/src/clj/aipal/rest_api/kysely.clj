@@ -39,8 +39,17 @@
       (arkisto/lisaa-kysymys! kyselyid kysymysid)))
   (arkisto/lisaa-kysymysryhma! kyselyid kysymysryhma))
 
+(defn lisakysymysten-lukumaara
+  [kysymysryhmat]
+  (->> kysymysryhmat
+     (remove :valtakunnallinen)
+     (mapcat :kysymykset)
+     (remove :poistettu)
+     count))
+
 (defn paivita-kysely!
   [kysely]
+  (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) 10)))
   (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
   (arkisto/poista-kysymykset! (:kyselyid kysely))
   (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
