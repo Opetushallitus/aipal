@@ -97,6 +97,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     return {
       lisaaUniikitKysymysryhmatKyselyyn: function(kysely, uudet) {
         _.assign(kysely, { kysymysryhmat: _(kysely.kysymysryhmat.concat(uudet)).uniq('kysymysryhmaid').value() });
+      },
+      laskeLisakysymykset: function(kysely) {
+        return _(kysely.kysymysryhmat).reject('valtakunnallinen').pluck('kysymykset').flatten().reject('poistettu').reduce(function(sum) { return sum + 1; }, 0);
       }
     };
   }])
@@ -149,15 +152,20 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
       $scope.tallenna = function () {
         poistaKysymysryhmat();
-        seuranta.asetaLatausIndikaattori(tallennusFn($scope.kysely), 'kyselynTallennus')
-        .success(function () {
-          $scope.kyselyForm.$setPristine();
-          $location.path('/kyselyt');
-          ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
-        })
-        .error(function () {
-          ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
-        });
+        if (apu.laskeLisakysymykset($scope.kysely) > 10) {
+          ilmoitus.virhe(i18n.hae('kysely.liian_monta_lisakysymysta'));
+        }
+        else {
+          seuranta.asetaLatausIndikaattori(tallennusFn($scope.kysely), 'kyselynTallennus')
+          .success(function () {
+            $scope.kyselyForm.$setPristine();
+            $location.path('/kyselyt');
+            ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
+          })
+          .error(function () {
+            ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
+          });
+        }
       };
 
       $scope.peruuta = function() {
