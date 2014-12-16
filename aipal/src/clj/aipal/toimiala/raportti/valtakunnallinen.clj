@@ -17,7 +17,11 @@
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
-            [oph.korma.korma :refer [joda-date->sql-date]]))
+            [oph.korma.korma :refer [joda-date->sql-date]]
+            [aipal.arkisto.tutkinto :as tutkinto-arkisto]
+            [aipal.arkisto.opintoala :as opintoala-arkisto]
+            [aipal.arkisto.koulutusala :as koulutusala-arkisto]
+            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]))
 
 (defn ^:private hae-valtakunnalliset-kysymykset []
   (sql/select :kysymys
@@ -125,6 +129,22 @@
       (map :vastaajien_lkm)
       (reduce +))))
 
+(defn ^:private vertailutyyppi-otsikko [parametrit]
+  (case (:vertailutyyppi parametrit)
+    "tutkinto" (let [tutkintotunnus (first (:tutkinnot parametrit))]
+                 (select-keys (tutkinto-arkisto/hae tutkintotunnus) [:nimi_fi :nimi_sv]))
+    "opintoala" (let [opintoalatunnus (first (:opintoalat parametrit))]
+                  (select-keys (opintoala-arkisto/hae opintoalatunnus) [:nimi_fi :nimi_sv]))
+    "koulutusala" (let [koulutusalatunnus (first (:koulutusalat parametrit))]
+                    (select-keys (koulutusala-arkisto/hae koulutusalatunnus) [:nimi_fi :nimi_sv]))))
+
+(defn ^:private raportin-otsikko [parametrit]
+  (case (:tyyppi parametrit)
+    "vertailu" (vertailutyyppi-otsikko parametrit)
+    "kehitys" (vertailutyyppi-otsikko parametrit)
+    "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
+                         (select-keys (koulutustoimija-arkisto/hae ytunnus) [:nimi_fi :nimi_sv]))))
+
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
@@ -136,7 +156,9 @@
         kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
         kysymykset (hae-valtakunnalliset-kysymykset)
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
-    {:luontipvm (time/today)
-     :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
-     :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
-     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)}))
+    (merge
+      (raportin-otsikko parametrit)
+      {:luontipvm (time/today)
+       :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
+       :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
+       :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))
