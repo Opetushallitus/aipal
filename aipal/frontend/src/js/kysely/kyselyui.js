@@ -118,6 +118,15 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
               tallennusFn = Kysely.luoUusi;
               $scope.kysely.tila = 'luonnos';
               delete $scope.kysely.kyselyid;
+
+              var alkuperaisetKysymysryhmat = _.clone($scope.kysely.kysymysryhmat);
+              var suodatetutKysymysryhmat = _.filter($scope.kysely.kysymysryhmat, function(k){
+                return k.vanha_valtakunnallinen !== true;
+              });
+              if (!_.isEqual(alkuperaisetKysymysryhmat, suodatetutKysymysryhmat)) {
+                ilmoitus.varoitus(i18n.hae('kysely.vanhan_valtakunnallisen_ryhman_kopiointi'));
+              }
+              $scope.kysely.kysymysryhmat = suodatetutKysymysryhmat;
             } else {
               tallennusFn = Kysely.tallenna;
             }

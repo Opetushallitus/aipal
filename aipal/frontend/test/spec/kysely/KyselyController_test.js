@@ -23,6 +23,7 @@ describe('kysely.kyselyui.KyselyController', function(){
   var $location;
   var $modal;
   var $q;
+  var ilmoitus;
 
   beforeEach(module('ui.bootstrap','kysely.kyselyui','yhteiset.palvelut.seuranta'));
 
@@ -33,6 +34,10 @@ describe('kysely.kyselyui.KyselyController', function(){
     $provide.value('$location', $location);
     $provide.value('i18n', {hae: function(){return '';}});
     $provide.value('kopioi', false);
+    ilmoitus = {onnistuminen: jasmine.createSpy('onnistuminen'),
+                varoitus: jasmine.createSpy('varoitus'),
+                virhe: jasmine.createSpy('virhe')};
+    $provide.value('ilmoitus', ilmoitus);
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$modal_, _$q_){
@@ -106,6 +111,39 @@ describe('kysely.kyselyui.KyselyController', function(){
     expect($scope.kysely).toEqual({kysymysryhmat: [{nimi_fi: 'kr1'},
                                                    {nimi_fi: 'kr2'}],
                                    tila: 'luonnos'});
+  });
+
+  it('ei kopioi vanhoja valtakunnallisia kysymysryhmiä', function(){
+    $httpBackend.whenGET(/api\/kysely\/1234.*/)
+                .respond(200, {kysymysryhmat: [{nimi_fi: 'kr1'},
+                                               {nimi_fi: 'kr2',
+                                                vanha_valtakunnallinen: true},
+                                               {nimi_fi: 'kr3'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect($scope.kysely.kysymysryhmat).toEqual([{nimi_fi: 'kr1'},
+                                                 {nimi_fi: 'kr3'}]);
+  });
+
+  it('ei näytä varoitusta, jos kaikki kysymysryhmät ovat kopioitavissa', function(){
+    $httpBackend.whenGET(/api\/kysely\/1234.*/)
+                .respond(200, {kysymysryhmat: [{nimi_fi: 'kr1'},
+                                               {nimi_fi: 'kr2'},
+                                               {nimi_fi: 'kr3'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).not.toHaveBeenCalled();
+  });
+
+  it('näyttää varoituksen, jos jokin kysymysryhmä ei ole kopioitavissa', function(){
+    $httpBackend.whenGET(/api\/kysely\/1234.*/)
+                .respond(200, {kysymysryhmat: [{nimi_fi: 'kr1'},
+                                               {nimi_fi: 'kr2',
+                                                vanha_valtakunnallinen: true},
+                                               {nimi_fi: 'kr3'}]});
+    alustaControllerKopioimaan(1234);
+    $httpBackend.flush();
+    expect(ilmoitus.varoitus).toHaveBeenCalled();
   });
 
 });

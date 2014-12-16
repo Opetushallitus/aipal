@@ -112,7 +112,11 @@
 (defn hae-kysymysryhmat [kyselyid]
   (->
     (sql/select* taulut/kysymysryhma)
-    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
+    ;; Käyttöliittymässä estetään vanhojen valtakunnallisten kysymysryhmien
+    ;; kopiointi uuteen kyselyyn.
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv
+                [(sql/raw "(valtakunnallinen and kysymysryhma.luotu_kayttaja='KONVERSIO')")
+                 :vanha_valtakunnallinen])
     (sql/join taulut/kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhmaid))
     (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})
     (sql/order :kysely_kysymysryhma.jarjestys)
