@@ -155,7 +155,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulos) {
-        $scope.tulos = tulos;
+        $scope.tulos = tulos[0];
       }).error(function(data, status) {
         if (status !== 500) {
           ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));

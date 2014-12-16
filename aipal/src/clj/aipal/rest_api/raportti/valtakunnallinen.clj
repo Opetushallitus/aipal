@@ -25,6 +25,6 @@
       (let [raportti (raportti/muodosta parametrit)
             vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
         (json-response
-          (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+          [(if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti
-            (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia")))))))
+            (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))])))))
