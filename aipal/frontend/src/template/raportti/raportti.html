@@ -40,6 +40,9 @@
   </div>
   <div>
     <div>
+      {{ 'raportti.otsikko' | i18n }}: {{ tulos | lokalisoiKentta:'nimi' }}
+    </div>
+    <div>
       {{'raportti.kohderyhman_koko' | i18n }}: {{tulos.vastaajien_maksimimaara}}
     </div>
     <hr>
