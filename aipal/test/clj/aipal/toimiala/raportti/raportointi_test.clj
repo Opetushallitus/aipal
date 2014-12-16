@@ -191,3 +191,19 @@
     (is (= (kysymysryhmaan-vastanneiden-lukumaara {:kysymykset [{:vastaukset [{:vastaajaid 1}]}
                                                                 {:vastaukset [{:vastaajaid 1}]}]})
            1))))
+
+(deftest ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain-test
+  (is (= (ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain [{:kysymysid 1 :kysymysryhmaid 101}
+                                                                 {:kysymysid 2 :kysymysryhmaid 102}]
+                                                                [{:vastausid 11 :kysymysid 1}
+                                                                 {:vastausid 12 :kysymysid 2}]
+                                                                [{:kysymysryhmaid 101}
+                                                                 {:kysymysryhmaid 102}])
+         [{:kysymykset [{:kysymysid 1
+                         :kysymysryhmaid 101
+                         :vastaukset [{:vastausid 11, :kysymysid 1}]}]
+           :kysymysryhmaid 101}
+          {:kysymykset [{:kysymysid 2
+                         :kysymysryhmaid 102
+                         :vastaukset [{:vastausid 12, :kysymysid 2}]}]
+           :kysymysryhmaid 102}])))
