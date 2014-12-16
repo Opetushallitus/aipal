@@ -174,3 +174,20 @@
          "yksi vastaus" [{:ei_vastausteksti "vastaus1"}] [{:teksti "vastaus1"}]
          "useampi vastaus" [{:ei_vastausteksti "vastaus1"} {:ei_vastausteksti "vastaus2"}] [{:teksti "vastaus1"} {:teksti "vastaus2"}]
          "yksi vastaus ja vastaamaton" [{:ei_vastausteksti "vastaus1"} {:ei_vastausteksti nil}] [{:teksti "vastaus1"}])))
+
+(deftest kysymysryhmaan-vastanneiden-lukumaara-test
+  (testing
+    "kaksi eri vastaajaa samalla kysymyksellä"
+    (is (= (kysymysryhmaan-vastanneiden-lukumaara {:kysymykset [{:vastaukset [{:vastaajaid 1}
+                                                                              {:vastaajaid 2}]}]})
+           2)))
+  (testing
+    "kaksi eri vastaajaa kahdella eri kysymyksellä"
+    (is (= (kysymysryhmaan-vastanneiden-lukumaara {:kysymykset [{:vastaukset [{:vastaajaid 1}]}
+                                                                {:vastaukset [{:vastaajaid 2}]}]})
+           2)))
+  (testing
+    "sama vastaaja kahdella eri kysymyksellä"
+    (is (= (kysymysryhmaan-vastanneiden-lukumaara {:kysymykset [{:vastaukset [{:vastaajaid 1}]}
+                                                                {:vastaukset [{:vastaajaid 1}]}]})
+           1))))
