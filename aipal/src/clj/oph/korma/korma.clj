@@ -84,6 +84,30 @@
      (sql/transform sql-timestamp->joda-datetime)
      ~@body))
 
+(defmacro select-unique-or-nil
+  "Wraps korma.core/select, returns unique result or nil if none found. Throws if result is not unique."
+  [entity & body]
+  `(let [[first# & rest#] (sql/select ~entity ~@body)]
+     (assert (empty? rest#) "Expected one result, got more")
+     first#))
+
+(defmacro select-unique
+  "Wraps korma.core/select, returns unique result. Throws if result is not unique."
+  [entity & body]
+  `(let [result# (select-unique-or-nil ~entity ~@body)]
+     (assert result# "Expected one result, got zero")
+     result#))
+
+(defmacro update-unique
+  "Wraps korma.core/update, updates exactly one row. Throws if row count is not 1. Returns the number of updated rows (1)."
+  [entity & body]
+  `(let [[count#] (-> (sql/update* ~entity)
+                    ~@body
+                    (dissoc :results)
+                    sql/exec)]
+     (assert (= count# 1) (str "Expected one updated row, got " count#))
+     count#))
+
 (defn entity-alias [entity alias]
   (assoc entity :name alias
                 :alias alias))
