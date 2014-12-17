@@ -16,6 +16,7 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [clojure.tools.logging :as log]
+            [oph.korma.korma :refer [select-unique select-unique-or-nil update-unique]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
@@ -27,10 +28,10 @@
 (defn hae
   "Hakee käyttäjätunnuksen perusteella."
   [oid]
-  (first (sql/select taulut/kayttaja (sql/where {:oid oid}))))
+  (select-unique-or-nil taulut/kayttaja (sql/where {:oid oid})))
 
 (defn hae-voimassaoleva [uid]
-  (first (sql/select taulut/kayttaja (sql/where {:uid uid, :voimassa true}))))
+  (select-unique-or-nil taulut/kayttaja (sql/where {:uid uid, :voimassa true})))
 
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
@@ -51,7 +52,7 @@
         ;; Päivitetään olemassaoleva käyttäjä merkiten voimassaolevaksi
         (do
           (log/debug "Käyttäjä on jo olemassa, päivitetään tiedot")
-          (sql/update taulut/kayttaja
+          (update-unique taulut/kayttaja
           (sql/set-fields (assoc k :voimassa true))
           (sql/where {:oid [= (:oid k)]})))
         ;; Lisätään uusi käyttäjä
@@ -86,7 +87,7 @@
     ;; Päivitetään olemassaoleva käyttäjä merkiten voimassaolevaksi
     (do
       (log/debug "Käyttäjä on jo olemassa, päivitetään tiedot")
-      (sql/update taulut/kayttaja
+      (update-unique taulut/kayttaja
                   (sql/set-fields k)
                   (sql/where {:oid [= (:oid k)]})))
     ;; Lisätään uusi käyttäjä

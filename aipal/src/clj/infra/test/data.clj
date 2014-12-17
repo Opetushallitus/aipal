@@ -15,6 +15,7 @@
 (ns infra.test.data
   (:require [korma.core :as sql]
             [korma.db :as db]
+            [oph.korma.korma :refer [select-unique-or-nil]]
             [aipal.integraatio.sql.korma :refer [kayttaja rooli-organisaatio]]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-uid]]))
@@ -47,8 +48,8 @@
 (defn ^:test-api luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
   (with-kayttaja jarjestelma-uid nil
-    (when-not (first (sql/select kayttaja
-                                 (sql/where {:oid testikayttaja-oid})))
+    (when-not (select-unique-or-nil kayttaja
+                (sql/where {:oid testikayttaja-oid}))
       (db/transaction
         (sql/insert kayttaja
                     (sql/values

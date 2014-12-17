@@ -15,6 +15,7 @@
 (ns aipal.arkisto.kyselypohja
   (:import java.sql.Date)
   (:require [korma.core :as sql]
+            [oph.korma.korma :refer [select-unique select-unique-or-nil]]
             [aipal.infra.kayttaja :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
@@ -38,9 +39,8 @@
 
 (defn hae-kyselypohja
   [kyselypohjaid]
-  (first
-    (sql/select taulut/kyselypohja
-      (sql/where {:kyselypohjaid kyselypohjaid}))))
+  (select-unique-or-nil taulut/kyselypohja
+    (sql/where {:kyselypohjaid kyselypohjaid})))
 
 (def muokattavat-kentat [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :valtakunnallinen])
 
@@ -77,21 +77,20 @@
     (sql/where {:kyselypohjaid kyselypohjaid})
     (sql/set-fields {:tila tila})))
 
-(defn julkaise-kyselypohja! [kyselypohjaid] 
+(defn julkaise-kyselypohja! [kyselypohjaid]
   (auditlog/kyselypohja-muokkaus! kyselypohjaid :julkaistu)
   (aseta-kyselypohjan-tila! kyselypohjaid "julkaistu"))
 
-(defn palauta-kyselypohja-luonnokseksi! [kyselypohjaid] 
+(defn palauta-kyselypohja-luonnokseksi! [kyselypohjaid]
   (auditlog/kyselypohja-muokkaus! kyselypohjaid :luonnos)
   (aseta-kyselypohjan-tila! kyselypohjaid "luonnos"))
 
-(defn sulje-kyselypohja! [kyselypohjaid] 
+(defn sulje-kyselypohja! [kyselypohjaid]
   (auditlog/kyselypohja-muokkaus! kyselypohjaid :suljettu)
   (aseta-kyselypohjan-tila! kyselypohjaid "suljettu"))
 
 (defn hae-organisaatiotieto
   [kyselypohjaid]
-  (first
-    (sql/select :kyselypohja_organisaatio_view
-      (sql/fields :koulutustoimija :valtakunnallinen)
-      (sql/where {:kyselypohjaid kyselypohjaid}))))
+  (select-unique :kyselypohja_organisaatio_view
+    (sql/fields :koulutustoimija :valtakunnallinen)
+    (sql/where {:kyselypohjaid kyselypohjaid})))

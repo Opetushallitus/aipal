@@ -15,6 +15,7 @@
 (ns aipal.arkisto.vastaajatunnus
   (:require [clojure.string :as st]
             [clojure.set :refer [rename-keys]]
+            [oph.korma.korma :refer [select-unique-or-nil]]
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
@@ -61,15 +62,14 @@
 (defn hae-viimeisin-tutkinto
   "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
   [kyselykertaid koulutustoimija]
-  (-> (sql/select taulut/vastaajatunnus
-        (sql/join :inner taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-        (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
-        (sql/where (and (= :vastaajatunnus.kyselykertaid kyselykertaid)
-                        [(sql/sqlfn :exists (sql/subselect :koulutustoimija_ja_tutkinto
-                                              (sql/where {:koulutustoimija_ja_tutkinto.tutkinto :tutkinto.tutkintotunnus
-                                                          :koulutustoimija_ja_tutkinto.koulutustoimija koulutustoimija})))]))
-        (sql/order :vastaajatunnus.luotuaika :desc))
-    first))
+  (select-unique-or-nil taulut/vastaajatunnus
+    (sql/join :inner taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
+    (sql/where (and (= :vastaajatunnus.kyselykertaid kyselykertaid)
+                    [(sql/sqlfn :exists (sql/subselect :koulutustoimija_ja_tutkinto
+                                          (sql/where {:koulutustoimija_ja_tutkinto.tutkinto :tutkinto.tutkintotunnus
+                                                      :koulutustoimija_ja_tutkinto.koulutustoimija koulutustoimija})))]))
+    (sql/order :vastaajatunnus.luotuaika :desc)))
 
 (defn hae [id]
   (-> kyselykerta-select
@@ -94,10 +94,9 @@
 
 (defn vastaajatunnus-olemassa?
   [vastaajatunnus]
-  (first
-    (sql/select taulut/vastaajatunnus
-      (sql/fields :tunnus)
-      (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)}))))
+  (select-unique-or-nil taulut/vastaajatunnus
+    (sql/fields :tunnus)
+    (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus

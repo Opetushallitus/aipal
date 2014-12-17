@@ -14,6 +14,7 @@
 
 (ns aipal.arkisto.tutkinto
   (:require [korma.core :as sql]
+            [oph.korma.korma :refer [select-unique-or-nil]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn ^:integration-api lisaa!
@@ -34,8 +35,8 @@
 
 (defn hae
   [tutkintotunnus]
-  (first (sql/select taulut/tutkinto
-           (sql/where {:tutkintotunnus tutkintotunnus}))))
+  (select-unique-or-nil taulut/tutkinto
+    (sql/where {:tutkintotunnus tutkintotunnus})))
 
 (defn hae-koulutustoimijan-tutkinnot
   [y-tunnus]

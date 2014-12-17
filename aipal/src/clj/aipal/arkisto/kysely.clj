@@ -17,6 +17,7 @@
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.arkisto.kysymysryhma :as kysymysryhma]
             [aipal.integraatio.sql.korma :as taulut]
+            [oph.korma.korma :refer [select-unique-or-nil select-unique]]
             [aipal.auditlog :as auditlog]))
 
 (defn hae-kyselyt
@@ -48,22 +49,20 @@
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"
   [kyselyid]
-  (first
-    (sql/select taulut/kysely
-      (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
-                  :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                  :kysely.selite_fi :kysely.selite_sv
-                  :kysely.tila :kysely.kaytettavissa)
-      (sql/where (= :kyselyid kyselyid)))))
+  (select-unique-or-nil taulut/kysely
+    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
+                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
+                :kysely.selite_fi :kysely.selite_sv
+                :kysely.tila :kysely.kaytettavissa)
+    (sql/where (= :kyselyid kyselyid))))
 
 (defn hae-organisaatiotieto
   "Hakee kyselyn luoneen organisaation tiedot"
   [kyselyid]
-  (first
-    (sql/select
-      :kysely_organisaatio_view
-      (sql/fields :koulutustoimija)
-      (sql/where {:kyselyid kyselyid}))))
+  (select-unique
+    :kysely_organisaatio_view
+    (sql/fields :koulutustoimija)
+    (sql/where {:kyselyid kyselyid})))
 
 (defn lisaa!
   "Lisää uuden kyselyn"

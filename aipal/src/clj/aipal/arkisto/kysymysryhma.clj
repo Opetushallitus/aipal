@@ -14,6 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
+            [oph.korma.korma :refer [select-unique]]
             [aipal.infra.kayttaja :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
@@ -227,10 +228,9 @@
 
 (defn hae-organisaatiotieto
   [kysymysryhmaid]
-  (first
-    (sql/select :kysymysryhma_organisaatio_view
-      (sql/fields :koulutustoimija :valtakunnallinen)
-      (sql/where {:kysymysryhmaid kysymysryhmaid}))))
+  (select-unique :kysymysryhma_organisaatio_view
+    (sql/fields :koulutustoimija :valtakunnallinen)
+    (sql/where {:kysymysryhmaid kysymysryhmaid})))
 
 (defn paivita!
   [kysymysryhma]

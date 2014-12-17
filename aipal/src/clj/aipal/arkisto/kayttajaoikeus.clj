@@ -19,6 +19,7 @@
             [clojure.tools.logging :as log]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
+            [oph.korma.korma :refer :all]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-oikeudet
@@ -34,10 +35,10 @@
     (hae-oikeudet (:oid *kayttaja*))))
 
 (defn hae-rooli [rooli kayttaja organisaatio]
-  (first (sql/select taulut/rooli-organisaatio
-           (sql/where {:rooli rooli
-                       :kayttaja kayttaja
-                       :organisaatio organisaatio}))))
+  (select-unique-or-nil taulut/rooli-organisaatio
+    (sql/where {:rooli rooli
+                :kayttaja kayttaja
+                :organisaatio organisaatio})))
 
 (defn hae-roolit [oid]
   (sql/select taulut/rooli-organisaatio
@@ -46,7 +47,7 @@
                 :voimassa true})))
 
 (defn olemassa? [k]
-  (boolean (hae-rooli (:rooli k) (:kayttaja k) (:organisaatio k))))
+  (hae-rooli (:rooli k) (:kayttaja k) (:organisaatio k)))
 
 (defn ^:integration-api tyhjaa-kayttooikeudet!
   "Merkitään olemassaolevat käyttäjät ja roolit ei-voimassaoleviksi"
@@ -67,9 +68,12 @@
   (if (olemassa? r)
     (do
       (log/debug "Rooli on jo olemassa, päivitetään tiedot")
-      (sql/update taulut/rooli-organisaatio
-                  (sql/set-fields r)
-                  (sql/where {:kayttaja [= (:kayttaja r)]})))
+      (update-unique
+        taulut/rooli-organisaatio
+        (sql/set-fields r)
+        (sql/where {:kayttaja (:kayttaja r)
+                    :rooli (:rooli r)
+                    :organisaatio (:organisaatio r)})))
     (do
       (log/debug "Luodaan uusi rooli")
       (sql/insert taulut/rooli-organisaatio (sql/values r)))))

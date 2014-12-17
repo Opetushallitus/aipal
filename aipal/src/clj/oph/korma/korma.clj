@@ -122,5 +122,4 @@
 
 (defn ^:test-api validate-connection!
   []
-  (first
-    (sql/select validationquery)))
+  (select-unique-or-nil validationquery))
