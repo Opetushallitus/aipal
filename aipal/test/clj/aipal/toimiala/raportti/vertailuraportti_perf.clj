@@ -9,6 +9,12 @@
 
 (use-fixtures :each tietokanta-fixture)
 
+
+; TODO: 
+;   -requestien lukumäärät dev vs. muu
+;   -timeout 20s liian pieni? For real?
+;   -uuden dumpin kanssa - onko kysymysid:t muuttuneet?
+
 (def tutkinnot ["020079" "037413" "048462" "058444" "080401" "080437" "080705" "324128"
                 "334103" "334106" "334113" "351105" "351201" "351701" "351803" "354110"
                 "354401" "354405" "355102" "355104" "355405" "357204" "357802" "358508" 
@@ -63,7 +69,8 @@
 
 (deftest ^:performance vertailuraportti-raportti []
   (let [config (get-configuration)
-        raportti-lkm 36
+        raportti-lkm (:request-count config)
+        concurrent-users 3
         tutkinto-reqs (take raportti-lkm (repeatedly #(tutkintovertailu-perf-fn (:base-url config) 
                                               (:userid config) 
                                               (:basic-auth config))))
@@ -74,8 +81,8 @@
     (run-simulation
       [{:name "Satunnaistettu vertailuraportin suorituskykytesti"
         :requests test-reqv}]
-      3 {:root "target/perf-report/valtakunnallinen-vertailu"
-         :timeout-in-ms 20000})))
+      concurrent-users {:root "target/perf-report/valtakunnallinen-vertailu"
+         :timeout-in-ms 60000})))
 
 ; yksittäisen tutkinnon vertailu
 ; http://localhost:8082/api/raportti/valtakunnallinen

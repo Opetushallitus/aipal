@@ -16,13 +16,15 @@
   
 (deftest ^:performance kyselykerta-raportti []
   (let [config (get-configuration)
-        test-ids (doall (map :kyselykertaid (take 100 (kyselykerta-arkisto/hae-kaikki))))
+        kyselykerta-lkm (* 3 (:request-count config))
+        concurrent-users 4
+        test-ids (doall (map :kyselykertaid (take kyselykerta-lkm (kyselykerta-arkisto/hae-kaikki))))
         test-reqv (mapv #(kyselekertaid->perf-fn (:base-url config) %1 (:userid config) (:basic-auth config)) test-ids)]
     (println test-ids)
     (run-simulation
       [{:name "Satunnaistettu kyselykerta raportin suorituskykytesti"
         :requests test-reqv}]
-      4 {:root "target/perf-report/kyselykerta"
+      concurrent-users {:root "target/perf-report/kyselykerta"
          :timeout-in-ms 10000})))
         
         
