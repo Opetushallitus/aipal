@@ -22,10 +22,15 @@
     margin-left: 0em;
   }
   li{
-    padding-left: .5em;
+    padding-left: 1em;
+    cursor: pointer;
+    .fa:before {
+      margin-right: .5em;
+    }
   }
   & .otsikko {
     font-weight: bold;
+    font-size: 1em;
   }
 }
 
@@ -35,7 +40,6 @@ li.selected{
 
 .raportit ul.valitsin.tutkinto {
   li li li{
-    cursor: pointer;
     &:hover{
       background-color: $lightest-gray;
     }
@@ -44,7 +48,6 @@ li.selected{
 
 .raportit ul.valitsin.opintoala {
   li li{
-    cursor: pointer;
     &:hover{
       background-color: $lightest-gray;
     }
@@ -53,7 +56,6 @@ li.selected{
 
 .raportit ul.valitsin.koulutusala {
   li{
-    cursor: pointer;
     &:hover{
       background-color: $lightest-gray;
     }

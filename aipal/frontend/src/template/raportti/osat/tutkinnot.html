@@ -15,14 +15,14 @@
 
     <ul class="valitsin {{raportti.tutkintorakennetaso}}">
       <li bindonce ng-repeat="koulutusala in koulutusalat |filter:tutkintoFilter" ng-click="valitseKoulutusala(koulutusala)" ng-class="{selected: raportti.tutkintorakennetaso == 'koulutusala' && koulutusala.valittu}">
-        <span ng-show="raportti.tutkintorakennetaso !== 'koulutusala'" class="otsikko fa" ng-class="{'fa-caret-up': koulutusalaAvattu, 'fa-caret-down': !koulutusalaAvattu}"
+        <span ng-show="raportti.tutkintorakennetaso !== 'koulutusala'" class="otsikko fa" ng-class="{'fa-caret-down': koulutusalaAvattu, 'fa-caret-right': !koulutusalaAvattu}"
           ng-click="koulutusalaAvattu = koulutusalaAvattu ? !koulutusalaAvattu : true" bo-text="koulutusala |lokalisoiKentta:'koulutusala_nimi'">
         </span>
         <span ng-show="raportti.tutkintorakennetaso === 'koulutusala'" bo-text="koulutusala |lokalisoiKentta:'koulutusala_nimi'"></span>
         <span class="fa fa-check" ng-if="raportti.tutkintorakennetaso == 'koulutusala' && koulutusala.valittu"></span>
         <ul class="opintoalat" ng-if="raportti.tutkintorakennetaso !== 'koulutusala' && (koulutusalaAvattu || tutkintoFilter)">
           <li bindonce ng-repeat="opintoala in koulutusala.opintoalat |filter:tutkintoFilter" ng-click="valitseOpintoala(opintoala)" ng-class="{selected: raportti.tutkintorakennetaso == 'opintoala' && opintoala.valittu}">
-            <span ng-show="raportti.tutkintorakennetaso !== 'opintoala'" class="otsikko fa" ng-class="{'fa-caret-up': opintoalaAvattu, 'fa-caret-down': !opintoalaAvattu}"
+            <span ng-show="raportti.tutkintorakennetaso !== 'opintoala'" class="otsikko fa" ng-class="{'fa-caret-down': opintoalaAvattu, 'fa-caret-right': !opintoalaAvattu}"
               ng-click="opintoalaAvattu = opintoalaAvattu ? !opintoalaAvattu : true" bo-text="opintoala |lokalisoiKentta:'opintoala_nimi'">
             </span>
             <span ng-show="raportti.tutkintorakennetaso == 'opintoala'" bo-text="opintoala |lokalisoiKentta:'opintoala_nimi'"></span>
