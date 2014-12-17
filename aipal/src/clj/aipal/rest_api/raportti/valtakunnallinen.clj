@@ -19,12 +19,21 @@
             [oph.common.util.http-util :refer [json-response]]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]))
 
+(defn luo-raportit [parametrit]
+  (case (:tyyppi parametrit)
+    "vertailu" (case (:tutkintorakennetaso parametrit)
+                 "tutkinto" (for [tutkinto (:tutkinnot parametrit)] (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
+                 "opintoala" (for [opintoala (:opintoalat parametrit)] (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
+                 "koulutusala" (for [koulutusala (:koulutusalat parametrit)] (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala]))))
+    "koulutustoimijat" (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija])))
+    [(raportti/muodosta parametrit)]))
+
 (defn reitit [asetukset]
   (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
     (db/transaction
-      (let [raportti (raportti/muodosta parametrit)
-            vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
-        (json-response
+      (json-response
+        (for [raportti (luo-raportit parametrit)
+              :let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]]
           (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti
             (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia")))))))

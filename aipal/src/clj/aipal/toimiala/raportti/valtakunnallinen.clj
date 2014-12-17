@@ -17,7 +17,11 @@
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
-            [oph.korma.korma :refer [joda-date->sql-date]]))
+            [oph.korma.korma :refer [joda-date->sql-date]]
+            [aipal.arkisto.tutkinto :as tutkinto-arkisto]
+            [aipal.arkisto.opintoala :as opintoala-arkisto]
+            [aipal.arkisto.koulutusala :as koulutusala-arkisto]
+            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]))
 
 (defn ^:private hae-valtakunnalliset-kysymykset []
   (sql/select :kysymys
@@ -125,18 +129,39 @@
       (map :vastaajien_lkm)
       (reduce +))))
 
+(defn ^:private nimet [juttu]
+  (select-keys juttu [:nimi_fi :nimi_sv]))
+
+(defn ^:private tutkintorakenne-otsikko [parametrit]
+  (case (:tutkintorakennetaso parametrit)
+    "tutkinto" (let [tutkintotunnus (first (:tutkinnot parametrit))]
+                 (nimet (tutkinto-arkisto/hae tutkintotunnus)))
+    "opintoala" (let [opintoalatunnus (first (:opintoalat parametrit))]
+                  (nimet (opintoala-arkisto/hae opintoalatunnus)))
+    "koulutusala" (let [koulutusalatunnus (first (:koulutusalat parametrit))]
+                    (nimet (koulutusala-arkisto/hae koulutusalatunnus)))))
+
+(defn ^:private raportin-otsikko [parametrit]
+  (case (:tyyppi parametrit)
+    "vertailu" (tutkintorakenne-otsikko parametrit)
+    "kehitys" (tutkintorakenne-otsikko parametrit)
+    "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
+                         (nimet (koulutustoimija-arkisto/hae ytunnus)))))
+
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
         rajaukset (:kysymykset parametrit)
-        tutkintotunnus (when (= "tutkinto" (:vertailutyyppi parametrit)) (first (:tutkinnot parametrit)))
-        opintoalatunnus (when (= "opintoala" (:vertailutyyppi parametrit)) (first (:opintoalat parametrit)))
-        koulutusalatunnus (when (= "koulutusala" (:vertailutyyppi parametrit)) (first (:koulutusalat parametrit)))
+        tutkintotunnus (when (= "tutkinto" (:tutkintorakennetaso parametrit)) (first (:tutkinnot parametrit)))
+        opintoalatunnus (when (= "opintoala" (:tutkintorakennetaso parametrit)) (first (:opintoalat parametrit)))
+        koulutusalatunnus (when (= "koulutusala" (:tutkintorakennetaso parametrit)) (first (:koulutusalat parametrit)))
         koulutustoimijat (not-empty (:koulutustoimijat parametrit))
         kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
         kysymykset (hae-valtakunnalliset-kysymykset)
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
-    {:luontipvm (time/today)
-     :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
-     :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
-     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)}))
+    (merge
+      (raportin-otsikko parametrit)
+      {:luontipvm (time/today)
+       :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
+       :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
+       :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))

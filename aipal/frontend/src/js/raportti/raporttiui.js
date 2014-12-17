@@ -27,7 +27,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
   .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.raportti = {};
     $scope.raportti.tyyppi = 'vertailu';
-    $scope.raportti.vertailutyyppi = 'tutkinto';
+    $scope.raportti.tutkintorakennetaso = 'tutkinto';
 
     var poistaKoulutusalaValinnat = function() {
       _.forEach($scope.koulutusalat, function(koulutusala) {
@@ -111,11 +111,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.koulutusalat = koulutusalat;
     });
 
+    var voikoValitaUseita = function() {
+      return $scope.raportti.tyyppi === 'vertailu';
+    };
     $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
-      if ($scope.raportti.vertailutyyppi === 'koulutusala') {
+      if ($scope.raportti.tutkintorakennetaso === 'koulutusala') {
         // Vain vertailuraportilla voi valita useamman
-        if ($scope.raportti.tyyppi !== 'vertailu-fixme' && !koulutusala.valittu) {
+        if (!voikoValitaUseita() && !koulutusala.valittu) {
           poistaKoulutusalaValinnat();
         }
         koulutusala.valittu = !koulutusala.valittu;
@@ -124,8 +127,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
     $scope.raportti.opintoalat = [];
     $scope.valitseOpintoala = function(opintoala) {
-      if ($scope.raportti.vertailutyyppi === 'opintoala') {
-        if ($scope.raportti.tyyppi !== 'vertailu-fixme' && !opintoala.valittu) {
+      if ($scope.raportti.tutkintorakennetaso === 'opintoala') {
+        if (!voikoValitaUseita() && !opintoala.valittu) {
           poistaOpintoalaValinnat();
         }
         opintoala.valittu = !opintoala.valittu;
@@ -134,8 +137,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
     $scope.raportti.tutkinnot = [];
     $scope.valitseTutkinto = function(tutkinto) {
-      if ($scope.raportti.vertailutyyppi === 'tutkinto') {
-        if ($scope.raportti.tyyppi !== 'vertailu-fixme' && !tutkinto.valittu) {
+      if ($scope.raportti.tutkintorakennetaso === 'tutkinto') {
+        if (!voikoValitaUseita() && !tutkinto.valittu) {
           poistaTutkintoValinnat();
         }
         tutkinto.valittu = !tutkinto.valittu;
@@ -154,8 +157,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     $scope.muodostaRaportti = function() {
-      seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulos) {
-        $scope.tulos = tulos;
+      seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulokset) {
+        $scope.tulokset = tulokset;
+        $scope.tulos = tulokset[0];
       }).error(function(data, status) {
         if (status !== 500) {
           ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
@@ -165,4 +169,16 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
-  }]);
+  }])
+
+  .controller('RaporttiController', ['$scope', function($scope) {
+    $scope.$watch('tulokset', function(tulokset) {
+      if (tulokset !== undefined) {
+        $scope.tulos = tulokset[0];
+      }
+    });
+    $scope.naytaRaportti = function(raportti) {
+      $scope.tulos = raportti;
+    };
+  }])
+;

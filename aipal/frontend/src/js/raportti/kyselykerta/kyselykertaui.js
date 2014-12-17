@@ -45,6 +45,7 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
     'kaavioApurit', 'KyselykertaRaportti', '$location', '$routeParams', '$scope',
     function(kaavioApurit, KyselykertaRaportti, $location, $routeParams, $scope) {
       KyselykertaRaportti.hae($routeParams.kyselykertaid, function(tulos) {
+        $scope.tulokset = [tulos];
         $scope.tulos = tulos;
         $scope.kaikkienVastaajienLukumaara = _(tulos.kyselykerta.tutkinnot)
           .pluck('vastaajien_lkm')
