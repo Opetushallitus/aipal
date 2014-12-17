@@ -14,6 +14,11 @@
 
 set -u
 
+if ! echo -n |nc 192.168.50.1 8083; then
+    echo Käynnistä vastaus-sovellus!
+    exit 1
+fi
+
 use_existing_e2e_database=no
 use_remote_ie=no
 while getopts 'ei' o; do
