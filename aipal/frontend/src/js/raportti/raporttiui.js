@@ -171,19 +171,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
   }])
 
-  .controller('RaporttiVaihtoController', ['$scope', function($scope) {
+  .controller('RaporttiController', ['$scope', function($scope) {
     $scope.$watch('tulokset', function(tulokset) {
-      if (tulokset !== undefined && $scope.valittuRaportti >= tulokset.length) {
-        $scope.valittuRaportti = 0;
+      if (tulokset !== undefined) {
+        $scope.tulos = tulokset[0];
       }
     });
-    $scope.valittuRaportti = 0;
-    $scope.seuraavaRaportti = function() {
-      $scope.valittuRaportti++;
-      if ($scope.valittuRaportti >= $scope.tulokset.length) {
-        $scope.valittuRaportti = 0;
-      }
-      $scope.$parent.tulos = $scope.tulokset[$scope.valittuRaportti];
+    $scope.naytaRaportti = function(raportti) {
+      $scope.tulos = raportti;
     };
   }])
 ;

@@ -1,8 +1,12 @@
+<div ng-controller="RaporttiController">
+
 <div class="alert alert-danger" ng-if="tulos.virhe">
   {{'raportit.liian_vahan_vastaajia' | i18n}}
 </div>
 
-<div ng-controller="RaporttiVaihtoController" ng-show="tulokset.length > 1"><button ng-click="seuraavaRaportti()">Seuraava raportti {{valittuRaportti + 1}}/{{tulokset.length}}</button></div>
+<div ng-show="tulokset.length > 1">
+  <button ng-click="naytaRaportti(raportti)" ng-repeat="raportti in tulokset">{{ raportti | lokalisoiKentta:'nimi' }}</button>
+</div>
 
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div ng-if="tulos.kyselykerta">
@@ -130,4 +134,6 @@
       </tbody>
     </table>
   </div>
+</div>
+
 </div>
