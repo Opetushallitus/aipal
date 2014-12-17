@@ -8,9 +8,9 @@
 
 (use-fixtures :each tietokanta-fixture)
                       
-(defn kyselekertaid->perf-fn [base-url id userid basic-auth]
-  (let [url (str base-url "/api/raportti/kyselykerta/" id)
-        requ-fn (partial async-http-requ url userid basic-auth)
+(defn kyselykertaid->perf-fn [config id ]
+  (let [url (str (:base-url config) "/api/raportti/kyselykerta/" id)
+        requ-fn (partial async-http-requ url (:userid config) (:basic-auth config))
         requ {:name "kyselykerta-raportti" :fn requ-fn}]
     requ))
   
@@ -19,7 +19,7 @@
         kyselykerta-lkm (* 3 (:request-count config))
         concurrent-users 4
         test-ids (doall (map :kyselykertaid (take kyselykerta-lkm (kyselykerta-arkisto/hae-kaikki))))
-        test-reqv (mapv #(kyselekertaid->perf-fn (:base-url config) %1 (:userid config) (:basic-auth config)) test-ids)]
+        test-reqv (mapv #(kyselykertaid->perf-fn config %1) test-ids)]
     (println test-ids)
     (run-simulation
       [{:name "Satunnaistettu kyselykerta raportin suorituskykytesti"

@@ -53,17 +53,17 @@
       {:tutkinnot []
        :koulutustoimijat (vec (take toimija-lkm (repeatedly #(rand-nth koulutustoimijat))))})))
 
-(defn tutkintovertailu-perf-fn [base-url userid basic-auth]
-  (let [url (str base-url "/api/raportti/valtakunnallinen")
+(defn tutkintovertailu-perf-fn [config]
+  (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
         json (generate-string (muodosta-tutkintovertailuraportin-parametrit))
-        requ-fn (partial async-http-json-requ url userid basic-auth json)
+        requ-fn (partial async-http-json-requ url (:userid config) (:basic-auth config) json)
         requ {:name "valtakunnallinen, tutkintovertailu" :fn requ-fn}]
     requ))
 
-(defn toimijavertailu-perf-fn [base-url userid basic-auth]
-  (let [url (str base-url "/api/raportti/valtakunnallinen")
+(defn toimijavertailu-perf-fn [config]
+  (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
         json (generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))
-        requ-fn (partial async-http-json-requ url userid basic-auth json)
+        requ-fn (partial async-http-json-requ url (:userid config) (:basic-auth config) json)
         requ {:name "valtakunnallinen, koulutustoimijavertailu" :fn requ-fn}]
     requ))
 
@@ -71,12 +71,8 @@
   (let [config (get-configuration)
         raportti-lkm (:request-count config)
         concurrent-users 3
-        tutkinto-reqs (take raportti-lkm (repeatedly #(tutkintovertailu-perf-fn (:base-url config) 
-                                              (:userid config) 
-                                              (:basic-auth config))))
-        toimija-reqs (take raportti-lkm (repeatedly #(toimijavertailu-perf-fn (:base-url config)
-                                             (:userid config)
-                                             (:basic-auth config))))
+        tutkinto-reqs (take raportti-lkm (repeatedly #(tutkintovertailu-perf-fn config)))
+        toimija-reqs (take raportti-lkm (repeatedly #(toimijavertailu-perf-fn config)))
         test-reqv (concat tutkinto-reqs toimija-reqs)]
     (run-simulation
       [{:name "Satunnaistettu vertailuraportin suorituskykytesti"
