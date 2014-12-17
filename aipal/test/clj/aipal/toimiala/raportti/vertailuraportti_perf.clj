@@ -9,12 +9,6 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-
-; TODO: 
-;   -requestien lukumäärät dev vs. muu
-;   -timeout 20s liian pieni? For real?
-;   -uuden dumpin kanssa - onko kysymysid:t muuttuneet?
-
 (def tutkinnot ["020079" "037413" "048462" "058444" "080401" "080437" "080705" "324128"
                 "334103" "334106" "334113" "351105" "351201" "351701" "351803" "354110"
                 "354401" "354405" "355102" "355104" "355405" "357204" "357802" "358508" 
