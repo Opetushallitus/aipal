@@ -113,11 +113,11 @@ describe('kysely.kyselyui.KyselyController', function(){
                                    tila: 'luonnos'});
   });
 
-  it('ei kopioi vanhoja valtakunnallisia kysymysryhmiä', function(){
+  it('ei kopioi suljettuja kysymysryhmiä', function(){
     $httpBackend.whenGET(/api\/kysely\/1234.*/)
                 .respond(200, {kysymysryhmat: [{nimi_fi: 'kr1'},
                                                {nimi_fi: 'kr2',
-                                                vanha_valtakunnallinen: true},
+                                                tila: 'suljettu'},
                                                {nimi_fi: 'kr3'}]});
     alustaControllerKopioimaan(1234);
     $httpBackend.flush();
@@ -139,7 +139,7 @@ describe('kysely.kyselyui.KyselyController', function(){
     $httpBackend.whenGET(/api\/kysely\/1234.*/)
                 .respond(200, {kysymysryhmat: [{nimi_fi: 'kr1'},
                                                {nimi_fi: 'kr2',
-                                                vanha_valtakunnallinen: true},
+                                                tila: 'suljettu'},
                                                {nimi_fi: 'kr3'}]});
     alustaControllerKopioimaan(1234);
     $httpBackend.flush();

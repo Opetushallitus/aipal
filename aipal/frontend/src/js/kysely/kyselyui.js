@@ -121,10 +121,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
               var alkuperaisetKysymysryhmat = _.clone($scope.kysely.kysymysryhmat);
               var suodatetutKysymysryhmat = _.filter($scope.kysely.kysymysryhmat, function(k){
-                return !k.vanha_valtakunnallinen;
+                return k.tila !== 'suljettu';
               });
               if (!_.isEqual(alkuperaisetKysymysryhmat, suodatetutKysymysryhmat)) {
-                ilmoitus.varoitus(i18n.hae('kysely.vanhan_valtakunnallisen_ryhman_kopiointi'));
+                ilmoitus.varoitus(i18n.hae('kysely.suljetun_kysymysryhman_kopiointi'));
               }
               $scope.kysely.kysymysryhmat = suodatetutKysymysryhmat;
             } else {
