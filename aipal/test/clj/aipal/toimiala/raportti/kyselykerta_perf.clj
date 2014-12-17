@@ -6,13 +6,11 @@
     [aipal.sql.test-util :refer :all])
   (:use clojure.test))
 
-(use-fixtures :each tietokanta-fixture)
-                      
+(use-fixtures :each tietokanta-fixture)                    
+
 (defn kyselykertaid->perf-fn [config id ]
-  (let [url (str (:base-url config) "/api/raportti/kyselykerta/" id)
-        requ-fn (partial async-http-requ url (:userid config) (:basic-auth config))
-        requ {:name "kyselykerta-raportti" :fn requ-fn}]
-    requ))
+  (let [url (str (:base-url config) "/api/raportti/kyselykerta/" id)]
+    (url->http-get-fn config url "kyselykerta-raportti")))
   
 (deftest ^:performance kyselykerta-raportti []
   (let [config (get-configuration)

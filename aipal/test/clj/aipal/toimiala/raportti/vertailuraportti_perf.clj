@@ -55,17 +55,13 @@
 
 (defn tutkintovertailu-perf-fn [config]
   (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
-        json (generate-string (muodosta-tutkintovertailuraportin-parametrit))
-        requ-fn (partial async-http-json-requ url (:userid config) (:basic-auth config) json)
-        requ {:name "valtakunnallinen, tutkintovertailu" :fn requ-fn}]
-    requ))
+        json (generate-string (muodosta-tutkintovertailuraportin-parametrit))]
+    (url->http-post-fn config url "valtakunnallinen, tutkintovertailu" json)))
 
 (defn toimijavertailu-perf-fn [config]
   (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
-        json (generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))
-        requ-fn (partial async-http-json-requ url (:userid config) (:basic-auth config) json)
-        requ {:name "valtakunnallinen, koulutustoimijavertailu" :fn requ-fn}]
-    requ))
+        json (generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))]
+    (url->http-post-fn config url "valtakunnallinen, koulutustoimijavertailu" json)))
 
 (deftest ^:performance vertailuraportti-raportti []
   (let [config (get-configuration)

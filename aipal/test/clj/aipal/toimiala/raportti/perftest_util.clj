@@ -22,7 +22,7 @@
 (defn async-http-requ [url uid basic-auth user-id context callback]
   (let [check-status (fn [{:keys [status]}] (callback (= 200 status)))]
     (http/get url (auth-params uid basic-auth) 
-      check-status))) 
+      check-status)))
 
 (defn async-http-json-requ [url uid basic-auth body user-id context callback]
   (let [check-status (fn [{:keys [status]}] (callback (= 200 status)))
@@ -32,3 +32,13 @@
                     :basic-auth basic-auth
                     :body body}
       check-status)))
+
+(defn url->http-get-fn [config url name]
+  (let [requ-fn (partial async-http-requ url (:userid config) (:basic-auth config))
+        requ {:name name :fn requ-fn}]
+    requ))
+
+(defn url->http-post-fn [config url name json]
+  (let [requ-fn (partial async-http-json-requ url (:userid config) (:basic-auth config) json)
+        requ {:name name :fn requ-fn}]
+    requ))
