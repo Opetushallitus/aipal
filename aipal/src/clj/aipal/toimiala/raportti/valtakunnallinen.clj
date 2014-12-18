@@ -137,16 +137,9 @@
 
 (defn rajaa-kyselykerrat-ajalle [query alkupvm loppupvm]
   (-> query
-    (sql/where (or
-                 (and
-                   (or (nil? alkupvm) (<= alkupvm :kyselykerta.voimassa_alkupvm))
-                   (or (nil? loppupvm) (<= :kyselykerta.voimassa_alkupvm loppupvm)))
-                 (and
-                   (or (nil? alkupvm) (<= alkupvm :kyselykerta.voimassa_loppupvm))
-                   (or (nil? loppupvm) (<= :kyselykerta.voimassa_loppupvm loppupvm)))
-                 (and
-                   {:kyselykerta.voimassa_loppupvm nil}
-                   (or (nil? loppupvm) (<= :kyselykerta.voimassa_alkupvm loppupvm)))))))
+    (sql/where (and
+                 (or (nil? loppupvm) {:kyselykerta.voimassa_alkupvm nil} (<= :kyselykerta.voimassa_alkupvm loppupvm))
+                 (or (nil? alkupvm) {:kyselykerta.voimassa_loppupvm nil} (<= alkupvm :kyselykerta.voimassa_loppupvm))))))
 
 (defn hae-vastaajien-maksimimaara [alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
