@@ -47,4 +47,33 @@ describe('kysely.kyselyui.kyselyApurit', function(){
       expect(kysely.kysymysryhmat).toEqual([{ kysymysryhmaid: 1 }, { kysymysryhmaid: 2 }, { kysymysryhmaid: 3 }]);
     });
   });
+
+  describe('laskeLisakysymykset:', function() {
+    it('pitäisi laskea vain lisäkysymyksiä', function() {
+      var kysely = {
+        kysymysryhmat: [
+          { valtakunnallinen: true, kysymykset: [{kysymysid: 1}, {kysymysid: 2}] },
+          { valtakunnallinen: false, kysymykset: [{kysymysid: 3}]}
+        ]
+      };
+      expect(apu.laskeLisakysymykset(kysely)).toEqual(1);
+    });
+    it('ei pitäisi laskea poistettuja', function() {
+      var kysely = {
+        kysymysryhmat: [
+          { valtakunnallinen: false, kysymykset: [{kysymysid: 1}, {kysymysid: 2, poistettu: true}]}
+        ]
+      };
+      expect(apu.laskeLisakysymykset(kysely)).toEqual(1);
+    });
+    it('pitäisi laskea kaikki kysymykset kaikista lisäkysymysryhmistä', function() {
+      var kysely = {
+        kysymysryhmat: [
+          { valtakunnallinen: false, kysymykset: [{kysymysid: 1}] },
+          { valtakunnallinen: false, kysymykset: [{kysymysid: 2}, {kysymysid: 3}]}
+        ]
+      };
+      expect(apu.laskeLisakysymykset(kysely)).toEqual(3);
+    })
+  });
 });
