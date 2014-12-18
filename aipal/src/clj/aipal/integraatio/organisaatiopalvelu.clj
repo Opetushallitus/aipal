@@ -215,4 +215,4 @@
         toimipaikkakoodit (:toimipaikka koodit)]
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
-    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit)))
+    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)))
