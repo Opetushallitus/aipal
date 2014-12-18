@@ -12,8 +12,8 @@
     <!--and http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy-->
     <!--for further documentation-->
     <File>logs/aipal.log</File>
-    <encoding>UTF-8</encoding>
     <encoder>
+      <charset>UTF-8</charset>
       <pattern>%d{ISO8601} %-5p %c: %m%n</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -27,8 +27,8 @@
     <!--and http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy-->
     <!--for further documentation-->
     <File>logs/aipal-audit.log</File>
-    <encoding>UTF-8</encoding>
     <encoder>
+      <charset>UTF-8</charset>
       <pattern>%d{ISO8601} %-5p %c: %m%n</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
