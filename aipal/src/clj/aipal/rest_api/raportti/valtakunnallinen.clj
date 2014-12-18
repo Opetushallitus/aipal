@@ -17,7 +17,19 @@
             [aipal.compojure-util :as cu]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response]]
-            [aipal.toimiala.raportti.valtakunnallinen :as raportti]))
+            [aipal.toimiala.raportti.valtakunnallinen :as raportti]
+            [aipal.arkisto.tutkinto :as tutkinto-arkisto]
+            [aipal.arkisto.opintoala :as opintoala-arkisto]))
+
+; Valtakunnallinen vertailuraportti on ilman koulutustoimijoita, ylemmälle tutkintohierarkian tasolle
+(defn kehitysraportti-vertailuraportti-parametrit [parametrit]
+  (let [parametrit (assoc parametrit :koulutustoimijat [])]
+    (case (:tutkintorakennetaso parametrit)
+      "tutkinto" (assoc parametrit :tutkintorakennetaso "opintoala"
+                                   :opintoalat [(:opintoala (tutkinto-arkisto/hae (first (:tutkinnot parametrit))))])
+      "opintoala" (assoc parametrit :tutkintorakennetaso "koulutusala"
+                                    :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))])
+      "koulutusala" parametrit)))
 
 (defn koulutustoimija-vertailuraportti [parametrit]
   (raportti/muodosta (assoc parametrit :koulutustoimijat []
@@ -29,10 +41,10 @@
                  "tutkinto" (for [tutkinto (:tutkinnot parametrit)] (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
                  "opintoala" (for [opintoala (:opintoalat parametrit)] (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
                  "koulutusala" (for [koulutusala (:koulutusalat parametrit)] (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala]))))
+    "kehitys" (concat [(raportti/muodosta (kehitysraportti-vertailuraportti-parametrit parametrit))] [(raportti/muodosta parametrit)])
     "koulutustoimijat" (concat
                          [(koulutustoimija-vertailuraportti parametrit)]
-                         (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija]))))
-    [(raportti/muodosta parametrit)]))
+                         (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija]))))))
 
 (defn reitit [asetukset]
   (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
