@@ -1,5 +1,5 @@
 (ns aipal.rest-api.kysely-test
-  (:require [aipal.rest-api.kysely :refer [lisaa-kysymysryhma! paivita-kysely!]]
+  (:require [aipal.rest-api.kysely :refer [lisaa-kysymysryhma! paivita-kysely! lisakysymysten-lukumaara]]
             aipal.toimiala.kayttajaoikeudet)
   (:use clojure.test))
 
@@ -79,3 +79,15 @@
       (is (= (@kysely->kysymys kyselyid) #{2 3}))
       (is (= (@kysely->kysymysryhma kyselyid) #{88})))))
 
+(deftest lisakysymysten-lukumaara-test
+  (testing "pitäisi laskea vain lisäkysymykset"
+    (let [kysymysryhmat [{:valtakunnallinen true :kysymykset [{:kysymysid 1}]}
+                         {:valtakunnallinen false :kysymykset [{:kysymysid 2}]}]]
+      (is (= (lisakysymysten-lukumaara kysymysryhmat) 1))))
+  (testing "pitäisi laskea kysymykset kaikista lisäkysymysryhmistä"
+    (let [kysymysryhmat [{:valtakunnallinen false :kysymykset [{:kysymysid 1}]}
+                         {:valtakunnallinen false :kysymykset [{:kysymysid 2}]}]]
+      (is (= (lisakysymysten-lukumaara kysymysryhmat) 2))))
+  (testing "ei pitäisi laskea poistettuja"
+    (let [kysymysryhmat [{:valtakunnallinen false :kysymykset [{:kysymysid 1 :poistettu true} {:kysymysid 2}]}]]
+      (is (= (lisakysymysten-lukumaara kysymysryhmat) 1)))))
