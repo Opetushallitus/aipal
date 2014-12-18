@@ -45,9 +45,13 @@
                                     {:logout-url (str cas-url "/logout")})))})
     (c/GET "/status" [] (s/render-file "status" (assoc (status)
                                                   :asetukset (with-out-str
-                                                               (-> asetukset
-                                                                   (assoc-in [:db :password] "*****")
-                                                                   pprint))
+                                                               (pprint
+                                                                 (clojure.walk/postwalk (fn [elem]
+                                                                                          (if (and (coll? elem)
+                                                                                                   (= (first elem) :password))
+                                                                                            [:password "*****"]
+                                                                                            elem))
+                                                                                        asetukset)))
                                                   :build-id @build-id)))
     (c/context "/api/jslog" [] (wrap-tarkasta-csrf-token aipal.rest_api.js-log/reitit))
 
