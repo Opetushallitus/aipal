@@ -70,7 +70,7 @@
                                            :voimassa_loppupvm (time/local-date 2200 1 1)
                                            :koulutustoimija (:ytunnus koulutustoimija)}]))
     (is (= #{"a" "b" "c"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija))))))
-    (is (= #{"b"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija) true)))))))
+    (is (= #{"b"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija) false true)))))))
 
 (deftest ^:integraatio hae-kysymysryhmat-oma-organisaatio
   (let [oma-koulutustoimija (test-data/lisaa-koulutustoimija! {:ytunnus "1111111-1"})
