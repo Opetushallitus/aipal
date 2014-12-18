@@ -135,7 +135,20 @@
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
     (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
 
-(defn hae-vastaajien-maksimimaara [koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn rajaa-kyselykerrat-ajalle [query alkupvm loppupvm]
+  (-> query
+    (sql/where (or
+                 (and
+                   (or (nil? alkupvm) (<= alkupvm :kyselykerta.voimassa_alkupvm))
+                   (or (nil? loppupvm) (<= :kyselykerta.voimassa_alkupvm loppupvm)))
+                 (and
+                   (or (nil? alkupvm) (<= alkupvm :kyselykerta.voimassa_loppupvm))
+                   (or (nil? loppupvm) (<= :kyselykerta.voimassa_loppupvm loppupvm)))
+                 (and
+                   {:kyselykerta.voimassa_loppupvm nil}
+                   (or (nil? loppupvm) (<= :kyselykerta.voimassa_alkupvm loppupvm)))))))
+
+(defn hae-vastaajien-maksimimaara [alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaajatunnus)
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
@@ -147,6 +160,7 @@
       koulutusalatunnus (rajaa-vastaajatunnukset-koulutusalalle koulutusalatunnus)
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
     (sql/where {:kysymysryhma.valtakunnallinen true})
+    (rajaa-kyselykerrat-ajalle alkupvm loppupvm)
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     sql/exec
@@ -190,4 +204,4 @@
        :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
        :parametrit parametrit
        :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
-       :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))
+       :vastaajien_maksimimaara (hae-vastaajien-maksimimaara alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))
