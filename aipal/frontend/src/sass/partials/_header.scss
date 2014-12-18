@@ -199,8 +199,16 @@ header {
   .kielen-vaihto {
     float: right;
     li.valittu {
-      &:hover {background-color: transparent;}
-      span {color: $darkest-primary;}
+      background-color: $darker-primary;
+      span {color: #ffffff;}
+
+      &.disabled{
+        background-color: $primary-color;
+        span{
+          color: #CA78B5 !important;
+        }
+      }
+
     }
   }
 }
