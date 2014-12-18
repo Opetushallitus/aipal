@@ -62,8 +62,8 @@
                      :unsafe-https false
                      :enabled true}
    :aitu {:url "http://192.168.50.1:8080/"
-          :user "T-1001"
-          :password "T-1001"}
+          :user "readaituaipal"
+          :password "readaituaipal"}
    :ldap-auth-server {:host "localhost"
                       :port 10389
                       :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
