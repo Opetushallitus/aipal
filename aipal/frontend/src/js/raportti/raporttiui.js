@@ -81,8 +81,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
     };
 
-    Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat) {
-      $scope.taustakysymysryhmat = _.filter(kysymysryhmat, 'taustakysymykset');
+    Kysymysryhma.haeTaustakysymysryhmat().success(function(kysymysryhmat) {
+      $scope.taustakysymysryhmat = kysymysryhmat;
 
       $scope.$watch('raportti.taustakysymysryhmaid', function(kysymysryhmaid) {
         haeTaustakysymykset(kysymysryhmaid);
