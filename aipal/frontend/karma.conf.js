@@ -18,6 +18,7 @@
 module.exports = function(config) {
   var autoWatch = true;
 
+  config.plugins.push('karma-ng-html2js-preprocessor');
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
@@ -52,8 +53,17 @@ module.exports = function(config) {
       'src/bower_components/aituaipaljs/**/*.js',
       'src/js/**/*.js',
       'test/mock/**/*.js',
-      'test/spec/**/*.js'
+      'test/spec/**/*.js',
+      'src/template/yhteiset/direktiivit/*.html'
     ],
+
+    preprocessors: {
+      '**/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'src/'
+    },
 
     // list of files / patterns to exclude
     exclude: [],
