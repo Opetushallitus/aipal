@@ -33,6 +33,7 @@ angular.module('aipal', [
   'yhteiset.palvelut.palvelinvirhe',
   'yhteiset.palvelut.varmistus',
   'yhteiset.direktiivit.auth',
+  'yhteiset.direktiivit.tiedote',
   'yhteiset.direktiivit.copyright',
   'yhteiset.direktiivit.navigaatio',
   'yhteiset.direktiivit.popup-ikkuna',
