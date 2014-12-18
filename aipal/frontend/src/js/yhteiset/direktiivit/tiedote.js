@@ -14,14 +14,16 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.tiedote', ['rest.tiedote'])
-  .directive('tiedote', ['Tiedote', function(Tiedote){
+angular.module('yhteiset.direktiivit.tiedote',
+  ['rest.tiedote',
+   'yhteiset.palvelut.i18n'])
+  .directive('tiedote', ['Tiedote', 'kieli', function(Tiedote, kieli){
     return {
       restrict: 'A',
       templateUrl: 'template/yhteiset/direktiivit/tiedote.html',
       link: function($scope){
         Tiedote.hae().success(function(tiedote){
-          $scope.viesti = tiedote.fi;
+          $scope.viesti = tiedote[kieli];
         });
       }
     };
