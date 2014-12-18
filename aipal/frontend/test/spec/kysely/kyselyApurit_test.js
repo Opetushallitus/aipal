@@ -74,6 +74,6 @@ describe('kysely.kyselyui.kyselyApurit', function(){
         ]
       };
       expect(apu.laskeLisakysymykset(kysely)).toEqual(3);
-    })
+    });
   });
 });
