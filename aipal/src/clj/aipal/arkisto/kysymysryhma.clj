@@ -20,7 +20,7 @@
             [aipal.auditlog :as auditlog]))
 
 (defn hae-kysymysryhmat
-  ([organisaatio vain-voimassaolevat]
+  ([organisaatio vain-taustakysymysryhmat vain-voimassaolevat]
     (-> (sql/select* taulut/kysymysryhma)
       (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
       (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
@@ -28,6 +28,7 @@
                           (or {:kysymysryhma.lisattavissa true}
                               (yllapitaja?)))))
       (cond->
+        vain-taustakysymysryhmat (sql/where {:kysymysryhma.taustakysymykset true})
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
                   :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
@@ -40,7 +41,7 @@
       (sql/order :muutettuaika :desc)
       sql/exec))
   ([organisaatio]
-    (hae-kysymysryhmat organisaatio false)))
+    (hae-kysymysryhmat organisaatio false false)))
 
 (defn lisaa-kysymysryhma! [k]
   (let [kysymysryhma (sql/insert taulut/kysymysryhma
