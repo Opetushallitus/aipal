@@ -17,7 +17,7 @@
 angular.module('yhteiset.direktiivit.tiedote',
   ['rest.tiedote',
    'yhteiset.palvelut.i18n'])
-  .directive('tiedote', ['Tiedote', 'kieli', function(Tiedote, kieli){
+  .directive('tiedote', ['Tiedote', 'kieli', 'ilmoitus', 'i18n', function(Tiedote, kieli, ilmoitus, i18n){
     return {
       restrict: 'A',
       templateUrl: 'template/yhteiset/direktiivit/tiedote.html',
@@ -29,8 +29,12 @@ angular.module('yhteiset.direktiivit.tiedote',
         $scope.tallenna = function(){
           var tiedote = {fi: $scope.tiedoteFi,
                          sv: $scope.tiedoteSv};
-          Tiedote.tallenna(tiedote);
-          $scope.naytettavaTiedote = tiedote[kieli];
+          Tiedote.tallenna(tiedote).success(function(){
+            ilmoitus.onnistuminen(i18n.hae('tiedote.tallennus_onnistui'));
+            $scope.naytettavaTiedote = tiedote[kieli];
+          }).error(function(){
+            ilmoitus.virhe(i18n.hae('yleiset.tallennus_epaonnistui'));
+          });
           $scope.tila = 'nayta';
         };
         Tiedote.hae().success(function(tiedote){
