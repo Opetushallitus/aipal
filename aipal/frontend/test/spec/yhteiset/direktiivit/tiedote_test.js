@@ -31,11 +31,10 @@ describe('yhteiset.direktiivit.tiedote', function(){
     .whenGET(/api\/tiedote.*/)
     .respond(200, {fi: 'suomenkielinen tiedote',
                    sv: 'ruotsinkielinen tiedote'});
-    var e = $compile('<div data-tiedote></div>')($scope);
+    $compile('<div data-tiedote></div>')($scope);
     $scope.$digest();
     $httpBackend.flush();
-    expect(e.html()).toMatch(/suomenkielinen tiedote/);
-    expect(e.html()).not.toMatch(/ruotsinkielinen tiedote/);
+    expect($scope.naytettavaTiedote).toEqual('suomenkielinen tiedote');
   });
 
   it('näyttää ruotsinkielisen tiedotteen, jos kieli on ruotsi', function(){
@@ -44,11 +43,10 @@ describe('yhteiset.direktiivit.tiedote', function(){
     .whenGET(/api\/tiedote.*/)
     .respond(200, {fi: 'suomenkielinen tiedote',
                    sv: 'ruotsinkielinen tiedote'});
-    var e = $compile('<div data-tiedote></div>')($scope);
+    $compile('<div data-tiedote></div>')($scope);
     $scope.$digest();
     $httpBackend.flush();
-    expect(e.html()).not.toMatch(/suomenkielinen tiedote/);
-    expect(e.html()).toMatch(/ruotsinkielinen tiedote/);
+    expect($scope.naytettavaTiedote).toEqual('ruotsinkielinen tiedote');
   });
 
   it('tallentaa muutokset tiedotteesen palvelimelle', function(){
@@ -70,6 +68,25 @@ describe('yhteiset.direktiivit.tiedote', function(){
     .respond(200);
     $scope.tallenna();
     $httpBackend.flush();
+  });
+
+  it('päivittää näytettävän tiedotteen tallennuksen jälkeen', function(){
+    alustaInjector('fi');
+    $httpBackend
+    .whenGET(/api\/tiedote.*/)
+    .respond(200, {fi: 'suomenkielinen tiedote',
+                   sv: 'ruotsinkielinen tiedote'});
+    $compile('<div data-tiedote></div>')($scope);
+    $scope.$digest();
+    $httpBackend.flush();
+    $scope.muokkaa();
+    $scope.$digest();
+    $scope.tiedoteFi = 'päivitetty suomenkielinen';
+    $scope.tiedoteSv = 'päivitetty ruotsinkielinen';
+    $httpBackend.whenPOST('api/tiedote').respond(200);
+    $scope.tallenna();
+    $httpBackend.flush();
+    expect($scope.naytettavaTiedote).toEqual('päivitetty suomenkielinen');
   });
 
 });

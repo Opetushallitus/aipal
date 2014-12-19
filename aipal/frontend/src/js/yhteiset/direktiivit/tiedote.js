@@ -27,8 +27,10 @@ angular.module('yhteiset.direktiivit.tiedote',
           $scope.tila = 'muokkaa';
         };
         $scope.tallenna = function(){
-          Tiedote.tallenna({fi: $scope.tiedoteFi,
-                            sv: $scope.tiedoteSv});
+          var tiedote = {fi: $scope.tiedoteFi,
+                         sv: $scope.tiedoteSv};
+          Tiedote.tallenna(tiedote);
+          $scope.naytettavaTiedote = tiedote[kieli];
           $scope.tila = 'nayta';
         };
         Tiedote.hae().success(function(tiedote){
