@@ -248,6 +248,8 @@
     :tutkinto aipal-kayttaja?
     :koulutustoimija aipal-kayttaja?
     :valtakunnallinen-raportti kayttaja/yllapitaja?
-    :omat_tiedot aipal-kayttaja?})
+    :omat_tiedot aipal-kayttaja?
+    :tiedote-luku aipal-kayttaja?
+    :tiedote-muokkaus kayttaja/yllapitaja?})
 
 (def toiminnot kayttajatoiminnot)

@@ -35,6 +35,7 @@ describe('yhteiset.direktiivit.tiedote', function(){
     $scope.$digest();
     $httpBackend.flush();
     expect(e.html()).toMatch(/suomenkielinen tiedote/);
+    expect(e.html()).not.toMatch(/ruotsinkielinen tiedote/);
   });
 
   it('näyttää ruotsinkielisen tiedotteen, jos kieli on ruotsi', function(){
@@ -46,50 +47,8 @@ describe('yhteiset.direktiivit.tiedote', function(){
     var e = $compile('<div data-tiedote></div>')($scope);
     $scope.$digest();
     $httpBackend.flush();
+    expect(e.html()).not.toMatch(/suomenkielinen tiedote/);
     expect(e.html()).toMatch(/ruotsinkielinen tiedote/);
-  });
-
-  it('piilottaa näytettävän tiedotteen muokkaustilassa', function(){
-    alustaInjector('fi');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    var e = $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
-    $scope.muokkaa();
-    $scope.$digest();
-    expect(e.html()).not.toMatch(/kielinen tiedote/);
-  });
-
-  it('ei näytä oletuksena muokkauskenttiä', function(){
-    alustaInjector('fi');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    var e = $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
-    expect(e.html()).not.toMatch(/textarea/);
-  });
-
-  it('näyttää molempien tiedotteiden muokkauskentät muokkaustilassa', function(){
-    alustaInjector('fi');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    var e = $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
-    $scope.muokkaa();
-    $scope.$digest();
-    expect(e.html()).toMatch(/tiedoteFi/);
-    expect($scope.tiedoteFi).toEqual('suomenkielinen tiedote');
-    expect(e.html()).toMatch(/tiedoteSv/);
-    expect($scope.tiedoteSv).toEqual('ruotsinkielinen tiedote');
   });
 
   it('tallentaa muutokset tiedotteesen palvelimelle', function(){
@@ -111,24 +70,6 @@ describe('yhteiset.direktiivit.tiedote', function(){
     .respond(200);
     $scope.tallenna();
     $httpBackend.flush();
-  });
-
-  it('tiedotteen tallennus piilottaa muokkauskentät', function(){
-    alustaInjector('fi');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    $httpBackend
-    .whenPOST('api/tiedote').respond(200);
-    var e = $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
-    $scope.muokkaa();
-    $scope.$digest();
-    $scope.tallenna();
-    $httpBackend.flush();
-    expect(e.html()).not.toMatch(/tiedote(Fi|Sv)/);
   });
 
 });

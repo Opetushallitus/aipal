@@ -145,4 +145,7 @@
                                         :vastaajatunnusid vastaajatunnusid
                                         :lukittu lukittu-tila}))
 
-
+(defn tiedote-operaatio!
+  [operaatio]
+  {:pre [(contains? operaatiot operaatio)]}
+  (kirjoita! :tiedote operaatio))

@@ -94,3 +94,4 @@
 
 (defentity kayttajarooli)
 
+(defentity tiedote)
