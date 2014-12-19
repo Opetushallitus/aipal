@@ -98,8 +98,8 @@
     (arkisto/paivita! kysymysryhma)))
 
 (c/defroutes reitit
-  (cu/defapi :kysymysryhma-listaaminen nil :get "/" [taustakysymysryhmat voimassa]
-    (json-response (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean taustakysymysryhmat) (Boolean/parseBoolean voimassa))))
+  (cu/defapi :kysymysryhma-listaaminen nil :get "/" [voimassa]
+    (json-response (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
 
   (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset taustakysymykset]
     (lisaa-kysymysryhma! {:nimi_fi nimi_fi
