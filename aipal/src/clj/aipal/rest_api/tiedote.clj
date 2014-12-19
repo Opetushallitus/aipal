@@ -21,11 +21,7 @@
 
 (c/defroutes reitit
   (cu/defapi :tiedote-luku nil :get "/" []
-    (let [tiedote (arkisto/hae)]
-      (-> (if (nil? tiedote)
-            {}
-            tiedote)
-        json-response)))
+    (json-response (or (arkisto/hae) {})))
 
   (cu/defapi :tiedote-muokkaus nil :post "/" request
     (let [tiedote (arkisto/poista-ja-lisaa! (select-keys (:params request)
