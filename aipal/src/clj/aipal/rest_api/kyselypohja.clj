@@ -57,4 +57,8 @@
                  :valtakunnallinen valtakunnallinen)))))
 
   (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid/kysymysryhmat" [kyselypohjaid]
-    (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid)))))
+    (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid))))
+
+  (cu/defapi :kyselypohja-poisto kyselypohjaid :delete "/:kyselypohjaid" [kyselypohjaid]
+    (let [kyselypohjaid (Integer/parseInt kyselypohjaid)]
+      (arkisto/poista-kyselypohja! kyselypohjaid))))

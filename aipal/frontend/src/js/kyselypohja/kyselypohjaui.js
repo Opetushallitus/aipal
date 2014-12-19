@@ -85,6 +85,19 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
     };
 
+    $scope.poistaKyselypohja = function(kyselypohjalista, kyselypohja) {
+      varmistus.varmista(i18n.hae('kyselypohja.poista'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.poista_teksti'), i18n.hae('kyselypohja.poista')).then(function() {
+        var kyselypohjaid = kyselypohja.kyselypohjaid;
+        var kyselypohjaindex = _.findIndex(kyselypohjalista, {kyselypohjaid: kyselypohjaid});
+        Kyselypohja.poista(kyselypohjaid).success(function() {
+          kyselypohjalista.splice(kyselypohjaindex, 1);
+          ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_onnistui'));
+        }).error(function() {
+          ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_epaonnistui'));
+        });
+      });
+    };
+
     Kyselypohja.haeKaikki().success(function(kyselypohjat) {
       $scope.kyselypohjat = kyselypohjat;
     });

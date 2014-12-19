@@ -41,11 +41,17 @@
 (defn hae-kyselyn-tila [kyselyid]
   (:tila (kysely-arkisto/hae (->int kyselyid))))
 
+(defn hae-kyselypohjan-tila [kyselypohjaid]
+  (:tila (kyselypohja-arkisto/hae-kyselypohja (->int kyselypohjaid))))
+
 (defn kysely-on-luonnostilassa? [kyselyid]
   (= "luonnos" (hae-kyselyn-tila kyselyid)))
 
 (defn kysely-on-julkaistu? [kyselyid]
   (= "julkaistu" (hae-kyselyn-tila kyselyid)))
+
+(defn kyselypohja-on-luonnostilassa? [kyselypohjaid]
+  (= "luonnos" (hae-kyselypohjan-tila kyselypohjaid)))
 
 (defn kayttajalla-on-lukuoikeus-kysymysryhmaan? [kysymysryhmaid]
   (let [organisaatiotieto (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid))]
@@ -164,6 +170,13 @@
         #{"OPL-VASTUUKAYTTAJA"}
         kyselypohjaid)))
 
+(defn kyselypohja-poisto? [kyselypohjaid]
+  (and (kyselypohja-on-luonnostilassa? kyselypohjaid)
+       (or (kayttaja/yllapitaja?)
+           (kayttajalla-on-jokin-rooleista-kyselypohjassa?
+             #{"OPL-VASTUUKAYTTAJA"}
+             kyselypohjaid))))
+
 (defn kyselypohja-luonti? []
   (or (kayttaja/yllapitaja?)
       (kayttaja/vastuukayttaja?)))
@@ -224,6 +237,7 @@
     :kyselypohja-listaaminen kyselypohja-listaaminen?
     :kyselypohja-luku kyselypohja-luku?
     :kyselypohja-muokkaus kyselypohja-muokkaus?
+    :kyselypohja-poisto kyselypohja-poisto?
     :kyselypohja-luonti kyselypohja-luonti?
     :impersonointi kayttaja/yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?

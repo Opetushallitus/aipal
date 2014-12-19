@@ -89,6 +89,13 @@
   (auditlog/kyselypohja-muokkaus! kyselypohjaid :suljettu)
   (aseta-kyselypohjan-tila! kyselypohjaid "suljettu"))
 
+(defn poista-kyselypohja! [kyselypohjaid]
+  (auditlog/kyselypohja-poisto! kyselypohjaid)
+  (sql/delete taulut/kysymysryhma-kyselypohja
+    (sql/where {:kyselypohjaid kyselypohjaid}))
+  (sql/delete taulut/kyselypohja
+    (sql/where {:kyselypohjaid kyselypohjaid})))
+
 (defn hae-organisaatiotieto
   [kyselypohjaid]
   (select-unique :kyselypohja_organisaatio_view

@@ -33,6 +33,10 @@
             {{ 'yleiset.sulje' | i18n }}&nbsp;
             <span class="fa fa-close"></span>
         </button>
+        <button class="btn btn-primary btn-sm" ng-click="poistaKyselypohja(kyselypohjat, kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+            {{ 'yleiset.poista' | i18n }}&nbsp;
+            <span class="fa fa-trash"></span>
+        </button>
     </td>
   </tr>
   </tbody>

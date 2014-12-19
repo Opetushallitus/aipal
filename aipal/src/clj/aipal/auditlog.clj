@@ -69,6 +69,10 @@
   [nimi]
   (kirjoita! :kyselypohja :lisays {:nimi nimi}))
 
+(defn kyselypohja-poisto!
+  [kyselypohjaid]
+  (kirjoita! :kyselypohja :poisto {:kyselypohjaid kyselypohjaid}))
+
 (defn kysymysryhma-muokkaus!
   ([kysymysryhmaid]
     (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid}))
