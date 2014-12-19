@@ -97,6 +97,10 @@
     (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
     (arkisto/paivita! kysymysryhma)))
 
+(defn poista-kysymysryhma! [kysymysryhmaid]
+  (poista-kysymysryhman-kysymykset! kysymysryhmaid)
+  (arkisto/poista! kysymysryhmaid))
+
 (c/defroutes reitit
   (cu/defapi :kysymysryhma-listaaminen nil :get "/" [taustakysymysryhmat voimassa]
     (let [taustakysymysryhmat (Boolean/parseBoolean taustakysymysryhmat)
@@ -128,6 +132,10 @@
           (assoc :kysymysryhmaid (Integer/parseInt kysymysryhmaid)
                  :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)
                  :taustakysymykset (if (yllapitaja?) (true? (:taustakysymykset kysymysryhma)) false))))))
+
+  (cu/defapi :kysymysryhma-poisto kysymysryhmaid :delete "/:kysymysryhmaid" [kysymysryhmaid]
+    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
+      (poista-kysymysryhma! kysymysryhmaid)))
 
   (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/:kysymysryhmaid/julkaise" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]

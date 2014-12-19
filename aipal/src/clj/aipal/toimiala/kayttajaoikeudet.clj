@@ -217,6 +217,7 @@
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
     :kysymysryhma-muokkaus kysymysryhma-muokkaus?
+    :kysymysryhma-poisto kysymysryhma-muokkaus?
     :kysymysryhma-julkaisu kysymysryhma-julkaisu?
     :kysymysryhma-sulkeminen kysymysryhma-sulkeminen?
     :kysymysryhma-palautus-luonnokseksi kysymysryhma-palautus-luonnokseksi?

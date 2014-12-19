@@ -43,6 +43,10 @@
           {{ 'yleiset.palauta_julkaistuksi' | i18n }}&nbsp;
           <span class="fa fa-reply"></span>
         </button>
+        <button class="btn btn-primary btn-sm" ng-click="poistaKysymysryhma(kysymysryhmat, k)" ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
+          {{ 'yleiset.poista' | i18n }}&nbsp;
+          <span class="fa fa-trash"></span>
+        </button>
       </auth>
     </td>
   </tr>

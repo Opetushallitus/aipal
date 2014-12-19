@@ -80,6 +80,11 @@
   [kysymysryhmaid nimi]
   (kirjoita! :kysymysryhma :lisays {:kysymysryhmaid kysymysryhmaid
                                     :nimi nimi}))
+
+(defn kysymysryhma-poisto!
+  [kysymysryhmaid]
+  (kirjoita! :kysymysryhma :poisto {:kysymysryhmaid kysymysryhmaid}))
+
 (defn kysymys-poisto!
   [kysymysid]
   (kirjoita! :kysymys :poisto {:kysymysid kysymysid}))

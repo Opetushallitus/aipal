@@ -102,6 +102,21 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       });
     };
 
+    $scope.poistaKysymysryhma = function(kysymysryhmalista, kysymysryhma) {
+      varmistus.varmista(i18n.hae('kysymysryhma.poista'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.poista_teksti'), i18n.hae('kysymysryhma.poista')).then(function() {
+        var kysymysryhmaid = kysymysryhma.kysymysryhmaid;
+        var kysymysryhmaindex = _.findIndex(kysymysryhmalista, {kysymysryhmaid: kysymysryhmaid});
+        Kysymysryhma.poista(kysymysryhmaid)
+          .success(function() {
+            kysymysryhmalista.splice(kysymysryhmaindex, 1);
+            ilmoitus.onnistuminen(i18n.hae('kysymysryhma.poistaminen_onnistui'));
+          })
+          .error(function() {
+            ilmoitus.virhe(i18n.hae('kysymysryhma.poistaminen_epaonnistui'));
+          });
+      });
+    };
+
     $scope.palautaKysymysryhmaJulkaistuksi = function(kysymysryhma) {
       varmistus.varmista(i18n.hae('kysymysryhma.palauta_julkaistuksi'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.palauta_julkaistuksi_teksti'), i18n.hae('kysymysryhma.palauta_julkaistuksi')).then(function() {
         Kysymysryhma.julkaise(kysymysryhma)

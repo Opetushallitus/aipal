@@ -267,6 +267,12 @@
     (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
     (sql/update)))
 
+(defn poista!
+  [kysymysryhmaid]
+  (auditlog/kysymysryhma-poisto! kysymysryhmaid)
+  (sql/delete taulut/kysymysryhma
+    (sql/where {:kysymysryhmaid kysymysryhmaid})))
+
 (defn poista-kysymys!
   [kysymysid]
   (auditlog/kysymys-poisto! kysymysid)
