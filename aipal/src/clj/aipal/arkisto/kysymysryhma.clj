@@ -42,6 +42,15 @@
   ([organisaatio]
     (hae-kysymysryhmat organisaatio false)))
 
+(defn hae-taustakysymysryhmat
+  []
+  (-> (sql/select* taulut/kysymysryhma)
+    (sql/where {:taustakysymykset true
+                :valtakunnallinen true})
+    (sql/fields :kysymysryhmaid)
+    (sql/order :muutettuaika :desc)
+    sql/exec))
+
 (defn lisaa-kysymysryhma! [k]
   (let [kysymysryhma (sql/insert taulut/kysymysryhma
                        (sql/values k))]
