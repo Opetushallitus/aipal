@@ -101,3 +101,11 @@
                                            :valtakunnallinen true
                                            :koulutustoimija (:ytunnus oph)}]))
     (is (= ["a"] (map :nimi_fi (hae-kysymysryhmat (:ytunnus oph)))))))
+
+(deftest ^:integraatio hae-taustakysymysryhmat-test
+  (let [koulutustoimija (test-data/lisaa-koulutustoimija!)
+        id1 (-> (test-data/lisaa-kysymysryhma! {:taustakysymykset true
+                                                :valtakunnallinen true} koulutustoimija) :kysymysryhmaid)
+        id2 (-> (test-data/lisaa-kysymysryhma! {:taustakysymykset true
+                                                :valtakunnallinen true} koulutustoimija) :kysymysryhmaid)]
+    (is (= #{id1 id2} (set (map :kysymysryhmaid (hae-taustakysymysryhmat)))))))
