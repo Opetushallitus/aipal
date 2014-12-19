@@ -37,11 +37,6 @@ describe('yhteiset.direktiivit.tiedote', function(){
     $httpBackend.flush();
   }
 
-  function muokkaa() {
-    $scope.muokkaa();
-    $scope.$digest();
-  }
-
   function tallenna() {
     $scope.tallenna();
     $httpBackend.flush();
@@ -66,7 +61,7 @@ describe('yhteiset.direktiivit.tiedote', function(){
   it('tallentaa muutokset tiedotteesen palvelimelle', function(){
     alustaInjector('fi');
     alustaDirektiivi();
-    muokkaa();
+    $scope.muokkaa();
     $scope.tiedoteFi = 'päivitetty suomenkielinen';
     $scope.tiedoteSv = 'päivitetty ruotsinkielinen';
     $httpBackend
@@ -79,7 +74,7 @@ describe('yhteiset.direktiivit.tiedote', function(){
   it('päivittää näytettävän tiedotteen tallennuksen jälkeen', function(){
     alustaInjector('fi');
     alustaDirektiivi();
-    muokkaa();
+    $scope.muokkaa();
     $scope.tiedoteFi = 'päivitetty suomenkielinen';
     $scope.tiedoteSv = 'päivitetty ruotsinkielinen';
     tallenna();
