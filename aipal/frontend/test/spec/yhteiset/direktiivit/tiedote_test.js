@@ -4,6 +4,7 @@ describe('yhteiset.direktiivit.tiedote', function(){
   var $compile;
   var $scope;
   var $httpBackend;
+  var haku;
 
   beforeEach(module('yhteiset.direktiivit.tiedote'));
   beforeEach(module('template/yhteiset/direktiivit/tiedote.html'));
@@ -22,70 +23,66 @@ describe('yhteiset.direktiivit.tiedote', function(){
       $compile = _$compile_;
       $scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
+
+      haku = $httpBackend.whenGET(/api\/tiedote.*/);
+      haku.respond(200, {});
+
+      $httpBackend.whenPOST('api/tiedote').respond(200);
     });
+  }
+
+  function alustaDirektiivi() {
+    $compile('<div data-tiedote></div>')($scope);
+    $scope.$digest();
+    $httpBackend.flush();
+  }
+
+  function muokkaa() {
+    $scope.muokkaa();
+    $scope.$digest();
+  }
+
+  function tallenna() {
+    $scope.tallenna();
+    $httpBackend.flush();
   }
 
   it('näyttää suomenkielisen tiedotteen, jos kieli on suomi', function(){
     alustaInjector('fi');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
+    haku.respond(200, {fi: 'suomenkielinen tiedote',
+                       sv: 'ruotsinkielinen tiedote'});
+    alustaDirektiivi();
     expect($scope.naytettavaTiedote).toEqual('suomenkielinen tiedote');
   });
 
   it('näyttää ruotsinkielisen tiedotteen, jos kieli on ruotsi', function(){
     alustaInjector('sv');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
+    haku.respond(200, {fi: 'suomenkielinen tiedote',
+                       sv: 'ruotsinkielinen tiedote'});
+    alustaDirektiivi();
     expect($scope.naytettavaTiedote).toEqual('ruotsinkielinen tiedote');
   });
 
   it('tallentaa muutokset tiedotteesen palvelimelle', function(){
     alustaInjector('fi');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
-    $scope.muokkaa();
-    $scope.$digest();
+    alustaDirektiivi();
+    muokkaa();
     $scope.tiedoteFi = 'päivitetty suomenkielinen';
     $scope.tiedoteSv = 'päivitetty ruotsinkielinen';
     $httpBackend
     .expectPOST('api/tiedote', {fi: 'päivitetty suomenkielinen',
                                 sv: 'päivitetty ruotsinkielinen'})
     .respond(200);
-    $scope.tallenna();
-    $httpBackend.flush();
+    tallenna();
   });
 
   it('päivittää näytettävän tiedotteen tallennuksen jälkeen', function(){
     alustaInjector('fi');
-    $httpBackend
-    .whenGET(/api\/tiedote.*/)
-    .respond(200, {fi: 'suomenkielinen tiedote',
-                   sv: 'ruotsinkielinen tiedote'});
-    $compile('<div data-tiedote></div>')($scope);
-    $scope.$digest();
-    $httpBackend.flush();
-    $scope.muokkaa();
-    $scope.$digest();
+    alustaDirektiivi();
+    muokkaa();
     $scope.tiedoteFi = 'päivitetty suomenkielinen';
     $scope.tiedoteSv = 'päivitetty ruotsinkielinen';
-    $httpBackend.whenPOST('api/tiedote').respond(200);
-    $scope.tallenna();
-    $httpBackend.flush();
+    tallenna();
     expect($scope.naytettavaTiedote).toEqual('päivitetty suomenkielinen');
   });
 
