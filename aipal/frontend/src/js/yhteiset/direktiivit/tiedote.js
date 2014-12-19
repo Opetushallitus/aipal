@@ -22,8 +22,19 @@ angular.module('yhteiset.direktiivit.tiedote',
       restrict: 'A',
       templateUrl: 'template/yhteiset/direktiivit/tiedote.html',
       link: function($scope){
+        $scope.tila = 'nayta';
+        $scope.muokkaa = function(){
+          $scope.tila = 'muokkaa';
+        };
+        $scope.tallenna = function(){
+          Tiedote.tallenna({fi: $scope.tiedoteFi,
+                            sv: $scope.tiedoteSv});
+          $scope.tila = 'nayta';
+        };
         Tiedote.hae().success(function(tiedote){
-          $scope.viesti = tiedote[kieli];
+          $scope.naytettavaTiedote = tiedote[kieli];
+          $scope.tiedoteFi = tiedote.fi;
+          $scope.tiedoteSv = tiedote.sv;
         });
       }
     };

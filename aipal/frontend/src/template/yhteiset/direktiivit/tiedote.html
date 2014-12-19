@@ -1,1 +1,9 @@
-<div ng-bind="viesti"></div>
+<div ng-if="tila==='nayta'">
+  <div ng-bind="naytettavaTiedote"></div>
+  <button ng-click="muokkaa()" ng-bind="'yleiset.muokkaa'|i18n"></button>
+</div>
+<div ng-if="tila==='muokkaa'">
+  <textarea ng-model="tiedoteFi" cols="30" rows="10"></textarea>
+  <textarea ng-model="tiedoteSv" cols="30" rows="10"></textarea>
+  <button ng-click="tallenna()" ng-bind="'yleiset.tallenna'|i18n"></button>
+</div>

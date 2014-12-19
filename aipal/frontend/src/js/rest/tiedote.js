@@ -17,8 +17,11 @@
 angular.module('rest.tiedote', [])
   .factory('Tiedote', ['$http', function($http) {
     return {
-      hae: function() {
+      hae: function(){
         return $http.get('api/tiedote', {params: {nocache: Date.now()}});
+      },
+      tallenna: function(tiedote){
+        return $http.post('api/tiedote', tiedote);
       }
     };
   }]);
