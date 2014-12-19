@@ -14,13 +14,14 @@
 
 (ns aipal.arkisto.tiedote
   (:require [korma.core :as sql]
+            [oph.korma.korma :refer [select-unique-or-nil]]
             [aipal.auditlog :as auditlog]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae
   "Hakee tiedotteen."
   []
-  (when-let [tiedote (first (sql/select taulut/tiedote))]
+  (when-let [tiedote (select-unique-or-nil taulut/tiedote)]
     {:fi (:teksti_fi tiedote)
      :sv (:teksti_sv tiedote)}))
 
