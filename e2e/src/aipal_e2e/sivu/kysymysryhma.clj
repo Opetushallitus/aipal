@@ -24,7 +24,7 @@
   (w/click {:css ".e2e-luo-uusi-kysymys"}))
 
 (defn aseta-kysymys-suomeksi [kysymys]
-  (syota-kenttaan "aktiivinenKysymys.kysymys_fi" kysymys))
+  (w/input-text {:css ".e2e-kysymys-suomeksi"} kysymys))
 
 (defn lisaa-kysymys []
   (w/click {:css ".e2e-lisaa-kysymys"}))

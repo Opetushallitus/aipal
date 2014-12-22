@@ -16,6 +16,7 @@
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
+            [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
             [aitu-e2e.util :refer :all]))
@@ -42,7 +43,7 @@
         (w/click {:css ".e2e-luo-uusi-kysymysryhma"})
         (syota-kenttaan "kysymysryhma.nimi_fi" "Uusi kysymysryhmä")
         (w/click {:css ".e2e-luo-uusi-kysymys"})
-        (syota-kenttaan "aktiivinenKysymys.kysymys_fi" "Uusi kysymys")
+        (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
         (w/click {:css ".e2e-lisaa-kysymys"})
         (w/click {:css ".e2e-tallenna-kysymysryhma"})
         (testing
