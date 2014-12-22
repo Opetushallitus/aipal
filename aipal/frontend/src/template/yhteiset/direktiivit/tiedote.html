@@ -1,9 +1,34 @@
 <div ng-show="tila==='nayta'">
-  <div ng-bind="naytettavaTiedote"></div>
-  <button ng-click="muokkaa()" ng-bind="'yleiset.muokkaa'|i18n"></button>
+  <br />
+  <div class="col-md-6">
+    <div class="row">
+      <h2>{{'tiedote.tiedote' | i18n}}</h2>
+    </div>
+    <div class="row">
+      <div ng-bind="naytettavaTiedote"></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary" ng-click="muokkaa()">{{'yleiset.muokkaa' | i18n}}&nbsp;&nbsp;<span class="fa fa-pencil"></span></button>
+    </div>
+  </div>
 </div>
+
 <div ng-show="tila==='muokkaa'">
-  <textarea ng-model="tiedoteFi" cols="30" rows="10"></textarea>
-  <textarea ng-model="tiedoteSv" cols="30" rows="10"></textarea>
-  <button ng-click="tallenna()" ng-bind="'yleiset.tallenna'|i18n"></button>
+  <br />
+  <div class="col-md-6">
+    <div class="row">
+      <h2>{{'tiedote.muokkaa' | i18n}}</h2>
+    </div>
+    <div class="row">
+      <h3>FI</h3>
+      <textarea class="form-control" ng-model="tiedoteFi" rows="10"></textarea>
+    </div>
+    <div class="row">
+      <h3>SV</h3>
+      <textarea class="form-control" ng-model="tiedoteSv" rows="10"></textarea>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary" ng-click="tallenna()">{{'yleiset.tallenna' | i18n}}&nbsp;&nbsp;<span class="fa fa-floppy-o"></span></button>
+    </div>
+  </div>
 </div>
