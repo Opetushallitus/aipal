@@ -42,10 +42,10 @@
         (avaa kysymysryhmat-sivu)
         (w/click {:css ".e2e-luo-uusi-kysymysryhma"})
         (syota-kenttaan "kysymysryhma.nimi_fi" "Uusi kysymysryhmä")
-        (w/click {:css ".e2e-luo-uusi-kysymys"})
+        (kysymysryhma-sivu/luo-uusi-kysymys)
         (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
-        (w/click {:css ".e2e-lisaa-kysymys"})
-        (w/click {:css ".e2e-tallenna-kysymysryhma"})
+        (kysymysryhma-sivu/lisaa-kysymys)
+        (kysymysryhma-sivu/tallenna-kysymysryhma)
         (testing
           "kysymyksen muokkaus:"
           (w/click {:css ".e2e-muokkaa-kysymysryhmaa"})
