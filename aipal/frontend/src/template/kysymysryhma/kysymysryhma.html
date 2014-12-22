@@ -100,13 +100,13 @@
 
                         <div class="form-group">
                             <label ng-class="{pakollinen: !aktiivinenKysymys.kysymys_sv}"><span>{{i18n.kysymys.kysymys_suomeksi}}</span>
-                                <input class="form-control e2e-kysymys-suomeksi" type="text" ng-model="aktiivinenKysymys.kysymys_fi" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_sv"/>
+                                <textarea class="form-control e2e-kysymys-suomeksi" type="text" ng-model="aktiivinenKysymys.kysymys_fi" rows="5" maxlength="500" ng-required="!aktiivinenKysymys.kysymys_sv"></textarea>
                             </label>
                         </div>
 
                         <div class="form-group">
                             <label ng-class="{pakollinen: !aktiivinenKysymys.kysymys_fi}"><span>{{i18n.kysymys.kysymys_ruotsiksi}}</span>
-                                <input class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_sv" size="80" maxlength="200" ng-required="!aktiivinenKysymys.kysymys_fi"/>
+                                <textarea class="form-control" type="text" ng-model="aktiivinenKysymys.kysymys_sv" rows="5" maxlength="500" ng-required="!aktiivinenKysymys.kysymys_fi"></textarea>
                             </label>
                         </div>
 
