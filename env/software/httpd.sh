@@ -2,6 +2,7 @@
 set -eu
 
 yum -y install httpd
+yum -y install mod_ssl
 
 cp httpd/aipal.conf /etc/httpd/conf.d/
 cp httpd/aipalvastaus.conf /etc/httpd/conf.d/
