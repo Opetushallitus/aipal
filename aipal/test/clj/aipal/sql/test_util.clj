@@ -56,7 +56,7 @@
   (let [pool (alusta-korma!)]
     (luo-testikayttaja!) ; eri transaktio kuin loppuosassa!
     ;; testin aikana eri käyttäjä
-    (with-kayttaja uid nil
+    (with-kayttaja uid nil nil
       (binding [i18n/*locale* testi-locale]
         ;; avataan transaktio joka on voimassa koko kutsun (f) ajan
         (db/transaction

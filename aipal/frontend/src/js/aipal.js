@@ -82,11 +82,13 @@ angular.module('aipal', [
     );
   }])
 
-  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'kayttooikeudet', 'breadcrumbs', function ($location, $modal, $scope, $window, i18n, impersonaatioResource, kayttooikeudet, breadcrumbs) {
+  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', 
+              function ($location, $modal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs) {
     $scope.i18n = i18n;
     $scope.breadcrumbs = breadcrumbs;
     $scope.baseUrl = _.has($window, 'ophBaseUrl') ? $window.ophBaseUrl : '';
     $scope.vastausBaseUrl = _.has($window, 'vastausBaseUrl') ? $window.vastausBaseUrl : 'http://192.168.50.1:8083';
+    $scope.valikkoAvattu = false;
     $scope.varmistaLogout = function () {
       if (!_.isEmpty($window.aipalLogoutUrl) && $window.confirm(i18n.yleiset.haluatko_kirjautua_ulos)) {
         $window.location = $window.aipalLogoutUrl;
@@ -106,6 +108,21 @@ angular.module('aipal', [
     $scope.lopetaImpersonointi = function () {
       impersonaatioResource.lopeta(null, function () {
         $window.location = $scope.baseUrl;
+      });
+    };
+    $scope.vaihdaRoolia = function () {
+      var modalInstance = $modal.open({
+        templateUrl: 'template/roolit.html',
+        controller: 'RoolitModalController',
+        resolve: {
+          roolit: function() { return $scope.kayttooikeudet.roolit; },
+          aktiivinenRooli: function() { return $scope.kayttooikeudet.aktiivinen_rooli.rooli_organisaatio_id; }
+        }
+      });
+      modalInstance.result.then(function(rooli_organisaatio_id) {
+        rooliResource.valitse({rooli_organisaatio_id: rooli_organisaatio_id}, function () {
+          $window.location = $scope.baseUrl;
+        });
       });
     };
 
@@ -150,6 +167,18 @@ angular.module('aipal', [
     };
     $scope.impersonoi = function() {
       $modalInstance.close($scope.impersonointi.impersonoitava);
+    };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  }])
+
+  .controller('RoolitModalController', ['$modalInstance', '$scope', 'i18n', 'roolit', 'aktiivinenRooli', function($modalInstance, $scope, i18n, roolit, aktiivinenRooli) {
+    $scope.i18n = i18n;
+    $scope.roolit = roolit;
+    $scope.rooli = aktiivinenRooli;
+    $scope.valitseRooli = function() {
+      $modalInstance.close($scope.rooli);
     };
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
@@ -212,6 +241,16 @@ angular.module('aipal', [
         method: 'POST',
         url: 'api/kayttaja/lopeta-impersonointi',
         id: 'impersonoi-lopetus'
+      }
+    });
+  }])
+
+  .factory('rooliResource', ['$resource', function ($resource) {
+    return $resource(null, null, {
+      valitse: {
+        method: 'POST',
+        url: 'api/kayttaja/rooli',
+        id: 'valitse-rooli'
       }
     });
   }])

@@ -15,7 +15,7 @@
   (let [kayttajat (for [i (range 50)]
                     (str "test-" i))]
     (exec-raw-fixture
-     #(with-kayttaja jarjestelma-uid nil
+     #(with-kayttaja jarjestelma-uid nil nil
         (db/transaction
           (doseq [k kayttajat]
             (sql/insert taulut/kayttaja

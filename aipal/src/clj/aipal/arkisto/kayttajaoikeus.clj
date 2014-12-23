@@ -22,14 +22,21 @@
             [oph.korma.korma :refer :all]
             [aipal.integraatio.sql.korma :as taulut]))
 
+(defn hae-roolit [oid]
+  (sql/select taulut/rooli-organisaatio
+    (sql/join taulut/koulutustoimija
+              (= :rooli_organisaatio.organisaatio :koulutustoimija.ytunnus))
+    (sql/fields :rooli :organisaatio :rooli_organisaatio_id
+                [:koulutustoimija.nimi_fi :koulutustoimija_fi]
+                [:koulutustoimija.nimi_sv :koulutustoimija_sv])
+    (sql/where {:kayttaja oid
+                :voimassa true})))
+
 (defn hae-oikeudet
   ([oid]
     (db/transaction
       (let [kayttaja (kayttaja-arkisto/hae oid)
-            roolit (sql/select taulut/rooli-organisaatio
-                     (sql/where {:kayttaja oid
-                                 :voimassa true})
-                     (sql/fields :rooli :organisaatio))]
+            roolit (hae-roolit oid)]
         (assoc kayttaja :roolit roolit))))
   ([]
     (hae-oikeudet (:oid *kayttaja*))))
@@ -39,12 +46,6 @@
     (sql/where {:rooli rooli
                 :kayttaja kayttaja
                 :organisaatio organisaatio})))
-
-(defn hae-roolit [oid]
-  (sql/select taulut/rooli-organisaatio
-    (sql/fields :rooli :organisaatio)
-    (sql/where {:kayttaja oid
-                :voimassa true})))
 
 (defn olemassa? [k]
   (hae-rooli (:rooli k) (:kayttaja k) (:organisaatio k)))

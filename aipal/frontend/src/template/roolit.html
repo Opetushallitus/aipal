@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <a class="pull-right" ng-click="cancel()">X</a>
+    <h4>{{'roolit.valitse_kaytettava_rooli' | i18n}}</h4>
+
+</div>
+<div class="modal-body">
+    <form name="rooliForm">
+        <select ng-options="r.rooli_organisaatio_id as (('roolit.rooli.' + r.rooli) | i18n) + ' (' + (r | lokalisoiKentta:'koulutustoimija') + ')' for r in roolit"
+                ng-model="rooli" class="form-control rooli-select-e2e">
+        </select>
+    </form>
+</div>
+<div class="modal-footer">
+    <small class="pull-right pakollinen"><pakollisia-kenttia></pakollisia-kenttia></small>
+    <tallenna class="btn btn-primary pull-left tallenna-rooli-e2e" formi-validi="rooliForm.$valid" ng-click="valitseRooli()" teksti="{{'roolit.valitse_rooli' | i18n}}"></tallenna>
+    <button class="btn btn-default pull-left" ng-click="cancel()">{{'yleiset.peruuta' | i18n}}</button>
+</div>
+

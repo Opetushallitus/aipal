@@ -47,7 +47,7 @@
 
 (defn ^:test-api luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
-  (with-kayttaja jarjestelma-uid nil
+  (with-kayttaja jarjestelma-uid nil nil
     (when-not (select-unique-or-nil kayttaja
                 (sql/where {:oid testikayttaja-oid}))
       (db/transaction

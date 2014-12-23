@@ -31,12 +31,18 @@
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
 
+  (cu/defapi :roolin-valinta nil :post "/rooli" {{rooli :rooli_organisaatio_id} :params
+                                                 session :session}
+    {:status 200
+     :session (assoc session :rooli rooli)})
+
   (cu/defapi :impersonointi nil :get "/impersonoitava" [termi]
     (json-response (arkisto/hae-impersonoitava-termilla termi)))
 
   (cu/defapi :omat_tiedot nil :get "/" []
     (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:aktiivinen-oid *kayttaja*))]
-      (json-response (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)))))
+      (json-response (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)
+                                     :aktiivinen_rooli (:aktiivinen-rooli *kayttaja*)))))
 
   (cu/defapi :kayttajan_tiedot oid :get "/:oid" [oid]
     true))

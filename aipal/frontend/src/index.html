@@ -50,11 +50,15 @@
         <div id="logout" ng-click="varmistaLogout()" title="{{i18n.yleiset.kirjaudu_ulos_title}}"></div>
 
         <ul id="current-user" ng-class="{impersonoitu : impersonoitu}">
-          <li>
-              <a href="" class="username" ng-class="{long:currentuser.length>30}">{{currentuser}}</a>
-                  <ul ng-if="yllapitaja || impersonoitu">
-                      <li ng-if="!impersonoitu"><a href="" ng-click="valitse()">{{i18n.impersonointi.vaihda_avustettavaksi_kayttajaksi}}</a></li>
+          <li class="avaa-valikko-e2e" ng-class="{avattu: valikkoAvattu}" ng-click="valikkoAvattu = !valikkoAvattu">
+              <a href="" class="username" ng-class="{long: currentuser.length>30 || kayttooikeudet.roolit.length > 1}">
+                {{currentuser}}
+                <span ng-if="kayttooikeudet.roolit.length > 1">{{('roolit.rooli.' + kayttooikeudet.aktiivinen_rooli.rooli) | i18n}} ({{kayttooikeudet.aktiivinen_rooli | lokalisoiKentta:'koulutustoimija'}})</span>
+              </a>
+                  <ul ng-if="yllapitaja || impersonoitu || kayttooikeudet.roolit.length > 1" ng-mouseover="$parent.valikkoAvattu = false">
+                      <li ng-if="!impersonoitu && yllapitaja"><a href="" ng-click="valitse()">{{i18n.impersonointi.vaihda_avustettavaksi_kayttajaksi}}</a></li>
                       <li ng-if="impersonoitu"><a href="" ng-click="lopetaImpersonointi()">{{i18n.impersonointi.lopeta_avustus}}</a></li>
+                      <li ng-if="kayttooikeudet.roolit.length > 1"><a class="vaihda-roolia-e2e" href="" ng-click="vaihdaRoolia()">{{i18n.roolit.vaihda_roolia}}</a></li>
                 </ul>
             </li>
         </ul>

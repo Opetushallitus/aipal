@@ -17,6 +17,7 @@
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
+            [aipal-e2e.sivu.etusivu :as etusivu]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
             [aitu-e2e.util :refer :all]))
@@ -39,6 +40,7 @@
                                       :voimassa true}]}
       (testing
         "kysymysryhman luonti:"
+        (etusivu/valitse-rooli 1)
         (avaa kysymysryhmat-sivu)
         (w/click {:css ".e2e-luo-uusi-kysymysryhma"})
         (syota-kenttaan "kysymysryhma.nimi_fi" "Uusi kysymysryhmä")

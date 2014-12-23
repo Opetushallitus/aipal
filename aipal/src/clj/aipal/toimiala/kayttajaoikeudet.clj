@@ -23,8 +23,10 @@
     true))
 
 (defn kayttajalla-on-jokin-rooleista-koulutustoimijassa? [roolit koulutustoimija]
-  (let [roolit-koulutustoimijassa (filter #(= koulutustoimija (:organisaatio %)) (:aktiiviset-roolit *kayttaja*))]
-    (kayttaja/sisaltaa-jonkin-rooleista? roolit roolit-koulutustoimijassa)))
+  (let [aktiivinen-rooli (:aktiivinen-rooli *kayttaja*)
+        rooli-koulutustoimijassa (when (= koulutustoimija (:organisaatio aktiivinen-rooli))
+                                   (:rooli aktiivinen-rooli))]
+    (boolean (some #{rooli-koulutustoimijassa} roolit))))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))]
@@ -241,6 +243,7 @@
     :kyselypohja-luonti kyselypohja-luonti?
     :impersonointi kayttaja/yllapitaja?
     :impersonointi-lopetus impersonoiva-yllapitaja?
+    :roolin-valinta aipal-kayttaja?
     :kayttajan_tiedot aipal-kayttaja?
     :ohjeet_luku aipal-kayttaja?
     :ohje_muokkaus kayttaja/yllapitaja?

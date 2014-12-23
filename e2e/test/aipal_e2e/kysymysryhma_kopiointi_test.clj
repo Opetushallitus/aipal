@@ -17,6 +17,7 @@
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
+            [aipal-e2e.sivu.etusivu :as etusivu]
             [aipal-e2e.util :refer :all]
             [aitu-e2e.util :refer :all]))
 
@@ -48,6 +49,7 @@
                            :kysymys_fi "Kysymys suomeksi"}]}
       (testing
         "kysymysryhman kopiointi:"
+        (etusivu/valitse-rooli 1)
         (avaa kysymysryhmat-sivu)
         (w/click {:css ".e2e-kopioi-kysymysryhma"})
         (odota-angular-pyyntoa)

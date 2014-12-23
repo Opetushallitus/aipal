@@ -20,21 +20,21 @@
 (deftest with-kayttaja-ei-voimassaolevaa-kayttajaa
   (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly nil)
                 hae-kayttaja-ldapista (constantly nil)]
-    (is (thrown? IllegalStateException (with-kayttaja "uid" nil)))))
+    (is (thrown? IllegalStateException (with-kayttaja "uid" nil nil)))))
 
 ;; Jos UIDilla löytyy voimassaoleva käyttäjä, with-kayttaja ajaa annetun koodin
 ;; sitoen varin *kayttaja* käyttäjän tietoihin.
 (deftest with-kayttaja-sidonta
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})]
-      (with-kayttaja "uid" nil
+      (with-kayttaja "uid" nil nil
         (reset! k *kayttaja*))
       (is (= (:oid @k) "oid")))))
 
 ;; Impersonoinnin aikana aktiivinen OID = impersonoitavan käyttäjän OID.
 (deftest with-kayttaja-aktiivinen-oid-impersonointi
   (let [k (atom nil)]
-    (with-kayttaja "uid" "impersonoitava-oid"
+    (with-kayttaja "uid" "impersonoitava-oid" nil
       (reset! k *kayttaja*))
       (is (= (:aktiivinen-oid @k) "impersonoitava-oid"))))
 
@@ -43,7 +43,7 @@
   (let [k (atom nil)]
     (with-redefs [kayttajaoikeus-arkisto/hae-roolit
                   {"impersonoitava-oid" [:...impersonoidut-roolit...]}]
-      (with-kayttaja "uid" "impersonoitava-oid"
+      (with-kayttaja "uid" "impersonoitava-oid" nil
         (reset! k *kayttaja*))
       (is (= (:aktiiviset-roolit @k) [:...impersonoidut-roolit...])))))
 
@@ -51,7 +51,7 @@
 (deftest with-kayttaja-aktiivinen-koulutustoimija-impersonointi
   (let [k (atom nil)]
     (with-redefs [kayttajaoikeus-arkisto/hae-roolit {"impersonoitava-oid" [{:rooli "rooli" :organisaatio "impersonoitu-koulutustoimija"}]}]
-      (with-kayttaja "uid" "impersonoitava-oid"
+      (with-kayttaja "uid" "impersonoitava-oid" nil
         (reset! k *kayttaja*))
       (is (= (:aktiivinen-koulutustoimija @k) "impersonoitu-koulutustoimija")))))
 
@@ -60,7 +60,7 @@
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
                   kayttajaoikeus-arkisto/hae-roolit {}]
-      (with-kayttaja "uid" nil
+      (with-kayttaja "uid" nil nil
         (reset! k *kayttaja*))
       (is (= (:aktiivinen-oid @k) "oid")))))
 
@@ -69,7 +69,7 @@
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
                   kayttajaoikeus-arkisto/hae-roolit {"oid" [:...omat-roolit...]}]
-      (with-kayttaja "uid" nil
+      (with-kayttaja "uid" nil nil
         (reset! k *kayttaja*))
       (is (= (:aktiiviset-roolit @k) [:...omat-roolit...])))))
 
@@ -78,7 +78,7 @@
   (let [k (atom nil)]
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly {:oid "oid"})
                   kayttajaoikeus-arkisto/hae-roolit {"oid" [{:rooli "rooli" :organisaatio "koulutustoimija"}]}]
-      (with-kayttaja "uid" nil
+      (with-kayttaja "uid" nil nil
         (reset! k *kayttaja*))
       (is (= (:aktiivinen-koulutustoimija @k) "koulutustoimija")))))
 
@@ -88,7 +88,7 @@
     (with-redefs [kayttaja-arkisto/hae-voimassaoleva
                   (constantly {:etunimi "Matti"
                                :sukunimi "Meikäläinen"})]
-      (with-kayttaja "uid" nil
+      (with-kayttaja "uid" nil nil
         (reset! k *kayttaja*))
       (is (= (:nimi @k) "Matti Meikäläinen")))))
 
@@ -98,7 +98,7 @@
     (with-redefs [kayttaja-arkisto/hae
                   (constantly {:etunimi "Maija"
                                :sukunimi "Mallikas"})]
-      (with-kayttaja "uid" "impersonoitu-oid"
+      (with-kayttaja "uid" "impersonoitu-oid" nil
         (reset! k *kayttaja*))
       (is (= (:impersonoidun-kayttajan-nimi @k) "Maija Mallikas")))))
 
@@ -109,6 +109,6 @@
     (with-redefs [kayttaja-arkisto/hae
                   (constantly {:etunimi "Maija"
                                :sukunimi "Mallikas"})]
-      (with-kayttaja "uid" nil
+      (with-kayttaja "uid" nil nil
         (reset! k *kayttaja*))
       (is (= (:impersonoidun-kayttajan-nimi @k) "")))))

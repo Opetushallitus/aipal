@@ -4,11 +4,9 @@
 
 (def ^:dynamic *kayttaja*)
 
-(defn sisaltaa-jonkin-rooleista? [roolit roolirivit]
-  (not (empty? (clojure.set/select roolit (set (map :rooli roolirivit))))))
-
 (defn kayttajalla-on-jokin-rooleista? [roolit]
-  (sisaltaa-jonkin-rooleista? roolit (:aktiiviset-roolit *kayttaja*)))
+  (let [aktiivinen-rooli (get-in *kayttaja* [:aktiivinen-rooli :rooli])]
+    (boolean (some #{aktiivinen-rooli} roolit))))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?
