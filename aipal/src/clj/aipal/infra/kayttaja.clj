@@ -4,9 +4,6 @@
 
 (def ^:dynamic *kayttaja*)
 
-(defn sisaltaa-jonkin-rooleista? [roolit roolirivit]
-  (some (comp roolit :rooli) roolirivit))
-
 (defn kayttajalla-on-jokin-rooleista? [roolit]
   (let [aktiivinen-rooli (get-in *kayttaja* [:aktiivinen-rooli :rooli])]
     (some #{aktiivinen-rooli} roolit)))

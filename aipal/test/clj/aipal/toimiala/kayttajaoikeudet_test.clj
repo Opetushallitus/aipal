@@ -3,14 +3,6 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.toimiala.kayttajaoikeudet :refer :all]))
 
-(deftest sisaltaa-jonkin-rooleista?-sisaltaa
-  (is (sisaltaa-jonkin-rooleista? #{"foo" "bar" "baz"}
-                                  [{:rooli "jee"} {:rooli "bar"} {:rooli "joo"}])))
-
-(deftest sisaltaa-jonkin-rooleista?-ei-sisalla
-  (is (not (sisaltaa-jonkin-rooleista? #{"foo" "bar" "baz"}
-                                       [{:rooli "jee"} {:rooli "asdf"} {:rooli "joo"}]))))
-
 (deftest kayttajalla-on-jokin-rooleista-koulutustoimijassa?-on-rooli
   (binding [*kayttaja* {:aktiivinen-rooli {:organisaatio "KT1" :rooli "bar"}}]
     (is (kayttajalla-on-jokin-rooleista-koulutustoimijassa? #{"foo" "bar"} "KT1"))))
