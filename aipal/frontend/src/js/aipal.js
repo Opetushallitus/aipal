@@ -101,13 +101,13 @@ angular.module('aipal', [
       });
       modalInstance.result.then(function(impersonoitava) {
         impersonaatioResource.impersonoi({oid: impersonoitava.oid}, function () {
-          $window.location = $scope.baseUrl;
+          $window.location = $scope.baseUrl + '/';
         });
       });
     };
     $scope.lopetaImpersonointi = function () {
       impersonaatioResource.lopeta(null, function () {
-        $window.location = $scope.baseUrl;
+        $window.location = $scope.baseUrl + '/';
       });
     };
     $scope.vaihdaRoolia = function () {
@@ -121,7 +121,7 @@ angular.module('aipal', [
       });
       modalInstance.result.then(function(rooli_organisaatio_id) {
         rooliResource.valitse({rooli_organisaatio_id: rooli_organisaatio_id}, function () {
-          $window.location = $scope.baseUrl;
+          $window.location = $scope.baseUrl + '/';
         });
       });
     };
