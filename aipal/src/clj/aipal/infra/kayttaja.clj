@@ -6,7 +6,7 @@
 
 (defn kayttajalla-on-jokin-rooleista? [roolit]
   (let [aktiivinen-rooli (get-in *kayttaja* [:aktiivinen-rooli :rooli])]
-    (some #{aktiivinen-rooli} roolit)))
+    (boolean (some #{aktiivinen-rooli} roolit))))
 
 (defn yllapitaja? []
   (kayttajalla-on-jokin-rooleista?

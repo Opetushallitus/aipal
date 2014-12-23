@@ -26,7 +26,7 @@
   (let [aktiivinen-rooli (:aktiivinen-rooli *kayttaja*)
         rooli-koulutustoimijassa (when (= koulutustoimija (:organisaatio aktiivinen-rooli))
                                    (:rooli aktiivinen-rooli))]
-    (some #{rooli-koulutustoimijassa} roolit)))
+    (boolean (some #{rooli-koulutustoimijassa} roolit))))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
   (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))]

@@ -88,6 +88,7 @@ angular.module('aipal', [
     $scope.breadcrumbs = breadcrumbs;
     $scope.baseUrl = _.has($window, 'ophBaseUrl') ? $window.ophBaseUrl : '';
     $scope.vastausBaseUrl = _.has($window, 'vastausBaseUrl') ? $window.vastausBaseUrl : 'http://192.168.50.1:8083';
+    $scope.valikkoAvattu = false;
     $scope.varmistaLogout = function () {
       if (!_.isEmpty($window.aipalLogoutUrl) && $window.confirm(i18n.yleiset.haluatko_kirjautua_ulos)) {
         $window.location = $window.aipalLogoutUrl;

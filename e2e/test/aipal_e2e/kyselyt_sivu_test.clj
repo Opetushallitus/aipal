@@ -18,6 +18,7 @@
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.util :refer :all]
+            [aipal-e2e.sivu.etusivu :as etusivu]
             [aitu-e2e.util :refer :all]
             [clj-time.core :as time]))
 
@@ -78,6 +79,7 @@
                               {:kyselykertaid 3
                                :kyselyid 2
                                :nimi "Kyselykerta 2-3"}]}
+      (etusivu/valitse-rooli 1)
       (avaa kyselyt-sivu)
       (testing
         "ensimmäisellä kyselyllä on kaksi kyselykertaa"
@@ -121,6 +123,7 @@
                           :nimi_fi "Kysely 2"
                           :koulutustoimija "0000000-0"
                           :voimassa_alkupvm (time/local-date 2000 1 1)}]}
+      (etusivu/valitse-rooli 1)
       (avaa kyselyt-sivu)
       (testing
         "Kyselykerran luonti onnistuu ensimmäiselle kyselylle"

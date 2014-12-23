@@ -136,7 +136,7 @@ header {
       border: 0;
       padding-right: 30px;
       padding-left: $marginM;
-      &:hover {
+      &:hover, &.avattu {
         ul {
           background-color: $primary-color;
           left: 0px;

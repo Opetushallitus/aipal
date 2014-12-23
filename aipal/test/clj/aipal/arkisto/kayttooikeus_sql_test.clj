@@ -74,7 +74,7 @@
                   :rooli "testirooli2"
                   :kayttaja "oid2"
                   :voimassa true}]))
-  (is (= (map #(dissoc % :rooli_organisaatio_id) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
+  (is (= (map #(select-keys % [:organisaatio :rooli]) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
          [{:organisaatio "org"
            :rooli "testirooli1"}]))
   (sql/delete taulut/rooli-organisaatio
@@ -100,7 +100,7 @@
                   :rooli "testirooli2"
                   :kayttaja "oid1"
                   :voimassa false}]))
-  (is (= (map #(dissoc % :rooli_organisaatio_id) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
+  (is (= (map #(select-keys % [:organisaatio :rooli]) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
          [{:organisaatio "org"
            :rooli "testirooli1"}]))
   (sql/delete taulut/rooli-organisaatio
