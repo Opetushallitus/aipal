@@ -14,7 +14,7 @@
             [aipal.sql.test-data-util :refer :all]))
 
 (defn with-auth-user [f]
-  (with-kayttaja default-test-user-uid nil
+  (with-kayttaja default-test-user-uid nil nil
     (binding [i18n/*locale* testi-locale]
       (f))))
 

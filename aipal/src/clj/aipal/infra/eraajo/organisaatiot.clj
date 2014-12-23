@@ -22,7 +22,7 @@
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
 (defn ^:integration-api paivita-organisaatiot! [asetukset]
-  (with-kayttaja integraatio-uid nil
+  (with-kayttaja integraatio-uid nil nil
     (log/info "Päivitetään organisaatiot organisaatiopalvelusta")
     (org/paivita-organisaatiot! asetukset)
     (log/info "Organisaatioiden päivitys organisaatiopalvelusta valmis")))

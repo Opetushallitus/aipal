@@ -25,7 +25,7 @@
 (defn ^:integration-api paivita-koulutustoimijoiden-tutkinnot! []
   (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Aitusta")
   (db/transaction
-    (with-kayttaja integraatio-uid nil
+    (with-kayttaja integraatio-uid nil nil
       (let [koulutustoimijoiden-tutkinnot (aitu/hae-koulutustoimijoiden-tutkinnot)]
         (koulutustoimija-arkisto/poista-kaikki-koulutustoimijoiden-tutkinnot!)
         (doseq [[y-tunnus tutkintotunnukset] koulutustoimijoiden-tutkinnot

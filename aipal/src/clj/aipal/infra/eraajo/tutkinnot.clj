@@ -22,7 +22,7 @@
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
 (defn ^:integration-api paivita-tutkinnot! [asetukset]
-  (with-kayttaja integraatio-uid
+  (with-kayttaja integraatio-uid nil nil
     (org/paivita-tutkinnot! asetukset)))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan

@@ -5,7 +5,7 @@
   (:require [clojure.tools.logging :as log]
             [korma.core :as sql]
             [aipal.asetukset :refer [asetukset]]
-            [oph.common.util.util :refer [map-by]]
+            [oph.common.util.util :refer [map-by some-value]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-oid integraatio-uid]]
             [aipal.toimiala.kayttajaroolit :refer [ldap-ryhma->rooli]]
@@ -20,18 +20,21 @@
 
 (declare hae-kayttaja-ldapista)
 
-(defn with-kayttaja* [uid impersonoitu-oid f]
+(defn with-kayttaja* [uid impersonoitu-oid rooli f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
   (if-let [k (kayttaja-arkisto/hae-voimassaoleva uid)]
     (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
           aktiiviset-roolit (kayttajaoikeus-arkisto/hae-roolit aktiivinen-oid)
-          aktiivinen-koulutustoimija (some :organisaatio aktiiviset-roolit)
+          aktiivinen-rooli (or (when rooli (some-value #(= rooli (:rooli_organisaatio_id %)) aktiiviset-roolit))
+                               (first aktiiviset-roolit))
+          aktiivinen-koulutustoimija (:organisaatio aktiivinen-rooli)
           ik (when impersonoitu-oid
                (kayttaja-arkisto/hae impersonoitu-oid))]
       (binding [*kayttaja*
                 (assoc k
                        :aktiivinen-oid aktiivinen-oid
                        :aktiiviset-roolit aktiiviset-roolit
+                       :aktiivinen-rooli aktiivinen-rooli
                        :aktiivinen-koulutustoimija aktiivinen-koulutustoimija
                        :nimi (kayttajan-nimi k)
                        :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
@@ -39,11 +42,11 @@
         (with-sql-kayttaja (:oid k)
           (f))))
     (if (hae-kayttaja-ldapista uid)
-      (recur uid impersonoitu-oid f)
+      (recur uid impersonoitu-oid rooli f)
       (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid))))))
 
-(defmacro with-kayttaja [uid impersonoitu-oid & body]
-  `(with-kayttaja* ~uid ~impersonoitu-oid (fn [] ~@body)))
+(defmacro with-kayttaja [uid impersonoitu-oid rooli & body]
+  `(with-kayttaja* ~uid ~impersonoitu-oid ~rooli (fn [] ~@body)))
 
 (defn hae-kayttaja-ldapista [uid]
   (with-kayttaja integraatio-uid nil

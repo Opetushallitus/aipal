@@ -42,7 +42,7 @@
 
 (defn hae-roolit [oid]
   (sql/select taulut/rooli-organisaatio
-    (sql/fields :rooli :organisaatio)
+    (sql/fields :rooli :organisaatio :rooli_organisaatio_id)
     (sql/where {:kayttaja oid
                 :voimassa true})))
 

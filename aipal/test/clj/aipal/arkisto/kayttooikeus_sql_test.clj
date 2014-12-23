@@ -47,7 +47,7 @@
           muun-organisaation-kysely (kysely-arkisto/lisaa! {:nimi_fi "testi"
                                                             :koulutustoimija "2345678-0"})]
       (doseq [uid (keys kysely-kayttajat)]
-        (with-kayttaja uid nil
+        (with-kayttaja uid nil nil
           (let [tulos [(kayttajaoikeudet/kysely-luonti?)
                        (kayttajaoikeudet/kysely-luku? (:kyselyid oman-organisaation-kysely))
                        (kayttajaoikeudet/kysely-muokkaus? (:kyselyid oman-organisaation-kysely))
@@ -74,7 +74,7 @@
                   :rooli "testirooli2"
                   :kayttaja "oid2"
                   :voimassa true}]))
-  (is (= (kayttajaoikeus-arkisto/hae-roolit "oid1")
+  (is (= (map #(dissoc % :rooli_organisaatio_id) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
          [{:organisaatio "org"
            :rooli "testirooli1"}]))
   (sql/delete taulut/rooli-organisaatio
@@ -100,7 +100,7 @@
                   :rooli "testirooli2"
                   :kayttaja "oid1"
                   :voimassa false}]))
-  (is (= (kayttajaoikeus-arkisto/hae-roolit "oid1")
+  (is (= (map #(dissoc % :rooli_organisaatio_id) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
          [{:organisaatio "org"
            :rooli "testirooli1"}]))
   (sql/delete taulut/rooli-organisaatio

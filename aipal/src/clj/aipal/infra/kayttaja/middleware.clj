@@ -5,9 +5,10 @@
   (fn [request]
     ;; CAS-middleware lisää käyttäjätunnuksen :username-avaimen alle
     (let [uid (:username request)
-          impersonoitu-oid (get-in request [:session :impersonoitu-oid])]
+          impersonoitu-oid (get-in request [:session :impersonoitu-oid])
+          rooli (get-in request [:session :rooli])]
       (try
-        (with-kayttaja uid impersonoitu-oid
+        (with-kayttaja uid impersonoitu-oid rooli
           (handler request))
         (catch IllegalStateException _
           {:headers {"Content-Type" "text/plain;charset=utf-8"}
