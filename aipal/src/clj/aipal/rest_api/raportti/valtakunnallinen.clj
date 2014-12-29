@@ -42,9 +42,18 @@
                                     :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))])
       "koulutusala" parametrit)))
 
+(defn kehitysraportti-vertailuraportti [parametrit]
+  (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
+        vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
+        parametrit (merge parametrit (vertailuraportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm))]
+    (raportti/muodosta (kehitysraportti-vertailuraportti-parametrit parametrit))))
+
 (defn koulutustoimija-vertailuraportti [parametrit]
-  (raportti/muodosta (assoc parametrit :koulutustoimijat []
-                                       :tyyppi "vertailu")))
+  (raportti/muodosta (merge
+                       parametrit
+                       {:koulutustoimijat []
+                        :tyyppi "vertailu"}
+                       (vertailuraportti-vertailujakso (:vertailujakso_alkupvm parametrit) (:vertailujakso_loppupvm parametrit)))))
 
 (defn luo-raportit [parametrit]
   (case (:tyyppi parametrit)
@@ -52,7 +61,7 @@
                  "tutkinto" (for [tutkinto (:tutkinnot parametrit)] (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
                  "opintoala" (for [opintoala (:opintoalat parametrit)] (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
                  "koulutusala" (for [koulutusala (:koulutusalat parametrit)] (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala]))))
-    "kehitys" (concat [(raportti/muodosta (kehitysraportti-vertailuraportti-parametrit parametrit))] [(raportti/muodosta parametrit)])
+    "kehitys" (concat [(kehitysraportti-vertailuraportti parametrit)] [(raportti/muodosta parametrit)])
     "koulutustoimijat" (concat
                          [(koulutustoimija-vertailuraportti parametrit)]
                          (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija]))))))
