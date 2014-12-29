@@ -31,4 +31,9 @@
     (is (=
           {:vertailujakso_alkupvm (.toString (t/minus (t/today) (t/years 1)))
            :vertailujakso_loppupvm nil}
-          (valtakunnallinen/vertailuraportti-vertailujakso (.toString (t/today)) nil)))))
+          (valtakunnallinen/vertailuraportti-vertailujakso (.toString (t/today)) nil))))
+  (testing "alkupvm ja loppupvm ei asetettu"
+    (is (=
+          {:vertailujakso_alkupvm nil
+           :vertailujakso_loppupvm nil}
+          (valtakunnallinen/vertailuraportti-vertailujakso nil nil)))))
