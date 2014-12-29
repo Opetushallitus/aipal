@@ -16,10 +16,21 @@
   (:require [compojure.core :as c]
             [aipal.compojure-util :as cu]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response]]
+            [clj-time.core :as t]
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
             [aipal.arkisto.opintoala :as opintoala-arkisto]))
+
+(defn vertailuraportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
+  (let [alkupvm (parse-iso-date vertailujakso_alkupvm)
+        loppupvm (or (parse-iso-date vertailujakso_loppupvm) (t/today))
+        vertailupvm (t/minus loppupvm (t/years 1))]
+    (if (and alkupvm (<= (.compareTo alkupvm vertailupvm) 0))
+      {:vertailujakso_alkupvm vertailujakso_alkupvm
+       :vertailujakso_loppupvm vertailujakso_loppupvm}
+      {:vertailujakso_alkupvm (and alkupvm (.toString vertailupvm))
+       :vertailujakso_loppupvm vertailujakso_loppupvm})))
 
 ; Valtakunnallinen vertailuraportti on ilman koulutustoimijoita, ylemmälle tutkintohierarkian tasolle
 (defn kehitysraportti-vertailuraportti-parametrit [parametrit]
