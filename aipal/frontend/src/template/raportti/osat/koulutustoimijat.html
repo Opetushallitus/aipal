@@ -3,7 +3,7 @@
     <input type="text" class="form-control icon search-icon-input" ng-model="koulutustoimijaFilter" ng-change="nollaaRajoite('koulutustoimijat')" placeholder="{{ 'raportit.hae_koulutustoimijoita' | i18n }}">
 
     <ul class="valitsin" rullaus="naytaLisaa('koulutustoimijat')">
-      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:koulutustoimijaFilter | limitTo: rajoite.koulutustoimijat" ng-click="valitseTaiPoistaKoulutustoimija(koulutustoimija)">
+      <li ng-repeat="koulutustoimija in koulutustoimijat | filter:koulutustoimijaFilter | orderByLokalisoitu:'nimi' | limitTo: rajoite.koulutustoimijat" ng-click="valitseTaiPoistaKoulutustoimija(koulutustoimija)">
         {{ koulutustoimija | lokalisoiKentta:'nimi' }}
         <span class="fa fa-check" ng-show="koulutustoimija.valittu"></span>
       </li>
