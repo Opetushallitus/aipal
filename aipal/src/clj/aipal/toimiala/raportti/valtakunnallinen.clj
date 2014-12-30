@@ -66,16 +66,16 @@
 (defn ^:private hae-vastaukset [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaus)
-    (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
-    (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+    (sql/join :inner :kysymys (and (= :vastaus.kysymysid :kysymys.kysymysid)
+                                   (= :kysymys.valtakunnallinen true)))
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus koulutustoimijat) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
-      (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus (and
-                                                        (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid)
-                                                        (or (nil? tutkintotunnus) (= :vastaajatunnus.tutkintotunnus tutkintotunnus))))
-      (or opintoalatunnus koulutusalatunnus) (sql/join :inner :tutkinto (and
-                                                   (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus)
-                                                   (or (nil? opintoalatunnus) (= :tutkinto.opintoala opintoalatunnus))))
+      (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus
+                                                                      (and (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid)
+                                                                           (or (nil? tutkintotunnus) (= :vastaajatunnus.tutkintotunnus tutkintotunnus))))
+      (or opintoalatunnus koulutusalatunnus) (sql/join :inner :tutkinto
+                                                       (and (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus)
+                                                            (or (nil? opintoalatunnus) (= :tutkinto.opintoala opintoalatunnus))))
       koulutusalatunnus (sql/join :inner :opintoala {:opintoala.opintoalatunnus :tutkinto.opintoala
                                                      :opintoala.koulutusala koulutusalatunnus})
       koulutustoimijat (->
@@ -83,7 +83,9 @@
                          (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
                          (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
     (generoi-joinit (konvertoi-ehdot rajaukset))
-    (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/where (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
+                                    (sql/where {:v1.vastaajaid :vastaus.vastaajaid
+                                                :v1.kysymysid [in (map #(->int %) (keys rajaukset))]}))))
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
     (sql/fields :vastaus.vastaajaid
