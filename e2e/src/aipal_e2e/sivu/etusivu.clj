@@ -26,4 +26,6 @@
   (w/click {:css ".avaa-valikko-e2e"})
   (w/click {:css ".vaihda-roolia-e2e"})
   (w/select-option {:css ".rooli-select-e2e"} {:index index})
-  (w/click {:css ".tallenna-rooli-e2e"}))
+  (odota-angular-pyyntoa)
+  (w/click {:css ".tallenna-rooli-e2e"})
+  (odota-angular-pyyntoa))
