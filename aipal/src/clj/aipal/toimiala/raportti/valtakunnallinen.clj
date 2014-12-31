@@ -165,5 +165,6 @@
       (raportin-otsikko parametrit)
       {:luontipvm (time/today)
        :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
+       :parametrit parametrit
        :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
        :vastaajien_maksimimaara (hae-vastaajien-maksimimaara koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))

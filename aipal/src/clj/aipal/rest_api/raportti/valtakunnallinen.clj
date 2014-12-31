@@ -16,10 +16,21 @@
   (:require [compojure.core :as c]
             [aipal.compojure-util :as cu]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response]]
+            [clj-time.core :as t]
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
             [aipal.arkisto.opintoala :as opintoala-arkisto]))
+
+(defn vertailuraportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
+  (let [alkupvm (parse-iso-date vertailujakso_alkupvm)
+        loppupvm (or (parse-iso-date vertailujakso_loppupvm) (t/today))
+        vertailupvm (t/minus loppupvm (t/years 1))]
+    (if (and alkupvm (<= (.compareTo alkupvm vertailupvm) 0))
+      {:vertailujakso_alkupvm vertailujakso_alkupvm
+       :vertailujakso_loppupvm vertailujakso_loppupvm}
+      {:vertailujakso_alkupvm (and alkupvm (.toString vertailupvm))
+       :vertailujakso_loppupvm vertailujakso_loppupvm})))
 
 ; Valtakunnallinen vertailuraportti on ilman koulutustoimijoita, ylemmälle tutkintohierarkian tasolle
 (defn kehitysraportti-vertailuraportti-parametrit [parametrit]
@@ -31,9 +42,18 @@
                                     :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))])
       "koulutusala" parametrit)))
 
+(defn kehitysraportti-vertailuraportti [parametrit]
+  (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
+        vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
+        parametrit (merge parametrit (vertailuraportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm))]
+    (raportti/muodosta (kehitysraportti-vertailuraportti-parametrit parametrit))))
+
 (defn koulutustoimija-vertailuraportti [parametrit]
-  (raportti/muodosta (assoc parametrit :koulutustoimijat []
-                                       :tyyppi "vertailu")))
+  (raportti/muodosta (merge
+                       parametrit
+                       {:koulutustoimijat []
+                        :tyyppi "vertailu"}
+                       (vertailuraportti-vertailujakso (:vertailujakso_alkupvm parametrit) (:vertailujakso_loppupvm parametrit)))))
 
 (defn luo-raportit [parametrit]
   (case (:tyyppi parametrit)
@@ -41,7 +61,7 @@
                  "tutkinto" (for [tutkinto (:tutkinnot parametrit)] (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
                  "opintoala" (for [opintoala (:opintoalat parametrit)] (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
                  "koulutusala" (for [koulutusala (:koulutusalat parametrit)] (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala]))))
-    "kehitys" (concat [(raportti/muodosta (kehitysraportti-vertailuraportti-parametrit parametrit))] [(raportti/muodosta parametrit)])
+    "kehitys" (concat [(kehitysraportti-vertailuraportti parametrit)] [(raportti/muodosta parametrit)])
     "koulutustoimijat" (concat
                          [(koulutustoimija-vertailuraportti parametrit)]
                          (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija]))))))
