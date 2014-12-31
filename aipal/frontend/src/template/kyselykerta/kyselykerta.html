@@ -1,7 +1,7 @@
 <div ng-show="kysely && kyselykerta">
-<h1 ng-if="!uusi && muokkaustila">{{'kyselykerta.hallitse' | i18n}}</h1>
-<h1 ng-if="!muokkaustila">{{'kyselykerta.nayta' | i18n}}</h1>
-<h1 ng-if="uusi">{{'kyselykerta.uusi_kyselykerta' | i18n}}</h1>
+<h1 ng-if="!uusi && muokkaustila">{{'kyselykerta.hallitse' | i18n}} <ohje tunniste="hallitse_kyselykertaa"></ohje></h1>
+<h1 ng-if="!muokkaustila">{{'kyselykerta.nayta' | i18n}} <ohje tunniste="nayta_kyselykerta"></ohje></h1>
+<h1 ng-if="uusi">{{'kyselykerta.uusi_kyselykerta' | i18n}} <ohje tunniste="uusi_kyselykerta"></ohje></h1>
 
 <h2>{{i18n.yleiset.kysely}}: {{ kysely | lokalisoiKentta:'nimi' }}</h2>
 
@@ -53,7 +53,7 @@
 </form>
 
 <div ng-if="!uusi">
-    <h2>{{'vastaajatunnus.lista' | i18n}}</h2>
+    <h2>{{'vastaajatunnus.lista' | i18n}} <ohje tunniste="kyselykerran_vastaajatunnukset"></ohje></h2>
     <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()" ng-if="muokkaustila">
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
