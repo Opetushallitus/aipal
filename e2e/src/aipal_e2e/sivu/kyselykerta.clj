@@ -21,7 +21,7 @@
   (syota-kenttaan "kyselykerta.nimi" nimi))
 
 (defn tallenna-kyselykerta []
-  (w/click {:css ".e2e-direktiivit-tallenna"})
+  (w/click {:css ".e2e-tallenna-kyselykerta"})
   (odota-angular-pyyntoa))
 
 (defn luo-vastaajatunnuksia []
