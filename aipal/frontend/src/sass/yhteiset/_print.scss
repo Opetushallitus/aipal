@@ -1,4 +1,6 @@
-$baseline: 24px;
-$marginL: $baseline;
-$marginM: $baseline/2;
-$marginS: $baseline/4;
+@media print {
+  .main-nav,
+  .dev-footer{
+    display: none;
+  }
+}

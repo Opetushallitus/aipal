@@ -61,15 +61,17 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
     };
 
-    $scope.vaihdaTyyppi = function(tyyppi) {
+    $scope.vaihdaTyyppi = function(tyyppi, nimi) {
       $scope.raportti.tyyppi = tyyppi;
-
+      $scope.selectedTabName = nimi;
       // Vain vertailuraportilla voi valita useamman tutkinnon/alan, joten tyhjennä valinnat raportin tyypin vaihtuessa
       poistaKoulutusalaValinnat();
       poistaOpintoalaValinnat();
       poistaTutkintoValinnat();
       tyhjaaTaustakysymysvalinnat();
     };
+
+    $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
       Kysymysryhma.hae(kysymysryhmaid).success(function(kysymysryhma) {

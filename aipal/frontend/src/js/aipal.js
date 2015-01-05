@@ -107,6 +107,7 @@ angular.module('aipal', [
         $window.location = $window.aipalLogoutUrl;
       }
     };
+    $scope.timestamp = Date.now();
     $scope.valitse = function () {
       var modalInstance = $modal.open({
         templateUrl: 'template/impersonointi.html',

@@ -1,35 +1,36 @@
 <div class="raportit">
+  <h2 class="visible-print">{{selectedTabName}}</h2>
   <tabset>
-    <tab heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu')" disabled="!yllapitaja">
-      <h2>{{ 'raportit.vertailtavat_tutkinnot' | i18n }} <ohje tunniste="vertailuraportti"></ohje></h2>
-      <ng-include src="'template/raportti/osat/tutkinnot.html'"></ng-include>
-      <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
-      <ng-include src="'template/raportti/osat/aikavali.html'"></ng-include>
-      <h3>{{ 'raportit.koulutustoimijat' | i18n }}</h3>
-      <div>{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
-      <ng-include src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
+    <tab class="hidden-print" heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu',i18n.raportit.vertailuraportti)" disabled="!yllapitaja">
+      <h2 class="hidden-print">{{ 'raportit.vertailtavat_tutkinnot' | i18n }} <ohje tunniste="vertailuraportti"></ohje></h2>
+      <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
+      <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>
+      <div class="hidden-print">{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
+      <ng-include class="hidden-print" src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
-    <tab heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys')" disabled="!yllapitaja">
-      <h2>{{ 'raportit.tarkasteltava_tutkinto' | i18n }} <ohje tunniste="kehitysraportti"></ohje></h2>
-      <ng-include src="'template/raportti/osat/tutkinnot.html'"></ng-include>
-      <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
-      <h3>{{ 'raportit.koulutustoimijat' | i18n }}</h3>
-      <div>{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
-      <ng-include src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
+    <tab class="hidden-print" heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys',i18n.raportit.kehitysraportti)" disabled="!yllapitaja">
+      <h2 class="hidden-print">{{ 'raportit.tarkasteltava_tutkinto' | i18n }} <ohje tunniste="kehitysraportti"></ohje></h2>
+      <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
+      <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>
+      <div class="hidden-print">{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
+      <ng-include class="hidden-print" src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
-    <tab heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}" select="vaihdaTyyppi('koulutustoimijat')" ng-show="yllapitaja">
-      <h2>{{ 'raportit.vertaa_koulutustoimijoita_otsikko' | i18n }} <ohje tunniste="vertaa_koulutustoimijoita_raportti"></ohje></h2>
-      <ng-include src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
-      <ng-include src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
-      <ng-include src="'template/raportti/osat/aikavali.html'"></ng-include>
-      <h3>{{ 'raportit.tutkinnot_ja_alat' | i18n }}</h3>
-      <div>{{ 'raportit.tutkinnot_ja_alat_ohje' | i18n }}</div>
-      <ng-include src="'template/raportti/osat/tutkinnot.html'"></ng-include>
+    <tab class="hidden-print" heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}" select="vaihdaTyyppi('koulutustoimijat',i18n.raportit.vertaa_koulutustoimijoita)" ng-show="yllapitaja">
+      <h2 class="hidden-print">{{ 'raportit.vertaa_koulutustoimijoita_otsikko' | i18n }} <ohje tunniste="vertaa_koulutustoimijoita_raportti"></ohje></h2>
+      <ng-include class="hidden-print" src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
+      <h3 class="hidden-print">{{ 'raportit.tutkinnot_ja_alat' | i18n }}</h3>
+      <div class="hidden-print">{{ 'raportit.tutkinnot_ja_alat_ohje' | i18n }}</div>
+      <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
-    <tab heading="{{ 'raportit.kyselykertaraportit' | i18n }}" active="kyselykertaraportitValittu">
+    <tab class="hidden-print" heading="{{ 'raportit.kyselykertaraportit' | i18n }}" active="kyselykertaraportitValittu" select="vaihdaTyyppi(false, i18n.raportit.kyselykertaraportit)">
       <ng-include src="'template/raportti/kyselykerrat.html'" ng-controller="KyselykerratController"></ng-include>
     </tab>
   </tabset>

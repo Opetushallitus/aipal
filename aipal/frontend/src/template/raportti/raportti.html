@@ -8,6 +8,11 @@
   <button ng-click="naytaRaportti(raportti)" ng-repeat="raportti in tulokset">{{ raportti | lokalisoiKentta:'nimi' }}</button>
 </div>
 
+<div class="visible-print" ng-if="tulos">
+  <h2 ng-if="tulos.kyselykerta">{{tulos.kyselykerta.nimi}}</h2>
+  <hr>
+</div>
+
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div ng-if="tulos.kyselykerta">
     <div>
