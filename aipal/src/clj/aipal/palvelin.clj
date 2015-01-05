@@ -105,7 +105,8 @@
       (catch clojure.lang.ExceptionInfo e
         (if (= :kayttooikeudet (-> e ex-data :cause))
           {:status 403
-           :headers {"Content-Type" "text/plain; charset=utf-8"}
+           :headers {"Content-Type" "text/plain; charset=utf-8"
+                     "X-Kayttooikeudet-Forbidden" "true"}
            :body "Käyttöoikeudet eivät riitä"}
           (throw e))))))
 
