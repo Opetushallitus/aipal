@@ -80,6 +80,18 @@ angular.module('aipal', [
         };
       }
     );
+    $httpProvider.interceptors.push(
+      function($q, $location) {
+        return {
+          responseError: function (vastaus) {
+            if (vastaus.status === 403 && !vastaus.headers('X-Kayttooikeudet-Forbidden')) {
+              $location.url('/istunto-vanhentunut');
+            }
+            return $q.reject(vastaus);
+          }
+        };
+      }
+    );
     $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
