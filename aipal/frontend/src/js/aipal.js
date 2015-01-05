@@ -80,6 +80,7 @@ angular.module('aipal', [
         };
       }
     );
+    $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
   .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', 
