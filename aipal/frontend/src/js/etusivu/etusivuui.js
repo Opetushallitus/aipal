@@ -22,6 +22,11 @@ angular.module('etusivu.etusivuui', ['ngRoute'])
         controller: 'EtusivuController',
         templateUrl: 'template/etusivu/etusivu.html',
         label: ''
+      })
+      .when('/istunto-vanhentunut', {
+        controller: 'EtusivuController',
+        template: '<h1>{{"yleiset.istunto_vanhentunut.otsikko" | i18n}}</h1><p>{{"yleiset.istunto_vanhentunut.ohje" | i18n }}</p>',
+        label: ''
       });
   }])
 
