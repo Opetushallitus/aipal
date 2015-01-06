@@ -90,6 +90,10 @@
     (testing
       "etusivu:"
       (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
+                  :rooli_organisaatio [{:organisaatio "0000000-0"
+                                      :rooli "OPL-VASTUUKAYTTAJA"
+                                      :kayttaja "OID.AIPAL-E2E"
+                                      :voimassa true}]
                   :kysely [{:kyselyid 1
                             :nimi_fi "Kysely 1"
                             :koulutustoimija "0000000-0"}]
