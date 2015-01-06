@@ -16,7 +16,6 @@
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
-            [aipal-e2e.sivu.etusivu :as etusivu]
             [aipal-e2e.sivu.kysely :as kysely-sivu]
             [aipal-e2e.sivu.kyselykerta :as kyselykerta-sivu]
             [aipal-e2e.sivu.kyselyt :as kyselyt-sivu]
@@ -42,9 +41,6 @@
                             :opintoala "123"}]
                 :koulutustoimija_ja_tutkinto [{:koulutustoimija "0000000-0"
                                                :tutkinto "123456"}]}
-      ;; valitse vastuukäyttäjärooli
-      (etusivu/valitse-rooli 1)
-
       ;; luo kysymysryhma
       (kysymysryhmat-sivu/avaa-sivu)
       (kysymysryhmat-sivu/luo-uusi)
