@@ -3,9 +3,6 @@ set session aipal.kayttaja='JARJESTELMA';
 insert into kayttaja(oid, uid, etunimi, sukunimi, voimassa)
 values ('OID.AIPAL-E2E', 'AIPAL-E2E', 'Test', 'End-to-End', true);
 
-insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'YLLAPITAJA', 'OID.AIPAL-E2E', 'true');
-
 -- Testiorganisaatio opetushallituskäyttäjille
 insert into koulutustoimija (ytunnus, nimi_fi, oid )
   values ('9876543-2', 'Testi-Opetushallitus', '1.2.246.777.888.1111111111');
