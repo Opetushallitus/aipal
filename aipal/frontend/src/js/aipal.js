@@ -95,8 +95,8 @@ angular.module('aipal', [
     $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
-  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', 
-              function ($location, $modal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs) {
+  .controller('AipalController', ['$location', '$modal', '$route', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs',
+              function ($location, $modal, $route, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs) {
     $scope.i18n = i18n;
     $scope.breadcrumbs = breadcrumbs;
     $scope.baseUrl = _.has($window, 'ophBaseUrl') ? $window.ophBaseUrl : '';
@@ -115,13 +115,15 @@ angular.module('aipal', [
       });
       modalInstance.result.then(function(impersonoitava) {
         impersonaatioResource.impersonoi({oid: impersonoitava.oid}, function () {
-          $window.location = $scope.baseUrl + '/';
+          $location.url('/');
+          $route.reload();
         });
       });
     };
     $scope.lopetaImpersonointi = function () {
       impersonaatioResource.lopeta(null, function () {
-        $window.location = $scope.baseUrl + '/';
+        $location.url('/');
+        $route.reload();
       });
     };
     $scope.vaihdaRoolia = function () {
@@ -135,7 +137,8 @@ angular.module('aipal', [
       });
       modalInstance.result.then(function(rooli_organisaatio_id) {
         rooliResource.valitse({rooli_organisaatio_id: rooli_organisaatio_id}, function () {
-          $window.location = $scope.baseUrl + '/';
+          $location.url('/');
+          $route.reload();
         });
       });
     };
