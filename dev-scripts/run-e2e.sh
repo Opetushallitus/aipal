@@ -44,7 +44,7 @@ if [ "$use_remote_ie" = "yes" ]; then
     export REMOTE_URL="http://127.0.0.1:5555/wd/hub" # for IE testing
     lein_options=":ie"
 else
-    lein_options=""
+    lein_options="$LEIN_OPTIONS"
 fi
 
 cd $repo_path
