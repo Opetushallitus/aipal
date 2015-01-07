@@ -60,7 +60,7 @@
                   <span class="text-muted" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
                   <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA']">
                       <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
-                          <span ng-if="!kyselykerta.lukittu && kysely.kaytettavissa">{{ 'kyselykerta.hallitse' | i18n }}</span>
+                          <span ng-if="!kyselykerta.lukittu && kysely.kaytettavissa">{{ 'yleiset.vastaajatunnukset' | i18n }}</span>
                           <span ng-if="kyselykerta.lukittu || !kysely.kaytettavissa">{{ 'kyselykerta.nayta' | i18n }}</span>
                           &nbsp;
                           <span class="fa fa-pencil" ng-if="!kyselykerta.lukittu && kysely.kaytettavissa"></span>
