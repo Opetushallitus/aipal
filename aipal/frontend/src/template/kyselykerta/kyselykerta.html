@@ -60,6 +60,13 @@
     </button>
     <br/>
 
+    <div class="center-block" ng-show="tunnukset.length>0">
+      <div class="yhteenveto">
+        <h2>{{'vastaajatunnus.vastauksia'|i18n}} {{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h2>
+        <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
+      </div>
+    </div>
+
     <div ng-repeat="rahoitusmuodot in rahoitusmuodotmap" ng-show="(tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}).length">
         <h3>{{rahoitusmuodot.rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</h3>
         <div class="well">
@@ -118,14 +125,6 @@
                 </tr>
             </tbody>
         </table>
-        </div>
-    </div>
-
-    <div class="center-block" ng-show="tunnukset.length>0">
-        <div class="yhteenveto">
-            <h2>{{'vastaajatunnus.vastauksia'|i18n}}</h2>
-            <h1>{{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h1>
-            <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
         </div>
     </div>
 </div>
