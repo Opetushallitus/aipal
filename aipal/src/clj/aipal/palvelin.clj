@@ -144,7 +144,7 @@
 
 (defn ^:integration-api kaynnista-eraajon-ajastimet! [asetukset]
   (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]
-    (eraajo/kaynnista-ajastimet! kop (:organisaatiopalvelu asetukset))))
+    (eraajo/kaynnista-ajastimet! kop asetukset)))
 
 (defn ^:integration-api kaynnista! [alkuasetukset]
   (try

@@ -46,7 +46,10 @@
    :eraajo Boolean
    :development-mode Boolean
    :raportointi-minimivastaajat s/Int
-   :logback {:properties-file s/Str}})
+   :logback {:properties-file s/Str}
+   :ajastus {:organisaatiopalvelu s/Str
+             :kayttooikeuspalvelu s/Str
+             :koulutustoimijoiden-tutkinnot s/Str}})
 
 (def oletusasetukset
   {:server {:port 8082
@@ -73,7 +76,10 @@
    :eraajo false
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :raportointi-minimivastaajat 5
-   :logback {:properties-file "resources/logback.xml"}})
+   :logback {:properties-file "resources/logback.xml"}
+   :ajastus {:organisaatiopalvelu "0 0 3 * * ?"
+             :kayttooikeuspalvelu "0 0 4 * * ?"
+             :koulutustoimijoiden-tutkinnot "0 0 5 * * ?"}})
 
 (defn hae-asetukset
   ([alkuasetukset] (lue-asetukset alkuasetukset Asetukset "aipal.properties"))

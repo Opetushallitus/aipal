@@ -27,7 +27,7 @@
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
            aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob))
 
-(defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu organisaatiopalvelu-asetukset]
+(defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
   (qs/initialize)
   (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")
@@ -42,16 +42,16 @@
                              (t/with-identity "daily4")
                              (t/start-now)
                              (t/with-schedule (cron/schedule
-                                               (cron/cron-schedule "0 0 4 * * ?"))))
+                                               (cron/cron-schedule (get-in asetukset [:ajastus :kayttooikeuspalvelu])))))
         org-job (j/build
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
-                  (j/using-job-data {"asetukset" organisaatiopalvelu-asetukset}))
+                  (j/using-job-data {"asetukset" (:organisaatiopalvelu asetukset)}))
         org-trigger-daily (t/build
                             (t/with-identity "daily3")
                             (t/start-now)
                             (t/with-schedule (cron/schedule
-                                              (cron/cron-schedule "0 0 3 * * ?"))))
+                                              (cron/cron-schedule (get-in asetukset [:ajastus :organisaatiopalvelu])))))
         koul-job (j/build
                    (j/of-type PaivitaKoulutustoimijoidenTutkinnotJob)
                    (j/with-identity "paivita-koulutustoimijoiden-tutkinnot"))
@@ -59,7 +59,7 @@
                              (t/with-identity "daily5")
                              (t/start-now)
                              (t/with-schedule (cron/schedule
-                                               (cron/cron-schedule "0 0 5 * * ?"))))]
+                                               (cron/cron-schedule (get-in asetukset [:ajastus :koulutustoimijoiden-tutkinnot])))))]
     (qs/schedule ldap-job ldap-trigger-daily)
     (qs/schedule org-job org-trigger-daily)
     (qs/schedule koul-job koul-trigger-daily)))
