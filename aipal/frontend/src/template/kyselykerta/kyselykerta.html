@@ -58,6 +58,10 @@
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
+    <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary e2e-nayta-raportti">
+      {{ 'kysely.raportti' | i18n }}&nbsp;
+      <span class="glyphicon glyphicon-stats"></span>
+    </a>
     <br/>
 
     <div class="center-block" ng-show="tunnukset.length>0">
