@@ -23,7 +23,9 @@
     (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
-                :kysymysryhma.nimi_sv)
+                :kysymysryhma.nimi_sv
+                :kysymysryhma.kuvaus_fi
+                :kysymysryhma.kuvaus_sv)
     (vastaajatunnus-where tunnus)
     (sql/order :kysely_kysymysryhma.jarjestys)))
 

@@ -5,6 +5,7 @@
 <form name="vastausForm" ng-show="data">
   <div ng-repeat="kysymysryhma in data.kysymysryhmat" class="kysymysryhma">
     <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
+    <p>{{kysymysryhma | lokalisoiKentta:'kuvaus'}}</p>
 
     <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys" id="k{{kysymys.kysymysid}}">
       <ng-form name="kysymysForm">
