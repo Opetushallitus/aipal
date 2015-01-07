@@ -27,6 +27,10 @@
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
            aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob))
 
+(defn ajastus [asetukset tyyppi]
+  (cron/schedule
+    (cron/cron-schedule (get-in asetukset [:ajastus tyyppi]))))
+
 (defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
   (qs/initialize)
@@ -41,8 +45,7 @@
         ldap-trigger-daily (t/build
                              (t/with-identity "daily4")
                              (t/start-now)
-                             (t/with-schedule (cron/schedule
-                                               (cron/cron-schedule (get-in asetukset [:ajastus :kayttooikeuspalvelu])))))
+                             (t/with-schedule (ajastus asetukset :kayttooikeuspalvelu)))
         org-job (j/build
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
@@ -50,16 +53,14 @@
         org-trigger-daily (t/build
                             (t/with-identity "daily3")
                             (t/start-now)
-                            (t/with-schedule (cron/schedule
-                                              (cron/cron-schedule (get-in asetukset [:ajastus :organisaatiopalvelu])))))
+                            (t/with-schedule (ajastus asetukset :organisaatiopalvelu)))
         koul-job (j/build
                    (j/of-type PaivitaKoulutustoimijoidenTutkinnotJob)
                    (j/with-identity "paivita-koulutustoimijoiden-tutkinnot"))
         koul-trigger-daily (t/build
                              (t/with-identity "daily5")
                              (t/start-now)
-                             (t/with-schedule (cron/schedule
-                                               (cron/cron-schedule (get-in asetukset [:ajastus :koulutustoimijoiden-tutkinnot])))))]
+                             (t/with-schedule (ajastus asetukset :koulutustoimijoiden-tutkinnot)))]
     (qs/schedule ldap-job ldap-trigger-daily)
     (qs/schedule org-job org-trigger-daily)
     (qs/schedule koul-job koul-trigger-daily)))
