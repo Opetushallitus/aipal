@@ -202,7 +202,7 @@
   ([kyselyid]
     (->
       (sql/select* taulut/kysymysryhma)
-      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :tila :valtakunnallinen)
+      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :kuvaus_fi :kuvaus_sv :tila :valtakunnallinen)
       (sql/with taulut/kysymys
         (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
                     :jatkokysymys.jatkokysymysid :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.kylla_vastaustyyppi)
