@@ -1,5 +1,5 @@
 <div ng-show="kysely && kyselykerta">
-<h1 ng-if="!uusi && muokkaustila">{{'kyselykerta.hallitse' | i18n}} <ohje tunniste="hallitse_kyselykertaa"></ohje></h1>
+<h1 ng-if="!uusi && muokkaustila">{{'yleiset.kyselykerta' | i18n}} <ohje tunniste="hallitse_kyselykertaa"></ohje></h1>
 <h1 ng-if="!muokkaustila">{{'kyselykerta.nayta' | i18n}} <ohje tunniste="nayta_kyselykerta"></ohje></h1>
 <h1 ng-if="uusi">{{'kyselykerta.uusi_kyselykerta' | i18n}} <ohje tunniste="uusi_kyselykerta"></ohje></h1>
 
@@ -58,7 +58,18 @@
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
+    <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary e2e-nayta-raportti">
+      {{ 'kysely.raportti' | i18n }}&nbsp;
+      <span class="glyphicon glyphicon-stats"></span>
+    </a>
     <br/>
+
+    <div class="center-block" ng-show="tunnukset.length>0">
+      <div class="yhteenveto">
+        <h2>{{'vastaajatunnus.vastauksia'|i18n}} {{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h2>
+        <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
+      </div>
+    </div>
 
     <div ng-repeat="rahoitusmuodot in rahoitusmuodotmap" ng-show="(tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}).length">
         <h3>{{rahoitusmuodot.rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</h3>
@@ -118,14 +129,6 @@
                 </tr>
             </tbody>
         </table>
-        </div>
-    </div>
-
-    <div class="center-block" ng-show="tunnukset.length>0">
-        <div class="yhteenveto">
-            <h2>{{'vastaajatunnus.vastauksia'|i18n}}</h2>
-            <h1>{{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h1>
-            <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
         </div>
     </div>
 </div>
