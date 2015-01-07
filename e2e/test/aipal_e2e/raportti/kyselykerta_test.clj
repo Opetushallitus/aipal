@@ -91,7 +91,7 @@
       "etusivu:"
       (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
                   :rooli_organisaatio [{:organisaatio "0000000-0"
-                                      :rooli "OPL-VASTUUKAYTTAJA"
+                                      :rooli "OPL-KAYTTAJA"
                                       :kayttaja "OID.AIPAL-E2E"
                                       :voimassa true}]
                   :kysely [{:kyselyid 1
