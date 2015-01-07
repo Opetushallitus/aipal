@@ -31,6 +31,9 @@
 (defn sivun-sisalto []
   (w/text (w/find-element {:css "body"})))
 
+(defn vastaaminen-onnistui? []
+  (w/present? {:css ".e2e-kiitos"}))
+
 (defn valitse-ensimmaisen-kysymyksen-ensimmainen-vaihtoehto []
   (w/select (nth (w/find-elements {:tag :radio}) 0)))
 

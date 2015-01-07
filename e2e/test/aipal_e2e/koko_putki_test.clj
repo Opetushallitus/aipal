@@ -94,7 +94,7 @@
           (vastaus-sivu/valitse-ensimmaisen-kysymyksen-ensimmainen-vaihtoehto)
           (vastaus-sivu/tallenna-vastaukset)
 
-          (is (.contains (vastaus-sivu/sivun-sisalto) "Kiitos vastauksestanne"))
+          (is (vastaus-sivu/vastaaminen-onnistui?))
 
           (kyselyt-sivu/avaa-sivu)
           (kyselyt-sivu/nayta-raportti)
