@@ -1,20 +1,20 @@
 (ns oph.common.util.cas
-  (:require [org.httpkit.client :as http]
+  (:require [clj-http.client :as http]
             [aipal.asetukset :refer [asetukset]]))
 
 (defn ^:private hae-ticket-granting-url [url user password unsafe-https]
-  (let [{:keys [status headers]} @(http/post (str url "/v1/tickets")
-                                             {:form-params {:username user
-                                                            :password password}
-                                              :insecure? unsafe-https})]
+  (let [{:keys [status headers]} (http/post (str url "/v1/tickets")
+                                            {:form-params {:username user
+                                                           :password password}
+                                             :insecure? unsafe-https})]
     (if (= status 201)
-      (:location headers)
+      (headers "location")
       (throw (RuntimeException. "CAS-kirjautuminen epäonnistui")))))
 
 (defn ^:private hae-service-ticket [url palvelu-url unsafe-https]
-  (let [{:keys [status body]} @(http/post url
-                                          {:form-params {:service palvelu-url}
-                                           :insecure? unsafe-https})]
+  (let [{:keys [status body]} (http/post url
+                                         {:form-params {:service palvelu-url}
+                                          :insecure? unsafe-https})]
     (if (= status 200)
       body
       (throw (RuntimeException. "Service ticketin pyytäminen CASilta epäonnistui")))))

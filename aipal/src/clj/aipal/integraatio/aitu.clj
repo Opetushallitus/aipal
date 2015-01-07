@@ -19,7 +19,7 @@
 
 (defn hae-koulutustoimijoiden-tutkinnot
   []
-  (-> @(get-with-cas-auth :aitu (str (get-in @asetukset [:aitu :url])
-                                     "api/aipal/sopimukset"))
+  (-> (get-with-cas-auth :aitu (str (get-in @asetukset [:aitu :url])
+                                    "api/aipal/sopimukset"))
     :body
     cheshire/parse-string))
