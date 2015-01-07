@@ -50,12 +50,13 @@
                  [robert/hooke "1.3.0"]
                  [peridot "0.3.0"]
 
-                 [stencil "0.3.2"]]
+                 [stencil "0.3.2"]
+
+                 [clj-http "1.0.1"]]
   :plugins [[test2junit "1.0.1"]]
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/tools.namespace "0.2.4"]
                                   [clj-webdriver "0.6.0"]
-                                  [clj-http "0.7.6"]
                                   [ring-mock "0.1.5"]
                                   [clj-gatling "0.4.1"]
                                   [org.clojure/test.check "0.5.9"]]}
