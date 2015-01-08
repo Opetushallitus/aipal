@@ -27,7 +27,7 @@
         <span ng-if="!muokkaustila">
             {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
         </span>
-        <span ng-if="muokkaustila">
+        <span ng-if="muokkaustila && kyselykerta && kysely">
             <pvm-valitsin
                     otsikko="{{i18n.yleiset.alkaen}}"
                     oletus-pvm="kysely.voimassa_alkupvm"
@@ -39,7 +39,7 @@
             </pvm-valitsin>
             <pvm-valitsin
                     otsikko="{{i18n.yleiset.asti}}"
-                    oletus-pvm="kyselykerta.voimassa_loppupvm"
+                    oletus-pvm="kysely.voimassa_loppupvm"
                     valittu-pvm="kyselykerta.voimassa_loppupvm"
                     min-pvm="kyselykerta.voimassa_alkupvm"
                     max-pvm="kysely.voimassa_loppupvm"
