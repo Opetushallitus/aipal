@@ -53,6 +53,28 @@
                 </ui-select>
             </label>
         </div>
+
+        <div>
+            <h3>{{'kyselykerta.vastausaika' | i18n}}</h3>
+            <span>
+                <pvm-valitsin
+                        otsikko="{{i18n.yleiset.alkaen}}"
+                        oletus-pvm="kyselykerta.voimassa_alkupvm"
+                        valittu-pvm="vastaajatunnus.voimassa_alkupvm"
+                        min-pvm="kyselykerta.voimassa_alkupvm"
+                        max-pvm="vastaajatunnus.voimassa_loppupvm"
+                        pakollinen="true">
+                </pvm-valitsin>
+                <pvm-valitsin
+                        otsikko="{{i18n.yleiset.asti}}"
+                        oletus-pvm="kyselykerta.voimassa_loppupvm"
+                        valittu-pvm="vastaajatunnus.voimassa_loppupvm"
+                        min-pvm="vastaajatunnus.voimassa_alkupvm"
+                        max-pvm="kyselykerta.voimassa_loppupvm"
+                        pakollinen="false">
+                </pvm-valitsin>
+            </span>
+        </div>
 </div>
 
 <div class="modal-footer e2e-vastaustunnusten-luonti-dialogi">

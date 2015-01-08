@@ -66,6 +66,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
             },
             viimeksiValittuTutkinto: function() {
               return Vastaajatunnus.haeViimeisinTutkinto($routeParams.kyselykertaid).then(function(response) { return response.data; });
+            },
+            kyselykerta: function () {
+              return $scope.kyselykerta;
             }
           }
         });
@@ -173,14 +176,15 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
-  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
-                                              function($modalInstance, $scope, $filter, rahoitusmuodot, tutkinnot, koulutustoimijat, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
+  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
+                                              function($modalInstance, $scope, $filter, rahoitusmuodot, tutkinnot, koulutustoimijat, kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
     $scope.vastaajatunnus = {
       vastaajien_lkm: 1,
       koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
       tutkinto: viimeksiValittuTutkinto
     };
     $scope.rahoitusmuodot = rahoitusmuodot;
+    $scope.kyselykerta = kyselykerta;
 
     $scope.tutkinnot = tutkinnot;
 
