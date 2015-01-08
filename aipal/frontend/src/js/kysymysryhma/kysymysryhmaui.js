@@ -338,10 +338,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       }
     };
 
-    $scope.esikatseleModal = function() {
+    $scope.naytaRakenneModal = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'template/kysymysryhma/esikatsele.html',
-        controller: 'EsikatseleKysymysryhmaModalController',
+        templateUrl: 'template/kysymysryhma/rakenne.html',
+        controller: 'KysymysryhmaRakenneModalController',
         resolve: {
           kysymysryhma: function() { return $scope.kysymysryhma; }
         }
@@ -380,7 +380,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     });
   }])
 
-  .controller('EsikatseleKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function($modalInstance, $scope, kysymysryhma) {
+  .controller('KysymysryhmaRakenneModalController', ['$modalInstance', '$scope', 'kysymysryhma', function($modalInstance, $scope, kysymysryhma) {
     $scope.kysymysryhma = kysymysryhma;
 
     $scope.cancel = function() {
