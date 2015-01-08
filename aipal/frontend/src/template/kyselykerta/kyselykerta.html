@@ -78,6 +78,7 @@
             <thead>
             <tr>
                 <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
+                <th>{{'kyselykerta.vastausaika' | i18n}}</th>
                 <th>{{'i18n.vastaajatunnus.jarjestaja'|i18n}}</th>
                 <th>{{'i18n.vastaajatunnus.tutkinto'|i18n}}</th>
                 <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
@@ -86,7 +87,7 @@
             </thead>
             <tfoot>
                 <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                         {{'vastaajatunnus.vastauksia'|i18n}}
                     </td>
                     <td>
@@ -95,7 +96,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                         {{'i18n.vastaajatunnus.vastausprosentti'|i18n}}
                     </td>
                     <td>
@@ -108,6 +109,7 @@
                 <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
                     ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
+                    <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
                     <td>{{tunnus.valmistavan_koulutuksen_jarjestaja | lokalisoiKentta: 'nimi'}}</td>
                     <td>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
