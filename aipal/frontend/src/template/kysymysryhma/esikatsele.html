@@ -12,6 +12,77 @@
       <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot">{{ vaihtoehto | lokalisoiKentta:'teksti' }}</div>
     </div>
     {{ kysymys | json }}
+
+    <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">
+      <textarea name="vapaateksti" ng-model="kysymys.vastaus" ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}"></textarea>
+      <span ng-show="kysymysForm.vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'" class="vastaus_valinnat">
+      <label style="display: block">
+        <input type="radio" ng-model="kysymys.vastaus" value="kylla" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
+        {{ i18n.yleiset.kylla }}
+      </label>
+      <label style="display: block">
+        <input type="radio" ng-model="kysymys.vastaus" value="ei" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
+        {{ i18n.yleiset.ei }}
+      </label>
+      <div class="jatkokysymys" ng-if="kysymys.vastaus === 'kylla' && kysymys.kylla_teksti_fi">
+        <h4>{{kysymys | lokalisoiKentta:'kylla_teksti'}}</h4>
+        <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
+          <input type="radio" ng-model="kysymys.jatkovastaus_kylla" ng-value="vaihtoehto" name="kysymys_kylla_{{kysymys.kysymysid}}">
+          {{ i18n.yleiset[kysymys.kylla_vastaustyyppi][vaihtoehto] }}
+        </label>
+      </div>
+      <div class="jatkokysymys" ng-if="kysymys.vastaus === 'ei' && kysymys.ei_teksti_fi">
+        <h4>{{kysymys | lokalisoiKentta:'ei_teksti'}}</h4>
+        <textarea name="ei_vapaateksti" ng-model="kysymys.jatkovastaus_ei" ng-maxlength="{{kysymys.ei_max_vastaus}}" cols="50" rows="5"></textarea>
+        <span ng-show="kysymysForm.ei_vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
+      </div>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'asteikko'" class="vastaus_valinnat">
+      <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
+        <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
+        {{ i18n.yleiset.asteikko[vaihtoehto] }}
+      </label>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'likert_asteikko'" class="vastaus_valinnat">
+      <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
+        <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
+        {{ i18n.yleiset.likert_asteikko[vaihtoehto] }}
+      </label>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi === 'arvosana'" class="vastaus_valinnat arvosana">
+      <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block" ng-class="{checked: kysymys.vastaus == vaihtoehto}">
+        <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
+        {{ vaihtoehto }}
+      </label>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'monivalinta'" class="vastaus_valinnat">
+      <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" style="display: block">
+            <span ng-if="kysymys.monivalinta_max == 1">
+              <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto.jarjestys" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
+            </span>
+            <span ng-if="kysymys.monivalinta_max > 1">
+              <input type="checkbox" ng-model="vaihtoehto.valittu" ng-change="vaihdaMonivalinta(vaihtoehto, kysymys)"
+                     ng-disabled="monivalinta[kysymys.kysymysid] === kysymys.monivalinta_max && !vaihtoehto.valittu"
+                     name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen && kysymys.vastaus !== 'EOS' && (!monivalinta[kysymys.kysymysid] || monivalinta[kysymys.kysymysid] === 0)">
+            </span>
+        {{vaihtoehto | lokalisoiKentta:'teksti'}}
+      </label>
+    </div>
+
+    <div ng-if="kysymys.pakollinen && kysymys.eos_vastaus_sallittu" class="vastaus_valinnat eos">
+      <label>
+        <input type="radio" ng-required="kysymys.pakollinen" ng-model="kysymys.vastaus" value="EOS" name="kysymys_{{kysymys.kysymysid}}"
+               ng-disabled="kysymys.vastaustyyppi === 'monivalinta' && kysymys.monivalinta_max > 1 && monivalinta[kysymys.kysymysid] > 0">
+        {{ i18n.yleiset.eikokemusta }}
+      </label>
+    </div>
   </div>
 </div>
 
