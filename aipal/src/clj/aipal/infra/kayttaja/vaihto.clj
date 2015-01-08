@@ -49,7 +49,7 @@
   `(with-kayttaja* ~uid ~impersonoitu-oid ~rooli (fn [] ~@body)))
 
 (defn hae-kayttaja-ldapista [uid]
-  (with-kayttaja integraatio-uid nil
+  (with-kayttaja integraatio-uid nil nil
     (let [kop (kayttooikeuspalvelu/tee-kayttooikeuspalvelu (:ldap-auth-server @asetukset))
           oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))
           kayttaja (kayttooikeuspalvelu/kayttaja kop uid oid->ytunnus ldap-ryhma->rooli)]
