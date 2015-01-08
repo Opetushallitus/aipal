@@ -339,7 +339,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
 
     $scope.naytaRakenneModal = function() {
-      var modalInstance = $modal.open({
+      $modal.open({
         templateUrl: 'template/kysymysryhma/rakenne.html',
         controller: 'KysymysryhmaRakenneModalController',
         resolve: {
