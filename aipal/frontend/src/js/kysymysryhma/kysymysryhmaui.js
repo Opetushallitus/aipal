@@ -14,7 +14,9 @@
 
 'use strict';
 
-angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
+angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
+                                               'ui.bootstrap',
+                                               'rest.kysymysryhma',
                                                'yhteiset.palvelut.i18n',
                                                'yhteiset.palvelut.ilmoitus',
                                                'yhteiset.palvelut.tallennusMuistutus',
