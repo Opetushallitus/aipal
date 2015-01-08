@@ -27,7 +27,8 @@
     (sql/join :left taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
     (sql/join :left taulut/koulutustoimija (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa
-                :tutkinto.nimi_fi :tutkinto.nimi_sv :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv])
+                :tutkinto.nimi_fi :tutkinto.nimi_sv :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                :voimassa_alkupvm :voimassa_loppupvm)
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
