@@ -78,6 +78,18 @@ li.selected{
   }
 }
 
+@media print {
+  .kysymysryhma {
+    font-size: .8em;
+    .kysymys {
+      page-break-inside: avoid;
+      td {
+        line-height: 1em;
+      }
+    }
+  }
+}
+
 .raportit .taustakysymykset .kysymykset {
   overflow: auto;
   font-size: .9em;

@@ -1,16 +1,14 @@
 <div ng-controller="RaporttiController">
-
 <div class="alert alert-danger" ng-if="tulos.virhe">
   {{'raportit.liian_vahan_vastaajia' | i18n}}
 </div>
 
-<div ng-show="tulokset.length > 1">
+<div class="hidden-print" ng-show="tulokset.length > 1">
   <button ng-click="naytaRaportti(raportti)" ng-repeat="raportti in tulokset">{{ raportti | lokalisoiKentta:'nimi' }}</button>
 </div>
 
 <div class="visible-print" ng-if="tulos">
   <h2 ng-if="tulos.kyselykerta">{{tulos.kyselykerta.nimi}}</h2>
-  <hr>
 </div>
 
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
@@ -64,14 +62,14 @@
   </div>
 </div>
 
-<div ng-repeat="kysymysryhma in tulos.raportti">
+<div ng-repeat="kysymysryhma in tulos.raportti" class="kysymysryhma">
   <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
   <p>
     {{'raportti.vastaajien_maara' | i18n }}: {{kysymysryhma.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
     {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymysryhma.vastaajien_lukumaara, tulos.vastaajien_maksimimaara)}}%
   </p>
 
-  <div ng-repeat="kysymys in kysymysryhma.kysymykset">
+  <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
     <p>
       {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
