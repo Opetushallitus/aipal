@@ -17,12 +17,14 @@
             [aipal.compojure-util :as cu]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
+            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (c/defroutes reitit
   (cu/defapi :vastaajatunnus-luonti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
-    (json-response (vastaajatunnus/lisaa!
-                     (assoc vastaajatunnus :kyselykertaid (Integer/parseInt kyselykertaid)))))
+    (let [vastaajatunnus (paivita-arvot vastaajatunnus [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (json-response (vastaajatunnus/lisaa!
+                       (assoc vastaajatunnus :kyselykertaid (Integer/parseInt kyselykertaid))))))
 
   (cu/defapi :vastaajatunnus-tilamuutos kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" [kyselykertaid vastaajatunnusid lukitse]
     (json-response (vastaajatunnus/aseta-lukittu! (Integer/parseInt kyselykertaid) (Integer/parseInt vastaajatunnusid) lukitse)))
