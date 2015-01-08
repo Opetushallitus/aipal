@@ -213,7 +213,15 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           $timeout(function () {
             var iframe = document.getElementById('previewiframe').contentWindow;
             iframe.postMessage('connect', '*');
-            var message = JSON.stringify({message: $scope.kysely});
+
+            // Esikatselussa ei näytetä poistettuja kysymysryhmiä ja kysymyksiä
+            var kysely = angular.copy($scope.kysely);
+            kysely.kysymysryhmat = _.reject(kysely.kysymysryhmat, 'poistetaan_kyselysta');
+            _.forEach(kysely.kysymysryhmat, function(kysymysryhma) {
+              kysymysryhma.kysymykset = _.reject(kysymysryhma.kysymykset, 'poistettu');
+            });
+
+            var message = JSON.stringify({message: kysely});
             iframe.postMessage(message, '*');
           }, 1000);
         };
