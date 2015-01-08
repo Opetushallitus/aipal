@@ -14,7 +14,9 @@
 
 'use strict';
 
-angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
+angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
+                                               'ui.bootstrap',
+                                               'rest.kysymysryhma',
                                                'yhteiset.palvelut.i18n',
                                                'yhteiset.palvelut.ilmoitus',
                                                'yhteiset.palvelut.tallennusMuistutus',
@@ -212,8 +214,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
     };
   }])
 
-  .controller('KysymysryhmaController', ['$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi', 'kopioi',
-                                             function($routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi, kopioi) {
+  .controller('KysymysryhmaController', ['$modal', '$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi', 'kopioi', function($modal, $routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi, kopioi) {
     $scope.$watch('form', function(form) {
       tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
     });
@@ -339,6 +340,16 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
       }
     };
 
+    $scope.naytaRakenneModal = function() {
+      $modal.open({
+        templateUrl: 'template/kysymysryhma/rakenne.html',
+        controller: 'KysymysryhmaRakenneModalController',
+        resolve: {
+          kysymysryhma: function() { return $scope.kysymysryhma; }
+        }
+      });
+    };
+
     var originals = {};
     $scope.muokkaa = function(kysymys) {
       originals = angular.copy($scope.kysymysryhma.kysymykset);
@@ -369,4 +380,12 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute', 'rest.kysymysryhma',
                                      sisaltaaAsteikkokysymyksen());
       }, true);
     });
+  }])
+
+  .controller('KysymysryhmaRakenneModalController', ['$modalInstance', '$scope', 'kysymysryhma', function($modalInstance, $scope, kysymysryhma) {
+    $scope.kysymysryhma = kysymysryhma;
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('cancel');
+    };
   }]);

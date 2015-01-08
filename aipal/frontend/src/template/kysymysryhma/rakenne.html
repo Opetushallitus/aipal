@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <a class="pull-right" ng-click="cancel()">X</a>
+  <h4>{{ 'kysymysryhma.rakenne' | i18n }}</h4>
+</div>
+
+<div class="modal-body">
+  <h3>{{ kysymysryhma | lokalisoiKentta:'nimi' }}</h3>
+
+  <div ng-repeat="kysymys in kysymysryhma.kysymykset">
+    <h3>{{ kysymys | lokalisoiKentta:'kysymys' }}<span ng-if="kysymys.pakollinen">*</span></h3>
+
+    <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">
+      <div>({{ 'kysymys.vapaa_tekstikentta' | i18n }})</div>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'" class="vastaus_valinnat">
+      <div>{{ 'kysymys.kylla_ei_valinta.kylla' | i18n }}</div>
+
+      <div class="jatkokysymys" ng-if="kysymys.jatkokysymys.kylla_teksti_fi">
+        <div style="margin-left: 2em">{{ 'kysymys.likert_asteikko_valinnat' | i18n }}</div>
+      </div>
+
+      <div>{{ 'kysymys.kylla_ei_valinta.ei' | i18n }}</div>
+
+      <div class="jatkokysymys" ng-if="kysymys.jatkokysymys.ei_teksti_fi">
+        <div style="margin-left: 2em">({{ 'kysymys.vapaa_tekstikentta' | i18n }})</div>
+      </div>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'asteikko'" class="vastaus_valinnat">
+      <div>{{ 'kysymys.asteikko_valinnat' | i18n }}</div>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'likert_asteikko'" class="vastaus_valinnat">
+      <div>{{ 'kysymys.likert_asteikko_valinnat' | i18n }}</div>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi === 'arvosana'" class="vastaus_valinnat arvosana">
+      <div>{{ 'kysymys.arvosana_valinnat' | i18n }}</div>
+    </div>
+
+    <div ng-if="kysymys.vastaustyyppi == 'monivalinta'" class="vastaus_valinnat">
+      <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot">{{ vaihtoehto | lokalisoiKentta:'teksti' }}</div>
+    </div>
+
+    <div ng-if="kysymys.pakollinen && kysymys.eos_vastaus_sallittu" class="vastaus_valinnat eos">
+      <div>{{ 'kysymys.' + kysymys.vastaustyyppi + '.eos' | i18n }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default btn-primary pull-left" ng-click="cancel()">{{ 'yleiset.sulje' | i18n }}</button>
+</div>
