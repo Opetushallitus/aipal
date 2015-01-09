@@ -7,7 +7,7 @@
     <div class="row">
       <div style="white-space: pre-line" ng-bind="naytettavaTiedote"></div>
     </div>
-    <div class="row">
+    <div class="row" ng-if="yllapitaja">
       <button class="btn btn-primary" ng-click="muokkaa()">{{'yleiset.muokkaa' | i18n}}&nbsp;&nbsp;<span class="fa fa-pencil"></span></button>
     </div>
   </div>
