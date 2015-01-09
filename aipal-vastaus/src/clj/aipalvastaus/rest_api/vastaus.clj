@@ -30,7 +30,7 @@
     (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
          (:jatkovastaus_kylla vastaus)
          (not (:jatkovastaus_ei vastaus))
-         (:kylla_teksti_fi kysymys))))
+         (:kylla_kysymys kysymys))))
 
 (defn ei-jatkovastaus-validi?
   [vastaus kysymys]
@@ -38,7 +38,7 @@
     (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
          (:jatkovastaus_ei vastaus)
          (not (:jatkovastaus_kylla vastaus))
-         (:ei_teksti_fi kysymys))))
+         (:ei_kysymys kysymys))))
 
 (defn ei-jatkovastausta?
   [vastaus]
