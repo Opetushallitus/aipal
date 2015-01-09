@@ -25,14 +25,14 @@
             <input type="radio" ng-model="kysymys.vastaus" value="ei" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
             {{ i18n.yleiset.ei }}
           </label>
-          <div class="jatkokysymys" ng-if="kysymys.vastaus === 'kylla' && kysymys.kylla_teksti_fi">
+          <div class="jatkokysymys" ng-if="kysymys.vastaus === 'kylla' && kysymys.kylla_kysymys">
             <h4>{{kysymys | lokalisoiKentta:'kylla_teksti'}}</h4>
             <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
               <input type="radio" ng-model="kysymys.jatkovastaus_kylla" ng-value="vaihtoehto" name="kysymys_kylla_{{kysymys.kysymysid}}">
               {{ i18n.yleiset[kysymys.kylla_vastaustyyppi][vaihtoehto] }}
             </label>
           </div>
-          <div class="jatkokysymys" ng-if="kysymys.vastaus === 'ei' && kysymys.ei_teksti_fi">
+          <div class="jatkokysymys" ng-if="kysymys.vastaus === 'ei' && kysymys.ei_kysymys">
             <h4>{{kysymys | lokalisoiKentta:'ei_teksti'}}</h4>
             <textarea name="ei_vapaateksti" ng-model="kysymys.jatkovastaus_ei" ng-maxlength="{{kysymys.ei_max_vastaus}}" cols="50" rows="5"></textarea>
             <span ng-show="kysymysForm.ei_vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
