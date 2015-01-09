@@ -143,7 +143,7 @@
           oid->ytunnus)))))
 
 (defn ^:private ^:integration-api paivita-koulutustoimijat! [koodit]
-  (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki)
+  (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki-organisaatiopalvelulle)
                            (map-by :ytunnus))]
     (doseq [koodi (vals (map-by y-tunnus koodit)) ;; Poistetaan duplikaatit
             :let [uusi-kt (koodi->koulutustoimija koodi)
