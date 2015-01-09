@@ -16,7 +16,7 @@
 
 angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.tutkinto', 'rest.koulutustoimija',
                                              'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
-                                             'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus'])
+                                             'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -176,8 +176,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
-  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
-                                              function($modalInstance, $scope, $filter, rahoitusmuodot, tutkinnot, koulutustoimijat, kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
+  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'Oppilaitos', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
+                                              function($modalInstance, $scope, $filter, Oppilaitos, rahoitusmuodot, tutkinnot, koulutustoimijat, kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
     $scope.vastaajatunnus = {
       vastaajien_lkm: 1,
       koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
@@ -196,6 +196,17 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       $scope.rullausrajoite = 20;
     };
     $scope.nollaaRajoite();
+
+    function haeOppilaitokset(koulutustoimija) {
+      Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).success(function(oppilaitokset) {
+        $scope.oppilaitokset = oppilaitokset;
+        $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
+      });
+    }
+    haeOppilaitokset(aktiivinenKoulutustoimija.ytunnus);
+    $scope.$watch('vastaajatunnus.koulutuksen_jarjestaja', function(koulutustoimija) {
+      haeOppilaitokset(koulutustoimija.ytunnus);
+    });
 
     $scope.luoTunnuksia = function(vastaajatunnus) {
       $modalInstance.close(vastaajatunnus);

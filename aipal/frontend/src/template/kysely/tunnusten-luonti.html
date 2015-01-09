@@ -53,6 +53,16 @@
                 </ui-select>
             </label>
         </div>
+        <div class="form-group">
+            <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}}
+                <ui-select ng-model="vastaajatunnus.koulutuksen_jarjestaja_oppilaitos" ng-disabled="disabled">
+                    <ui-select-match allow-clear>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+                    <ui-select-choices repeat="oppilaitos in oppilaitokset | filter: $select.search | orderByLokalisoitu:'nimi'">
+                        <div ng-bind-html="oppilaitos | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </label>
+        </div>
 
         <div>
             <h3>{{'kyselykerta.vastausaika' | i18n}}</h3>
