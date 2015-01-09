@@ -26,8 +26,11 @@
   (-> (sql/select* taulut/vastaajatunnus)
     (sql/join :left taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
     (sql/join :left taulut/koulutustoimija (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
+    (sql/join :left taulut/oppilaitos (= :oppilaitos.oppilaitoskoodi :vastaajatunnus.valmistavan_koulutuksen_oppilaitos))
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa
-                :tutkinto.nimi_fi :tutkinto.nimi_sv :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                :tutkinto.nimi_fi :tutkinto.nimi_sv
+                :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
+                :oppilaitos.oppilaitoskoodi [:oppilaitos.nimi_fi :oppilaitos_nimi_fi] [:oppilaitos.nimi_sv :oppilaitos_nimi_sv]
                 :voimassa_alkupvm :voimassa_loppupvm)
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
@@ -52,13 +55,26 @@
       (dissoc :ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv)
       (assoc :valmistavan_koulutuksen_jarjestaja koulutustoimija))))
 
+(defn ^:private erota-oppilaitos
+  [vastaajatunnus]
+  (let [oppilaitos (rename-keys
+                     (select-keys vastaajatunnus [:oppilaitoskoodi :oppilaitos_nimi_fi :oppilaitos_nimi_sv])
+                     {:oppilaitos_nimi_fi :nimi_fi
+                      :oppilaitos_nimi_sv :nimi_sv})]
+    (some-> vastaajatunnus
+      (dissoc :oppilaitoskoodi :oppilaitos_nimi_fi :oppilaitos_nimi_sv)
+      (assoc :valmistavan_koulutuksen_oppilaitos oppilaitos))))
+
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]
   (-> kyselykerta-select
     (sql/where (= :kyselykertaid kyselykertaid))
     sql/exec
-    (->> (map erota-tutkinto) (map erota-koulutustoimija))))
+    (->>
+      (map erota-tutkinto)
+      (map erota-koulutustoimija)
+      (map erota-oppilaitos))))
 
 (defn hae-viimeisin-tutkinto
   "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
@@ -79,7 +95,8 @@
     sql/exec
     first
     erota-tutkinto
-    erota-koulutustoimija))
+    erota-koulutustoimija
+    erota-oppilaitos))
 
 (defn luo-satunnainen-tunnus
   [pituus]

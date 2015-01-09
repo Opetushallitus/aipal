@@ -110,7 +110,10 @@
                     ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
-                    <td>{{tunnus.valmistavan_koulutuksen_jarjestaja | lokalisoiKentta: 'nimi'}}</td>
+                    <td>
+                        {{tunnus.valmistavan_koulutuksen_jarjestaja | lokalisoiKentta: 'nimi'}}
+                        {{tunnus.valmistavan_koulutuksen_oppilaitos | lokalisoiKentta: 'nimi'}}
+                    </td>
                     <td>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
                     <td class="nowrap actions">
