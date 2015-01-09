@@ -249,6 +249,7 @@
     :ohje_muokkaus kayttaja/yllapitaja?
     :rahoitusmuoto aipal-kayttaja?
     :tutkinto aipal-kayttaja?
+    :oppilaitos aipal-kayttaja?
     :koulutustoimija aipal-kayttaja?
     :valtakunnallinen-raportti kayttaja/yllapitaja?
     :omat_tiedot aipal-kayttaja?

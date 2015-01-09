@@ -1,4 +1,4 @@
-;; Copyright (c) 2014 The Finnish National Board of Education - Opetushallitus
+;; Copyright (c) 2015 The Finnish National Board of Education - Opetushallitus
 ;;
 ;; This program is free software:  Licensed under the EUPL, Version 1.1 or - as
 ;; soon as they will be approved by the European Commission - subsequent versions
@@ -12,15 +12,12 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.rest-api.koulutustoimija
+(ns aipal.rest-api.oppilaitos
   (:require [compojure.core :as c]
             [aipal.compojure-util :as cu]
-            [aipal.arkisto.koulutustoimija :as koulutustoimija]
-            [oph.common.util.http-util :refer [json-response]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.arkisto.oppilaitos :as oppilaitos]
+            [oph.common.util.http-util :refer [json-response]]))
 
 (c/defroutes reitit
-  (cu/defapi :koulutustoimija nil :get "/aktiivinen" []
-    (json-response (koulutustoimija/hae (:aktiivinen-koulutustoimija *kayttaja*))))
-  (cu/defapi :koulutustoimija nil :get "/" []
-    (json-response (koulutustoimija/hae-kaikki))))
+  (cu/defapi :oppilaitos nil :get "/" [koulutustoimija]
+    (json-response (oppilaitos/hae-koulutustoimijan-oppilaitokset koulutustoimija))))
