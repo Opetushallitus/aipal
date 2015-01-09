@@ -73,23 +73,25 @@
     (when-let [kayttaja (ldap/get yhteys (kayttaja-dn uid))]
       (let [etunimi (first (s/split (:cn kayttaja) #" "))
             sukunimi (:sn kayttaja)
-            ryhmat (ldap/search yhteys ryhma-base (jasen-filter (kayttaja-dn uid)))]
-        {:oid (:employeeNumber kayttaja)
-         :uid (:uid kayttaja)
-         :etunimi etunimi
-         :sukunimi (or sukunimi "")
-         :voimassa true
-         :roolit (for [ldap-ryhma ryhmat
-                       :let [koulutustoimija-oid (last (s/split (:cn ldap-ryhma) #"_"))
-                             ryhma (second (re-matches #"APP_AIPAL_(.*)_[\d.]+" (:cn ldap-ryhma)))
-                             rooli (ryhma->rooli ryhma)
-                             koulutustoimija (or (oid->ytunnus koulutustoimija-oid)
-                                                 (when (contains? oph-roolit rooli)
-                                                   oph-koulutustoimija))]
-                       :when rooli]
-                   {:rooli rooli
-                    :organisaatio (:ytunnus koulutustoimija)
-                    :voimassa true})}))))
+            ryhmat (ldap/search yhteys ryhma-base (jasen-filter (kayttaja-dn uid)))
+            roolit (for [ldap-ryhma ryhmat
+                         :let [koulutustoimija-oid (last (s/split (:cn ldap-ryhma) #"_"))
+                               ryhma (second (re-matches #"APP_AIPAL_(.*)_[\d.]+" (:cn ldap-ryhma)))
+                               rooli (ryhma->rooli ryhma)
+                               koulutustoimija (or (oid->ytunnus koulutustoimija-oid)
+                                                   (when (contains? oph-roolit rooli)
+                                                     oph-koulutustoimija))]
+                         :when rooli]
+                     {:rooli rooli
+                      :organisaatio (:ytunnus koulutustoimija)
+                      :voimassa true})]
+        (when (seq roolit)
+          {:oid (:employeeNumber kayttaja)
+           :uid (:uid kayttaja)
+           :etunimi etunimi
+           :sukunimi (or sukunimi "")
+           :voimassa true
+           :roolit roolit})))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []
