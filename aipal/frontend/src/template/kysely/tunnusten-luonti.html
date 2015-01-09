@@ -54,7 +54,7 @@
             </label>
         </div>
         <div class="form-group">
-            <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}}
+            <label>{{i18n.vastaajatunnus.koulutuksen_jarjestava_oppilaitos}}
                 <ui-select ng-model="vastaajatunnus.koulutuksen_jarjestaja_oppilaitos" ng-disabled="disabled">
                     <ui-select-match allow-clear>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
                     <ui-select-choices repeat="oppilaitos in oppilaitokset | filter: $select.search | orderByLokalisoitu:'nimi'">
