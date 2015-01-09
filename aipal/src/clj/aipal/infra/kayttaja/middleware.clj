@@ -13,4 +13,8 @@
         (catch IllegalStateException _
           {:headers {"Content-Type" "text/plain;charset=utf-8"}
            :status 403
-           :body (str "Käyttäjällä " uid " ei ole voimassaolevaa Aipal-käyttöoikeutta.")})))))
+           :body (str
+                   "AIPAL-palautejärjestelmän käyttö edellyttää käyttöoikeuksia, jotka sinun käyttäjätunnukseltasi puuttuvat. "
+                   "Tarvittaessa ota yhteyttä oman organisaatiosi AIPAL-koulutustoimijan pääkäyttäjään tai Opetushallituksen AIPAL-neuvontaan (aipal@oph.fi).\n\n"
+                   "Användningen av responssystemet AIPAL förutsätter användarrättigheter. I din användarkod finns ej användarrättigheter. "
+                   "Kontakta vid behov huvudanvändaren för AIPAL i din egen organisation eller Utbildningsstyrelsens AIPAL-rådgivning (aipal@oph.fi). ")})))))
