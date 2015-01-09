@@ -13,13 +13,13 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns oph.common.util.util 
+(ns oph.common.util.util
   "Yleisiä apufunktioita."
   (:require [cheshire.core :as cheshire]
             [clj-time.core :as time]
             [clj-time.format :as time-format]
             [clojure.string :as string]
-            [org.httpkit.client :as http]
+            [clj-http.client :as http]
             [clojure.set :refer [union]]
             [clojure.walk :refer [keywordize-keys]]
             [clojure.tools.logging :as log]))
@@ -128,7 +128,8 @@
 
 (defn get-json-from-url
   [url]
-  (-> @(http/get url)
+  (->
+    (http/get url)
     :body
     cheshire/parse-string
     keywordize-keys))
