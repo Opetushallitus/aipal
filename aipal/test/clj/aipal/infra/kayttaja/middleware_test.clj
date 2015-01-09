@@ -18,12 +18,6 @@
   (is (= (:status ((wrap-kayttaja (constantly nil)) {:username "haxor"}))
          403)))
 
-;; wrap-kayttaja mainitsee 403-viestissä käyttäjätunnuksen, jolla yritettiin
-;; kirjautua.
-(deftest ^:integraatio wrap-kayttaja-403-viesti
-  (is (re-find #"haxor"
-               (:body ((wrap-kayttaja (constantly nil)) {:username "haxor"})))))
-
 ;; Jos käyttäjä on voimassa, suoritetaan seuraava handler.
 (deftest ^:integraatio wrap-kayttaja-voimassa
   (sql/insert taulut/kayttaja
