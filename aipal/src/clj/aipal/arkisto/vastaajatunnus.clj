@@ -116,11 +116,13 @@
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
+        valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
         vastaajatunnus (-> vastaajatunnus
-                         (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja)
+                         (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos)
                          (assoc :vastaajien_lkm vastaajien-lkm
                                 :tutkintotunnus tutkintotunnus
-                                :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja))]
+                                :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
+                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos))]
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)
