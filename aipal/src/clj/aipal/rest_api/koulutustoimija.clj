@@ -16,6 +16,7 @@
   (:require [compojure.core :as c]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
+            [aipal.arkisto.oppilaitos :as oppilaitos]
             [oph.common.util.http-util :refer [json-response]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
@@ -23,4 +24,6 @@
   (cu/defapi :koulutustoimija nil :get "/aktiivinen" []
     (json-response (koulutustoimija/hae (:aktiivinen-koulutustoimija *kayttaja*))))
   (cu/defapi :koulutustoimija nil :get "/" []
-    (json-response (koulutustoimija/hae-kaikki))))
+    (json-response (koulutustoimija/hae-kaikki)))
+  (cu/defapi :koulutustoimija nil :get "/:ytunnus/oppilaitos" [ytunnus]
+    (json-response (oppilaitos/hae-koulutustoimijan-oppilaitokset ytunnus))))

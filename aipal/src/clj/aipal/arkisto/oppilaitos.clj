@@ -33,3 +33,11 @@
     (sql/select* taulut/oppilaitos)
     (sql/order :oppilaitoskoodi)
     sql/exec))
+
+(defn hae-koulutustoimijan-oppilaitokset
+  [koulutustoimija]
+  (->
+    (sql/select* taulut/oppilaitos)
+    (sql/fields :oppilaitoskoodi :koulutustoimija :nimi_fi :nimi_sv)
+    (sql/where {:koulutustoimija koulutustoimija})
+    sql/exec))
