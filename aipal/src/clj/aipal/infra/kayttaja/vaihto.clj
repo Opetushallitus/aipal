@@ -8,7 +8,7 @@
             [oph.common.util.util :refer [map-by some-value]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-oid integraatio-uid]]
-            [aipal.toimiala.kayttajaroolit :refer [ldap-ryhma->rooli]]
+            [aipal.toimiala.kayttajaroolit :refer [ldap-ryhma->rooli roolijarjestys]]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
@@ -26,7 +26,7 @@
     (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
           aktiiviset-roolit (kayttajaoikeus-arkisto/hae-roolit aktiivinen-oid)
           aktiivinen-rooli (or (when rooli (some-value #(= rooli (:rooli_organisaatio_id %)) aktiiviset-roolit))
-                               (first aktiiviset-roolit))
+                               (first (sort-by (comp roolijarjestys :rooli) aktiiviset-roolit)))
           aktiivinen-koulutustoimija (:organisaatio aktiivinen-rooli)
           ik (when impersonoitu-oid
                (kayttaja-arkisto/hae impersonoitu-oid))]

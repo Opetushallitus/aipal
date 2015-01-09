@@ -27,3 +27,13 @@
 (def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})
 
 (def oph-roolit #{"YLLAPITAJA" "OPH-KATSELIJA"})
+
+(def roolijarjestys
+  "Roolien prioriteettijärjestys, jolla valitaan aktiivinen rooli jos käyttäjä ei ole sitä valinnut"
+  {"YLLAPITAJA" 0
+   "OPH-KATSELIJA" 1
+   "OPL-VASTUUKAYTTAJA" 2
+   "OPL-KAYTTAJA" 3
+   "OPL-KATSELIJA" 4
+   "KATSELIJA" 5
+   "TTK-KATSELIJA" 6})
