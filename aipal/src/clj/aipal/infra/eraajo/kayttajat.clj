@@ -24,7 +24,7 @@
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
 (defn paivita-kayttajat-ldapista [kayttooikeuspalvelu]
-  (with-kayttaja integraatio-uid nil
+  (with-kayttaja integraatio-uid nil nil
     (let [oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))]
       (log/info "Päivitetään käyttäjät ja käyttäjien roolit käyttöoikeuspalvelun LDAP:sta")
       (kayttajaoikeus-arkisto/paivita-kaikki!
