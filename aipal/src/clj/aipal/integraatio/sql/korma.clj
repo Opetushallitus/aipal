@@ -55,6 +55,9 @@
 (defentity rahoitusmuoto
   (sql/pk :rahoitusmuotoid))
 
+(defentity kieli
+  (sql/pk :kieli))
+
 (defentity rooli-organisaatio
   (sql/table :rooli_organisaatio))
 

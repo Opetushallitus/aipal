@@ -8,6 +8,7 @@
             [aitu.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
             [aipal.asetukset :refer [service-path]]
             aipal.rest-api.i18n
+            aipal.rest-api.kieli
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.kyselypohja
@@ -58,6 +59,7 @@
     (c/context "/api/jslog" [] (wrap-tarkasta-csrf-token aipal.rest_api.js-log/reitit))
 
     (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
+    (c/context "/api/kieli" [] aipal.rest-api.kieli/reitit)
     (c/context "/api/kyselykerta" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselykerta/reitit))
     (c/context "/api/kyselypohja" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselypohja/reitit))
     (c/context "/api/ohje" [] (wrap-tarkasta-csrf-token aipal.rest-api.ohje/reitit))
