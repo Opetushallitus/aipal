@@ -47,9 +47,6 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
       KyselykertaRaportti.hae($routeParams.kyselykertaid, function(tulos) {
         $scope.tulokset = [tulos];
         $scope.tulos = tulos;
-        $scope.kaikkienVastaajienLukumaara = _(tulos.kyselykerta.tutkinnot)
-          .pluck('vastaajien_lkm')
-          .reduce(function sum(result, l) {return result + l;});
       }, function(value) {
         if (value.status !== 500) {
           $location.url('/');
