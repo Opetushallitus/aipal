@@ -32,17 +32,38 @@
     sql/exec
     first))
 
-(defn hae-vastaajatunnusten-tutkinnot [kyselykertaid]
-  (sql/select :vastaajatunnus
-    (sql/join :left :tutkinto
-              (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-    (sql/join :left :vastaaja
-              (= :vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid))
-    (sql/aggregate (count :vastaaja.vastaajaid) :vastaajien_lkm)
-    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
-    (sql/where {:kyselykertaid kyselykertaid})
-    (sql/group :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
-    (sql/order :tutkinto.tutkintotunnus)))
+(defn yhdista-ja-jarjesta-tutkinnot
+  [tutkinnot]
+  (->>
+    (let [tutkinnot (group-by #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot)]
+      (for [[tutkinto lukumaarat] tutkinnot]
+        (assoc tutkinto :vastaajien_lkm (reduce + 0 (map :vastaajien_lkm lukumaarat)))))
+    (sort-by :tutkintotunnus)))
+
+(defn koulutustoimijat-hierarkiaksi
+  [vastaajatunnus-tiedot kyselykerta]
+  (let [koulutustoimijat (group-by #(select-keys % [:ytunnus :koulutustoimija_fi :koulutustoimija_sv]) vastaajatunnus-tiedot)]
+    (for [[koulutustoimija tutkinnot] koulutustoimijat]
+      (-> (if (:ytunnus koulutustoimija)
+            (dissoc koulutustoimija :ytunnus)
+            (select-keys kyselykerta [:koulutustoimija_fi :koulutustoimija_sv]))
+        (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
+               :vastaajat_yhteensa (reduce + 0 (map :vastaajien_lkm tutkinnot)))))))
+
+(defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
+  [kyselykerta]
+  (-> (sql/select :vastaajatunnus
+        (sql/join :left :koulutustoimija
+                  (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
+        (sql/join :left :tutkinto
+                  (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
+        (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv
+                    [(sql/subselect :vastaaja
+                       (sql/aggregate (count :*) :vastaajien_lkm)
+                       (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajien_lkm]
+                    :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
+        (sql/where {:kyselykertaid (:kyselykertaid kyselykerta)}))
+    (koulutustoimijat-hierarkiaksi kyselykerta)))
 
 (defn hae-vastaajien-maksimimaara [kyselykertaid]
   (->
@@ -141,7 +162,7 @@
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
-    {:kyselykerta (assoc kyselykerta :tutkinnot (hae-vastaajatunnusten-tutkinnot kyselykertaid))
+    {:kyselykerta (assoc kyselykerta :koulutustoimijat (hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta))
      :luontipvm (time/today)
      :vastaajien_maksimimaara (hae-vastaajien-maksimimaara kyselykertaid)}))
 
