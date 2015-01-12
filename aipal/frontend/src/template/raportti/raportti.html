@@ -11,6 +11,18 @@
   <h2 ng-if="tulos.kyselykerta">{{tulos.kyselykerta.nimi}}</h2>
 </div>
 
+<div ng-show="tulos">
+  <h1>{{ 'kysely.raportti_otsikko' | i18n }}</h1>
+  <div class="hidden-print clearfix">
+    <button class="btn btn-primary pull-left" ng-click="print()">{{ 'kysely.raportti_tulosta' | i18n }}&nbsp;<span class="fa fa-print"></span></button>
+    <div class="checkbox pull-left">
+      <label>
+        <input type="checkbox" ng-model="printgraphs">&nbsp;{{ 'kysely.raportti_tulosta_graafit' | i18n }}
+      </label>
+    </div>
+  </div>
+</div>
+
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div ng-if="tulos.kyselykerta">
     <div>
@@ -79,12 +91,12 @@
       {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymys.vastaajien_lukumaara, tulos.vastaajien_maksimimaara)}}%
     </p>
 
-    <jakauma-kaavio
+    <jakauma-kaavio ng-class="{ 'hidden-print': !printgraphs }"
       ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'"
       jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi">
     </jakauma-kaavio>
 
-    <vaittama-kaavio
+    <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
       ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'likert_asteikko' || kysymys.vastaustyyppi === 'arvosana'"
       jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi" eos="kysymys.eos_vastaus_sallittu">
     </vaittama-kaavio>
@@ -114,7 +126,7 @@
       <h3>{{$index + 1}}. {{i18n.raportit.jatkokysymykset}}</h3>
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
         <h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>
-        <vaittama-kaavio jakauma="kysymys.jatkovastaukset.kylla.jakauma" vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi">
+        <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }" jakauma="kysymys.jatkovastaukset.kylla.jakauma" vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi">
         </vaittama-kaavio>
       </div>
       <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">

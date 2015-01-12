@@ -29,6 +29,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.raportti = {};
     $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
+    $scope.printgraphs = true;
+
+    $scope.print = function(){
+      window.print();
+    };
 
     var poistaKoulutusalaValinnat = function() {
       _.forEach($scope.koulutusalat, function(koulutusala) {
