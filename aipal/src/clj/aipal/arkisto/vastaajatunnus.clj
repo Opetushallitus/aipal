@@ -22,7 +22,7 @@
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 
-(def kyselykerta-select
+(def vastaajatunnus-select
   (-> (sql/select* taulut/vastaajatunnus)
     (sql/join :left taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
     (sql/join :left taulut/koulutustoimija (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
@@ -68,7 +68,7 @@
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]
-  (-> kyselykerta-select
+  (-> vastaajatunnus-select
     (sql/where (= :kyselykertaid kyselykertaid))
     sql/exec
     (->>
@@ -90,7 +90,7 @@
       (sql/order :vastaajatunnus.luotuaika :desc))))
 
 (defn hae [id]
-  (-> kyselykerta-select
+  (-> vastaajatunnus-select
     (sql/where {:vastaajatunnusid id})
     sql/exec
     first
