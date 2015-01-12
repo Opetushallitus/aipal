@@ -44,6 +44,15 @@
             <span class="text-muted" ng-if="tutkinnot.length==0">{{i18n.vastaajatunnus.ei_tutkintoja}}</span>
         </div>
         <div class="form-group">
+            <label>{{'yleiset.tutkinnon_suorituskieli' | i18n}}
+                <select ng-required="true"
+                        ng-model="vastaajatunnus.suorituskieli"
+                        ng-options="kieli as kieli | enumArvo:'kieli' for kieli in kielet"
+                        class="form-control">
+                </select>
+            </label>
+        </div>
+        <div class="form-group">
             <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}}
                 <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled">
                     <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
