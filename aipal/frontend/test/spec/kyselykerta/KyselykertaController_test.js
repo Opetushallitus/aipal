@@ -40,6 +40,7 @@ describe('kysely.kyselyui.KyselykertaController', function(){
     $httpBackend.whenGET(/api\/vastaajatunnus\/.*/).respond([]);
     $httpBackend.whenGET(/api\/tutkinto\/koulutustoimija.*/).respond([]);
     $httpBackend.whenGET(/api\/koulutustoimija.*/).respond([]);
+    $httpBackend.whenGET(/api\/kieli.*/).respond([{kieli: 'fi'}]);
     $controller('KyselykertaController', {$scope: $scope});
   }
 
