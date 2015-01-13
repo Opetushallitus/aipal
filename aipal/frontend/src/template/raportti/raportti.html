@@ -122,6 +122,11 @@
       </tbody>
     </table>
 
+    <div>
+      Keskiarvo: {{ kysymys.keskiarvo | number:2 }}
+      Keskihajonta: {{ kysymys.keskihajonta | number:2 }}
+    </div>
+
     <div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">
       <h3>{{$index + 1}}. {{i18n.raportit.jatkokysymykset}}</h3>
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">

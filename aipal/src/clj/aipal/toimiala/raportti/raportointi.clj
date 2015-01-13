@@ -187,6 +187,8 @@
                         :jakauma
                         :vapaatekstivastaukset
                         :vastaajien_lukumaara
+                        :keskiarvo
+                        :keskihajonta
                         :jatkovastaukset
                         :vastaustyyppi
                         :eos_vastaus_sallittu]))
@@ -197,13 +199,40 @@
     distinct
     count))
 
+(defn keskihajonta [arvot]
+  (let [lukumaara (count arvot)
+        summa (reduce + arvot)
+        keskiarvo (/ summa lukumaara)
+        hajonnat (map #(Math/pow (- % keskiarvo) 2) arvot)
+        jaettava (reduce + hajonnat)
+        jakaja (- lukumaara 1)]
+    (if (not= jakaja 0)
+      (Math/sqrt (/ jaettava jakaja))
+      0)))
+
+(defn vastausten-keskiarvo-ja-hajonta [kysymys]
+  (let [vastaukset (:vastaukset kysymys)
+        vastauksia (count vastaukset)]
+    (when
+      (and
+        (some #{(:vastaustyyppi kysymys)} '("asteikko" "likert_asteikko"))
+        (not= 0 vastauksia))
+    (let [numerovalinnat (map :numerovalinta vastaukset)
+          summa (reduce + numerovalinnat)
+          keskiarvo (float (/ summa vastauksia))
+          keskihajonta (keskihajonta numerovalinnat)]
+      {:keskiarvo keskiarvo
+       :keskihajonta keskihajonta}))))
+
 (defn kasittele-kysymykset
   [kysymykset]
   (for [kysymys kysymykset
-        :let [vastaajia (vastaajien-lukumaara (:vastaukset kysymys))
+        :let [keskiarvo-ja-hajonta (vastausten-keskiarvo-ja-hajonta kysymys)
+              vastaajia (vastaajien-lukumaara (:vastaukset kysymys))
               kasitelty-kysymys ((kysymyksen-kasittelija kysymys) kysymys (:vastaukset kysymys))]]
     (-> kasitelty-kysymys
       (assoc :vastaajien_lukumaara vastaajia)
+      (merge keskiarvo-ja-hajonta)
       suodata-eos-vastaukset
       valitse-kysymyksen-kentat)))
 
