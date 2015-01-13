@@ -1,21 +1,21 @@
+<h3>{{ 'raportit.taustakysymykset' | i18n }}</h3>
+
 <div class="well taustakysymykset">
+    <div>
+      <select ng-model="raportti.taustakysymysryhmaid" class="form-control">
+        <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">{{ ryhma
+          |lokalisoiKentta:'nimi' }}
+        </option>
+      </select>
+    </div>
+    <br>
+
     <h3 class="pointer" ng-click="taustakysymyksetAvattu = taustakysymyksetAvattu ? !taustakysymyksetAvattu : true">
-        {{ 'raportit.taustakysymykset' | i18n }}
+        {{ 'raportit.taustakysymykset_rajaa' | i18n }}
         <span class="pull-left fa" ng-class="{'fa-caret-down': taustakysymyksetAvattu, 'fa-caret-right': !taustakysymyksetAvattu}"></span>
     </h3>
 
     <div ng-if="taustakysymyksetAvattu">
-        <div class="row">
-            <div class="col-md-4">
-                <br />
-                <select ng-model="raportti.taustakysymysryhmaid" class="form-control">
-                    <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">{{ ryhma
-                        |lokalisoiKentta:'nimi' }}
-                    </option>
-                </select>
-            </div>
-        </div>
-        <br/>
         <div class="row">
             <div class="col-md-12">
                 <div class="kysymykset">
