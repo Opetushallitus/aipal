@@ -142,7 +142,28 @@ button.open-datepicker{
     margin: 0;
     font-weight: 400 !important;
   }
+
+  .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
+  .btn-group>.btn:last-child:not(:first-child),
+  .btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){
+    height: 2em;
+  }
+  .btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){
+    border: 0;
+    border-bottom: 1px solid $primary-color;
+    border-top: 1px solid $primary-color;
+    margin-left: -1px;
+    padding-right: 1px;
+  }
+  .btn-group>.btn:last-child:not(:first-child){
+    background-color: $primary-color;
+    color: #ffffff;
+    width: 2em;
+  }
+
 }
+
+
 
 /* Accordion */
 accordion {
