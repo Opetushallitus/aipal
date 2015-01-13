@@ -164,6 +164,18 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
     };
 
+    $scope.raporttiValidi = function() {
+      if ($scope.raportti.tyyppi === 'vertailu') {
+        return ($scope.raportti.tutkintorakennetaso === 'tutkinto' && $scope.raportti.tutkinnot.length > 0) ||
+          ($scope.raportti.tutkintorakennetaso === 'opintoala' && $scope.raportti.opintoalat.length > 0) ||
+          ($scope.raportti.tutkintorakennetaso === 'koulutusala' && $scope.raportti.koulutusalat.length > 0);
+      }
+      else if ($scope.raportti.tyyppi === 'koulutustoimijat') {
+        return $scope.raportti.koulutustoimijat.length > 0;
+      }
+      return true;
+    };
+
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulokset) {
         $scope.tulokset = tulokset;

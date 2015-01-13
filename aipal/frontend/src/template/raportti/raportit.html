@@ -2,7 +2,7 @@
   <h2 class="visible-print">{{selectedTabName}}</h2>
   <tabset>
     <tab class="hidden-print" heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu',i18n.raportit.vertailuraportti)" disabled="!yllapitaja">
-      <h2 class="hidden-print">{{ 'raportit.vertailtavat_tutkinnot' | i18n }} <ohje tunniste="vertailuraportti"></ohje></h2>
+      <h2 class="hidden-print">{{ 'raportit.vertailtavat_tutkinnot' | i18n }} *<ohje tunniste="vertailuraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
@@ -21,7 +21,7 @@
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}" select="vaihdaTyyppi('koulutustoimijat',i18n.raportit.vertaa_koulutustoimijoita)" ng-show="yllapitaja">
-      <h2 class="hidden-print">{{ 'raportit.vertaa_koulutustoimijoita_otsikko' | i18n }} <ohje tunniste="vertaa_koulutustoimijoita_raportti"></ohje></h2>
+      <h2 class="hidden-print">{{ 'raportit.vertaa_koulutustoimijoita_otsikko' | i18n }} *<ohje tunniste="vertaa_koulutustoimijoita_raportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/koulutustoimijat.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
