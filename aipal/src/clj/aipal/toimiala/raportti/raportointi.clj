@@ -217,12 +217,12 @@
       (and
         (some #{(:vastaustyyppi kysymys)} '("asteikko" "likert_asteikko"))
         (not= 0 vastauksia))
-    (let [numerovalinnat (map :numerovalinta vastaukset)
-          summa (reduce + numerovalinnat)
-          keskiarvo (float (/ summa vastauksia))
-          keskihajonta (keskihajonta numerovalinnat)]
-      {:keskiarvo keskiarvo
-       :keskihajonta keskihajonta}))))
+      (let [numerovalinnat (map :numerovalinta vastaukset)
+            summa (reduce + numerovalinnat)
+            keskiarvo (float (/ summa vastauksia))
+            keskihajonta (keskihajonta numerovalinnat)]
+        {:keskiarvo keskiarvo
+         :keskihajonta keskihajonta}))))
 
 (defn kasittele-kysymykset
   [kysymykset]
