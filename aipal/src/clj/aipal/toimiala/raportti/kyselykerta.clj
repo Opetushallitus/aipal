@@ -16,6 +16,7 @@
   (:require [clj-time.core :as time]
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :refer [kyselykerta]]
+            [aipal.toimiala.raportti.kyselyraportointi :as kyselyraportointi]
             [aipal.toimiala.raportti.raportointi :as raportointi]))
 
 (defn ^:private hae-kyselykerta [kyselykertaid]
@@ -25,151 +26,23 @@
               (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
     (sql/join :inner :koulutustoimija
               (= :koulutustoimija.ytunnus :kysely_organisaatio_view.koulutustoimija))
-    (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+    (sql/fields :kyselykerta.kyselykertaid :kyselykerta.nimi :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     (sql/where {:kyselykertaid kyselykertaid})
 
     sql/exec
     first))
 
-(defn yhdista-ja-jarjesta-tutkinnot
-  [tutkinnot]
-  (->>
-    (let [tutkinnot (group-by #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot)]
-      (for [[tutkinto lukumaarat] tutkinnot]
-        (assoc tutkinto :vastaajien_lkm (reduce + 0 (map :vastaajien_lkm lukumaarat)))))
-    (sort-by :tutkintotunnus)))
-
-(defn koulutustoimijat-hierarkiaksi
-  [vastaajatunnus-tiedot kyselykerta]
-  (let [koulutustoimijat (group-by #(select-keys % [:ytunnus :koulutustoimija_fi :koulutustoimija_sv]) vastaajatunnus-tiedot)]
-    (for [[koulutustoimija tutkinnot] koulutustoimijat]
-      (-> (if (:ytunnus koulutustoimija)
-            (dissoc koulutustoimija :ytunnus)
-            (select-keys kyselykerta [:koulutustoimija_fi :koulutustoimija_sv]))
-        (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
-               :vastaajat_yhteensa (reduce + 0 (map :vastaajien_lkm tutkinnot)))))))
-
-(defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
-  [kyselykerta]
-  (-> (sql/select :vastaajatunnus
-        (sql/join :left :koulutustoimija
-                  (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
-        (sql/join :left :tutkinto
-                  (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-        (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv
-                    [(sql/subselect :vastaaja
-                       (sql/aggregate (count :*) :vastaajien_lkm)
-                       (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajien_lkm]
-                    :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
-        (sql/where {:kyselykertaid (:kyselykertaid kyselykerta)}))
-    (koulutustoimijat-hierarkiaksi kyselykerta)))
-
-(defn hae-vastaajien-maksimimaara [kyselykertaid]
-  (->
-    (sql/select* :vastaajatunnus)
-    (sql/aggregate (sum :vastaajien_lkm) :vastaajien_maksimimaara)
-    (sql/where {:kyselykertaid kyselykertaid})
-    sql/exec
-    first
-    :vastaajien_maksimimaara))
-
-(defn ^:private hae-kysymykset [kyselykertaid]
-  (sql/select :kyselykerta
-    (sql/join :inner :kysely
-             (= :kyselykerta.kyselyid
-                :kysely.kyselyid))
-    (sql/join :inner :kysely_kysymysryhma
-             (= :kysely.kyselyid
-                :kysely_kysymysryhma.kyselyid))
-    ;; otetaan mukaan vain kyselyyn kuuluvat kysymykset
-    (sql/join :inner :kysely_kysymys
-              (= :kysely.kyselyid
-                 :kysely_kysymys.kyselyid))
-    (sql/join :inner :kysymys
-             (and (= :kysely_kysymysryhma.kysymysryhmaid
-                     :kysymys.kysymysryhmaid)
-                  (= :kysely_kysymys.kysymysid
-                     :kysymys.kysymysid)))
-    (sql/join :left :jatkokysymys
-              (= :jatkokysymys.jatkokysymysid
-                 :kysymys.jatkokysymysid))
-    (sql/where {:kyselykertaid kyselykertaid})
-    (sql/order :kysely_kysymysryhma.jarjestys :ASC)
-    (sql/order :kysymys.jarjestys :ASC)
-    (sql/fields :kyselykerta.kyselykertaid
-                :kysymys.kysymysryhmaid
-                :kysymys.kysymysid
-                :kysymys.kysymys_fi
-                :kysymys.kysymys_sv
-                :kysymys.vastaustyyppi
-                :kysymys.eos_vastaus_sallittu
-                :jatkokysymys.jatkokysymysid
-                :jatkokysymys.kylla_kysymys
-                :jatkokysymys.kylla_teksti_fi
-                :jatkokysymys.kylla_teksti_sv
-                :jatkokysymys.kylla_vastaustyyppi
-                :jatkokysymys.ei_kysymys
-                :jatkokysymys.ei_teksti_fi
-                :jatkokysymys.ei_teksti_sv)))
-
-(defn hae-kysymysryhmat [kyselykertaid]
-  (sql/select :kyselykerta
-    (sql/join :inner :kysely
-             (= :kyselykerta.kyselyid
-                :kysely.kyselyid))
-    (sql/join :inner :kysely_kysymysryhma
-             (= :kysely.kyselyid
-                :kysely_kysymysryhma.kyselyid))
-    (sql/join :inner :kysymysryhma
-              (= :kysely_kysymysryhma.kysymysryhmaid
-                 :kysymysryhma.kysymysryhmaid))
-    (sql/where {:kyselykertaid kyselykertaid})
-    (sql/order :kysely_kysymysryhma.jarjestys :ASC)
-    (sql/fields :kysymysryhma.kysymysryhmaid
-                :kysymysryhma.nimi_fi
-                :kysymysryhma.nimi_sv)))
-
-(defn ^:private hae-vastaukset [kyselykertaid]
-  (sql/select :kyselykerta
-    (sql/join :inner :vastaaja
-              (= :kyselykerta.kyselykertaid
-                 :vastaaja.kyselykertaid))
-    (sql/join :inner :vastaus
-              (= :vastaaja.vastaajaid
-                 :vastaus.vastaajaid))
-    (sql/join :left :jatkovastaus
-              (= :jatkovastaus.jatkovastausid
-                 :vastaus.jatkovastausid))
-    (sql/where {:kyselykertaid kyselykertaid})
-    (sql/fields :kyselykerta.kyselykertaid
-                :vastaaja.vastaajaid
-                :vastaus.vastausid
-                :vastaus.kysymysid
-                :vastaus.numerovalinta
-                :vastaus.vaihtoehto
-                :vastaus.vapaateksti
-                :vastaus.en_osaa_sanoa
-                :jatkovastaus.jatkovastausid
-                :jatkovastaus.jatkokysymysid
-                :jatkovastaus.kylla_asteikko
-                :jatkovastaus.ei_vastausteksti)))
-
-(defn ^:private muodosta-raportti-kyselykerrasta [kyselykertaid]
-  (raportointi/muodosta-raportti-vastauksista (hae-kysymysryhmat kyselykertaid)
-                                              (hae-kysymykset kyselykertaid)
-                                              (hae-vastaukset kyselykertaid)))
-
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
-    {:kyselykerta (assoc kyselykerta :koulutustoimijat (hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta))
+    {:kyselykerta (assoc kyselykerta :koulutustoimijat (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta))
      :luontipvm (time/today)
-     :vastaajien_maksimimaara (hae-vastaajien-maksimimaara kyselykertaid)}))
+     :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kyselykerta)}))
 
 (defn muodosta-raportti [kyselykertaid]
   (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]
     (when perustiedot
-      (assoc perustiedot :raportti (muodosta-raportti-kyselykerrasta kyselykertaid)))))
+      (assoc perustiedot :raportti (kyselyraportointi/muodosta-raportti (:kyselykerta perustiedot))))))
 
 (defn laske-vastaajat [kyselykertaid]
   (-> (sql/select :vastaaja
