@@ -33,6 +33,7 @@
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.kysymysryhmaid
+                :kysymys.eos_vastaus_sallittu
                 :kysymys.vastaustyyppi)))
 
 (defn hae-valtakunnalliset-kysymysryhmat []
@@ -92,7 +93,8 @@
                 :vastaus.kysymysid
                 :vastaus.numerovalinta
                 :vastaus.vaihtoehto
-                :vastaus.vapaateksti)
+                :vastaus.vapaateksti
+                :vastaus.en_osaa_sanoa)
     sql/exec))
 
 (defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]
