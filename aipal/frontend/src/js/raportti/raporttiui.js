@@ -96,7 +96,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         haeTaustakysymykset(kysymysryhmaid);
       });
 
-      $scope.raportti.taustakysymysryhmaid = $scope.taustakysymysryhmat[0].kysymysryhmaid;
+      $scope.raportti.taustakysymysryhmaid = $scope.taustakysymysryhmat[0].kysymysryhmaid.toString();
     });
 
     Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
