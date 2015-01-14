@@ -140,7 +140,6 @@ angular.module('aipal', [
       });
     };
 
-    // Set current user and if yllapitaja, impersonoitu
     kayttooikeudet.hae().then(function (data) {
       $scope.kayttooikeudet = data;
 
@@ -149,7 +148,15 @@ angular.module('aipal', [
 
       $scope.currentuser = $scope.kayttooikeudet.impersonoitu_kayttaja ||
                            $scope.kayttooikeudet.etunimi + ' ' + $scope.kayttooikeudet.sukunimi;
-      $scope.koulutustoimija = $filter('lokalisoiKentta')($scope.kayttooikeudet.aktiivinen_rooli, 'koulutustoimija');
+      var koulutustoimija = $filter('lokalisoiKentta')($scope.kayttooikeudet.aktiivinen_rooli, 'koulutustoimija');
+      if ($scope.kayttooikeudet.roolit.length === 1) {
+        $scope.rooli_koulutustoimija = koulutustoimija;
+      } else {
+        var rooli = $scope.kayttooikeudet.aktiivinen_rooli.rooli;
+        i18n.$promise.then(function(){
+          $scope.rooli_koulutustoimija = i18n.hae('roolit.rooli.' + rooli) + ' / ' + koulutustoimija;
+        });
+      }
     });
 
     $scope.unohdaAvoimetKyselyt = function() {

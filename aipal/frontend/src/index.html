@@ -61,8 +61,7 @@
         <ul id="current-user" ng-class="{impersonoitu : impersonoitu}">
           <li class="avaa-valikko-e2e" ng-class="{avattu: valikkoAvattu}" ng-click="valikkoAvattu = !valikkoAvattu">
               <a href="" class="username">
-                {{currentuser}}<br>{{koulutustoimija}}
-                <span ng-if="kayttooikeudet.roolit.length > 1">{{('roolit.rooli.' + kayttooikeudet.aktiivinen_rooli.rooli) | i18n}} ({{kayttooikeudet.aktiivinen_rooli | lokalisoiKentta:'koulutustoimija'}})</span>
+                {{currentuser}}<br>{{rooli_koulutustoimija}}
               </a>
                   <ul ng-if="yllapitaja || impersonoitu || kayttooikeudet.roolit.length > 1" ng-mouseover="$parent.valikkoAvattu = false">
                       <li ng-if="!impersonoitu && yllapitaja"><a href="" ng-click="valitse()">{{i18n.impersonointi.vaihda_avustettavaksi_kayttajaksi}}</a></li>

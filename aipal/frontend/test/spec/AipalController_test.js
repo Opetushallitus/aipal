@@ -28,7 +28,8 @@ describe('AipalController', function() {
   beforeEach(module('aipal'));
 
   beforeEach(module(function($provide){
-    $provide.value('i18n', {hae: function(){return '';}});
+    $provide.value('i18n', {$promise: {then: function(f){f();}},
+                            hae: function(x){return 'i18n(' + x + ')';}});
   }));
 
   beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_) {
@@ -53,7 +54,8 @@ describe('AipalController', function() {
     .whenGET(/api\/kayttaja.*/)
     .respond(200, {etunimi: 'Aku',
                    sukunimi: 'Ankka',
-                   impersonoitu_kayttaja: ''});
+                   impersonoitu_kayttaja: '',
+                   roolit: [{}]});
     alustaController();
     $httpBackend.flush();
     expect($scope.currentuser).toEqual('Aku Ankka');
@@ -64,7 +66,8 @@ describe('AipalController', function() {
     .whenGET(/api\/kayttaja.*/)
     .respond(200, {etunimi: 'Aku',
                    sukunimi: 'Ankka',
-                   impersonoitu_kayttaja: 'Mikki Hiiri'});
+                   impersonoitu_kayttaja: 'Mikki Hiiri',
+                   roolit: [{}]});
     alustaController();
     $httpBackend.flush();
     expect($scope.currentuser).toEqual('Mikki Hiiri');
@@ -74,20 +77,34 @@ describe('AipalController', function() {
     $httpBackend
     .whenGET(/api\/kayttaja.*/)
     .respond(200, {impersonoitu_kayttaja: '',
-                   aktiivinen_rooli: {koulutustoimija_fi: 'KT fi'}});
+                   aktiivinen_rooli: {koulutustoimija_fi: 'KT fi'},
+                   roolit: [{}]});
     alustaController();
     $httpBackend.flush();
-    expect($scope.koulutustoimija).toEqual('KT fi');
+    expect($scope.rooli_koulutustoimija).toEqual('KT fi');
   });
 
   it('näyttää aktiivisen roolin koulutustoimijan ruotsinkielisen nimen', function(){
     $httpBackend
     .whenGET(/api\/kayttaja.*/)
     .respond(200, {impersonoitu_kayttaja: '',
-                   aktiivinen_rooli: {koulutustoimija_sv: 'KT sv'}});
+                   aktiivinen_rooli: {koulutustoimija_sv: 'KT sv'},
+                   roolit: [{}]});
     alustaController();
     $httpBackend.flush();
-    expect($scope.koulutustoimija).toEqual('KT sv');
+    expect($scope.rooli_koulutustoimija).toEqual('KT sv');
+  });
+
+  it('jos käyttäjällä on useampi rooli, näyttää aktiivisen roolin nimen', function(){
+    $httpBackend
+    .whenGET(/api\/kayttaja.*/)
+    .respond(200, {impersonoitu_kayttaja: '',
+                   aktiivinen_rooli: {rooli: 'OPL-VASTUUKAYTTAJA',
+                                      koulutustoimija_fi: 'KT fi'},
+                   roolit: [{}, {}]});
+    alustaController();
+    $httpBackend.flush();
+    expect($scope.rooli_koulutustoimija).toEqual('i18n(roolit.rooli.OPL-VASTUUKAYTTAJA) / KT fi');
   });
 
 });
