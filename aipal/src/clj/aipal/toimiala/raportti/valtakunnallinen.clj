@@ -36,10 +36,13 @@
                 :kysymys.eos_vastaus_sallittu
                 :kysymys.vastaustyyppi)))
 
-(defn hae-valtakunnalliset-kysymysryhmat []
+(defn hae-valtakunnalliset-kysymysryhmat [taustakysymysryhmaid]
   (sql/select
     :kysymysryhma
-    (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/where {:kysymysryhma.valtakunnallinen true
+                :kysymysryhma.tila (sql/subselect :kysymysryhma
+                                     (sql/fields :tila)
+                                     (sql/where {:kysymysryhmaid taustakysymysryhmaid}))})
     (sql/order :kysymysryhma.kysymysryhmaid :ASC)
     (sql/fields :kysymysryhmaid
                 :nimi_fi
@@ -160,7 +163,7 @@
         opintoalatunnus (when (= "opintoala" (:tutkintorakennetaso parametrit)) (first (:opintoalat parametrit)))
         koulutusalatunnus (when (= "koulutusala" (:tutkintorakennetaso parametrit)) (first (:koulutusalat parametrit)))
         koulutustoimijat (not-empty (:koulutustoimijat parametrit))
-        kysymysryhmat (hae-valtakunnalliset-kysymysryhmat)
+        kysymysryhmat (hae-valtakunnalliset-kysymysryhmat (Integer/parseInt (:taustakysymysryhmaid parametrit)))
         kysymykset (hae-valtakunnalliset-kysymykset)
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
     (merge
