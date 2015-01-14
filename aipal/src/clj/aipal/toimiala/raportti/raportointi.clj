@@ -250,17 +250,19 @@
       (assoc :vastaajien_lukumaara vastaajia)
       (update-in [:kysymykset] kasittele-kysymykset))))
 
-(defn liita-kysymyksiin-vastaukset [kysymykset vastaukset]
-  (let [kysymysten-vastaukset (group-by :kysymysid vastaukset)]
-    (for [kysymys kysymykset
-          :let [vastaukset (get kysymysten-vastaukset (:kysymysid kysymys))]]
-      (assoc kysymys :vastaukset vastaukset))))
+(defn liita-kysymyksiin-vastaukset [kysymykset kysymysten-vastaukset]
+  (for [kysymys kysymykset
+        :let [vastaukset (get kysymysten-vastaukset (:kysymysid kysymys))]]
+    (assoc kysymys :vastaukset vastaukset)))
 
 (defn ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain [kysymykset vastaukset kysymysryhmat]
   (let [kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
     (for [kysymysryhma kysymysryhmat
-          :let [kysymykset (get kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))]]
-      (assoc kysymysryhma :kysymykset (liita-kysymyksiin-vastaukset kysymykset vastaukset)))))
+          :let [kysymykset (get kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))
+                kysymysten-vastaukset (group-by :kysymysid vastaukset)
+                kysymykset-ja-vastaukset (liita-kysymyksiin-vastaukset kysymykset kysymysten-vastaukset)]
+          :when (seq (mapcat :vastaukset kysymykset-ja-vastaukset))]
+      (assoc kysymysryhma :kysymykset kysymykset-ja-vastaukset))))
 
 (defn muodosta-raportti-vastauksista
   [kysymysryhmat kysymykset vastaukset]
