@@ -59,10 +59,13 @@
 
 (defn hae-vastaajien-maksimimaara [parametrit]
   (->
-    (sql/select* :vastaajatunnus)
-    (sql/aggregate (sum :vastaajien_lkm) :vastaajien_maksimimaara)
+    (sql/select* :kyselykerta)
+    (sql/join :inner :vastaajatunnus
+              (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
+    (sql/aggregate (sum :vastaajatunnus.vastaajien_lkm) :vastaajien_maksimimaara)
     (cond->
-      (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)}))
+      (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
+      (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
     sql/exec
     first
     :vastaajien_maksimimaara))
@@ -122,7 +125,8 @@
       (:kyselykertaid parametrit) (->
                                     (sql/join :inner :kyselykerta
                                               (= :kyselykerta.kyselyid :kysely.kyselyid))
-                                    (sql/where {:kyselykerta.kyselykertaid (:kyselykertaid parametrit)})))
+                                    (sql/where {:kyselykerta.kyselykertaid (:kyselykertaid parametrit)}))
+      (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
     (sql/order :kysely_kysymysryhma.jarjestys :ASC)
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
@@ -142,7 +146,8 @@
               (= :jatkovastaus.jatkovastausid
                  :vastaus.jatkovastausid))
     (cond->
-      (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)}))
+      (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
+      (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
     (sql/fields :vastaaja.vastaajaid
                 :vastaus.vastausid
                 :vastaus.kysymysid
