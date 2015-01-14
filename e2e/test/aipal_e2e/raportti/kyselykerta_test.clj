@@ -33,7 +33,7 @@
 
 (defn kyselykerran-tietojen-kentta [kentta]
   (sisemman-elementin-kentan-teksti {:css ".raportti-kyselykerta-tiedot"}
-                             (str "tulos.kyselykerta." kentta)))
+                             (str "tulos.yhteenveto." kentta)))
 
 (defn raportin-luontipvm []
   (sisemman-elementin-kentan-teksti {:css ".raportti-kyselykerta-tiedot"}
@@ -214,8 +214,7 @@
         (avaa (kyselykertaraportti-sivu 1))
         (testing
           "kyselykerran tiedot"
-          (is (= (kyselykerran-tietojen-kentta "nimi") "Kyselykerta 1"))
-          (is (= (kyselykerran-tietojen-kentta "kyselyid") "1"))
+          (is (= (kyselykerran-tietojen-kentta "kyselykerta") "Kyselykerta 1"))
           (is (= (kyselykerran-tietojen-kentta "voimassa_alkupvm") "28.05.2014 - 29.05.2014")))
         (testing
           "raportin luontipäivä"

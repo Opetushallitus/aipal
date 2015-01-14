@@ -22,11 +22,14 @@
 (defn ^:private hae-kyselykerta [kyselykertaid]
   (->
     (sql/select* kyselykerta)
+    (sql/join :inner :kysely
+              (= :kysely.kyselyid :kyselykerta.kyselyid))
     (sql/join :inner :kysely_organisaatio_view
               (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
     (sql/join :inner :koulutustoimija
               (= :koulutustoimija.ytunnus :kysely_organisaatio_view.koulutustoimija))
-    (sql/fields :kyselykerta.kyselykertaid :kyselykerta.nimi :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+    (sql/fields :kyselykerta.kyselykertaid [:kyselykerta.nimi :kyselykerta] :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+                [:kysely.nimi_fi :kysely_fi] [:kysely.nimi_sv :kysely_sv]
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     (sql/where {:kyselykertaid kyselykertaid})
 
@@ -35,14 +38,14 @@
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
-    {:kyselykerta (assoc kyselykerta :koulutustoimijat (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta))
+    {:yhteenveto (assoc kyselykerta :koulutustoimijat (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta))
      :luontipvm (time/today)
      :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kyselykerta)}))
 
 (defn muodosta-raportti [kyselykertaid]
   (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]
     (when perustiedot
-      (assoc perustiedot :raportti (kyselyraportointi/muodosta-raportti (:kyselykerta perustiedot))))))
+      (assoc perustiedot :raportti (kyselyraportointi/muodosta-raportti (:yhteenveto perustiedot))))))
 
 (defn laske-vastaajat [kyselykertaid]
   (-> (sql/select :vastaaja

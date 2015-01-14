@@ -26,7 +26,7 @@
               (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
     (sql/join :inner :koulutustoimija
               (= :koulutustoimija.ytunnus :kysely_organisaatio_view.koulutustoimija))
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
+    (sql/fields :kysely.kyselyid [:kysely.nimi_fi :kysely_fi] [:kysely.nimi_sv :kysely_sv] :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     (sql/where {:kyselyid kyselyid})))
 
@@ -34,7 +34,7 @@
   (when-let [kysely (hae-kysely kyselyid)]
     (let [koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kysely)
           vastaajien-lkm (reduce + (map :vastaajat_yhteensa koulutustoimijatiedot))]
-      {:kysely (assoc kysely :koulutustoimijat koulutustoimijatiedot)
+      {:yhteenveto (assoc kysely :koulutustoimijat koulutustoimijatiedot)
        :luontipvm (time/today)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kysely)
        :vastaajien-lkm vastaajien-lkm

@@ -7,10 +7,6 @@
   <button ng-click="naytaRaportti(raportti)" ng-repeat="raportti in tulokset">{{ raportti | lokalisoiKentta:'nimi' }}</button>
 </div>
 
-<div class="visible-print" ng-if="tulos">
-  <h2 ng-if="tulos.kyselykerta">{{tulos.kyselykerta.nimi}}</h2>
-</div>
-
 <div ng-show="tulos">
   <h1>{{ 'kysely.raportti_otsikko' | i18n }}</h1>
   <div class="hidden-print clearfix">
@@ -24,17 +20,17 @@
 </div>
 
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
-  <div ng-if="tulos.kyselykerta">
+  <div ng-if="tulos.yhteenveto">
     <div>
-      {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.kyselykerta.nimi}}</span>
+      {{'yleiset.kysely' | i18n }}: <span>{{tulos.yhteenveto | lokalisoiKentta:'kysely'}}</span>
+    </div>
+    <div ng-if="tulos.yhteenveto.kyselykerta">
+      {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.yhteenveto.kyselykerta}}</span>
     </div>
     <div>
-      {{'yleiset.kysely' | i18n }}: <span>{{tulos.kyselykerta.kyselyid}}</span>
+      {{'yleiset.voimassa' | i18n }}: <span>{{tulos.yhteenveto.voimassa_alkupvm | voimassaoloAika: tulos.yhteenveto.voimassa_loppupvm}}</span>
     </div>
-    <div>
-      {{'yleiset.voimassa' | i18n }}: <span>{{tulos.kyselykerta.voimassa_alkupvm | voimassaoloAika: tulos.kyselykerta.voimassa_loppupvm}}</span>
-    </div>
-    <div ng-repeat="koulutustoimija in tulos.kyselykerta.koulutustoimijat">
+    <div ng-repeat="koulutustoimija in tulos.yhteenveto.koulutustoimijat">
       <hr>
       <div>
         {{'raportti.koulutuksen_jarjestaja' | i18n}}: <span>{{koulutustoimija | lokalisoiKentta:'koulutustoimija'}}</span>
