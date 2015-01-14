@@ -95,8 +95,8 @@ angular.module('aipal', [
     $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
-  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', 
-              function ($location, $modal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs) {
+  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', '$filter',
+              function ($location, $modal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs, $filter) {
     $scope.i18n = i18n;
     $scope.breadcrumbs = breadcrumbs;
     $scope.baseUrl = _.has($window, 'ophBaseUrl') ? $window.ophBaseUrl : '';
@@ -146,11 +146,10 @@ angular.module('aipal', [
 
       $scope.yllapitaja = kayttooikeudet.isYllapitaja();
       $scope.impersonoitu = kayttooikeudet.isImpersonoitu();
-      $scope.currentuser = $scope.kayttooikeudet.etunimi + ' ' + $scope.kayttooikeudet.sukunimi;
 
-      if ($scope.impersonoitu) {
-        $scope.currentuser = $scope.kayttooikeudet.impersonoitu_kayttaja;
-      }
+      $scope.currentuser = $scope.kayttooikeudet.impersonoitu_kayttaja ||
+                           $scope.kayttooikeudet.etunimi + ' ' + $scope.kayttooikeudet.sukunimi;
+      $scope.koulutustoimija = $filter('lokalisoiKentta')($scope.kayttooikeudet.aktiivinen_rooli, 'koulutustoimija');
     });
 
     $scope.unohdaAvoimetKyselyt = function() {

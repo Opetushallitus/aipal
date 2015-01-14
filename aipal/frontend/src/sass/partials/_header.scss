@@ -177,14 +177,13 @@ header {
     background-color: red;
   }
 
-  /* Jos pitkä käyttäjänimi, niin pakotetaan rivittymään */
-  a.username.long {
+  a.username {
+    text-align: right;
     text-transform: none;
     font-size: 1em;
-    padding: 0;
+    padding: 0 1em 0 0;
     margin: 0;
     line-height: 1em;
-    width: 25em;
     font-weight: 100;
   }
 

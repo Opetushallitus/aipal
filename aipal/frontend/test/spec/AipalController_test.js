@@ -70,4 +70,24 @@ describe('AipalController', function() {
     expect($scope.currentuser).toEqual('Mikki Hiiri');
   });
 
+  it('näyttää aktiivisen roolin koulutustoimijan suomenkielisen nimen', function(){
+    $httpBackend
+    .whenGET(/api\/kayttaja.*/)
+    .respond(200, {impersonoitu_kayttaja: '',
+                   aktiivinen_rooli: {koulutustoimija_fi: 'KT fi'}});
+    alustaController();
+    $httpBackend.flush();
+    expect($scope.koulutustoimija).toEqual('KT fi');
+  });
+
+  it('näyttää aktiivisen roolin koulutustoimijan ruotsinkielisen nimen', function(){
+    $httpBackend
+    .whenGET(/api\/kayttaja.*/)
+    .respond(200, {impersonoitu_kayttaja: '',
+                   aktiivinen_rooli: {koulutustoimija_sv: 'KT sv'}});
+    alustaController();
+    $httpBackend.flush();
+    expect($scope.koulutustoimija).toEqual('KT sv');
+  });
+
 });
