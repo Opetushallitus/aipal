@@ -46,7 +46,6 @@ describe('AipalController', function() {
 
   function alustaController() {
     $controller('AipalController', {$scope: $scope});
-    $scope.form = { $setPristine: function() {} };
   }
 
   it('ilman impersonointia näyttää käyttäjän oman nimen', function(){
