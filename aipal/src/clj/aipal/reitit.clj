@@ -16,6 +16,7 @@
             aipal.rest-api.ohje
             aipal.rest-api.oppilaitos
             aipal.rest-api.rahoitusmuoto
+            aipal.rest-api.raportti.kysely
             aipal.rest-api.raportti.kyselykerta
             aipal.rest-api.raportti.valtakunnallinen
             aipal.rest_api.js-log
@@ -65,6 +66,7 @@
     (c/context "/api/ohje" [] (wrap-tarkasta-csrf-token aipal.rest-api.ohje/reitit))
     (c/context "/api/oppilaitos" [] (wrap-tarkasta-csrf-token aipal.rest-api.oppilaitos/reitit))
     (c/context "/api/rahoitusmuoto" [] (wrap-tarkasta-csrf-token aipal.rest-api.rahoitusmuoto/reitit))
+    (c/context "/api/raportti/kysely" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.kysely/reitit asetukset)))
     (c/context "/api/raportti/kyselykerta" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.kyselykerta/reitit asetukset)))
     (c/context "/api/raportti/valtakunnallinen" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.valtakunnallinen/reitit asetukset)))
     (c/context "/api/kysely" [] (wrap-tarkasta-csrf-token aipal.rest-api.kysely/reitit))

@@ -223,6 +223,7 @@
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
     :kysely-tilamuutos kysely-tilamuutos?
+    :kysely-raportti kysely-luku?
     :kyselykerta-luku kyselykerta-luku?
     :kyselykerta-raportti kyselykerta-luku?
     :kyselykerta-luonti kyselykerta-luonti?
