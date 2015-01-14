@@ -30,13 +30,12 @@
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     (sql/where {:kyselyid kyselyid})))
 
-(defn muodosta-raportti-perustiedot [kyselyid]
-  (when-let [kysely (hae-kysely kyselyid)]
-    {:kysely (assoc kysely :koulutustoimijat (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kysely))
-     :luontipvm (time/today)
-     :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kysely)}))
-
 (defn muodosta-raportti [kyselyid]
-  (let [perustiedot (muodosta-raportti-perustiedot kyselyid)]
-    (when perustiedot
-      (assoc perustiedot :raportti (kyselyraportointi/muodosta-raportti (:kysely perustiedot))))))
+  (when-let [kysely (hae-kysely kyselyid)]
+    (let [koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kysely)
+          vastaajien-lkm (reduce + (map :vastaajat_yhteensa koulutustoimijatiedot))]
+      {:kysely (assoc kysely :koulutustoimijat koulutustoimijatiedot)
+       :luontipvm (time/today)
+       :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kysely)
+       :vastaajien-lkm vastaajien-lkm
+       :raportti (kyselyraportointi/muodosta-raportti kysely)})))
