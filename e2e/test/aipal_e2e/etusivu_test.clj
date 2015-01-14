@@ -29,7 +29,12 @@
   (with-webdriver
     (testing
       "etusivu"
-      (avaa etusivu)
-      (testing
-        "sisältää järjestelmän nimen"
-        (is (true? (.contains (sivun-sisalto) "AIPAL")))))))
+      (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
+                  :rooli_organisaatio [{:organisaatio "0000000-0"
+                                        :rooli "OPL-KAYTTAJA"
+                                        :kayttaja "OID.AIPAL-E2E"
+                                        :voimassa true}] }
+        (avaa etusivu)
+        (testing
+          "sisältää järjestelmän nimen"
+          (is (true? (.contains (sivun-sisalto) "AIPAL"))))))))
