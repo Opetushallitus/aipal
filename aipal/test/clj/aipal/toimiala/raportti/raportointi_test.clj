@@ -207,3 +207,6 @@
                          :kysymysryhmaid 102
                          :vastaukset [{:vastausid 12, :kysymysid 2}]}]
            :kysymysryhmaid 102}])))
+
+(deftest keskihajonta-test
+  (is (= (int (keskihajonta [1000 2000 3000 4000 5000])) 1581)))
