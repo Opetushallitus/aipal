@@ -211,14 +211,13 @@
       0)))
 
 (defn vastausten-keskiarvo-ja-hajonta [kysymys]
-  (let [vastaukset (:vastaukset kysymys)
-        vastauksia (count vastaukset)]
+  (let [numerovalinnat (keep :numerovalinta (:vastaukset kysymys))
+        vastauksia (count numerovalinnat)]
     (when
       (and
         (some #{(:vastaustyyppi kysymys)} '("asteikko" "likert_asteikko"))
         (not= 0 vastauksia))
-      (let [numerovalinnat (map :numerovalinta vastaukset)
-            summa (reduce + numerovalinnat)
+      (let [summa (reduce + numerovalinnat)
             keskiarvo (float (/ summa vastauksia))
             keskihajonta (keskihajonta numerovalinnat)]
         {:keskiarvo keskiarvo
