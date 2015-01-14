@@ -168,6 +168,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         }
       };
 
+      $scope.validoi = function() {
+        var kysymysryhmat = _.reject($scope.kysely.kysymysryhmat, 'poistetaan_kyselysta');
+        var taustakysymysryhma = _.find(kysymysryhmat, 'taustakysymykset') !== undefined;
+        var valtakunnallisia = _.find(kysymysryhmat, 'valtakunnallinen') !== undefined;
+        return !valtakunnallisia || taustakysymysryhma;
+      };
+
       $scope.peruuta = function() {
         $location.path('/kyselyt');
       };
