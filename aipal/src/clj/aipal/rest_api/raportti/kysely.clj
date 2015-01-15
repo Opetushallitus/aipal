@@ -23,7 +23,7 @@
     (db/transaction
       (let [kyselyid (Integer/parseInt kyselyid)
             vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            raportti (muodosta-raportti kyselyid)]
+            raportti (muodosta-raportti kyselyid nil)]
         (json-response
           (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti

@@ -40,6 +40,7 @@
   (->
     (sql/select* :vastaajatunnus)
     (cond->
+      (:tutkinnot parametrit) (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]})
       (:kyselyid parametrit) (->
                                (sql/join :inner :kyselykerta
                                          (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
@@ -64,6 +65,11 @@
               (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
     (sql/aggregate (sum :vastaajatunnus.vastaajien_lkm) :vastaajien_maksimimaara)
     (cond->
+      (:tutkinnot parametrit) (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]})
+      (:alkupvm parametrit) (sql/where (or (nil? :vastaajatunnus.loppupvm)
+                                           (>= :vastaajatunnus.loppupvm (:alkupvm parametrit))))
+      (:loppupvm parametrit) (sql/where (or (nil? :vastaajatunnus.alkupvm)
+                                            (<= :vastaajatunnus.alkupvm (:loppupvm parametrit))))
       (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
       (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
     sql/exec
@@ -146,6 +152,12 @@
               (= :jatkovastaus.jatkovastausid
                  :vastaus.jatkovastausid))
     (cond->
+      (:tutkinnot parametrit) (->
+                                (sql/join :inner :vastaajatunnus
+                                          (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
+                                (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]}))
+      (:alkupvm parametrit) (sql/where (>= :vastaus.vastausaika (:alkupvm parametrit)))
+      (:loppupvm parametrit) (sql/where (<= :vastaus.vastausaika (:loppupvm parametrit)))
       (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
       (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
     (sql/fields :vastaaja.vastaajaid
