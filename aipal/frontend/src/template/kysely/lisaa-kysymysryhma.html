@@ -7,6 +7,7 @@
   <p>{{i18n.kysymysryhma.valinta_ohjeistus}}</p>
 
   <select class="form-control e2e-valittavat-kysymysryhmat" ng-model="kysymysryhmaid" ng-show="kysymysryhmat.length > 0">
+    <option></option>
     <optgroup label="{{ 'kysymysryhma.taustakysymykset' | i18n }}">
       <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: true}" value="{{ryhma.kysymysryhmaid}}">{{ryhma | lokalisoiKentta:'nimi' }}</option>
     </optgroup>
