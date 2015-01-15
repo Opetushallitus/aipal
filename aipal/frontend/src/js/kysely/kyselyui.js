@@ -97,6 +97,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     return {
       lisaaUniikitKysymysryhmatKyselyyn: function(kysely, uudet) {
         _.assign(kysely, { kysymysryhmat: _(kysely.kysymysryhmat.concat(uudet)).uniq('kysymysryhmaid').value() });
+        kysely.kysymysryhmat = _.sortBy(kysely.kysymysryhmat, function(kysymysryhma, index) {
+          return (kysymysryhma.taustakysymykset ? 0 : 100) + (kysymysryhma.valtakunnallinen ? 0 : 1000) + index;
+        });
       },
       laskeLisakysymykset: function(kysely) {
         return _(kysely.kysymysryhmat).reject('valtakunnallinen').pluck('kysymykset').flatten().reject('poistettu').reduce(function(sum) { return sum + 1; }, 0);
@@ -166,6 +169,16 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
             ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
           });
         }
+      };
+
+      $scope.validoiKysymysryhmat = function() {
+        if ($scope.kysely === undefined) {
+          return true;
+        }
+        var kysymysryhmat = _.reject($scope.kysely.kysymysryhmat, 'poistetaan_kyselysta');
+        var taustakysymysryhma = _.find(kysymysryhmat, 'taustakysymykset') !== undefined;
+        var valtakunnallisia = _.find(kysymysryhmat, 'valtakunnallinen') !== undefined;
+        return !valtakunnallisia || taustakysymysryhma;
       };
 
       $scope.peruuta = function() {
