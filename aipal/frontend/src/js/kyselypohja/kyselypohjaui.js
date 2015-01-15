@@ -99,7 +99,14 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     };
 
     Kyselypohja.haeKaikki().success(function(kyselypohjat) {
-      $scope.kyselypohjat = kyselypohjat;
+      // angular-tablesort haluaa lajitella rivioliosta löytyvän (filtteröidyn)
+      // attribuutin perusteella, mutta lokalisoitujen kenttien kanssa täytyy
+      // antaa filtterille koko rivi. Lisätään riviolioon viittaus itseensä,
+      // jolloin voidaan kertoa angular-tablesortille attribuutti, josta koko
+      // rivi löytyy.
+      $scope.kyselypohjat = _.map(kyselypohjat, function(k){
+        return _.assign(k, {self: k});
+      });
     });
   }])
 

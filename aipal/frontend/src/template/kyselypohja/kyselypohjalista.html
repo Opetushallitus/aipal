@@ -1,13 +1,13 @@
-<table class="table table-striped kyselypohjat-taulukko">
+<table class="table table-striped kyselypohjat-taulukko" ts-wrapper>
   <thead>
   <tr>
-    <th>{{i18n.yleiset.nimi_otsikko}}</th>
-    <th>{{i18n.yleiset.valtakunnallinen}}</th>
+    <th ts-criteria="self|lokalisoiKentta:'nimi'">{{i18n.yleiset.nimi_otsikko}}</th>
+    <th ts-criteria="valtakunnallinen">{{i18n.yleiset.valtakunnallinen}}</th>
     <th></th>
   </tr>
   </thead>
   <tbody>
-  <tr ng-repeat="kyselypohja in kyselypohjat |filter:{tila: tila} |filter:hakuehto.teksti">
+  <tr ng-repeat="kyselypohja in kyselypohjat |filter:{tila: tila} |filter:hakuehto.teksti" ts-repeat>
     <td>
       {{kyselypohja |lokalisoiKentta:'nimi'}}
     </td>
