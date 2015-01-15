@@ -97,6 +97,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     return {
       lisaaUniikitKysymysryhmatKyselyyn: function(kysely, uudet) {
         _.assign(kysely, { kysymysryhmat: _(kysely.kysymysryhmat.concat(uudet)).uniq('kysymysryhmaid').value() });
+        kysely.kysymysryhmat = _.sortBy(kysely.kysymysryhmat, function(kysymysryhma, index) {
+          return (kysymysryhma.taustakysymykset ? 0 : 100) + (kysymysryhma.valtakunnallinen ? 0 : 1000) + index;
+        });
       },
       laskeLisakysymykset: function(kysely) {
         return _(kysely.kysymysryhmat).reject('valtakunnallinen').pluck('kysymykset').flatten().reject('poistettu').reduce(function(sum) { return sum + 1; }, 0);

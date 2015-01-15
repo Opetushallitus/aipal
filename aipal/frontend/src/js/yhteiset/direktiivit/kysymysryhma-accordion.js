@@ -29,6 +29,21 @@ angular.module('yhteiset.direktiivit.kysymysryhma-accordion', [])
         $scope.poistaTaiPalautaKysymysryhma = function(kysymysryhma) {
           kysymysryhma.poistetaan_kyselysta = !kysymysryhma.poistetaan_kyselysta;
         };
+
+        var jarjesta = function() {
+          if ($scope.kysymysryhmat !== undefined) {
+            $scope.kysymysryhmat = _.sortBy($scope.kysymysryhmat, function(kysymysryhma, index) {
+              return (kysymysryhma.taustakysymykset ? 0 : 100) + (kysymysryhma.valtakunnallinen ? 0 : 1000) + index;
+            });
+          }
+        };
+        jarjesta();
+
+        $scope.sortableOptions = {
+          stop: function() {
+            jarjesta();
+          }
+        };
       }]
     };
   }])

@@ -113,6 +113,9 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         Kysymysryhma.hae(kysymysryhmaid)
           .success(function(kysymysryhma) {
             _.assign($scope.kyselypohja, { kysymysryhmat: _($scope.kyselypohja.kysymysryhmat.concat(kysymysryhma)).uniq('kysymysryhmaid').value() });
+            $scope.kyselypohja.kysymysryhmat = _.sortBy($scope.kyselypohja.kysymysryhmat, function(kysymysryhma, index) {
+              return (kysymysryhma.taustakysymykset ? 0 : 100) + (kysymysryhma.valtakunnallinen ? 0 : 1000) + index;
+            });
 
             $scope.kyselypohjaForm.$setDirty();
           });
