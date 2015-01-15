@@ -74,14 +74,14 @@
     <div ng-repeat="rahoitusmuodot in rahoitusmuodotmap" ng-show="(tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}).length">
         <h3>{{rahoitusmuodot.rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</h3>
         <div class="well">
-        <table class="table table-striped vastaajatunnus-taulukko">
+        <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper>
             <thead>
             <tr>
-                <th>{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
-                <th>{{'kyselykerta.vastausaika' | i18n}}</th>
-                <th>{{'i18n.vastaajatunnus.jarjestaja'|i18n}}</th>
-                <th>{{'i18n.vastaajatunnus.tutkinto'|i18n}}</th>
-                <th>{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
+                <th ts-criteria="tunnus">{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
+                <th ts-criteria="voimassa_alkupvm">{{'kyselykerta.vastausaika' | i18n}}</th>
+                <th ts-criteria="(valmistavan_koulutuksen_jarjestaja|lokalisoiKentta:'nimi')+(valmistavan_koulutuksen_oppilaitos|lokalisoiKentta:'nimi')">{{'i18n.vastaajatunnus.jarjestaja'|i18n}}</th>
+                <th ts-criteria="tutkinto|lokalisoiKentta:'nimi'">{{'i18n.vastaajatunnus.tutkinto'|i18n}}</th>
+                <th ts-criteria="vastausten_lkm">{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
                 <th></th>
             </tr>
             </thead>
@@ -107,7 +107,8 @@
             </tfoot>
             <tbody>
                 <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
-                    ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}">
+                    ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}"
+                    ts-repeat>
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
                     <td>
