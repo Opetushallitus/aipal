@@ -19,11 +19,11 @@
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]))
 
 (defn reitit [asetukset]
-  (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid" [kyselyid]
+  (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]
     (db/transaction
       (let [kyselyid (Integer/parseInt kyselyid)
             vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            raportti (muodosta-raportti kyselyid nil)]
+            raportti (muodosta-raportti kyselyid parametrit)]
         (json-response
           (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti

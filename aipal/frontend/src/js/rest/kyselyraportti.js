@@ -17,8 +17,8 @@
 angular.module('rest.kyselyraportti', [])
   .factory('Kyselyraportti', ['$http', function($http) {
     return {
-      hae: function(id) {
-        return $http.get('api/raportti/kysely/' + id, {params: {nocache: Date.now()}});
+      hae: function(id, parametrit) {
+        return $http.post('api/raportti/kysely/' + id, parametrit);
       }
     };
   }]);
