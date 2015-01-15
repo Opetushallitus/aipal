@@ -135,6 +135,12 @@
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
     (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
 
+(defn rajaa-vastaajatunnukset-ajalle [query alkupvm loppupvm]
+  (-> query
+    (sql/where (and
+                 (or (nil? loppupvm) {:vastaajatunnus.voimassa_alkupvm nil} (<= :vastaajatunnus.voimassa_alkupvm loppupvm))
+                 (or (nil? alkupvm) {:vastaajatunnus.voimassa_loppupvm nil} (<= alkupvm :vastaajatunnus.voimassa_loppupvm))))))
+
 (defn rajaa-kyselykerrat-ajalle [query alkupvm loppupvm]
   (-> query
     (sql/where (and
@@ -153,6 +159,7 @@
       koulutusalatunnus (rajaa-vastaajatunnukset-koulutusalalle koulutusalatunnus)
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
     (sql/where {:kysymysryhma.valtakunnallinen true})
+    (rajaa-vastaajatunnukset-ajalle alkupvm loppupvm)
     (rajaa-kyselykerrat-ajalle alkupvm loppupvm)
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
