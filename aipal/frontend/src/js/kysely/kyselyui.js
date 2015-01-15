@@ -169,6 +169,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.validoiKysymysryhmat = function() {
+        if ($scope.kysely === undefined) {
+          return true;
+        }
         var kysymysryhmat = _.reject($scope.kysely.kysymysryhmat, 'poistetaan_kyselysta');
         var taustakysymysryhma = _.find(kysymysryhmat, 'taustakysymykset') !== undefined;
         var valtakunnallisia = _.find(kysymysryhmat, 'valtakunnallinen') !== undefined;
