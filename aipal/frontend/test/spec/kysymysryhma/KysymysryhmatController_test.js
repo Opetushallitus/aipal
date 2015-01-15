@@ -35,7 +35,7 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmatController', function(){
     $httpBackend.whenGET(/api\/kysymysryhma\?nocache=.*/).respond([{nimi_fi: 'foo'}]);
     alustaController();
     $httpBackend.flush();
-    expect($scope.kysymysryhmat).toEqual([{nimi_fi: 'foo'}]);
+    expect(_.map($scope.kysymysryhmat, 'nimi_fi')).toEqual(['foo']);
   });
 
   it('kertoo templatelle kun lataus on kesken', function(){
