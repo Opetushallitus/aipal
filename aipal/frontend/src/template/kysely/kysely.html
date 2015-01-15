@@ -68,11 +68,15 @@
 
     <kysymysryhma-accordion kysymysryhmat="kysely.kysymysryhmat" kysymysten-poisto="true"></kysymysryhma-accordion>
 
+    <div class="alert alert-warning" ng-if="!validoiKysymysryhmat()">
+      {{ 'kysely.taustakysymysryhma_puuttuu' | i18n }}
+    </div>
+
     <small class="pull-right"><pakollisia-kenttia></pakollisia-kenttia></small>
 
     <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{'i18n.yleiset.tallennataan' | i18n}}" virheviesti="{{'i18n.yleiset.tallennus_epaonnistui' | i18n}}" yrita-uudelleen="tallenna()">
       <br>
-      <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid || !validoi()" ng-click="tallenna()">
+      <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid || !validoiKysymysryhmat()" ng-click="tallenna()">
           {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="fa fa-save e2e-tallenna-kysely"></span>
       </button>
         <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid" ng-click="esikatseleModal()">
