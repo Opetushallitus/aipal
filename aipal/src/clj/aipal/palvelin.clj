@@ -130,9 +130,9 @@
       wrap-expires
 
       wrap-kayttaja
-      log-request-wrapper
       (auth-middleware asetukset)
-
+      log-request-wrapper
+      
       (wrap-frame-options :deny)
       (wrap-session {:store session-store
                      :cookie-attrs {:http-only true
