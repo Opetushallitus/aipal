@@ -63,7 +63,14 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
                                           function($filter, $scope, $modal, Kysymysryhma, i18n, ilmoitus, varmistus) {
     $scope.latausValmis = false;
     Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
-      $scope.kysymysryhmat = kysymysryhmat;
+      // angular-tablesort haluaa lajitella rivioliosta löytyvän (filtteröidyn)
+      // attribuutin perusteella, mutta lokalisoitujen kenttien kanssa täytyy
+      // antaa filtterille koko rivi. Lisätään riviolioon viittaus itseensä,
+      // jolloin voidaan kertoa angular-tablesortille attribuutti, josta koko
+      // rivi löytyy.
+      $scope.kysymysryhmat = _.map(kysymysryhmat, function(k){
+        return _.assign(k, {self: k});
+      });
       $scope.latausValmis = true;
     }).error(function() {
       $scope.latausValmis = true;

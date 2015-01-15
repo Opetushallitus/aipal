@@ -1,14 +1,14 @@
-<table class="table table-striped kysymysryhmat-taulukko" ng-show="latausValmis">
+<table class="table table-striped kysymysryhmat-taulukko" ng-show="latausValmis" ts-wrapper>
   <thead>
   <tr>
-    <th>{{'i18n.kysymysryhma.nimi' | i18n}}</th>
-    <th>{{'i18n.kysymysryhma.selite' | i18n}}</th>
-    <th>{{'i18n.kysymysryhma.valtakunnallinen' | i18n}}</th>
+    <th ts-criteria="self|lokalisoiKentta:'nimi'">{{'i18n.kysymysryhma.nimi' | i18n}}</th>
+    <th ts-criteria="self|lokalisoiKentta:'selite'">{{'i18n.kysymysryhma.selite' | i18n}}</th>
+    <th ts-criteria="valtakunnallinen">{{'i18n.kysymysryhma.valtakunnallinen' | i18n}}</th>
     <th></th>
   </tr>
   </thead>
   <tbody>
-  <tr ng-repeat="k in kysymysryhmat | filter:{tila: tila}">
+  <tr ng-repeat="k in kysymysryhmat | filter:{tila: tila}" ts-repeat>
     <td>{{ k | lokalisoiKentta:'nimi' }}</td>
     <td>{{ k | lokalisoiKentta:'selite' }}</td>
     <td>
