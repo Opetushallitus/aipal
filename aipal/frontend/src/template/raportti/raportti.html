@@ -122,7 +122,7 @@
       </tbody>
     </table>
 
-    <div>
+    <div ng-show="kysymys.keskiarvo !== undefined && kysymys.keskihajonta !== undefined">
       Keskiarvo: {{ kysymys.keskiarvo | number:2 }}
       Keskihajonta: {{ kysymys.keskihajonta | number:2 }}
     </div>
