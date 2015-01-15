@@ -215,7 +215,7 @@
         vastauksia (count numerovalinnat)]
     (when
       (and
-        (some #{(:vastaustyyppi kysymys)} '("asteikko" "likert_asteikko"))
+        (some #{(:vastaustyyppi kysymys)} '("asteikko" "likert_asteikko" "arvosana"))
         (not= 0 vastauksia))
       (let [summa (reduce + numerovalinnat)
             keskiarvo (float (/ summa vastauksia))
