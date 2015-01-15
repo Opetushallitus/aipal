@@ -58,7 +58,8 @@ angular.module('aipal', [
   'ngPostMessage',
   'ui.select',
   'ngSanitize',
-  'ui.sortable'
+  'ui.sortable',
+  'tableSort'
 ])
 
   .config(['$httpProvider', 'asetukset', function ($httpProvider, asetukset) {
