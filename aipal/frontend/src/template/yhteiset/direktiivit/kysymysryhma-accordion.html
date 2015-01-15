@@ -7,7 +7,11 @@
         <accordion-group is-open="group.open">
           <accordion-heading>
             <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': group.open, 'glyphicon-chevron-right': !group.open}"></i>
-            <span ng-class="{removed: kysymysryhma.poistetaan_kyselysta}">{{kysymysryhma | lokalisoiKentta:'nimi' }}</span>
+            <span ng-class="{removed: kysymysryhma.poistetaan_kyselysta}">
+              <strong ng-if="kysymysryhma.taustakysymykset">{{ 'kysymysryhma.taustakysymykset' | i18n }}:</strong>
+              <strong ng-if="kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset">{{ 'kysymysryhma.valtakunnallinen' | i18n }}:</strong>
+              {{kysymysryhma | lokalisoiKentta:'nimi' }}
+            </span>
           </accordion-heading>
           <ol class="kysymykset">
             <li ng-repeat="kysymys in kysymysryhma.kysymykset">
