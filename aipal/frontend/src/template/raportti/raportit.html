@@ -34,7 +34,7 @@
       <ng-include src="'template/raportti/kyselykerrat.html'" ng-controller="KyselykerratController"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.kyselyraportti' | i18n }}" select="vaihdaTyyppi('kysely', i18n.raportit.kyselyraportti)">
-      <h2 class="hidden-print">{{ 'raportit.kyselyraportti_otsikko' | i18n }}<ohje tunniste="kyselyraportti"></ohje></h2>
+      <h2 class="hidden-print">{{ 'raportit.kyselyraportti_otsikko' | i18n }} *<ohje tunniste="kyselyraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/kyselyt.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/vainTutkinnot.html'"></ng-include>
