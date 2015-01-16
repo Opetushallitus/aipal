@@ -46,6 +46,12 @@
                   <span class="fa fa-check"></span>
                 </button>
               </auth>
+              <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.kyselykerrat === null && kysely.tila === 'julkaistu'">
+                <button class="btn btn-primary pull-left" ng-click="palautaLuonnokseksi(kysely)">
+                  {{ 'kysely.palauta' | i18n }}
+                  <span class="fa fa-check"></span>
+                </button>
+              </auth>
               <auth roolit="['OPL-VASTUUKAYTTAJA']">
                 <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}/kopioi" class="btn btn-primary pull-left">
                     {{ 'kysely.kopioi' | i18n }}&nbsp;

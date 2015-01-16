@@ -99,4 +99,10 @@
     (json-response (arkisto/sulje-kysely! (Integer/parseInt kyselyid))))
 
   (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta/:kyselyid" [kyselyid]
-    (json-response (arkisto/julkaise-kysely! (Integer/parseInt kyselyid)))))
+    (json-response (arkisto/julkaise-kysely! (Integer/parseInt kyselyid))))
+
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta-luonnokseksi/:kyselyid" [kyselyid]
+    (let [kyselyid (Integer/parseInt kyselyid)]
+      (if (= (arkisto/laske-kyselykerrat kyselyid) 0)
+        (json-response (arkisto/palauta-luonnokseksi! kyselyid))
+        {:status 403}))))

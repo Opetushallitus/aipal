@@ -87,6 +87,14 @@
   ;; haetaan kysely, jotta saadaan myös kaytettavissa tieto mukaan paluuarvona
   (hae kyselyid))
 
+(defn palauta-luonnokseksi! [kyselyid]
+  (auditlog/kysely-muokkaus! kyselyid :luonnos)
+  (sql/update taulut/kysely
+    (sql/set-fields {:tila "luonnos"})
+    (sql/where {:kyselyid kyselyid
+                :tila "julkaistu"}))
+  (hae kyselyid))
+
 (defn sulje-kysely! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :suljettu)
   (sql/update taulut/kysely
@@ -108,6 +116,14 @@
     (sql/select taulut/kysely_kysymysryhma
       (sql/aggregate (count :*) :lkm)
       (sql/where {:kysely_kysymysryhma.kyselyid kyselyid}))
+    first
+    :lkm))
+
+(defn laske-kyselykerrat [kyselyid]
+  (->
+    (sql/select taulut/kyselykerta
+      (sql/aggregate (count :*) :lkm)
+      (sql/where {:kyselyid kyselyid}))
     first
     :lkm))
 

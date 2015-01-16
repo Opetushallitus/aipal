@@ -38,6 +38,9 @@ angular.module('rest.kysely', [])
       palauta: function(id) {
         return $http.put('api/kysely/palauta/' + id);
       },
+      palautaLuonnokseksi: function(id) {
+        return $http.put('api/kysely/palauta-luonnokseksi/' + id);
+      },
       poista: function(id) {
         return $http.delete('api/kysely/' + id);
       }

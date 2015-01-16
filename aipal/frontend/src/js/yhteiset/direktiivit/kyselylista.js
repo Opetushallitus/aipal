@@ -74,6 +74,12 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
             ilmoitus.onnistuminen(i18n.hae('kysely.palautus_onnistui'));
           });
         };
+        $scope.palautaLuonnokseksi = function(kysely) {
+          Kysely.palautaLuonnokseksi(kysely.kyselyid).success(function(uusiKysely) {
+            _.assign(kysely, uusiKysely);
+            ilmoitus.onnistuminen(i18n.hae('kysely.palautus_onnistui'));
+          });
+        };
         $scope.lukitseKyselykerta = function(kyselykerta) {
           varmistus.varmista(i18n.hae('kyselykerta.lukitse'), kyselykerta.nimi, i18n.hae('kyselykerta.lukitse_teksti'), i18n.hae('kyselykerta.lukitse')).then(function() {
             Kyselykerta.lukitse(kyselykerta.kyselykertaid)
