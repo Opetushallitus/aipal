@@ -265,6 +265,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('LisaaKysymysryhmaModalController', ['$modalInstance', '$scope', 'Kysymysryhma', function ($modalInstance, $scope, Kysymysryhma) {
+    $scope.outerscope = {};
     Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
     });

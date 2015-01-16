@@ -6,7 +6,7 @@
 <div class="modal-body">
   <p>{{i18n.kysymysryhma.valinta_ohjeistus}}</p>
 
-  <select class="form-control e2e-valittavat-kysymysryhmat" ng-model="kysymysryhmaid" ng-show="kysymysryhmat.length > 0">
+  <select class="form-control e2e-valittavat-kysymysryhmat" ng-model="outerscope.kysymysryhmaid" ng-if="kysymysryhmat.length > 0">
     <option></option>
     <optgroup label="{{ 'kysymysryhma.taustakysymykset' | i18n }}">
       <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: true}" value="{{ryhma.kysymysryhmaid}}" ng-bind="ryhma | lokalisoiKentta:'nimi'"></option>
@@ -24,7 +24,7 @@
   <small class="pull-right">
     <pakollisia-kenttia></pakollisia-kenttia>
   </small>
-  <button class="btn btn-primary pull-left e2e-lisaa-valittu-kysymysryhma" ng-disabled="!kysymysryhmaid" ng-click="tallenna(kysymysryhmaid)">
+  <button class="btn btn-primary pull-left e2e-lisaa-valittu-kysymysryhma" ng-disabled="!outerscope.kysymysryhmaid" ng-click="tallenna(outerscope.kysymysryhmaid)">
     {{i18n.yleiset.lisaa_valittu}}
   </button>
   <button class="btn btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
