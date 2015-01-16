@@ -26,6 +26,9 @@
 (defn ^:private hae-valtakunnalliset-kysymykset []
   (sql/select :kysymys
     (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+    (sql/join :left :jatkokysymys
+              (= :jatkokysymys.jatkokysymysid
+                 :kysymys.jatkokysymysid))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (sql/order :kysymysryhma.kysymysryhmaid :ASC)
     (sql/order :kysymys.jarjestys :ASC)
@@ -34,7 +37,15 @@
                 :kysymys.kysymys_sv
                 :kysymys.kysymysryhmaid
                 :kysymys.eos_vastaus_sallittu
-                :kysymys.vastaustyyppi)))
+                :kysymys.vastaustyyppi
+                :jatkokysymys.jatkokysymysid
+                :jatkokysymys.kylla_kysymys
+                :jatkokysymys.kylla_teksti_fi
+                :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.kylla_vastaustyyppi
+                :jatkokysymys.ei_kysymys
+                :jatkokysymys.ei_teksti_fi
+                :jatkokysymys.ei_teksti_sv)))
 
 (defn hae-valtakunnalliset-kysymysryhmat [taustakysymysryhmaid]
   (sql/select
@@ -72,6 +83,9 @@
     (sql/select* :vastaus)
     (sql/join :inner :kysymys (and (= :vastaus.kysymysid :kysymys.kysymysid)
                                    (= :kysymys.valtakunnallinen true)))
+    (sql/join :left :jatkovastaus
+              (= :jatkovastaus.jatkovastausid
+                 :vastaus.jatkovastausid))
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus koulutustoimijat) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus
@@ -97,7 +111,11 @@
                 :vastaus.numerovalinta
                 :vastaus.vaihtoehto
                 :vastaus.vapaateksti
-                :vastaus.en_osaa_sanoa)
+                :vastaus.en_osaa_sanoa
+                :jatkovastaus.jatkovastausid
+                :jatkovastaus.jatkokysymysid
+                :jatkovastaus.kylla_asteikko
+                :jatkovastaus.ei_vastausteksti)
     sql/exec))
 
 (defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]
