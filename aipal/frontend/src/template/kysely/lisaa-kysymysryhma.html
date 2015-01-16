@@ -9,13 +9,13 @@
   <select class="form-control e2e-valittavat-kysymysryhmat" ng-model="kysymysryhmaid" ng-show="kysymysryhmat.length > 0">
     <option></option>
     <optgroup label="{{ 'kysymysryhma.taustakysymykset' | i18n }}">
-      <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: true}" value="{{ryhma.kysymysryhmaid}}">{{ryhma | lokalisoiKentta:'nimi' }}</option>
+      <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: true}" value="{{ryhma.kysymysryhmaid}}" ng-bind="ryhma | lokalisoiKentta:'nimi'"></option>
     </optgroup>
     <optgroup label="{{ 'kysymysryhma.valtakunnalliset' | i18n }}">
-      <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: false, valtakunnallinen: true}" value="{{ryhma.kysymysryhmaid}}">{{ryhma | lokalisoiKentta:'nimi' }}</option>
+      <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: false, valtakunnallinen: true}" value="{{ryhma.kysymysryhmaid}}" ng-bind="ryhma | lokalisoiKentta:'nimi'"></option>
     </optgroup>
     <optgroup label="{{ 'kysymysryhma.muut' | i18n }}">
-      <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: false, valtakunnallinen: false}" value="{{ryhma.kysymysryhmaid}}">{{ryhma | lokalisoiKentta:'nimi' }}</option>
+      <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: false, valtakunnallinen: false}" value="{{ryhma.kysymysryhmaid}}" ng-bind="ryhma | lokalisoiKentta:'nimi'"></option>
     </optgroup>
   </select>
 </div>
