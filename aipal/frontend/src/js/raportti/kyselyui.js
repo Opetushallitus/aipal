@@ -18,7 +18,7 @@ angular.module('raportti.kyselyui', ['raportti.kyselykerta.jakaumakaavio',
                                      'raportti.kyselykerta.kaavioapurit',
                                      'raportti.kyselykerta.kyselykertaraportti',
                                      'raportti.kyselykerta.vaittamakaavio',
-                                     'rest.kyselyraportti',
+                                     'rest.raportti',
                                      'yhteiset.suodattimet.voimassaoloaika',
                                      'ngRoute'])
   .config(['$routeProvider', function($routeProvider) {
@@ -31,9 +31,9 @@ angular.module('raportti.kyselyui', ['raportti.kyselykerta.jakaumakaavio',
   }])
 
   .controller('KyselyraporttiController', [
-    'kaavioApurit', 'Kyselyraportti', '$location', '$routeParams', '$scope',
-    function(kaavioApurit, Kyselyraportti, $location, $routeParams, $scope) {
-      Kyselyraportti.hae($routeParams.kyselyid)
+    'kaavioApurit', 'Raportti', '$location', '$routeParams', '$scope',
+    function(kaavioApurit, Raportti, $location, $routeParams, $scope) {
+      Raportti.muodostaKyselyraportti($routeParams.kyselyid)
         .success(function(tulos) {
           $scope.tulokset = [tulos];
           $scope.tulos = tulos;

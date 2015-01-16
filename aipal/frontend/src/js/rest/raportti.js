@@ -19,6 +19,9 @@ angular.module('rest.raportti', [])
     return {
       muodosta: function(raportti) {
         return $http.post('api/raportti/valtakunnallinen', raportti);
+      },
+      muodostaKyselyraportti: function(id, raportti) {
+        return $http.post('api/raportti/kysely/' + id, raportti);
       }
     };
   }])
