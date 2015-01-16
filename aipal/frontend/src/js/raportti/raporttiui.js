@@ -24,7 +24,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta', function($scope, Koulutustoimija, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysely', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta',
+    function($scope, Koulutustoimija, Kysely, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.tyyppi = 'vertailu';
@@ -58,6 +59,12 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         });
       });
       $scope.raportti.tutkinnot = [];
+    };
+
+    var poistaKyselyValinnat = function() {
+      _.forEach($scope.kyselyt, function(kysely) {
+        delete kysely.valittu;
+      });
     };
 
     var tyhjaaTaustakysymysvalinnat = function() {
@@ -103,8 +110,13 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.koulutustoimijat = koulutustoimijat;
     });
 
+    Kysely.hae().success(function (data) {
+      $scope.kyselyt = data;
+    });
+
     $scope.rajoite = {
-      koulutustoimijat: 20
+      koulutustoimijat: 20,
+      kyselyt: 20
     };
 
     $scope.naytaLisaa = function(elem) {
@@ -144,14 +156,25 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
     };
     $scope.raportti.tutkinnot = [];
+    $scope.valitseTutkintoja = function(tutkinto) {
+      tutkinto.valittu = !tutkinto.valittu;
+      $scope.raportti.tutkinnot = _.xor($scope.raportti.tutkinnot, [tutkinto.tutkintotunnus]);
+    };
     $scope.valitseTutkinto = function(tutkinto) {
       if ($scope.raportti.tutkintorakennetaso === 'tutkinto') {
         if (!voikoValitaUseita() && !tutkinto.valittu) {
           poistaTutkintoValinnat();
         }
-        tutkinto.valittu = !tutkinto.valittu;
-        $scope.raportti.tutkinnot = _.xor($scope.raportti.tutkinnot, [tutkinto.tutkintotunnus]);
+        $scope.valitseTutkintoja(tutkinto);
       }
+    };
+
+    $scope.valitseKysely = function(kysely) {
+      if(!kysely.valittu) {
+        poistaKyselyValinnat();
+      }
+      kysely.valittu = !kysely.valittu;
+      $scope.raportti.kyselyid = kysely.kyselyid;
     };
 
     $scope.raportti.koulutustoimijat = [];
@@ -173,6 +196,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       else if ($scope.raportti.tyyppi === 'koulutustoimijat') {
         return $scope.raportti.koulutustoimijat.length > 0;
       }
+      else if ($scope.raportti.tyyppi === 'kysely') {
+        return _.isNumber($scope.raportti.kyselyid);
+      }
       return true;
     };
 
@@ -185,6 +211,22 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
         }
       });
+    };
+
+    $scope.muodostaKyselyraportti = function(raportti) {
+      var raporttifunktio = (raportti.tyyppi === 'kysely' ? Raportti.muodostaKyselyraportti : function() {});
+      var parametrit = _.pick(raportti, 'vertailujakso_alkupvm', 'vertailujakso_loppupvm', 'tutkinnot');
+
+      seuranta.asetaLatausIndikaattori(raporttifunktio(raportti.kyselyid, parametrit), 'raportinMuodostus')
+        .success(function(tulos) {
+          $scope.tulokset = [tulos];
+          $scope.tulos = tulos;
+        })
+        .error(function(value) {
+          if (value.status !== 500) {
+            ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
+          }
+        });
     };
 
     $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
