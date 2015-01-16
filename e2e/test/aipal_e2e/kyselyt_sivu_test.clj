@@ -44,8 +44,7 @@
 
 (defn ^:private kyselykerrat-kyselylle [kysely-elementti]
   (let [kyselykerrat (w/find-elements-under kysely-elementti
-                                            (-> *ng*
-                                                (.repeater "kyselykerta in kysely.kyselykerrat")))]
+                                            {:css ".kyselykerrat-container"})]
     (->> kyselykerrat
         (map kyselykerran-nimi)
         (map w/text))))

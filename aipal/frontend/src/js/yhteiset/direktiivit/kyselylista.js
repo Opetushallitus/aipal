@@ -95,6 +95,8 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
               _.assign(kyselykerta, uusiKyselykerta);
             });
         };
+
+        $scope.kyselykertojen_lajitteluperuste = 'voimassa_alkupvm';
       }]
     };
   }])
