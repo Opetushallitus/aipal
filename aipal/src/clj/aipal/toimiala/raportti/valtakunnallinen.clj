@@ -135,17 +135,18 @@
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
     (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
 
-(defn rajaa-vastaajatunnukset-ajalle [query alkupvm loppupvm]
+(defn rajaa-aikavalille
+  [query [alkupvm-sarake loppupvm-sarake] [alkupvm loppupvm]]
   (-> query
     (sql/where (and
-                 (or (nil? loppupvm) {:vastaajatunnus.voimassa_alkupvm nil} (<= :vastaajatunnus.voimassa_alkupvm loppupvm))
-                 (or (nil? alkupvm) {:vastaajatunnus.voimassa_loppupvm nil} (<= alkupvm :vastaajatunnus.voimassa_loppupvm))))))
+                 (or (nil? loppupvm) {alkupvm-sarake nil} (<= alkupvm-sarake loppupvm))
+                 (or (nil? alkupvm) {loppupvm-sarake nil} (<= alkupvm loppupvm-sarake))))))
+
+(defn rajaa-vastaajatunnukset-ajalle [query alkupvm loppupvm]
+  (rajaa-aikavalille query [:vastaajatunnus.voimassa_alkupvm :vastaajatunnus.voimassa_loppupvm] [alkupvm loppupvm]))
 
 (defn rajaa-kyselykerrat-ajalle [query alkupvm loppupvm]
-  (-> query
-    (sql/where (and
-                 (or (nil? loppupvm) {:kyselykerta.voimassa_alkupvm nil} (<= :kyselykerta.voimassa_alkupvm loppupvm))
-                 (or (nil? alkupvm) {:kyselykerta.voimassa_loppupvm nil} (<= alkupvm :kyselykerta.voimassa_loppupvm))))))
+  (rajaa-aikavalille query [:kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm] [alkupvm loppupvm]))
 
 (defn hae-vastaajien-maksimimaara [alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
