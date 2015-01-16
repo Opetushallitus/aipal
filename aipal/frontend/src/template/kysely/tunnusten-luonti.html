@@ -23,7 +23,7 @@
         </div>
 
         <div class="form-group">
-            <label>{{i18n.yleiset.rahoitusmuoto}}*
+            <label>{{i18n.yleiset.rahoitusmuoto}} *
                <select ng-required="true" ng-options="rahoitusmuoto.rahoitusmuotoid as rahoitusmuoto.rahoitusmuoto |enumArvo:'rahoitusmuoto' for rahoitusmuoto in rahoitusmuodot"
                         ng-model="vastaajatunnus.rahoitusmuotoid"
                         class="form-control e2e-vastaajatunnuksen-rahoitusmuoto"
@@ -33,8 +33,8 @@
             </label>
         </div>
         <div class="form-group">
-            <label>{{i18n.yleiset.tutkinto}}
-                <ui-select ng-if="tutkinnot.length>0" ng-model="vastaajatunnus.tutkinto" ng-disabled="disabled">
+            <label>{{i18n.yleiset.tutkinto}}<span ng-if="tutkinnot.length > 0"> *</span>
+                <ui-select ng-if="tutkinnot.length>0" ng-model="vastaajatunnus.tutkinto" ng-disabled="disabled" ng-required="tutkinnot.length > 0">
                     <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
                     <ui-select-choices repeat="tutkinto in tutkinnot | filter: $select.search | orderByLokalisoitu:'nimi'">
                         <div ng-bind-html="tutkinto | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
@@ -44,7 +44,7 @@
             <span class="text-muted" ng-if="tutkinnot.length==0">{{i18n.vastaajatunnus.ei_tutkintoja}}</span>
         </div>
         <div class="form-group">
-            <label>{{'yleiset.tutkinnon_suorituskieli' | i18n}}
+            <label>{{'yleiset.tutkinnon_suorituskieli' | i18n}} *
                 <select ng-required="true"
                         ng-model="vastaajatunnus.suorituskieli"
                         ng-options="kieli as kieli | enumArvo:'kieli' for kieli in kielet"
@@ -53,8 +53,8 @@
             </label>
         </div>
         <div class="form-group">
-            <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}}
-                <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled">
+            <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}} *
+                <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled" required="true">
                     <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
                     <ui-select-choices rullaus="naytaLisaa()" repeat="koulutustoimija in koulutustoimijat | filter: $select.search | orderByLokalisoitu:'nimi' | limitTo: rullausrajoite">
                         <div ng-bind-html="koulutustoimija | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
