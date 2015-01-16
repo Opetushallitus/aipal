@@ -3,4 +3,13 @@
   .dev-footer{
     display: none;
   }
+  .print-header{
+    p {
+      margin: 0;
+      line-height: 1.2em;
+    }
+  }
+  hr{
+    margin: 1em 0 1em 0;
+  }
 }

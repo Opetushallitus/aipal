@@ -44,13 +44,12 @@
 
   <toaster-container toaster-options="{'close-button': true}"></toaster-container>
 
-  <div class="visible-print">
+  <div class="visible-print print-header">
     <p class="pull-right text-right">
       {{i18n.yleiset.tietolahde}}<br/>
-      {{currentuser}} <br />
       {{timestamp | date:'dd.MM.yyyy HH:mm'}}
     </p>
-    <img src="img/opetushallitus.svg" class="pull-left" />
+    <img src="img/opetushallitus.svg" class="pull-left" width="200" />
   </div>
 
   <div ng-show="i18n.$resolved" class="ng-hide">

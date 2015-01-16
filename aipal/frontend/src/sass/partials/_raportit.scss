@@ -79,14 +79,37 @@ li.selected{
 }
 
 @media print {
+  body {
+    font-size: 8pt;
+  }
+  #content {
+    padding: 0;
+  }
   .kysymysryhma {
     font-size: .8em;
+    page-break-before: always;
+    h2 {
+      margin-bottom: 0;
+    }
     .kysymys {
       page-break-inside: avoid;
+      margin-bottom: 2em;
+      h3 {
+        margin-bottom: 0;
+      }
       td {
         line-height: 1em;
       }
     }
+  }
+  .raportti-kyselykerta-tiedot {
+    margin-top: $marginM;
+    padding: $marginM/2 $marginM/2;
+    width: 60%;
+  }
+  table.report-table thead tr th,
+  table.report-table tbody tr td{
+    padding: .2em !important;
   }
 }
 

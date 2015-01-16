@@ -7,9 +7,13 @@
   <button ng-click="naytaRaportti(raportti)" ng-repeat="raportti in tulokset">{{ raportti | lokalisoiKentta:'nimi' }}</button>
 </div>
 
-<div ng-show="tulos">
+<div class="visible-print" ng-if="tulos">
+  <h2 ng-if="tulos.kyselykerta">{{tulos.kyselykerta.nimi}}</h2>
+</div>
+
+<div ng-show="tulos" class="hidden-print print-header">
   <h1>{{ 'kysely.raportti_otsikko' | i18n }}</h1>
-  <div class="hidden-print clearfix">
+  <div class="clearfix">
     <button class="btn btn-primary pull-left" ng-click="print()">{{ 'kysely.raportti_tulosta' | i18n }}&nbsp;<span class="fa fa-print"></span></button>
     <div class="checkbox pull-left">
       <label>
@@ -58,7 +62,7 @@
   </div>
   <div>
     <div>
-      {{ 'raportti.otsikko' | i18n }}: {{ tulos | lokalisoiKentta:'nimi' }}
+      {{ 'raportti.otsikko' | i18n }}: <b>{{ tulos | lokalisoiKentta:'nimi' }}</b>
     </div>
     <div>
       {{'raportti.kohderyhman_koko' | i18n }}: {{tulos.vastaajien_maksimimaara}}
@@ -82,10 +86,11 @@
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
-    <p>
+    <span>
       {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
       {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymys.vastaajien_lukumaara, tulos.vastaajien_maksimimaara)}}%
-    </p>
+      <br />
+    </span>
 
     <jakauma-kaavio ng-class="{ 'hidden-print': !printgraphs }"
       ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'"
@@ -98,7 +103,7 @@
     </vaittama-kaavio>
 
     <table class="report-table" ng-if="kysymys.vastaustyyppi && kysymys.vastaustyyppi !== 'vapaateksti'">
-      <thead>
+      <thead ng-class="{ 'hidden-print': !printgraphs }">
         <tr>
           <th class="report-table-question">{{kysymys | lokalisoiKentta:'kysymys'}}</th>
           <th class="report-table-percentage-field">Vast%</th>
