@@ -36,5 +36,39 @@
         </ul>
       </li>
     </ul>
+
+    <div class="valitut-tutkinnot" ng-if="raportti.tutkintorakennetaso === 'tutkinto'">
+      <span ng-repeat="koulutusala in koulutusalat">
+        <span ng-repeat="opintoala in koulutusala.opintoalat">
+          <span ng-repeat="tutkinto in opintoala.tutkinnot | filter:{valittu: true}">
+            <span class="btn btn-primary" ng-click="valitseTutkinto(tutkinto)">
+              {{ tutkinto | lokalisoiKentta:'nimi' }}
+              <span class="fa fa-remove"></span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </div>
+
+    <div class="valitut-opintoalat" ng-if="raportti.tutkintorakennetaso === 'opintoala'">
+      <span ng-repeat="koulutusala in koulutusalat">
+        <span ng-repeat="opintoala in koulutusala.opintoalat | filter:{valittu: true}">
+          <span class="btn btn-primary" ng-click="valitseOpintoala(opintoala)">
+            {{ opintoala | lokalisoiKentta:'opintoala_nimi' }}
+            <span class="fa fa-remove"></span>
+          </span>
+        </span>
+      </span>
+    </div>
+
+    <div class="valitut-koulutusalat" ng-if="raportti.tutkintorakennetaso === 'koulutusala'">
+      <span ng-repeat="koulutusala in koulutusalat | filter:{valittu: true}">
+        <span class="btn btn-primary" ng-click="valitseKoulutusala(koulutusala)">
+          {{ koulutusala | lokalisoiKentta:'koulutusala_nimi' }}
+          <span class="fa fa-remove"></span>
+        </span>
+      </span>
+    </div>
+
   </div>
 </div>
