@@ -15,7 +15,9 @@
 (ns aipal.rest-api.raportti.kysely
   (:require [aipal.compojure-util :as cu]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response]]
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.korma.korma :refer [joda-date->sql-date]]
+            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]))
 
 (defn reitit [asetukset]
@@ -23,6 +25,9 @@
     (db/transaction
       (let [kyselyid (Integer/parseInt kyselyid)
             vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
+            parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
+            parametrit (paivita-arvot parametrit [:tutkinnot] seq) ; tyhjä lista -> nil
             raportti (muodosta-raportti kyselyid parametrit)]
         (json-response
           (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
