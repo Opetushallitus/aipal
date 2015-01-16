@@ -1,0 +1,12 @@
+<div class="koulutustoimijat" ng-show="kyselyt">
+  <div class="well">
+    <input type="text" class="form-control icon search-icon-input" ng-model="kyselyFilter" ng-change="nollaaRajoite('kyselyt')" placeholder="{{ 'raportit.hae_kyselyita' | i18n }}">
+
+    <ul class="valitsin" rullaus="naytaLisaa('kyselyt')">
+      <li ng-repeat="kysely in kyselyt | filter:kyselyFilter | orderByLokalisoitu:'nimi' | limitTo: rajoite.kyselyt" ng-click="valitseKysely(kysely)">
+        {{ kysely | lokalisoiKentta:'nimi' }}
+        <span class="fa fa-check" ng-show="kysely.valittu"></span>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="hidden-print" lataus-indikaattori metodi-id="raportinMuodostus" viesti="{{'raportti.muodostetaan' | i18n}}"
+    virheviesti="{{'raportti.muodostus_epaonnistui' | i18n}}" yrita-uudelleen="muodostaKyselyraportti(raportti)">
+  <button class="btn btn-primary" ng-click="muodostaKyselyraportti(raportti)" ng-disabled="!raporttiValidi(raportti)">
+    {{ 'raportit.muodosta_raportti' | i18n }}
+    <span class="fa fa-bar-chart"></span>
+  </button>
+</div>
+
+<div ng-if="tulos">
+  <ng-include src="'template/raportti/raportti.html'"></ng-include>
+</div>
