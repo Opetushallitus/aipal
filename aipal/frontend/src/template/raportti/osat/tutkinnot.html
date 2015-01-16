@@ -1,6 +1,6 @@
 <div ng-show="koulutusalat">
 
-  <div class="row">
+  <div class="row" ng-if="!piilotaTutkintorakenneVaihto()">
     <div class="col-md-12">
       <div class="btn-group tutkintorakennetaso">
         <label class="btn btn-primary" ng-model="raportti.tutkintorakennetaso" btn-radio="'tutkinto'">{{ 'raportit.tutkinto' | i18n }}</label>

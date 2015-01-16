@@ -81,6 +81,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       poistaOpintoalaValinnat();
       poistaTutkintoValinnat();
       tyhjaaTaustakysymysvalinnat();
+
+      // Kyselyraportilla tutkintorakennetasovalintaa ei ole näkyvissä, joten pitää valita tasoksi tutkinto
+      if (tyyppi === 'kysely') {
+        $scope.raportti.tutkintorakennetaso = 'tutkinto';
+      }
     };
 
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
@@ -131,8 +136,12 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.koulutusalat = koulutusalat;
     });
 
+    $scope.piilotaTutkintorakenneVaihto = function() {
+      return $scope.raportti.tyyppi === 'kysely';
+    };
+
     var voikoValitaUseita = function() {
-      return $scope.raportti.tyyppi === 'vertailu';
+      return $scope.raportti.tyyppi === 'vertailu' || $scope.raportti.tyyppi === 'kysely';
     };
     $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
