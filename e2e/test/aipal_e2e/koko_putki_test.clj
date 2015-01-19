@@ -38,9 +38,7 @@
                              :koulutusala "1"}]
                 :tutkinto [{:tutkintotunnus "123456"
                             :nimi_fi "Tutkinto"
-                            :opintoala "123"}]
-                :koulutustoimija_ja_tutkinto [{:koulutustoimija "0000000-0"
-                                               :tutkinto "123456"}]}
+                            :opintoala "123"}]}
       ;; luo kysymysryhma
       (kysymysryhmat-sivu/avaa-sivu)
       (kysymysryhmat-sivu/luo-uusi)
