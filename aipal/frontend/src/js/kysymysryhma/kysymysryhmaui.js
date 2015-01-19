@@ -362,6 +362,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       originals = angular.copy($scope.kysymysryhma.kysymykset);
       kysymys.muokattava = true;
 
+      if (_.isUndefined(kysymys.jatkokysymys) || _.isUndefined(kysymys.jatkokysymys.max_vastaus)) {
+        _.merge(kysymys, {jatkokysymys: {max_vastaus: 500}});
+      }
       $scope.aktiivinenKysymys = kysymys;
       $scope.muokkaustila = true;
     };
