@@ -179,3 +179,21 @@
 
 (defmacro retrying [expected-throwable attempts & body]
   `(retrying* ~expected-throwable ~attempts (fn [] ~@body)))
+
+(defn pvm-menneisyydessa?
+  [pvm]
+  {:pre [(not (nil? pvm))]}
+  (let [nytpvm (time/today)]
+    (time/after? nytpvm pvm)))
+
+(defn pvm-tulevaisuudessa?
+  [pvm]
+  {:pre [(not (nil? pvm))]}
+  (let [nytpvm (time/today)]
+    (time/before? nytpvm pvm)))
+
+(def pvm-mennyt-tai-tanaan?
+  (complement pvm-tulevaisuudessa?))
+
+(def pvm-tuleva-tai-tanaan?
+  (complement pvm-menneisyydessa?))

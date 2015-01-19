@@ -132,7 +132,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.rajoite[elem] = 20;
     };
 
-    Tutkinto.haeTutkinnotHierarkiassa().success(function(koulutusalat) {
+    Tutkinto.haeVoimassaolevatTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.koulutusalat = koulutusalat;
     });
 
