@@ -99,13 +99,16 @@
                 </div>
             </div>
         </div>
+        <small ng-if="menneisyydessa">
+            <span>{{ 'vastaajatunnus.menneisyydessa_selite' | i18n }}</span>
+        </small>
 </div>
 
 <div class="modal-footer e2e-vastaustunnusten-luonti-dialogi">
     <small class="pull-right ">
         <pakollisia-kenttia></pakollisia-kenttia>
     </small>
-    <tallenna class="btn btn-primary pull-left" formi-validi="tunnustenLuontiForm.$valid" teksti="{{i18n.vastaajatunnus.lisaa_vastaajatunnukset}}" ng-click="luoTunnuksia(vastaajatunnus)"></tallenna>
+    <tallenna class="btn btn-primary pull-left" formi-validi="tunnustenLuontiForm.$valid && !menneisyydessa" teksti="{{i18n.vastaajatunnus.lisaa_vastaajatunnukset}}" ng-click="luoTunnuksia(vastaajatunnus)"></tallenna>
     <button class="btn btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
 </div>
 

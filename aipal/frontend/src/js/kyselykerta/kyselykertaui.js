@@ -199,6 +199,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     var alkupvm = new Date(kyselykerta.voimassa_alkupvm),
       loppupvm = kyselykerta.voimassa_loppupvm ? new Date(kyselykerta.voimassa_loppupvm) : alkupvm;
     $scope.oletusalkupvm = alkupvm > tanaan ? alkupvm : (tanaan > loppupvm ? loppupvm : tanaan);
+    $scope.menneisyydessa =  kyselykerta.voimassa_loppupvm && loppupvm < tanaan;
 
     $scope.tutkinnot = tutkinnot;
 
