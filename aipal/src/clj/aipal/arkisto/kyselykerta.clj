@@ -24,13 +24,12 @@
         (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
         (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
         (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
-          :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
-          :kyselykerta.lukittu)
+                    :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+                    :kyselykerta.lukittu :kyselykerta.luotuaika)
         (cond-> (not (nil? koulutustoimija))
           (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija}))
         (sql/order :kyselykerta.kyselykertaid :ASC)))
   ([] (hae-kaikki nil)))
-    
 
 (defn lisaa!
   [kyselyid kyselykerta-data]

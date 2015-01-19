@@ -69,8 +69,8 @@
           <div class="kyselykerrat" ng-if="kysely.tila !== 'luonnos'">
               <div ng-show="kysely.kyselykerrat.length > 0">
                 {{'kysely.kyselykertojen_lajitteluperuste'|i18n}}:
-                <span ng-show="kyselykertojen_lajitteluperuste == 'voimassa_alkupvm'">{{'kysely.kyselykertojen_lajitteluperuste_alkuaika'|i18n}}</span>
-                <a ng-hide="kyselykertojen_lajitteluperuste == 'voimassa_alkupvm'" ng-click="kyselykertojen_lajitteluperuste = 'voimassa_alkupvm'">{{'kysely.kyselykertojen_lajitteluperuste_alkuaika'|i18n}}</a>
+                <span ng-show="kyselykertojen_lajitteluperuste == 'luotuaika'">{{'kysely.kyselykertojen_lajitteluperuste_luontiaika'|i18n}}</span>
+                <a ng-hide="kyselykertojen_lajitteluperuste == 'luotuaika'" ng-click="kyselykertojen_lajitteluperuste = 'luotuaika'">{{'kysely.kyselykertojen_lajitteluperuste_luontiaika'|i18n}}</a>
                 <span ng-show="kyselykertojen_lajitteluperuste == 'nimi'">{{'kysely.kyselykertojen_lajitteluperuste_nimi'|i18n}}</span>
                 <a ng-hide="kyselykertojen_lajitteluperuste == 'nimi'" ng-click="kyselykertojen_lajitteluperuste = 'nimi'">{{'kysely.kyselykertojen_lajitteluperuste_nimi'|i18n}}</a>
               </div>
