@@ -44,7 +44,7 @@
 
 (defn ^:private kyselykerrat-kyselylle [kysely-elementti]
   (let [kyselykerrat (w/find-elements-under kysely-elementti
-                                            {:css ".kyselykerrat-container"})]
+                                            {:css ".e2e-kyselykerrat"})]
     (->> kyselykerrat
         (map kyselykerran-nimi)
         (map w/text))))

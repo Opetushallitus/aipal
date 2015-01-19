@@ -74,7 +74,7 @@
                 <span ng-show="kyselykertojen_lajitteluperuste == 'nimi'">{{'kysely.kyselykertojen_lajitteluperuste_nimi'|i18n}}</span>
                 <a ng-hide="kyselykertojen_lajitteluperuste == 'nimi'" ng-click="kyselykertojen_lajitteluperuste = 'nimi'">{{'kysely.kyselykertojen_lajitteluperuste_nimi'|i18n}}</a>
               </div>
-              <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in (kysely.kyselykerrat|orderBy:kyselykertojen_lajitteluperuste)" class="kyselykerrat-container">
+              <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in (kysely.kyselykerrat|orderBy:kyselykertojen_lajitteluperuste)" class="kyselykerrat-container e2e-kyselykerrat">
                   <h3 class="e2e-kyselykerta-nimi"><span ng-if="kyselykerta.lukittu" class="fa fa-lock" title="{{ 'yleiset.lukittu' | i18n }}">&nbsp;&nbsp;</span>{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta.nimi}}</h3>
                   <span class="text-muted" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
                   <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA']">
