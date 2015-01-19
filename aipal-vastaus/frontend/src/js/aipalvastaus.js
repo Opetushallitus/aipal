@@ -24,9 +24,18 @@ angular.module('aipalvastaus', [
     'ngPostMessage'
   ])
 
-  .controller('AipalvastausController', ['$scope', '$window', 'i18n', function($scope, $window, i18n){
+  .controller('AipalvastausController', ['$scope', '$window', 'i18n', 'kieli', function($scope, $window, i18n, kieli){
     $scope.i18n = i18n;
     $scope.baseUrl = _.has($window, 'hakuBaseUrl') ?  $window.hakuBaseUrl : '';
+
+    $scope.vastauksetToisellaKielella = function(kysymys) {
+      if (kieli === 'sv') {
+        return kysymys.kysymys_sv === '';
+      }
+      else {
+        return kysymys.kysymys_fi === '';
+      }
+    };
   }])
 
   .constant('asetukset', {
