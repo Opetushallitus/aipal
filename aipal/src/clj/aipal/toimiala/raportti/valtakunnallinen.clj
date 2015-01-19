@@ -145,9 +145,6 @@
 (defn rajaa-vastaajatunnukset-ajalle [query alkupvm loppupvm]
   (rajaa-aikavalille query [:vastaajatunnus.voimassa_alkupvm :vastaajatunnus.voimassa_loppupvm] [alkupvm loppupvm]))
 
-(defn rajaa-kyselykerrat-ajalle [query alkupvm loppupvm]
-  (rajaa-aikavalille query [:kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm] [alkupvm loppupvm]))
-
 (defn hae-vastaajien-maksimimaara [alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaajatunnus)
@@ -161,7 +158,6 @@
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
     (sql/where {:kysymysryhma.valtakunnallinen true})
     (rajaa-vastaajatunnukset-ajalle alkupvm loppupvm)
-    (rajaa-kyselykerrat-ajalle alkupvm loppupvm)
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     sql/exec

@@ -30,19 +30,20 @@
   (when date
     (time-coerce/to-sql-date (time-format/parse (time-format/formatters :date) date))))
 
-(deftest ^:integraatio rajaa-kyselykerrat-ajalle-testi
-  (are [alkupvm loppupvm kyselykerta odotettu-kyselykertojen-maara]
+(deftest ^:integraatio rajaa-aikavalille-testi
+  (are [alkupvm loppupvm vastaajatunnus odotettu-vastaajatunnusten-maara]
        (=
-         (let [voimassa_alkupvm (date-in-sql (:voimassa_alkupvm kyselykerta))
-               voimassa_loppupvm (date-in-sql (:voimassa_loppupvm kyselykerta))]
+         (let [voimassa_alkupvm (date-in-sql (:voimassa_alkupvm vastaajatunnus))
+               voimassa_loppupvm (date-in-sql (:voimassa_loppupvm vastaajatunnus))]
            (->
              (sql/select* [(sql/raw (str "(select "
                                          voimassa_alkupvm " as voimassa_alkupvm, "
-                                         voimassa_loppupvm " as voimassa_loppupvm) ")) :kyselykerta])
-             (rajaa-kyselykerrat-ajalle (parse-to-sql-date alkupvm) (parse-to-sql-date loppupvm))
+                                         voimassa_loppupvm " as voimassa_loppupvm) ")) :vastaajatunnus])
+             (rajaa-aikavalille [:vastaajatunnus.voimassa_alkupvm :vastaajatunnus.voimassa_loppupvm]
+                                [(parse-to-sql-date alkupvm) (parse-to-sql-date loppupvm)])
              sql/exec
              count))
-         odotettu-kyselykertojen-maara)
+         odotettu-vastaajatunnusten-maara)
 
        "2013-01-01" "2013-12-31" {:voimassa_alkupvm "2012-10-01" :voimassa_loppupvm "2012-12-31"} 0
        "2013-01-01" "2013-12-31" {:voimassa_alkupvm "2012-11-01" :voimassa_loppupvm "2013-01-01"} 1
