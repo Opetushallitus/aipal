@@ -112,8 +112,8 @@
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
                     <td>
-                        {{tunnus.valmistavan_koulutuksen_jarjestaja | lokalisoiKentta: 'nimi'}}
-                        {{tunnus.valmistavan_koulutuksen_oppilaitos | lokalisoiKentta: 'nimi'}}
+                        <div>{{tunnus.valmistavan_koulutuksen_jarjestaja | lokalisoiKentta: 'nimi'}}</div>
+                        <div>{{tunnus.valmistavan_koulutuksen_oppilaitos | lokalisoiKentta: 'nimi'}}</div>
                     </td>
                     <td>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
