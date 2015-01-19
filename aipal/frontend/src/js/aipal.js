@@ -86,7 +86,7 @@ angular.module('aipal', [
       function($q, $location) {
         return {
           responseError: function (vastaus) {
-            if (vastaus.status === 403 && !vastaus.headers('X-Kayttooikeudet-Forbidden')) {
+            if (vastaus.status === 403 && !vastaus.headers('X-Kayttooikeudet-Forbidden') && !vastaus.headers('X-Aipal-Error')) {
               $location.url('/istunto-vanhentunut');
             }
             return $q.reject(vastaus);

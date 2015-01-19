@@ -110,6 +110,13 @@
            :body "Käyttöoikeudet eivät riitä"}
           (throw e))))))
 
+(defn wrap-internal-forbidden [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (if (= (:status response) 403)
+        (assoc response :headers {"X-Aipal-Error" "true"})
+        response))))
+
 (defn app
   "Ring-wrapperit ja compojure-reitit ilman HTTP-palvelinta"
   [asetukset]
@@ -120,6 +127,7 @@
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))]
     (-> reitit
+      wrap-internal-forbidden
       wrap-keyword-params
       wrap-json-params
       (wrap-resource "public/app")
