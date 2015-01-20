@@ -41,7 +41,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
 
         $scope.julkaiseKysymysryhmaModal = function(kysymysryhma) {
           var modalInstance = $modal.open({
-            templateUrl: 'template/kysymysryhma/julkaise-kysymysryhma.html',
+            templateUrl: 'template/yhteiset/direktiivit/julkaise-kysymysryhma.html',
             controller: 'JulkaiseKysymysryhmaModalController',
             resolve: {
               kysymysryhma: function() {
@@ -116,5 +116,12 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
         };
       }]
     };
+  }])
+
+  .controller('JulkaiseKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function ($modalInstance, $scope, kysymysryhma) {
+    $scope.kysymysryhma = kysymysryhma;
+
+    $scope.julkaise = $modalInstance.close;
+    $scope.cancel = $modalInstance.dismiss;
   }])
 ;

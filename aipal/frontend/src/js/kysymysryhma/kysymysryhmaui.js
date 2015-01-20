@@ -77,13 +77,6 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     });
   }])
 
-  .controller('JulkaiseKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function ($modalInstance, $scope, kysymysryhma) {
-    $scope.kysymysryhma = kysymysryhma;
-
-    $scope.julkaise = $modalInstance.close;
-    $scope.cancel = $modalInstance.dismiss;
-  }])
-
   .factory('kysymysApurit', [function() {
     var uusiVaihtoehto = function() {
       return {
