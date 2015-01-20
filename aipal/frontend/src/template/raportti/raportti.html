@@ -73,11 +73,10 @@
       {{'raportti.organisaatio' | i18n }}: {{rooli_koulutustoimija}}
     </div>
 
-    <!-- <hr>
-    <div>
+    <hr class="hidden-print">
+    <div class="hidden-print">
       {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
     </div>
-    -->
 
     <div ng-show="tulos.parametrit.vertailujakso_alkupvm || tulos.parametrit.vertailujakso_loppupvm">
       {{'raportti.raportin_vertailujakso' | i18n }}: <span>{{tulos.parametrit.vertailujakso_alkupvm | date: 'dd.MM.yyyy'}} - {{tulos.parametrit.vertailujakso_loppupvm | date: 'dd.MM.yyyy'}}</span>
