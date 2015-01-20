@@ -40,6 +40,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       _.forEach($scope.koulutusalat, function(koulutusala) {
         delete koulutusala.valittu;
       });
+      _.forEach($scope.vanhentuneetKoulutusalat, function(koulutusala) {
+        delete koulutusala.valittu;
+      });
       $scope.raportti.koulutusalat = [];
     };
     var poistaOpintoalaValinnat = function() {
@@ -48,10 +51,22 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           delete opintoala.valittu;
         });
       });
+      _.forEach($scope.vanhentuneetKoulutusalat, function(koulutusala) {
+        _.forEach(koulutusala.opintoalat, function(opintoala) {
+          delete opintoala.valittu;
+        });
+      });
       $scope.raportti.opintoalat = [];
     };
     var poistaTutkintoValinnat = function() {
       _.forEach($scope.koulutusalat, function(koulutusala) {
+        _.forEach(koulutusala.opintoalat, function(opintoala) {
+          _.forEach(opintoala.tutkinnot, function(tutkinto) {
+            delete tutkinto.valittu;
+          });
+        });
+      });
+      _.forEach($scope.vanhentuneetKoulutusalat, function(koulutusala) {
         _.forEach(koulutusala.opintoalat, function(opintoala) {
           _.forEach(opintoala.tutkinnot, function(tutkinto) {
             delete tutkinto.valittu;
@@ -134,6 +149,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     Tutkinto.haeVoimassaolevatTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.koulutusalat = koulutusalat;
+    });
+
+    Tutkinto.haeVanhentuneetTutkinnotHierarkiassa().success(function(koulutusalat) {
+      $scope.vanhentuneetKoulutusalat = koulutusalat;
     });
 
     $scope.piilotaTutkintorakenneVaihto = function() {
