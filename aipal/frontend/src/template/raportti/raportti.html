@@ -31,9 +31,11 @@
     <div ng-if="tulos.yhteenveto.kyselykerta">
       {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.yhteenveto.kyselykerta}}</span>
     </div>
+    <!--
     <div>
       {{'yleiset.voimassa' | i18n }}: <span>{{tulos.yhteenveto.voimassa_alkupvm | voimassaoloAika: tulos.yhteenveto.voimassa_loppupvm}}</span>
     </div>
+    -->
     <div ng-repeat="koulutustoimija in tulos.yhteenveto.koulutustoimijat">
       <hr>
       <div>
@@ -67,10 +69,16 @@
     <div>
       {{'raportti.kohderyhman_koko' | i18n }}: {{tulos.vastaajien_maksimimaara}}
     </div>
-    <hr>
+    <div>
+      {{'raportti.organisaatio' | i18n }}: {{rooli_koulutustoimija}}
+    </div>
+
+    <!-- <hr>
     <div>
       {{'raportti.raportin_luontipaiva' | i18n }}: <span>{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</span>
     </div>
+    -->
+
     <div ng-show="tulos.parametrit.vertailujakso_alkupvm || tulos.parametrit.vertailujakso_loppupvm">
       {{'raportti.raportin_vertailujakso' | i18n }}: <span>{{tulos.parametrit.vertailujakso_alkupvm | date: 'dd.MM.yyyy'}} - {{tulos.parametrit.vertailujakso_loppupvm | date: 'dd.MM.yyyy'}}</span>
     </div>
