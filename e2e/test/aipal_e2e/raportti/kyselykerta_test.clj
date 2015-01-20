@@ -214,8 +214,7 @@
         (avaa (kyselykertaraportti-sivu 1))
         (testing
           "kyselykerran tiedot"
-          (is (= (kyselykerran-tietojen-kentta "kyselykerta") "Kyselykerta 1"))
-          (is (= (kyselykerran-tietojen-kentta "voimassa_alkupvm") "28.05.2014 - 29.05.2014")))
+          (is (= (kyselykerran-tietojen-kentta "kyselykerta") "Kyselykerta 1")))
         (testing
           "raportin luontipäivä"
           (is (= (raportin-luontipvm) tanaan-kayttoliittyman-muodossa)))
