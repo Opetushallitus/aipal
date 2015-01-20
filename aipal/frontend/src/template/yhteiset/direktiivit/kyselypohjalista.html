@@ -8,7 +8,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="kyselypohja in kyselypohjat |filter:{tila: tila} |filter:hakuehto.teksti" ts-repeat>
+    <tr ng-repeat="kyselypohja in kyselypohjat |filter:rajoitin |filter:hakuehto.teksti" ts-repeat>
       <td>
         {{kyselypohja |lokalisoiKentta:'nimi'}}
       </td>

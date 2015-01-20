@@ -25,8 +25,19 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
         tila: '@'
       },
       templateUrl: 'template/yhteiset/direktiivit/kyselypohjalista.html',
+      link: function(scope, element, attrs) {
+        attrs.$observe('valtakunnalliset', function() {
+          scope.valtakunnalliset = scope.$eval(attrs.valtakunnalliset);
+        });
+      },
       controller: ['$filter', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $scope, Kyselypohja, i18n, ilmoitus, varmistus) {
         $scope.i18n = i18n;
+        $scope.rajoitin = {
+          tila: $scope.tila
+        };
+        $scope.$watch('valtakunnalliset', function(valtakunnalliset) {
+          $scope.rajoitin.valtakunnallinen = valtakunnalliset;
+        });
 
         $scope.julkaiseKyselypohja = function(kyselypohja) {
           varmistus.varmista(i18n.hae('kyselypohja.julkaise'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.julkaise_teksti'), i18n.hae('kyselypohja.julkaise')).then(function() {
