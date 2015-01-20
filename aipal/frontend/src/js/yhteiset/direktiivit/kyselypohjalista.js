@@ -24,7 +24,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
         kyselypohjat: '=',
         tila: '@'
       },
-      templateUrl: 'template/kyselypohja/kyselypohjalista.html',
+      templateUrl: 'template/yhteiset/direktiivit/kyselypohjalista.html',
       controller: ['$filter', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $scope, Kyselypohja, i18n, ilmoitus, varmistus) {
         $scope.i18n = i18n;
 
