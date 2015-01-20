@@ -1,0 +1,91 @@
+// Copyright (c) 2015 The Finnish National Board of Education - Opetushallitus
+//
+// This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+// soon as they will be approved by the European Commission - subsequent versions
+// of the EUPL (the "Licence");
+//
+// You may not use this work except in compliance with the Licence.
+// You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// European Union Public Licence for more details.
+
+'use strict';
+
+angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.lokalisointi'])
+
+  .directive('kyselypohjalista', [function() {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        kyselypohjat: '=',
+        tila: '@'
+      },
+      templateUrl: 'template/kyselypohja/kyselypohjalista.html',
+      controller: ['$filter', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $scope, Kyselypohja, i18n, ilmoitus, varmistus) {
+        $scope.i18n = i18n;
+
+        $scope.julkaiseKyselypohja = function(kyselypohja) {
+          varmistus.varmista(i18n.hae('kyselypohja.julkaise'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.julkaise_teksti'), i18n.hae('kyselypohja.julkaise')).then(function() {
+            Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
+              ilmoitus.onnistuminen(i18n.hae('kyselypohja.julkaistu'));
+              _.assign(kyselypohja, uusiKyselypohja);
+            }).error(function() {
+              ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
+            });
+          });
+        };
+
+        $scope.poistaKyselypohja = function(kyselypohjalista, kyselypohja) {
+          varmistus.varmista(i18n.hae('kyselypohja.poista'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.poista_teksti'), i18n.hae('kyselypohja.poista')).then(function() {
+            var kyselypohjaid = kyselypohja.kyselypohjaid;
+            var kyselypohjaindex = _.findIndex(kyselypohjalista, {kyselypohjaid: kyselypohjaid});
+            Kyselypohja.poista(kyselypohjaid).success(function() {
+              kyselypohjalista.splice(kyselypohjaindex, 1);
+              ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_onnistui'));
+            }).error(function() {
+              ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_epaonnistui'));
+            });
+          });
+        };
+
+        $scope.palautaKyselypohjaLuonnokseksi = function(kyselypohja) {
+          varmistus.varmista(i18n.hae('kyselypohja.palauta_luonnokseksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_luonnokseksi_teksti'), i18n.hae('kyselypohja.palauta_luonnokseksi')).then(function() {
+            Kyselypohja.palautaLuonnokseksi(kyselypohja).success(function(uusiKyselypohja) {
+              ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_luonnokseksi_onnistui'));
+              _.assign(kyselypohja, uusiKyselypohja);
+            }).error(function() {
+              ilmoitus.virhe(i18n.hae('kyselypohja.palautus_luonnokseksi_epaonnistui'));
+            });
+          });
+        };
+
+        $scope.suljeKyselypohja = function(kyselypohja) {
+          varmistus.varmista(i18n.hae('kyselypohja.sulje'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.sulje_teksti'), i18n.hae('kyselypohja.sulje')).then(function() {
+            Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {
+              ilmoitus.onnistuminen(i18n.hae('kyselypohja.suljettu'));
+              _.assign(kyselypohja, uusiKyselypohja);
+            }).error(function() {
+              ilmoitus.onnistuminen(i18n.hae('kyselypohja.sulkeminen_epaonnistui'));
+            });
+          });
+        };
+
+        $scope.palautaKyselypohjaJulkaistuksi = function(kyselypohja) {
+          varmistus.varmista(i18n.hae('kyselypohja.palauta_julkaistuksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_julkaistuksi_teksti'), i18n.hae('kyselypohja.palauta_julkaistuksi')).then(function() {
+            Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
+              ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_julkaistuksi_onnistui'));
+              _.assign(kyselypohja, uusiKyselypohja);
+            }).error(function() {
+              ilmoitus.virhe(i18n.hae('kyselypohja.palautus_julkaistuksi_epaonnistui'));
+            });
+          });
+        };
+
+      }]
+    };
+  }])
+;

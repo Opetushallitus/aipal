@@ -13,10 +13,10 @@
 </div>
 
 <h2>{{i18n.kyselypohja.julkaistut}}</h2>
-<ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['julkaistu']"></ng-include>
+<kyselypohjalista kyselypohjat="kyselypohjat" tila="julkaistu"></kyselypohjalista>
 
 <h2>{{i18n.kyselypohja.luonnokset}}</h2>
-<ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['luonnos']"></ng-include>
+<kyselypohjalista kyselypohjat="kyselypohjat" tila="luonnos"></kyselypohjalista>
 
 <div>
   <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
@@ -28,5 +28,5 @@
 <div ng-if="naytaSuljetut">
   <h2>{{i18n.kyselypohja.suljetut}}</h2>
 
-  <ng-include src="'template/kyselypohja/kyselypohjalista.html'" ng-repeat="tila in ['suljettu']"></ng-include>
+  <kyselypohjalista kyselypohjat="kyselypohjat" tila="suljettu"></kyselypohjalista>
 </div>
