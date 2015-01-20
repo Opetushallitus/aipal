@@ -36,66 +36,9 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     ;
   }])
 
-  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $location, $scope, Kyselypohja, i18n, ilmoitus, varmistus) {
+  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', function($filter, $location, $scope, Kyselypohja) {
     $scope.luoUusiKyselypohja = function() {
       $location.url('/kyselypohjat/kyselypohja/uusi');
-    };
-
-    $scope.julkaiseKyselypohja = function(kyselypohja) {
-      varmistus.varmista(i18n.hae('kyselypohja.julkaise'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.julkaise_teksti'), i18n.hae('kyselypohja.julkaise')).then(function() {
-        Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
-          ilmoitus.onnistuminen(i18n.hae('kyselypohja.julkaistu'));
-          _.assign(kyselypohja, uusiKyselypohja);
-        }).error(function() {
-          ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
-        });
-      });
-    };
-
-    $scope.palautaKyselypohjaJulkaistuksi = function(kyselypohja) {
-      varmistus.varmista(i18n.hae('kyselypohja.palauta_julkaistuksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_julkaistuksi_teksti'), i18n.hae('kyselypohja.palauta_julkaistuksi')).then(function() {
-        Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
-          ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_julkaistuksi_onnistui'));
-          _.assign(kyselypohja, uusiKyselypohja);
-        }).error(function() {
-          ilmoitus.virhe(i18n.hae('kyselypohja.palautus_julkaistuksi_epaonnistui'));
-        });
-      });
-    };
-
-    $scope.palautaKyselypohjaLuonnokseksi= function(kyselypohja) {
-      varmistus.varmista(i18n.hae('kyselypohja.palauta_luonnokseksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_luonnokseksi_teksti'), i18n.hae('kyselypohja.palauta_luonnokseksi')).then(function() {
-        Kyselypohja.palautaLuonnokseksi(kyselypohja).success(function(uusiKyselypohja) {
-          ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_luonnokseksi_onnistui'));
-          _.assign(kyselypohja, uusiKyselypohja);
-        }).error(function() {
-          ilmoitus.virhe(i18n.hae('kyselypohja.palautus_luonnokseksi_epaonnistui'));
-        });
-      });
-    };
-
-    $scope.suljeKyselypohja = function(kyselypohja) {
-      varmistus.varmista(i18n.hae('kyselypohja.sulje'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.sulje_teksti'), i18n.hae('kyselypohja.sulje')).then(function() {
-        Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {
-          ilmoitus.onnistuminen(i18n.hae('kyselypohja.suljettu'));
-          _.assign(kyselypohja, uusiKyselypohja);
-        }).error(function() {
-          ilmoitus.onnistuminen(i18n.hae('kyselypohja.sulkeminen_epaonnistui'));
-        });
-      });
-    };
-
-    $scope.poistaKyselypohja = function(kyselypohjalista, kyselypohja) {
-      varmistus.varmista(i18n.hae('kyselypohja.poista'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.poista_teksti'), i18n.hae('kyselypohja.poista')).then(function() {
-        var kyselypohjaid = kyselypohja.kyselypohjaid;
-        var kyselypohjaindex = _.findIndex(kyselypohjalista, {kyselypohjaid: kyselypohjaid});
-        Kyselypohja.poista(kyselypohjaid).success(function() {
-          kyselypohjalista.splice(kyselypohjaindex, 1);
-          ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_onnistui'));
-        }).error(function() {
-          ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_epaonnistui'));
-        });
-      });
     };
 
     Kyselypohja.haeKaikki().success(function(kyselypohjat) {
