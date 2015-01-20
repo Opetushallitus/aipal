@@ -55,9 +55,9 @@
                 :when (or koulutustoimija
                           (not (contains? koulutustoimija-roolit rooli)))
                 kayttaja-dn kayttaja-dnt
-                :let [kayttaja (ldap/get yhteys kayttaja-dn)
-                      _ (assert kayttaja)
-                      etunimi (first (s/split (:cn kayttaja) #" "))
+                :let [kayttaja (ldap/get yhteys kayttaja-dn)]
+                :when kayttaja
+                :let [etunimi (first (s/split (:cn kayttaja) #" "))
                       sukunimi (:sn kayttaja)]]
             {:oid (:employeeNumber kayttaja)
              :uid (:uid kayttaja)
