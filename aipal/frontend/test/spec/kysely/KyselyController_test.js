@@ -25,7 +25,7 @@ describe('kysely.kyselyui.KyselyController', function(){
   var $q;
   var ilmoitus;
 
-  beforeEach(module('ui.bootstrap','kysely.kyselyui','yhteiset.palvelut.seuranta'));
+  beforeEach(module('kysely.kyselyui'));
 
   beforeEach(module(function($provide){
     $routeParams = {};

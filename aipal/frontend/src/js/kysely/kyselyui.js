@@ -18,7 +18,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
                                    'rest.vastaajatunnus', 'yhteiset.palvelut.i18n',
                                    'ngAnimate', 'ngRoute', 'yhteiset.palvelut.ilmoitus',
                                    'yhteiset.palvelut.tallennusMuistutus',
-                                   'rest.kysymysryhma'])
+                                   'rest.kysymysryhma', 'yhteiset.palvelut.seuranta',
+                                   'ui.bootstrap'])
 
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider
