@@ -42,6 +42,9 @@ angular.module('yhteiset.palvelut.seuranta', [])
 
         return promise;
       },
+      kuittaaVirhe: function(id) {
+        latausIndikaattorit[id].ok = true;
+      },
       haeTila: function(id) {
         return latausIndikaattorit[id] ? latausIndikaattorit[id] : { valmis: true, ok: true, paivitetty: -1 };
       }

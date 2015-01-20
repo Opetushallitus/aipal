@@ -37,7 +37,10 @@ angular.module('yhteiset.direktiivit.latausindikaattori', ['yhteiset.palvelut.se
         }, function(){
           var tila = seuranta.haeTila(id);
           scope.latausKaynnissa = !tila.valmis;
-          scope.virhe = !tila.ok;
+          if (tila.valmis && !tila.ok) {
+            seuranta.kuittaaVirhe(id);
+            scope.virhe = true;
+          }
         });
       }
     };
