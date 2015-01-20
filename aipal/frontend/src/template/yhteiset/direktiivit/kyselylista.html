@@ -88,9 +88,13 @@
                           {{ 'yleiset.lukitse' | i18n }}&nbsp;
                           <span class="fa fa-lock"></span>
                       </button>
-                      <button class="btn btn-primary btn-sm  pull-left" ng-click="avaaKyselykerta(kyselykerta)" ng-if="kyselykerta.lukittu && kysely.kaytettavissa">
+                      <button class="btn btn-primary btn-sm pull-left" ng-click="avaaKyselykerta(kyselykerta)" ng-if="kyselykerta.lukittu && kysely.kaytettavissa">
                           {{ 'yleiset.avaa' | i18n }}&nbsp;
                           <span class="fa fa-unlock"></span>
+                      </button>
+                      <button class="btn btn-primary btn-sm pull-left" ng-disabled="!kyselykerta.poistettavissa">
+                          {{ 'kyselykerta.poista' | i18n }}&nbsp;
+                          <span class="fa fa-trash"></span>
                       </button>
                   </auth>
                   <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']">

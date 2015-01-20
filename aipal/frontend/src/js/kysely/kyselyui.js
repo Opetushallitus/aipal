@@ -85,7 +85,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.haeKyselyt = function () {
         seuranta.asetaLatausIndikaattori(Kysely.hae(), 'kyselylistaus')
         .success(function (data) {
-          $scope.kyselyt = data;
+          $scope.kyselyt = _.map(data, function(kysely){
+            kysely.kyselykerrat = _.map(kysely.kyselykerrat, function(kyselykerta){
+              kyselykerta.poistettavissa = false;
+              return kyselykerta;
+            });
+            return kysely;
+          });
           avaaMuistetutKyselyt();
           muistaAvattavatKyselyt();
         });
