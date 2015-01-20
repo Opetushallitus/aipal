@@ -5,7 +5,6 @@
   <tr>
     <th ts-criteria="self|lokalisoiKentta:'nimi'" ts-default>{{'i18n.kysymysryhma.nimi' | i18n}}</th>
     <th ts-criteria="self|lokalisoiKentta:'selite'">{{'i18n.kysymysryhma.selite' | i18n}}</th>
-    <th ts-criteria="valtakunnallinen">{{'i18n.kysymysryhma.valtakunnallinen' | i18n}}</th>
     <th></th>
   </tr>
   </thead>
@@ -13,9 +12,6 @@
   <tr ng-repeat="k in kysymysryhmat | filter:rajoitin" ts-repeat>
     <td>{{ k | lokalisoiKentta:'nimi' }}</td>
     <td>{{ k | lokalisoiKentta:'selite' }}</td>
-    <td>
-      <span ng-show="k.valtakunnallinen" class="fa fa-check"></span>
-    </td>
     <td class="actions nowrap">
       <auth roolit="['OPL-VASTUUKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja || !k.valtakunnallinen)">
         <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}" class="e2e-muokkaa-kysymysryhmaa">

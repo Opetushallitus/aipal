@@ -12,8 +12,11 @@
 
 <div class="loader" ng-show="!latausValmis"></div>
 
-<h2>{{i18n.kysymysryhma.julkaistut}}</h2>
-<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" ng-show="latausValmis"></kysymysryhmalista>
+<h2>{{i18n.kysymysryhma.julkaistut_omat}}</h2>
+<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="false" ng-show="latausValmis"></kysymysryhmalista>
+
+<h2>{{i18n.kysymysryhma.julkaistut_valtakunnalliset}}</h2>
+<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="true" ng-show="latausValmis"></kysymysryhmalista>
 
 <h2>{{i18n.kysymysryhma.luonnokset}}</h2>
 <kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="luonnos" ng-show="latausValmis"></kysymysryhmalista>
