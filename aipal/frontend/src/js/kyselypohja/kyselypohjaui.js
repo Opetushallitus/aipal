@@ -36,7 +36,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     ;
   }])
 
-  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $location, $scope, Kyselypohja, i18n, ilmoitus, varmistus) {
+  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', function($filter, $location, $scope, Kyselypohja) {
     $scope.luoUusiKyselypohja = function() {
       $location.url('/kyselypohjat/kyselypohja/uusi');
     };
