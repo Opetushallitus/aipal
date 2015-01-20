@@ -1,4 +1,6 @@
-<table class="table table-striped kysymysryhmat-taulukko" ng-show="latausValmis" ts-wrapper>
+<div>
+
+<table class="table table-striped kysymysryhmat-taulukko" ts-wrapper>
   <thead>
   <tr>
     <th ts-criteria="self|lokalisoiKentta:'nimi'" ts-default>{{'i18n.kysymysryhma.nimi' | i18n}}</th>
@@ -8,7 +10,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr ng-repeat="k in kysymysryhmat | filter:{tila: tila}" ts-repeat>
+  <tr ng-repeat="k in kysymysryhmat | filter:rajoitin" ts-repeat>
     <td>{{ k | lokalisoiKentta:'nimi' }}</td>
     <td>{{ k | lokalisoiKentta:'selite' }}</td>
     <td>
@@ -52,3 +54,5 @@
   </tr>
   </tbody>
 </table>
+
+</div>

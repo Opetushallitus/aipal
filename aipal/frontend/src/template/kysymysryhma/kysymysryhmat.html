@@ -13,10 +13,10 @@
 <div class="loader" ng-show="!latausValmis"></div>
 
 <h2>{{i18n.kysymysryhma.julkaistut}}</h2>
-<div ng-repeat="tila in ['julkaistu']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
+<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" ng-show="latausValmis"></kysymysryhmalista>
 
 <h2>{{i18n.kysymysryhma.luonnokset}}</h2>
-<div ng-repeat="tila in ['luonnos']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
+<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="luonnos" ng-show="latausValmis"></kysymysryhmalista>
 
 <div>
   <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
@@ -28,5 +28,5 @@
 <div ng-if="naytaSuljetut">
   <h2>{{i18n.kysymysryhma.suljetut}}</h2>
 
-  <div ng-repeat="tila in ['suljettu']" ng-include="'template/kysymysryhma/kysymysryhmalista.html'"></div>
+  <kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="suljettu" ng-show="latausValmis"></kysymysryhmalista>
 </div>

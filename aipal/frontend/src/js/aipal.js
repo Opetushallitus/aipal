@@ -41,6 +41,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.pvm-valitsin',
   'yhteiset.direktiivit.kyselypohjalista',
   'yhteiset.direktiivit.kysymysryhma-accordion',
+  'yhteiset.direktiivit.kysymysryhmalista',
   'yhteiset.direktiivit.latausindikaattori',
   'yhteiset.direktiivit.ohjeet',
   'yhteiset.direktiivit.pakollisia-kenttia',
