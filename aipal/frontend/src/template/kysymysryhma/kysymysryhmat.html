@@ -12,13 +12,13 @@
 
 <div class="loader" ng-show="!latausValmis"></div>
 
-<h2>{{i18n.kysymysryhma.julkaistut}}</h2>
+<h2>{{i18n.yleiset.julkaistut}}</h2>
 <kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="false" ng-show="latausValmis"></kysymysryhmalista>
 
-<h2>{{i18n.kysymysryhma.julkaistut_valtakunnalliset}}</h2>
+<h2>{{i18n.yleiset.julkaistut_valtakunnalliset}}</h2>
 <kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="true" ng-show="latausValmis"></kysymysryhmalista>
 
-<h2>{{i18n.kysymysryhma.luonnokset}}</h2>
+<h2>{{i18n.yleiset.luonnokset}}</h2>
 <kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="luonnos" ng-show="latausValmis"></kysymysryhmalista>
 
 <div>
@@ -29,7 +29,7 @@
 </div>
 
 <div ng-if="naytaSuljetut">
-  <h2>{{i18n.kysymysryhma.suljetut}}</h2>
+  <h2>{{i18n.yleiset.suljetut}}</h2>
 
   <kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="suljettu" ng-show="latausValmis"></kysymysryhmalista>
 </div>
