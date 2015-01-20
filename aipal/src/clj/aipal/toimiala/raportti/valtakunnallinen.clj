@@ -145,7 +145,8 @@
 (defn rajaa-vastaajatunnukset-ajalle [query alkupvm loppupvm]
   (rajaa-aikavalille query [:vastaajatunnus.voimassa_alkupvm :vastaajatunnus.voimassa_loppupvm] [alkupvm loppupvm]))
 
-(defn hae-vastaajien-maksimimaara [alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn hae-vastaajien-maksimimaara-kysymysryhmalle
+  [kysymysryhmaid alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaajatunnus)
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
@@ -156,7 +157,7 @@
       opintoalatunnus (rajaa-vastaajatunnukset-opintoalalle opintoalatunnus)
       koulutusalatunnus (rajaa-vastaajatunnukset-koulutusalalle koulutusalatunnus)
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
-    (sql/where {:kysymysryhma.valtakunnallinen true})
+    (sql/where {:kysymysryhma.kysymysryhmaid kysymysryhmaid})
     (rajaa-vastaajatunnukset-ajalle alkupvm loppupvm)
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
@@ -164,6 +165,15 @@
     (->>
       (map :vastaajien_lkm)
       (reduce +))))
+
+(defn liita-vastaajien-maksimimaarat
+  [kysymysryhmat alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+  (for [kysymysryhma kysymysryhmat]
+    (assoc kysymysryhma
+           :vastaajien_maksimimaara
+           (hae-vastaajien-maksimimaara-kysymysryhmalle
+             (:kysymysryhmaid kysymysryhma)
+             alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus))))
 
 (defn ^:private nimet [juttu]
   (select-keys juttu [:nimi_fi :nimi_sv]))
@@ -192,7 +202,10 @@
         opintoalatunnus (when (= "opintoala" (:tutkintorakennetaso parametrit)) (first (:opintoalat parametrit)))
         koulutusalatunnus (when (= "koulutusala" (:tutkintorakennetaso parametrit)) (first (:koulutusalat parametrit)))
         koulutustoimijat (not-empty (:koulutustoimijat parametrit))
-        kysymysryhmat (hae-valtakunnalliset-kysymysryhmat (Integer/parseInt (:taustakysymysryhmaid parametrit)))
+        taustakysymysryhmaid (Integer/parseInt (:taustakysymysryhmaid parametrit))
+        kysymysryhmat (liita-vastaajien-maksimimaarat
+                        (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
+                        alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         kysymykset (hae-valtakunnalliset-kysymykset)
         vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
     (merge
@@ -201,4 +214,6 @@
        :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
        :parametrit parametrit
        :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
-       :vastaajien_maksimimaara (hae-vastaajien-maksimimaara alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))
+       :vastaajien_maksimimaara (hae-vastaajien-maksimimaara-kysymysryhmalle
+                                  taustakysymysryhmaid
+                                  alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))

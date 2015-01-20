@@ -87,15 +87,15 @@
 <div ng-repeat="kysymysryhma in tulos.raportti" class="kysymysryhma">
   <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
   <p>
-    {{'raportti.vastaajien_maara' | i18n }}: {{kysymysryhma.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
-    {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymysryhma.vastaajien_lukumaara, tulos.vastaajien_maksimimaara)}}%
+    {{'raportti.vastaajien_maara' | i18n }}: {{kysymysryhma.vastaajien_lukumaara}}/{{kysymysryhma.vastaajien_maksimimaara}}
+    {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymysryhma.vastaajien_lukumaara, kysymysryhma.vastaajien_maksimimaara)}}%
   </p>
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
     <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
     <span>
-      {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{tulos.vastaajien_maksimimaara}}
-      {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymys.vastaajien_lukumaara, tulos.vastaajien_maksimimaara)}}%
+      {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{kysymysryhma.vastaajien_maksimimaara}}
+      {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymys.vastaajien_lukumaara, kysymysryhma.vastaajien_maksimimaara)}}%
       <br />
     </span>
 
