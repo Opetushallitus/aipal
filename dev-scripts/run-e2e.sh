@@ -48,6 +48,7 @@ else
 fi
 
 cd $repo_path
+(cd aipal/frontend; grunt build)
 dev-scripts/copy-db.sh aipal aipal_e2e_backup
 if [ "$use_existing_e2e_database" = "no" ]; then
     dev-scripts/create-db-schema.sh
