@@ -256,10 +256,10 @@
     (assoc kysymys :vastaukset vastaukset)))
 
 (defn ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain [kysymykset vastaukset kysymysryhmat]
-  (let [kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
+  (let [kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)
+        kysymysten-vastaukset (group-by :kysymysid vastaukset)]
     (for [kysymysryhma kysymysryhmat
           :let [kysymykset (get kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))
-                kysymysten-vastaukset (group-by :kysymysid vastaukset)
                 kysymykset-ja-vastaukset (liita-kysymyksiin-vastaukset kysymykset kysymysten-vastaukset)]
           :when (seq (mapcat :vastaukset kysymykset-ja-vastaukset))]
       (assoc kysymysryhma :kysymykset kysymykset-ja-vastaukset))))
