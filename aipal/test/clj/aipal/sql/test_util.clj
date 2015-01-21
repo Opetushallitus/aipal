@@ -61,6 +61,7 @@
         ;; avataan transaktio joka on voimassa koko kutsun (f) ajan
         (db/transaction
           (try
+            (testdata/luo-dummy-rivit!)
             (f)
             (finally
               (testdata/tyhjenna-testidata! oid)

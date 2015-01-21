@@ -23,9 +23,11 @@
       (sql/select taulut/kyselykerta
         (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
         (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
+        (sql/join :left :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid))
         (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
                     :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
-                    :kyselykerta.lukittu :kyselykerta.luotuaika)
+                    :kyselykerta.lukittu :kyselykerta.luotuaika
+                    [(sql/raw "vastaaja.vastaajaid is null") :poistettavissa])
         (cond-> (not (nil? koulutustoimija))
           (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija}))
         (sql/order :kyselykerta.kyselykertaid :ASC)))

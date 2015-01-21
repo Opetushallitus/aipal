@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [oph.korma.korma :refer [select-unique-or-nil]]
-            [aipal.integraatio.sql.korma :refer [kayttaja rooli_organisaatio]]
+            [aipal.integraatio.sql.korma :as taulut]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-uid]]))
 
@@ -40,6 +40,20 @@
    "koulutustoimija"
    "kayttaja"])
 
+(defn ^:test-api luo-dummy-rivit!
+  "Luo jokaiseen tauluun yhden rivin, johon voidaan viitata testeissä, kun
+  tarvitaan vierasavainviittaus, jonka kohdedatalla ei ole merkitystä testin
+  kannalta." []
+  (sql/insert taulut/koulutustoimija
+    (sql/values
+      {:ytunnus "0000000-0"
+       :nimi_fi "Dummy"}))
+  (sql/insert taulut/kysely
+    (sql/values
+      {:kyselyid -1
+       :nimi_fi "Dummy"
+       :koulutustoimija "0000000-0"})))
+
 (defn ^:test-api tyhjenna-testidata!
   [oid]
   (doseq [taulu taulut]
@@ -47,24 +61,24 @@
 
 (defn ^:test-api luo-testikayttaja!
   ([testikayttaja-oid testikayttaja-uid roolitunnus]
-  (with-kayttaja jarjestelma-uid nil nil
-    (when-not (select-unique-or-nil kayttaja
-                (sql/where {:oid testikayttaja-oid}))
-      (db/transaction
-        (sql/insert kayttaja
-                    (sql/values
-                      {:voimassa true
-                       :sukunimi "Leiningen"
-                       :etunimi "Testi"
-                       :uid testikayttaja-uid
-                       :oid testikayttaja-oid}))
-        (sql/insert rooli_organisaatio
-                    (sql/values
-                      {:voimassa true
-                       :kayttaja testikayttaja-oid
-                       :rooli roolitunnus}))))))
+   (with-kayttaja jarjestelma-uid nil nil
+     (when-not (select-unique-or-nil taulut/kayttaja
+                 (sql/where {:oid testikayttaja-oid}))
+       (db/transaction
+         (sql/insert taulut/kayttaja
+           (sql/values
+             {:voimassa true
+              :sukunimi "Leiningen"
+              :etunimi "Testi"
+              :uid testikayttaja-uid
+              :oid testikayttaja-oid}))
+         (sql/insert taulut/rooli_organisaatio
+           (sql/values
+             {:voimassa true
+              :kayttaja testikayttaja-oid
+              :rooli roolitunnus}))))))
   ([testikayttaja-oid testikayttaja-uid]
-    (luo-testikayttaja! testikayttaja-oid testikayttaja-uid "YLLAPITAJA")))
+   (luo-testikayttaja! testikayttaja-oid testikayttaja-uid "YLLAPITAJA")))
 
 (defn ^:test-api poista-testikayttaja!
   [testikayttaja-oid]
