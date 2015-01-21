@@ -35,7 +35,7 @@
                   [(sql/subselect taulut/kysymys
                      (sql/aggregate (count :*) :lkm)
                      (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
-                  [(sql/sqlfn exists (sql/subselect taulut/kysymysryhma-kyselypohja
+                  [(sql/sqlfn exists (sql/subselect taulut/kysymysryhma_kyselypohja
                                        (sql/where {:kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselypohjaan]
                   [(sql/sqlfn exists (sql/subselect taulut/kysely_kysymysryhma
                                        (sql/where {:kysely_kysymysryhma.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselyyn])
@@ -238,7 +238,7 @@
   "Hakee kyselypohjan kyselyryhmät, jotka ovat lisättävissä kyselyyn"
   [kyselypohjaid]
   (-> (kysymysryhma-esikatselulle-select)
-    (sql/join :inner taulut/kysymysryhma-kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
+    (sql/join :inner taulut/kysymysryhma_kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid :kysymysryhma_kyselypohja.jarjestys)
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid
                 :kysymysryhma.lisattavissa true})
@@ -340,7 +340,7 @@
 (defn laske-kyselypohjat
   [kysymysryhmaid]
   (->
-    (sql/select taulut/kysymysryhma-kyselypohja
+    (sql/select taulut/kysymysryhma_kyselypohja
       (sql/aggregate (count :*) :lkm)
       (sql/where {:kysymysryhmaid kysymysryhmaid}))
     first

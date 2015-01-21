@@ -91,7 +91,7 @@
 
 (defn poista-kyselypohja! [kyselypohjaid]
   (auditlog/kyselypohja-poisto! kyselypohjaid)
-  (sql/delete taulut/kysymysryhma-kyselypohja
+  (sql/delete taulut/kysymysryhma_kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid}))
   (sql/delete taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})))
