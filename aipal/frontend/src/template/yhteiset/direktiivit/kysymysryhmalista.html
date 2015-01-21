@@ -9,7 +9,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr ng-repeat="k in kysymysryhmat | filter:rajoitin" ts-repeat>
+  <tr ng-repeat="k in kysymysryhmat | filter:rajoitin |lokalisoituFilter:'nimi':hakuehto" ts-repeat>
     <td>{{ k | lokalisoiKentta:'nimi' }}</td>
     <td>{{ k | lokalisoiKentta:'selite' }}</td>
     <td class="actions nowrap">

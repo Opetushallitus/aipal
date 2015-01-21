@@ -21,6 +21,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
       restrict: 'E',
       replace: true,
       scope: {
+        hakuehto: '=',
         kysymysryhmat: '=',
         tila: '@'
       },

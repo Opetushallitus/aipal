@@ -8,18 +8,21 @@
             </a>
         </auth>
     </div>
+  <div class="col-md-4">
+    <input type="text" class="icon search-icon-input form-control" ng-model="hakuehto" placeholder="{{i18n.kysymysryhma.etsi}}">
+  </div>
 </div>
 
 <div class="loader" ng-show="!latausValmis"></div>
 
 <h2>{{i18n.yleiset.julkaistut}}</h2>
-<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="false" ng-show="latausValmis"></kysymysryhmalista>
+<kysymysryhmalista hakuehto="hakuehto" kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="false" ng-show="latausValmis"></kysymysryhmalista>
 
 <h2>{{i18n.yleiset.julkaistut_valtakunnalliset}}</h2>
-<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="true" ng-show="latausValmis"></kysymysryhmalista>
+<kysymysryhmalista hakuehto="hakuehto" kysymysryhmat="kysymysryhmat" tila="julkaistu" valtakunnalliset="true" ng-show="latausValmis"></kysymysryhmalista>
 
 <h2>{{i18n.yleiset.luonnokset}}</h2>
-<kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="luonnos" ng-show="latausValmis"></kysymysryhmalista>
+<kysymysryhmalista hakuehto="hakuehto" kysymysryhmat="kysymysryhmat" tila="luonnos" ng-show="latausValmis"></kysymysryhmalista>
 
 <div>
   <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
@@ -31,5 +34,5 @@
 <div ng-if="naytaSuljetut">
   <h2>{{i18n.yleiset.suljetut}}</h2>
 
-  <kysymysryhmalista kysymysryhmat="kysymysryhmat" tila="suljettu" ng-show="latausValmis"></kysymysryhmalista>
+  <kysymysryhmalista hakuehto="hakuehto" kysymysryhmat="kysymysryhmat" tila="suljettu" ng-show="latausValmis"></kysymysryhmalista>
 </div>
