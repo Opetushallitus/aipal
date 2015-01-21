@@ -24,11 +24,11 @@ angular.module('yhteiset.direktiivit.lokalisoitufilter', [])
       _.forEach(items, function(item) {
         var fi = item[kentta + '_fi'];
         var sv = item[kentta + '_sv'];
-        if (hakuehto === undefined || hakuehto.length == 0 || (fi && fi.toLowerCase().indexOf(hakuehto) != -1) || (sv && sv.toLowerCase().indexOf(hakuehto) != -1)) {
+        if (hakuehto === undefined || hakuehto.length === 0 || (fi && fi.toLowerCase().indexOf(hakuehto) !== -1) || (sv && sv.toLowerCase().indexOf(hakuehto) !== -1)) {
           filtered.push(item);
         }
       });
       return filtered;
-    }
+    };
   })
 ;
