@@ -80,6 +80,12 @@
     first
     :vastaajien_maksimimaara))
 
+(defn liita-vastaajien-maksimimaarat
+  [kysymysryhmat parametrit]
+  (let [vastaajien-maksimimaara (hae-vastaajien-maksimimaara parametrit)]
+    (for [kysymysryhma kysymysryhmat]
+      (assoc kysymysryhma :vastaajien_maksimimaara vastaajien-maksimimaara))))
+
 (defn ^:private hae-kysymykset [parametrit]
   (->
     (sql/select* :kysely)
@@ -180,6 +186,7 @@
 (defn muodosta-raportti [parametrit]
   {:pre [(or :kyselyid parametrit
              :kyselykertaid parametrit)]}
-  (raportointi/muodosta-raportti-vastauksista (hae-kysymysryhmat parametrit)
+  (raportointi/muodosta-raportti-vastauksista (liita-vastaajien-maksimimaarat
+                                                (hae-kysymysryhmat parametrit) parametrit)
                                               (hae-kysymykset parametrit)
                                               (hae-vastaukset parametrit)))
