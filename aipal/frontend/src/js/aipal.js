@@ -43,6 +43,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.kysymysryhma-accordion',
   'yhteiset.direktiivit.kysymysryhmalista',
   'yhteiset.direktiivit.latausindikaattori',
+  'yhteiset.direktiivit.lokalisoitufilter',
   'yhteiset.direktiivit.ohjeet',
   'yhteiset.direktiivit.pakollisia-kenttia',
   'yhteiset.direktiivit.tallenna',

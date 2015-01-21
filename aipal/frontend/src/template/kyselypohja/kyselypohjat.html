@@ -13,13 +13,13 @@
 </div>
 
 <h2>{{i18n.yleiset.julkaistut}}</h2>
-<kyselypohjalista kyselypohjat="kyselypohjat" tila="julkaistu" valtakunnalliset="false"></kyselypohjalista>
+<kyselypohjalista hakuehto="hakuehto.teksti" kyselypohjat="kyselypohjat" tila="julkaistu" valtakunnalliset="false"></kyselypohjalista>
 
 <h2>{{i18n.yleiset.julkaistut_valtakunnalliset}}</h2>
-<kyselypohjalista kyselypohjat="kyselypohjat" tila="julkaistu" valtakunnalliset="true"></kyselypohjalista>
+<kyselypohjalista hakuehto="hakuehto.teksti" kyselypohjat="kyselypohjat" tila="julkaistu" valtakunnalliset="true"></kyselypohjalista>
 
 <h2>{{i18n.yleiset.luonnokset}}</h2>
-<kyselypohjalista kyselypohjat="kyselypohjat" tila="luonnos"></kyselypohjalista>
+<kyselypohjalista hakuehto="hakuehto.teksti" kyselypohjat="kyselypohjat" tila="luonnos"></kyselypohjalista>
 
 <div>
   <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
@@ -31,5 +31,5 @@
 <div ng-if="naytaSuljetut">
   <h2>{{i18n.yleiset.suljetut}}</h2>
 
-  <kyselypohjalista kyselypohjat="kyselypohjat" tila="suljettu"></kyselypohjalista>
+  <kyselypohjalista hakuehto="hakuehto.teksti" kyselypohjat="kyselypohjat" tila="suljettu"></kyselypohjalista>
 </div>

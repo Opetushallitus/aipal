@@ -21,6 +21,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
       restrict: 'E',
       replace: true,
       scope: {
+        hakuehto: '=',
         kyselypohjat: '=',
         tila: '@'
       },
