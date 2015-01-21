@@ -34,6 +34,9 @@ angular.module('rest.kyselykerta', [])
       },
       avaa: function(kyselykertaId) {
         return $http.put('api/kyselykerta/' + kyselykertaId + '/avaa');
+      },
+      poista: function(kyselykertaId) {
+        return $http.delete('api/kyselykerta/' + kyselykertaId);
       }
     };
   }]);

@@ -14,7 +14,11 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus'])
+angular.module('yhteiset.direktiivit.kyselylista',
+    ['yhteiset.palvelut.i18n',
+     'yhteiset.palvelut.ilmoitus',
+     'rest.kysely',
+     'rest.kyselykerta'])
 
   .controller('KyselylistaController', ['$filter', '$scope', '$location', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', 'varmistus', function($filter, $scope, $location, Kysely, Kyselykerta, ilmoitus, i18n, varmistus) {
     $scope.julkaiseKyselyModal = function(kysely) {
@@ -47,6 +51,13 @@ angular.module('yhteiset.direktiivit.kyselylista', ['yhteiset.palvelut.i18n', 'y
 
     $scope.uusiKyselykerta = function (kysely) {
       $location.url('/kyselyt/' + kysely.kyselyid + '/kyselykerta/uusi');
+    };
+
+    $scope.poistaKyselykerta = function(kyselykerta) {
+      Kyselykerta.poista(kyselykerta.kyselykertaid)
+      .error(function(){
+        ilmoitus.virhe(i18n.hae('kyselykerta.poistaminen_epaonnistui'));
+      });
     };
 
     $scope.suljeKyselyModal = function(kysely) {

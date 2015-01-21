@@ -92,7 +92,7 @@
                           {{ 'yleiset.avaa' | i18n }}&nbsp;
                           <span class="fa fa-unlock"></span>
                       </button>
-                      <button class="btn btn-primary btn-sm pull-left" ng-disabled="!kyselykerta.poistettavissa">
+                      <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)" ng-disabled="!kyselykerta.poistettavissa">
                           {{ 'kyselykerta.poista' | i18n }}&nbsp;
                           <span class="fa fa-trash"></span>
                       </button>
