@@ -8,14 +8,14 @@
 (use-fixtures :each tietokanta-fixture)
 
 ;; Kyselykerta on poistettavissa, jos sillä ei ole yhtään vastaajaa.
-(deftest kyselykerta-poistettavissa
+(deftest ^:integraatio kyselykerta-poistettavissa
   (sql/insert taulut/kyselykerta
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()")}))
   (is (= (map :poistettavissa (arkisto/hae-kaikki))
          [true])))
 
 ;; Kyselykerta ei ole poistettavissa, jos sillä on yksikin vastaaja..
-(deftest kyselykerta-poistettavissa
+(deftest ^:integraatio kyselykerta-poistettavissa
   (sql/insert taulut/kyselykerta
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
                  :kyselykertaid 1}))
