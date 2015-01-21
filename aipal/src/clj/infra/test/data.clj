@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [oph.korma.korma :refer [select-unique-or-nil]]
-            [aipal.integraatio.sql.korma :refer [kayttaja rooli-organisaatio]]
+            [aipal.integraatio.sql.korma :refer [kayttaja rooli_organisaatio]]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-uid]]))
 
@@ -58,7 +58,7 @@
                        :etunimi "Testi"
                        :uid testikayttaja-uid
                        :oid testikayttaja-oid}))
-        (sql/insert rooli-organisaatio
+        (sql/insert rooli_organisaatio
                     (sql/values
                       {:voimassa true
                        :kayttaja testikayttaja-oid

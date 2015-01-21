@@ -65,7 +65,7 @@
   (sql/insert taulut/kayttajarooli
     (sql/values [{:roolitunnus "testirooli1"}
                  {:roolitunnus "testirooli2"}]))
-  (sql/insert taulut/rooli-organisaatio
+  (sql/insert taulut/rooli_organisaatio
     (sql/values [{:organisaatio "org"
                   :rooli "testirooli1"
                   :kayttaja "oid1"
@@ -77,7 +77,7 @@
   (is (= (map #(select-keys % [:organisaatio :rooli]) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
          [{:organisaatio "org"
            :rooli "testirooli1"}]))
-  (sql/delete taulut/rooli-organisaatio
+  (sql/delete taulut/rooli_organisaatio
     (sql/where {:rooli [like "testirooli%"]}))
   (sql/delete taulut/kayttajarooli
     (sql/where {:roolitunnus [like "testirooli%"]})))
@@ -91,7 +91,7 @@
   (sql/insert taulut/kayttajarooli
     (sql/values [{:roolitunnus "testirooli1"}
                  {:roolitunnus "testirooli2"}]))
-  (sql/insert taulut/rooli-organisaatio
+  (sql/insert taulut/rooli_organisaatio
     (sql/values [{:organisaatio "org"
                   :rooli "testirooli1"
                   :kayttaja "oid1"
@@ -103,7 +103,7 @@
   (is (= (map #(select-keys % [:organisaatio :rooli]) (kayttajaoikeus-arkisto/hae-roolit "oid1"))
          [{:organisaatio "org"
            :rooli "testirooli1"}]))
-  (sql/delete taulut/rooli-organisaatio
+  (sql/delete taulut/rooli_organisaatio
     (sql/where {:rooli [like "testirooli%"]}))
   (sql/delete taulut/kayttajarooli
     (sql/where {:roolitunnus [like "testirooli%"]})))

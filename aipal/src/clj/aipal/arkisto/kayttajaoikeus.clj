@@ -23,7 +23,7 @@
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae-roolit [oid]
-  (sql/select taulut/rooli-organisaatio
+  (sql/select taulut/rooli_organisaatio
     (sql/join taulut/koulutustoimija
               (= :rooli_organisaatio.organisaatio :koulutustoimija.ytunnus))
     (sql/fields :rooli :organisaatio :rooli_organisaatio_id
@@ -42,7 +42,7 @@
     (hae-oikeudet (:oid *kayttaja*))))
 
 (defn hae-rooli [rooli kayttaja organisaatio]
-  (select-unique-or-nil taulut/rooli-organisaatio
+  (select-unique-or-nil taulut/rooli_organisaatio
     (sql/where {:rooli rooli
                 :kayttaja kayttaja
                 :organisaatio organisaatio})))
@@ -58,7 +58,7 @@
     (sql/set-fields {:voimassa false})
     (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]}))
   (log/debug "Merkitään olemassaolevien käyttäjien roolit ei-voimassaoleviksi")
-  (sql/update taulut/rooli-organisaatio
+  (sql/update taulut/rooli_organisaatio
     (sql/set-fields {:voimassa false})
     (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]})))
 
@@ -70,14 +70,14 @@
     (do
       (log/debug "Rooli on jo olemassa, päivitetään tiedot")
       (update-unique
-        taulut/rooli-organisaatio
+        taulut/rooli_organisaatio
         (sql/set-fields r)
         (sql/where {:kayttaja (:kayttaja r)
                     :rooli (:rooli r)
                     :organisaatio (:organisaatio r)})))
     (do
       (log/debug "Luodaan uusi rooli")
-      (sql/insert taulut/rooli-organisaatio (sql/values r)))))
+      (sql/insert taulut/rooli_organisaatio (sql/values r)))))
 
 (defn ^:integration-api paivita-kaikki!
   "Päivittää käyttäjätaulun uusilla käyttäjillä kt."

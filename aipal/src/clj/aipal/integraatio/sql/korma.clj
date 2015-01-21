@@ -58,9 +58,6 @@
 (defentity kieli
   (sql/pk :kieli))
 
-(defentity rooli-organisaatio
-  (sql/table :rooli_organisaatio))
-
 (defentity kayttaja
   (sql/pk :oid))
 
