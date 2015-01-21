@@ -22,7 +22,9 @@ angular.module('yhteiset.direktiivit.lokalisoitufilter', [])
       }
       var filtered = [];
       _.forEach(items, function(item) {
-        if (hakuehto === undefined || hakuehto.length == 0 || item[kentta + '_fi'].toLowerCase().indexOf(hakuehto) != -1 || item[kentta + '_sv'].toLowerCase().indexOf(hakuehto) != -1) {
+        var fi = item[kentta + '_fi'];
+        var sv = item[kentta + '_sv'];
+        if (hakuehto === undefined || hakuehto.length == 0 || (fi && fi.toLowerCase().indexOf(hakuehto) != -1) || (sv && sv.toLowerCase().indexOf(hakuehto) != -1)) {
           filtered.push(item);
         }
       });
