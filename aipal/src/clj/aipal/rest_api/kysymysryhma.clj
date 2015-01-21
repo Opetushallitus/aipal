@@ -145,7 +145,9 @@
 
   (cu/defapi :kysymysryhma-palautus-luonnokseksi kysymysryhmaid :put "/:kysymysryhmaid/palauta" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
-      (if (zero? (arkisto/laske-kyselyt kysymysryhmaid))
+      (if (and
+            (zero? (arkisto/laske-kyselyt kysymysryhmaid))
+            (zero? (arkisto/laske-kyselypohjat kysymysryhmaid)))
         (json-response (arkisto/palauta-luonnokseksi! kysymysryhmaid))
         {:status 403})))
 

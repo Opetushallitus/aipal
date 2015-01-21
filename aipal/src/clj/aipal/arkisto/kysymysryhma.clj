@@ -334,3 +334,12 @@
       (sql/where {:kysymysryhmaid kysymysryhmaid}))
     first
     :lkm))
+
+(defn laske-kyselypohjat
+  [kysymysryhmaid]
+  (->
+    (sql/select taulut/kysymysryhma-kyselypohja
+      (sql/aggregate (count :*) :lkm)
+      (sql/where {:kysymysryhmaid kysymysryhmaid}))
+    first
+    :lkm))
