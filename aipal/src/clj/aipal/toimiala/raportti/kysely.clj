@@ -35,7 +35,8 @@
     (let [parametrit (merge kysely parametrit)
           koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain parametrit)
           vastaajien-lkm (reduce + (map :vastaajat_yhteensa koulutustoimijatiedot))]
-      {:yhteenveto (assoc kysely :koulutustoimijat koulutustoimijatiedot)
+      {:yhteenveto (assoc kysely :koulutustoimijat koulutustoimijatiedot
+                                 :vastaajat_yhteensa (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot))
        :luontipvm (time/today)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
        :vastaajien-lkm vastaajien-lkm

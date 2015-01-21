@@ -38,9 +38,11 @@
 
 (defn muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
-    {:yhteenveto (assoc kyselykerta :koulutustoimijat (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta))
-     :luontipvm (time/today)
-     :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kyselykerta)}))
+    (let [koulutustoimijat (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta)]
+      {:yhteenveto (assoc kyselykerta :koulutustoimijat koulutustoimijat
+                                      :vastaajat_yhteensa (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijat))
+       :luontipvm (time/today)
+       :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kyselykerta)})))
 
 (defn muodosta-raportti [kyselykertaid]
   (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]

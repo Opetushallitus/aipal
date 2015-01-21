@@ -62,6 +62,10 @@
     sql/exec
     (koulutustoimijat-hierarkiaksi parametrit)))
 
+(defn laske-vastaajat-yhteensa
+  [koulutustoimijat]
+  (reduce + 0 (map :vastaajat_yhteensa koulutustoimijat)))
+
 (defn hae-vastaajien-maksimimaara [parametrit]
   (->
     (sql/select* :kyselykerta)
