@@ -1,13 +1,13 @@
 <h1>{{i18n.kysymysryhma.kysymysryhmat}} <ohje tunniste="kysymysryhmat"></ohje></h1>
 <div class="row">
-    <div class="col-md-12">
-        <auth roolit="['OPL-VASTUUKAYTTAJA']">
-            <a class="pull-right btn btn-primary e2e-luo-uusi-kysymysryhma" href="#/kysymysryhmat/kysymysryhma/uusi" style="margin: 0;">
-                {{i18n.kysymysryhma.luo_uusi}} &nbsp;
-                <span class="fa fa-plus"></span>
-            </a>
-        </auth>
-    </div>
+  <div class="col-md-12">
+    <auth roolit="['OPL-VASTUUKAYTTAJA']">
+      <a class="pull-right btn btn-primary e2e-luo-uusi-kysymysryhma" href="#/kysymysryhmat/kysymysryhma/uusi" style="margin: 0;">
+        {{i18n.kysymysryhma.luo_uusi}} &nbsp;
+        <span class="fa fa-plus"></span>
+      </a>
+    </auth>
+  </div>
   <div class="col-md-4">
     <input type="text" class="icon search-icon-input form-control" ng-model="hakuehto" placeholder="{{i18n.kysymysryhma.etsi}}">
   </div>
