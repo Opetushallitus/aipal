@@ -26,10 +26,10 @@
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div ng-if="tulos.yhteenveto">
     <div>
-      {{'yleiset.kysely' | i18n }}: <span>{{tulos.yhteenveto | lokalisoiKentta:'kysely'}}</span>
+      <h2>{{'yleiset.kysely' | i18n }}: <span>{{tulos.yhteenveto | lokalisoiKentta:'kysely'}}</span></h2>
     </div>
     <div ng-if="tulos.yhteenveto.kyselykerta">
-      {{'yleiset.kyselykerta' | i18n }}: <span>{{tulos.yhteenveto.kyselykerta}}</span>
+      {{'yleiset.kyselykerta' | i18n }}: <b><span>{{tulos.yhteenveto.kyselykerta}}</span></b>
     </div>
     <!--
     <div>
@@ -37,9 +37,8 @@
     </div>
     -->
     <div ng-repeat="koulutustoimija in tulos.yhteenveto.koulutustoimijat">
-      <hr>
       <div>
-        {{'raportti.koulutuksen_jarjestaja' | i18n}}: <span>{{koulutustoimija | lokalisoiKentta:'koulutustoimija'}}</span>
+        <h3>{{'raportti.koulutuksen_jarjestaja' | i18n}}: <span>{{koulutustoimija | lokalisoiKentta:'koulutustoimija'}}</span></h3>
       </div>
       <table class="table">
         <thead>
@@ -63,14 +62,18 @@
     </div>
   </div>
   <div>
-    <div>
+    <hr>
+    <div ng-show="tulos | lokalisoiKentta:'nimi'">
       {{ 'raportti.otsikko' | i18n }}: <b>{{ tulos | lokalisoiKentta:'nimi' }}</b>
     </div>
     <div>
-      {{'raportti.kohderyhman_koko' | i18n }}: {{tulos.vastaajien_maksimimaara}}
+      {{'raportti.kohderyhman_koko' | i18n }}: <b>{{tulos.vastaajien_maksimimaara}}</b>
     </div>
     <div>
-      {{'raportti.organisaatio' | i18n }}: {{rooli_koulutustoimija}}
+      {{'raportti.organisaatio' | i18n }}: <b>{{rooli_koulutustoimija}}</b>
+    </div>
+    <div>
+      {{'raportti.kokonaismaara' | i18n }}: <b>{{tulos.yhteenveto.vastaajat_yhteensa}}</b>
     </div>
 
     <hr class="hidden-print">
