@@ -29,7 +29,7 @@
           {{ 'yleiset.julkaise' | i18n }}&nbsp;
           <span class="fa fa-share"></span>
         </button>
-        <button class="btn btn-primary btn-sm" ng-click="palautaKysymysryhmaLuonnokseksi(k)" ng-if="k.tila === 'julkaistu' && !k.lisatty_kyselyyn">
+        <button class="btn btn-primary btn-sm" ng-click="palautaKysymysryhmaLuonnokseksi(k)" ng-if="k.tila === 'julkaistu' && !k.lisatty_kyselyyn && !k.lisatty_kyselypohjaan">
           {{ 'yleiset.palauta_luonnokseksi' | i18n }}&nbsp;
           <span class="fa fa-reply"></span>
         </button>

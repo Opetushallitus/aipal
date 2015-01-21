@@ -35,6 +35,8 @@
                   [(sql/subselect taulut/kysymys
                      (sql/aggregate (count :*) :lkm)
                      (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
+                  [(sql/sqlfn exists (sql/subselect taulut/kysymysryhma-kyselypohja
+                                       (sql/where {:kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselypohjaan]
                   [(sql/sqlfn exists (sql/subselect taulut/kysely_kysymysryhma
                                        (sql/where {:kysely_kysymysryhma.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselyyn])
       (sql/order :muutettuaika :desc)
