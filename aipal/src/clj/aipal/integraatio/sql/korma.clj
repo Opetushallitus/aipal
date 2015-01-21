@@ -89,8 +89,7 @@
   (sql/pk :toimipaikkakoodi)
   (sql/belongs-to oppilaitos {:fk :oppilaitos}))
 
-(defentity koulutustoimija-ja-tutkinto
-  (sql/table :koulutustoimija_ja_tutkinto))
+(defentity koulutustoimija_ja_tutkinto)
 
 (defentity kayttajarooli)
 

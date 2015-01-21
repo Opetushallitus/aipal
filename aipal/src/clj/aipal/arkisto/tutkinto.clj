@@ -41,7 +41,7 @@
 
 (defn hae-koulutustoimijan-tutkinnot
   [y-tunnus]
-  (sql/select taulut/koulutustoimija-ja-tutkinto
+  (sql/select taulut/koulutustoimija_ja_tutkinto
     (sql/join taulut/tutkinto
               (= :tutkinto.tutkintotunnus :koulutustoimija_ja_tutkinto.tutkinto))
     (sql/where {:koulutustoimija y-tunnus})

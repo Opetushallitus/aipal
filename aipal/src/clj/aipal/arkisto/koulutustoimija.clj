@@ -56,10 +56,10 @@
 
 (defn ^:integration-api lisaa-koulutustoimijalle-tutkinto!
   [y-tunnus tutkintotunnus]
-  (sql/insert taulut/koulutustoimija-ja-tutkinto
+  (sql/insert taulut/koulutustoimija_ja_tutkinto
     (sql/values {:koulutustoimija y-tunnus
                  :tutkinto tutkintotunnus})))
 
 (defn ^:integration-api poista-kaikki-koulutustoimijoiden-tutkinnot!
   []
-  (sql/delete taulut/koulutustoimija-ja-tutkinto))
+  (sql/delete taulut/koulutustoimija_ja_tutkinto))
