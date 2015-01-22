@@ -180,17 +180,19 @@
 
 (defn ^:private tutkintorakenne-otsikko [parametrit]
   (case (:tutkintorakennetaso parametrit)
-    "tutkinto" (let [tutkintotunnus (first (:tutkinnot parametrit))]
-                 (nimet (tutkinto-arkisto/hae tutkintotunnus)))
-    "opintoala" (let [opintoalatunnus (first (:opintoalat parametrit))]
-                  (nimet (opintoala-arkisto/hae opintoalatunnus)))
-    "koulutusala" (let [koulutusalatunnus (first (:koulutusalat parametrit))]
-                    (nimet (koulutusala-arkisto/hae koulutusalatunnus)))))
+     "tutkinto" (when-let [tutkintotunnus (first (:tutkinnot parametrit))]
+                  (nimet (tutkinto-arkisto/hae tutkintotunnus)))
+     "opintoala" (when-let [opintoalatunnus (first (:opintoalat parametrit))]
+                   (nimet (opintoala-arkisto/hae opintoalatunnus)))
+     "koulutusala" (when-let [koulutusalatunnus (first (:koulutusalat parametrit))]
+                     (nimet (koulutusala-arkisto/hae koulutusalatunnus)))))
 
 (defn ^:private raportin-otsikko [parametrit]
   (case (:tyyppi parametrit)
     "vertailu" (tutkintorakenne-otsikko parametrit)
-    "kehitys" (tutkintorakenne-otsikko parametrit)
+    "kehitys" (merge {:nimi_fi "Kaikki tutkinnot"
+                      :nimi_sv "Kaikki tutkinnot (sv)"}
+                     (tutkintorakenne-otsikko parametrit))
     "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
                          (nimet (koulutustoimija-arkisto/hae ytunnus)))))
 
