@@ -34,6 +34,11 @@
         (sql/order :kyselykerta.kyselykertaid :ASC)))
   ([] (hae-kaikki nil)))
 
+(defn poistettavissa? [id]
+  (empty?
+    (sql/select taulut/kyselykerta
+      (sql/join :inner :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid)))))
+
 (defn lisaa!
   [kyselyid kyselykerta-data]
   (let [kyselykerta (sql/insert taulut/kyselykerta
