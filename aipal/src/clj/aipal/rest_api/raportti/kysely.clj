@@ -20,15 +20,19 @@
             [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]))
 
+(defn muodosta-raportti-parametreilla
+  [kyselyid parametrit]
+  (let [kyselyid (Integer/parseInt kyselyid)
+        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
+        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
+        parametrit (paivita-arvot parametrit [:tutkinnot] seq)] ; tyhjä lista -> nil
+    (muodosta-raportti kyselyid parametrit)))
+
 (defn reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]
     (db/transaction
-      (let [kyselyid (Integer/parseInt kyselyid)
-            vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
-            parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
-            parametrit (paivita-arvot parametrit [:tutkinnot] seq) ; tyhjä lista -> nil
-            raportti (muodosta-raportti kyselyid parametrit)]
+      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (json-response
           (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti
