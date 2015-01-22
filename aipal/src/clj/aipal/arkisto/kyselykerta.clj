@@ -21,6 +21,7 @@
   "Hae kaikki koulutustoimijan kyselykerrat"
   ([koulutustoimija]
       (sql/select taulut/kyselykerta
+        (sql/modifier "distinct")
         (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
         (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
         (sql/join :left :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid))

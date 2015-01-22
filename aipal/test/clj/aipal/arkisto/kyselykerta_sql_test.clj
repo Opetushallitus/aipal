@@ -26,3 +26,20 @@
     (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
   (is (= (map :poistettavissa (arkisto/hae-kaikki))
          [false])))
+
+(deftest ^:integraatio hae-kaikki-test
+  (testing
+    "vastaajien määrä ei vaikuta kyselykertoihin (OPH-1254)"
+    (sql/insert taulut/kyselykerta
+      (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                   :kyselykertaid 1}))
+    (sql/insert taulut/vastaajatunnus
+      (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "",
+                   :vastaajien_lkm 2}))
+    (sql/insert taulut/vastaaja
+      (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
+    (sql/insert taulut/vastaaja
+      (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
+
+    (is (= (map :kyselykertaid (arkisto/hae-kaikki))
+           [1]))))
