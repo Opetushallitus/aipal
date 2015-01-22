@@ -52,6 +52,8 @@
 
                  [stencil "0.3.2"]
 
+                 [clojure-csv/clojure-csv "2.0.1"]
+
                  [clj-http "1.0.1"]]
   :plugins [[test2junit "1.0.1"]]
   :profiles {:dev {:source-paths ["dev"]
