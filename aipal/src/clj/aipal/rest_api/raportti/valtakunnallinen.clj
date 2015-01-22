@@ -42,18 +42,24 @@
                                     :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))])
       "koulutusala" parametrit)))
 
+(defn lisaa-vertailuraportille-otsikko [raportti]
+  (merge raportti {:nimi_fi "Valtakunnallinen"
+                   :nimi_sv "Valtakunnallinen (sv)"}))
+
 (defn kehitysraportti-vertailuraportti [parametrit]
   (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
         vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
         parametrit (merge parametrit (vertailuraportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm))]
-    (raportti/muodosta (kehitysraportti-vertailuraportti-parametrit parametrit))))
+    (-> (raportti/muodosta (kehitysraportti-vertailuraportti-parametrit parametrit))
+      lisaa-vertailuraportille-otsikko)))
 
 (defn koulutustoimija-vertailuraportti [parametrit]
-  (raportti/muodosta (merge
-                       parametrit
-                       {:koulutustoimijat []
-                        :tyyppi "vertailu"}
-                       (vertailuraportti-vertailujakso (:vertailujakso_alkupvm parametrit) (:vertailujakso_loppupvm parametrit)))))
+  (-> (raportti/muodosta (merge
+                          parametrit
+                          {:koulutustoimijat []
+                           :tyyppi "vertailu"}
+                          (vertailuraportti-vertailujakso (:vertailujakso_alkupvm parametrit) (:vertailujakso_loppupvm parametrit))))
+    lisaa-vertailuraportille-otsikko))
 
 (defn luo-raportit [parametrit]
   (case (:tyyppi parametrit)
