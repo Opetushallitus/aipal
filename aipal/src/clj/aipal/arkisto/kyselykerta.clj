@@ -88,3 +88,10 @@
   (sql/update taulut/kyselykerta
     (sql/set-fields {:lukittu false})
     (sql/where {:kyselykertaid kyselykertaid})))
+
+(defn poista! [id]
+  {:pre [(poistettavissa? id)]}
+  (sql/delete taulut/vastaajatunnus
+    (sql/where {:kyselykertaid id}))
+  (sql/delete taulut/kyselykerta
+    (sql/where {:kyselykertaid id})))

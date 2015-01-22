@@ -45,6 +45,36 @@
       (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
     (is (not (arkisto/poistettavissa? id)))))
 
+;; Poistaminen poistaa kyselykerran.
+(deftest ^:integraatio poista-kyselykerta
+  (sql/insert taulut/kyselykerta
+    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid 1}))
+  (sql/insert taulut/kyselykerta
+    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid 2}))
+  (arkisto/poista! 1)
+  (is (= (map :kyselykertaid (sql/select taulut/kyselykerta))
+         [2])))
+
+;; Poistaminen poistaa kyselykertaan liittyvät vastaajatunnukset.
+(deftest ^:integraatio poista-vastaajatunnukset
+  (sql/insert taulut/kyselykerta
+    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid 1}))
+  (sql/insert taulut/kyselykerta
+    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid 2}))
+  (sql/insert taulut/vastaajatunnus
+    (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "1",
+                 :vastaajien_lkm 1}))
+  (sql/insert taulut/vastaajatunnus
+    (sql/values {:vastaajatunnusid 2, :kyselykertaid 2, :tunnus "2",
+                 :vastaajien_lkm 1}))
+  (arkisto/poista! 1)
+  (is (= (map :vastaajatunnusid (sql/select taulut/vastaajatunnus))
+         [2])))
+
 (deftest ^:integraatio hae-kaikki-test
   (testing
     "vastaajien määrä ei vaikuta kyselykertoihin (OPH-1254)"
