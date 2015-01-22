@@ -27,6 +27,11 @@
     (sql/set-fields tiedot)
     (sql/where {:oppilaitoskoodi oppilaitoskoodi})))
 
+(defn ^:integration-api aseta-kaikki-vanhentuneiksi!
+  []
+  (sql/update taulut/oppilaitos
+    (sql/set-fields {:voimassa false})))
+
 (defn hae-kaikki
   []
   (->

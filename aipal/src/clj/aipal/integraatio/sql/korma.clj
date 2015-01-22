@@ -94,3 +94,6 @@
 (defentity kayttajarooli)
 
 (defentity tiedote)
+
+(defentity organisaatiopalvelu_log
+  (sql/pk :id))

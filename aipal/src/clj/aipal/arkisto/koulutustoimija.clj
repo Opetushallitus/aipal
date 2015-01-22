@@ -46,7 +46,7 @@
   []
   (sql/select taulut/koulutustoimija
     (sql/fields :ytunnus :nimi_fi :nimi_sv :osoite :postinumero :postitoimipaikka
-                :puhelin :www_osoite :sahkoposti :oid)))
+                :puhelin :www_osoite :sahkoposti :oid :voimassa)))
 
 (defn hae-kaikki-joissa-oid
   []
@@ -63,3 +63,8 @@
 (defn ^:integration-api poista-kaikki-koulutustoimijoiden-tutkinnot!
   []
   (sql/delete taulut/koulutustoimija_ja_tutkinto))
+
+(defn ^:integration-api aseta-kaikki-vanhentuneiksi!
+  []
+  (sql/update taulut/koulutustoimija
+    (sql/set-fields {:voimassa false})))

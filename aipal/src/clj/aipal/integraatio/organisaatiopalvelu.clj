@@ -16,18 +16,24 @@
   (:require [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.arkisto.oppilaitos :as oppilaitos-arkisto]
             [aipal.arkisto.toimipaikka :as toimipaikka-arkisto]
+            [aipal.arkisto.organisaatiopalvelu :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
+            [clj-time.coerce :as time-coerce]
             [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value]]
-            [clojure.tools.logging :as log]))
+            [clojure.tools.logging :as log]
+            [korma.db :as db]))
 
 (defn halutut-kentat [koodi]
-  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid]))
+  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid :lakkautusPvm]))
 
 (defn hae-kaikki [url]
   (let [oids (get-json-from-url url)]
     (for [oid oids]
       (halutut-kentat (get-json-from-url (str url oid))))))
 
+(defn hae-muuttuneet [url viimeisin-paivitys]
+  (map halutut-kentat
+       (get-json-from-url (str url "v2/muutetut") {:query-params {"lastModifiedSince" viimeisin-paivitys}})))
 
 ;; Koodistopalvelun oppilaitostyyppikoodistosta
 (def ^:private halutut-tyypit
@@ -71,6 +77,11 @@
 (defn ^:private y-tunnus [koodi]
   (or (:ytunnus koodi) (:virastoTunnus koodi)))
 
+(defn ^:private voimassa? [koodi]
+  (if-let [lakkautus-pvm (time-coerce/to-local-date (:lakkautusPvm koodi))]
+    (not (time/before? lakkautus-pvm (time/today)))
+    true))
+
 (defn ^:private koodi->koulutustoimija [koodi]
   {:nimi_fi (nimi koodi)
    :nimi_sv (nimi-sv koodi)
@@ -81,7 +92,8 @@
    :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
-   :ytunnus (y-tunnus koodi)})
+   :ytunnus (y-tunnus koodi)
+   :voimassa (voimassa? koodi)})
 
 (defn ^:private koodi->oppilaitos [koodi]
   {:nimi_fi (nimi koodi)
@@ -93,7 +105,8 @@
    :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
-   :oppilaitoskoodi (:oppilaitosKoodi koodi)})
+   :oppilaitoskoodi (:oppilaitosKoodi koodi)
+   :voimassa (voimassa? koodi)})
 
 (defn ^:private koodi->toimipaikka [koodi]
   {:nimi_fi (nimi koodi)
@@ -105,10 +118,11 @@
    :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
-   :toimipaikkakoodi (:toimipistekoodi koodi)})
+   :toimipaikkakoodi (:toimipistekoodi koodi)
+   :voimassa (voimassa? koodi)})
 
 (def ^:private yhteiset-kentat [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
-                                :postinumero :postitoimipaikka :www_osoite])
+                                :postinumero :postitoimipaikka :www_osoite :voimassa])
 
 (defn ^:private koulutustoimijan-kentat [koulutustoimija]
   (when koulutustoimija
@@ -207,12 +221,27 @@
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
-  (let [kaikki-koodit (hae-kaikki (get asetukset "url"))
-        koodit (group-by tyyppi kaikki-koodit)
-        _ (log/info "Haettu kaikki organisaatiot")
-        koulutustoimijakoodit (:koulutustoimija koodit)
-        oppilaitoskoodit (:oppilaitos koodit)
-        toimipaikkakoodit (:toimipaikka koodit)]
-    (paivita-koulutustoimijat! koulutustoimijakoodit)
-    (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
-    (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)))
+  (let [viimeisin-paivitys (organisaatiopalvelu-arkisto/hae-viimeisin-paivitys)
+        _ (when viimeisin-paivitys
+            (log/info "Edellinen päivitys:" (str viimeisin-paivitys)))
+        url (get asetukset "url")
+        nyt (time/now)
+        koodit (if viimeisin-paivitys
+                 (hae-muuttuneet url viimeisin-paivitys)
+                 (hae-kaikki url))
+        koodit-tyypeittain (group-by tyyppi koodit)
+        _ (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
+        koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
+        oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
+        toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
+    (db/transaction
+      (when-not viimeisin-paivitys
+        ;; Ajetaan käytännössä vain kerran. Konversiossa on tuotu organisaatioita, joita ei käytetä eikä haeta organisaatiopalvelusta
+        ;; ja tällä tavalla saadaan ne merkittyä vanhentuneiksi.
+        (koulutustoimija-arkisto/aseta-kaikki-vanhentuneiksi!)
+        (oppilaitos-arkisto/aseta-kaikki-vanhentuneiksi!)
+        (toimipaikka-arkisto/aseta-kaikki-vanhentuneiksi!))
+      (paivita-koulutustoimijat! koulutustoimijakoodit)
+      (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
+      (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)
+      (organisaatiopalvelu-arkisto/tallenna-paivitys! nyt))))

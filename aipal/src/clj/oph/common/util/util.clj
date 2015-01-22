@@ -127,12 +127,14 @@
                   [new-v old-v])])))
 
 (defn get-json-from-url
-  [url]
-  (->
-    (http/get url)
-    :body
-    cheshire/parse-string
-    keywordize-keys))
+  ([url]
+    (get-json-from-url url {}))
+  ([url options]
+    (->
+      (http/get url options)
+      :body
+      cheshire/parse-string
+      keywordize-keys)))
 
 (defn uusin-muokkausaika
   "Palauttaa uusimman muokkausajan annetuista arvoista.

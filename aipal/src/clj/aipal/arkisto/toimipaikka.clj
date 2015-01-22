@@ -27,6 +27,11 @@
     (sql/set-fields tiedot)
     (sql/where {:toimipaikkakoodi toimipaikkakoodi})))
 
+(defn ^:integration-api aseta-kaikki-vanhentuneiksi!
+  []
+  (sql/update taulut/toimipaikka
+    (sql/set-fields {:voimassa false})))
+
 (defn hae-kaikki
   []
   (->
