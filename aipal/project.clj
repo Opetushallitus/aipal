@@ -66,9 +66,8 @@
   :source-paths ["src/clj"]
   :java-source-paths ["src/java"]
   :test-paths ["test/clj"]
-  :test-selectors {:kaikki (constantly true)
-                   :default  (complement (some-fn :integraatio :performance))
-                   :integraatio :integraatio
+  :test-selectors {:default  (complement (some-fn :integraatio :performance))
+                   :integraatio (complement (some-fn :performance))
                    :performance :performance}
   :jar-name "aipal.jar"
   :uberjar-name "aipal-standalone.jar"
