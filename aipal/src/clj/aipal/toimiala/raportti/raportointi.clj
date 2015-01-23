@@ -13,7 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.toimiala.raportti.raportointi
-  (:require [korma.core :as sql]))
+  (:require [korma.core :as sql]
+            [clojure-csv.core :refer [write-csv]]
+            [aipal.rest-api.i18n :as i18n]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
@@ -267,3 +269,47 @@
 (defn muodosta-raportti-vastauksista
   [kysymysryhmat kysymykset vastaukset]
   (kasittele-kysymysryhmat (ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain kysymykset vastaukset kysymysryhmat)))
+
+(defn numeroiden-piste-pilkuksi
+  "Jos merkkijono on numero, niin muutetaan piste pilkuksi"
+  [merkkijono]
+  (if (re-matches #"[0-9.]+" merkkijono)
+    (clojure.string/replace merkkijono #"\." ",")
+    merkkijono))
+
+(defn muuta-kaikki-stringeiksi [rivit]
+  (clojure.walk/postwalk (fn [x]
+                           (if (coll? x)
+                             x
+                             (numeroiden-piste-pilkuksi (str x))))
+                         rivit))
+
+(defn lokalisoitu-kentta
+  [m kentta kieli]
+  (let [avain (keyword (str kentta "_" kieli))
+        vaihtoehto-avain (keyword (str kentta "_" (if (= kieli "fi")
+                                                    "sv"
+                                                    kieli)))]
+    (or (avain m) (vaihtoehto-avain m))))
+
+(defn lokalisoi-vaihtoehto-avain
+  [tekstit tyyppi avain]
+  (get-in tekstit [:kysymys (keyword tyyppi) (keyword avain)]))
+
+(defn raportti-taulukoksi
+  [raportti kieli]
+  (let [tekstit (i18n/hae-tekstit kieli)]
+    (for [kysymysryhma (:raportti raportti)
+          kysymys (:kysymykset kysymysryhma)]
+      (flatten [(lokalisoitu-kentta kysymysryhma "nimi" kieli) (lokalisoitu-kentta kysymys "kysymys" kieli) (:vastaajien_lukumaara kysymys) (:vastaajien_maksimimaara kysymysryhma)
+                (:keskiarvo kysymys) (:keskihajonta kysymys)
+                (for [vaihtoehto (:jakauma kysymys)]
+                  [(if (:vaihtoehto-avain vaihtoehto)
+                     (lokalisoi-vaihtoehto-avain tekstit (:vastaustyyppi kysymys) (:vaihtoehto-avain vaihtoehto))
+                     (lokalisoitu-kentta vaihtoehto "vaihtoehto" kieli)) (:lukumaara vaihtoehto)])]))))
+
+(defn muodosta-csv
+  [raportti kieli]
+  (write-csv
+    (muuta-kaikki-stringeiksi (raportti-taulukoksi raportti kieli))
+    :delimiter \;))
