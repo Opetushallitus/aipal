@@ -3,16 +3,18 @@
             [korma.core :as sql]
             [aipal.sql.test-util :refer [tietokanta-fixture]]
             [aipal.integraatio.sql.korma :as taulut]
-            [aipal.arkisto.kyselykerta :as arkisto]))
+            [aipal.arkisto.kyselykerta :as arkisto]
+            [oph.common.util.util :refer [some-value]]))
 
 (use-fixtures :each tietokanta-fixture)
 
 ;; Kyselykerta on poistettavissa, jos sillä ei ole yhtään vastaajaa.
 (deftest ^:integraatio hae-kaikki-kyselykerta-poistettavissa
   (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()")}))
-  (is (= (map :poistettavissa (arkisto/hae-kaikki))
-         [true])))
+    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid 1}))
+  (is (:poistettavissa (some-value #(= (:kyselykertaid %) 1)
+                                   (arkisto/hae-kaikki)))))
 
 (deftest ^:integraatio kyselykerta-poistettavissa
   (sql/insert taulut/kyselykerta
@@ -30,8 +32,8 @@
                  :vastaajien_lkm 1}))
   (sql/insert taulut/vastaaja
     (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
-  (is (= (map :poistettavissa (arkisto/hae-kaikki))
-         [false])))
+  (is (not (:poistettavissa (some-value #(= (:kyselykertaid %) 1)
+                                        (arkisto/hae-kaikki))))))
 
 (deftest ^:integraatio kyselykerta-ei-poistettavissa
   (sql/insert taulut/kyselykerta
@@ -53,22 +55,18 @@
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
                  :kyselykertaid 2}))
   (arkisto/poista! 1)
-  (is (= (map :kyselykertaid (sql/select taulut/kyselykerta))
-         [2])))
+  (is (nil? (some #(= (:kyselykertaid %) 1) (sql/select taulut/kyselykerta)))))
 
 ;; Poistaminen poistaa kyselykertaan liittyvät vastaajatunnukset.
 (deftest ^:integraatio poista-vastaajatunnukset
   (sql/insert taulut/kyselykerta
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
                  :kyselykertaid 1}))
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 2}))
   (sql/insert taulut/vastaajatunnus
     (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "1",
                  :vastaajien_lkm 1}))
   (sql/insert taulut/vastaajatunnus
-    (sql/values {:vastaajatunnusid 2, :kyselykertaid 2, :tunnus "2",
+    (sql/values {:vastaajatunnusid 2, :kyselykertaid -1, :tunnus "2",
                  :vastaajien_lkm 1}))
   (arkisto/poista! 1)
   (is (= (map :vastaajatunnusid (sql/select taulut/vastaajatunnus))
@@ -88,5 +86,4 @@
     (sql/insert taulut/vastaaja
       (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
 
-    (is (= (map :kyselykertaid (arkisto/hae-kaikki))
-           [1]))))
+    (is (= (count (filter #(= (:kyselykertaid %) 1) (arkisto/hae-kaikki))) 1))))
