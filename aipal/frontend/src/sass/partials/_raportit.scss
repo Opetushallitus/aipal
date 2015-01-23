@@ -81,6 +81,10 @@ li.selected{
   }
 }
 
+.whitespace{
+  white-space: pre-line;
+}
+
 @media print {
   body {
     font-size: 8pt;
@@ -113,6 +117,10 @@ li.selected{
   table.report-table thead tr th,
   table.report-table tbody tr td{
     padding: .2em !important;
+  }
+  .report-table-percentage-field,
+  .report-table-amount-field{
+    width: 3em;
   }
 }
 
