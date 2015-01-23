@@ -4,7 +4,8 @@
             [aipal.sql.test-util :refer [tietokanta-fixture]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.arkisto.kyselykerta :as arkisto]
-            [oph.common.util.util :refer [some-value]]))
+            [oph.common.util.util :refer [some-value
+                                          some-value-with]]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -13,8 +14,8 @@
   (sql/insert taulut/kyselykerta
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
                  :kyselykertaid 1}))
-  (is (:poistettavissa (some-value #(= (:kyselykertaid %) 1)
-                                   (arkisto/hae-kaikki)))))
+  (is (:poistettavissa (some-value-with :kyselykertaid 1
+                                        (arkisto/hae-kaikki)))))
 
 (deftest ^:integraatio kyselykerta-poistettavissa
   (sql/insert taulut/kyselykerta
@@ -32,8 +33,8 @@
                  :vastaajien_lkm 1}))
   (sql/insert taulut/vastaaja
     (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
-  (is (not (:poistettavissa (some-value #(= (:kyselykertaid %) 1)
-                                        (arkisto/hae-kaikki))))))
+  (is (not (:poistettavissa (some-value-with :kyselykertaid 1
+                                             (arkisto/hae-kaikki))))))
 
 (deftest ^:integraatio kyselykerta-ei-poistettavissa
   (sql/insert taulut/kyselykerta
@@ -55,7 +56,8 @@
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
                  :kyselykertaid 2}))
   (arkisto/poista! 1)
-  (is (nil? (some #(= (:kyselykertaid %) 1) (sql/select taulut/kyselykerta)))))
+  (is (nil? (some-value-with :kyselykertaid 1
+                             (sql/select taulut/kyselykerta)))))
 
 ;; Poistaminen poistaa kyselykertaan liittyvät vastaajatunnukset.
 (deftest ^:integraatio poista-vastaajatunnukset

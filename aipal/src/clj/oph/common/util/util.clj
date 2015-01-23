@@ -158,6 +158,9 @@
 (defn some-value [pred coll]
   (first (filter pred coll)))
 
+(defn some-value-with [f expected coll]
+  (some-value #(= (f %) expected) coll))
+
 (defn map-by [f coll]
   (into {} (for [item coll]
              [(f item) item])))
