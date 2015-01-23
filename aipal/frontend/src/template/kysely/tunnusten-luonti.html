@@ -40,6 +40,7 @@
                         <div ng-bind-html="tutkinto | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
                         <div ng-if="tutkinto.voimassa_alkupvm || tutkinto.voimassa_loppupvm" style="margin-left: 1em"><small>Voimassa {{tutkinto.voimassa_alkupvm | voimassaoloAika:tutkinto.voimassa_loppupvm}}</small></div>
                         <div ng-if="tutkinto.siirtymaajan_loppupvm" style="margin-left: 1em"><small>Siirtymäaika loppuu {{tutkinto.siirtymaajan_loppupvm | date}}</small></div>
+                        <div ng-if="tutkinto.sopimus_alkupvm || tutkinto.sopimus_loppupvm"><small>Sopimus: {{tutkinto.sopimus_alkupvm | voimassaoloAika:tutkinto.sopimus_loppupvm}}</small></div>
                     </ui-select-choices>
                 </ui-select>
             </label>

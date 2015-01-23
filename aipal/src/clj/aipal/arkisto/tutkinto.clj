@@ -45,7 +45,7 @@
     (sql/join taulut/tutkinto
               (= :tutkinto.tutkintotunnus :koulutustoimija_ja_tutkinto.tutkinto))
     (sql/where {:koulutustoimija y-tunnus})
-    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm :tutkinto.siirtymaajan_loppupvm)))
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm :tutkinto.siirtymaajan_loppupvm [:koulutustoimija_ja_tutkinto.voimassa_alkupvm :sopimus_alkupvm] [:koulutustoimija_ja_tutkinto.voimassa_loppupvm :sopimus_loppupvm])))
 
 (defn tutkinto-voimassa? [tutkinto]
   (let [{alkupvm :voimassa_alkupvm
