@@ -74,7 +74,6 @@
      #(with-kayttaja "impossiblator" nil nil
         true))
    (catch Exception e
-      (assert "Ei voimassaolevaa käyttäjää impossiblator" (.getMessage e))
-      ;(.printStackTrace e)
-      )))
-
+      (when-not (= "Ei voimassaolevaa käyttäjää impossiblator" (.getMessage e))
+        (.printStackTrace e)
+        (throw e)))))
