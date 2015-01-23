@@ -55,10 +55,12 @@
     (sql/where (not= :oid nil))))
 
 (defn ^:integration-api lisaa-koulutustoimijalle-tutkinto!
-  [y-tunnus tutkintotunnus]
+  [y-tunnus tutkintotunnus alkupvm loppupvm]
   (sql/insert taulut/koulutustoimija_ja_tutkinto
     (sql/values {:koulutustoimija y-tunnus
-                 :tutkinto tutkintotunnus})))
+                 :tutkinto tutkintotunnus
+                 :voimassa_alkupvm alkupvm
+                 :voimassa_loppupvm loppupvm})))
 
 (defn ^:integration-api poista-kaikki-koulutustoimijoiden-tutkinnot!
   []

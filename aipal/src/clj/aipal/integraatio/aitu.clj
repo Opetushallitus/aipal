@@ -17,9 +17,10 @@
             [aipal.asetukset :refer [asetukset]]
             [cheshire.core :as cheshire]))
 
-(defn hae-koulutustoimijoiden-tutkinnot
+(defn hae-koulutustoimijoiden-tutkinnot-ja-jarjestamissopimukset
   []
-  (-> (get-with-cas-auth :aitu (str (get-in @asetukset [:aitu :url])
-                                    "api/aipal/sopimukset"))
+  (->
+    (get-with-cas-auth :aitu (str (get-in @asetukset [:aitu :url])
+                                    "api/aipal/sopimukset/v2"))
     :body
     cheshire/parse-string))

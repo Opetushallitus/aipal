@@ -20,19 +20,24 @@
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
-            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
+            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
+            [oph.common.util.http-util :refer [parse-iso-date]]
+            [oph.korma.korma :refer [joda-date->sql-date]]))
 
 (defn ^:integration-api paivita-koulutustoimijoiden-tutkinnot! []
   (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Aitusta")
   (db/transaction
     (with-kayttaja integraatio-uid nil nil
-      (let [koulutustoimijoiden-tutkinnot (aitu/hae-koulutustoimijoiden-tutkinnot)]
+      (let [koulutustoimijoiden-tutkinnot (aitu/hae-koulutustoimijoiden-tutkinnot-ja-jarjestamissopimukset)]
         (koulutustoimija-arkisto/poista-kaikki-koulutustoimijoiden-tutkinnot!)
-        (doseq [[y-tunnus tutkintotunnukset] koulutustoimijoiden-tutkinnot
+        (doseq [[y-tunnus tutkinnot] koulutustoimijoiden-tutkinnot
                 :when (koulutustoimija-arkisto/hae y-tunnus)
-                tutkintotunnus tutkintotunnukset
+                tutkinto tutkinnot
+                :let [tutkintotunnus (get tutkinto "tutkintotunnus")
+                      alkupvm (joda-date->sql-date (parse-iso-date (get tutkinto "alkupvm")))
+                      loppupvm (joda-date->sql-date (parse-iso-date (get tutkinto "loppupvm")))]
                 :when (tutkinto-arkisto/hae tutkintotunnus)]
-          (koulutustoimija-arkisto/lisaa-koulutustoimijalle-tutkinto! y-tunnus tutkintotunnus)))))
+          (koulutustoimija-arkisto/lisaa-koulutustoimijalle-tutkinto! y-tunnus tutkintotunnus alkupvm loppupvm)))))
   (log/info "Koulutustoimijoiden tutkintojen päivitys Aitusta valmis"))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
