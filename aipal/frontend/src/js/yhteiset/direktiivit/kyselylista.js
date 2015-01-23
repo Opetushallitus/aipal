@@ -54,7 +54,16 @@ angular.module('yhteiset.direktiivit.kyselylista',
     };
 
     $scope.poistaKyselykerta = function(kyselykerta) {
-      Kyselykerta.poista(kyselykerta.kyselykertaid)
+      var id = kyselykerta.kyselykertaid;
+      Kyselykerta.poista(id)
+      .success(function(){
+        _.map($scope.kyselyt, function(kysely){
+          _.remove(kysely.kyselykerrat, function(kyselykerta){
+            return kyselykerta.kyselykertaid === id;
+          });
+        });
+        ilmoitus.onnistuminen(i18n.hae('kyselykerta.poistaminen_onnistui'));
+      })
       .error(function(){
         ilmoitus.virhe(i18n.hae('kyselykerta.poistaminen_epaonnistui'));
       });

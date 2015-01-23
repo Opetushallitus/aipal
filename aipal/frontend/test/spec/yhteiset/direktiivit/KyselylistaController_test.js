@@ -67,4 +67,40 @@ describe('kysely.kyselyui.KyselylistaController', function(){
     expect(ilmoitus.virhe).toHaveBeenCalled();
   });
 
+  it('Näyttää onnistumisilmoituksen, jos kyselykerran poistaminen onnistuu', function(){
+    alustaController();
+    $scope.kyselyt = [{kyselykerrat: [{kyselykertaid: 123}]}];
+
+    $httpBackend.whenDELETE('api/kyselykerta/123').respond(204);
+    $scope.poistaKyselykerta({kyselykertaid: 123});
+    $httpBackend.flush();
+
+    expect(ilmoitus.onnistuminen).toHaveBeenCalled();
+  });
+
+  it('Ei näytä virheilmoitusta, jos kyselykerran poistaminen onnistuu', function(){
+    alustaController();
+    $scope.kyselyt = [{kyselykerrat: [{kyselykertaid: 123}]}];
+
+    $httpBackend.whenDELETE('api/kyselykerta/123').respond(204);
+    $scope.poistaKyselykerta({kyselykertaid: 123});
+    $httpBackend.flush();
+
+    expect(ilmoitus.virhe).not.toHaveBeenCalled();
+  });
+
+  it('Poistaa poistetun kyselykerran käyttöliittymästä', function(){
+    alustaController();
+    $scope.kyselyt = [{kyselykerrat: [{kyselykertaid: 123},
+                                      {kyselykertaid: 456},
+                                      {kyselykertaid: 789}]}];
+
+    $httpBackend.whenDELETE('api/kyselykerta/456').respond(204);
+    $scope.poistaKyselykerta({kyselykertaid: 456});
+    $httpBackend.flush();
+
+    expect($scope.kyselyt[0].kyselykerrat).toEqual([{kyselykertaid: 123},
+                                                    {kyselykertaid: 789}]);
+  });
+
 });
