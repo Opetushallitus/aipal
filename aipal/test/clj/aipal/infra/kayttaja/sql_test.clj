@@ -75,5 +75,6 @@
         true))
    (catch Exception e
       (assert "Ei voimassaolevaa käyttäjää impossiblator" (.getMessage e))
-      (.printStackTrace e))))
+      ;(.printStackTrace e)
+      )))
 
