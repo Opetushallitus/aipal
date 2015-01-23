@@ -91,6 +91,7 @@
 
 (defn poista! [id]
   {:pre [(poistettavissa? id)]}
+  (auditlog/kyselykerta-poisto! id)
   (sql/delete taulut/vastaajatunnus
     (sql/where {:kyselykertaid id}))
   (sql/delete taulut/kyselykerta

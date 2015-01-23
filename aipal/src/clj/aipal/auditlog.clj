@@ -132,6 +132,9 @@
   (kirjoita! :kyselykerta :lisays {:kyselyid kyselyid
                                    :nimi nimi}))
 
+(defn kyselykerta-poisto! [id]
+  (kirjoita! :kyselykerta :poisto {:kyselykertaid id}))
+
 (defn vastaajatunnus-luonti!
   ([kyselykertaid]
     (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid}))
