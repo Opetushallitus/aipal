@@ -43,4 +43,8 @@
     (json-response (arkisto/lukitse! (Integer/parseInt kyselykertaid))))
 
   (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/avaa" [kyselykertaid]
-    (json-response (arkisto/avaa! (Integer/parseInt kyselykertaid)))))
+    (json-response (arkisto/avaa! (Integer/parseInt kyselykertaid))))
+
+  (cu/defapi :kyselykerta-poisto kyselykertaid :delete "/:kyselykertaid" [kyselykertaid]
+    (arkisto/poista! (Integer/parseInt kyselykertaid))
+    {:status 204}))

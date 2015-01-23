@@ -212,6 +212,10 @@
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
     (kyselykerta-luonti? kyselyid)))
 
+(defn kyselykerta-poisto? [kyselykertaid]
+  (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
+    (kyselykerta-luonti? kyselyid)))
+
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
@@ -229,6 +233,7 @@
     :kyselykerta-luonti kyselykerta-luonti?
     :kyselykerta-muokkaus kyselykerta-muokkaus?
     :kyselykerta-tilamuutos kyselykerta-tilamuutos?
+    :kyselykerta-poisto kyselykerta-poisto?
     :kysymysryhma-listaaminen kysymysryhma-listaaminen?
     :kysymysryhma-luku kysymysryhma-luku?
     :kysymysryhma-luonti kysymysryhma-luonti?
