@@ -2,6 +2,10 @@
   (:require [clojure.test :refer :all]
             [korma.core :as sql]
             [aipal.sql.test-util :refer [exec-raw-fixture]]
+            [aipal.arkisto.kayttaja :as kayttaja-arkisto]
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.asetukset :refer [asetukset oletusasetukset]]
+            [aipal.integraatio.kayttooikeuspalvelu :as kayttooikeuspalvelu]           
             [aipal.infra.kayttaja.sql :refer :all]))
 
 (use-fixtures :each exec-raw-fixture)
@@ -12,3 +16,64 @@
     (is (= (:current_setting (first (sql/exec-raw "select current_setting('aipal.kayttaja');"
                                                   :results)))
            "foobar"))))
+
+(defn runtime-throws []
+  (let [fo (kayttaja-arkisto/hae-voimassaoleva "uid")]
+    (throw (RuntimeException. "forced"))))
+
+
+(defn checked-throws []
+  (let [fo (kayttaja-arkisto/hae-voimassaoleva "uid")]
+    (throw (Exception. "forced"))))
+
+;; poikkeuksien käsittely
+;(deftest ^:integraatio with-sql-kayttaja-poikkeukset-test
+;  (let [fo (kayttaja-arkisto/hae-voimassaoleva "uid")]
+;    (try 
+;      (with-sql-kayttaja "foobar"
+;        (runtime-throws))
+;      (catch Exception e
+;        (.printStackTrace e)))))
+
+;; poikkeuksien käsittely
+;(deftest ^:integraatio with-sql-kayttaja-poikkeukset-test2
+;  (try 
+;    (with-sql-kayttaja "foobar"
+;      (checked-throws))
+;    (catch Exception e
+;      (.printStackTrace e))))
+
+
+; Testataan LDAP-haku reaaliaikaisesti
+
+(defn with-ldap-haku-mock [f]
+  (let [foobar-ldap {:oid "foobar"
+                     :uid "foobar-uid"
+                     :etunimi "etunimi"
+                     :sukunimi "sukunimi"
+                     :voimassa true
+                     :roolit {}}
+        testi-asetukset (-> oletusasetukset
+             (assoc-in [:cas-auth-server :enabled] false)
+             (assoc :development-mode true))]
+    (deliver asetukset testi-asetukset)
+    (try 
+      (with-redefs [kayttooikeuspalvelu/kayttaja (constantly foobar-ldap)]
+        (f))
+      (finally 
+        (sql/exec-raw (str "delete from kayttaja where uid = 'foobar-uid'"))))))
+  
+(deftest ^:integraatio with-kayttaja-ldap-reaaliaikainen-haku
+  (with-ldap-haku-mock
+    #(with-kayttaja "foobar-uid" nil nil
+       true)))
+
+(deftest ^:integraatio ldap-kayttajaa-ei-loydy
+ (try 
+   (with-ldap-haku-mock
+     #(with-kayttaja "impossiblator" nil nil
+        true))
+   (catch Exception e
+      (assert "Ei voimassaolevaa käyttäjää impossiblator" (.getMessage e))
+      (.printStackTrace e))))
+
