@@ -18,10 +18,20 @@
                                         (arkisto/hae-kaikki)))))
 
 (deftest ^:integraatio kyselykerta-poistettavissa
+  ;; Kyselykerta vastaajilla
   (sql/insert taulut/kyselykerta
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
                  :kyselykertaid 1}))
-  (is (arkisto/poistettavissa? 1)))
+  (sql/insert taulut/vastaajatunnus
+    (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "",
+                 :vastaajien_lkm 1}))
+  (sql/insert taulut/vastaaja
+    (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
+  ;; Kyselykerta ilman vastaajia
+  (sql/insert taulut/kyselykerta
+    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid 2}))
+  (is (arkisto/poistettavissa? 2)))
 
 ;; Kyselykerta ei ole poistettavissa, jos sillä on yksikin vastaaja.
 (deftest ^:integraatio hae-kaikki-kyselykerta-ei-poistettavissa

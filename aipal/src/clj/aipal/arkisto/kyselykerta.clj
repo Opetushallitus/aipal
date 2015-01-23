@@ -37,7 +37,8 @@
 (defn poistettavissa? [id]
   (empty?
     (sql/select taulut/kyselykerta
-      (sql/join :inner :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid)))))
+      (sql/join :inner :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid))
+      (sql/where {:kyselykerta.kyselykertaid id}))))
 
 (defn lisaa!
   [kyselyid kyselykerta-data]
