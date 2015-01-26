@@ -193,6 +193,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     };
     $scope.kielet = kielet;
     $scope.rahoitusmuodot = rahoitusmuodot;
+    $scope.rahoitusmuodotmap = _.indexBy(rahoitusmuodot, 'rahoitusmuotoid');
     $scope.kyselykerta = kyselykerta;
     var tanaan = new Date();
     tanaan.setUTCHours(0,0,0,0);
@@ -235,5 +236,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       } else {
         return tutkinto;
       }
+    };
+
+    $scope.tutkintoPakollinen = function() {
+      var rahoitusmuotoid = $scope.vastaajatunnus.rahoitusmuotoid;
+      return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined || $scope.rahoitusmuodotmap[rahoitusmuotoid].rahoitusmuoto !== 'ei_rahoitusmuotoa');
     };
   }]);
