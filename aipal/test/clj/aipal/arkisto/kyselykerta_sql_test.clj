@@ -9,52 +9,41 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-;; Kyselykerta on poistettavissa, jos sillä ei ole yhtään vastaajaa.
-(deftest ^:integraatio hae-kaikki-kyselykerta-poistettavissa
+(defn lisaa-kyselykerta-johon-on-vastattu! [id]
   (sql/insert taulut/kyselykerta
     (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 1}))
-  (is (:poistettavissa (some-value-with :kyselykertaid 1
+                 :kyselykertaid id}))
+  (sql/insert taulut/vastaajatunnus
+    (sql/values {:vastaajatunnusid 1, :kyselykertaid id, :tunnus "",
+                 :vastaajien_lkm 1}))
+  (sql/insert taulut/vastaaja
+    (sql/values {:kyselykertaid id, :vastaajatunnusid 1})))
+
+(defn lisaa-kyselykerta-ilman-vastaajia! [id]
+  (sql/insert taulut/kyselykerta
+    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid id})))
+
+;; Kyselykerta on poistettavissa, jos sillä ei ole yhtään vastaajaa.
+(deftest ^:integraatio hae-kaikki-kyselykerta-poistettavissa
+  (lisaa-kyselykerta-johon-on-vastattu! 1)
+  (lisaa-kyselykerta-ilman-vastaajia! 2)
+  (is (:poistettavissa (some-value-with :kyselykertaid 2
                                         (arkisto/hae-kaikki)))))
 
 (deftest ^:integraatio kyselykerta-poistettavissa
-  ;; Kyselykerta vastaajilla
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 1}))
-  (sql/insert taulut/vastaajatunnus
-    (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "",
-                 :vastaajien_lkm 1}))
-  (sql/insert taulut/vastaaja
-    (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
-  ;; Kyselykerta ilman vastaajia
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 2}))
+  (lisaa-kyselykerta-johon-on-vastattu! 1)
+  (lisaa-kyselykerta-ilman-vastaajia! 2)
   (is (arkisto/poistettavissa? 2)))
 
 ;; Kyselykerta ei ole poistettavissa, jos sillä on yksikin vastaaja.
 (deftest ^:integraatio hae-kaikki-kyselykerta-ei-poistettavissa
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 1}))
-  (sql/insert taulut/vastaajatunnus
-    (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "",
-                 :vastaajien_lkm 1}))
-  (sql/insert taulut/vastaaja
-    (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
+  (lisaa-kyselykerta-johon-on-vastattu! 1)
   (is (not (:poistettavissa (some-value-with :kyselykertaid 1
                                              (arkisto/hae-kaikki))))))
 
 (deftest ^:integraatio kyselykerta-ei-poistettavissa
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 1}))
-  (sql/insert taulut/vastaajatunnus
-    (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "",
-                 :vastaajien_lkm 1}))
-  (sql/insert taulut/vastaaja
-    (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
+  (lisaa-kyselykerta-johon-on-vastattu! 1)
   (is (not (arkisto/poistettavissa? 1))))
 
 ;; Poistaminen poistaa kyselykerran.
