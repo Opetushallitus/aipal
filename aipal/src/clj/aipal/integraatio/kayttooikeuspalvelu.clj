@@ -82,16 +82,20 @@
                                                    (when (contains? oph-roolit rooli)
                                                      oph-koulutustoimija))]
                          :when rooli]
-                     {:rooli rooli
-                      :organisaatio (:ytunnus koulutustoimija)
-                      :voimassa true})]
-        (when (seq roolit)
+                     (do
+                       (when-not koulutustoimija
+                         (log/warn "Organisaatiota" koulutustoimija-oid "ei löydy koulutustoimijoista"))
+                       {:rooli rooli
+                        :organisaatio (:ytunnus koulutustoimija)
+                        :voimassa true}))
+            validit-roolit (filter :organisaatio roolit)]
+        (when (seq validit-roolit)
           {:oid (:employeeNumber kayttaja)
            :uid (:uid kayttaja)
            :etunimi etunimi
            :sukunimi (or sukunimi "")
            :voimassa true
-           :roolit roolit})))))
+           :roolit validit-roolit})))))
 
 (defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
   (fn []
