@@ -48,15 +48,11 @@
 
 ;; Poistaminen poistaa kyselykerran.
 (deftest ^:integraatio poista-kyselykerta
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 1}))
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 2}))
+  (lisaa-kyselykerta-ilman-vastaajia! 1)
+  (lisaa-kyselykerta-ilman-vastaajia! 2)
   (arkisto/poista! 1)
-  (is (nil? (some-value-with :kyselykertaid 1
-                             (sql/select taulut/kyselykerta)))))
+  (is (= (set (map :kyselykertaid (sql/select taulut/kyselykerta)))
+         #{-1 2})))
 
 ;; Poistaminen poistaa kyselykertaan liittyvät vastaajatunnukset.
 (deftest ^:integraatio poista-vastaajatunnukset
