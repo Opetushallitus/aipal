@@ -44,5 +44,6 @@
   (->
     (sql/select* taulut/oppilaitos)
     (sql/fields :oppilaitoskoodi :koulutustoimija :nimi_fi :nimi_sv)
-    (sql/where {:koulutustoimija koulutustoimija})
+    (sql/where {:koulutustoimija koulutustoimija
+                :voimassa true})
     sql/exec))
