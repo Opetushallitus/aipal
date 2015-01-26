@@ -58,10 +58,8 @@ angular.module('yhteiset.direktiivit.kyselylista',
         var id = kyselykerta.kyselykertaid;
         Kyselykerta.poista(id)
         .success(function(){
-          _.map($scope.kyselyt, function(kysely){
-            _.remove(kysely.kyselykerrat, function(kyselykerta){
-              return kyselykerta.kyselykertaid === id;
-            });
+          _.forEach($scope.kyselyt, function(kysely){
+            _.remove(kysely.kyselykerrat, {kyselykertaid: id});
           });
           ilmoitus.onnistuminen(i18n.hae('kyselykerta.poistaminen_onnistui'));
         })
