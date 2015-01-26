@@ -104,6 +104,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       },
       laskeLisakysymykset: function(kysely) {
         return _(kysely.kysymysryhmat).reject('valtakunnallinen').pluck('kysymykset').flatten().reject('poistettu').reduce(function(sum) { return sum + 1; }, 0);
+      },
+      valtakunnallisiaRyhmia: function(kysely) {
+        return _.find(kysely.kysymysryhmat, 'valtakunnallinen');
       }
     };
   }])
@@ -156,7 +159,11 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
       $scope.tallenna = function () {
         poistaKysymysryhmat();
-        if (apu.laskeLisakysymykset($scope.kysely) > 10) {
+        var maxKysymyksia = 10;
+        if (!apu.valtakunnallisiaRyhmia($scope.kysely)) {
+          maxKysymyksia = 30;
+        }
+        if (apu.laskeLisakysymykset($scope.kysely) > maxKysymyksia) {
           ilmoitus.virhe(i18n.hae('kysely.liian_monta_lisakysymysta'));
         }
         else {
