@@ -20,6 +20,9 @@ describe('kysely.kyselyui.KyselylistaController', function(){
   var $httpBackend;
   var $controller;
   var ilmoitus;
+  var varmistus;
+  var varmistusHyvaksytty;
+  var varmistusPeruutettu;
 
   beforeEach(module('yhteiset.direktiivit.kyselylista'));
 
@@ -29,7 +32,11 @@ describe('kysely.kyselyui.KyselylistaController', function(){
                 varoitus: jasmine.createSpy('varoitus'),
                 virhe: jasmine.createSpy('virhe')};
     $provide.value('ilmoitus', ilmoitus);
-    $provide.value('varmistus', {});
+    varmistusHyvaksytty = {then: function(f){f();}};
+    varmistusPeruutettu = {then: function(){}};
+    varmistus = {varmista: jasmine.createSpy('varmista')
+                           .and.returnValue(varmistusHyvaksytty)};
+    $provide.value('varmistus', varmistus);
   }));
 
   beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_){
@@ -46,6 +53,13 @@ describe('kysely.kyselyui.KyselylistaController', function(){
   function alustaController() {
     $controller('KyselylistaController', {$scope: $scope});
   }
+
+  it('Ei poista kyselykertaa, jos käyttäjä peruuttaa varmistuksen', function(){
+    alustaController();
+    varmistus.varmista.and.returnValue(varmistusPeruutettu);
+    $scope.poistaKyselykerta({kyselykertaid: 123});
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('Ei näytä onnistumisilmoitusta, jos kyselykerran poistaminen epäonnistuu', function(){
     alustaController();
