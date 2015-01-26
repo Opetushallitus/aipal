@@ -47,9 +47,15 @@
      (remove :poistettu)
      count))
 
+(defn valtakunnallisia-ryhmia?
+  [kysymysryhmat]
+  (some :valtakunnallinen kysymysryhmat))
+
 (defn paivita-kysely!
   [kysely]
-  (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) 10)))
+  (let [valtakunnallisia (valtakunnallisia-ryhmia? (:kysymysryhmat kysely))
+        max-kysymyksia (if valtakunnallisia 10 30)]
+    (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) max-kysymyksia))))
   (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
   (arkisto/poista-kysymykset! (:kyselyid kysely))
   (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
