@@ -5,7 +5,7 @@
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.asetukset :refer [asetukset oletusasetukset]]
-            [aipal.integraatio.kayttooikeuspalvelu :as kayttooikeuspalvelu]           
+            [aipal.integraatio.kayttooikeuspalvelu :as kayttooikeuspalvelu]
             [aipal.infra.kayttaja.sql :refer :all]))
 
 (use-fixtures :each exec-raw-fixture)
@@ -27,21 +27,16 @@
     (throw (Exception. "forced"))))
 
 ;; poikkeuksien käsittely
-;(deftest ^:integraatio with-sql-kayttaja-poikkeukset-test
-;  (let [fo (kayttaja-arkisto/hae-voimassaoleva "uid")]
-;    (try 
-;      (with-sql-kayttaja "foobar"
-;        (runtime-throws))
-;      (catch Exception e
-;        (.printStackTrace e)))))
+(deftest ^:integraatio with-sql-kayttaja-poikkeukset-test
+  (is (thrown-with-msg? RuntimeException #"forced"
+        (with-sql-kayttaja "foobar"
+          (runtime-throws)))))
 
 ;; poikkeuksien käsittely
-;(deftest ^:integraatio with-sql-kayttaja-poikkeukset-test2
-;  (try 
-;    (with-sql-kayttaja "foobar"
-;      (checked-throws))
-;    (catch Exception e
-;      (.printStackTrace e))))
+(deftest ^:integraatio with-sql-kayttaja-poikkeukset-test2
+  (is (thrown-with-msg? Exception #"forced"
+        (with-sql-kayttaja "foobar"
+          (runtime-throws)))))
 
 
 ; Testataan LDAP-haku reaaliaikaisesti
@@ -57,23 +52,19 @@
              (assoc-in [:cas-auth-server :enabled] false)
              (assoc :development-mode true))]
     (deliver asetukset testi-asetukset)
-    (try 
+    (try
       (with-redefs [kayttooikeuspalvelu/kayttaja (constantly foobar-ldap)]
         (f))
-      (finally 
+      (finally
         (sql/exec-raw (str "delete from kayttaja where uid = 'foobar-uid'"))))))
-  
+
 (deftest ^:integraatio with-kayttaja-ldap-reaaliaikainen-haku
   (with-ldap-haku-mock
-    #(with-kayttaja "foobar-uid" nil nil
-       true)))
+    (is #(with-kayttaja "foobar-uid" nil nil
+           true))))
 
 (deftest ^:integraatio ldap-kayttajaa-ei-loydy
- (try 
-   (with-ldap-haku-mock
-     #(with-kayttaja "impossiblator" nil nil
-        true))
-   (catch Exception e
-      (when-not (= "Ei voimassaolevaa käyttäjää impossiblator" (.getMessage e))
-        (.printStackTrace e)
-        (throw e)))))
+ (is (thrown-with-msg? IllegalStateException #"Ei voimassaolevaa käyttäjää impossiblator"
+       (with-ldap-haku-mock
+         #(with-kayttaja "impossiblator" nil nil
+            true)))))
