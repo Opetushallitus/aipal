@@ -6,7 +6,8 @@
     [clj-time.coerce :as time-coerce]
     [clj-time.core :as time]
     [oph.common.util.util :refer [uusin-muokkausaika]]
-    [schema.core :as s] ))
+    [schema.core :as s] )
+  (:import java.io.ByteArrayInputStream))
 
 (def ^:private http-date-format
   (->
@@ -84,11 +85,19 @@
     (json-response (s/validate (s/maybe schema) data))))
 
 (defn file-download-response
-  [data filename content-type]
-  {:status 200
-   :body (new java.io.ByteArrayInputStream data)
-   :headers {"Content-type" content-type
-             "Content-Disposition" (str "attachment; filename=\"" filename "\"")}})
+  ([data filename content-type]
+    (file-download-response data filename content-type {}))
+  ([data filename content-type options]
+    {:status 200
+     :body (if-let [charset (:charset options)]
+             (ByteArrayInputStream. (.getBytes (str data) charset))
+             (ByteArrayInputStream. data))
+     :headers {"Content-type" content-type
+               "Content-Disposition" (str "attachment; filename=\"" filename "\"")}}))
+
+(defn csv-download-response
+  [data filename]
+  (file-download-response data filename "text/csv" {:charset "CP1252"}))
 
 (defn file-upload-response
   [data]
