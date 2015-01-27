@@ -8,7 +8,7 @@
     <p>{{kysymysryhma | lokalisoiKentta:'kuvaus'}}</p>
 
     <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys" id="k{{kysymys.kysymysid}}" ng-init="erikieli = vastauksetToisellaKielella(kysymys)">
-      <ng-form name="kysymysForm">
+      <ng-form name="kysymysForm" class="kysymysForm">
         <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
         <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">

@@ -98,11 +98,20 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $location.hash('k' + kysymysid);
         $anchorScroll();
         $location.hash(old);
-        angular.element(document.getElementById('k' + kysymysid)).addClass('highlight');
+
+        var required = angular.element(document.getElementsByClassName("kysymysForm ng-invalid-required"));
+
+        _.forEach(required,function(e){
+          angular.element(e).parent().addClass('highlight');
+        });
 
         $timeout(function(){
-          angular.element(document.getElementById('k' + kysymysid)).removeClass('highlight');
-        },2000);
+          // Remove all highlights
+          _.forEach(required,function(e){
+            angular.element(e).parent().removeClass('highlight');
+          });
+        },7000);
+
       };
 
       $scope.tunnus = $routeParams.tunnus;
