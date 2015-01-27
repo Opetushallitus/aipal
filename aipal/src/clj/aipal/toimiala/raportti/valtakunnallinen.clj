@@ -21,49 +21,92 @@
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
             [aipal.arkisto.opintoala :as opintoala-arkisto]
             [aipal.arkisto.koulutusala :as koulutusala-arkisto]
-            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]))
+            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
+            [oph.common.util.util :refer [some-value-with]]))
+
+(def taustakysymysten-mappaus-yksisuuntainen {7312036 7312029 ; Ikä
+                                              7312037 7312030 ; Korkein tutkinto
+                                              7312039 7312039 ; Aiempi tilanteesi
+                                              7312032 7312032 ; Tuleva tilanteesi
+                                              7312034 7312027 ; Sukupuoli
+                                              7312040 7312033 ; Tavoitteeni
+                                              7312038 7312031 ; Tärkein syy
+                                              7312035 7312028 ; Äidinkieli
+                                              })
+
+(def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
+
+(def taustakysymysten-mappaus
+  (into taustakysymysten-mappaus-yksisuuntainen
+     (map (comp vec reverse) taustakysymysten-mappaus-yksisuuntainen)))
+
+(defn mappaa-id
+  [id]
+  [id (taustakysymysten-mappaus id)])
+
+(defn yhdista-taustakysymysten-vastaukset
+  [vastaus]
+  (update-in vastaus [:kysymysid] #(or (taustakysymysten-mappaus-yksisuuntainen %) %)))
+
+(defn yhdista-taustakysymysten-kysymykset
+  [kysymys]
+  (update-in kysymys [:kysymysryhmaid] (fn [id]
+                                         (if (= id 3341884)
+                                           3341885
+                                           id))))
 
 (defn ^:private hae-valtakunnalliset-kysymykset []
-  (sql/select :kysymys
-    (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
-    (sql/join :left :jatkokysymys
-              (= :jatkokysymys.jatkokysymysid
-                 :kysymys.jatkokysymysid))
-    (sql/where {:kysymysryhma.valtakunnallinen true})
-    (sql/order :kysymysryhma.kysymysryhmaid :ASC)
-    (sql/order :kysymys.jarjestys :ASC)
-    (sql/fields :kysymys.kysymysid
-                :kysymys.kysymys_fi
-                :kysymys.kysymys_sv
-                :kysymys.kysymysryhmaid
-                :kysymys.eos_vastaus_sallittu
-                :kysymys.vastaustyyppi
-                :jatkokysymys.jatkokysymysid
-                :jatkokysymys.kylla_kysymys
-                :jatkokysymys.kylla_teksti_fi
-                :jatkokysymys.kylla_teksti_sv
-                :jatkokysymys.kylla_vastaustyyppi
-                :jatkokysymys.ei_kysymys
-                :jatkokysymys.ei_teksti_fi
-                :jatkokysymys.ei_teksti_sv)))
+  (->> (sql/select :kysymys
+         (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
+         (sql/join :left :jatkokysymys
+                   (= :jatkokysymys.jatkokysymysid
+                      :kysymys.jatkokysymysid))
+         (sql/where {:kysymysryhma.valtakunnallinen true
+                     :kysymys.kysymysid [not-in valtakunnalliset-duplikaattikysymykset]})
+         (sql/order :kysymysryhma.kysymysryhmaid :ASC)
+         (sql/order :kysymys.jarjestys :ASC)
+         (sql/fields :kysymys.kysymysid
+                     :kysymys.kysymys_fi
+                     :kysymys.kysymys_sv
+                     :kysymys.kysymysryhmaid
+                     :kysymys.eos_vastaus_sallittu
+                     :kysymys.vastaustyyppi
+                     :jatkokysymys.jatkokysymysid
+                     :jatkokysymys.kylla_kysymys
+                     :jatkokysymys.kylla_teksti_fi
+                     :jatkokysymys.kylla_teksti_sv
+                     :jatkokysymys.kylla_vastaustyyppi
+                     :jatkokysymys.ei_kysymys
+                     :jatkokysymys.ei_teksti_fi
+                     :jatkokysymys.ei_teksti_sv))
+    (map yhdista-taustakysymysten-kysymykset)))
+
+(defn yhdista-valtakunnalliset-taustakysymysryhmat [kysymysryhmat]
+  (let [hakeutumisvaihe (some-value-with :kysymysryhmaid 3341884 kysymysryhmat)
+        suorittamisvaihe (some-value-with :kysymysryhmaid 3341885 kysymysryhmat)
+        taustakysymykset (assoc suorittamisvaihe
+                                :nimi_fi "Näyttötutkintojen taustakysymykset"
+                                :nimi_sv "Bakgrundsfrågor gällande fristående examina")
+        muut (remove (comp #{3341884 3341885} :kysymysryhmaid) kysymysryhmat)]
+    (conj muut taustakysymykset)))
 
 (defn hae-valtakunnalliset-kysymysryhmat [taustakysymysryhmaid]
-  (sql/select
-    :kysymysryhma
-    (sql/where {:kysymysryhma.valtakunnallinen true
-                :kysymysryhma.tila (sql/subselect :kysymysryhma
-                                     (sql/fields :tila)
-                                     (sql/where {:kysymysryhmaid taustakysymysryhmaid}))})
-    (sql/order :kysymysryhma.kysymysryhmaid :ASC)
-    (sql/fields :kysymysryhmaid
-                :nimi_fi
-                :nimi_sv)))
+  (yhdista-valtakunnalliset-taustakysymysryhmat
+    (sql/select :kysymysryhma
+      (sql/where {:kysymysryhma.valtakunnallinen true
+                  :kysymysryhma.tila (sql/subselect :kysymysryhma
+                                       (sql/fields :tila)
+                                       (sql/where {:kysymysryhmaid taustakysymysryhmaid}))})
+      (sql/order :kysymysryhma.kysymysryhmaid :ASC)
+      (sql/fields :kysymysryhmaid
+                  :nimi_fi
+                  :nimi_sv))))
 
 (defn generoi-joinit [query ehdot]
   (reduce (fn [query {:keys [id arvot]}]
             (sql/where query (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
                                                                (sql/where {:v1.vastaajaid :vastaus.vastaajaid
-                                                                           :v1.kysymysid id
+                                                                           :v1.kysymysid [in (mappaa-id id)]
                                                                            :v1.numerovalinta [in arvot]})))))
           query
           ehdot))
@@ -103,7 +146,7 @@
     (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
                                     (sql/where {:v1.vastaajaid :vastaus.vastaajaid
-                                                :v1.kysymysid [in (map #(->int %) (keys rajaukset))]}))))
+                                                :v1.kysymysid [in (mapcat (comp mappaa-id ->int) (keys rajaukset))]}))))
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
     (sql/fields :vastaus.vastaajaid
@@ -116,7 +159,8 @@
                 :jatkovastaus.jatkokysymysid
                 :jatkovastaus.kylla_asteikko
                 :jatkovastaus.ei_vastausteksti)
-    sql/exec))
+    sql/exec
+    (->> (map yhdista-taustakysymysten-vastaukset))))
 
 (defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]
   (-> query
