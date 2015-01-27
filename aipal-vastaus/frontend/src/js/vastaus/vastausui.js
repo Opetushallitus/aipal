@@ -99,7 +99,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $anchorScroll();
         $location.hash(old);
 
-        var required = angular.element(document.getElementsByClassName("kysymysForm ng-invalid-required"));
+        var required = angular.element(document.getElementsByClassName('kysymysForm ng-invalid-required'));
 
         _.forEach(required,function(e){
           angular.element(e).parent().addClass('highlight');
