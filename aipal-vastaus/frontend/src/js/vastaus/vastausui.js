@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.i18n', 'yhteiset.palvelut.tallennusMuistutus'])
+angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.i18n', 'yhteiset.palvelut.lokalisointi', 'yhteiset.palvelut.tallennusMuistutus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -86,8 +86,8 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
   }])
 
   .controller('VastausController', [
-    '$http', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus', '$anchorScroll', '$timeout',
-    function($http, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus, $anchorScroll, $timeout) {
+    '$filter', '$http', '$rootScope', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus', '$anchorScroll', '$timeout',
+    function($filter, $http, $rootScope, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus, $anchorScroll, $timeout) {
       $scope.preview = false;
       $scope.$watch('vastausForm', function(vastausForm) {
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(vastausForm);
@@ -136,6 +136,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $http.get('api/kyselykerta/' + $routeParams.tunnus)
       .success(function(data) {
         $scope.data = data;
+        $rootScope.title = $filter('lokalisoiKentta')(data, 'nimi');
       })
       .error(function() {
         $location.path('/vastausaika-loppunut');
