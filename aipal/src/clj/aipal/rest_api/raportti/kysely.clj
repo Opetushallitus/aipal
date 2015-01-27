@@ -16,9 +16,11 @@
   (:require [aipal.compojure-util :as cu]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
-            [oph.common.util.util :refer [paivita-arvot]]
+            [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
             [oph.korma.korma :refer [joda-date->sql-date]]
-            [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]))
+            [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]
+            [aipal.toimiala.raportti.raportointi :refer [muodosta-csv muodosta-tyhja-csv]]
+            [oph.common.util.http-util :refer [csv-download-response]]))
 
 (defn muodosta-raportti-parametreilla
   [kyselyid parametrit]
@@ -37,3 +39,14 @@
           (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti
             (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia")))))))
+
+(defn csv-reitit [asetukset]
+  (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/:kieli/csv" [kyselyid kieli & parametrit]
+    (db/transaction
+      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            parametrit (paivita-arvot parametrit [:tutkinnot] #(remove clojure.string/blank? (clojure.string/split % #",")))
+            parametrit (poista-tyhjat parametrit)
+            raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
+        (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+          (csv-download-response (muodosta-csv raportti kieli) "kysely.csv")
+          (csv-download-response (muodosta-tyhja-csv raportti kieli) "kysely_ei_vastaajia.csv"))))))

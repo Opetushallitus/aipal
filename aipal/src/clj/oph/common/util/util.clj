@@ -205,3 +205,6 @@
 
 (defn paivita-arvot [m avaimet f]
   (reduce #(update-in % [%2] f) m avaimet))
+
+(defn poista-tyhjat [m]
+  (into {} (filter (comp not-empty val) m)))
