@@ -313,3 +313,10 @@
   (write-csv
     (muuta-kaikki-stringeiksi (raportti-taulukoksi raportti kieli))
     :delimiter \;))
+
+(defn muodosta-tyhja-csv
+  [raportti kieli]
+  (let [tekstit (i18n/hae-tekstit kieli)]
+    (write-csv
+      (muuta-kaikki-stringeiksi [[(get-in tekstit [:raportit :liian_vahan_vastaajia]) (:vastaajien-lkm raportti)]])
+      :delimiter \;)))
