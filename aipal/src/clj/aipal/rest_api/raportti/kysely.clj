@@ -16,8 +16,8 @@
   (:require [aipal.compojure-util :as cu]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.common.util.util :refer [paivita-arvot]]
             [oph.korma.korma :refer [joda-date->sql-date]]
-            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]))
 
 (defn muodosta-raportti-parametreilla

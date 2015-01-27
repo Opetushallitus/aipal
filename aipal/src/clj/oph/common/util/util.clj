@@ -202,3 +202,6 @@
 
 (def pvm-tuleva-tai-tanaan?
   (complement pvm-menneisyydessa?))
+
+(defn paivita-arvot [m avaimet f]
+  (reduce #(update-in % [%2] f) m avaimet))

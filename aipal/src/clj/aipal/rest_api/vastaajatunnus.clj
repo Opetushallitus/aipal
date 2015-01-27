@@ -17,7 +17,7 @@
             [aipal.compojure-util :as cu]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
-            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
+            [oph.common.util.util :refer [paivita-arvot]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (c/defroutes reitit

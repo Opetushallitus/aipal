@@ -20,10 +20,9 @@
             [aipal.arkisto.kysely :as arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.toimiala.kayttajaoikeudet :refer [kysymysryhma-luku? kysymysryhma-on-julkaistu?]]
-            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
-            [oph.common.util.util :refer [map-by]]
+            [oph.common.util.util :refer [map-by paivita-arvot]]
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]))
 
 (defn lisaa-kysymysryhma!

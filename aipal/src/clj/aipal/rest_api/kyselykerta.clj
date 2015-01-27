@@ -19,10 +19,8 @@
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kyselykerta :as arkisto]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.common.util.util :refer [paivita-arvot]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
-
-(defn paivita-arvot [m avaimet f]
-  (reduce #(update-in % [%2] f) m avaimet))
 
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []

@@ -19,7 +19,7 @@
             [aipal.arkisto.kyselypohja :as arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
-            [aipal.rest-api.kyselykerta :refer [paivita-arvot]]
+            [oph.common.util.util :refer [paivita-arvot]]
             [oph.common.util.http-util :refer [json-response parse-iso-date]]))
 
 (c/defroutes reitit
