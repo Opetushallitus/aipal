@@ -4,6 +4,10 @@
     {{ 'raportit.muodosta_raportti' | i18n }}
     <span class="fa fa-bar-chart"></span>
   </button>
+  <a class="btn btn-primary" ng-href="api/raportti/kysely/{{raportti.kyselyid}}/{{kieli}}/csv?vertailujakso_alkupvm={{raportti.vertailujakso_alkupvm}}&vertailujakso_loppupvm={{raportti.vertailujakso_loppupvm}}&tutkinnot={{raportti.tutkinnot.join(',')}}" ng-disabled="!raporttiValidi(raportti)">
+    {{ 'raportit.muodosta_csv_raportti' | i18n }}
+    <span class="fa fa-file-excel-o"></span>
+  </a>
 </div>
 
 <div ng-if="tulos">

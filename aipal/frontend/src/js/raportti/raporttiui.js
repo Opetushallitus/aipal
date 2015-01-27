@@ -24,10 +24,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysely', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'i18n', 'ilmoitus', 'seuranta',
-    function($scope, Koulutustoimija, Kysely, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, i18n, ilmoitus, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysely', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'seuranta',
+    function($scope, Koulutustoimija, Kysely, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
+    $scope.kieli = kieli;
     $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
     $scope.printgraphs = true;
