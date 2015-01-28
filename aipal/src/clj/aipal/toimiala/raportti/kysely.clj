@@ -18,7 +18,9 @@
             [aipal.integraatio.sql.korma :refer [kyselykerta]]
             [oph.korma.korma :refer [select-unique-or-nil]]
             [aipal.toimiala.raportti.kyselyraportointi :as kyselyraportointi]
-            [aipal.toimiala.raportti.raportointi :as raportointi]))
+            [aipal.toimiala.raportti.raportointi :as raportointi]
+            [aipal.arkisto.kysely :as arkisto]
+            [aipal.toimiala.raportti.valtakunnallinen :as valtakunnallinen-raportti]))
 
 (defn ^:private hae-kysely [kyselyid]
   (select-unique-or-nil :kysely
@@ -29,6 +31,16 @@
     (sql/fields :kysely.kyselyid [:kysely.nimi_fi :kysely_fi] [:kysely.nimi_sv :kysely_sv] :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     (sql/where {:kyselyid kyselyid})))
+
+(defn muodosta-valtakunnallinen-vertailuraportti [kyselyid parametrit]
+  (let [taustakysymysryhmaid (arkisto/hae-kyselyn-taustakysymysryhmaid kyselyid)
+        kysymysidt (arkisto/hae-kyselyn-valtakunnallisten-kysymysryhmien-kysymysidt kyselyid)
+        parametrit (assoc parametrit :taustakysymysryhmaid (str taustakysymysryhmaid)
+                                     :tyyppi "vertailu"
+                                     :tutkintorakennetaso "tutkinto"
+                                     :kysymykset (into {} (for [kysymysid kysymysidt]
+                                                            {kysymysid {:monivalinnat {}}})))]
+    (valtakunnallinen-raportti/muodosta parametrit)))
 
 (defn muodosta-raportti [kyselyid parametrit]
   (when-let [kysely (hae-kysely kyselyid)]

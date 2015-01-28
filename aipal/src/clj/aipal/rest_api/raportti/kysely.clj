@@ -18,8 +18,9 @@
             [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
             [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
             [oph.korma.korma :refer [joda-date->sql-date]]
-            [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]
-            [aipal.toimiala.raportti.raportointi :refer [muodosta-csv muodosta-tyhja-csv]]))
+            [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti]]
+            [aipal.toimiala.raportti.raportointi :refer [muodosta-csv muodosta-tyhja-csv]]
+            [oph.common.util.http-util :refer [csv-download-response]]))
 
 (defn muodosta-raportti-parametreilla
   [kyselyid parametrit]
@@ -33,11 +34,13 @@
   (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            valtakunnallinen-raportti (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
             raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (json-response
-          [(if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
-            raportti
-            (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))])))))
+          (for [raportti [valtakunnallinen-raportti raportti]]
+            (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+              raportti
+              (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))))))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/:kieli/csv" [kyselyid kieli & parametrit]
