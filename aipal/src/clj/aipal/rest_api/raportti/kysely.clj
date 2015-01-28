@@ -15,12 +15,11 @@
 (ns aipal.rest-api.raportti.kysely
   (:require [aipal.compojure-util :as cu]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
             [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
             [oph.korma.korma :refer [joda-date->sql-date]]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti]]
-            [aipal.toimiala.raportti.raportointi :refer [muodosta-csv muodosta-tyhja-csv]]
-            [oph.common.util.http-util :refer [csv-download-response]]))
+            [aipal.toimiala.raportti.raportointi :refer [muodosta-csv muodosta-tyhja-csv]]))
 
 (defn muodosta-raportti-parametreilla
   [kyselyid parametrit]
