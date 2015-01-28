@@ -330,5 +330,6 @@
   [raportti kieli]
   (let [tekstit (i18n/hae-tekstit kieli)]
     (write-csv
-      (muuta-kaikki-stringeiksi [[(get-in tekstit [:raportit :liian_vahan_vastaajia]) (:vastaajien-lkm raportti)]])
+      (muuta-kaikki-stringeiksi [[(lokalisoitu-kentta raportti "nimi" kieli)]
+                                 [(get-in tekstit [:raportit :liian_vahan_vastaajia]) (:vastaajien-lkm raportti)]])
       :delimiter \;)))
