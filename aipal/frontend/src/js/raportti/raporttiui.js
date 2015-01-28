@@ -33,6 +33,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
     $scope.printgraphs = true;
     $scope.printfreetext = true;
+    $scope.$watch('raportti', function(uusi) {
+      $scope.parametrit = JSON.stringify(uusi);
+    }, true);
 
     var poistaKoulutusalaValinnat = function() {
       _.forEach($scope.koulutusalat, function(koulutusala) {
