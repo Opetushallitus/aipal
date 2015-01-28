@@ -52,4 +52,6 @@
        :luontipvm (time/today)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
        :vastaajien-lkm vastaajien-lkm
-       :raportti (kyselyraportointi/muodosta-raportti parametrit)})))
+       :raportti (kyselyraportointi/muodosta-raportti parametrit)
+       :nimi_fi (:kysely_fi kysely)
+       :nimi_sv (:kysely_sv kysely)})))
