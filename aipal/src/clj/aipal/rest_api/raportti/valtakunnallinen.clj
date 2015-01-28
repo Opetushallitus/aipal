@@ -17,8 +17,10 @@
             [aipal.compojure-util :as cu]
             [korma.db :as db]
             [clj-time.core :as t]
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
+            [oph.common.util.util :refer [paivita-arvot muunna-avainsanoiksi]]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
+            [aipal.toimiala.raportti.raportointi :refer [muodosta-csv muodosta-tyhja-csv]]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
             [aipal.arkisto.opintoala :as opintoala-arkisto]))
 
@@ -81,3 +83,16 @@
           (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti
             (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia")))))))
+
+(defn csv-reitit [asetukset]
+  (cu/defapi :valtakunnallinen-raportti nil :get "/:kieli/csv" [kieli & parametrit]
+    (db/transaction
+      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))]
+        (csv-download-response
+          (apply str
+                 (for [raportti (luo-raportit parametrit)]
+                   (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+                     (muodosta-csv raportti kieli)
+                     (muodosta-tyhja-csv raportti kieli))))
+          (str (:tyyppi parametrit) "raportti.csv"))))))

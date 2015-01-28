@@ -208,3 +208,16 @@
 
 (defn poista-tyhjat [m]
   (into {} (filter (comp not-empty val) m)))
+
+(defn keyword-syntax?
+  "Keywordit muutetaan samalla syntaksilla kun wrap-keyword-params:
+   https://github.com/ring-clojure/ring/blob/1.3.1/ring-core/src/ring/middleware/keyword_params.clj"
+  [s]
+  (when (string? s)
+    (re-matches #"[A-Za-z*+!_?-][A-Za-z0-9*+!_?-]*" s)))
+
+(defn muunna-avainsanoiksi
+  "Päivitetty versio clojure.walk/keywordize-keys funktiosta, koska alkuperäinen muuntaa myös numerolla alkavan symbolin avainsanaksi."
+  [m]
+  (let [f (fn [[k v]] (if (keyword-syntax? k) [(keyword k) v] [k v]))]
+    (clojure.walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
