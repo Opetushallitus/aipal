@@ -247,9 +247,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       var parametrit = _.pick(raportti, 'vertailujakso_alkupvm', 'vertailujakso_loppupvm', 'tutkinnot');
 
       seuranta.asetaLatausIndikaattori(raporttifunktio(raportti.kyselyid, parametrit), 'raportinMuodostus')
-        .success(function(tulos) {
-          $scope.tulokset = [tulos];
-          $scope.tulos = tulos;
+        .success(function(tulokset) {
+          $scope.tulokset = tulokset;
+          $scope.tulos = tulokset[0];
         })
         .error(function(value) {
           if (value.status !== 500) {

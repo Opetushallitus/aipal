@@ -35,9 +35,9 @@
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (json-response
-          (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+          [(if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
             raportti
-            (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia")))))))
+            (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))])))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/:kieli/csv" [kyselyid kieli & parametrit]
