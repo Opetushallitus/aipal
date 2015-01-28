@@ -27,8 +27,9 @@
   (let [kyselyid (Integer/parseInt kyselyid)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
-        parametrit (paivita-arvot parametrit [:tutkinnot] seq)] ; tyhjä lista -> nil
-    (muodosta-raportti kyselyid parametrit)))
+        parametrit (paivita-arvot parametrit [:tutkinnot] seq) ; tyhjä lista -> nil
+        raportti (muodosta-raportti kyselyid parametrit)]
+    (assoc raportti :parametrit parametrit)))
 
 (defn reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]

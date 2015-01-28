@@ -39,8 +39,9 @@
                                      :tyyppi "vertailu"
                                      :tutkintorakennetaso "tutkinto"
                                      :kysymykset (into {} (for [kysymysid kysymysidt]
-                                                            {kysymysid {:monivalinnat {}}})))]
-    (valtakunnallinen-raportti/muodosta parametrit)))
+                                                            {kysymysid {:monivalinnat {}}})))
+        raportti (valtakunnallinen-raportti/muodosta parametrit)]
+    (assoc raportti :parametrit parametrit)))
 
 (defn muodosta-raportti [kyselyid parametrit]
   (when-let [kysely (hae-kysely kyselyid)]
