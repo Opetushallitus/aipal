@@ -307,17 +307,18 @@
 (defn raportti-taulukoksi
   [raportti kieli]
   (let [tekstit (i18n/hae-tekstit kieli)]
-    (into [(for [otsikko otsikot]
-             (get-in tekstit [:raportit :csv otsikko]))]
-          (for [kysymysryhma (:raportti raportti)
-                kysymys (:kysymykset kysymysryhma)]
-            (flatten [(lokalisoitu-kentta kysymysryhma "nimi" kieli) (lokalisoitu-kentta kysymys "kysymys" kieli) (:vastaajien_lukumaara kysymys) (:vastaajien_maksimimaara kysymysryhma)
-                      (:keskiarvo kysymys) (:keskihajonta kysymys)
-                      (for [vaihtoehto (:jakauma kysymys)]
-                        [(if (:vaihtoehto-avain vaihtoehto)
-                           (lokalisoi-vaihtoehto-avain tekstit (:vastaustyyppi kysymys) (:vaihtoehto-avain vaihtoehto))
-                           (lokalisoitu-kentta vaihtoehto "vaihtoehto" kieli))
-                         (:lukumaara vaihtoehto)])])))))
+    (concat [[(lokalisoitu-kentta raportti "nimi" kieli)]]
+            (into [(for [otsikko otsikot]
+                     (get-in tekstit [:raportit :csv otsikko]))]
+                  (for [kysymysryhma (:raportti raportti)
+                        kysymys (:kysymykset kysymysryhma)]
+                    (flatten [(lokalisoitu-kentta kysymysryhma "nimi" kieli) (lokalisoitu-kentta kysymys "kysymys" kieli) (:vastaajien_lukumaara kysymys) (:vastaajien_maksimimaara kysymysryhma)
+                              (:keskiarvo kysymys) (:keskihajonta kysymys)
+                              (for [vaihtoehto (:jakauma kysymys)]
+                                [(if (:vaihtoehto-avain vaihtoehto)
+                                   (lokalisoi-vaihtoehto-avain tekstit (:vastaustyyppi kysymys) (:vaihtoehto-avain vaihtoehto))
+                                   (lokalisoitu-kentta vaihtoehto "vaihtoehto" kieli))
+                                 (:lukumaara vaihtoehto)])]))))))
 
 (defn muodosta-csv
   [raportti kieli]
