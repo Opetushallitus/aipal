@@ -107,7 +107,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
-      Kysymysryhma.hae(kysymysryhmaid).success(function(kysymysryhma) {
+      Kysymysryhma.haeTaustakysymysryhma(kysymysryhmaid).success(function(kysymysryhma) {
         $scope.kysymysryhma = kysymysryhma;
 
         $scope.raportti.kysymykset = {};

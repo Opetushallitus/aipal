@@ -158,5 +158,8 @@
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
     (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid))))
 
+  (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/taustakysymysryhma/:kysymysryhmaid" [kysymysryhmaid]
+    (json-response (arkisto/hae-taustakysymysryhma (Integer/parseInt kysymysryhmaid))))
+
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid/esikatselu" [kysymysryhmaid]
     (json-response (arkisto/hae-esikatselulle (Integer/parseInt kysymysryhmaid)))))

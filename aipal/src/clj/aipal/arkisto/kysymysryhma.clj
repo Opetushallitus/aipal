@@ -17,7 +17,8 @@
             [oph.korma.korma :refer [select-unique]]
             [aipal.infra.kayttaja :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
-            [aipal.auditlog :as auditlog]))
+            [aipal.auditlog :as auditlog]
+            [aipal.toimiala.raportti.taustakysymykset :refer :all]))
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
@@ -51,7 +52,8 @@
                 :valtakunnallinen true})
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
     (sql/order :muutettuaika :desc)
-    sql/exec))
+    sql/exec
+    yhdista-valtakunnalliset-taustakysymysryhmat))
 
 (defn lisaa-kysymysryhma! [k]
   (let [kysymysryhma (sql/insert taulut/kysymysryhma
@@ -199,6 +201,19 @@
               taydenna-kysymysryhma
               taydenna-kysymysryhman-kysymykset)
           kysymysryhma)))))
+
+(defn hae-taustakysymysryhma
+  [kysymysryhmaid]
+  (if (= kysymysryhmaid 3341885)
+    (let [hakeutumisvaihe (hae 3341884)
+          suorittamisvaihe (hae 3341885)
+          kysymykset (->> (mapcat :kysymykset [suorittamisvaihe hakeutumisvaihe])
+                       (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid)))]
+      (assoc suorittamisvaihe
+             :nimi_fi "Näyttötutkintojen taustakysymykset"
+             :nimi_sv "Bakgrundsfrågor gällande fristående examina"
+             :kysymykset kysymykset))
+    (hae kysymysryhmaid)))
 
 (defn kysymysryhma-esikatselulle-select
   ([kyselyid]
