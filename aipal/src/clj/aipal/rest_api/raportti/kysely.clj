@@ -37,7 +37,8 @@
       (let [valtakunnallinen-raportti (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
             raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (json-response
-          (for [raportti [valtakunnallinen-raportti raportti]]
+          (for [raportti [valtakunnallinen-raportti raportti]
+                :when raportti]
             (ei-riittavasti-vastaajia raportti asetukset)))))))
 
 (defn csv-reitit [asetukset]

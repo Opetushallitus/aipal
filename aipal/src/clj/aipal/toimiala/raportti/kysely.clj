@@ -33,15 +33,15 @@
     (sql/where {:kyselyid kyselyid})))
 
 (defn muodosta-valtakunnallinen-vertailuraportti [kyselyid parametrit]
-  (let [taustakysymysryhmaid (arkisto/hae-kyselyn-taustakysymysryhmaid kyselyid)
-        kysymysidt (arkisto/hae-kyselyn-valtakunnallisten-kysymysryhmien-kysymysidt kyselyid)
-        parametrit (assoc parametrit :taustakysymysryhmaid (str taustakysymysryhmaid)
-                                     :tyyppi "vertailu"
-                                     :tutkintorakennetaso "tutkinto"
-                                     :kysymykset (into {} (for [kysymysid kysymysidt]
-                                                            {kysymysid {:monivalinnat {}}})))
-        raportti (valtakunnallinen-raportti/muodosta parametrit)]
-    (assoc raportti :parametrit parametrit)))
+  (when-let [taustakysymysryhmaid (arkisto/hae-kyselyn-taustakysymysryhmaid kyselyid)]
+    (let [kysymysidt (arkisto/hae-kyselyn-valtakunnallisten-kysymysryhmien-kysymysidt kyselyid)
+          parametrit (assoc parametrit :taustakysymysryhmaid (str taustakysymysryhmaid)
+                                       :tyyppi "vertailu"
+                                       :tutkintorakennetaso "tutkinto"
+                                       :kysymykset (into {} (for [kysymysid kysymysidt]
+                                                              {kysymysid {:monivalinnat {}}})))
+          raportti (valtakunnallinen-raportti/muodosta parametrit)]
+      (assoc raportti :parametrit parametrit))))
 
 (defn muodosta-raportti [kyselyid parametrit]
   (when-let [kysely (hae-kysely kyselyid)]
