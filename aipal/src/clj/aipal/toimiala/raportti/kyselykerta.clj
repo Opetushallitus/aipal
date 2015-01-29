@@ -36,7 +36,7 @@
     sql/exec
     first))
 
-(defn muodosta-raportti-perustiedot [kyselykertaid]
+(defn ^:private muodosta-raportti-perustiedot [kyselykertaid]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
     (let [koulutustoimijat (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain kyselykerta)]
       {:yhteenveto (assoc kyselykerta :koulutustoimijat koulutustoimijat
@@ -44,14 +44,15 @@
        :luontipvm (time/today)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara kyselykerta)})))
 
+(defn ^:private laske-vastaajat [kyselykertaid]
+  (-> (sql/select :vastaaja
+                  (sql/aggregate (count :*) :vastaajia)
+                  (sql/where {:kyselykertaid kyselykertaid}))
+      first
+      :vastaajia))
+
 (defn muodosta-raportti [kyselykertaid]
   (let [perustiedot (muodosta-raportti-perustiedot kyselykertaid)]
     (when perustiedot
-      (assoc perustiedot :raportti (kyselyraportointi/muodosta-raportti (:yhteenveto perustiedot))))))
-
-(defn laske-vastaajat [kyselykertaid]
-  (-> (sql/select :vastaaja
-        (sql/aggregate (count :*) :vastaajia)
-        (sql/where {:kyselykertaid kyselykertaid}))
-      first
-      :vastaajia))
+      (assoc perustiedot :raportti (kyselyraportointi/muodosta-raportti (:yhteenveto perustiedot))
+                         :vastaajien-lkm (laske-vastaajat kyselykertaid)))))

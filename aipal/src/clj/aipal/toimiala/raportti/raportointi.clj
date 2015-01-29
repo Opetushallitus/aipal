@@ -333,3 +333,10 @@
       (muuta-kaikki-stringeiksi [[(lokalisoitu-kentta raportti "nimi" kieli)]
                                  [(get-in tekstit [:raportit :liian_vahan_vastaajia]) (:vastaajien-lkm raportti)]])
       :delimiter \;)))
+
+(defn ei-riittavasti-vastaajia
+  [raportti asetukset]
+  (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
+    (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+      raportti
+      (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))))
