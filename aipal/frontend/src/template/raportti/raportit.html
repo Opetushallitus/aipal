@@ -30,8 +30,10 @@
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
-    <tab class="hidden-print" heading="{{ 'raportit.kyselykertaraportit' | i18n }}" active="kyselykertaraportitValittu" select="vaihdaTyyppi(false, i18n.raportit.kyselykertaraportit)">
-      <ng-include src="'template/raportti/kyselykerrat.html'" ng-controller="KyselykerratController"></ng-include>
+    <tab class="hidden-print" heading="{{ 'raportit.kyselykertaraportti' | i18n }}" active="kyselykertaraportitValittu" select="vaihdaTyyppi('kyselykerta', i18n.raportit.kyselykertaraportti)">
+      <h2 class="hidden-print">{{ 'raportit.kyselykertaraportti_otsikko' | i18n }} *<ohje tunniste="kyselykertaraportti"></ohje></h2>
+      <ng-include class="hidden-print" src="'template/raportti/osat/kyselykerrat.html'"></ng-include>
+      <ng-include src="'template/raportti/osat/kyselykertaraportit.html'"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.kyselyraportti' | i18n }}" select="vaihdaTyyppi('kysely', i18n.raportit.kyselyraportti)">
       <h2 class="hidden-print">{{ 'raportit.kyselyraportti_otsikko' | i18n }} *<ohje tunniste="kyselyraportti"></ohje></h2>

@@ -31,16 +31,6 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
       });
   }])
 
-  .controller('KyselykerratController', [
-    'Kyselykerta', '$scope',
-    function(Kyselykerta, $scope) {
-      Kyselykerta.hae()
-        .success(function(kyselykerrat) {
-          $scope.kyselykerrat = kyselykerrat;
-        });
-    }
-  ])
-
   .controller('KyselykertaRaporttiController', [
     'kaavioApurit', 'KyselykertaRaportti', '$location', '$routeParams', '$scope',
     function(kaavioApurit, KyselykertaRaportti, $location, $routeParams, $scope) {
