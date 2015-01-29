@@ -15,15 +15,20 @@
 (ns aipal.toimiala.raportti.taustakysymykset
   (:require [oph.common.util.util :refer [some-value-with]]))
 
-(def taustakysymysten-mappaus-yksisuuntainen {7312036 7312029 ; Ikä
-                                              7312037 7312030 ; Korkein tutkinto
-                                              7312039 7312039 ; Aiempi tilanteesi
-                                              7312032 7312032 ; Tuleva tilanteesi
-                                              7312034 7312027 ; Sukupuoli
-                                              7312040 7312033 ; Tavoitteeni
-                                              7312038 7312031 ; Tärkein syy
-                                              7312035 7312028 ; Äidinkieli
-                                              })
+(def hakeutumisvaihe-id 3341884)
+(def suorittamisvaihe-id 3341885)
+
+(def taustakysymysten-mappaus-yksisuuntainen
+  "Mappaa hakeutumisvaiheen taustakysymysten ID:t niitä vastaaviin suoritusvaiheen taustakysymyksiin.
+   Aiempi tilanteesi -kysymystä ei ole suoritusvaiheen kysymyksissä."
+  {7312034 7312027 ; Sukupuoli
+   7312035 7312028 ; Äidinkieli
+   7312036 7312029 ; Ikä
+   7312037 7312030 ; Korkein tutkinto
+   7312038 7312031 ; Tärkein syy
+   7312039 7312039 ; Aiempi tilanteesi
+   7312040 7312033 ; Tavoitteeni
+   })
 
 (def yhdistettyjen-taustakysymysten-jarjestys
   {7312027 "1"
@@ -43,12 +48,15 @@
 (def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
 
 (def taustakysymysten-mappaus
+  "Mappaa hakeutumisvaiheen taustakysymysten ID:t niitä vastaaviin suoritusvaiheen taustakysymyksiin ja päinvastoin."
   (into taustakysymysten-mappaus-yksisuuntainen
      (map (comp vec reverse) taustakysymysten-mappaus-yksisuuntainen)))
 
 (defn mappaa-id
   [id]
-  [id (taustakysymysten-mappaus id)])
+  (if-let [toinen-id (taustakysymysten-mappaus id)]
+    [id toinen-id]
+    [id]))
 
 (defn yhdista-taustakysymysten-vastaukset
   [vastaus]
@@ -57,15 +65,17 @@
 (defn yhdista-taustakysymysten-kysymykset
   [kysymys]
   (update-in kysymys [:kysymysryhmaid] (fn [id]
-                                         (if (= id 3341884)
-                                           3341885
+                                         (if (= id hakeutumisvaihe-id)
+                                           suorittamisvaihe-id
                                            id))))
 
 (defn yhdista-valtakunnalliset-taustakysymysryhmat [kysymysryhmat]
-  (let [hakeutumisvaihe (some-value-with :kysymysryhmaid 3341884 kysymysryhmat)
-        suorittamisvaihe (some-value-with :kysymysryhmaid 3341885 kysymysryhmat)
+  (let [hakeutumisvaihe (some-value-with :kysymysryhmaid hakeutumisvaihe-id kysymysryhmat)
+        suorittamisvaihe (some-value-with :kysymysryhmaid suorittamisvaihe-id kysymysryhmat)
         taustakysymykset (assoc suorittamisvaihe
                                 :nimi_fi "Näyttötutkintojen taustakysymykset"
                                 :nimi_sv "Bakgrundsfrågor gällande fristående examina")
-        muut (remove (comp #{3341884 3341885} :kysymysryhmaid) kysymysryhmat)]
-    (conj muut taustakysymykset)))
+        muut (remove (comp #{hakeutumisvaihe-id suorittamisvaihe-id} :kysymysryhmaid) kysymysryhmat)]
+    (if (and suorittamisvaihe hakeutumisvaihe)
+      (conj muut taustakysymykset)
+      kysymysryhmat)))

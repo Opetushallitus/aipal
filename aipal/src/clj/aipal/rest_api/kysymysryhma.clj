@@ -158,6 +158,7 @@
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
     (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid))))
 
+  ;; Muuten sama kuin ylläoleva, mutta haettaessa vuoden 2015 taustakysymysryhmiä yhdistää hakeutumis- ja suoritusvaiheen kysymysryhmät
   (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/taustakysymysryhma/:kysymysryhmaid" [kysymysryhmaid]
     (json-response (arkisto/hae-taustakysymysryhma (Integer/parseInt kysymysryhmaid))))
 

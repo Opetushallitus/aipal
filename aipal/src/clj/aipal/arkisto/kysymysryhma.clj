@@ -204,9 +204,9 @@
 
 (defn hae-taustakysymysryhma
   [kysymysryhmaid]
-  (if (= kysymysryhmaid 3341885)
-    (let [hakeutumisvaihe (hae 3341884)
-          suorittamisvaihe (hae 3341885)
+  (if (= kysymysryhmaid suorittamisvaihe-id)
+    (let [hakeutumisvaihe (hae hakeutumisvaihe-id)
+          suorittamisvaihe (hae suorittamisvaihe-id)
           kysymykset (->> (mapcat :kysymykset [suorittamisvaihe hakeutumisvaihe])
                        (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid))
                        (map aseta-taustakysymyksen-jarjestys)
