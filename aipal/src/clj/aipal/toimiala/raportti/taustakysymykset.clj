@@ -25,6 +25,21 @@
                                               7312035 7312028 ; Äidinkieli
                                               })
 
+(def yhdistettyjen-taustakysymysten-jarjestys
+  {7312027 "1"
+   7312028 "2"
+   7312029 "3"
+   7312030 "4"
+   7312031 "5"
+   7312039 "6a"
+   7312032 "6b"
+   7312033 "7"})
+
+(defn aseta-taustakysymyksen-jarjestys
+  [kysymys]
+  (let [id (:kysymysid kysymys)]
+    (assoc kysymys :jarjestys (yhdistettyjen-taustakysymysten-jarjestys id))))
+
 (def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
 
 (def taustakysymysten-mappaus

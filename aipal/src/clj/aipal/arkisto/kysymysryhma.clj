@@ -100,7 +100,7 @@
     (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
     (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv
                 :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi :kysymys.eos_vastaus_sallittu
-                :kysymys.max_vastaus :kysymys.monivalinta_max
+                :kysymys.max_vastaus :kysymys.monivalinta_max :kysymys.jarjestys
                 :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
                 :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv
                 :jatkokysymys.kylla_vastaustyyppi
@@ -208,7 +208,9 @@
     (let [hakeutumisvaihe (hae 3341884)
           suorittamisvaihe (hae 3341885)
           kysymykset (->> (mapcat :kysymykset [suorittamisvaihe hakeutumisvaihe])
-                       (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid)))]
+                       (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid))
+                       (map aseta-taustakysymyksen-jarjestys)
+                       (sort-by :jarjestys))]
       (assoc suorittamisvaihe
              :nimi_fi "Näyttötutkintojen taustakysymykset"
              :nimi_sv "Bakgrundsfrågor gällande fristående examina"

@@ -20,7 +20,7 @@
             <div class="col-md-12">
                 <div class="kysymykset">
                     <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
-                        <div class="kysymys-otsikko">{{ kysymys |lokalisoiKentta:'kysymys' }}</div>
+                        <div class="kysymys-otsikko">{{kysymys.jarjestys}}. {{ kysymys |lokalisoiKentta:'kysymys' }}</div>
 
                         <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot"
                              ng-show="kysymys.vastaustyyppi === 'monivalinta'" class="checkbox">

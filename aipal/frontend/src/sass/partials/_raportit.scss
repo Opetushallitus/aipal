@@ -129,7 +129,6 @@ li.selected{
   font-size: .9em;
 
   & .kysymys {
-    counter-increment: kysymys-counter;
     display: inline-block;
     float: left;
     max-width: 18%;
@@ -161,9 +160,6 @@ li.selected{
     & .kysymys-otsikko {
       font-weight: bold;
       line-height: 1.3em;
-      &:before {
-        content: counter(kysymys-counter) ". ";
-      }
     }
   }
 }
