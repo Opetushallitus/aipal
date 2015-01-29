@@ -15,7 +15,9 @@
 (ns aipal.toimiala.raportti.raportointi
   (:require [korma.core :as sql]
             [clojure-csv.core :refer [write-csv]]
-            [aipal.rest-api.i18n :as i18n]))
+            [aipal.rest-api.i18n :as i18n]
+            [clj-time.core :as t]
+            [oph.common.util.http-util :refer [parse-iso-date]]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
@@ -340,3 +342,13 @@
     (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
       raportti
       (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))))
+
+(defn vertailuraportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
+  (let [alkupvm (parse-iso-date vertailujakso_alkupvm)
+        loppupvm (or (parse-iso-date vertailujakso_loppupvm) (t/today))
+        vertailupvm (t/minus loppupvm (t/years 1))]
+    (if (and alkupvm (<= (.compareTo alkupvm vertailupvm) 0))
+      {:vertailujakso_alkupvm vertailujakso_alkupvm
+       :vertailujakso_loppupvm vertailujakso_loppupvm}
+      {:vertailujakso_alkupvm (and alkupvm (.toString vertailupvm))
+       :vertailujakso_loppupvm vertailujakso_loppupvm})))

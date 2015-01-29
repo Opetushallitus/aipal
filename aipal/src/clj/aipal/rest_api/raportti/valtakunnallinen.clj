@@ -20,19 +20,9 @@
             [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
             [oph.common.util.util :refer [paivita-arvot muunna-avainsanoiksi]]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
-            [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
+            [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv vertailuraportti-vertailujakso]]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
             [aipal.arkisto.opintoala :as opintoala-arkisto]))
-
-(defn vertailuraportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
-  (let [alkupvm (parse-iso-date vertailujakso_alkupvm)
-        loppupvm (or (parse-iso-date vertailujakso_loppupvm) (t/today))
-        vertailupvm (t/minus loppupvm (t/years 1))]
-    (if (and alkupvm (<= (.compareTo alkupvm vertailupvm) 0))
-      {:vertailujakso_alkupvm vertailujakso_alkupvm
-       :vertailujakso_loppupvm vertailujakso_loppupvm}
-      {:vertailujakso_alkupvm (and alkupvm (.toString vertailupvm))
-       :vertailujakso_loppupvm vertailujakso_loppupvm})))
 
 ; Valtakunnallinen vertailuraportti on ilman koulutustoimijoita, ylemmälle tutkintohierarkian tasolle
 (defn kehitysraportti-vertailuraportti-parametrit [parametrit]
