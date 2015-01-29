@@ -20,7 +20,8 @@
             [aipal.toimiala.raportti.kyselyraportointi :as kyselyraportointi]
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [aipal.arkisto.kysely :as arkisto]
-            [aipal.toimiala.raportti.valtakunnallinen :as valtakunnallinen-raportti]))
+            [aipal.toimiala.raportti.valtakunnallinen :as valtakunnallinen-raportti]
+            [aipal.rest-api.raportti.valtakunnallinen :as valtakunnallinen]))
 
 (defn ^:private hae-kysely [kyselyid]
   (select-unique-or-nil :kysely
@@ -40,6 +41,8 @@
                                        :tutkintorakennetaso "tutkinto"
                                        :kysymykset (into {} (for [kysymysid kysymysidt]
                                                               {kysymysid {:monivalinnat {}}})))
+          parametrit (merge parametrit
+                            (valtakunnallinen/vertailuraportti-vertailujakso (:vertailujakso_alkupvm parametrit) (:vertailujakso_loppupvm parametrit)))
           raportti (valtakunnallinen-raportti/muodosta parametrit)]
       (assoc raportti :parametrit parametrit))))
 
