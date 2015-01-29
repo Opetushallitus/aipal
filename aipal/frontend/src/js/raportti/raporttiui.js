@@ -232,21 +232,21 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     $scope.muodostaRaportti = function() {
-      seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus').success(function(tulokset) {
-        $scope.tulokset = tulokset;
-        $scope.tulos = tulokset[0];
-      }).error(function(data, status) {
-        if (status !== 500) {
-          ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
-        }
-      });
+      seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
+        .success(function(tulokset) {
+          $scope.tulokset = tulokset;
+          $scope.tulos = tulokset[0];
+        }).error(function(data, status) {
+          if (status !== 500) {
+            ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
+          }
+        });
     };
 
     $scope.muodostaKyselyraportti = function(raportti) {
-      var raporttifunktio = (raportti.tyyppi === 'kysely' ? Raportti.muodostaKyselyraportti : function() {});
       var parametrit = _.pick(raportti, 'vertailujakso_alkupvm', 'vertailujakso_loppupvm', 'tutkinnot');
 
-      seuranta.asetaLatausIndikaattori(raporttifunktio(raportti.kyselyid, parametrit), 'raportinMuodostus')
+      seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, parametrit), 'raportinMuodostus')
         .success(function(tulokset) {
           $scope.tulokset = tulokset;
           $scope.tulos = tulokset[0];
@@ -300,10 +300,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         };
 
         $scope.muodostaKyselykertaraportti = function(raportti) {
-          var raporttifunktio = (raportti.tyyppi === 'kyselykerta' ? Raportti.muodostaKyselykertaraportti : function() {});
           var parametrit = {};
 
-          seuranta.asetaLatausIndikaattori(raporttifunktio(raportti.kyselykertaid, parametrit), 'raportinMuodostus')
+          seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, parametrit), 'raportinMuodostus')
             .success(function(tulos) {
               $scope.tulokset = [tulos];
               $scope.tulos = tulos;
