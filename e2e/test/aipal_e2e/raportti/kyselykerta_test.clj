@@ -25,19 +25,15 @@
 
 (defn kyselykertaraportti-sivu [kyselykertaid] (str "/#/raportit/kyselykerrat/kyselykerta/" kyselykertaid))
 
-(defn sisemman-elementin-kentan-teksti [ulompi-elementti kentta]
+(defn css-elementin-teksti [css]
   (w/text
-    (w/find-element-under ulompi-elementti
-                          (-> *ng*
-                            (.binding kentta)))))
+    (w/find-element {:css css})))
 
 (defn kyselykerran-tietojen-kentta [kentta]
-  (sisemman-elementin-kentan-teksti {:css ".raportti-kyselykerta-tiedot"}
-                             (str "tulos.yhteenveto." kentta)))
+  (css-elementin-teksti (str ".e2e-yhteenveto-" kentta)))
 
 (defn raportin-luontipvm []
-  (sisemman-elementin-kentan-teksti {:css ".raportti-kyselykerta-tiedot"}
-                                    "tulos.luontipvm"))
+  (css-elementin-teksti ".e2e-luontipvm"))
 
 (defn paivamaara [paivamaara-iso-muodossa]
   (time-format/parse-local-date (time-format/formatters :year-month-day)
@@ -47,21 +43,18 @@
                                                                       tanaan-pvm))
 
 (defn kysymykset []
-  (w/find-elements (-> *ng*
-                     (.repeater "kysymys in kysymysryhma.kysymykset"))))
+  (w/find-elements {:css ".e2e-kysymysryhma-kysymykset-repeat"}))
 
 (defn kysymyksen-teksti [kysymys-elementti]
-  (sisemman-elementin-kentan-teksti kysymys-elementti "kysymys"))
+  (w/text
+    (w/find-element-under kysymys-elementti {:css ".e2e-kysymys-otsikko"})))
 
 (defn ^:private taulukon-kysymysteksti-kysymykselle [kysymys-elementti]
   (w/text (w/find-element-under kysymys-elementti {:css ".report-table-question"})))
 
 (defn ^:private vapaatekstit-kysymykselle [kysymys-elementti]
   (map w/text
-       (w/find-elements-under kysymys-elementti
-                              (-> *ng*
-                                (.repeater "vastaus in kysymys.vapaatekstivastaukset")
-                                (.column "teksti")))))
+       (w/find-elements-under kysymys-elementti {:css ".e2e-kysymys-vapaatekstivastaukset-repeat"})))
 
 (defn css-sarakkeet-kysymykselle [css-luokka kysymys-elementti]
   (map w/text
