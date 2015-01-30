@@ -163,7 +163,7 @@
       opintoalatunnus (rajaa-vastaajatunnukset-opintoalalle opintoalatunnus)
       koulutusalatunnus (rajaa-vastaajatunnukset-koulutusalalle koulutusalatunnus)
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
-    (sql/where {:kysymysryhma.kysymysryhmaid kysymysryhmaid})
+    (sql/where {:kysymysryhma.kysymysryhmaid [in (mappaa-kysymysryhmaid kysymysryhmaid)]})
     (rajaa-vastaajatunnukset-ajalle alkupvm loppupvm)
     (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
     (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)

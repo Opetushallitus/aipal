@@ -55,6 +55,12 @@
   (into taustakysymysten-mappaus-yksisuuntainen
      (map (comp vec reverse) taustakysymysten-mappaus-yksisuuntainen)))
 
+(defn mappaa-kysymysryhmaid
+  [id]
+  (if (= id suorittamisvaihe-id)
+    [suorittamisvaihe-id hakeutumisvaihe-id]
+    [id]))
+
 (defn mappaa-kysymysid
   [id]
   (if-let [toinen-id (taustakysymysten-mappaus id)]
