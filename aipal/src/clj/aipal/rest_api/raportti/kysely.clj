@@ -27,7 +27,7 @@
   (let [kyselyid (Integer/parseInt kyselyid)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
-        parametrit (paivita-arvot parametrit [:tutkinnot] seq) ; tyhjä lista -> nil
+        parametrit (poista-tyhjat parametrit)
         raportti (muodosta-raportti kyselyid parametrit)]
     (assoc raportti :parametrit parametrit)))
 
@@ -46,8 +46,6 @@
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             parametrit (paivita-arvot parametrit [:tutkinnot] #(remove clojure.string/blank? (clojure.string/split % #",")))
-            parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] cheshire/parse-string)
-            parametrit (poista-tyhjat parametrit)
             raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
           (csv-download-response (muodosta-csv raportti kieli) "kysely.csv")
