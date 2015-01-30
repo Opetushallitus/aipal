@@ -195,7 +195,8 @@
                         :keskihajonta
                         :jatkovastaukset
                         :vastaustyyppi
-                        :eos_vastaus_sallittu]))
+                        :eos_vastaus_sallittu
+                        :jarjestys]))
 
 (defn vastaajien-lukumaara [vastaukset]
   (->> vastaukset

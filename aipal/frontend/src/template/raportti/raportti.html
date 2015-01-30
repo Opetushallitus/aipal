@@ -92,7 +92,7 @@
   </p>
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys">
-    <h3>{{$index + 1}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
+    <h3>{{kysymys.jarjestys}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
     <span>
       {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{kysymysryhma.vastaajien_maksimimaara}}
       {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymys.vastaajien_lukumaara, kysymysryhma.vastaajien_maksimimaara)}}%

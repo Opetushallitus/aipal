@@ -34,7 +34,8 @@
                      :kysymys.kysymysid [not-in valtakunnalliset-duplikaattikysymykset]})
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
-         (sql/fields :kysymys.kysymysid
+         (sql/fields :kysymys.jarjestys
+                     :kysymys.kysymysid
                      :kysymys.kysymys_fi
                      :kysymys.kysymys_sv
                      :kysymys.kysymysryhmaid
@@ -48,7 +49,8 @@
                      :jatkokysymys.ei_kysymys
                      :jatkokysymys.ei_teksti_fi
                      :jatkokysymys.ei_teksti_sv))
-    (map yhdista-taustakysymysten-kysymykset)))
+    (map (comp aseta-taustakysymyksen-jarjestys yhdista-taustakysymysten-kysymykset))
+    (sort-by (comp str :jarjestys))))
 
 (defn hae-valtakunnalliset-kysymysryhmat [taustakysymysryhmaid]
   (yhdista-valtakunnalliset-taustakysymysryhmat

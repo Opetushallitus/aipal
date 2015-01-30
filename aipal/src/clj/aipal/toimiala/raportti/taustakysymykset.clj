@@ -42,8 +42,11 @@
 
 (defn aseta-taustakysymyksen-jarjestys
   [kysymys]
-  (let [id (:kysymysid kysymys)]
-    (assoc kysymys :jarjestys (yhdistettyjen-taustakysymysten-jarjestys id))))
+  (let [id (:kysymysid kysymys)
+        jarjestys (yhdistettyjen-taustakysymysten-jarjestys id)]
+    (if jarjestys
+      (assoc kysymys :jarjestys jarjestys)
+      kysymys)))
 
 (def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
 

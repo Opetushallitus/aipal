@@ -122,6 +122,7 @@
                 :kysymys.kysymys_sv
                 :kysymys.vastaustyyppi
                 :kysymys.eos_vastaus_sallittu
+                :kysymys.jarjestys
                 :jatkokysymys.jatkokysymysid
                 :jatkokysymys.kylla_kysymys
                 :jatkokysymys.kylla_teksti_fi
