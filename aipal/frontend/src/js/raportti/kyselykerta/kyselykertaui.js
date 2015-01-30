@@ -16,9 +16,9 @@
 
 angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jakaumakaavio',
                                                       'raportti.kyselykerta.kaavioapurit',
-                                                      'raportti.kyselykerta.kyselykertaraportti',
                                                       'raportti.kyselykerta.vaittamakaavio',
                                                       'rest.kyselykerta',
+                                                      'rest.raportti',
                                                       'yhteiset.suodattimet.voimassaoloaika',
                                                       'ngRoute',
                                                       'ngResource'])
@@ -32,16 +32,18 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
   }])
 
   .controller('KyselykertaRaporttiController', [
-    'kaavioApurit', 'KyselykertaRaportti', '$location', '$routeParams', '$scope',
-    function(kaavioApurit, KyselykertaRaportti, $location, $routeParams, $scope) {
-      KyselykertaRaportti.hae($routeParams.kyselykertaid, function(tulos) {
-        $scope.tulokset = [tulos];
-        $scope.tulos = tulos;
-      }, function(value) {
-        if (value.status !== 500) {
-          $location.url('/');
-        }
-      });
+    'kaavioApurit', 'Raportti', '$location', '$routeParams', '$scope',
+    function(kaavioApurit, Raportti, $location, $routeParams, $scope) {
+      Raportti.muodostaKyselykertaraportti($routeParams.kyselykertaid, {})
+        .success(function onSuccess(tulos) {
+          $scope.tulokset = [tulos];
+          $scope.tulos = tulos;
+        })
+        .error(function onError(value) {
+          if (value.status !== 500) {
+            $location.url('/');
+          }
+        });
 
       $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
       $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;

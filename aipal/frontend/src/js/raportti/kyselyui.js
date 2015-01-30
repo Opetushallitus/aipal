@@ -16,7 +16,6 @@
 
 angular.module('raportti.kyselyui', ['raportti.kyselykerta.jakaumakaavio',
                                      'raportti.kyselykerta.kaavioapurit',
-                                     'raportti.kyselykerta.kyselykertaraportti',
                                      'raportti.kyselykerta.vaittamakaavio',
                                      'rest.raportti',
                                      'yhteiset.suodattimet.voimassaoloaika',
