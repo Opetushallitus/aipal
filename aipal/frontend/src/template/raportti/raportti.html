@@ -36,9 +36,6 @@
   <div ng-show="tulos.yhteenveto.kyselykerta">
     {{'yleiset.kyselykerta' | i18n }}: <b class="e2e-yhteenveto-kyselykerta">{{tulos.yhteenveto.kyselykerta}}</b>
   </div>
-  <div ng-show="tulos.nimi">
-    {{ 'raportit.tutkinnot' | i18n }}: <b>{{ tulos | lokalisoiKentta:'nimi' }}</b>
-  </div>
   <div ng-show="tulos.vastaajien_maksimimaara">
     {{'raportti.kohderyhman_koko' | i18n }}: <b>{{tulos.vastaajien_maksimimaara}}</b>
   </div>
