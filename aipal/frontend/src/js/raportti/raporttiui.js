@@ -238,9 +238,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     $scope.muodostaKyselyraportti = function(raportti) {
-      var parametrit = _.pick(raportti, 'vertailujakso_alkupvm', 'vertailujakso_loppupvm', 'tutkinnot');
-
-      seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, parametrit), 'raportinMuodostus')
+      seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
         .success(function(tulokset) {
           $scope.tulokset = tulokset;
           $scope.tulos = tulokset[0];

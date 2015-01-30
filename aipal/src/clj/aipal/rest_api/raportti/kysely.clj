@@ -16,7 +16,7 @@
   (:require [cheshire.core :as cheshire]
             [korma.db :as db]
             [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
-            [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
+            [oph.common.util.util :refer [paivita-arvot poista-tyhjat muunna-avainsanoiksi]]
             [oph.korma.korma :refer [joda-date->sql-date]]
             [aipal.compojure-util :as cu]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti]]
@@ -45,7 +45,7 @@
   (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/:kieli/csv" [kyselyid kieli & parametrit]
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            parametrit (paivita-arvot parametrit [:tutkinnot] #(remove clojure.string/blank? (clojure.string/split % #",")))
+            parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
             raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
           (csv-download-response (muodosta-csv raportti kieli) "kysely.csv")

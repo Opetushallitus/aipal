@@ -42,6 +42,7 @@
       <valintalista class="hidden-print" valittavat="kyselyt" hakuteksti="{{ 'raportit.hae_kyselyita' | i18n }}" valitse="valitseKysely(valittava)"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
+      <valintalista class="hidden-print" valittavat="koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="valitseTaiPoistaKoulutustoimija(valittava)"></valintalista>
       <ng-include src="'template/raportti/osat/kyselyraportit.html'"></ng-include>
     </tab>
   </tabset>
