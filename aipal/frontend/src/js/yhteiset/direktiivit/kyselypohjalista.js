@@ -37,7 +37,11 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
           tila: $scope.tila
         };
         $scope.$watch('valtakunnalliset', function(valtakunnalliset) {
-          $scope.rajoitin.valtakunnallinen = valtakunnalliset;
+          if (valtakunnalliset !== undefined) {
+            $scope.rajoitin.valtakunnallinen = valtakunnalliset;
+          } else {
+            delete $scope.rajoitin.valtakunnallinen;
+          }
         });
 
         $scope.julkaiseKyselypohja = function(kyselypohja) {
