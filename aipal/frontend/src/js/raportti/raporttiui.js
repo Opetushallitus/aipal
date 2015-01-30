@@ -98,8 +98,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       poistaTutkintoValinnat();
       tyhjaaTaustakysymysvalinnat();
 
-      // Kyselyraportilla tutkintorakennetasovalintaa ei ole näkyvissä, joten pitää valita tasoksi tutkinto
-      if (tyyppi === 'kysely') {
+      // Kysely-ja kyselykertaraportilla tutkintorakennetasovalintaa ei ole näkyvissä, joten pitää valita tasoksi tutkinto
+      if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
         $scope.raportti.tutkintorakennetaso = 'tutkinto';
       }
     };
@@ -157,7 +157,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     });
 
     $scope.piilotaTutkintorakenneVaihto = function() {
-      return $scope.raportti.tyyppi === 'kysely';
+      return $scope.raportti.tyyppi === 'kysely' || $scope.raportti.tyyppi === 'kyselykerta';
     };
 
     var voikoValitaUseita = function() {
@@ -227,6 +227,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
       else if ($scope.raportti.tyyppi === 'kysely') {
         return _.isNumber($scope.raportti.kyselyid);
+      }
+      else if ($scope.raportti.tyyppi === 'kyselykerta') {
+        return _.isNumber($scope.raportti.kyselykertaid);
       }
       return true;
     };
@@ -300,7 +303,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         };
 
         $scope.muodostaKyselykertaraportti = function(raportti) {
-          var parametrit = {};
+          var parametrit = _.pick(raportti, 'vertailujakso_alkupvm', 'vertailujakso_loppupvm', 'tutkinnot');
 
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, parametrit), 'raportinMuodostus')
             .success(function(tulos) {

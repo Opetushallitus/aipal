@@ -14,15 +14,27 @@
 
 (ns aipal.rest-api.raportti.kyselykerta
   (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response]]
+
+            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
+            [oph.korma.korma :refer [joda-date->sql-date]]
+
+            [aipal.compojure-util :as cu]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]
             [aipal.toimiala.raportti.raportointi :as raportointi]))
 
+(defn muodosta-raportti-parametreilla
+  [kyselykertaid parametrit]
+  (let [kyselykertaid (Integer/parseInt kyselykertaid)
+        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
+        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
+        parametrit (paivita-arvot parametrit [:tutkinnot] seq) ; tyhjä lista -> nil
+        raportti (muodosta-raportti kyselykertaid parametrit)]
+    (assoc raportti :parametrit parametrit)))
+
 (defn reitit [asetukset]
-  (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
+  (cu/defapi :kyselykerta-raportti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & parametrit]
     (db/transaction
-      (let [kyselykertaid (Integer/parseInt kyselykertaid)]
-        (json-response
-          (raportointi/ei-riittavasti-vastaajia (muodosta-raportti kyselykertaid) asetukset))))))
+      (json-response
+        (raportointi/ei-riittavasti-vastaajia (muodosta-raportti-parametreilla kyselykertaid parametrit) asetukset)))))

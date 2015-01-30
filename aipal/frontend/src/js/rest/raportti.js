@@ -24,7 +24,7 @@ angular.module('rest.raportti', [])
         return $http.post('api/raportti/kysely/' + id, raportti);
       },
       muodostaKyselykertaraportti: function(id, parametrit) {
-        return $http.get('api/raportti/kyselykerta/' + id, parametrit);
+        return $http.post('api/raportti/kyselykerta/' + id, parametrit);
       }
     };
   }])
