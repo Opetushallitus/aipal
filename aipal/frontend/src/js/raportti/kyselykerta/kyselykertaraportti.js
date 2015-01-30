@@ -18,17 +18,14 @@ angular.module('raportti.kyselykerta.kyselykertaraportti', ['ngResource'])
   .factory('KyselykertaRaportti', ['$resource', function($resource) {
     var resource = $resource(null, null, {
       haku: {
-        method: 'GET',
-        params: {
-          nocache: function() {return Date.now();},
-        },
+        method: 'POST',
         url: 'api/raportti/kyselykerta/:kyselykertaid'
       }
     });
 
     return {
       hae: function(kyselykertaid, successCallback, errorCallback) {
-        return resource.haku({kyselykertaid: kyselykertaid}, successCallback, errorCallback);
+        return resource.haku({kyselykertaid: kyselykertaid}, {}, successCallback, errorCallback);
       }
     };
   }]);
