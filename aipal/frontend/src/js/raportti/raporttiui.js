@@ -161,7 +161,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     var voikoValitaUseita = function() {
-      return $scope.raportti.tyyppi === 'vertailu' || $scope.raportti.tyyppi === 'kysely';
+      return $scope.raportti.tyyppi === 'vertailu';
     };
     $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
