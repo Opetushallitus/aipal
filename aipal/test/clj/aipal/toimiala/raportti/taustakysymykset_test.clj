@@ -16,11 +16,11 @@
   (:require [clojure.test :refer [are deftest is testing]]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]))
 
-(deftest mappaa-id-test
+(deftest mappaa-kysymysid-test
   (testing "Jos annetaan molemmista taustakysymyksistä löytyvä id, palauttaa molemmat vastaavat "
-    (is (= (mappaa-id 7312034) [7312034 7312027])))
+    (is (= (mappaa-kysymysid 7312034) [7312034 7312027])))
   (testing "Jos annetaan id jota ei löydy molemmista, palauttaa vain sen id:n listana"
-    (is (= (mappaa-id 1) [1]))))
+    (is (= (mappaa-kysymysid 1) [1]))))
 
 (deftest yhdista-taustakysymysten-vastaukset-test
   (testing "Jos vastaus on hakeutumisvaiheen kysymykseen, vaihdetaan vastaavaan suorittamisvaiheen kysymykseen"

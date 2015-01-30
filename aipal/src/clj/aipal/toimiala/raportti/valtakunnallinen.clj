@@ -68,7 +68,7 @@
   (reduce (fn [query {:keys [id arvot]}]
             (sql/where query (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
                                                                (sql/where {:v1.vastaajaid :vastaus.vastaajaid
-                                                                           :v1.kysymysid [in (mappaa-id id)]
+                                                                           :v1.kysymysid [in (mappaa-kysymysid id)]
                                                                            :v1.numerovalinta [in arvot]})))))
           query
           ehdot))
@@ -108,7 +108,7 @@
     (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
                                     (sql/where {:v1.vastaajaid :vastaus.vastaajaid
-                                                :v1.kysymysid [in (mapcat (comp mappaa-id ->int) (keys rajaukset))]}))))
+                                                :v1.kysymysid [in (mapcat (comp mappaa-kysymysid ->int) (keys rajaukset))]}))))
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
     (sql/fields :vastaus.vastaajaid
