@@ -8,5 +8,16 @@
         <span class="fa fa-check" ng-show="valittava.valittu"></span>
       </li>
     </ul>
+
+    <div class="valintalista-valitut">
+      <ul>
+        <li ng-repeat="valittava in valittavat | filter:{valittu: true}" ng-click="valitse({'valittava': valittava})">
+          <div class="btn btn-primary">
+            {{ valittava | lokalisoiKentta:'nimi' }}
+            <span class="fa fa-remove"></span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
