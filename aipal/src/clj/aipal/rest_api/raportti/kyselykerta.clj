@@ -13,7 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.raportti.kyselykerta
-  (:require [compojure.core :as c]
+  (:require [cheshire.core :as cheshire]
+            [compojure.core :as c]
             [korma.db :as db]
 
             [oph.common.util.http-util :refer [csv-download-response json-response parse-iso-date]]
@@ -44,6 +45,7 @@
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             parametrit (paivita-arvot parametrit [:tutkinnot] #(remove clojure.string/blank? (clojure.string/split % #",")))
+            parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] cheshire/parse-string)
             parametrit (poista-tyhjat parametrit)
             raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
         (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
