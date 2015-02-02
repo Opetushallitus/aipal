@@ -32,7 +32,7 @@
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.kyselykertaraportti' | i18n }}" active="kyselykertaraportitValittu" select="vaihdaTyyppi('kyselykerta', i18n.raportit.kyselykertaraportti)">
       <h2 class="hidden-print">{{ 'raportit.kyselykertaraportti_otsikko' | i18n }} *<ohje tunniste="kyselykertaraportti"></ohje></h2>
-      <ng-include class="hidden-print" src="'template/raportti/osat/kyselykerrat.html'"></ng-include>
+      <valintalista class="hidden-print" valittavat="kyselykerrat" hakuteksti="{{ 'raportit.hae_kyselykertoja' | i18n }}" valitse="valitseKyselykerta(valittava)"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include src="'template/raportti/osat/kyselykertaraportit.html'"></ng-include>

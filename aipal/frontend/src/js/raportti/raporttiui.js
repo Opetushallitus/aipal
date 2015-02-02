@@ -285,9 +285,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           $scope.kyselykerrat = data;
         });
 
-        $scope.rajoite = $scope.rajoite || {};
-        $scope.rajoite.kyselykerrat = 20;
-
         var poistaKyselykertaValinnat = function() {
           _.forEach($scope.kyselykerrat, function(kyselykerta) {
             delete kyselykerta.valittu;
