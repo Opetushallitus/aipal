@@ -49,7 +49,9 @@
     {{'raportti.raportin_luontipaiva' | i18n }}: <b class="e2e-luontipvm">{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</b>
   </div>
   <div ng-show="tulos.parametrit.vertailujakso_alkupvm || tulos.parametrit.vertailujakso_loppupvm">
-    {{'raportti.raportin_vertailujakso' | i18n }}: <b>{{tulos.parametrit.vertailujakso_alkupvm | date: 'dd.MM.yyyy'}} - {{tulos.parametrit.vertailujakso_loppupvm | date: 'dd.MM.yyyy'}}</b>
+    <span ng-show="raportti.tyyppi=='kyselykerta' || raportti.tyyppi=='kysely'">{{'raportit.raportin_aikajakso' | i18n }}:</span>
+    <span ng-show="raportti.tyyppi!='kyselykerta' && raportti.tyyppi!='kysely' ">{{'raportti.raportin_vertailujakso' | i18n }}:</span>
+    <b>{{tulos.parametrit.vertailujakso_alkupvm | date: 'dd.MM.yyyy'}} - {{tulos.parametrit.vertailujakso_loppupvm | date: 'dd.MM.yyyy'}}</b>
   </div>
 
   <div ng-if="tulos.yhteenveto">
