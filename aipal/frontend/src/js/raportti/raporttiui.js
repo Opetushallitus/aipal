@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kyselykerta.kaavioapurit'])
+angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kyselykerta.kaavioapurit', 'yhteiset.direktiivit.valintalista'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/raportit', {
@@ -134,19 +134,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     Kysely.hae().success(function (data) {
       $scope.kyselyt = data;
     });
-
-    $scope.rajoite = {
-      koulutustoimijat: 20,
-      kyselyt: 20
-    };
-
-    $scope.naytaLisaa = function(elem) {
-      $scope.rajoite[elem] += 5;
-    };
-
-    $scope.nollaaRajoite = function(elem) {
-      $scope.rajoite[elem] = 20;
-    };
 
     Tutkinto.haeVoimassaolevatTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.koulutusalat = koulutusalat;
@@ -284,9 +271,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         Kyselykerta.hae().success(function(data) {
           $scope.kyselykerrat = data;
         });
-
-        $scope.rajoite = $scope.rajoite || {};
-        $scope.rajoite.kyselykerrat = 20;
 
         var poistaKyselykertaValinnat = function() {
           _.forEach($scope.kyselykerrat, function(kyselykerta) {
