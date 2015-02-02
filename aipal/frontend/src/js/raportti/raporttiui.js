@@ -190,7 +190,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         poistaKyselyValinnat();
       }
       kysely.valittu = !kysely.valittu;
-      $scope.raportti.kyselyid = kysely.kyselyid;
+      if (kysely.valittu) {
+        $scope.raportti.kyselyid = kysely.kyselyid;
+      } else {
+        delete $scope.raportti.kyselyid;
+      }
     };
 
     $scope.raportti.koulutustoimijat = [];
@@ -283,7 +287,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
             poistaKyselykertaValinnat();
           }
           kyselykerta.valittu = !kyselykerta.valittu;
-          $scope.raportti.kyselykertaid = kyselykerta.kyselykertaid;
+          if (kyselykerta.valittu) {
+            $scope.raportti.kyselykertaid = kyselykerta.kyselykertaid;
+          } else {
+            delete $scope.raportti.kyselykertaid;
+          }
         };
 
         $scope.muodostaKyselykertaraportti = function(raportti) {
