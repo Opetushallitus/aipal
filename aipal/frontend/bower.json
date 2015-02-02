@@ -22,7 +22,7 @@
     "ng-breadcrumbs": "0.1.2",
     "angular-post-message": "1.1.1",
     "fontawesome": "4.2.0",
-    "angular-ui-select": "~0.9.1",
+    "angular-ui-select": "0.9.5",
     "angular-ui-sortable": "0.13.1",
     "angular-bindonce": "0.3.3",
     "angular-tablesort": "1.0.5"
