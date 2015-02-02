@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kyselykerta.kaavioapurit'])
+angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kyselykerta.kaavioapurit', 'yhteiset.direktiivit.valintalista'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/raportit', {
