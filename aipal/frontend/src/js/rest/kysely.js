@@ -23,6 +23,9 @@ angular.module('rest.kysely', [])
       haeId: function(id) {
         return $http.get('api/kysely/' + id, {params: {nocache: Date.now()}});
       },
+      haeVastaustunnustiedot: function(id) {
+        return $http.get('api/kysely/' + id + '/vastaustunnustiedot', {params: {nocache: Date.now()}});
+      },
       luoUusi: function(kysely) {
         return $http.post('api/kysely', kysely);
       },

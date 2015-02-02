@@ -18,6 +18,7 @@
             [schema.core :as schema]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysely :as arkisto]
+            [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.toimiala.kayttajaoikeudet :refer [kysymysryhma-luku? kysymysryhma-on-julkaistu?]]
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
@@ -89,6 +90,9 @@
       (if (= (:tila (arkisto/hae kyselyid)) "luonnos")
         (arkisto/poista-kysely! kyselyid)
         {:status 403})))
+
+  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/vastaustunnustiedot" [kyselyid]
+    (json-response (kyselykerta-arkisto/hae-vastaustunnustiedot-kyselylta (Integer/parseInt kyselyid))))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
     (json-response (when-let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
