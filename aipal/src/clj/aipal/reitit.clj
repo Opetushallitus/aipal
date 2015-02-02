@@ -68,6 +68,7 @@
     (c/context "/api/rahoitusmuoto" [] (wrap-tarkasta-csrf-token aipal.rest-api.rahoitusmuoto/reitit))
     (c/context "/api/raportti/kysely" [] (aipal.rest-api.raportti.kysely/csv-reitit asetukset))
     (c/context "/api/raportti/kysely" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.kysely/reitit asetukset)))
+    (c/context "/api/raportti/kyselykerta" [] (aipal.rest-api.raportti.kyselykerta/csv-reitit asetukset))
     (c/context "/api/raportti/kyselykerta" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.kyselykerta/reitit asetukset)))
     (c/context "/api/raportti/valtakunnallinen" [] (aipal.rest-api.raportti.valtakunnallinen/csv-reitit asetukset))
     (c/context "/api/raportti/valtakunnallinen" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.valtakunnallinen/reitit asetukset)))

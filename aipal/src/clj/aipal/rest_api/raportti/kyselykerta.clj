@@ -16,7 +16,7 @@
   (:require [compojure.core :as c]
             [korma.db :as db]
 
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+            [oph.common.util.http-util :refer [csv-download-response json-response parse-iso-date]]
             [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
             [oph.korma.korma :refer [joda-date->sql-date]]
 
@@ -38,3 +38,14 @@
     (db/transaction
       (json-response
         (raportointi/ei-riittavasti-vastaajia (muodosta-raportti-parametreilla kyselykertaid parametrit) asetukset)))))
+
+(defn csv-reitit [asetukset]
+  (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/:kieli/csv" [kyselykertaid kieli & parametrit]
+    (db/transaction
+      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            parametrit (paivita-arvot parametrit [:tutkinnot] #(remove clojure.string/blank? (clojure.string/split % #",")))
+            parametrit (poista-tyhjat parametrit)
+            raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
+        (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+          (csv-download-response (raportointi/muodosta-csv raportti kieli) "kyselykerta.csv")
+          (csv-download-response (raportointi/muodosta-tyhja-csv raportti kieli) "kyselykerta_ei_vastaajia.csv"))))))
