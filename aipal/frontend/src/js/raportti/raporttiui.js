@@ -24,8 +24,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Kysely', 'kyselykertaValilehti', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'seuranta',
-    function($scope, Koulutustoimija, Kysely, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'seuranta',
+    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.kieli = kieli;
@@ -77,12 +77,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       $scope.raportti.tutkinnot = [];
     };
 
-    var poistaKyselyValinnat = function() {
-      _.forEach($scope.kyselyt, function(kysely) {
-        delete kysely.valittu;
-      });
-    };
-
     var tyhjaaTaustakysymysvalinnat = function() {
       _.forEach($scope.raportti.kysymykset, function (kysymys) {
         kysymys.monivalinnat = {};
@@ -129,10 +123,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
       $scope.koulutustoimijat = koulutustoimijat;
-    });
-
-    Kysely.hae().success(function (data) {
-      $scope.kyselyt = data;
     });
 
     Tutkinto.haeVoimassaolevatTutkinnotHierarkiassa().success(function(koulutusalat) {
@@ -185,18 +175,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
     };
 
-    $scope.valitseKysely = function(kysely) {
-      if(!kysely.valittu) {
-        poistaKyselyValinnat();
-      }
-      kysely.valittu = !kysely.valittu;
-      if (kysely.valittu) {
-        $scope.raportti.kyselyid = kysely.kyselyid;
-      } else {
-        delete $scope.raportti.kyselyid;
-      }
-    };
-
     $scope.raportti.koulutustoimijat = [];
     $scope.valitseTaiPoistaKoulutustoimija = function(koulutustoimija) {
       if (_.remove($scope.raportti.koulutustoimijat, function(ytunnus) { return ytunnus === koulutustoimija.ytunnus; }).length === 0) {
@@ -237,20 +215,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         });
     };
 
-    $scope.muodostaKyselyraportti = function(raportti) {
-      seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
-        .success(function(tulokset) {
-          $scope.tulokset = tulokset;
-          $scope.tulos = tulokset[0];
-        })
-        .error(function(value) {
-          if (value.status !== 500) {
-            ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
-          }
-        });
-    };
-
     kyselykertaValilehti.alusta($scope);
+    kyselyValilehti.alusta($scope);
 
     $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
@@ -264,6 +230,48 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     });
     $scope.naytaRaportti = function(raportti) {
       $scope.tulos = raportti;
+    };
+  }])
+
+  .factory('kyselyValilehti', ['i18n', 'ilmoitus', 'Kysely', 'Raportti', 'seuranta', function(i18n, ilmoitus, Kysely, Raportti, seuranta) {
+    return {
+      alusta: function alusta($scope) {
+        Kysely.hae().success(function (data) {
+          $scope.kyselyt = data;
+        });
+
+
+        var poistaKyselyValinnat = function() {
+          _.forEach($scope.kyselyt, function(kysely) {
+            delete kysely.valittu;
+          });
+        };
+
+        $scope.valitseKysely = function(kysely) {
+          if(!kysely.valittu) {
+            poistaKyselyValinnat();
+          }
+          kysely.valittu = !kysely.valittu;
+          if (kysely.valittu) {
+            $scope.raportti.kyselyid = kysely.kyselyid;
+          } else {
+            delete $scope.raportti.kyselyid;
+          }
+        };
+
+        $scope.muodostaKyselyraportti = function(raportti) {
+          seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
+            .success(function(tulokset) {
+              $scope.tulokset = tulokset;
+              $scope.tulos = tulokset[0];
+            })
+            .error(function(value) {
+              if (value.status !== 500) {
+                ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
+              }
+            });
+        };
+      }
     };
   }])
 
