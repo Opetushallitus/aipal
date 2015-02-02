@@ -136,8 +136,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     });
 
     $scope.rajoite = {
-      koulutustoimijat: 20,
-      kyselyt: 20
+      koulutustoimijat: 20
     };
 
     $scope.naytaLisaa = function(elem) {
