@@ -184,6 +184,15 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         delete koulutustoimija.valittu;
       }
     };
+    $scope.raportti.oppilaitokset = [];
+    $scope.valitseTaiPoistaOppilaitos = function(oppilaitos) {
+      if (_.remove($scope.raportti.oppilaitokset, function(oppilaitoskoodi) { return oppilaitoskoodi === oppilaitos.oppilaitoskoodi; }).length === 0) {
+        oppilaitos.valittu = true;
+        $scope.raportti.oppilaitokset.push(oppilaitos.oppilaitoskoodi);
+      } else {
+        delete oppilaitos.valittu;
+      }
+    };
 
     $scope.raporttiValidi = function() {
       if ($scope.raportti.tyyppi === 'vertailu') {
@@ -240,11 +249,23 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           $scope.kyselyt = data;
         });
 
+        $scope.$watch('raportti.kyselyid', function(uusi) {
+          if (!_.isUndefined(uusi)) {
+            Kysely.haeVastaustunnustiedot(uusi).success(function(tiedot) {
+              $scope.vastaustunnustiedot = tiedot;
+            });
+          }
+          else {
+            $scope.vastaustunnustiedot = {};
+          }
+        });
 
         var poistaKyselyValinnat = function() {
           _.forEach($scope.kyselyt, function(kysely) {
             delete kysely.valittu;
           });
+          $scope.raportti.koulutustoimijat = [];
+          $scope.raportti.oppilaitokset = [];
         };
 
         $scope.valitseKysely = function(kysely) {
