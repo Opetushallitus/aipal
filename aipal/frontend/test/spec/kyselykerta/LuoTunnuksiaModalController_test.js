@@ -67,7 +67,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       kyselykerta.voimassa_loppupvm = '2015-02-01';
       alustaController();
       expect($scope.menneisyydessa).toEqual(false);
-      expect($scope.oletusalkupvm).toEqual(today);
+      expect(new Date($scope.oletusalkupvm)).toEqual(today);
     });
 
     it('pitäisi antaa oletusalkupäiväksi nykyhetki, kun kyselykerta viimeistä päivää voimassa', function() {
@@ -75,7 +75,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       kyselykerta.voimassa_loppupvm = '2015-01-15';
       alustaController();
       expect($scope.menneisyydessa).toEqual(false);
-      expect($scope.oletusalkupvm).toEqual(today);
+      expect(new Date($scope.oletusalkupvm)).toEqual(today);
     });
 
     it('pitäisi antaa oletusalkupäiväksi kyselykerran loppupäivä, kun kyselykerta päättynyt', function() {
@@ -84,7 +84,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       var loppupvm = new Date(kyselykerta.voimassa_loppupvm);
       alustaController();
       expect($scope.menneisyydessa).toEqual(true);
-      expect($scope.oletusalkupvm).toEqual(loppupvm);
+      expect(new Date($scope.oletusalkupvm)).toEqual(loppupvm);
     });
 
     it('pitäisi antaa oletusalkupäiväksi nykyhetki, kun kyselykerta voimassa toistaiseksi', function() {
@@ -92,7 +92,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       kyselykerta.voimassa_loppupvm = null;
       alustaController();
       expect($scope.menneisyydessa).toEqual(false);
-      expect($scope.oletusalkupvm).toEqual(today);
+      expect(new Date($scope.oletusalkupvm)).toEqual(today);
     });
 
     it('pitäisi antaa oletusalkupäiväksi kyselykerran alkupäivä, kun kyselykerta tulevaisuudessa', function() {
@@ -101,7 +101,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       var alkupvm = new Date(kyselykerta.voimassa_alkupvm);
       alustaController();
       expect($scope.menneisyydessa).toEqual(false);
-      expect($scope.oletusalkupvm).toEqual(alkupvm);
+      expect(new Date($scope.oletusalkupvm)).toEqual(alkupvm);
     });
 
     it('pitäisi antaa oletusalkupäiväksi kyselykerran alkupäivä, kun kyselykerta tulevaisuudessa ja avoimella loppupäivällä', function() {
@@ -110,7 +110,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       var alkupvm = new Date(kyselykerta.voimassa_alkupvm);
       alustaController();
       expect($scope.menneisyydessa).toEqual(false);
-      expect($scope.oletusalkupvm).toEqual(alkupvm);
+      expect(new Date($scope.oletusalkupvm)).toEqual(alkupvm);
     });
 
     it('pitäisi antaa oletusalkupäiväksi nykyhetki, kun kyselykerta tulee voimaan samana päivänä', function() {
@@ -118,7 +118,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       kyselykerta.voimassa_loppupvm = '2015-01-31';
       alustaController();
       expect($scope.menneisyydessa).toEqual(false);
-      expect($scope.oletusalkupvm).toEqual(today);
+      expect(new Date($scope.oletusalkupvm)).toEqual(today);
     });
 
     it('pitäisi antaa oletusalkupäiväksi nykyhetki, kun kyselykerta tulee voimaan samana päivänä ja on avoimella loppupäivällä', function() {
@@ -126,7 +126,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
       kyselykerta.voimassa_loppupvm = null;
       alustaController();
       expect($scope.menneisyydessa).toEqual(false);
-      expect($scope.oletusalkupvm).toEqual(today);
+      expect(new Date($scope.oletusalkupvm)).toEqual(today);
     });
   });
 });
