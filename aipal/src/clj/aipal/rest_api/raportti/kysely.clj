@@ -25,9 +25,9 @@
 (defn muodosta-raportti-parametreilla
   [kyselyid parametrit]
   (let [kyselyid (Integer/parseInt kyselyid)
+        parametrit (poista-tyhjat parametrit)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
-        parametrit (poista-tyhjat parametrit)
         raportti (muodosta-raportti kyselyid parametrit)]
     (assoc raportti :parametrit parametrit)))
 
