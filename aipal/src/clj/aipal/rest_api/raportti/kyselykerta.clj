@@ -16,21 +16,18 @@
   (:require [cheshire.core :as cheshire]
             [korma.db :as db]
 
-            [oph.common.util.http-util :refer [csv-download-response json-response parse-iso-date]]
-            [oph.common.util.util :refer [paivita-arvot poista-tyhjat muunna-avainsanoiksi]]
-            [oph.korma.korma :refer [joda-date->sql-date]]
+            [oph.common.util.http-util :refer [csv-download-response json-response]]
+            [oph.common.util.util :refer [muunna-avainsanoiksi]]
 
             [aipal.compojure-util :as cu]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]
-            [aipal.toimiala.raportti.raportointi :as raportointi]))
+            [aipal.toimiala.raportti.raportointi :as raportointi]
+            [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
 
 (defn muodosta-raportti-parametreilla
   [kyselykertaid parametrit]
-  (let [kyselykertaid (Integer/parseInt kyselykertaid)
-        parametrit (poista-tyhjat parametrit)
-        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
-        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
-        raportti (muodosta-raportti kyselykertaid parametrit)]
+  (let [parametrit (paivita-parametrit parametrit)
+        raportti (muodosta-raportti (Integer/parseInt kyselykertaid) parametrit)]
     (assoc raportti :parametrit parametrit)))
 
 (defn reitit [asetukset]

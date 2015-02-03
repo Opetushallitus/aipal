@@ -15,7 +15,10 @@
 (ns aipal.toimiala.raportti.kyselyraportointi
   (:require [clj-time.core :as time]
             [korma.core :as sql]
-            [aipal.toimiala.raportti.raportointi :as raportointi]))
+            [aipal.toimiala.raportti.raportointi :as raportointi]
+            [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
+            [oph.korma.korma :refer [joda-date->sql-date]]
+            [oph.common.util.http-util :refer [parse-iso-date]]))
 
 (defn yhdista-ja-jarjesta-tutkinnot
   [tutkinnot]
@@ -206,3 +209,8 @@
                                                 (hae-kysymysryhmat parametrit) parametrit)
                                               (hae-kysymykset parametrit)
                                               (hae-vastaukset parametrit)))
+
+(defn paivita-parametrit [parametrit]
+  (-> parametrit
+    poista-tyhjat
+    (paivita-arvot [:vertailujakso_alkupvm :vertailujakso_loppupvm] (comp joda-date->sql-date parse-iso-date))))

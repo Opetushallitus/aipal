@@ -15,20 +15,17 @@
 (ns aipal.rest-api.raportti.kysely
   (:require [cheshire.core :as cheshire]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
-            [oph.common.util.util :refer [paivita-arvot poista-tyhjat muunna-avainsanoiksi]]
-            [oph.korma.korma :refer [joda-date->sql-date]]
+            [oph.common.util.http-util :refer [json-response csv-download-response]]
+            [oph.common.util.util :refer [muunna-avainsanoiksi]]
             [aipal.compojure-util :as cu]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti]]
-            [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]))
+            [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
+            [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
 
 (defn muodosta-raportti-parametreilla
   [kyselyid parametrit]
-  (let [kyselyid (Integer/parseInt kyselyid)
-        parametrit (poista-tyhjat parametrit)
-        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
-        parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
-        raportti (muodosta-raportti kyselyid parametrit)]
+  (let [parametrit (paivita-parametrit parametrit)
+        raportti (muodosta-raportti (Integer/parseInt kyselyid) parametrit)]
     (assoc raportti :parametrit parametrit)))
 
 (defn reitit [asetukset]
