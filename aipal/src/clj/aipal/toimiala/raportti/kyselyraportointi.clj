@@ -59,6 +59,10 @@
     (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv
                 [(sql/subselect :vastaaja
                                 (sql/aggregate (count :*) :vastaajien_lkm)
+                                (sql/where (or (nil? (:vertailujakso_alkupvm parametrit))
+                                               (>= :vastaaja.luotuaika (:vertailujakso_alkupvm parametrit))))
+                                (sql/where (or (nil? (:vertailujakso_loppupvm parametrit))
+                                               (<= :vastaaja.luotuaika (:vertailujakso_loppupvm parametrit))))
                                 (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajien_lkm]
                 :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     sql/exec
