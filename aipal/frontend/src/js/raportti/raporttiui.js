@@ -91,6 +91,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       poistaOpintoalaValinnat();
       poistaTutkintoValinnat();
       tyhjaaTaustakysymysvalinnat();
+      delete $scope.raportti.kyselykertaid;
+      delete $scope.raportti.kyselyid;
 
       // Kysely-ja kyselykertaraportilla tutkintorakennetasovalintaa ei ole näkyvissä, joten pitää valita tasoksi tutkinto
       if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
@@ -303,10 +305,23 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           $scope.kyselykerrat = data;
         });
 
+        $scope.$watch('raportti.kyselykertaid', function(uusi) {
+          if (!_.isUndefined(uusi)) {
+            Kyselykerta.haeVastaustunnustiedot(uusi).success(function(tiedot) {
+              $scope.vastaustunnustiedot = tiedot;
+            });
+          }
+          else {
+            $scope.vastaustunnustiedot = {};
+          }
+        });
+
         var poistaKyselykertaValinnat = function() {
           _.forEach($scope.kyselykerrat, function(kyselykerta) {
             delete kyselykerta.valittu;
           });
+          $scope.raportti.koulutustoimijat = [];
+          $scope.raportti.oppilaitokset = [];
         };
 
         $scope.valitseKyselykerta = function(kyselykerta) {
