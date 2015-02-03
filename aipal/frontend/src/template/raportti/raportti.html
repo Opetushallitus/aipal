@@ -156,6 +156,8 @@
       </div>
     </div>
 
+    <div ng-if="kysymys.vastaustyyppi === 'vapaateksti' && !printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n }})</div>
+
     <table ng-class="{ 'hidden-print': !printfreetext }" class="report-table" ng-show="kysymys.vastaustyyppi === 'vapaateksti'">
       <thead>
         <tr><th>{{'raportti.vastaukset' |i18n}}:</th></tr>
