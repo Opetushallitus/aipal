@@ -26,6 +26,9 @@
   (cu/defapi :kysely nil :get "/" []
     (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
+  (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid/vastaustunnustiedot" [kyselykertaid]
+    (json-response (arkisto/hae-vastaustunnustiedot-kyselykerralta (Integer/parseInt kyselykertaid))))
+
   (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
     (json-response (arkisto/hae-yksi (Integer/parseInt kyselykertaid))))
 

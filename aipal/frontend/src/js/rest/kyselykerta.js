@@ -23,6 +23,9 @@ angular.module('rest.kyselykerta', [])
       haeYksi: function(id) {
         return $http.get('api/kyselykerta/' + id, {params: {nocache: Date.now()}});
       },
+      haeVastaustunnustiedot: function(id) {
+        return $http.get('api/kyselykerta/' + id + '/vastaustunnustiedot', {params: {nocache: Date.now()}});
+      },
       luoUusi: function(kyselyId, kyselykerta) {
         return $http.post('api/kyselykerta', {kyselyid: kyselyId, kyselykerta: kyselykerta});
       },
