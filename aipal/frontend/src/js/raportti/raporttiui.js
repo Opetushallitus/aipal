@@ -24,8 +24,30 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'seuranta',
-    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, seuranta) {
+.factory('raporttiApurit', [function(){
+    return {
+      poistaKyselyValinnat: function(kyselyt, raportti) {
+        _.forEach(kyselyt, function(kysely) {
+          delete kysely.valittu;
+        });
+        raportti.koulutustoimijat = [];
+        raportti.oppilaitokset = [];
+        delete raportti.kyselyid;
+      },
+
+      poistaKyselykertaValinnat: function(kyselykerrat, raportti) {
+        _.forEach(kyselykerrat, function(kyselykerta) {
+          delete kyselykerta.valittu;
+        });
+        raportti.koulutustoimijat = [];
+        raportti.oppilaitokset = [];
+        delete raportti.kyselykertaid;
+      }
+    };
+  }])
+
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.kieli = kieli;
@@ -91,8 +113,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       poistaOpintoalaValinnat();
       poistaTutkintoValinnat();
       tyhjaaTaustakysymysvalinnat();
-      delete $scope.raportti.kyselykertaid;
-      delete $scope.raportti.kyselyid;
+      raporttiApurit.poistaKyselykertaValinnat($scope.kyselykerrat, $scope.raportti);
+      raporttiApurit.poistaKyselyValinnat($scope.kyselyt, $scope.raportti);
 
       // Kysely-ja kyselykertaraportilla tutkintorakennetasovalintaa ei ole näkyvissä, joten pitää valita tasoksi tutkinto
       if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
@@ -244,7 +266,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .factory('kyselyValilehti', ['i18n', 'ilmoitus', 'Kysely', 'Raportti', 'seuranta', function(i18n, ilmoitus, Kysely, Raportti, seuranta) {
+  .factory('kyselyValilehti', ['i18n', 'ilmoitus', 'Kysely', 'Raportti', 'raporttiApurit', 'seuranta', function(i18n, ilmoitus, Kysely, Raportti, raporttiApurit, seuranta) {
     return {
       alusta: function alusta($scope) {
         Kysely.hae().success(function (data) {
@@ -262,17 +284,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           }
         });
 
-        var poistaKyselyValinnat = function() {
-          _.forEach($scope.kyselyt, function(kysely) {
-            delete kysely.valittu;
-          });
-          $scope.raportti.koulutustoimijat = [];
-          $scope.raportti.oppilaitokset = [];
-        };
-
         $scope.valitseKysely = function(kysely) {
           if(!kysely.valittu) {
-            poistaKyselyValinnat();
+            raporttiApurit.poistaKyselyValinnat($scope.kyselyt, $scope.raportti);
           }
           kysely.valittu = !kysely.valittu;
           if (kysely.valittu) {
@@ -298,7 +312,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .factory('kyselykertaValilehti', ['i18n', 'ilmoitus', 'Kyselykerta', 'Raportti', 'seuranta', function(i18n, ilmoitus, Kyselykerta, Raportti, seuranta){
+  .factory('kyselykertaValilehti', ['i18n', 'ilmoitus', 'Kyselykerta', 'Raportti', 'raporttiApurit', 'seuranta', function(i18n, ilmoitus, Kyselykerta, Raportti, raporttiApurit, seuranta){
     return {
       alusta: function alusta($scope) {
         Kyselykerta.hae().success(function(data) {
@@ -316,17 +330,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           }
         });
 
-        var poistaKyselykertaValinnat = function() {
-          _.forEach($scope.kyselykerrat, function(kyselykerta) {
-            delete kyselykerta.valittu;
-          });
-          $scope.raportti.koulutustoimijat = [];
-          $scope.raportti.oppilaitokset = [];
-        };
-
         $scope.valitseKyselykerta = function(kyselykerta) {
           if (!kyselykerta.valittu) {
-            poistaKyselykertaValinnat();
+            raporttiApurit.poistaKyselykertaValinnat($scope.kyselykerrat, $scope.raportti);
           }
           kyselykerta.valittu = !kyselykerta.valittu;
           if (kyselykerta.valittu) {
