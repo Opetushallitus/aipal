@@ -14,11 +14,10 @@
 
 (ns aipal.rest-api.raportti.kyselykerta
   (:require [cheshire.core :as cheshire]
-            [compojure.core :as c]
             [korma.db :as db]
 
             [oph.common.util.http-util :refer [csv-download-response json-response parse-iso-date]]
-            [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
+            [oph.common.util.util :refer [paivita-arvot poista-tyhjat muunna-avainsanoiksi]]
             [oph.korma.korma :refer [joda-date->sql-date]]
 
             [aipal.compojure-util :as cu]
@@ -28,9 +27,9 @@
 (defn muodosta-raportti-parametreilla
   [kyselykertaid parametrit]
   (let [kyselykertaid (Integer/parseInt kyselykertaid)
+        parametrit (poista-tyhjat parametrit)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] parse-iso-date)
         parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] joda-date->sql-date)
-        parametrit (paivita-arvot parametrit [:tutkinnot] seq) ; tyhjä lista -> nil
         raportti (muodosta-raportti kyselykertaid parametrit)]
     (assoc raportti :parametrit parametrit)))
 
@@ -44,9 +43,7 @@
   (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/:kieli/csv" [kyselykertaid kieli & parametrit]
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            parametrit (paivita-arvot parametrit [:tutkinnot] #(remove clojure.string/blank? (clojure.string/split % #",")))
-            parametrit (paivita-arvot parametrit [:vertailujakso_alkupvm :vertailujakso_loppupvm] cheshire/parse-string)
-            parametrit (poista-tyhjat parametrit)
+            parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
             raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
         (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
           (csv-download-response (raportointi/muodosta-csv raportti kieli) "kyselykerta.csv")
