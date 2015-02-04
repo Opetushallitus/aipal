@@ -48,6 +48,12 @@
       (assoc kysymys :jarjestys jarjestys)
       kysymys)))
 
+(defn lisaa-selite-taustakysymykseen
+  [kysymys]
+  (cond-> kysymys
+    (= (:kysymysid kysymys) 7312039) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6a_selite")
+    (= (:kysymysid kysymys) 7312032) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6b_selite")))
+
 (def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
 
 (def taustakysymysten-mappaus

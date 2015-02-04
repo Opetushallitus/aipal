@@ -209,6 +209,7 @@
           suorittamisvaihe (hae suorittamisvaihe-id)
           kysymykset (->> (mapcat :kysymykset [suorittamisvaihe hakeutumisvaihe])
                        (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid))
+                       (map lisaa-selite-taustakysymykseen)
                        (map aseta-taustakysymyksen-jarjestys)
                        (sort-by :jarjestys))]
       (assoc suorittamisvaihe
