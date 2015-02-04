@@ -20,6 +20,12 @@
             <div class="col-md-12">
                 <div class="kysymykset">
                     <div ng-repeat="kysymys in taustakysymysryhma.kysymykset" class="kysymys">
+                        <div class="bg-info taustakysymyksen-selite" ng-if="kysymys.kysymysid === 7312039">
+                            <span class="glyphicon glyphicon-info-sign"></span> {{ 'raportit.taustakysymyksen_6a_selite' | i18n }}
+                        </div>
+                        <div class="bg-info taustakysymyksen-selite" ng-if="kysymys.kysymysid === 7312032">
+                            <span class="glyphicon glyphicon-info-sign"></span> {{ 'raportit.taustakysymyksen_6b_selite' | i18n }}
+                        </div>
                         <div class="kysymys-otsikko">{{kysymys.jarjestys}}. {{ kysymys |lokalisoiKentta:'kysymys' }}</div>
 
                         <div ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot"
