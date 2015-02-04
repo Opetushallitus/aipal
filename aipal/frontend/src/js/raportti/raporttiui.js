@@ -126,7 +126,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
       Kysymysryhma.haeTaustakysymysryhma(kysymysryhmaid).success(function(kysymysryhma) {
-        $scope.kysymysryhma = kysymysryhma;
+        $scope.taustakysymysryhma = kysymysryhma;
 
         $scope.raportti.kysymykset = {};
         _.forEach(kysymysryhma.kysymykset, function(kysymys) {
