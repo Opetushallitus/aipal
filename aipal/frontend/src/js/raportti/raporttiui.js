@@ -30,8 +30,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         _.forEach(kyselyt, function(kysely) {
           delete kysely.valittu;
         });
-        raportti.koulutustoimijat = [];
-        raportti.oppilaitokset = [];
+        raportti.koulutuksen_jarjestajat = [];
+        raportti.jarjestavat_oppilaitokset = [];
         delete raportti.kyselyid;
       },
 
@@ -39,8 +39,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         _.forEach(kyselykerrat, function(kyselykerta) {
           delete kyselykerta.valittu;
         });
-        raportti.koulutustoimijat = [];
-        raportti.oppilaitokset = [];
+        raportti.koulutuksen_jarjestajat = [];
+        raportti.jarjestavat_oppilaitokset = [];
         delete raportti.kyselykertaid;
       }
     };
@@ -199,6 +199,17 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
     };
 
+    $scope.raportti.koulutuksen_jarjestajat = [];
+    $scope.raportti.jarjestavat_oppilaitokset = [];
+    $scope.vaihdaValinta = function(elementti, taulukko, idAvain) {
+      if (_.remove($scope.raportti[taulukko], function(item) { return item === elementti[idAvain]; }).length === 0) {
+        elementti.valittu = true;
+        $scope.raportti[taulukko].push(elementti[idAvain]);
+      } else {
+        delete elementti.valittu;
+      }
+    };
+
     $scope.raportti.koulutustoimijat = [];
     $scope.valitseTaiPoistaKoulutustoimija = function(koulutustoimija) {
       if (_.remove($scope.raportti.koulutustoimijat, function(ytunnus) { return ytunnus === koulutustoimija.ytunnus; }).length === 0) {
@@ -206,15 +217,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         $scope.raportti.koulutustoimijat.push(koulutustoimija.ytunnus);
       } else {
         delete koulutustoimija.valittu;
-      }
-    };
-    $scope.raportti.oppilaitokset = [];
-    $scope.valitseTaiPoistaOppilaitos = function(oppilaitos) {
-      if (_.remove($scope.raportti.oppilaitokset, function(oppilaitoskoodi) { return oppilaitoskoodi === oppilaitos.oppilaitoskoodi; }).length === 0) {
-        oppilaitos.valittu = true;
-        $scope.raportti.oppilaitokset.push(oppilaitos.oppilaitoskoodi);
-      } else {
-        delete oppilaitos.valittu;
       }
     };
 

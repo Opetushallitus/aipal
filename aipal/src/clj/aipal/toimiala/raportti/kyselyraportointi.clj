@@ -48,8 +48,8 @@
                                                          (>= :vastaajatunnus.voimassa_loppupvm (:vertailujakso_alkupvm parametrit))))
       (:vertailujakso_loppupvm parametrit) (sql/where (or (= :vastaajatunnus.voimassa_alkupvm nil)
                                                           (<= :vastaajatunnus.voimassa_alkupvm (:vertailujakso_loppupvm parametrit))))
-      (:koulutustoimijat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutustoimijat parametrit)]})
-      (:oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:oppilaitokset parametrit)]})
+      (:koulutuksen_jarjestajat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutuksen_jarjestajat parametrit)]})
+      (:jarjestavat_oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:jarjestavat_oppilaitokset parametrit)]})
       (:kyselyid parametrit) (->
                                (sql/join :inner :kyselykerta
                                          (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
@@ -87,8 +87,8 @@
                                                          (>= :vastaajatunnus.voimassa_loppupvm (:vertailujakso_alkupvm parametrit))))
       (:vertailujakso_loppupvm parametrit) (sql/where (or (= :vastaajatunnus.voimassa_alkupvm nil)
                                                           (<= :vastaajatunnus.voimassa_alkupvm (:vertailujakso_loppupvm parametrit))))
-      (:koulutustoimijat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutustoimijat parametrit)]})
-      (:oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:oppilaitokset parametrit)]})
+      (:koulutuksen_jarjestajat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutuksen_jarjestajat parametrit)]})
+      (:jarjestavat_oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:jarjestavat_oppilaitokset parametrit)]})
       (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
       (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
     sql/exec
@@ -179,12 +179,12 @@
                  :vastaus.jatkovastausid))
     (cond->
       (or (:tutkinnot parametrit)
-          (:koulutustoimijat parametrit)
-          (:oppilaitokset parametrit)) (sql/join :inner :vastaajatunnus
+          (:koulutuksen_jarjestajat parametrit)
+          (:jarjestavat_oppilaitokset parametrit)) (sql/join :inner :vastaajatunnus
                                                  (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
       (:tutkinnot parametrit) (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]})
-      (:koulutustoimijat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutustoimijat parametrit)]})
-      (:oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:oppilaitokset parametrit)]})
+      (:koulutuksen_jarjestajat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutuksen_jarjestajat parametrit)]})
+      (:jarjestavat_oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:jarjestavat_oppilaitokset parametrit)]})
       (:vertailujakso_alkupvm parametrit) (sql/where (>= :vastaus.vastausaika (:vertailujakso_alkupvm parametrit)))
       (:vertailujakso_loppupvm parametrit) (sql/where (<= :vastaus.vastausaika (:vertailujakso_loppupvm parametrit)))
       (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
