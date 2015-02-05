@@ -50,7 +50,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
-    $scope.kieli = kieli;
+    $scope.raportti.kieli = kieli;
     $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
     $scope.printgraphs = true;

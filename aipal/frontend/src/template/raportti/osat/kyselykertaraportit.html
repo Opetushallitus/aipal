@@ -4,7 +4,7 @@
     {{ 'raportit.muodosta_raportti' | i18n }}
     <span class="fa fa-bar-chart"></span>
   </button>
-  <a class="btn btn-primary" ng-href="api/raportti/kyselykerta/{{raportti.kyselykertaid}}/{{kieli}}/csv?raportti={{parametrit}}" ng-disabled="!raporttiValidi(raportti)">
+  <a class="btn btn-primary" ng-href="api/raportti/kyselykerta/{{raportti.kyselykertaid}}/csv?raportti={{parametrit}}" ng-disabled="!raporttiValidi(raportti)">
     {{ 'raportit.muodosta_csv_raportti' | i18n }}
     <span class="fa fa-file-excel-o"></span>
   </a>

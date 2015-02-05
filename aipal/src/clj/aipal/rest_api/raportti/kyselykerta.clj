@@ -37,11 +37,11 @@
         (raportointi/ei-riittavasti-vastaajia (muodosta-raportti-parametreilla kyselykertaid parametrit) asetukset)))))
 
 (defn csv-reitit [asetukset]
-  (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/:kieli/csv" [kyselykertaid kieli & parametrit]
+  (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/csv" [kyselykertaid & parametrit]
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
             raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
         (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-          (csv-download-response (raportointi/muodosta-csv raportti kieli) "kyselykerta.csv")
-          (csv-download-response (raportointi/muodosta-tyhja-csv raportti kieli) "kyselykerta_ei_vastaajia.csv"))))))
+          (csv-download-response (raportointi/muodosta-csv raportti (:kieli parametrit)) "kyselykerta.csv")
+          (csv-download-response (raportointi/muodosta-tyhja-csv raportti (:kieli parametrit)) "kyselykerta_ei_vastaajia.csv"))))))
