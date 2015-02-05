@@ -186,10 +186,11 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
   .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
                                               function($modalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat, kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
     $scope.vastaajatunnus = {
-      vastaajien_lkm: 1,
+      henkilokohtainen: true,
       koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
+      suorituskieli: 'fi',
       tutkinto: viimeksiValittuTutkinto,
-      suorituskieli: 'fi'
+      vastaajien_lkm: 1
     };
     $scope.kielet = kielet;
     $scope.rahoitusmuodot = rahoitusmuodot;
