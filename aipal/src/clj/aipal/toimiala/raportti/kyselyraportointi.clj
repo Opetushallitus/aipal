@@ -25,7 +25,7 @@
   (->>
     (let [tutkinnot (group-by #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot)]
       (for [[tutkinto lukumaarat] tutkinnot]
-        (assoc tutkinto :vastaajien_lkm (reduce + 0 (map :vastaajien_lkm lukumaarat)))))
+        (assoc tutkinto :vastaajien_lukumaara (reduce + 0 (map :vastaajien_lkm lukumaarat)))))
     (sort-by :tutkintotunnus)))
 
 (defn koulutustoimijat-hierarkiaksi
@@ -36,7 +36,7 @@
             (dissoc koulutustoimija :ytunnus)
             (select-keys parametrit [:koulutustoimija_fi :koulutustoimija_sv]))
         (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
-               :vastaajat_yhteensa (reduce + 0 (map :vastaajien_lkm tutkinnot)))))))
+               :vastaajien_lukumaara (reduce + 0 (map :vastaajien_lkm tutkinnot)))))))
 
 (defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
   [parametrit]
@@ -73,7 +73,7 @@
 
 (defn laske-vastaajat-yhteensa
   [koulutustoimijat]
-  (reduce + 0 (map :vastaajat_yhteensa koulutustoimijat)))
+  (reduce + 0 (map :vastaajien_lukumaara koulutustoimijat)))
 
 (defn hae-vastaajien-maksimimaara [parametrit]
   (->

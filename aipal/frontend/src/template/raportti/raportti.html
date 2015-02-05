@@ -71,11 +71,11 @@
           <tr ng-repeat="tutkinto in koulutustoimija.tutkinnot">
             <td ng-if="tutkinto.tutkintotunnus">{{tutkinto.tutkintotunnus}}, {{tutkinto | lokalisoiKentta:'nimi'}}</td>
             <td ng-if="!tutkinto.tutkintotunnus">{{'raportti.ei_tutkintotietoa' | i18n}}</td>
-            <td>{{tutkinto.vastaajien_lkm}}</td>
+            <td>{{tutkinto.vastaajien_lukumaara}}</td>
           </tr>
           <tr>
             <td>{{'raportti.yhteensa' | i18n }}</td>
-            <td>{{koulutustoimija.vastaajat_yhteensa}}</td>
+            <td>{{koulutustoimija.vastaajien_lukumaara}}</td>
           </tr>
         </tbody>
       </table>
