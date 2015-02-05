@@ -28,7 +28,7 @@
 
 <div class="raportti-kyselykerta-tiedot" ng-if="tulos">
   <div>
-    <h2>{{rooli_koulutustoimija}}</h2>
+    <h2>{{tulos | lokalisoiKentta:'nimi'}}</h2>
   </div>
   <div ng-show="tulos.yhteenveto.kysely_fi">
     {{'yleiset.kysely' | i18n }}: <b>{{tulos.yhteenveto | lokalisoiKentta:'kysely'}}</b>
