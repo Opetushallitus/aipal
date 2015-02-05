@@ -199,6 +199,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
     };
 
+    $scope.raportti.koulutustoimijat = [];
     $scope.raportti.koulutuksen_jarjestajat = [];
     $scope.raportti.jarjestavat_oppilaitokset = [];
     $scope.vaihdaValinta = function(elementti, taulukko, idAvain) {
@@ -207,16 +208,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         $scope.raportti[taulukko].push(elementti[idAvain]);
       } else {
         delete elementti.valittu;
-      }
-    };
-
-    $scope.raportti.koulutustoimijat = [];
-    $scope.valitseTaiPoistaKoulutustoimija = function(koulutustoimija) {
-      if (_.remove($scope.raportti.koulutustoimijat, function(ytunnus) { return ytunnus === koulutustoimija.ytunnus; }).length === 0) {
-        koulutustoimija.valittu = true;
-        $scope.raportti.koulutustoimijat.push(koulutustoimija.ytunnus);
-      } else {
-        delete koulutustoimija.valittu;
       }
     };
 
