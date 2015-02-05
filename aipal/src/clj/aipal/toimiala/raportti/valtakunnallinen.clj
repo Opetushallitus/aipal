@@ -221,7 +221,7 @@
       {:luontipvm (time/today)
        :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
        :parametrit parametrit
-       :vastaajien-lkm (count (group-by :vastaajaid vastaukset))
+       :vastaajien_lukumaara (count (group-by :vastaajaid vastaukset))
        :vastaajien_maksimimaara (hae-vastaajien-maksimimaara-kysymysryhmalle
                                   taustakysymysryhmaid
                                   alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))

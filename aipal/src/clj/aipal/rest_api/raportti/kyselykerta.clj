@@ -42,6 +42,6 @@
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
             raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
-        (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+        (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
           (csv-download-response (raportointi/muodosta-csv raportti kieli) "kyselykerta.csv")
           (csv-download-response (raportointi/muodosta-tyhja-csv raportti kieli) "kyselykerta_ei_vastaajia.csv"))))))

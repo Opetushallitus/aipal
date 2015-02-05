@@ -79,7 +79,7 @@
         (csv-download-response
           (apply str
                  (for [raportti (luo-raportit parametrit)]
-                   (if (>= (:vastaajien-lkm raportti) vaaditut-vastaajat)
+                   (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
                      (muodosta-csv raportti kieli)
                      (muodosta-tyhja-csv raportti kieli))))
           (str (:tyyppi parametrit) "raportti.csv"))))))

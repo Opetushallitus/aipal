@@ -48,13 +48,11 @@
 (defn muodosta-raportti [kyselyid parametrit]
   (when-let [kysely (hae-kysely kyselyid)]
     (let [parametrit (merge kysely parametrit)
-          koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain parametrit)
-          vastaajien-lkm (reduce + (map :vastaajat_yhteensa koulutustoimijatiedot))]
-      {:yhteenveto (assoc kysely :koulutustoimijat koulutustoimijatiedot
-                                 :vastaajat_yhteensa (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot))
+          koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain parametrit)]
+      {:yhteenveto (assoc kysely :koulutustoimijat koulutustoimijatiedot)
        :luontipvm (time/today)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
-       :vastaajien-lkm vastaajien-lkm
+       :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
        :raportti (kyselyraportointi/muodosta-raportti parametrit)
        :nimi_fi (:kysely_fi kysely)
        :nimi_sv (:kysely_sv kysely)})))

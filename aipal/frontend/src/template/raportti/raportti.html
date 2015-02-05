@@ -39,11 +39,11 @@
   <div ng-show="tulos.vastaajien_maksimimaara">
     {{'raportti.kohderyhman_koko' | i18n }}: <b>{{tulos.vastaajien_maksimimaara}}</b>
   </div>
-  <div ng-show="tulos.yhteenveto.vastaajat_yhteensa">
-    {{'raportti.kokonaismaara' | i18n }}: <b>{{tulos.yhteenveto.vastaajat_yhteensa}}</b>
+  <div ng-show="tulos.vastaajien_lukumaara">
+    {{'raportti.kokonaismaara' | i18n }}: <b>{{tulos.vastaajien_lukumaara}}</b>
   </div>
-  <div ng-show="tulos.vastaajien_maksimimaara && tulos.yhteenveto.vastaajat_yhteensa">
-    {{'raportti.vastausprosentti' | i18n }}: <b>{{(tulos.yhteenveto.vastaajat_yhteensa / tulos.vastaajien_maksimimaara) *100 | number:0}}%</b>
+  <div ng-show="tulos.vastaajien_maksimimaara && tulos.vastaajien_lukumaara">
+    {{'raportti.vastausprosentti' | i18n }}: <b>{{(tulos.vastaajien_lukumaara / tulos.vastaajien_maksimimaara) *100 | number:0}}%</b>
   </div>
   <div class="hidden-print" ng-show="tulos.luontipvm">
     {{'raportti.raportin_luontipaiva' | i18n }}: <b class="e2e-luontipvm">{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</b>
