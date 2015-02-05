@@ -18,6 +18,7 @@
             [oph.common.util.http-util :refer [json-response csv-download-response]]
             [oph.common.util.util :refer [muunna-avainsanoiksi]]
             [aipal.compojure-util :as cu]
+            [aipal.rest-api.i18n :as i18n]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti]]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
@@ -31,7 +32,9 @@
 (defn reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]
     (db/transaction
-      (let [valtakunnallinen-raportti (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
+      (let [tekstit (i18n/hae-tekstit (:kieli parametrit))
+            valtakunnallinen-raportti (-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
+                                        (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen])))
             raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (json-response
           (for [raportti [raportti valtakunnallinen-raportti]
