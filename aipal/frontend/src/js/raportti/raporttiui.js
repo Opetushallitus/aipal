@@ -137,6 +137,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     Kysymysryhma.haeTaustakysymysryhmat().success(function(kysymysryhmat) {
       $scope.taustakysymysryhmat = kysymysryhmat;
+      _.forEach($scope.taustakysymysryhmat, function(taustakysymysryhma) {
+        if (taustakysymysryhma.kysymysryhmaid === 1) {
+          taustakysymysryhma.lisateksti = i18n.raportit.taustakysymysryhma_vanha_lisateksti;
+        }
+        else if (taustakysymysryhma.kysymysryhmaid === 3341885) {
+          taustakysymysryhma.lisateksti = i18n.raportit.taustakysymysryhma_uusi_lisateksti;
+        }
+      });
 
       $scope.$watch('raportti.taustakysymysryhmaid', function(kysymysryhmaid) {
         haeTaustakysymykset(kysymysryhmaid);

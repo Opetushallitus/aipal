@@ -3,8 +3,8 @@
 <div class="well taustakysymykset">
     <div>
       <select ng-model="raportti.taustakysymysryhmaid" class="form-control">
-        <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">{{ ryhma
-          |lokalisoiKentta:'nimi' }}
+        <option ng-repeat="ryhma in taustakysymysryhmat" value="{{ryhma.kysymysryhmaid}}">
+          {{ ryhma |lokalisoiKentta:'nimi' }} {{ ryhma.lisateksti }}
         </option>
       </select>
     </div>
