@@ -63,7 +63,8 @@
 
 (defn mappaa-kysymysryhmaid
   [id]
-  (if (= id suorittamisvaihe-id)
+  (if (or (= id suorittamisvaihe-id)
+          (= id hakeutumisvaihe-id))
     [suorittamisvaihe-id hakeutumisvaihe-id]
     [id]))
 
