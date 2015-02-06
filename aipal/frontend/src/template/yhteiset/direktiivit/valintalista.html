@@ -1,4 +1,4 @@
-<div class="valintalista" ng-show="valittavat">
+<div class="valintalista" ng-show="valittavat && valittavat.length > 0">
   <div class="well">
     <input type="text" class="form-control icon search-icon-input" ng-model="filter" ng-change="nollaaRajoite()" placeholder="{{ hakuteksti }}">
 
