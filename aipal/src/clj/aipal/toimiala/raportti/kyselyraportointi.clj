@@ -60,7 +60,8 @@
                                (sql/join :inner :kyselykerta
                                          (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
                                (sql/where {:kyselykerta.kyselyid (:kyselyid parametrit)}))
-      (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)}))
+      (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
+      (:rahoitusmuotoid parametrit) (sql/where {:rahoitusmuotoid (:rahoitusmuotoid parametrit)}))
     (sql/join :left :koulutustoimija
               (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
     (sql/join :left :tutkinto
@@ -96,7 +97,8 @@
       (:koulutuksen_jarjestajat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutuksen_jarjestajat parametrit)]})
       (:jarjestavat_oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:jarjestavat_oppilaitokset parametrit)]})
       (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
-      (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
+      (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)})
+      (:rahoitusmuotoid parametrit) (sql/where {:vastaajatunnus.rahoitusmuotoid (:rahoitusmuotoid parametrit)}))
     sql/exec
     first
     :vastaajien_maksimimaara))
@@ -186,6 +188,7 @@
     (cond->
       (or (:tutkinnot parametrit)
           (:koulutuksen_jarjestajat parametrit)
+          (:rahoitusmuotoid parametrit)
           (:jarjestavat_oppilaitokset parametrit)) (sql/join :inner :vastaajatunnus
                                                  (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
       (:tutkinnot parametrit) (rajaa-vastaajatunnukset-tutkintoihin (:tutkinnot parametrit))
@@ -194,7 +197,8 @@
       (:vertailujakso_alkupvm parametrit) (sql/where (>= :vastaus.vastausaika (:vertailujakso_alkupvm parametrit)))
       (:vertailujakso_loppupvm parametrit) (sql/where (<= :vastaus.vastausaika (:vertailujakso_loppupvm parametrit)))
       (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
-      (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)}))
+      (:kyselyid parametrit) (sql/where {:kyselyid (:kyselyid parametrit)})
+      (:rahoitusmuotoid parametrit) (sql/where {:vastaajatunnus.rahoitusmuotoid (:rahoitusmuotoid parametrit)}))
     (sql/fields :vastaaja.vastaajaid
                 :vastaus.vastausid
                 :vastaus.kysymysid

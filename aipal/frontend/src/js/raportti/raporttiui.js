@@ -64,8 +64,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
-    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.kieli = kieli;
@@ -121,6 +121,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
         $scope.raportti.tutkintorakennetaso = 'tutkinto';
       }
+      delete $scope.raportti.rahoitusmuotoid;
     };
 
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
@@ -164,6 +165,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     Tutkinto.haeVanhentuneetTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.vanhentuneetKoulutusalat = koulutusalat;
+    });
+
+    Rahoitusmuoto.haeKaikki(function(rahoitusmuodot) {
+      $scope.rahoitusmuodot = rahoitusmuodot;
     });
 
     $scope.piilotaTutkintorakenneVaihto = function() {
