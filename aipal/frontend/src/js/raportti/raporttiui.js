@@ -122,6 +122,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         $scope.raportti.tutkintorakennetaso = 'tutkinto';
       }
       delete $scope.raportti.rahoitusmuotoid;
+      delete $scope.raportti.suorituskieli;
     };
 
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
