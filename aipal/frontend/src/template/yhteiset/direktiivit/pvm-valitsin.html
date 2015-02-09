@@ -1,5 +1,6 @@
 <fieldset class="datepicker-field">
   <label ng-if="otsikko" ng-class="{pakollinen : pakollinen}"><span>{{otsikko}}</span></label>
+  <div>
   <input
     type="text"
     datepicker-popup="dd.MM.yyyy"
@@ -12,7 +13,7 @@
     show-button-bar="false"
     readonly
     ng-click="open($event)"/>
-  <button
-    ng-click="open($event)"
-    class="open-datepicker icon calendar-icon" />
+    <button ng-click="open($event)" class="open-datepicker icon calendar-icon" />
+    <button ng-click="valittuPvm = undefined" ng-show="valittuPvm" class="fa fa-close calendar-clear"></button>
+  </div>
 </fieldset>

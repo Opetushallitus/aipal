@@ -73,8 +73,20 @@ table a:not(.btn) span.fa:hover{
   font-size: 1.0em;
 }
 
-button.open-datepicker{
+.datepicker-field div{
+  position: relative;
+}
+
+button.open-datepicker,
+button.calendar-clear{
   border: 0;
+}
+
+button.calendar-clear{
+  position: absolute;
+  top: -0.1em;
+  right: .4em;
+  background-color: transparent;
 }
 
 .form-control{
