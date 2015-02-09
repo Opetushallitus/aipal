@@ -219,7 +219,7 @@
     (merge
       (raportin-otsikko parametrit)
       {:luontipvm (time/today)
-       :raportti  (raportointi/muodosta-raportti-vastauksista kysymysryhmat kysymykset vastaukset)
+       :raportti  (raportointi/muodosta-raportti kysymysryhmat kysymykset vastaukset)
        :parametrit parametrit
        :vastaajien_lukumaara (count (group-by :vastaajaid vastaukset))
        :vastaajien_maksimimaara (hae-vastaajien-maksimimaara-kysymysryhmalle

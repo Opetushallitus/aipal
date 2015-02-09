@@ -17,69 +17,6 @@
             [aipal.toimiala.raportti.raportointi :refer :all]
             [clj-time.core :as t]))
 
-(deftest jaottele-asteikko-test
- (testing
-   "jaottele asteikko:"
-   (let [tyhja-jakauma {1 0 2 0 3 0 4 0 5 0 :eos 0}]
-     (are [kuvaus vastaukset odotettu-tulos]
-          (is (= (jaottele-asteikko vastaukset) odotettu-tulos) kuvaus)
-          "ei vastauksia" [] tyhja-jakauma
-          "yksi vastaus" [{:numerovalinta 1}] (merge tyhja-jakauma {1 1})
-          "useampi sama vastaus" [{:numerovalinta 1} {:numerovalinta 1}] (merge tyhja-jakauma {1 2})
-          "eri vastaukset" [{:numerovalinta 1} {:numerovalinta 2}] (merge tyhja-jakauma {1 1 2 1})))))
-
-(deftest jaottele-jatkokysymys-asteikko-test
- (let [tyhja-jakauma {1 0 2 0 3 0 4 0 5 0 :eos 0}]
-   (are [kuvaus vastaukset odotettu-tulos] (is (= (jaottele-jatkokysymys-asteikko vastaukset) odotettu-tulos) kuvaus)
-        "ei vastauksia" [] tyhja-jakauma
-        "tyhja vastaus" [nil] tyhja-jakauma
-        "yksi vastaus" [{:kylla_asteikko 1}] (merge tyhja-jakauma {1 1})
-        "useampi sama vastaus" [{:kylla_asteikko 1} {:kylla_asteikko 1}] (merge tyhja-jakauma {1 2})
-        "useampi vastaus, mukana tyhja vastaus" [{:kylla_asteikko 1} nil {:kylla_asteikko 1}] (merge tyhja-jakauma {1 2})
-        "eri vastaukset" [{:kylla_asteikko 1} {:kylla_asteikko 2}] (merge tyhja-jakauma {1 1 2 1}))))
-
-(deftest jaottele-monivalinta-test
- (testing
-   "jaottele monivalinta:"
-   (are [kuvaus vastaukset odotettu-tulos]
-        (is (= (jaottele-monivalinta vastaukset) odotettu-tulos) kuvaus)
-        "ei vastauksia" [] {}
-        "yksi vastaus" [{:numerovalinta 1}] {1 1}
-        "monta vastausta, sama valinta" [{:numerovalinta 1} {:numerovalinta 1}] {1 2}
-        "monta vastausta, eri valinnat" [{:numerovalinta 1} {:numerovalinta 2}] {1 1 2 1})))
-
-(deftest jaottele-vaihtoehdot-test
- (testing
-   "jaottele vaihtoehdot:"
-   (are [kuvaus vastaukset odotettu-tulos]
-        (is (= (jaottele-vaihtoehdot vastaukset) odotettu-tulos) kuvaus)
-        "ei vastauksia" [] {:kylla 0 :ei 0 :eos 0}
-        "kyllä-vastaus" [{:vaihtoehto "kylla"}] {:kylla 1 :ei 0 :eos 0}
-        "ei-vastaus" [{:vaihtoehto "ei"}] {:kylla 0 :ei 1 :eos 0}
-        "molempia valintoja" [{:vaihtoehto "kylla"} {:vaihtoehto "ei"}] {:kylla 1 :ei 1 :eos 0}
-        "joku muu vastaus" [{:vaihtoehto "jokumuu"}] {:jokumuu 1 :kylla 0 :ei 0 :eos 0})))
-
-(deftest kysymyksen-kasittelija-test
-  (testing
-    "kysymyksen käsittelijä:"
-    (let [lisaa-asteikon-jakauma (fn [kysymys vastaukset] kysymys)
-          lisaa-monivalinnan-jakauma (fn [kysymys vastaukset] kysymys)
-          lisaa-vaihtoehtojen-jakauma (fn [kysymys vastaukset] kysymys)
-          lisaa-vapaatekstit (fn [kysymys vastaukset] kysymys)]
-      (with-redefs [aipal.toimiala.raportti.raportointi/lisaa-asteikon-jakauma lisaa-asteikon-jakauma
-                    aipal.toimiala.raportti.raportointi/lisaa-monivalinnan-jakauma lisaa-monivalinnan-jakauma
-                    aipal.toimiala.raportti.raportointi/lisaa-vaihtoehtojen-jakauma lisaa-vaihtoehtojen-jakauma
-                    aipal.toimiala.raportti.raportointi/lisaa-vastausten-vapaateksti lisaa-vapaatekstit]
-        (testing
-          "valitsee oikean funktion:"
-          (are [kuvaus kysymys odotettu-tulos]
-               (is (= (kysymyksen-kasittelija kysymys) odotettu-tulos) kuvaus)
-               "asteikko" {:vastaustyyppi "asteikko"} lisaa-asteikon-jakauma
-               "kyllä/ei valinta" {:vastaustyyppi "kylla_ei_valinta"} lisaa-vaihtoehtojen-jakauma
-               "likert-asteikko" {:vastaustyyppi "likert_asteikko"} lisaa-asteikon-jakauma
-               "monivalinta" {:vastaustyyppi "monivalinta"} lisaa-monivalinnan-jakauma
-               "vapaateksti" {:vastaustyyppi "vapaateksti"} lisaa-vapaatekstit))))))
-
 (deftest prosentteina-test
   (testing
     "prosentteina:"
@@ -167,50 +104,6 @@
            "yksi vastaus, vaihtoehto 2" {2 1} (esitys 0 0 1 100)
            "monta vastausta, sama vaihtoehto" {1 2} (esitys 2 100 0 0)
            "monta vastausta, eri vaihtoehto" {1 1 2 1} (esitys 1 50 1 50)))))
-
-(deftest keraa-ei-jatkovastaukset-test
-  (let [ei-kysymys {:ei_kysymys true :ei_teksti_fi "kysymys"}]
-    (are [kuvaus vastaukset odotettu-tulos] (is (= (:vapaatekstivastaukset (keraa-ei-jatkovastaukset ei-kysymys vastaukset)) odotettu-tulos) kuvaus)
-         "ei vastauksia" [] []
-         "yksi vastaus" [{:ei_vastausteksti "vastaus1"}] [{:teksti "vastaus1"}]
-         "useampi vastaus" [{:ei_vastausteksti "vastaus1"} {:ei_vastausteksti "vastaus2"}] [{:teksti "vastaus1"} {:teksti "vastaus2"}]
-         "yksi vastaus ja vastaamaton" [{:ei_vastausteksti "vastaus1"} {:ei_vastausteksti nil}] [{:teksti "vastaus1"}])))
-
-(deftest kysymysryhmaan-vastanneiden-lukumaara-test
-  (testing
-    "kaksi eri vastaajaa samalla kysymyksellä"
-    (is (= (kysymysryhmaan-vastanneiden-lukumaara {:kysymykset [{:vastaukset [{:vastaajaid 1}
-                                                                              {:vastaajaid 2}]}]})
-           2)))
-  (testing
-    "kaksi eri vastaajaa kahdella eri kysymyksellä"
-    (is (= (kysymysryhmaan-vastanneiden-lukumaara {:kysymykset [{:vastaukset [{:vastaajaid 1}]}
-                                                                {:vastaukset [{:vastaajaid 2}]}]})
-           2)))
-  (testing
-    "sama vastaaja kahdella eri kysymyksellä"
-    (is (= (kysymysryhmaan-vastanneiden-lukumaara {:kysymykset [{:vastaukset [{:vastaajaid 1}]}
-                                                                {:vastaukset [{:vastaajaid 1}]}]})
-           1))))
-
-(deftest ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain-test
-  (is (= (ryhmittele-kysymykset-ja-vastaukset-kysymysryhmittain [{:kysymysid 1 :kysymysryhmaid 101}
-                                                                 {:kysymysid 2 :kysymysryhmaid 102}]
-                                                                [{:vastausid 11 :kysymysid 1}
-                                                                 {:vastausid 12 :kysymysid 2}]
-                                                                [{:kysymysryhmaid 101}
-                                                                 {:kysymysryhmaid 102}])
-         [{:kysymykset [{:kysymysid 1
-                         :kysymysryhmaid 101
-                         :vastaukset [{:vastausid 11, :kysymysid 1}]}]
-           :kysymysryhmaid 101}
-          {:kysymykset [{:kysymysid 2
-                         :kysymysryhmaid 102
-                         :vastaukset [{:vastausid 12, :kysymysid 2}]}]
-           :kysymysryhmaid 102}])))
-
-(deftest keskihajonta-test
-  (is (= (int (keskihajonta [1000 2000 3000 4000 5000])) 1581)))
 
 ; Vertailun aineisto vuosi taaksepäin raportointijakson loppupäivästä.
 ; Eli raportoinnin rajaus voi olla 1kk, mutta vertailuluku lasketaan vuoden aineistosta.
