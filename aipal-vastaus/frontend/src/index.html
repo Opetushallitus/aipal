@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html ng-app="aipalvastaus">
+<!--[if lt IE 9]> <html> <![endif]-->
+<!--[if gte IE 9]><!--> <html ng-app="aipalvastaus"> <!--<![endif]-->
 <head>
   <!-- mustache
   {{=[[ ]]=}}
@@ -16,6 +17,11 @@
   <link rel="stylesheet" href="compiled_css/main.css">
   <meta name="viewport" content="width = device-width, initial-scale = 1, maximum-scale = 2, minimum-scale=.5">
 </head>
+<!--[if lt IE 9]>
+<body>
+  <p><strong>Sovellus ei tue vastaamista käyttämälläsi selaimella. Ole hyvä ja käytä Internet Explorerin versiota 9 tai uudempi.</strong></p>
+<![endif]-->
+<!--[if gte IE 9]><!-->
 <body ng-cloak ng-controller="AipalvastausController">
   <toaster-container toaster-options="{'close-button': true}"></toaster-container>
   <div>
@@ -44,6 +50,7 @@
     <div class="app-wrapper">
     </div>
   </footer>
+<!--<![endif]-->
 
   <!-- Piwik -->
   <script type="text/javascript">
