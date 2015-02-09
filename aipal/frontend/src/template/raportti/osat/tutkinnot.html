@@ -38,7 +38,7 @@
       </li>
     </ul>
 
-	<h3 ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">{{'raportti.vanhentuneet_tutkinnot' | i18n}}</h3>
+    <h3 ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">{{'raportti.vanhentuneet_tutkinnot' | i18n}}</h3>
     <ul class="valitsin {{raportti.tutkintorakennetaso}}" ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">
       <li bindonce ng-repeat="koulutusala in vanhentuneetKoulutusalat |filter:tutkintoFilter" ng-click="valitseKoulutusala(koulutusala)" ng-class="{selected: raportti.tutkintorakennetaso == 'koulutusala' && koulutusala.valittu}">
         <span ng-show="raportti.tutkintorakennetaso !== 'koulutusala'" class="otsikko fa" ng-class="{'fa-caret-down': koulutusalaAvattu, 'fa-caret-right': !koulutusalaAvattu}"
