@@ -38,12 +38,19 @@
         (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
                :vastaajien_lukumaara (reduce + 0 (map :vastaajien_lkm tutkinnot)))))))
 
+(defn rajaa-vastaajatunnukset-tutkintoihin
+  [query tutkinnot]
+  (-> query
+    (sql/where (if (= (first tutkinnot) "ei_tutkintoa")
+                 {:vastaajatunnus.tutkintotunnus nil}
+                 {:vastaajatunnus.tutkintotunnus [in tutkinnot]}))))
+
 (defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
   [parametrit]
   (->
     (sql/select* :vastaajatunnus)
     (cond->
-      (:tutkinnot parametrit) (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]})
+      (:tutkinnot parametrit) (rajaa-vastaajatunnukset-tutkintoihin (:tutkinnot parametrit))
       (:vertailujakso_alkupvm parametrit) (sql/where (or (= :vastaajatunnus.voimassa_loppupvm nil)
                                                          (>= :vastaajatunnus.voimassa_loppupvm (:vertailujakso_alkupvm parametrit))))
       (:vertailujakso_loppupvm parametrit) (sql/where (or (= :vastaajatunnus.voimassa_alkupvm nil)
@@ -82,7 +89,7 @@
               (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
     (sql/aggregate (sum :vastaajatunnus.vastaajien_lkm) :vastaajien_maksimimaara)
     (cond->
-      (:tutkinnot parametrit) (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]})
+      (:tutkinnot parametrit) (rajaa-vastaajatunnukset-tutkintoihin (:tutkinnot parametrit))
       (:vertailujakso_alkupvm parametrit) (sql/where (or (= :vastaajatunnus.voimassa_loppupvm nil)
                                                          (>= :vastaajatunnus.voimassa_loppupvm (:vertailujakso_alkupvm parametrit))))
       (:vertailujakso_loppupvm parametrit) (sql/where (or (= :vastaajatunnus.voimassa_alkupvm nil)
@@ -182,7 +189,7 @@
           (:koulutuksen_jarjestajat parametrit)
           (:jarjestavat_oppilaitokset parametrit)) (sql/join :inner :vastaajatunnus
                                                  (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
-      (:tutkinnot parametrit) (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]})
+      (:tutkinnot parametrit) (rajaa-vastaajatunnukset-tutkintoihin (:tutkinnot parametrit))
       (:koulutuksen_jarjestajat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutuksen_jarjestajat parametrit)]})
       (:jarjestavat_oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:jarjestavat_oppilaitokset parametrit)]})
       (:vertailujakso_alkupvm parametrit) (sql/where (>= :vastaus.vastausaika (:vertailujakso_alkupvm parametrit)))
