@@ -35,7 +35,7 @@
     <div class="form-group">
       <label>{{i18n.yleiset.tutkinto}}<span ng-if="tutkintoPakollinen()"> *</span>
         <ui-select ng-if="tutkinnot.length>0" ng-model="vastaajatunnus.tutkinto" ng-disabled="disabled" ng-required="tutkintoPakollinen()">
-          <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+          <ui-select-match allow-clear>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
           <ui-select-choices repeat="tutkinto in tutkinnot | filter: $select.search | orderByLokalisoitu:'nimi'">
             <div ng-bind-html="tutkinto | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
             <div ng-if="tutkinto.voimassa_alkupvm || tutkinto.voimassa_loppupvm" style="margin-left: 1em"><small>{{'yleiset.voimassa' | i18n}} {{tutkinto.voimassa_alkupvm | voimassaoloAika:tutkinto.voimassa_loppupvm}}</small></div>
