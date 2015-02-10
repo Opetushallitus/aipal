@@ -213,14 +213,14 @@
   (let [id->kysymys (map-by :kysymysid kysymykset)
         kasittele-vastaus (fn [tulokset vastaus]
                             (let [kysymys (id->kysymys (:kysymysid vastaus))
-                                 tulokset (case (:vastaustyyppi kysymys)
-                                            "arvosana" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                            "asteikko" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                            "kylla_ei_valinta" (kasittele-kyllaei-vastaus tulokset kysymys vastaus)
-                                            "likert_asteikko" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                            "monivalinta" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                            "vapaateksti" (kasittele-vapaatekstivastaus tulokset kysymys vastaus))]
-                             (update-in tulokset [kysymys :vastaajat] (fnil conj #{}) (:vastaajaid vastaus))))
+                                  tulokset (case (:vastaustyyppi kysymys)
+                                             "arvosana" (kasittele-asteikkovastaus tulokset kysymys vastaus)
+                                             "asteikko" (kasittele-asteikkovastaus tulokset kysymys vastaus)
+                                             "kylla_ei_valinta" (kasittele-kyllaei-vastaus tulokset kysymys vastaus)
+                                             "likert_asteikko" (kasittele-asteikkovastaus tulokset kysymys vastaus)
+                                             "monivalinta" (kasittele-asteikkovastaus tulokset kysymys vastaus)
+                                             "vapaateksti" (kasittele-vapaatekstivastaus tulokset kysymys vastaus))]
+                              (update-in tulokset [kysymys :vastaajat] (fnil conj #{}) (:vastaajaid vastaus))))
         tulokset (for [[kysymys tulos] (reduce kasittele-vastaus {} vastaukset)]
                    (merge kysymys tulos))
         kysymysryhmien-kysymykset (->> tulokset
