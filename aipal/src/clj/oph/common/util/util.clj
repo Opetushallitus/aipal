@@ -207,7 +207,7 @@
   (reduce #(update-in % [%2] f) m avaimet))
 
 (defn poista-tyhjat [m]
-  (into {} (filter (comp #(or (number? %) (not-empty %)) val) m)))
+  (into {} (filter (comp #(or (instance? Boolean %) (number? %) (not-empty %)) val) m)))
 
 (defn keyword-syntax?
   "Keywordit muutetaan samalla syntaksilla kun wrap-keyword-params:

@@ -298,11 +298,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         };
 
         $scope.muodostaKyselyraportti = function(raportti) {
-          var parametrit = _.chain(_.cloneDeep(raportti))
-            .assign('tutkinnot', (raportti.ei_tutkintoa ? {tutkinnot: ['ei_tutkintoa']} : {}))
-            .omit('ei_tutkintoa')
-            .value();
-          seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(parametrit.kyselyid, parametrit), 'raportinMuodostus')
+          seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
             .success(function(tulokset) {
               $scope.tulokset = tulokset;
               $scope.tulos = tulokset[0];
@@ -348,11 +344,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         };
 
         $scope.muodostaKyselykertaraportti = function(raportti) {
-          var parametrit = _.chain(_.cloneDeep(raportti))
-            .assign('tutkinnot', (raportti.ei_tutkintoa ? {tutkinnot: ['ei_tutkintoa']} : {}))
-            .omit('ei_tutkintoa')
-            .value();
-          seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(parametrit.kyselykertaid, parametrit), 'raportinMuodostus')
+          seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
               $scope.tulokset = [tulos];
               $scope.tulos = tulos;

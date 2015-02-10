@@ -40,7 +40,7 @@
 
 (defn rajaa-vastaajatunnukset-tutkintoihin
   [query tutkinnot]
-  (if (= tutkinnot ["ei_tutkintoa"])
+  (if (= tutkinnot [nil])
     (sql/where query {:vastaajatunnus.tutkintotunnus nil})
     (sql/where query {:vastaajatunnus.tutkintotunnus [in tutkinnot]})))
 
@@ -219,4 +219,5 @@
 (defn paivita-parametrit [parametrit]
   (-> parametrit
     poista-tyhjat
+    (cond-> (:ei_tutkintoa parametrit) (assoc :tutkinnot [nil]))
     (paivita-arvot [:vertailujakso_alkupvm :vertailujakso_loppupvm] (comp joda-date->sql-date parse-iso-date))))
