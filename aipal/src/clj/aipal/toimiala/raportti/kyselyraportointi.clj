@@ -46,15 +46,16 @@
 
 (defn yhteiset-rajaukset
   [query parametrit]
-  (cond-> query
-    (:tutkinnot parametrit) (sql/where {:vastaajatunnus.tutkintotunnus [in (:tutkinnot parametrit)]})
-    (:koulutuksen_jarjestajat parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in (:koulutuksen_jarjestajat parametrit)]})
-    (:jarjestavat_oppilaitokset parametrit) (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in (:jarjestavat_oppilaitokset parametrit)]})
-    (:kyselyid parametrit) (sql/where {:kyselykerta.kyselyid (:kyselyid parametrit)})
-    ; vastaajatunnus.kyselykertaid tai kyselykerta.kyselykertaid
-    (:kyselykertaid parametrit) (sql/where {:kyselykertaid (:kyselykertaid parametrit)})
-    (:rahoitusmuotoid parametrit) (sql/where {:vastaajatunnus.rahoitusmuotoid (:rahoitusmuotoid parametrit)})
-    (:suorituskieli parametrit) (sql/where {:vastaajatunnus.suorituskieli (:suorituskieli parametrit)})))
+  (let [{:keys [tutkinnot koulutuksen_jarjestajat jarjestavat_oppilaitokset kyselyid kyselykertaid rahoitusmuotoid suorituskieli]} parametrit]
+    (cond-> query
+      tutkinnot (sql/where {:vastaajatunnus.tutkintotunnus [in tutkinnot]})
+      koulutuksen_jarjestajat (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in koulutuksen_jarjestajat]})
+      jarjestavat_oppilaitokset (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in jarjestavat_oppilaitokset]})
+      kyselyid (sql/where {:kyselykerta.kyselyid kyselyid})
+      ; vastaajatunnus.kyselykertaid tai kyselykerta.kyselykertaid
+      kyselykertaid (sql/where {:kyselykertaid kyselykertaid})
+      rahoitusmuotoid (sql/where {:vastaajatunnus.rahoitusmuotoid rahoitusmuotoid})
+      suorituskieli (sql/where {:vastaajatunnus.suorituskieli suorituskieli}))))
 
 (defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
   [parametrit]
