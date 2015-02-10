@@ -209,6 +209,12 @@
                         :eos_vastaus_sallittu
                         :jarjestys]))
 
+(defn laske-kysymysryhman-vastaajat [kysymysryhma]
+  (let [vastaajia (count (:vastaajat kysymysryhma))]
+    (-> kysymysryhma
+      (assoc :vastaajien_lukumaara vastaajia)
+      (dissoc :vastaajat))))
+
 (defn muodosta-raportti [kysymysryhmat kysymykset vastaukset]
   (let [id->kysymys (map-by :kysymysid kysymykset)
         kasittele-vastaus (fn [tulokset vastaus]
@@ -229,8 +235,8 @@
                                     (group-by :kysymysryhmaid))]
     (for [kysymysryhma kysymysryhmat
           :let [kysymykset (kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))
-                vastaajia (count (reduce clojure.set/union #{} (map :vastaajat kysymykset)))]]
-      (assoc kysymysryhma :vastaajien_lukumaara vastaajia
+                vastaajat (reduce clojure.set/union #{} (map :vastaajat kysymykset))]]
+      (assoc kysymysryhma :vastaajat vastaajat
                           :kysymykset (map valitse-kysymyksen-kentat kysymykset)))))
 
 (defn numeroiden-piste-pilkuksi

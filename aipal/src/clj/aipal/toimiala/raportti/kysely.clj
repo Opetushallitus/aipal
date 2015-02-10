@@ -53,6 +53,6 @@
        :luontipvm (time/today)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
        :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
-       :raportti (kyselyraportointi/muodosta-raportti parametrit)
+       :raportti (map raportointi/laske-kysymysryhman-vastaajat (kyselyraportointi/muodosta-raportti parametrit))
        :nimi_fi (:kysely_fi kysely)
        :nimi_sv (:kysely_sv kysely)})))

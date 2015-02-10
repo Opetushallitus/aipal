@@ -214,14 +214,15 @@
                         (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
                         alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        vastaus-query (tee-vastaus-query rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
+        vastaus-query (tee-vastaus-query rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
+        raportti (exec vastaus-query :result-set-fn (partial raportointi/muodosta-raportti kysymysryhmat kysymykset)
+                                     :row-fn yhdista-taustakysymysten-vastaukset)]
     (merge
       (raportin-otsikko parametrit)
       {:luontipvm (time/today)
-       :raportti  (exec vastaus-query :result-set-fn (partial raportointi/muodosta-raportti kysymysryhmat kysymykset)
-                                      :row-fn yhdista-taustakysymysten-vastaukset)
+       :raportti (map raportointi/laske-kysymysryhman-vastaajat raportti)
        :parametrit parametrit
-       :vastaajien_lukumaara (count (group-by :vastaajaid vastaukset))
+       :vastaajien_lukumaara (count (reduce clojure.set/union (map :vastaajat raportti)))
        :vastaajien_maksimimaara (hae-vastaajien-maksimimaara-kysymysryhmalle
                                   taustakysymysryhmaid
                                   alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)})))
