@@ -121,8 +121,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
         $scope.raportti.tutkintorakennetaso = 'tutkinto';
       }
-      delete $scope.raportti.rahoitusmuotoid;
-      delete $scope.raportti.suorituskieli;
+      // Säilytetään rahoitusmuodon ja suorituskielen valinta kysely- ja kyselykertasivuilla
+      else {
+        delete $scope.raportti.rahoitusmuotoid;
+        delete $scope.raportti.suorituskieli;
+      }
     };
 
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
