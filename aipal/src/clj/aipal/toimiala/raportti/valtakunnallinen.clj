@@ -22,7 +22,8 @@
             [aipal.arkisto.opintoala :as opintoala-arkisto]
             [aipal.arkisto.koulutusala :as koulutusala-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
-            [aipal.toimiala.raportti.taustakysymykset :refer :all]))
+            [aipal.toimiala.raportti.taustakysymykset :refer :all]
+            [oph.korma.korma :refer [exec]]))
 
 (defn ^:private hae-valtakunnalliset-kysymykset []
   (->> (sql/select :kysymys
@@ -79,11 +80,11 @@
 (defn konvertoi-ehdot [ehdot]
   (for [[kysymysid valinnat] ehdot
         :let [monivalinnat (:monivalinnat valinnat)
-              arvot (keys (filter #(second %) monivalinnat))]
+              arvot (keys (filter second monivalinnat))]
         :when (seq arvot)]
-    {:id (->int kysymysid) :arvot (map #(->int %) arvot)}))
+    {:id (->int kysymysid) :arvot (map ->int arvot)}))
 
-(defn ^:private hae-vastaukset [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn ^:private tee-vastaus-query [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaus)
     (sql/join :inner :kysymys (and (= :vastaus.kysymysid :kysymys.kysymysid)
@@ -120,9 +121,7 @@
                 :jatkovastaus.jatkovastausid
                 :jatkovastaus.jatkokysymysid
                 :jatkovastaus.kylla_asteikko
-                :jatkovastaus.ei_vastausteksti)
-    sql/exec
-    (->> (map yhdista-taustakysymysten-vastaukset))))
+                :jatkovastaus.ei_vastausteksti)))
 
 (defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]
   (-> query
@@ -215,11 +214,12 @@
                         (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
                         alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        vastaukset (hae-vastaukset rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
+        vastaus-query (tee-vastaus-query rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)]
     (merge
       (raportin-otsikko parametrit)
       {:luontipvm (time/today)
-       :raportti  (raportointi/muodosta-raportti kysymysryhmat kysymykset vastaukset)
+       :raportti  (exec vastaus-query :result-set-fn (partial raportointi/muodosta-raportti kysymysryhmat kysymykset)
+                                      :row-fn yhdista-taustakysymysten-vastaukset)
        :parametrit parametrit
        :vastaajien_lukumaara (count (group-by :vastaajaid vastaukset))
        :vastaajien_maksimimaara (hae-vastaajien-maksimimaara-kysymysryhmalle

@@ -18,7 +18,8 @@
   (:require  korma.db
              [korma.core :as sql]
              [clj-time.coerce :as time-coerce]
-             [clj-time.core :as time]))
+             [clj-time.core :as time]
+             [clojure.java.jdbc :as jdbc]))
 
 (defn korma-asetukset
   "Muuttaa asetustiedoston db-avaimen arvon Korman odottamaan muotoon."
@@ -117,6 +118,12 @@
 (defmacro defalias [alias entity]
   `(def ~alias (entity-alias ~entity ~(name alias))))
 
+(defn exec [query & {:keys [result-set-fn row-fn] :or {result-set-fn doall, row-fn identity}}]
+  "Uses jdbc directly to execute a korma query. Keyword parameter :row-fn is applied to each row, :result-set-fn to the whole result set."
+  (let [{:keys [sql-str params]} (sql/query-only (sql/exec query))]
+    (korma.db/with-db @korma.db/_default
+      (jdbc/with-query-results rs (apply vector sql-str params)
+        (result-set-fn (map row-fn rs))))))
 
 (def validationquery "select count(*) from kayttajarooli")
 
