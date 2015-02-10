@@ -40,10 +40,9 @@
 
 (defn rajaa-vastaajatunnukset-tutkintoihin
   [query tutkinnot]
-  (-> query
-    (sql/where (if (= (first tutkinnot) "ei_tutkintoa")
-                 {:vastaajatunnus.tutkintotunnus nil}
-                 {:vastaajatunnus.tutkintotunnus [in tutkinnot]}))))
+  (if (= tutkinnot ["ei_tutkintoa"])
+    (sql/where query {:vastaajatunnus.tutkintotunnus nil})
+    (sql/where query {:vastaajatunnus.tutkintotunnus [in tutkinnot]})))
 
 (defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
   [parametrit]
