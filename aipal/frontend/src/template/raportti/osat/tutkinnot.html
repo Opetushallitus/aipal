@@ -37,6 +37,11 @@
         </ul>
       </li>
     </ul>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="raportti.ei_tutkintoa"> Ei tutkintoa
+      </label>
+    </div>
 
     <h3 ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">{{'raportti.vanhentuneet_tutkinnot' | i18n}}</h3>
     <ul class="valitsin {{raportti.tutkintorakennetaso}}" ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">
