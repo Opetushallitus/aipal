@@ -87,8 +87,9 @@
 (defn ^:private tee-vastaus-query [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaus)
-    (sql/join :inner :kysymys (and (= :vastaus.kysymysid :kysymys.kysymysid)
-                                   (= :kysymys.valtakunnallinen true)))
+    (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
+    (sql/join :inner :kysymysryhma (and (= :kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid)
+                                        (= :kysymysryhma.valtakunnallinen true)))
     (sql/join :left :jatkovastaus
               (= :jatkovastaus.jatkovastausid
                  :vastaus.jatkovastausid))
