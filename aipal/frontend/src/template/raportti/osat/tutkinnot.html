@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <div class="well tutkinnot">
+  <div class="well tutkinnot" ng-hide="raportti.ei_tutkintoa">
     <input type="text" class="form-control icon search-icon-input" ng-model="tutkintoFilter" placeholder="{{ 'raportit.hae_tutkintoja_tai_aloja' | i18n }}">
 
     <h3 ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">{{'raportti.voimassaolevat_tutkinnot' | i18n}}</h3>
@@ -37,11 +37,6 @@
         </ul>
       </li>
     </ul>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" ng-model="raportti.ei_tutkintoa"> Ei tutkintoa
-      </label>
-    </div>
 
     <h3 ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">{{'raportti.vanhentuneet_tutkinnot' | i18n}}</h3>
     <ul class="valitsin {{raportti.tutkintorakennetaso}}" ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">
@@ -100,6 +95,11 @@
         </span>
       </span>
     </div>
+  </div>
 
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" ng-model="raportti.ei_tutkintoa"> Ei tutkintoa
+    </label>
   </div>
 </div>
