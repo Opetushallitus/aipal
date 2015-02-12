@@ -34,7 +34,7 @@
     (db/transaction
       (let [tekstit (i18n/hae-tekstit (:kieli parametrit))
             valtakunnallinen-raportti (-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
-                                        (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen])))
+                                        (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen]))))
             raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
         (json-response
           (for [raportti [raportti valtakunnallinen-raportti]
