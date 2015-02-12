@@ -42,6 +42,24 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         raportti.koulutuksen_jarjestajat = [];
         raportti.jarjestavat_oppilaitokset = [];
         delete raportti.kyselykertaid;
+      },
+
+      poistaTutkintoValinnat: function(koulutusalat, vanhentuneetKoulutusalat, raportti) {
+        _.forEach(koulutusalat, function(koulutusala) {
+          _.forEach(koulutusala.opintoalat, function(opintoala) {
+            _.forEach(opintoala.tutkinnot, function(tutkinto) {
+              delete tutkinto.valittu;
+            });
+          });
+        });
+        _.forEach(vanhentuneetKoulutusalat, function(koulutusala) {
+          _.forEach(koulutusala.opintoalat, function(opintoala) {
+            _.forEach(opintoala.tutkinnot, function(tutkinto) {
+              delete tutkinto.valittu;
+            });
+          });
+        });
+        raportti.tutkinnot = [];
       }
     };
   }])
@@ -81,23 +99,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       });
       $scope.raportti.opintoalat = [];
     };
-    var poistaTutkintoValinnat = function() {
-      _.forEach($scope.koulutusalat, function(koulutusala) {
-        _.forEach(koulutusala.opintoalat, function(opintoala) {
-          _.forEach(opintoala.tutkinnot, function(tutkinto) {
-            delete tutkinto.valittu;
-          });
-        });
-      });
-      _.forEach($scope.vanhentuneetKoulutusalat, function(koulutusala) {
-        _.forEach(koulutusala.opintoalat, function(opintoala) {
-          _.forEach(opintoala.tutkinnot, function(tutkinto) {
-            delete tutkinto.valittu;
-          });
-        });
-      });
-      $scope.raportti.tutkinnot = [];
-    };
 
     var tyhjaaTaustakysymysvalinnat = function() {
       _.forEach($scope.raportti.kysymykset, function (kysymys) {
@@ -111,7 +112,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       // Vain vertailuraportilla voi valita useamman tutkinnon/alan, joten tyhjennä valinnat raportin tyypin vaihtuessa
       poistaKoulutusalaValinnat();
       poistaOpintoalaValinnat();
-      poistaTutkintoValinnat();
+      raporttiApurit.poistaTutkintoValinnat($scope.koulutusalat, $scope.vanhentuneetKoulutusalat, $scope.raportti);
       tyhjaaTaustakysymysvalinnat();
       raporttiApurit.poistaKyselykertaValinnat($scope.kyselykerrat, $scope.raportti);
       raporttiApurit.poistaKyselyValinnat($scope.kyselyt, $scope.raportti);
@@ -201,7 +202,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.valitseTutkinto = function(tutkinto) {
       if ($scope.raportti.tutkintorakennetaso === 'tutkinto') {
         if (!voikoValitaUseita() && !tutkinto.valittu) {
-          poistaTutkintoValinnat();
+          raporttiApurit.poistaTutkintoValinnat($scope.koulutusalat, $scope.vanhentuneetKoulutusalat, $scope.raportti);
         }
         $scope.valitseTutkintoja(tutkinto);
       }
@@ -309,6 +310,12 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
               }
             });
         };
+
+        $scope.$watch('raportti.ei_tutkintoa', function(ei_tutkintoa) {
+          if (ei_tutkintoa) {
+            raporttiApurit.poistaTutkintoValinnat($scope.koulutusalat, $scope.vanhentuneetKoulutusalat, $scope.raportti);
+          }
+        });
       }
     };
   }])
@@ -355,6 +362,12 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
               }
             });
         };
+
+        $scope.$watch('raportti.ei_tutkintoa', function(ei_tutkintoa) {
+          if (ei_tutkintoa) {
+            raporttiApurit.poistaTutkintoValinnat($scope.koulutusalat, $scope.vanhentuneetKoulutusalat, $scope.raportti);
+          }
+        });
       }
     };
   }])
