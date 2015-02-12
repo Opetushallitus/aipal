@@ -14,3 +14,12 @@
                            {:name "Bob", :age 43},
                            {:name "John", :age 70}])
          {:name "John", :age 31})))
+
+(deftest poista-tyhjat-test
+  (are [parametrit odotettu-tulos]
+       (= (poista-tyhjat parametrit) odotettu-tulos)
+       {:a true} {:a true}
+       {:a 1} {:a 1}
+       {:a "string"} {:a "string"}
+       {:a ""} {}
+       {:a nil} {}))
