@@ -39,8 +39,8 @@
       <valintalista class="hidden-print" valittavat="vastaustunnustiedot.koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutuksen_jarjestajat', 'ytunnus')"></valintalista>
       <h3 class="hidden-print" ng-if="vastaustunnustiedot.oppilaitokset.length > 0">{{ 'vastaajatunnus.koulutuksen_jarjestava_oppilaitos' | i18n }}</h3>
       <valintalista class="hidden-print" valittavat="vastaustunnustiedot.oppilaitokset" hakuteksti="{{ 'raportit.hae_oppilaitoksia' | i18n }}" valitse="vaihdaValinta(valittava, 'jarjestavat_oppilaitokset', 'oppilaitoskoodi')"></valintalista>
-      <ng-include src="'template/raportti/osat/rahoitusmuoto.html'"></ng-include>
-      <ng-include src="'template/raportti/osat/suorituskieli.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/rahoitusmuoto.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/suorituskieli.html'"></ng-include>
       <ng-include src="'template/raportti/osat/kyselykertaraportit.html'"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.kyselyraportti' | i18n }}" select="vaihdaTyyppi('kysely', i18n.raportit.kyselyraportti)">
@@ -52,8 +52,8 @@
       <valintalista class="hidden-print" valittavat="vastaustunnustiedot.koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutuksen_jarjestajat', 'ytunnus')"></valintalista>
       <h3 class="hidden-print" ng-if="vastaustunnustiedot.oppilaitokset.length > 0">{{ 'vastaajatunnus.koulutuksen_jarjestava_oppilaitos' | i18n }}</h3>
       <valintalista class="hidden-print" valittavat="vastaustunnustiedot.oppilaitokset" hakuteksti="{{ 'raportit.hae_oppilaitoksia' | i18n }}" valitse="vaihdaValinta(valittava, 'jarjestavat_oppilaitokset', 'oppilaitoskoodi')"></valintalista>
-      <ng-include src="'template/raportti/osat/rahoitusmuoto.html'"></ng-include>
-      <ng-include src="'template/raportti/osat/suorituskieli.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/rahoitusmuoto.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/suorituskieli.html'"></ng-include>
       <ng-include src="'template/raportti/osat/kyselyraportit.html'"></ng-include>
     </tab>
   </tabset>
