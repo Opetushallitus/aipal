@@ -64,8 +64,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
-    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.kieli = kieli;
@@ -173,6 +173,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     Rahoitusmuoto.haeKaikki(function(rahoitusmuodot) {
       $scope.rahoitusmuodot = rahoitusmuodot;
+    });
+    Kieli.haeKaikki().success(function(kielet) {
+      $scope.kielet = _.pluck(kielet, 'kieli');
     });
 
     $scope.piilotaTutkintorakenneVaihto = function() {
