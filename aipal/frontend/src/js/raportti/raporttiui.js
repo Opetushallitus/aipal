@@ -117,6 +117,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       raporttiApurit.poistaKyselykertaValinnat($scope.kyselykerrat, $scope.raportti);
       raporttiApurit.poistaKyselyValinnat($scope.kyselyt, $scope.raportti);
 
+      // Kysely- ja kyselykertaraportilla asetetaan alkupvm kysely(kerra)n mukaan, joten tyhjennä se välilehteä vaihtaessa
+      delete $scope.raportti.vertailujakso_alkupvm;
+      delete $scope.raportti.vertailujakso_loppupvm;
+
       // Kysely-ja kyselykertaraportilla tutkintorakennetasovalintaa ei ole näkyvissä, joten pitää valita tasoksi tutkinto
       if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
         $scope.raportti.tutkintorakennetaso = 'tutkinto';
@@ -305,6 +309,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           kysely.valittu = !kysely.valittu;
           if (kysely.valittu) {
             $scope.raportti.kyselyid = kysely.kyselyid;
+            $scope.raportti.vertailujakso_alkupvm = kysely.voimassa_alkupvm;
           } else {
             delete $scope.raportti.kyselyid;
           }
@@ -357,6 +362,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           kyselykerta.valittu = !kyselykerta.valittu;
           if (kyselykerta.valittu) {
             $scope.raportti.kyselykertaid = kyselykerta.kyselykertaid;
+            $scope.raportti.vertailujakso_alkupvm = kyselykerta.voimassa_alkupvm;
           } else {
             delete $scope.raportti.kyselykertaid;
           }
