@@ -97,7 +97,7 @@
     </div>
   </div>
 
-  <div class="checkbox">
+  <div class="checkbox" ng-if="raportti.tyyppi === 'kysely' || raportti.tyyppi === 'kyselykerta'">
     <label>
       <input type="checkbox" ng-model="raportti.ei_tutkintoa"> {{'raportti.vastaajat_joilla_ei_tutkintoa' | i18n}}
     </label>
