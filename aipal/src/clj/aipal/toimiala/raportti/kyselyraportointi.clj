@@ -115,17 +115,17 @@
   (->
     (sql/select* :kysely)
     (sql/join :inner :kysely_kysymysryhma
-             (= :kysely.kyselyid
-                :kysely_kysymysryhma.kyselyid))
+              (= :kysely.kyselyid
+                 :kysely_kysymysryhma.kyselyid))
     ;; otetaan mukaan vain kyselyyn kuuluvat kysymykset
     (sql/join :inner :kysely_kysymys
               (= :kysely.kyselyid
                  :kysely_kysymys.kyselyid))
     (sql/join :inner :kysymys
-             (and (= :kysely_kysymysryhma.kysymysryhmaid
-                     :kysymys.kysymysryhmaid)
-                  (= :kysely_kysymys.kysymysid
-                     :kysymys.kysymysid)))
+              (and (= :kysely_kysymysryhma.kysymysryhmaid
+                      :kysymys.kysymysryhmaid)
+                   (= :kysely_kysymys.kysymysid
+                      :kysymys.kysymysid)))
     (sql/join :left :jatkokysymys
               (= :jatkokysymys.jatkokysymysid
                  :kysymys.jatkokysymysid))
