@@ -115,7 +115,7 @@
 
 (defn kasittele-eos [kysymys]
   (if (:eos_vastaus_sallittu kysymys)
-    (assoc-in kysymys [:vastaukset :eos] (:eos kysymys))
+    (assoc-in kysymys [:vastaukset :eos] (or (:eos kysymys) 0))
     kysymys))
 
 (defn kasittele-asteikkokysymys [kysymys]
