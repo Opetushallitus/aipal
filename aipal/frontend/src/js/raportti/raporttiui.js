@@ -64,8 +64,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
-    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.kieli = kieli;
@@ -121,6 +121,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
         $scope.raportti.tutkintorakennetaso = 'tutkinto';
       }
+      // Säilytetään rahoitusmuodon ja suorituskielen valinta kysely- ja kyselykertasivuilla
+      else {
+        delete $scope.raportti.rahoitusmuotoid;
+        delete $scope.raportti.suorituskieli;
+      }
     };
 
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
@@ -164,6 +169,13 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     Tutkinto.haeVanhentuneetTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.vanhentuneetKoulutusalat = koulutusalat;
+    });
+
+    Rahoitusmuoto.haeKaikki(function(rahoitusmuodot) {
+      $scope.rahoitusmuodot = rahoitusmuodot;
+    });
+    Kieli.haeKaikki().success(function(kielet) {
+      $scope.kielet = _.pluck(kielet, 'kieli');
     });
 
     $scope.piilotaTutkintorakenneVaihto = function() {

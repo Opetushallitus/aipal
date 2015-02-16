@@ -1,0 +1,8 @@
+<div>
+  <h3>{{ 'yleiset.tutkinnon_suorituskieli' | i18n }}</h3>
+
+  <select class="form-control" ng-model="raportti.suorituskieli" ng-if="kielet">
+    <option value=""></option>
+    <option value="{{kieli}}" ng-bind="'enum.kieli-arvo.' + kieli | i18n" ng-repeat="kieli in kielet"></option>
+  </select>
+</div>

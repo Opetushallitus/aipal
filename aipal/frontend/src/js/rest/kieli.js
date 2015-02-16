@@ -16,9 +16,13 @@
 
 angular.module('rest.kieli', [])
   .factory('Kieli', ['$http', function($http) {
+    var kielet;
     return {
       haeKaikki: function() {
-        return $http.get('api/kieli', {params: {nocache: Date.now()}});
+        if (kielet === undefined) {
+          kielet = $http.get('api/kieli', {params: {nocache: Date.now()}});
+        }
+        return kielet;
       }
     };
   }])
