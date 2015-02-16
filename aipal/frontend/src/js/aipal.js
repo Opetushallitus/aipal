@@ -65,12 +65,11 @@ angular.module('aipal', [
   'tableSort'
 ])
 
-  .config(['$httpProvider', 'asetukset', function ($httpProvider, asetukset) {
+  .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(
       function (apiCallInterceptor, $q) {
         return {
           request: function (pyynto) {
-            pyynto.timeout = asetukset.requestTimeout;
             apiCallInterceptor.apiPyynto(pyynto);
             return pyynto;
           },
@@ -209,10 +208,6 @@ angular.module('aipal', [
       $modalInstance.dismiss('cancel');
     };
   }])
-
-  .constant('asetukset', {
-    requestTimeout: 120000 //2min timeout kaikille pyynnöille
-  })
 
   .constant('datepickerConfig', {
     formatDay: 'd',
