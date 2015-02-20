@@ -256,9 +256,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
-        .success(function(tulokset) {
-          $scope.tulokset = tulokset;
-          $scope.tulos = tulokset[0];
+        .success(function(tulos) {
+          $scope.tulokset = tulos;
+          $scope.tulos = tulos;
+          $scope.raporttiIndeksit = _.range(tulos.nimi_fi.length);
         }).error(function(data, status) {
           if (status !== 500) {
             ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
@@ -269,18 +270,22 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     kyselykertaValilehti.alusta($scope);
     kyselyValilehti.alusta($scope);
 
-    $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
+    var lukumaaratYhteensa = function (jakauma, i) {
+      var lukumaarat = _.map(_.pluck(jakauma, 'lukumaara'), function(taulukko) {return taulukko[i];});
+      return _.reduce(lukumaarat, function (sum, n) {return sum + n;});
+    };
+    $scope.lukumaaratYhteensa = lukumaaratYhteensa;
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
   }])
 
   .controller('RaporttiController', ['$scope', function($scope) {
     $scope.$watch('tulokset', function(tulokset) {
       if (tulokset !== undefined) {
-        $scope.tulos = tulokset[0];
+//        $scope.tulos = tulokset;
       }
     });
     $scope.naytaRaportti = function(raportti) {
-      $scope.tulos = raportti;
+//      $scope.tulos = raportti;
     };
   }])
 
