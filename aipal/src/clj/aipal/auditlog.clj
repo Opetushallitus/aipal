@@ -148,6 +148,11 @@
                                         :vastaajatunnusid vastaajatunnusid
                                         :lukittu lukittu-tila}))
 
+(defn vastaajatunnus-poisto!
+  [vastaajatunnusid kyselykertaid]
+  (kirjoita! :vastaajatunnus :poisto {:kyselykertaid kyselykertaid
+                                      :vastaajatunnusid vastaajatunnusid}))
+
 (defn tiedote-operaatio!
   [operaatio]
   {:pre [(contains? operaatiot operaatio)]}

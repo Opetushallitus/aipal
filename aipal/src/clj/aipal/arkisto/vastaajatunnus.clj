@@ -154,3 +154,17 @@
                 :vastaajatunnusid vastaajatunnusid}))
   ;; haetaan vastaajatunnus, jotta saadaan kaytettavissa arvo
   (hae vastaajatunnusid))
+
+(defn poista! [kyselykertaid vastaajatunnusid]
+  (auditlog/vastaajatunnus-poisto! vastaajatunnusid kyselykertaid)
+  (sql/delete taulut/vastaajatunnus
+    (sql/where {:kyselykertaid kyselykertaid
+                :vastaajatunnusid vastaajatunnusid})))
+
+(defn laske-vastaajat [vastaajatunnusid]
+  (->
+    (sql/select taulut/vastaaja
+      (sql/aggregate (count :*) :cnt)
+      (sql/where {:vastaajatunnusid vastaajatunnusid}))
+    first
+    :cnt))
