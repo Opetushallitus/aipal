@@ -16,7 +16,8 @@
 
 angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.tutkinto', 'rest.koulutustoimija', 'rest.kieli',
                                              'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
-                                             'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus'])
+                                             'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus',
+                                             'yhteiset.palvelut.varmistus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -38,8 +39,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi',
-    function(Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$modal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus',
+    function(Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $modal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus) {
       $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -173,6 +174,14 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
               ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
             });
         }
+      };
+
+      $scope.poistaTunnus = function(tunnus) {
+        varmistus.varmista(i18n.hae('vastaajatunnus.poista_otsikko'), null, i18n.hae('vastaajatunnus.poista_teksti'), i18n.hae('yleiset.poista')).then(function() {
+          Vastaajatunnus.poista($scope.kyselykertaid, tunnus.vastaajatunnusid).success(function() {
+            $scope.tunnukset = _.reject($scope.tunnukset, function(t) { return t.vastaajatunnusid === tunnus.vastaajatunnusid; });
+          });
+        });
       };
 
       $scope.lukitseTunnus = function(tunnus, lukitse) {

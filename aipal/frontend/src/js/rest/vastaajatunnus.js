@@ -28,6 +28,9 @@ angular.module('rest.vastaajatunnus', ['ngResource'])
       },
       haeViimeisinTutkinto: function(kyselykertaid) {
         return $http.get('api/vastaajatunnus/' + kyselykertaid + '/tutkinto', {params: {nocache: Date.now()}});
+      },
+      poista: function(kyselykertaid, vastaajatunnusid) {
+        return $http.delete('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + vastaajatunnusid);
       }
     };
   }]);
