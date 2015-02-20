@@ -19,6 +19,7 @@
             [clj-time.core :as t]
             [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
             [oph.common.util.util :refer [paivita-arvot muunna-avainsanoiksi]]
+            [aipal.rest-api.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv vertailuraportti-vertailujakso]]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
@@ -68,8 +69,9 @@
   (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
     (db/transaction
       (json-response
-        (for [raportti (luo-raportit parametrit)]
-          (ei-riittavasti-vastaajia raportti asetukset))))))
+        (yhdistaminen/yhdista-raportit (luo-raportit parametrit))
+        #_(for [raportti (luo-raportit parametrit)]
+           (ei-riittavasti-vastaajia raportti asetukset))))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :valtakunnallinen-raportti nil :get "/:kieli/csv" [kieli & parametrit]
