@@ -18,8 +18,8 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', '
   .factory('kaavioApurit', ['$filter', 'i18n', function($filter, i18n) {
     var varit = ['#43b1d5', '#ffad33', '#d633ad', '#6cc555'];
 
-    var lukumaaratYhteensa = function (jakauma) {
-      var lukumaarat = _.pluck(jakauma, 'lukumaara');
+    var lukumaaratYhteensa = function (jakauma, kentta) {
+      var lukumaarat = kentta ? _.pluck(jakauma, kentta) : jakauma;
       return _.reduce(lukumaarat, function (sum, n) {return sum + n;});
     };
 
@@ -58,6 +58,10 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', '
 
       prosenttiosuus: function prosenttiosuus(a, b) {
         return (b >= 1) ? Math.round(100 * a / b) : 0;
+      },
+
+      erotaJakauma: function (jakauma, kentta, i) {
+        return _.map(jakauma, function(alkio) {return alkio[kentta][i];});
       },
 
       palkinPituus: function (asetukset, lukumaara, jakauma) {

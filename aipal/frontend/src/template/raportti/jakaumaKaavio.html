@@ -1,41 +1,39 @@
 <svg class="jakauma-kaavio"
   ng-attr-width="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus + 100}}"
-  ng-attr-height="{{1.5*asetukset.palkinLeveys*(jakauma.length + 1)}}">
+  ng-attr-height="{{kaavionKorkeus(jakauma) + 30}}">
 
   <line ng-repeat="osa in [0, 0.25, 0.5, 0.75, 1.0]"
     class="jakauma-kaavio-viiva"
     ng-attr-x1="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus * osa}}"
     ng-attr-y1="0"
     ng-attr-x2="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus * osa}}"
-    ng-attr-y2="{{1.5*asetukset.palkinLeveys*jakauma.length}}" />
+    ng-attr-y2="{{kaavionKorkeus(jakauma)}}" />
   <text ng-repeat="otsikko in otsikot"
     class="jakauma-kaavio-viivan-otsikko"
     ng-attr-x="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus * otsikko.x}}"
-    ng-attr-y="{{1.5*asetukset.palkinLeveys*jakauma.length + 20}}">
+    ng-attr-y="{{kaavionKorkeus(jakauma) + 20}}">
     {{otsikko.teksti}}
-  </text>
-  <text class="jakauma-kaavio-viivan-otsikko"
-    ng-attr-x="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus + 33}}"
-    ng-attr-y="{{1.5*asetukset.palkinLeveys*jakauma.length + 20}}">
-    ({{lukumaaratYhteensa(jakauma)}})
   </text>
 
   <text ng-repeat-start="data in jakauma"
     class="jakauma-kaavio-otsikko"
+    ng-init="outerIndex = $index"
     ng-attr-x="{{asetukset.tekstinPituus - 10}}"
-    ng-attr-y="{{asetukset.palkinLeveys * (1.5*$index + 0.75)}}">
+    ng-attr-y="{{asetukset.palkinLeveys * (data.lukumaara.length + 0.5) * (outerIndex + 0.5)}}">
     <tspan ng-attr-dy="{{ $first ? '0' : '1em'}}" ng-repeat="osa in jaaTeksti(data)" text-anchor="end" ng-attr-x="{{asetukset.tekstinPituus - 10}}">{{osa}}</tspan>
   </text>
-  <rect ng-attr-width="{{palkinPituus(data.lukumaara, jakauma)}}"
+  <rect ng-repeat="i in raporttiIndeksit(data.lukumaara)"
+    ng-attr-width="{{palkinPituus(data.lukumaara[i], erotaJakauma(jakauma, 'lukumaara', i))}}"
     ng-attr-height="{{asetukset.palkinLeveys}}"
     ng-attr-x="{{asetukset.tekstinPituus}}"
-    ng-attr-y="{{asetukset.palkinLeveys * (1.5*$index + 0.25)}}"
-    ng-attr-fill="{{palkinVari($index)}}">
-  </rect>
-  <text ng-repeat-end
-    ng-attr-x="{{asetukset.tekstinPituus + palkinPituus(data.lukumaara, jakauma) + 10}}"
-    ng-attr-y="{{asetukset.palkinLeveys * (1.5*$index + 0.75)}}">
-    {{data.osuus}}% ({{data.lukumaara}})
+    ng-attr-y="{{asetukset.palkinLeveys * ((data.lukumaara.length + 0.5)*outerIndex + i + 0.25)}}"
+    ng-attr-fill="{{palkinVari(i)}}">
+  </rect> <!--  -->
+  <text ng-repeat="i in raporttiIndeksit(data.lukumaara)"
+    ng-attr-x="{{asetukset.tekstinPituus + palkinPituus(data.lukumaara[i], erotaJakauma(jakauma, 'lukumaara', i)) + 10}}"
+    ng-attr-y="{{asetukset.palkinLeveys * ((data.lukumaara.length + 0.5)*outerIndex + i + 0.75)}}"
+    ng-repeat-end>
+    {{data.osuus[i]}}% ({{data.lukumaara[i]}})
   </text>
 </svg>
 

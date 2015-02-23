@@ -32,7 +32,7 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
         };
 
         scope.asetukset = asetukset;
-        _.assign(scope, _.pick(kaavioApurit, ['maksimi', 'lukumaaratYhteensa', 'palkinVari']));
+        _.assign(scope, _.pick(kaavioApurit, ['erotaJakauma', 'maksimi', 'lukumaaratYhteensa', 'palkinVari']));
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
         if (scope.vastaustyyppi === 'kylla_ei_valinta') {
           scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.kylla_ei_valinta', 'vaihtoehto-avain');
@@ -46,6 +46,12 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
             }
           };
         }
+        scope.raporttiIndeksit = function(taulukko) {
+          return _.range(taulukko.length);
+        };
+        scope.kaavionKorkeus = function kaavionKorkeus(jakauma) {
+          return (jakauma[0].lukumaara.length + 0.5) * asetukset.palkinLeveys * jakauma.length;
+        };
         scope.otsikot = [
           {x: 0, teksti: ''},
           {x: 0.25, teksti: '25%'},
