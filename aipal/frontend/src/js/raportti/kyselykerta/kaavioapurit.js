@@ -64,13 +64,8 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', '
         return _.map(jakauma, function(alkio) {return alkio[kentta][i];});
       },
 
-      palkinPituus: function (asetukset, lukumaara, jakauma) {
-        var yhteensa = lukumaaratYhteensa(jakauma);
-        if (Math.abs(yhteensa) > 0.01) {
-          return asetukset.palkinMaksimiPituus * (lukumaara / yhteensa);
-        } else {
-          return 0;
-        }
+      palkinPituus: function (asetukset, osuus) {
+        return asetukset.palkinMaksimiPituus * osuus / 100;
       },
 
       palkinVari: function (i) {

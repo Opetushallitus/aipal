@@ -26,7 +26,7 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
       },
       templateUrl: 'template/raportti/vaittamakaavio.html',
       link: function(scope) {
-        var raportoitavia = scope.jakauma[0].lukumaara.length,
+        var raportoitavia = scope.jakauma[0].osuus.length,
           viivastonLeveys;
         if(scope.eos) {
           viivastonLeveys = 6*(raportoitavia + 2)*40;
@@ -40,7 +40,7 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
         };
 
         scope.asetukset = asetukset;
-        _.assign(scope, _.pick(kaavioApurit, ['erotaJakauma', 'maksimi', 'lukumaaratYhteensa', 'palkinVari']));
+        _.assign(scope, _.pick(kaavioApurit, ['erotaJakauma', 'maksimi', 'palkinVari']));
         scope.palkinPituus = _.partial(kaavioApurit.palkinPituus, asetukset);
         scope.jaaTeksti = _.partial(kaavioApurit.jaaLokalisointiavain, 'kysymys.' + scope.vastaustyyppi, 'vaihtoehto-avain');
         scope.raporttiIndeksit = function(taulukko) {

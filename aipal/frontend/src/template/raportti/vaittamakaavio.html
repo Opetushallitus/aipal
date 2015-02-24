@@ -38,16 +38,16 @@
       </tspan>
     </text>
 
-    <rect ng-repeat="i in raporttiIndeksit(data.lukumaara)"
+    <rect ng-repeat="i in raporttiIndeksit(data.osuus)"
       ng-attr-width="{{asetukset.palkinLeveys}}"
-      ng-attr-height="{{palkinPituus(data.lukumaara[i], erotaJakauma(jakauma, 'lukumaara', i))}}"
+      ng-attr-height="{{palkinPituus(data.osuus[i])}}"
       ng-attr-x="{{paikkaPalkistonSuhteen(outerIndex, i, 1)}}"
-      ng-attr-y="{{asetukset.palkinMaksimiPituus - palkinPituus(data.lukumaara[i], erotaJakauma(jakauma, 'lukumaara', i))}}"
+      ng-attr-y="{{asetukset.palkinMaksimiPituus - palkinPituus(data.osuus[i])}}"
       ng-attr-fill="{{palkinVari(i)}}" />
-    <text ng-repeat="i in raporttiIndeksit(data.lukumaara)"
+    <text ng-repeat="i in raporttiIndeksit(data.osuus)"
       class="vaittama-kaavio-palkin-arvo"
       ng-attr-x="{{paikkaPalkistonSuhteen(outerIndex, i, 1.5)}}"
-      ng-attr-y="{{(asetukset.palkinMaksimiPituus - palkinPituus(data.lukumaara[i], erotaJakauma(jakauma, 'lukumaara', i))) - 20}}"
+      ng-attr-y="{{asetukset.palkinMaksimiPituus - palkinPituus(data.osuus[i]) - 20}}"
       ng-repeat-end>
       <tspan ng-attr-x="{{paikkaPalkistonSuhteen(outerIndex, i, 1.5)}}">{{data.osuus[i]}}%</tspan>
       <tspan ng-attr-x="{{paikkaPalkistonSuhteen(outerIndex, i, 1.5)}}" dy="1em">({{data.lukumaara[i]}})</tspan>
