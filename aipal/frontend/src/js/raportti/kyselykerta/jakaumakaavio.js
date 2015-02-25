@@ -50,8 +50,8 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
         scope.raporttiIndeksit = function(taulukko) {
           return _.range(taulukko.length);
         };
-        scope.kaavionKorkeus = function kaavionKorkeus(jakauma) {
-          return (raportoitavia + 0.5) * asetukset.palkinLeveys * jakauma.length;
+        scope.viivastonKorkeus = function() {
+          return (raportoitavia + 0.5) * asetukset.palkinLeveys * scope.jakauma.length;
         };
         scope.paikkaPalkistonSuhteen = function(palkisto, palkki, siirtyma) {
           return asetukset.palkinLeveys * ((raportoitavia + 0.5)*palkisto + palkki + siirtyma);

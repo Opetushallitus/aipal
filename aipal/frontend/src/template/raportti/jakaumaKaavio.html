@@ -1,17 +1,17 @@
 <svg class="jakauma-kaavio"
   ng-attr-width="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus + 100}}"
-  ng-attr-height="{{kaavionKorkeus(jakauma) + 30}}">
+  ng-attr-height="{{viivastonKorkeus() + 30}}">
 
   <line ng-repeat="osa in [0, 0.25, 0.5, 0.75, 1.0]"
     class="jakauma-kaavio-viiva"
     ng-attr-x1="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus * osa}}"
     ng-attr-y1="0"
     ng-attr-x2="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus * osa}}"
-    ng-attr-y2="{{kaavionKorkeus(jakauma)}}" />
+    ng-attr-y2="{{viivastonKorkeus()}}" />
   <text ng-repeat="otsikko in otsikot"
     class="jakauma-kaavio-viivan-otsikko"
     ng-attr-x="{{asetukset.tekstinPituus + asetukset.palkinMaksimiPituus * otsikko.x}}"
-    ng-attr-y="{{kaavionKorkeus(jakauma) + 20}}">
+    ng-attr-y="{{viivastonKorkeus() + 20}}">
     {{otsikko.teksti}}
   </text>
 
