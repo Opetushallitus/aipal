@@ -30,6 +30,7 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
           palkinMaksimiPituus: 480,
           tekstinPituus: 180
         };
+        var raportoitavia = scope.jakauma[0].osuus.length;
 
         scope.asetukset = asetukset;
         _.assign(scope, _.pick(kaavioApurit, ['erotaJakauma', 'maksimi', 'palkinVari']));
@@ -50,7 +51,10 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
           return _.range(taulukko.length);
         };
         scope.kaavionKorkeus = function kaavionKorkeus(jakauma) {
-          return (jakauma[0].osuus.length + 0.5) * asetukset.palkinLeveys * jakauma.length;
+          return (raportoitavia + 0.5) * asetukset.palkinLeveys * jakauma.length;
+        };
+        scope.paikkaPalkistonSuhteen = function(palkisto, palkki, siirtyma) {
+          return asetukset.palkinLeveys * ((raportoitavia + 0.5)*palkisto + palkki + siirtyma);
         };
         scope.otsikot = [
           {x: 0, teksti: ''},

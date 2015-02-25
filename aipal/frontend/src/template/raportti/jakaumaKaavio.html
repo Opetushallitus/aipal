@@ -19,19 +19,19 @@
     class="jakauma-kaavio-otsikko"
     ng-init="outerIndex = $index"
     ng-attr-x="{{asetukset.tekstinPituus - 10}}"
-    ng-attr-y="{{asetukset.palkinLeveys * (data.osuus.length + 0.5) * (outerIndex + 0.5)}}">
+    ng-attr-y="{{paikkaPalkistonSuhteen(outerIndex + 0.5, 0, 0)}}">
     <tspan ng-attr-dy="{{ $first ? '0' : '1em'}}" ng-repeat="osa in jaaTeksti(data)" text-anchor="end" ng-attr-x="{{asetukset.tekstinPituus - 10}}">{{osa}}</tspan>
   </text>
   <rect ng-repeat="i in raporttiIndeksit(data.osuus)"
     ng-attr-width="{{palkinPituus(data.osuus[i])}}"
     ng-attr-height="{{asetukset.palkinLeveys}}"
     ng-attr-x="{{asetukset.tekstinPituus}}"
-    ng-attr-y="{{asetukset.palkinLeveys * ((data.osuus.length + 0.5)*outerIndex + i + 0.25)}}"
+    ng-attr-y="{{paikkaPalkistonSuhteen(outerIndex, i, 0.25)}}"
     ng-attr-fill="{{palkinVari(i)}}">
-  </rect> <!--  -->
+  </rect>
   <text ng-repeat="i in raporttiIndeksit(data.osuus)"
     ng-attr-x="{{asetukset.tekstinPituus + palkinPituus(data.osuus[i]) + 10}}"
-    ng-attr-y="{{asetukset.palkinLeveys * ((data.osuus.length + 0.5)*outerIndex + i + 0.75)}}"
+    ng-attr-y="{{paikkaPalkistonSuhteen(outerIndex, i, 0.75)}}"
     ng-repeat-end>
     {{data.osuus[i]}}% ({{data.lukumaara[i]}})
   </text>
