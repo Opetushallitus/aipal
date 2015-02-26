@@ -9,6 +9,10 @@
 (defn yhdistä-vektorit [datat]
   (apply map vector datat))
 
+(defn yhdistä-samat [xs]
+  {:pre [(or (nil? xs) (empty? xs) (apply = xs))]}
+  (first xs))
+
 (defn päivitä-polusta [[k & ks] päivitä rakenne]
   (let [päivitä-seuraavat (if ks
                             (partial päivitä-polusta ks päivitä)
@@ -53,8 +57,8 @@
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma] yhdistä-vektorit)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] yhdistä-kaikki-kentät)
     (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-kysymyksen-jatkovastaukset)
-    (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] first))
-    (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] first))
-    (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] first))
+    (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] yhdistä-samat))
+    (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
+    (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] yhdistä-samat))
     (päivitä-kentät [:luontipvm :parametrit] first)))
 
