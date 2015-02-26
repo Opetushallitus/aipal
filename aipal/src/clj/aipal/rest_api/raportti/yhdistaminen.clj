@@ -20,6 +20,29 @@
 (defn päivitä-kentät [kentät päivitä rakenne]
   (reduce (fn [rakenne kenttä] (update-in rakenne [kenttä] päivitä)) rakenne kentät))
 
+(defn käsittele-kyllä-jatkovastaukset [jatkovastaukset]
+  (if (not-every? nil? (:kylla jatkovastaukset))
+    (->> jatkovastaukset
+      (päivitä-polusta [:kylla] yhdistä-kaikki-kentät)
+      (päivitä-polusta [:kylla :jakauma] yhdistä-vektorit)
+      (päivitä-polusta [:kylla :jakauma :*] yhdistä-kaikki-kentät)
+      (päivitä-polusta [:kylla] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] first))
+      (päivitä-polusta [:kylla :jakauma :*] (partial päivitä-kentät [:vaihtoehto-avain] first)))
+    jatkovastaukset))
+
+(defn käsittele-ei-jatkovastaukset [jatkovastaukset]
+  (if (not-every? nil? (:ei jatkovastaukset))
+    jatkovastaukset
+    (assoc jatkovastaukset :ei nil)))
+
+(defn käsittele-kysymyksen-jatkovastaukset [kysymys]
+  (if (not-every? nil? (:jatkovastaukset kysymys))
+    (->> kysymys
+      (päivitä-polusta [:jatkovastaukset] yhdistä-kaikki-kentät)
+      (päivitä-polusta [:jatkovastaukset] käsittele-kyllä-jatkovastaukset)
+      (päivitä-polusta [:jatkovastaukset] käsittele-ei-jatkovastaukset))
+    (assoc kysymys :jatkovastaukset nil)))
+
 (defn yhdista-raportit [raportit]
   (->> raportit
     yhdistä-kaikki-kentät
@@ -29,6 +52,7 @@
     (päivitä-polusta [:raportti :* :kysymykset :*] yhdistä-kaikki-kentät)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma] yhdistä-vektorit)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] yhdistä-kaikki-kentät)
+    (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-kysymyksen-jatkovastaukset)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] first))
     (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] first))
     (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] first))
