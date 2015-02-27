@@ -28,6 +28,7 @@
         (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
                     :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
                     :kyselykerta.lukittu :kyselykerta.luotuaika
+                    :kyselykerta.kaytettavissa
                     [(sql/raw "vastaaja.vastaajaid is null") :poistettavissa])
         (cond-> (not (nil? koulutustoimija))
           (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija}))

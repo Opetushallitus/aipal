@@ -32,7 +32,12 @@
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.kyselykertaraportti' | i18n }}" active="kyselykertaraportitValittu" select="vaihdaTyyppi('kyselykerta', i18n.raportit.kyselykertaraportti)">
       <h2 class="hidden-print">{{ 'raportit.kyselykertaraportti_otsikko' | i18n }} *<ohje tunniste="kyselykertaraportti"></ohje></h2>
-      <valintalista class="hidden-print" valittavat="kyselykerrat" hakuteksti="{{ 'raportit.hae_kyselykertoja' | i18n }}" valitse="valitseKyselykerta(valittava)"></valintalista>
+      <div class="btn-group tutkintorakennetaso">
+        <label class="btn btn-primary" ng-model="tilafilterKyselykerta.tila" btn-radio="'avoin'">{{ 'yleiset.avoimet' | i18n }}</label>
+        <label class="btn btn-primary" ng-model="tilafilterKyselykerta.tila" btn-radio="'suljettu'">{{ 'yleiset.suljetut' | i18n }}</label>
+        <label class="btn btn-primary" ng-model="tilafilterKyselykerta.tila" btn-radio="'kaikki'">{{ 'yleiset.kaikki' | i18n }}</label>
+      </div>
+      <valintalista class="hidden-print" valittavat="kyselykerratTilassa" hakuteksti="{{ 'raportit.hae_kyselykertoja' | i18n }}" valitse="valitseKyselykerta(valittava)"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <h3 class="hidden-print" ng-if="vastaustunnustiedot.koulutustoimijat.length > 0">{{ 'vastaajatunnus.koulutuksen_jarjestaja' | i18n }}</h3>
