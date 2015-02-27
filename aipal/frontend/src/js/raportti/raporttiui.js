@@ -284,11 +284,26 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .factory('kyselyValilehti', ['i18n', 'ilmoitus', 'Kysely', 'Raportti', 'raporttiApurit', 'seuranta', function(i18n, ilmoitus, Kysely, Raportti, raporttiApurit, seuranta) {
+  .factory('kyselyValilehti', ['$filter', 'i18n', 'ilmoitus', 'Kysely', 'Raportti', 'raporttiApurit', 'seuranta', function($filter, i18n, ilmoitus, Kysely, Raportti, raporttiApurit, seuranta) {
     return {
       alusta: function alusta($scope) {
+        var suodataKyselyt = function() {
+          var tila = $scope.tilafilter.tila;
+          if (tila !== 'kaikki') {
+            $scope.kyselytTilassa = $filter('filter')($scope.kyselyt, {tila: tila});
+          } else {
+            $scope.kyselytTilassa = $scope.kyselyt;
+          }
+        };
+
+        $scope.tilafilter = { 'tila': 'julkaistu'};
+        $scope.$watch('tilafilter.tila', function() {
+          suodataKyselyt();
+        });
+
         Kysely.hae().success(function (data) {
           $scope.kyselyt = data;
+          suodataKyselyt();
         });
 
         $scope.$watch('raportti.kyselyid', function(uusi) {
