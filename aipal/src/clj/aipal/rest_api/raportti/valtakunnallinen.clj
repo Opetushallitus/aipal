@@ -60,10 +60,10 @@
                  "tutkinto" (for [tutkinto (:tutkinnot parametrit)] (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
                  "opintoala" (for [opintoala (:opintoalat parametrit)] (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
                  "koulutusala" (for [koulutusala (:koulutusalat parametrit)] (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala]))))
-    "kehitys" (concat [(kehitysraportti-vertailuraportti parametrit)] [(raportti/muodosta parametrit)])
+    "kehitys" (concat [(raportti/muodosta parametrit)] [(kehitysraportti-vertailuraportti parametrit)])
     "koulutustoimijat" (concat
-                         [(koulutustoimija-vertailuraportti parametrit)]
-                         (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija]))))))
+                         (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija])))
+                         [(koulutustoimija-vertailuraportti parametrit)])))
 
 (defn reitit [asetukset]
   (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
