@@ -69,9 +69,13 @@
   (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
     (db/transaction
       (json-response
-        (yhdistaminen/yhdista-raportit (luo-raportit parametrit))
-        #_(for [raportti (luo-raportit parametrit)]
-           (ei-riittavasti-vastaajia raportti asetukset))))))
+        (let [kaikki-raportit (for [raportti (luo-raportit parametrit)]
+                                 (ei-riittavasti-vastaajia raportti asetukset))
+              naytettavat (filter (comp nil? :virhe) kaikki-raportit)
+              virheelliset (filter :virhe kaikki-raportit)]
+          (merge (when (seq naytettavat)
+                   (yhdistaminen/yhdista-raportit naytettavat))
+                 {:virheelliset virheelliset}))))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :valtakunnallinen-raportti nil :get "/:kieli/csv" [kieli & parametrit]
