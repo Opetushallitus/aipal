@@ -79,7 +79,7 @@
   [vaihtoehdot jakauma]
   (let [yhteensa (reduce + (vals jakauma))]
     (for [vaihtoehto vaihtoehdot
-          :let [lukumaara (or (jakauma (:jarjestys vaihtoehto)) 0)
+          :let [lukumaara (or (get jakauma (:jarjestys vaihtoehto)) 0)
                 osuus (laske-osuus lukumaara yhteensa)]]
       {:vaihtoehto_fi (:teksti_fi vaihtoehto)
        :vaihtoehto_sv (:teksti_sv vaihtoehto)
@@ -162,7 +162,8 @@
 
 (defn kasittele-kysymys [kysymys]
   (let [vastaajia (count (:vastaajat kysymys))
-        keskiarvo-ja-hajonta (when (asteikkotyyppi? (:vastaustyyppi kysymys))
+        keskiarvo-ja-hajonta (when (and (asteikkotyyppi? (:vastaustyyppi kysymys))
+                                        (> vastaajia 0))
                                (jakauman-keskiarvo-ja-keskihajonta (:vastaukset kysymys)))
         kysymys (case (:vastaustyyppi kysymys)
                   "arvosana" (kasittele-asteikkokysymys kysymys)
@@ -227,7 +228,7 @@
                                              "monivalinta" (kasittele-asteikkovastaus tulokset kysymys vastaus)
                                              "vapaateksti" (kasittele-vapaatekstivastaus tulokset kysymys vastaus))]
                               (update-in tulokset [kysymys :vastaajat] (fnil conj #{}) (:vastaajaid vastaus))))
-        tulokset (for [[kysymys tulos] (reduce kasittele-vastaus {} vastaukset)]
+        tulokset (for [[kysymys tulos] (reduce kasittele-vastaus (zipmap kysymykset (repeat {})) vastaukset)]
                    (merge kysymys tulos))
         kysymysryhmien-kysymykset (->> tulokset
                                     (map kasittele-kysymys)
