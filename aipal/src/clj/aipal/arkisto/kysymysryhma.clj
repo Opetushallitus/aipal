@@ -218,6 +218,13 @@
              :kysymykset kysymykset))
     (hae kysymysryhmaid)))
 
+(defn hae-kysymysryhman-kysymyksien-idt
+  [kysymysryhmaid]
+  (map :kysymysid
+       (sql/select taulut/kysymys
+         (sql/where {:kysymysryhmaid kysymysryhmaid})
+         (sql/fields :kysymysid))))
+
 (defn kysymysryhma-esikatselulle-select
   ([kyselyid]
     (->

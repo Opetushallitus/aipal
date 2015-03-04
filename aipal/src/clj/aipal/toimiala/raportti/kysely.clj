@@ -17,9 +17,10 @@
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :refer [kyselykerta]]
             [oph.korma.korma :refer [select-unique-or-nil]]
+            [aipal.arkisto.kysely :as arkisto]
+            [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.toimiala.raportti.kyselyraportointi :as kyselyraportointi]
             [aipal.toimiala.raportti.raportointi :as raportointi]
-            [aipal.arkisto.kysely :as arkisto]
             [aipal.toimiala.raportti.valtakunnallinen :as valtakunnallinen-raportti]))
 
 (defn ^:private hae-kysely [kyselyid]
@@ -34,7 +35,7 @@
 
 (defn muodosta-valtakunnallinen-vertailuraportti [kyselyid parametrit]
   (when-let [taustakysymysryhmaid (arkisto/hae-kyselyn-taustakysymysryhmaid kyselyid)]
-    (let [kysymysidt (arkisto/hae-kyselyn-valtakunnallisten-kysymysryhmien-kysymysidt kyselyid)
+    (let [kysymysidt (kysymysryhma-arkisto/hae-kysymysryhman-kysymyksien-idt taustakysymysryhmaid)
           parametrit (assoc parametrit :taustakysymysryhmaid (str taustakysymysryhmaid)
                                        :tyyppi "vertailu"
                                        :tutkintorakennetaso "tutkinto"

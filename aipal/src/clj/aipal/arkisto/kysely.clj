@@ -180,13 +180,3 @@
       (sql/fields :kysymysryhmaid))
     first
     :kysymysryhmaid))
-
-(defn hae-kyselyn-valtakunnallisten-kysymysryhmien-kysymysidt
-  [kyselyid]
-  (map :kysymysid
-       (sql/select taulut/kysely_kysymysryhma
-         (sql/join taulut/kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymysryhmaid))
-         (sql/join taulut/kysymys (= :kysymys.kysymysryhmaid :kysymysryhmaid))
-         (sql/where {:kysymysryhma.valtakunnallinen true
-                     :kysely_kysymysryhma.kyselyid kyselyid})
-         (sql/fields :kysymys.kysymysid))))
