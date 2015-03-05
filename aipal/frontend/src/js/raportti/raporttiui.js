@@ -407,8 +407,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         $scope.muodostaKyselykertaraportti = function(raportti) {
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
-              $scope.tulokset = [tulos];
+              $scope.tulokset = tulos;
               $scope.tulos = tulos;
+              $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
             })
             .error(function(value) {
               if (value.status !== 500) {

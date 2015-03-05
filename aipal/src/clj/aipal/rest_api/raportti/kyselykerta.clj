@@ -20,6 +20,7 @@
             [oph.common.util.util :refer [muunna-avainsanoiksi]]
 
             [aipal.compojure-util :as cu]
+            [aipal.rest-api.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
@@ -30,11 +31,25 @@
         raportti (muodosta-raportti (Integer/parseInt kyselykertaid) parametrit)]
     (assoc raportti :parametrit parametrit)))
 
+(defn muodosta-kyselykertaraportti
+  [kyselykertaid parametrit asetukset]
+  (let [raportti (raportointi/ei-riittavasti-vastaajia
+                   (muodosta-raportti-parametreilla kyselykertaid parametrit)
+                   asetukset)
+        nimi (-> raportti :yhteenveto :kyselykerta)
+        naytettavat (filter (comp nil? :virhe) [raportti])
+        virheelliset (filter :virhe [raportti])]
+    (merge (when (seq naytettavat)
+             (yhdistaminen/yhdista-raportit naytettavat))
+           {:nimi nimi
+            :raportoitavia (count naytettavat)
+            :virheelliset virheelliset})))
+
 (defn reitit [asetukset]
   (cu/defapi :kyselykerta-raportti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & parametrit]
     (db/transaction
       (json-response
-        (raportointi/ei-riittavasti-vastaajia (muodosta-raportti-parametreilla kyselykertaid parametrit) asetukset)))))
+        (muodosta-kyselykertaraportti kyselykertaid parametrit asetukset)))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/csv" [kyselykertaid & parametrit]
