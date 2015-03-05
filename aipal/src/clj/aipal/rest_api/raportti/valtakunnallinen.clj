@@ -75,7 +75,8 @@
               virheelliset (filter :virhe kaikki-raportit)]
           (merge (when (seq naytettavat)
                    (yhdistaminen/yhdista-raportit naytettavat))
-                 {:virheelliset virheelliset}))))))
+                 {:raportoitavia (count naytettavat)
+                  :virheelliset virheelliset}))))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :valtakunnallinen-raportti nil :get "/:kieli/csv" [kieli & parametrit]

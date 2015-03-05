@@ -42,7 +42,8 @@
         virheelliset (filter :virhe kaikki-raportit)]
     (merge (when (seq naytettavat)
              (yhdistaminen/yhdista-raportit naytettavat))
-           {:virheelliset virheelliset})))
+           {:raportoitavia (count naytettavat)
+            :virheelliset virheelliset})))
 
 (defn reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]

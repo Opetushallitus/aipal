@@ -259,7 +259,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         .success(function(tulos) {
           $scope.tulokset = tulos;
           $scope.tulos = tulos;
-          $scope.raporttiIndeksit = _.range(tulos.nimi_fi.length);
+          $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
         }).error(function(data, status) {
           if (status !== 500) {
             ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
@@ -340,7 +340,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
             .success(function(tulos) {
               $scope.tulokset = tulos;
               $scope.tulos = tulos;
-              $scope.raporttiIndeksit = _.range(tulos.nimi_fi.length);
+              $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
             })
             .error(function(value) {
               if (value.status !== 500) {
