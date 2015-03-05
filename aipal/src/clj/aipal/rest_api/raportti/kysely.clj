@@ -19,6 +19,7 @@
             [oph.common.util.util :refer [muunna-avainsanoiksi]]
             [aipal.compojure-util :as cu]
             [aipal.rest-api.i18n :as i18n]
+            [aipal.rest-api.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti]]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
@@ -29,17 +30,25 @@
         raportti (muodosta-raportti (Integer/parseInt kyselyid) parametrit)]
     (assoc raportti :parametrit parametrit)))
 
+(defn muodosta-kyselyraportti [kyselyid parametrit asetukset]
+  (let [tekstit (i18n/hae-tekstit (:kieli parametrit))
+        valtakunnallinen-raportti nil #_(-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
+                                          (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen]))))
+        raportti (muodosta-raportti-parametreilla kyselyid parametrit)
+        kaikki-raportit (for [raportti [raportti valtakunnallinen-raportti]
+                              :when raportti]
+                          (ei-riittavasti-vastaajia raportti asetukset))
+        naytettavat (filter (comp nil? :virhe) kaikki-raportit)
+        virheelliset (filter :virhe kaikki-raportit)]
+    (merge (when (seq naytettavat)
+             (yhdistaminen/yhdista-raportit naytettavat))
+           {:virheelliset virheelliset})))
+
 (defn reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]
     (db/transaction
-      (let [tekstit (i18n/hae-tekstit (:kieli parametrit))
-            valtakunnallinen-raportti (-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
-                                        (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen]))))
-            raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
-        (json-response
-          (for [raportti [raportti valtakunnallinen-raportti]
-                :when raportti]
-            (ei-riittavasti-vastaajia raportti asetukset)))))))
+      (json-response
+        (muodosta-kyselyraportti kyselyid parametrit asetukset)))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/csv" [kyselyid & parametrit]

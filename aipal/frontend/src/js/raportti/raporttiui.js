@@ -337,9 +337,10 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
 
         $scope.muodostaKyselyraportti = function(raportti) {
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
-            .success(function(tulokset) {
-              $scope.tulokset = tulokset;
-              $scope.tulos = tulokset[0];
+            .success(function(tulos) {
+              $scope.tulokset = tulos;
+              $scope.tulos = tulos;
+              $scope.raporttiIndeksit = _.range(tulos.nimi_fi.length);
             })
             .error(function(value) {
               if (value.status !== 500) {
