@@ -71,5 +71,6 @@
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] yhdistä-samat))
     (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
     (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] yhdistä-samat))
-    (päivitä-kentät [:luontipvm :parametrit] first)))
+    (päivitä-kentät [:luontipvm :parametrit] first)
+    (päivitä-kentät [:yhteenveto] first)))
 
