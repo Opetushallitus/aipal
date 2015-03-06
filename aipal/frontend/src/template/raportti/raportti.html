@@ -131,12 +131,17 @@
           <td ng-repeat-end class="report-table-amount-field e2e-vastausten-lukumaara">{{alkio.lukumaara[i]}}</td>
         </tr>
       </tbody>
+      <tfoot ng-if="kysymys.keskiarvo !== undefined && kysymys.keskihajonta !== undefined" style="text-align: center">
+        <tr>
+          <td>{{ 'raportti.keskiarvo' | i18n }}</td>
+          <td ng-repeat="i in raporttiIndeksit" colspan="2">{{ kysymys.keskiarvo[i] | number:2 }}</td>
+        </tr>
+        <tr>
+          <td>{{ 'raportti.keskihajonta' | i18n }}</td>
+          <td ng-repeat="i in raporttiIndeksit" colspan="2">{{ kysymys.keskihajonta[i] | number:2 }}</td>
+        </tr>
+      </tfoot>
     </table>
-
-    <div ng-show="kysymys.keskiarvo !== undefined && kysymys.keskihajonta !== undefined">
-      Keskiarvo: {{ kysymys.keskiarvo | number:2 }}
-      Keskihajonta: {{ kysymys.keskihajonta | number:2 }}
-    </div>
 
     <div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">
       <h3>{{$index + 1}}. {{i18n.raportit.jatkokysymykset}}</h3>
