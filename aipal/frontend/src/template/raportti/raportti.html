@@ -1,6 +1,11 @@
 <div ng-controller="RaporttiController">
-<div class="alert alert-danger" ng-if="tulos.virhe">
+<div class="alert alert-danger" ng-if="tulos.virheelliset.length > 0">
   {{'raportit.liian_vahan_vastaajia' | i18n}}
+  <ul>
+    <li ng-repeat="raportti in tulos.virheelliset">
+      {{raportti | lokalisoiKentta:'nimi'}}
+    </li>
+  </ul>
 </div>
 
 <div class="hidden-print" ng-show="tulokset.length > 1">
