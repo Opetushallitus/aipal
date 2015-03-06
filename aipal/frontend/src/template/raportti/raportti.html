@@ -156,7 +156,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vapaatekstivastaukset">
-              <td><span class="whitespace">{{vastaus.teksti}}</span></td>
+              <td ng-repeat="i in raporttiIndeksit"><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
             </tr>
           </tbody>
         </table>

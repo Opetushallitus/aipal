@@ -24,6 +24,13 @@
 (defn päivitä-kentät [kentät päivitä rakenne]
   (reduce (fn [rakenne kenttä] (update-in rakenne [kenttä] päivitä)) rakenne kentät))
 
+(defn käsittele-vapaatekstivastaukset [kysymys]
+  (if (not-every? nil? (:vapaatekstivastaukset kysymys))
+    (->> kysymys
+      (päivitä-polusta [:vapaatekstivastaukset] yhdistä-vektorit)
+      (päivitä-polusta [:vapaatekstivastaukset :*] yhdistä-kaikki-kentät))
+    (assoc kysymys :vapaatekstivastaukset nil)))
+
 (defn käsittele-kyllä-jatkovastaukset [jatkovastaukset]
   (if (not-every? nil? (:kylla jatkovastaukset))
     (->> jatkovastaukset
@@ -32,11 +39,14 @@
       (päivitä-polusta [:kylla :jakauma :*] yhdistä-kaikki-kentät)
       (päivitä-polusta [:kylla] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] first))
       (päivitä-polusta [:kylla :jakauma :*] (partial päivitä-kentät [:vaihtoehto-avain] first)))
-    jatkovastaukset))
+    (assoc jatkovastaukset :kylla nil)))
 
 (defn käsittele-ei-jatkovastaukset [jatkovastaukset]
   (if (not-every? nil? (:ei jatkovastaukset))
-    jatkovastaukset
+    (->> jatkovastaukset
+      (päivitä-polusta [:ei] yhdistä-kaikki-kentät)
+      (päivitä-polusta [:ei] käsittele-vapaatekstivastaukset)
+      (päivitä-polusta [:ei] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] first)))
     (assoc jatkovastaukset :ei nil)))
 
 (defn käsittele-kysymyksen-jatkovastaukset [kysymys]
@@ -47,13 +57,6 @@
       (päivitä-polusta [:jatkovastaukset] käsittele-ei-jatkovastaukset))
     (assoc kysymys :jatkovastaukset nil)))
 
-(defn käsittele-kysymyksen-vapaatekstivastaukset [kysymys]
-  (if (not-every? nil? (:vapaatekstivastaukset kysymys))
-    (->> kysymys
-      (päivitä-polusta [:vapaatekstivastaukset] yhdistä-vektorit)
-      (päivitä-polusta [:vapaatekstivastaukset :*] yhdistä-kaikki-kentät))
-    (assoc kysymys :vapaatekstivastaukset nil)))
-
 (defn yhdista-raportit [raportit]
   (->> raportit
     yhdistä-kaikki-kentät
@@ -63,7 +66,7 @@
     (päivitä-polusta [:raportti :* :kysymykset :*] yhdistä-kaikki-kentät)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma] yhdistä-vektorit)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] yhdistä-kaikki-kentät)
-    (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-kysymyksen-vapaatekstivastaukset)
+    (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-vapaatekstivastaukset)
     (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-kysymyksen-jatkovastaukset)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] yhdistä-samat))
     (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
