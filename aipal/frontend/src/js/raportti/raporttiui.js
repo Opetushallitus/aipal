@@ -257,7 +257,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
         .success(function(tulos) {
-          $scope.tulokset = tulos;
           $scope.tulos = tulos;
           $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
         }).error(function(data, status) {
@@ -276,17 +275,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
     $scope.lukumaaratYhteensa = lukumaaratYhteensa;
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
-  }])
-
-  .controller('RaporttiController', ['$scope', function($scope) {
-    $scope.$watch('tulokset', function(tulokset) {
-      if (tulokset !== undefined) {
-//        $scope.tulos = tulokset;
-      }
-    });
-    $scope.naytaRaportti = function(raportti) {
-//      $scope.tulos = raportti;
-    };
   }])
 
   .factory('kyselyValilehti', ['$filter', 'i18n', 'ilmoitus', 'Kysely', 'Raportti', 'raporttiApurit', 'seuranta', function($filter, i18n, ilmoitus, Kysely, Raportti, raporttiApurit, seuranta) {
@@ -338,7 +326,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         $scope.muodostaKyselyraportti = function(raportti) {
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
-              $scope.tulokset = tulos;
               $scope.tulos = tulos;
               $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
             })
@@ -407,7 +394,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         $scope.muodostaKyselykertaraportti = function(raportti) {
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
-              $scope.tulokset = tulos;
               $scope.tulos = tulos;
               $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
             })
