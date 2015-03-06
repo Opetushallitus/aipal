@@ -47,6 +47,13 @@
       (päivitä-polusta [:jatkovastaukset] käsittele-ei-jatkovastaukset))
     (assoc kysymys :jatkovastaukset nil)))
 
+(defn käsittele-kysymyksen-vapaatekstivastaukset [kysymys]
+  (if (not-every? nil? (:vapaatekstivastaukset kysymys))
+    (->> kysymys
+      (päivitä-polusta [:vapaatekstivastaukset] yhdistä-vektorit)
+      (päivitä-polusta [:vapaatekstivastaukset :*] yhdistä-kaikki-kentät))
+    (assoc kysymys :vapaatekstivastaukset nil)))
+
 (defn yhdista-raportit [raportit]
   (->> raportit
     yhdistä-kaikki-kentät
@@ -56,6 +63,7 @@
     (päivitä-polusta [:raportti :* :kysymykset :*] yhdistä-kaikki-kentät)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma] yhdistä-vektorit)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] yhdistä-kaikki-kentät)
+    (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-kysymyksen-vapaatekstivastaukset)
     (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-kysymyksen-jatkovastaukset)
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] yhdistä-samat))
     (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
