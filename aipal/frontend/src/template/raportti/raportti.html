@@ -92,11 +92,6 @@
 
   <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys e2e-kysymysryhma-kysymykset-repeat">
     <h3 class="e2e-kysymys-otsikko">{{kysymys.jarjestys}}. {{kysymys | lokalisoiKentta:'kysymys'}}</h3>
-    <span>
-      {{'raportti.vastaajien_maara' | i18n }}: {{kysymys.vastaajien_lukumaara}}/{{kysymysryhma.vastaajien_maksimimaara}}
-      {{'raportti.vastausprosentti' | i18n }}: {{prosenttiosuus(kysymys.vastaajien_lukumaara, kysymysryhma.vastaajien_maksimimaara)}}%
-      <br />
-    </span>
 
     <jakauma-kaavio ng-class="{ 'hidden-print': !printgraphs }"
       ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'"
@@ -131,14 +126,22 @@
           <td ng-repeat-end class="report-table-amount-field e2e-vastausten-lukumaara">{{alkio.lukumaara[i]}}</td>
         </tr>
       </tbody>
-      <tfoot ng-if="kysymys.keskiarvo !== undefined && kysymys.keskihajonta !== undefined" style="text-align: center">
-        <tr>
+      <tfoot style="text-align: center">
+        <tr ng-if="kysymys.keskiarvo !== undefined">
           <td>{{ 'raportti.keskiarvo' | i18n }}</td>
           <td ng-repeat="i in raporttiIndeksit" colspan="2">{{ kysymys.keskiarvo[i] | number:2 }}</td>
         </tr>
-        <tr>
+        <tr ng-if="kysymys.keskihajonta !== undefined">
           <td>{{ 'raportti.keskihajonta' | i18n }}</td>
           <td ng-repeat="i in raporttiIndeksit" colspan="2">{{ kysymys.keskihajonta[i] | number:2 }}</td>
+        </tr>
+        <tr>
+          <td>{{'raportti.vastaajien_maara' | i18n }}</td>
+          <td ng-repeat="i in raporttiIndeksit" colspan="2">{{ kysymys.vastaajien_lukumaara[i] }}/{{ kysymysryhma.vastaajien_maksimimaara[i] }}</td>
+        </tr>
+        <tr>
+          <td>{{'raportti.vastausprosentti' | i18n }}</td>
+          <td ng-repeat="i in raporttiIndeksit" colspan="2">{{ prosenttiosuus(kysymys.vastaajien_lukumaara[i], kysymysryhma.vastaajien_maksimimaara[i]) }}%</td>
         </tr>
       </tfoot>
     </table>
