@@ -1,6 +1,6 @@
 <div class="valintalista" ng-show="valittavat">
   <div class="well">
-    <input type="text" class="form-control icon search-icon-input" ng-model="filter" ng-change="nollaaRajoite()" placeholder="{{ hakuteksti }}">
+    <input type="text" class="form-control icon search-icon-input" ng-model="filter" ng-model-options="{debounce: 100}" ng-change="nollaaRajoite()" placeholder="{{ hakuteksti }}">
 
     <ul class="valitsin" rullaus="naytaLisaa()">
       <li ng-repeat="valittava in valittavat | filter:filter | orderByLokalisoitu:'nimi' | limitTo: rajoite" ng-click="valitse({'valittava': valittava})">

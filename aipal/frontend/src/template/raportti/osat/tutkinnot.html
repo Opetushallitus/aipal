@@ -11,7 +11,7 @@
   </div>
 
   <div class="well tutkinnot" ng-hide="raportti.ei_tutkintoa">
-    <input type="text" class="form-control icon search-icon-input" ng-model="tutkintoFilter" placeholder="{{ 'raportit.hae_tutkintoja_tai_aloja' | i18n }}">
+    <input type="text" class="form-control icon search-icon-input" ng-model="tutkintoFilter" ng-model-options="{debounce: 100}" placeholder="{{ 'raportit.hae_tutkintoja_tai_aloja' | i18n }}">
 
     <h3 ng-show="raportti.tutkintorakennetaso === 'tutkinto' && vanhentuneetKoulutusalat.length > 0">{{'raportti.voimassaolevat_tutkinnot' | i18n}}</h3>
     <ul class="valitsin {{raportti.tutkintorakennetaso}}">
