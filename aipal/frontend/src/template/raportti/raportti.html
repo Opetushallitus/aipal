@@ -71,7 +71,7 @@
 </div>
 
 <table class="report-table">
-    <thead ng-class="{ 'hidden-print': !printGraphs }">
+    <thead>
         <tr>
             <th></th>
             <th ng-repeat="i in raporttiIndeksit">{{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th>
@@ -97,7 +97,7 @@
   <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
 
   <table class="report-table">
-    <thead ng-class="{ 'hidden-print': !printgraphs }">
+    <thead>
       <tr>
         <th></th>
         <th ng-repeat="i in raporttiIndeksit">{{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th>
@@ -129,7 +129,7 @@
     </vaittama-kaavio>
 
     <table class="report-table" ng-if="kysymys.vastaustyyppi && kysymys.vastaustyyppi !== 'vapaateksti'">
-      <thead ng-class="{ 'hidden-print': !printgraphs }">
+      <thead>
         <tr>
           <th class="report-table-question"></th>
           <th ng-repeat="i in raporttiIndeksit" colspan="2" class="report-table-percentage-field">{{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th>
