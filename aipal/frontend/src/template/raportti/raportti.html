@@ -86,7 +86,7 @@
     <thead ng-class="{ 'hidden-print': !printgraphs }">
       <tr>
         <th></th>
-        <th ng-repeat="i in raporttiIndeksit">{{ tulos.nimi_fi[i] }}</th>
+        <th ng-repeat="i in raporttiIndeksit">{{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th>
       </tr>
     </thead>
     <tfoot style="text-align: center">
@@ -118,7 +118,7 @@
       <thead ng-class="{ 'hidden-print': !printgraphs }">
         <tr>
           <th class="report-table-question"></th>
-          <th ng-repeat="i in raporttiIndeksit" colspan="2" class="report-table-percentage-field">{{tulos.nimi_fi[i]}}</th>
+          <th ng-repeat="i in raporttiIndeksit" colspan="2" class="report-table-percentage-field">{{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th>
         </tr>
         <tr>
           <th class="report-table-question e2e-kysymys-taulukossa">{{kysymys | lokalisoiKentta:'kysymys'}}</th>
