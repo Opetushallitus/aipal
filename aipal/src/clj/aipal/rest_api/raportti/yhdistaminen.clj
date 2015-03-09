@@ -57,6 +57,16 @@
       (päivitä-polusta [:jatkovastaukset] käsittele-ei-jatkovastaukset))
     (assoc kysymys :jatkovastaukset nil)))
 
+(defn nimet-yhteen-listaan [data]
+  (let [zipped (map vector (:nimi_fi data) (:nimi_sv data))
+        nimet (for [z zipped] {:nimi_fi (first z)
+                               :nimi_sv (second z)})]
+    (->
+      data
+      (assoc :nimet nimet)
+      (dissoc :nimi_fi)
+      (dissoc :nimi_sv))))
+
 (defn yhdista-raportit [raportit]
   (->> raportit
     yhdistä-kaikki-kentät
@@ -71,6 +81,7 @@
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] yhdistä-samat))
     (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
     (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] yhdistä-samat))
+    nimet-yhteen-listaan
     (päivitä-kentät [:luontipvm :parametrit] first)
     (päivitä-kentät [:yhteenveto] first)))
 
