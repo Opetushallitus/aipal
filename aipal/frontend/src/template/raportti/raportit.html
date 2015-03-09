@@ -8,7 +8,7 @@
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>
       <div class="hidden-print">{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
-      <valintalista class="hidden-print" valittavat="koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
+      <valintalista class="hidden-print" valittavat="::koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys',i18n.raportit.kehitysraportti)" disabled="!yllapitaja">
@@ -17,12 +17,12 @@
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>
       <div class="hidden-print">{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
-      <valintalista class="hidden-print" valittavat="koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
+      <valintalista class="hidden-print" valittavat="::koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}" select="vaihdaTyyppi('koulutustoimijat',i18n.raportit.vertaa_koulutustoimijoita)" ng-show="yllapitaja">
       <h2 class="hidden-print">{{ 'raportit.vertaa_koulutustoimijoita_otsikko' | i18n }} *<ohje tunniste="vertaa_koulutustoimijoita_raportti"></ohje></h2>
-      <valintalista class="hidden-print" valittavat="koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
+      <valintalista class="hidden-print" valittavat="::koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <h3 class="hidden-print">{{ 'raportit.tutkinnot_ja_alat' | i18n }}</h3>
