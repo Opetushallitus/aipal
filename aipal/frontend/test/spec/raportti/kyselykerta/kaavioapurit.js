@@ -56,7 +56,7 @@ describe('Palvelu: kaavioApurit', function () {
 
   describe('lukumäärät yhteensä:', function() {
     it('pitäisi laskea jakauman lukumäärien summa', function () {
-      var summa = kaavioApurit.lukumaaratYhteensa([{lukumaara: 1}, {lukumaara: 2}]);
+      var summa = kaavioApurit.lukumaaratYhteensa([{lukumaara: [1]}, {lukumaara: [2]}], 0);
       expect(summa).toBe(3);
     });
   });
@@ -65,22 +65,20 @@ describe('Palvelu: kaavioApurit', function () {
     var asetukset = {
       palkinMaksimiPituus: 480,
     };
-    var palkinPituudeksi = function (kuvaus, lukumaara, jakauma, odotettuTulos) {
+    var palkinPituudeksi = function (kuvaus, osuus, odotettuTulos) {
       it('pitäisi antaa ' + kuvaus, function () {
-        var pituus = kaavioApurit.palkinPituus(asetukset, lukumaara, jakauma);
+        var pituus = kaavioApurit.palkinPituus(asetukset, osuus);
         expect(pituus).toBe(odotettuTulos);
       });
     };
 
-    var jakauma = [{lukumaara: 10}];
     var maksimiPituus = asetukset.palkinMaksimiPituus;
     var testitapaukset = [
-      ['tyhjä palkki lukumäärälle nolla', 0, jakauma, 0],
-      ['puolikas palkki lukumäärien maksimin puolikkaalle', 5, jakauma, maksimiPituus / 2],
-      ['koko palkki lukumäärien maksimiarvolle', 10, jakauma, maksimiPituus],
+      ['tyhjä palkki 0% osuudelle', 0, 0],
+      ['puolikas palkki 50% osuudelle', 50, maksimiPituus / 2],
+      ['koko palkki 100% osuudelle', 100, maksimiPituus],
 
-      ['tyhjä palkki tyhjälle jakaumalle', 0, [], 0],
-      ['palkin pituus jakauman yhteismäärän mukaan', 5, [{lukumaara: 5}, {lukumaara: 5}], maksimiPituus / 2],
+      ['tyhjä palkki puuttuvalle osuudelle', null, 0],
     ];
 
     _.forEach(testitapaukset, function(tapaus) {palkinPituudeksi.apply(null, tapaus);});
