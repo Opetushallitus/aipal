@@ -32,15 +32,6 @@
   <div ng-show="tulos.yhteenveto.kyselykerta">
     {{'yleiset.kyselykerta' | i18n }}: <b class="e2e-yhteenveto-kyselykerta">{{tulos.yhteenveto.kyselykerta}}</b>
   </div>
-  <div ng-show="tulos.vastaajien_maksimimaara">
-    {{'raportti.kohderyhman_koko' | i18n }}: <b>{{tulos.vastaajien_maksimimaara}}</b>
-  </div>
-  <div ng-show="tulos.vastaajien_lukumaara">
-    {{'raportti.kokonaismaara' | i18n }}: <b>{{tulos.vastaajien_lukumaara}}</b>
-  </div>
-  <div ng-show="tulos.vastaajien_maksimimaara && tulos.vastaajien_lukumaara">
-    {{'raportti.vastausprosentti' | i18n }}: <b>{{(tulos.vastaajien_lukumaara / tulos.vastaajien_maksimimaara) *100 | number:0}}%</b>
-  </div>
   <div class="hidden-print" ng-show="tulos.luontipvm">
     {{'raportti.raportin_luontipaiva' | i18n }}: <b class="e2e-luontipvm">{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</b>
   </div>
@@ -78,6 +69,29 @@
     </div>
   </div>
 </div>
+
+<table class="report-table">
+    <thead ng-class="{ 'hidden-print': !printGraphs }">
+        <tr>
+            <th></th>
+            <th ng-repeat="i in raporttiIndeksit">{{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th>
+        </tr>
+    </thead>
+    <tfoot style="text-align: center">
+        <tr>
+            <td>{{'raportti.kokonaismaara' | i18n }}</td>
+            <td ng-repeat="i in raporttiIndeksit">{{ tulos.vastaajien_lukumaara[i] }}</td>
+        </tr>
+        <tr>
+            <td>{{'raportti.kohderyhman_koko' | i18n }}</td>
+            <td ng-repeat="i in raporttiIndeksit">{{ tulos.vastaajien_maksimimaara[i] }}</td>
+        </tr>
+        <tr>
+            <td>{{'raportti.vastausprosentti' | i18n }}</td>
+            <td ng-repeat="i in raporttiIndeksit">{{ (tulos.vastaajien_lukumaara[i] / tulos.vastaajien_maksimimaara[i]) *100 | number:0 }} %</td>
+        </tr>
+    </tfoot>
+</table>
 
 <div ng-repeat="kysymysryhma in tulos.raportti" class="kysymysryhma">
   <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
