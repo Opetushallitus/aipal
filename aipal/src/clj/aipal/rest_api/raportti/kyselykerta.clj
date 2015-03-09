@@ -42,6 +42,8 @@
     (merge (when (seq naytettavat)
              (yhdistaminen/yhdista-raportit naytettavat))
            {:nimi nimi
+            :nimet [{:nimi_fi nimi
+                     :nimi_sv nimi}]
             :raportoitavia (count naytettavat)
             :virheelliset virheelliset})))
 
