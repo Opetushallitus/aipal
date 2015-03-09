@@ -121,7 +121,7 @@
           <th ng-repeat="i in raporttiIndeksit" colspan="2" class="report-table-percentage-field">{{tulos.nimi_fi[i]}}</th>
         </tr>
         <tr>
-          <th class="report-table-question">{{kysymys | lokalisoiKentta:'kysymys'}}</th>
+          <th class="report-table-question e2e-kysymys-taulukossa">{{kysymys | lokalisoiKentta:'kysymys'}}</th>
           <th ng-repeat-start="i in raporttiIndeksit" class="report-table-percentage-field">Vast%</th>
           <th ng-repeat-end class="report-table-amount-header">n={{lukumaaratYhteensa(kysymys.jakauma, i)}}</th>
         </tr>

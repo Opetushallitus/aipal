@@ -50,7 +50,7 @@
     (w/find-element-under kysymys-elementti {:css ".e2e-kysymys-otsikko"})))
 
 (defn ^:private taulukon-kysymysteksti-kysymykselle [kysymys-elementti]
-  (w/text (w/find-element-under kysymys-elementti {:css ".report-table-question"})))
+  (w/text (w/find-element-under kysymys-elementti {:css ".e2e-kysymys-taulukossa"})))
 
 (defn ^:private vapaatekstit-kysymykselle [kysymys-elementti]
   (map w/text
