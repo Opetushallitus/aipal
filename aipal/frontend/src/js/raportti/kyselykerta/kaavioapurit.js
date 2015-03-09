@@ -18,8 +18,8 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', '
   .factory('kaavioApurit', ['$filter', 'i18n', function($filter, i18n) {
     var varit = ['#43b1d5', '#ffad33', '#d633ad', '#6cc555'];
 
-    var lukumaaratYhteensa = function (jakauma, kentta) {
-      var lukumaarat = kentta ? _.pluck(jakauma, kentta) : jakauma;
+    var lukumaaratYhteensa = function (jakauma, i) {
+      var lukumaarat = _.map(_.pluck(jakauma, 'lukumaara'), function(taulukko) {return taulukko[i];});
       return _.reduce(lukumaarat, function (sum, n) {return sum + n;});
     };
 

@@ -269,11 +269,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     kyselykertaValilehti.alusta($scope);
     kyselyValilehti.alusta($scope);
 
-    var lukumaaratYhteensa = function (jakauma, i) {
-      var lukumaarat = _.map(_.pluck(jakauma, 'lukumaara'), function(taulukko) {return taulukko[i];});
-      return _.reduce(lukumaarat, function (sum, n) {return sum + n;});
-    };
-    $scope.lukumaaratYhteensa = lukumaaratYhteensa;
+    $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
   }])
 

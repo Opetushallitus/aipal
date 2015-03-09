@@ -36,8 +36,8 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
     function(kaavioApurit, Raportti, $location, $routeParams, $scope) {
       Raportti.muodostaKyselykertaraportti($routeParams.kyselykertaid, {})
         .success(function onSuccess(tulos) {
-          $scope.tulokset = [tulos];
           $scope.tulos = tulos;
+          $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
         })
         .error(function onError(value) {
           if (value.status !== 500) {
