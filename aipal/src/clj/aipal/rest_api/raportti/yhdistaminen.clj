@@ -41,8 +41,8 @@
       (päivitä-polusta [:kylla] yhdistä-kaikki-kentät)
       (päivitä-polusta [:kylla :jakauma] yhdistä-vektorit)
       (päivitä-polusta [:kylla :jakauma :*] yhdistä-kaikki-kentät)
-      (päivitä-polusta [:kylla] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] first))
-      (päivitä-polusta [:kylla :jakauma :*] (partial päivitä-kentät [:vaihtoehto-avain] first)))
+      (päivitä-polusta [:kylla] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
+      (päivitä-polusta [:kylla :jakauma :*] (partial päivitä-kentät [:vaihtoehto-avain] yhdistä-samat)))
     (assoc jatkovastaukset :kylla nil)))
 
 (defn käsittele-ei-jatkovastaukset [jatkovastaukset]
@@ -50,7 +50,7 @@
     (->> jatkovastaukset
       (päivitä-polusta [:ei] yhdistä-kaikki-kentät)
       (päivitä-polusta [:ei] käsittele-vapaatekstivastaukset)
-      (päivitä-polusta [:ei] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] first)))
+      (päivitä-polusta [:ei] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat)))
     (assoc jatkovastaukset :ei nil)))
 
 (defn käsittele-kysymyksen-jatkovastaukset [kysymys]
