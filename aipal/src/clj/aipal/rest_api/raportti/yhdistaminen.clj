@@ -68,8 +68,7 @@
     (->
       data
       (assoc :nimet nimet)
-      (dissoc :nimi_fi)
-      (dissoc :nimi_sv))))
+      (dissoc :nimi_fi :nimi_sv))))
 
 (defn yhdista-raportit [raportit]
   (->> raportit
@@ -86,6 +85,5 @@
     (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
     (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] yhdistä-samat))
     nimet-yhteen-listaan
-    (päivitä-kentät [:luontipvm :parametrit] first)
-    (päivitä-kentät [:yhteenveto] first)))
+    (päivitä-kentät [:luontipvm :parametrit :yhteenveto] first)))
 
