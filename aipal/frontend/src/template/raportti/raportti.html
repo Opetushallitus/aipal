@@ -88,7 +88,7 @@
         </tr>
         <tr>
             <td>{{'raportti.vastausprosentti' | i18n }}</td>
-            <td ng-repeat="i in raporttiIndeksit">{{ (tulos.vastaajien_lukumaara[i] / tulos.vastaajien_maksimimaara[i]) *100 | number:0 }} %</td>
+            <td ng-repeat="i in raporttiIndeksit">{{ prosenttiosuus(tulos.vastaajien_lukumaara[i], tulos.vastaajien_maksimimaara[i]) }} %</td>
         </tr>
     </tfoot>
 </table>
