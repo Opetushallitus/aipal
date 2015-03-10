@@ -4,7 +4,9 @@
   {kenttä (map kenttä datat)})
 
 (defn yhdistä-kaikki-kentät [datat]
-  (reduce (fn [result key] (merge result (yhdistä-kentästä key datat))) {} (keys (first datat))))
+  (reduce (fn [result key] (merge result (yhdistä-kentästä key datat)))
+          {}
+          (keys (first datat))))
 
 (defn yhdistä-vektorit [datat]
   (apply map vector datat))
@@ -22,7 +24,9 @@
       (update-in rakenne [k] päivitä-seuraavat))))
 
 (defn päivitä-kentät [kentät päivitä rakenne]
-  (reduce (fn [rakenne kenttä] (update-in rakenne [kenttä] päivitä)) rakenne kentät))
+  (reduce (fn [rakenne kenttä] (update-in rakenne [kenttä] päivitä))
+          rakenne
+          kentät))
 
 (defn käsittele-vapaatekstivastaukset [kysymys]
   (if (not-every? nil? (:vapaatekstivastaukset kysymys))
