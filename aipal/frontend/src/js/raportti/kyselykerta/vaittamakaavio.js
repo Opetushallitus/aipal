@@ -29,12 +29,12 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
         var raportoitavia = scope.jakauma[0].osuus.length,
           viivastonLeveys;
         if(scope.eos) {
-          viivastonLeveys = 6*(raportoitavia + 2)*40;
+          viivastonLeveys = 6*(raportoitavia + 2)*25;
         } else {
-          viivastonLeveys = 5*(raportoitavia + 2)*40;
+          viivastonLeveys = 5*(raportoitavia + 2)*25;
         }
         var asetukset = {
-          palkinLeveys: 40,
+          palkinLeveys: 25,
           palkinMaksimiPituus: 300,
           viivastonLeveys: viivastonLeveys
         };
