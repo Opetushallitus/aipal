@@ -19,7 +19,7 @@
             [clj-time.core :as t]
             [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
             [oph.common.util.util :refer [paivita-arvot muunna-avainsanoiksi]]
-            [aipal.rest-api.raportti.yhdistaminen :as yhdistaminen]
+            [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv vertailuraportti-vertailujakso]]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]

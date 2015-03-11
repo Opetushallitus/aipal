@@ -1,4 +1,4 @@
-(ns aipal.rest-api.raportti.yhdistaminen)
+(ns aipal.toimiala.raportti.yhdistaminen)
 
 (defn yhdistä-kentästä [kenttä datat]
   {kenttä (map kenttä datat)})

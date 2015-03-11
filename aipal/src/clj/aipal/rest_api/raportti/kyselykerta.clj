@@ -20,7 +20,7 @@
             [oph.common.util.util :refer [muunna-avainsanoiksi]]
 
             [aipal.compojure-util :as cu]
-            [aipal.rest-api.raportti.yhdistaminen :as yhdistaminen]
+            [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
