@@ -106,7 +106,7 @@
   (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
     (assoc kysymys :jakauma (muodosta-asteikko-jakauman-esitys
                               (if (:eos_vastaus_sallittu kysymys)
-                                (assoc jakauma :eos (:en_osaa_sanoa vastaukset))
+                                (assoc jakauma :eos (or (:en_osaa_sanoa vastaukset) 0))
                                 jakauma)))))
 
 (defn kasittele-monivalintakysymys [kysymys vastaukset]
@@ -114,7 +114,7 @@
     (assoc kysymys :jakauma (muodosta-monivalinta-jakauman-esitys
                               (muodosta-monivalintavaihtoehdot kysymys)
                               (if (:eos_vastaus_sallittu kysymys)
-                                (assoc jakauma :eos (:en_osaa_sanoa vastaukset))
+                                (assoc jakauma :eos (or (:en_osaa_sanoa vastaukset) 0))
                                 jakauma)))))
 
 (defn liita-kylla-jatkovastaukset
