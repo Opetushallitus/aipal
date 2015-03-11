@@ -84,7 +84,7 @@
         :when (seq arvot)]
     {:id (->int kysymysid) :arvot (map ->int arvot)}))
 
-(defn ^:private tee-vastaus-query [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn ^:private raportti-query [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* :vastaus)
     (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
@@ -113,16 +113,20 @@
                                                 :v1.kysymysid [in (mapcat (comp mappaa-kysymysid ->int) (keys rajaukset))]}))))
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
-    (sql/fields :vastaus.vastaajaid
-                :vastaus.kysymysid
-                :vastaus.numerovalinta
-                :vastaus.vaihtoehto
-                :vastaus.vapaateksti
-                :vastaus.en_osaa_sanoa
-                :jatkovastaus.jatkovastausid
-                :jatkovastaus.jatkokysymysid
-                :jatkovastaus.kylla_asteikko
-                :jatkovastaus.ei_vastausteksti)))
+    (sql/fields [(sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid) :kysymysid]
+                [(sql/sqlfn array_agg :vastaus.vastaajaid) :vastaajat]
+                [(sql/sqlfn avg :vastaus.numerovalinta) :keskiarvo]
+                [(sql/sqlfn stddev_samp :vastaus.numerovalinta) :keskihajonta]
+                [(sql/sqlfn array_agg :vastaus.vaihtoehto) :vaihtoehdot]
+                [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
+                [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
+                [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa]
+                [(sql/sqlfn avg :jatkovastaus.kylla_asteikko) :jatkovastaus_keskiarvo]
+                [(sql/sqlfn stddev_samp :jatkovastaus.kylla_asteikko) :keskihajonta]
+                [(sql/sqlfn jakauma :jatkovastaus.kylla_asteikko) :jatkovastaus_jakauma]
+                [(sql/sqlfn array_agg :jatkovastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
+    (sql/group (sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid))
+    sql/exec))
 
 (defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]
   (-> query
@@ -165,12 +169,10 @@
       koulutustoimijat (rajaa-kyselykerrat-koulutustoimijoihin koulutustoimijat))
     (sql/where {:kysymysryhma.kysymysryhmaid [in (mappaa-kysymysryhmaid kysymysryhmaid)]})
     (rajaa-vastaajatunnukset-ajalle alkupvm loppupvm)
-    (sql/fields :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
-    (sql/group :vastaajatunnus.vastaajatunnusid :vastaajatunnus.vastaajien_lkm)
+    (sql/aggregate (sum :vastaajatunnus.vastaajien_lkm) :vastaajia)
     sql/exec
-    (->>
-      (map :vastaajien_lkm)
-      (reduce +))))
+    first
+    :vastaajia))
 
 (defn liita-vastaajien-maksimimaarat
   [kysymysryhmat alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
@@ -215,9 +217,8 @@
                         (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
                         alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        vastaus-query (tee-vastaus-query rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
-        raportti (exec vastaus-query :result-set-fn (partial raportointi/muodosta-raportti kysymysryhmat kysymykset)
-                                     :row-fn yhdista-taustakysymysten-vastaukset)]
+        data (raportti-query rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
+        raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
     (merge
       (raportin-otsikko parametrit)
       {:luontipvm (time/today)

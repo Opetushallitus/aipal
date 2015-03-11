@@ -94,107 +94,89 @@
 
 (def asteikkotyyppi? #{"asteikko" "likert_asteikko" "arvosana"})
 
-(defn jakauman-keskiarvo-ja-keskihajonta [jakauma]
-  (let [maara (reduce + 0 (vals jakauma))
-        keskiarvo (/ (reduce (fn [summa [arvo maara]]
-                               (+ summa (* arvo maara)))
-                             0
-                             jakauma)
-                     maara)
-        hajonnat (reduce (fn [summa [arvo maara]]
-                           (+ summa
-                              (* maara
-                                 (Math/pow (- arvo keskiarvo) 2))))
-                         0
-                         jakauma)
-        jakaja (dec maara)]
-    {:keskiarvo keskiarvo
-     :keskihajonta (if (pos? jakaja)
-                     (Math/sqrt (/ hajonnat jakaja))
-                     0)}))
+(defn muotoile-jakauma [jakauma]
+  (when jakauma
+    (zipmap (range) (.getArray jakauma))))
 
-(defn kasittele-eos [kysymys]
-  (if (:eos_vastaus_sallittu kysymys)
-    (assoc-in kysymys [:vastaukset :eos] (or (:eos kysymys) 0))
-    kysymys))
+(defn muotoile-kyllaei-jakauma [vastaukset]
+  (when vastaukset
+    (frequencies (keep keyword (.getArray vastaukset)))))
 
-(defn kasittele-asteikkokysymys [kysymys]
-  (let [kysymys (kasittele-eos kysymys)]
-    (assoc kysymys :jakauma (muodosta-asteikko-jakauman-esitys (:vastaukset kysymys)))))
+(defn kasittele-asteikkokysymys [kysymys vastaukset]
+  (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
+    (assoc kysymys :jakauma (muodosta-asteikko-jakauman-esitys
+                              (if (:eos_vastaus_sallittu kysymys)
+                                (assoc jakauma :eos (:en_osaa_sanoa vastaukset))
+                                jakauma)))))
 
-(defn kasittele-monivalintakysymys [kysymys]
-  (let [kysymys (kasittele-eos kysymys)]
+(defn kasittele-monivalintakysymys [kysymys vastaukset]
+  (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
     (assoc kysymys :jakauma (muodosta-monivalinta-jakauman-esitys
                               (muodosta-monivalintavaihtoehdot kysymys)
-                              (:vastaukset kysymys)))))
+                              (if (:eos_vastaus_sallittu kysymys)
+                                (assoc jakauma :eos (:en_osaa_sanoa vastaukset))
+                                jakauma)))))
 
 (defn liita-kylla-jatkovastaukset
-  [kysymys]
+  [kysymys vastaukset]
   (when (:kylla_kysymys kysymys)
     {:kysymys_fi (:kylla_teksti_fi kysymys)
      :kysymys_sv (:kylla_teksti_sv kysymys)
-     :jakauma (butlast (muodosta-asteikko-jakauman-esitys (get-in kysymys [:jatkovastaukset :kylla]))) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
+     :jakauma (butlast (muodosta-asteikko-jakauman-esitys (muotoile-jakauma (:jatkovastaus_jakauma vastaukset)))) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
      :vastaustyyppi (:kylla_vastaustyyppi kysymys)}))
 
 (defn liita-ei-jatkovastaukset
-  [kysymys]
+  [kysymys vastaukset]
   (when (:ei_kysymys kysymys)
-    (let [ei-vastaukset (get-in kysymys [:jatkovastaukset :ei])]
+    (let [ei-vastaukset (:jatkovastaus_vapaatekstit vastaukset)]
       {:kysymys_fi (:ei_teksti_fi kysymys)
        :kysymys_sv (:ei_teksti_sv kysymys)
-       :vapaatekstivastaukset (for [v ei-vastaukset] {:teksti v})
+       :vapaatekstivastaukset (when ei-vastaukset
+                                (for [v (.getArray ei-vastaukset)
+                                      :when v]
+                                  {:teksti v}))
        :vastaustyyppi "vapaateksti"})))
 
 (defn liita-jatkovastaukset
-  [kysymys]
+  [kysymys vastaukset]
   (when (:jatkokysymysid kysymys)
-    {:kylla (liita-kylla-jatkovastaukset kysymys)
-     :ei (liita-ei-jatkovastaukset kysymys)}))
+    {:kylla (liita-kylla-jatkovastaukset kysymys vastaukset)
+     :ei (liita-ei-jatkovastaukset kysymys vastaukset)}))
 
-(defn kasittele-kyllaei-kysymys [kysymys]
-  (let [kysymys (kasittele-eos kysymys)]
-    (assoc kysymys :jakauma (muodosta-kylla-ei-jakauman-esitys (:vastaukset kysymys))
-                   :jatkovastaukset (liita-jatkovastaukset kysymys))))
+(defn kasittele-kyllaei-kysymys [kysymys vastaukset]
+  (let [jakauma (muotoile-kyllaei-jakauma (:vaihtoehdot vastaukset))]
+    (assoc kysymys :jakauma (muodosta-kylla-ei-jakauman-esitys (if (:eos_vastaus_sallittu kysymys)
+                                                                 (assoc jakauma :eos (:en_osaa_sanoa vastaukset))
+                                                                 jakauma))
+                   :jatkovastaukset (liita-jatkovastaukset kysymys vastaukset))))
 
-(defn kasittele-vapaatekstikysymys [kysymys]
-  (assoc kysymys :vapaatekstivastaukset
-         (for [v (:vastaukset kysymys)] {:teksti v})))
+(defn kasittele-vapaatekstikysymys [kysymys vastaukset]
+  (let [vapaatekstit (:vapaatekstit vastaukset)]
+    (assoc kysymys :vapaatekstivastaukset
+           (when vapaatekstit
+             (for [v (.getArray vapaatekstit)
+                   :when v]
+               {:teksti v})))))
 
-(defn kasittele-kysymys [kysymys]
-  (let [vastaajia (count (:vastaajat kysymys))
-        keskiarvo-ja-hajonta (when (and (asteikkotyyppi? (:vastaustyyppi kysymys))
-                                        (> vastaajia 0))
-                               (jakauman-keskiarvo-ja-keskihajonta (:vastaukset kysymys)))
+(defn kasittele-kysymys [kysymys vastaukset]
+  (let [vastaajat (set (when-let [vastaajat (:vastaajat vastaukset)]
+                         (.getArray vastaajat)))
+        vastaajia (count vastaajat)
+        keskiarvo-ja-hajonta (when (asteikkotyyppi? (:vastaustyyppi kysymys))
+                               (select-keys vastaukset [:keskiarvo :keskihajonta]))
         kysymys (case (:vastaustyyppi kysymys)
-                  "arvosana" (kasittele-asteikkokysymys kysymys)
-                  "asteikko" (kasittele-asteikkokysymys kysymys)
-                  "kylla_ei_valinta" (kasittele-kyllaei-kysymys kysymys)
-                  "likert_asteikko" (kasittele-asteikkokysymys kysymys)
-                  "monivalinta" (kasittele-monivalintakysymys kysymys)
-                  "vapaateksti" (kasittele-vapaatekstikysymys kysymys))]
+                  "arvosana" (kasittele-asteikkokysymys kysymys vastaukset)
+                  "asteikko" (kasittele-asteikkokysymys kysymys vastaukset)
+                  "kylla_ei_valinta" (kasittele-kyllaei-kysymys kysymys vastaukset)
+                  "likert_asteikko" (kasittele-asteikkokysymys kysymys vastaukset)
+                  "monivalinta" (kasittele-monivalintakysymys kysymys vastaukset)
+                  "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset))]
     (-> kysymys
       (update-in [:jarjestys] str)
-      (assoc :vastaajien_lukumaara vastaajia)
+      (assoc :vastaajien_lukumaara vastaajia
+             :vastaajat vastaajat)
       (merge keskiarvo-ja-hajonta)
       suodata-eos-vastaukset)))
-
-(defn kasittele-asteikkovastaus [tulokset kysymys vastaus]
-  (if-let [numerovalinta (:numerovalinta vastaus)]
-    (update-in tulokset [kysymys :vastaukset numerovalinta] (fnil inc 0))
-    (update-in tulokset [kysymys :eos] (fnil inc 0))))
-
-(defn kasittele-kyllaei-vastaus [tulokset kysymys vastaus]
-  (let [vaihtoehto (keyword (:vaihtoehto vastaus))
-        kylla-jatko (:kylla_asteikko vastaus)
-        ei-jatko (:ei_vastausteksti vastaus)]
-    (cond-> tulokset
-      vaihtoehto (update-in [kysymys :vastaukset vaihtoehto] (fnil inc 0))
-      (not vaihtoehto) (update-in [kysymys :eos] (fnil inc 0))
-      kylla-jatko (update-in [kysymys :jatkovastaukset :kylla kylla-jatko] (fnil inc 0))
-      ei-jatko (update-in [kysymys :jatkovastaukset :ei] conj ei-jatko))))
-
-(defn kasittele-vapaatekstivastaus [tulokset kysymys vastaus]
-  (update-in tulokset [kysymys :vastaukset] conj (:vapaateksti vastaus)))
 
 (defn valitse-kysymyksen-kentat
   [kysymys]
@@ -217,28 +199,16 @@
       (dissoc :vastaajat))))
 
 (defn muodosta-raportti [kysymysryhmat kysymykset vastaukset]
-  (let [id->kysymys (map-by :kysymysid kysymykset)
-        kasittele-vastaus (fn [tulokset vastaus]
-                            (let [kysymys (id->kysymys (:kysymysid vastaus))
-                                  tulokset (case (:vastaustyyppi kysymys)
-                                             "arvosana" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                             "asteikko" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                             "kylla_ei_valinta" (kasittele-kyllaei-vastaus tulokset kysymys vastaus)
-                                             "likert_asteikko" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                             "monivalinta" (kasittele-asteikkovastaus tulokset kysymys vastaus)
-                                             "vapaateksti" (kasittele-vapaatekstivastaus tulokset kysymys vastaus))]
-                              (update-in tulokset [kysymys :vastaajat] (fnil conj #{}) (:vastaajaid vastaus))))
-        tulokset (for [[kysymys tulos] (reduce kasittele-vastaus (zipmap kysymykset (repeat {})) vastaukset)]
-                   (merge kysymys tulos))
-        kysymysryhmien-kysymykset (->> tulokset
-                                    (map kasittele-kysymys)
-                                    (sort-by :jarjestys)
-                                    (group-by :kysymysryhmaid))]
+  (let [id->vastaukset (map-by :kysymysid vastaukset)
+        kysymykset (for [kysymys kysymykset
+                         :let [kysymyksen-vastaukset (id->vastaukset (:kysymysid kysymys))]]
+                     (kasittele-kysymys kysymys kysymyksen-vastaukset))
+        kysymysryhmien-kysymykset (group-by :kysymysryhmaid (sort-by :jarjestys kysymykset))]
     (for [kysymysryhma kysymysryhmat
           :let [kysymykset (kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))
-                vastaajat (reduce clojure.set/union #{} (map :vastaajat kysymykset))]]
-      (assoc kysymysryhma :vastaajat vastaajat
-                          :kysymykset (map valitse-kysymyksen-kentat kysymykset)))))
+                vastaajat (reduce clojure.set/union (map :vastaajat kysymykset))]]
+      (assoc kysymysryhma :kysymykset (map valitse-kysymyksen-kentat kysymykset)
+                          :vastaajat vastaajat))))
 
 (defn numeroiden-piste-pilkuksi
   "Jos merkkijono on numero, niin muutetaan piste pilkuksi"

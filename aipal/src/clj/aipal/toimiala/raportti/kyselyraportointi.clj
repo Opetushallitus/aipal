@@ -200,17 +200,19 @@
       vertailujakso_alkupvm (sql/where (>= :vastaus.vastausaika vertailujakso_alkupvm))
       vertailujakso_loppupvm (sql/where (<= :vastaus.vastausaika vertailujakso_loppupvm)))
     (yhteiset-rajaukset parametrit)
-    (sql/fields :vastaaja.vastaajaid
-                :vastaus.vastausid
-                :vastaus.kysymysid
-                :vastaus.numerovalinta
-                :vastaus.vaihtoehto
-                :vastaus.vapaateksti
-                :vastaus.en_osaa_sanoa
-                :jatkovastaus.jatkovastausid
-                :jatkovastaus.jatkokysymysid
-                :jatkovastaus.kylla_asteikko
-                :jatkovastaus.ei_vastausteksti)
+    (sql/fields [(sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid) :kysymysid]
+                [(sql/sqlfn array_agg :vastaus.vastaajaid) :vastaajat]
+                [(sql/sqlfn avg :vastaus.numerovalinta) :keskiarvo]
+                [(sql/sqlfn stddev_samp :vastaus.numerovalinta) :keskihajonta]
+                [(sql/sqlfn array_agg :vastaus.vaihtoehto) :vaihtoehdot]
+                [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
+                [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
+                [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa]
+                [(sql/sqlfn avg :jatkovastaus.kylla_asteikko) :jatkovastaus_keskiarvo]
+                [(sql/sqlfn stddev_samp :jatkovastaus.kylla_asteikko) :keskihajonta]
+                [(sql/sqlfn jakauma :jatkovastaus.kylla_asteikko) :jatkovastaus_jakauma]
+                [(sql/sqlfn array_agg :jatkovastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
+    (sql/group (sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid))
     sql/exec))
 
 (defn muodosta-raportti [parametrit]
