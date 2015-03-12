@@ -46,11 +46,28 @@
            "2.2"
            "3.2"]])))
 
+(deftest yhdistä-vektorit-jokin-nil-test
+  (is (= (yhdistä-vektorit [["1.1" "1.2"]
+                            ["2.1" "2.2"]
+                            nil])
+         [["1.1"
+           "2.1"
+           nil]
+          ["1.2"
+           "2.2"
+           nil]])))
+
+(deftest yhdistä-vektorit-kaikki-nil-test
+  (is (= (yhdistä-vektorit [nil nil])
+         nil)))
+
 (deftest yhdistä-samat-test
   (testing "yhdistä samat arvot"
            (are [rakenteet odotettu-tulos]
                (= (yhdistä-samat rakenteet) odotettu-tulos)
                ["1" "1" "1"] "1"
+               ["1" nil "1"] "1"
+               [nil] nil
                [] nil
                nil nil))
   (testing "eri arvojen yhdistäminen epäonnistuu"

@@ -22,11 +22,14 @@
           {}
           (keys (first datat))))
 
-(defn yhdistä-vektorit [datat]
-  (apply map vector datat))
+(defn yhdistä-vektorit [vektorit]
+  (when (not-every? nil? vektorit)
+    (apply map vector
+           (replace {nil (repeat nil)} vektorit))))
 
 (defn yhdistä-samat [xs]
-  {:pre [(or (nil? xs) (empty? xs) (apply = xs))]}
+  {:pre [(let [xs (remove nil? xs)]
+           (or (empty? xs) (apply = xs)))]}
   (first xs))
 
 (defn päivitä-polusta [[k & ks] päivitä rakenne]

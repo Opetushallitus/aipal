@@ -30,11 +30,26 @@
         raportti (muodosta-raportti (Integer/parseInt kyselyid) parametrit)]
     (assoc raportti :parametrit parametrit)))
 
+(defn suodata-kysymysryhmat
+  [valtakunnallinen-raportti kysely-raportti]
+  (update-in valtakunnallinen-raportti
+             [:raportti]
+             (fn [valtakunnalliset-kysymysryhmat]
+               (map (fn [kyselyn-kysymysryhma]
+                      (first
+                        (filter
+                          (fn [{:keys [kysymysryhmaid]}]
+                            (= kysymysryhmaid
+                               (:kysymysryhmaid kyselyn-kysymysryhma)))
+                          valtakunnalliset-kysymysryhmat)))
+                    (:raportti kysely-raportti)))))
+
 (defn muodosta-kyselyraportti [kyselyid parametrit asetukset]
   (let [tekstit (i18n/hae-tekstit (:kieli parametrit))
-        valtakunnallinen-raportti nil #_(-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
-                                          (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen]))))
+        valtakunnallinen-raportti (-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
+                                    (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen]))))
         raportti (muodosta-raportti-parametreilla kyselyid parametrit)
+        valtakunnallinen-raportti (suodata-kysymysryhmat valtakunnallinen-raportti raportti)
         kaikki-raportit (for [raportti [raportti valtakunnallinen-raportti]
                               :when raportti]
                           (ei-riittavasti-vastaajia raportti asetukset))
