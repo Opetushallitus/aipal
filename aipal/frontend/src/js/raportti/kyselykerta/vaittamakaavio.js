@@ -21,6 +21,7 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
       replace: true,
       scope: {
         jakauma: '=',
+        nimet: '=',
         vastaustyyppi: '=',
         eos: '='
       },

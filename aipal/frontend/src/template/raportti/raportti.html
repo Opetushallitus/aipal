@@ -125,7 +125,8 @@
 
     <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
       ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'likert_asteikko' || kysymys.vastaustyyppi === 'arvosana'"
-      jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi" eos="kysymys.eos_vastaus_sallittu">
+      jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi" nimet="tulos.nimet"
+      eos="kysymys.eos_vastaus_sallittu">
     </vaittama-kaavio>
 
     <table class="report-table" ng-if="kysymys.vastaustyyppi && kysymys.vastaustyyppi !== 'vapaateksti'">
@@ -178,7 +179,8 @@
         <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
           ng-if="kysymys.jatkovastaukset.kylla.vastaustyyppi === 'asteikko'"
           jakauma="kysymys.jatkovastaukset.kylla.jakauma"
-          vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi">
+          vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi"
+          nimet="tulos.nimet">
         </vaittama-kaavio>
       </div>
       <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">

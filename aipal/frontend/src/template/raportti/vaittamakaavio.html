@@ -1,5 +1,5 @@
 <svg class="vaittama-kaavio"
-  ng-attr-width="{{asetukset.viivastonLeveys + 100}}" ng-attr-height="{{asetukset.palkinMaksimiPituus + 80}}">
+  ng-attr-width="{{asetukset.viivastonLeveys + 350}}" ng-attr-height="{{asetukset.palkinMaksimiPituus + 80}}">
 
   <g transform="translate(50, 20)">
     <line ng-repeat="osa in [0, 0.2, 0.4, 0.6, 0.8, 1.0]"
@@ -51,6 +51,20 @@
       ng-repeat-end>
       <tspan ng-attr-x="{{paikkaPalkistonSuhteen(outerIndex, i, 1.5)}}">{{data.osuus[i]}}%</tspan>
       <tspan ng-attr-x="{{paikkaPalkistonSuhteen(outerIndex, i, 1.5)}}" dy="1em">({{data.lukumaara[i]}})</tspan>
+    </text>
+
+    <rect ng-repeat-start="raportoitava in nimet"
+      ng-attr-width="{{asetukset.palkinLeveys}}"
+      ng-attr-height="{{asetukset.palkinLeveys}}"
+      ng-attr-x="{{asetukset.viivastonLeveys + 75}}"
+      ng-attr-y="{{1.2*asetukset.palkinLeveys*($index + 1)}}"
+      ng-attr-fill="{{palkinVari($index)}}">
+    </rect>
+    <text
+      ng-attr-x="{{asetukset.viivastonLeveys + 75 + 1.2*asetukset.palkinLeveys}}"
+      ng-attr-y="{{1.2*asetukset.palkinLeveys*($index + 1.5)}}"
+      ng-repeat-end>
+      {{ raportoitava | lokalisoiKentta:'nimi' }}
     </text>
   </g>
 </svg>
