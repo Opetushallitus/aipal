@@ -21,6 +21,7 @@ angular.module('raportti.kyselykerta.jakaumakaavio', ['raportti.kyselykerta.kaav
       replace: true,
       scope: {
         jakauma: '=',
+        nimet: '=',
         vastaustyyppi: '='
       },
       templateUrl: 'template/raportti/jakaumaKaavio.html',

@@ -120,7 +120,7 @@
 
     <jakauma-kaavio ng-class="{ 'hidden-print': !printgraphs }"
       ng-if="kysymys.vastaustyyppi === 'kylla_ei_valinta' || kysymys.vastaustyyppi === 'monivalinta'"
-      jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi">
+      jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi" nimet="tulos.nimet">
     </jakauma-kaavio>
 
     <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
