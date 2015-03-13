@@ -151,10 +151,12 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         return _($scope.tunnukset).filter({ 'rahoitusmuotoid': rahoitusmuotoid }).map('vastaajien_lkm').reduce(function(sum, num) {return sum + num;});
       };
       $scope.getVastausProsentti = function(rahoitusmuotoid){
+        var prosentti;
         if(!rahoitusmuotoid) {
-          return ($scope.getVastaustenLkm() / $scope.getVastaajienLkm()) * 100;
+          prosentti = ($scope.getVastaustenLkm() / $scope.getVastaajienLkm()) * 100;
         }
-        return ($scope.getVastaustenLkm(rahoitusmuotoid) / $scope.getVastaajienLkm(rahoitusmuotoid))*100;
+        prosentti = ($scope.getVastaustenLkm(rahoitusmuotoid) / $scope.getVastaajienLkm(rahoitusmuotoid))*100;
+        return Math.min(100, prosentti);
       };
 
       $scope.tallenna = function() {
