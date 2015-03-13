@@ -30,26 +30,29 @@
         raportti (muodosta-raportti (Integer/parseInt kyselyid) parametrit)]
     (assoc raportti :parametrit parametrit)))
 
-(defn suodata-kysymysryhmat
-  [valtakunnallinen-raportti kysely-raportti]
-  (update-in valtakunnallinen-raportti
-             [:raportti]
-             (fn [valtakunnalliset-kysymysryhmat]
-               (map (fn [kyselyn-kysymysryhma]
-                      (first
-                        (filter
-                          (fn [{:keys [kysymysryhmaid]}]
-                            (= kysymysryhmaid
-                               (:kysymysryhmaid kyselyn-kysymysryhma)))
-                          valtakunnalliset-kysymysryhmat)))
-                    (:raportti kysely-raportti)))))
+(defn ^:private hae-kysymysryhmista [haettava-kysymysryhmaid kysymysryhmat]
+  (first
+    (filter
+      (fn [{:keys [kysymysryhmaid]}]
+        (= kysymysryhmaid
+           haettava-kysymysryhmaid))
+      kysymysryhmat)))
+
+(defn ^:private valitse-valtakunnalliseen-kyselyn-kysymysryhmat
+  [valtakunnallinen-raportti {kyselyn-kysymysryhmat :raportti}]
+  (let [valtakunnalliset-kysymysryhmat (:raportti valtakunnallinen-raportti)]
+    (assoc valtakunnallinen-raportti
+           :raportti
+           (map (fn [{:keys [kysymysryhmaid]}]
+                  (hae-kysymysryhmista kysymysryhmaid valtakunnalliset-kysymysryhmat))
+                kyselyn-kysymysryhmat))))
 
 (defn muodosta-kyselyraportti [kyselyid parametrit asetukset]
   (let [tekstit (i18n/hae-tekstit (:kieli parametrit))
-        valtakunnallinen-raportti (-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
-                                    (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen]))))
         raportti (muodosta-raportti-parametreilla kyselyid parametrit)
-        valtakunnallinen-raportti (suodata-kysymysryhmat valtakunnallinen-raportti raportti)
+        valtakunnallinen-raportti (-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
+                                    (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen])))
+                                    (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti))
         kaikki-raportit (for [raportti [raportti valtakunnallinen-raportti]
                               :when raportti]
                           (ei-riittavasti-vastaajia raportti asetukset))
