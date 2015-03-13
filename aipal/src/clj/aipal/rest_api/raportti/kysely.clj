@@ -47,11 +47,17 @@
                   (hae-kysymysryhmista kysymysryhmaid valtakunnalliset-kysymysryhmat))
                 kyselyn-kysymysryhmat))))
 
+(defn ^:private lisaa-raporttiin-nimi [valtakunnallinen-raportti]
+  (let [tekstit-fi (i18n/hae-tekstit "fi")
+        tekstit-sv (i18n/hae-tekstit "sv")]
+    (-> valtakunnallinen-raportti
+      (assoc :nimi_fi (get-in tekstit-fi [:yleiset :valtakunnallinen]))
+      (assoc :nimi_sv (get-in tekstit-sv [:yleiset :valtakunnallinen])))))
+
 (defn muodosta-kyselyraportti [kyselyid parametrit asetukset]
-  (let [tekstit (i18n/hae-tekstit (:kieli parametrit))
-        raportti (muodosta-raportti-parametreilla kyselyid parametrit)
-        valtakunnallinen-raportti (-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
-                                    (some-> (assoc :nimi (get-in tekstit [:yleiset :valtakunnallinen])))
+  (let [raportti (muodosta-raportti-parametreilla kyselyid parametrit)
+        valtakunnallinen-raportti (some-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
+                                    (lisaa-raporttiin-nimi)
                                     (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti))
         kaikki-raportit (for [raportti [raportti valtakunnallinen-raportti]
                               :when raportti]
