@@ -9,8 +9,7 @@
 
 <div ng-show="tulos" class="hidden-print print-header">
   <h1>{{ 'kysely.raportti_otsikko' | i18n }}</h1>
-  <div class="clearfix">
-    <button class="btn btn-primary" onclick="window.print()">{{ 'kysely.raportti_tulosta' | i18n }}&nbsp;<span class="fa fa-print"></span></button>
+  <div class="clearfix raportti-tiedot">
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="printgraphs">&nbsp;{{ 'kysely.raportti_tulosta_graafit' | i18n }}
@@ -19,10 +18,11 @@
         <input type="checkbox" ng-model="printfreetext">&nbsp;{{ 'kysely.raportti_tulosta_vapaatekstivastaukset' | i18n }}
       </label>
     </div>
+    <button class="btn btn-primary" onclick="window.print()">{{ 'kysely.raportti_tulosta' | i18n }}&nbsp;<span class="fa fa-print"></span></button>
   </div>
 </div>
 
-<div class="raportti-kyselykerta-tiedot" ng-if="tulos">
+<div class="raportti-tiedot" ng-if="tulos">
   <div>
     <h2>{{tulos | lokalisoiKentta:'nimi'}}</h2>
   </div>
