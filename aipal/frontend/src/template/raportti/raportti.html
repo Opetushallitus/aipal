@@ -90,6 +90,10 @@
             <td>{{'raportti.vastausprosentti' | i18n }}</td>
             <td ng-repeat="i in raporttiIndeksit">{{ prosenttiosuus(tulos.vastaajien_lukumaara[i], tulos.vastaajien_maksimimaara[i]) }} %</td>
         </tr>
+        <tr>
+            <td>{{'raportti.raportin_vertailujakso' | i18n }}</td>
+            <td ng-repeat="i in raporttiIndeksit">{{ tulos.parametrit[i].vertailujakso_alkupvm |voimassaoloAika:tulos.parametrit[i].vertailujakso_loppupvm }}</td>
+        </tr>
     </tfoot>
 </table>
 
