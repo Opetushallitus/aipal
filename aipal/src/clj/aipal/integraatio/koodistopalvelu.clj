@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.integraatio.koodistopalvelu
- (:require [clj-time.format :as time]
+ (:require [clj-time.core :as time]
            [aipal.arkisto.tutkinto :as tutkinto-arkisto]
            [aipal.arkisto.koulutusala :as koulutusala-arkisto]
            [aipal.arkisto.opintoala :as opintoala-arkisto]
@@ -34,6 +34,8 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
           metadata_sv (first (filter #(= "SV" (:kieli %)) (:metadata koodi)))]
       {:nimi_fi (:nimi metadata_fi)
        :nimi_sv (:nimi metadata_sv)
+       :voimassa_alkupvm (some-> (:voimassaAlkuPvm koodi) parse-ymd)
+       :voimassa_loppupvm (some-> (:voimassaLoppuPvm koodi) parse-ymd)
        :koodiUri (:koodiUri koodi)
        arvokentta (:koodiArvo koodi)})))
 
@@ -135,7 +137,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-tutkinto-muutokset
   [asetukset]
-  (let [tutkinto-kentat [:nimi_fi :nimi_sv :tutkintotunnus :opintoala]
+  (let [tutkinto-kentat [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala]
         vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
                           [(:tutkintotunnus tutkinto) (select-keys tutkinto tutkinto-kentat)]))
         uudet (->> (hae-tutkinnot asetukset)
