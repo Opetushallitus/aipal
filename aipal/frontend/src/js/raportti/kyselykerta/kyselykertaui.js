@@ -44,12 +44,9 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
           }
         });
 
-      $scope.raporttiIndeksit = function(taulukko) {
-        return _.range(_.size(_.filter(taulukko, function(alkio) {return alkio !== null;})));
-      };
-
       $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
       $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
+      $scope.raporttiIndeksit = kaavioApurit.raporttiIndeksit;
     }
   ]);
 

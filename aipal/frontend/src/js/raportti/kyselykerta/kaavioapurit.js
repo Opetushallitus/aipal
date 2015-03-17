@@ -71,5 +71,10 @@ angular.module('raportti.kyselykerta.kaavioapurit', ['yhteiset.palvelut.i18n', '
       palkinVari: function (i) {
         return varit[i % varit.length];
       },
+
+      raporttiIndeksit: function(taulukko) {
+        return _.range(_.size(_.filter(taulukko, function(alkio) {return alkio !== null;})));
+      }
+
     };
   }]);

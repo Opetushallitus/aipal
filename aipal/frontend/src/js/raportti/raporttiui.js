@@ -265,15 +265,12 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
         });
     };
 
-    $scope.raporttiIndeksit = function(taulukko) {
-      return _.range(_.size(_.filter(taulukko, function(alkio) {return alkio !== null;})));
-    };
-
     kyselykertaValilehti.alusta($scope);
     kyselyValilehti.alusta($scope);
 
     $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
     $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
+    $scope.raporttiIndeksit = kaavioApurit.raporttiIndeksit;
   }])
 
   .factory('kyselyValilehti', ['$filter', 'i18n', 'ilmoitus', 'Kysely', 'Raportti', 'raporttiApurit', 'seuranta', function($filter, i18n, ilmoitus, Kysely, Raportti, raporttiApurit, seuranta) {
