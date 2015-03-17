@@ -88,4 +88,18 @@ describe('Palvelu: kaavioApurit', function () {
   it('pitäisi sisältää funktio palkin värille', function () {
     expect(kaavioApurit.palkinVari).toBeDefined();
   });
+
+  describe('raporttiIndeksit:', function() {
+    it('pitäisi tuottaa taulukon indeksit', function () {
+      expect(kaavioApurit.raporttiIndeksit([2, 3, 4])).toEqual([0, 1, 2]);
+    });
+
+    it('pitäisi jättää lopusta null-arvot huomiotta', function () {
+      expect(kaavioApurit.raporttiIndeksit([2, 3, null])).toEqual([0, 1]);
+    });
+
+    it('pitäisi toimia tyhjälle taulukolle', function () {
+      expect(kaavioApurit.raporttiIndeksit([])).toEqual([]);
+    });
+  });
 });
