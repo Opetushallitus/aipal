@@ -92,7 +92,7 @@
         </tr>
         <tr>
             <td>{{'raportti.raportin_vertailujakso' | i18n }}</td>
-            <td ng-repeat="i in raporttiIndeksit">{{ tulos.parametrit[i].vertailujakso_alkupvm |voimassaoloAika:tulos.parametrit[i].vertailujakso_loppupvm }}</td>
+            <td ng-repeat="i in raporttiIndeksit(tulos.vastaajien_lukumaara)">{{ tulos.parametrit[i].vertailujakso_alkupvm |voimassaoloAika:tulos.parametrit[i].vertailujakso_loppupvm }}</td>
         </tr>
     </tfoot>
 </table>
