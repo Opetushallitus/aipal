@@ -258,12 +258,15 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
         .success(function(tulos) {
           $scope.tulos = tulos;
-          $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
         }).error(function(data, status) {
           if (status !== 500) {
             ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
           }
         });
+    };
+
+    $scope.raporttiIndeksit = function(taulukko) {
+      return _.range(_.size(_.filter(taulukko, function(alkio) {return alkio !== null;})));
     };
 
     kyselykertaValilehti.alusta($scope);
@@ -323,7 +326,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
               $scope.tulos = tulos;
-              $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
             })
             .error(function(value) {
               if (value.status !== 500) {
@@ -391,7 +393,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
               $scope.tulos = tulos;
-              $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
             })
             .error(function(value) {
               if (value.status !== 500) {

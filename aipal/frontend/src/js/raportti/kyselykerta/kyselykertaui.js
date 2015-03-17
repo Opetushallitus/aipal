@@ -37,13 +37,16 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
       Raportti.muodostaKyselykertaraportti($routeParams.kyselykertaid, {})
         .success(function onSuccess(tulos) {
           $scope.tulos = tulos;
-          $scope.raporttiIndeksit = _.range(tulos.raportoitavia);
         })
         .error(function onError(value) {
           if (value.status !== 500) {
             $location.url('/');
           }
         });
+
+      $scope.raporttiIndeksit = function(taulukko) {
+        return _.range(_.size(_.filter(taulukko, function(alkio) {return alkio !== null;})));
+      };
 
       $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
       $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
