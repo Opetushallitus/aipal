@@ -3,6 +3,6 @@
 <ul class="kielen-vaihto">
   <li class="ei-valittu fi" ng-if="kieli!='fi'"><a ng-click="asetaKieli('fi')" title="{{i18n.yleiset.suomeksi}}">FI</a></li>
   <li class="valittu fi" ng-if="kieli=='fi'"><span>FI</span></li>
-  <li class="ei-valittu sv" ng-if="yllapitaja && kieli!='sv'"><a ng-click="asetaKieli('sv')" title="{{i18n.yleiset.ruotsiksi}}">SV</a></li>
-  <li class="valittu sv" ng-if="!yllapitaja || kieli=='sv'" ng-class="{disabled: !yllapitaja && kieli=='fi'}"><span>SV</span></li>
+  <li class="ei-valittu sv" ng-if="kieli!='sv'"><a ng-click="asetaKieli('sv')" title="{{i18n.yleiset.ruotsiksi}}">SV</a></li>
+  <li class="valittu sv" ng-if="kieli=='sv'"><span>SV</span></li>
 </ul>
