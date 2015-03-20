@@ -24,11 +24,18 @@
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
 
-(defn muodosta-raportti-parametreilla
+(defn ^:private muodosta-kyselyn-raportti-parametreilla
   [kyselyid parametrit]
-  (let [parametrit (paivita-parametrit parametrit)
-        raportti (muodosta-raportti (Integer/parseInt kyselyid) parametrit)]
+  (let [parametrit (paivita-parametrit (assoc parametrit :tutkinnot []))
+        raportti (muodosta-raportti kyselyid parametrit)]
     (assoc raportti :parametrit parametrit)))
+
+(defn ^:private muodosta-kyselyn-tutkintojen-raportit-parametreilla
+  [kyselyid parametrit]
+  (let [parametrit (paivita-parametrit parametrit)]
+    (for [tutkinto (:tutkinnot parametrit)]
+      (-> (muodosta-raportti kyselyid (assoc parametrit :tutkinnot [tutkinto]))
+        (assoc :parametrit parametrit)))))
 
 (defn ^:private hae-kysymysryhmista [haettava-kysymysryhmaid kysymysryhmat]
   (first
@@ -54,12 +61,18 @@
       (assoc :nimi_fi (get-in tekstit-fi [:yleiset :valtakunnallinen]))
       (assoc :nimi_sv (get-in tekstit-sv [:yleiset :valtakunnallinen])))))
 
+(defn ^:private muodosta-raportit-parametreilla [kyselyid parametrit]
+  (if (empty? (:tutkinnot parametrit))
+    (let [raportti (muodosta-kyselyn-raportti-parametreilla kyselyid parametrit)
+          valtakunnallinen-raportti (some-> (muodosta-valtakunnallinen-vertailuraportti kyselyid parametrit)
+                                      (lisaa-raporttiin-nimi)
+                                      (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti))]
+      [raportti valtakunnallinen-raportti])
+    (muodosta-kyselyn-tutkintojen-raportit-parametreilla kyselyid parametrit)))
+
 (defn muodosta-kyselyraportti [kyselyid parametrit asetukset]
-  (let [raportti (muodosta-raportti-parametreilla kyselyid parametrit)
-        valtakunnallinen-raportti (some-> (muodosta-valtakunnallinen-vertailuraportti (Integer/parseInt kyselyid) parametrit)
-                                    (lisaa-raporttiin-nimi)
-                                    (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti))
-        kaikki-raportit (for [raportti [raportti valtakunnallinen-raportti]
+  (let [raportit (muodosta-raportit-parametreilla kyselyid parametrit)
+        kaikki-raportit (for [raportti raportit
                               :when raportti]
                           (ei-riittavasti-vastaajia raportti asetukset))
         naytettavat (filter (comp nil? :virhe) kaikki-raportit)
@@ -73,14 +86,14 @@
   (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]
     (db/transaction
       (json-response
-        (muodosta-kyselyraportti kyselyid parametrit asetukset)))))
+        (muodosta-kyselyraportti (Integer/parseInt kyselyid) parametrit asetukset)))))
 
 (defn csv-reitit [asetukset]
   (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/csv" [kyselyid & parametrit]
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
-            raportti (muodosta-raportti-parametreilla kyselyid parametrit)]
+            raportti (muodosta-kyselyn-raportti-parametreilla (Integer/parseInt kyselyid) parametrit)]
         (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
           (csv-download-response (muodosta-csv raportti (:kieli parametrit)) "kysely.csv")
           (csv-download-response (muodosta-tyhja-csv raportti (:kieli parametrit)) "kysely_ei_vastaajia.csv"))))))

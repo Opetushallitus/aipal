@@ -187,12 +187,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     var voikoValitaUseita = function() {
-      return $scope.raportti.tyyppi === 'vertailu';
+      return $scope.raportti.tyyppi === 'vertailu' || $scope.raportti.tyyppi === 'kysely';
     };
     $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
       if ($scope.raportti.tutkintorakennetaso === 'koulutusala') {
-        // Vain vertailuraportilla voi valita useamman
         if (!voikoValitaUseita() && !koulutusala.valittu) {
           poistaKoulutusalaValinnat();
         }

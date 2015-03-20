@@ -195,14 +195,15 @@
      "koulutusala" (when-let [koulutusalatunnus (first (:koulutusalat parametrit))]
                      (nimet (koulutusala-arkisto/hae koulutusalatunnus)))))
 
-(defn ^:private raportin-otsikko [parametrit]
+(defn raportin-otsikko [parametrit]
   (case (:tyyppi parametrit)
     "vertailu" (tutkintorakenne-otsikko parametrit)
     "kehitys" (merge {:nimi_fi "Kaikki tutkinnot"
                       :nimi_sv "Kaikki tutkinnot (sv)"}
                      (tutkintorakenne-otsikko parametrit))
     "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
-                         (nimet (koulutustoimija-arkisto/hae ytunnus)))))
+                         (nimet (koulutustoimija-arkisto/hae ytunnus)))
+    "kysely" (tutkintorakenne-otsikko parametrit)))
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
