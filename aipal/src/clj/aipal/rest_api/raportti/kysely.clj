@@ -20,7 +20,7 @@
             [aipal.compojure-util :as cu]
             [aipal.rest-api.i18n :as i18n]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
-            [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti]]
+            [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti muodosta-yhteenveto]]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
 
@@ -76,10 +76,12 @@
                               :when raportti]
                           (ei-riittavasti-vastaajia raportti asetukset))
         naytettavat (filter (comp nil? :virhe) kaikki-raportit)
-        virheelliset (filter :virhe kaikki-raportit)]
+        virheelliset (filter :virhe kaikki-raportit)
+        yhteenveto (muodosta-yhteenveto kyselyid (paivita-parametrit parametrit))]
     (merge (when (seq naytettavat)
              (yhdistaminen/yhdista-raportit naytettavat))
            {:raportoitavia (count naytettavat)
+            :yhteenveto yhteenveto
             :virheelliset virheelliset})))
 
 (defn reitit [asetukset]

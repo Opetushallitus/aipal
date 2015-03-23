@@ -33,6 +33,11 @@
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
     (sql/where {:kyselyid kyselyid})))
 
+(defn muodosta-yhteenveto [kyselyid parametrit]
+  (when-let [kysely (hae-kysely kyselyid)]
+    (let [koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain (merge kysely parametrit))]
+      (assoc kysely :koulutustoimijat koulutustoimijatiedot))))
+
 (defn muodosta-valtakunnallinen-vertailuraportti [kyselyid parametrit]
   (when-let [taustakysymysryhmaid (arkisto/hae-kyselyn-taustakysymysryhmaid kyselyid)]
     (let [kysymysidt (kysymysryhma-arkisto/hae-kysymysryhman-kysymyksien-idt taustakysymysryhmaid)
