@@ -80,8 +80,9 @@
         yhteenveto (muodosta-yhteenveto kyselyid (paivita-parametrit parametrit))]
     (merge (when (seq naytettavat)
              (yhdistaminen/yhdista-raportit naytettavat))
+           (when (seq naytettavat)
+             {:yhteenveto yhteenveto})
            {:raportoitavia (count naytettavat)
-            :yhteenveto yhteenveto
             :virheelliset virheelliset})))
 
 (defn reitit [asetukset]
