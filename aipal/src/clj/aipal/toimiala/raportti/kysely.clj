@@ -56,8 +56,7 @@
     (let [parametrit (merge kysely parametrit)
           koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain parametrit)
           tutkinto-otsikko (valtakunnallinen-raportti/raportin-otsikko parametrit)]
-      (merge {:yhteenveto (assoc kysely :koulutustoimijat koulutustoimijatiedot)
-              :luontipvm (time/today)
+      (merge {:luontipvm (time/today)
               :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
               :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
               :raportti (map raportointi/laske-kysymysryhman-vastaajat (kyselyraportointi/muodosta-raportti parametrit))

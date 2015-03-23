@@ -102,5 +102,5 @@
     (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
     (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] yhdistä-samat))
     nimet-yhteen-listaan
-    (päivitä-kentät [:luontipvm :yhteenveto] first)))
+    (päivitä-kentät [:luontipvm] first)))
 

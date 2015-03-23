@@ -21,7 +21,7 @@
 
             [aipal.compojure-util :as cu]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
-            [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti]]
+            [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti muodosta-yhteenveto]]
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
 
@@ -36,16 +36,19 @@
   (let [raportti (raportointi/ei-riittavasti-vastaajia
                    (muodosta-raportti-parametreilla kyselykertaid parametrit)
                    asetukset)
-        nimi (-> raportti :yhteenveto :kyselykerta)
         naytettavat (filter (comp nil? :virhe) [raportti])
-        virheelliset (filter :virhe [raportti])]
+        virheelliset (filter :virhe [raportti])
+        yhteenveto (muodosta-yhteenveto (Integer/parseInt kyselykertaid) (paivita-parametrit parametrit))
+        nimi (:kyselykerta yhteenveto)]
     (merge (when (seq naytettavat)
              (yhdistaminen/yhdista-raportit naytettavat))
            {:nimi nimi
             :nimet [{:nimi_fi nimi
                      :nimi_sv nimi}]
             :raportoitavia (count naytettavat)
-            :virheelliset virheelliset})))
+            :virheelliset virheelliset}
+           (when (seq naytettavat)
+             {:yhteenveto yhteenveto}))))
 
 (defn reitit [asetukset]
   (cu/defapi :kyselykerta-raportti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & parametrit]

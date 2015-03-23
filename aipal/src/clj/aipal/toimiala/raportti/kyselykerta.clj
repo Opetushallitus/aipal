@@ -36,13 +36,16 @@
     sql/exec
     first))
 
+(defn muodosta-yhteenveto [kyselykertaid parametrit]
+  (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
+    (let [koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain (merge kyselykerta parametrit))]
+      (assoc kyselykerta :koulutustoimijat koulutustoimijatiedot))))
+
 (defn muodosta-raportti [kyselykertaid parametrit]
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
     (let [parametrit (merge kyselykerta parametrit)
           koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain parametrit)]
-      {:yhteenveto (assoc kyselykerta
-                          :koulutustoimijat koulutustoimijatiedot)
-       :luontipvm (time/today)
+      {:luontipvm (time/today)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
        :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
        :raportti (map raportointi/laske-kysymysryhman-vastaajat (kyselyraportointi/muodosta-raportti parametrit))
