@@ -189,13 +189,13 @@
       </div>
       <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
         <h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>
-        <table class="report-table">
+        <table ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" class="report-table">
           <thead>
-            <tr><th>{{'raportti.vastaukset' |i18n}}:</th></tr>
+            <tr><th>{{'raportti.vastaukset' |i18n}}: {{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th></tr>
           </thead>
           <tbody>
             <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vapaatekstivastaukset">
-              <td ng-repeat="i in raporttiIndeksit(vastaus.teksti)"><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
+              <td><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
             </tr>
           </tbody>
         </table>
@@ -204,13 +204,16 @@
 
     <div ng-if="kysymys.vastaustyyppi === 'vapaateksti' && !printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n }})</div>
 
-    <table ng-class="{ 'hidden-print': !printfreetext }" class="report-table" ng-show="kysymys.vastaustyyppi === 'vapaateksti'">
+    <table ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)"
+      ng-class="{ 'hidden-print': !printfreetext }"
+      class="report-table"
+      ng-show="kysymys.vastaustyyppi === 'vapaateksti'">
       <thead>
-        <tr><th>{{'raportti.vastaukset' |i18n}}:</th></tr>
+        <tr><th>{{'raportti.vastaukset' |i18n}}: {{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th></tr>
       </thead>
       <tbody>
         <tr ng-repeat="vastaus in kysymys.vapaatekstivastaukset" class="e2e-kysymys-vapaatekstivastaukset-repeat">
-          <td ng-repeat="i in raporttiIndeksit(vastaus.teksti)"><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
+          <td><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
         </tr>
       </tbody>
     </table>
