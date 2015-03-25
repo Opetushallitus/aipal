@@ -96,7 +96,12 @@
     (db/transaction
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
-            raportti (muodosta-kyselyn-raportti-parametreilla (Integer/parseInt kyselyid) parametrit)]
-        (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-          (csv-download-response (muodosta-csv raportti (:kieli parametrit)) "kysely.csv")
-          (csv-download-response (muodosta-tyhja-csv raportti (:kieli parametrit)) "kysely_ei_vastaajia.csv"))))))
+            raportit (muodosta-raportit-parametreilla (Integer/parseInt kyselyid) parametrit)
+            kieli (:kieli parametrit)]
+        (csv-download-response
+          (apply str
+                 (for [raportti raportit]
+                   (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+                     (muodosta-csv raportti kieli)
+                     (muodosta-tyhja-csv raportti kieli))))
+          "kysely.csv")))))
