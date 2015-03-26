@@ -15,6 +15,7 @@
 (ns aipal.toimiala.raportti.taustakysymykset
   (:require [oph.common.util.util :refer [some-value-with]]))
 
+(def vanhat-taustakysymykset-id 1)
 (def hakeutumisvaihe-id 3341884)
 (def suorittamisvaihe-id 3341885)
 

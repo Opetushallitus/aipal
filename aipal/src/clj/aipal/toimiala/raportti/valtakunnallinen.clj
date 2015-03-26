@@ -84,15 +84,13 @@
         :when (seq arvot)]
     {:id (->int kysymysid) :arvot (map ->int arvot)}))
 
-(defn ^:private raportti-query [rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn ^:private raportti-query [rajaukset taustakysymykset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
-    (sql/select* :vastaus)
-    (sql/join :inner :kysymys (= :vastaus.kysymysid :kysymys.kysymysid))
-    (sql/join :inner :kysymysryhma (and (= :kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid)
-                                        (= :kysymysryhma.valtakunnallinen true)))
-    (sql/join :left :jatkovastaus
-              (= :jatkovastaus.jatkovastausid
-                 :vastaus.jatkovastausid))
+    (sql/select* [:vastaus_jatkovastaus_valtakunnallinen_view :vastaus])
+    (sql/join :kysymys_vastaaja (and (= :vastaus.vastaajaid :kysymys_vastaaja.vastaajaid)
+                                     (if (= :uusi taustakysymykset)
+                                       :kysymys_vastaaja.uusi
+                                       :kysymys_vastaaja.vanha)))
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus koulutustoimijat) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus
@@ -108,9 +106,6 @@
                          (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
                          (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
     (generoi-joinit (konvertoi-ehdot rajaukset))
-    (sql/where (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
-                                    (sql/where {:v1.vastaajaid :vastaus.vastaajaid
-                                                :v1.kysymysid [in (mapcat (comp mappaa-kysymysid ->int) (keys rajaukset))]}))))
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
     (sql/fields [(sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid) :kysymysid]
@@ -121,10 +116,10 @@
                 [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
                 [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
                 [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa]
-                [(sql/sqlfn avg :jatkovastaus.kylla_asteikko) :jatkovastaus_keskiarvo]
-                [(sql/sqlfn stddev_samp :jatkovastaus.kylla_asteikko) :keskihajonta]
-                [(sql/sqlfn jakauma :jatkovastaus.kylla_asteikko) :jatkovastaus_jakauma]
-                [(sql/sqlfn array_agg :jatkovastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
+                [(sql/sqlfn avg :vastaus.kylla_asteikko) :jatkovastaus_keskiarvo]
+                [(sql/sqlfn stddev_samp :vastaus.kylla_asteikko) :keskihajonta]
+                [(sql/sqlfn jakauma :vastaus.kylla_asteikko) :jatkovastaus_jakauma]
+                [(sql/sqlfn array_agg :vastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
     (sql/group (sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid))
     sql/exec))
 
@@ -218,7 +213,10 @@
                         (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
                         alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        data (raportti-query rajaukset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
+        taustakysymykset (if (= taustakysymysryhmaid vanhat-taustakysymykset-id)
+                           :vanha
+                           :uusi)
+        data (raportti-query rajaukset taustakysymykset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
     (merge
       (raportin-otsikko parametrit)
