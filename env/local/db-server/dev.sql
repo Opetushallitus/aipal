@@ -5,3 +5,4 @@ GRANT ALL PRIVILEGES ON DATABASE aipal to aipal_adm;
 create user aipal_user with password 'aipal';
 GRANT CONNECT ON DATABASE aipal TO aipal_user;
 
+GRANT aipal_user TO aipal_adm;

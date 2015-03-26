@@ -99,11 +99,14 @@
   (let [flyway (Flyway.)
         kantaversio (:target-version options)
         tyhjenna (:clear options)]
-    (.setDataSource flyway datasource)
-    (.setLocations flyway (into-array String ["/db/migration"]))
-    (when tyhjenna (.clean flyway))
-    (when kantaversio (.setTarget flyway kantaversio))
-    (.migrate flyway)))
+    (doto flyway
+      (.setDataSource datasource)
+      (.setLocations (into-array String ["/db/migration"]))
+      (cond->
+        tyhjenna (.clean)
+        kantaversio (.setTarget kantaversio))
+      (.setPlaceholders {"aipal_user" (:username options)})
+      (.migrate))))
 
 (def cli-options
   [[nil "--clear" "Tyhjennetään kanta ja luodaan skeema ja pohjadata uusiksi"
