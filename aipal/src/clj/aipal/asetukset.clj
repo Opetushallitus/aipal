@@ -49,7 +49,8 @@
    :logback {:properties-file s/Str}
    :ajastus {:organisaatiopalvelu s/Str
              :kayttooikeuspalvelu s/Str
-             :koulutustoimijoiden-tutkinnot s/Str}})
+             :koulutustoimijoiden-tutkinnot s/Str
+             :raportointi s/Str}})
 
 (def oletusasetukset
   {:server {:port 8082
@@ -79,7 +80,8 @@
    :logback {:properties-file "resources/logback.xml"}
    :ajastus {:organisaatiopalvelu "0 0 3 * * ?"
              :kayttooikeuspalvelu "0 0 4 * * ?"
-             :koulutustoimijoiden-tutkinnot "0 0 5 * * ?"}})
+             :koulutustoimijoiden-tutkinnot "0 0 5 * * ?"
+             :raportointi "0 30 5 * * ?"}})
 
 (defn hae-asetukset
   ([alkuasetukset] (lue-asetukset alkuasetukset Asetukset "aipal.properties"))

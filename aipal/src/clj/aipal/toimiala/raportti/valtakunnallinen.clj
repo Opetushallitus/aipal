@@ -200,6 +200,10 @@
                          (nimet (koulutustoimija-arkisto/hae ytunnus)))
     "kysely" (tutkintorakenne-otsikko parametrit)))
 
+(defn paivita-nakymat []
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY kysymys_vastaaja_view;")
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;"))
+
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
         loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))

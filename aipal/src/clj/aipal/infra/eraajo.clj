@@ -22,10 +22,12 @@
             [clojure.tools.logging :as log]
             aipal.infra.eraajo.kayttajat
             aipal.infra.eraajo.organisaatiot
-            aipal.infra.eraajo.koulutustoimijoiden-tutkinnot)
+            aipal.infra.eraajo.koulutustoimijoiden-tutkinnot
+            aipal.infra.eraajo.raportointi)
   (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
-           aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob))
+           aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob
+           aipal.infra.eraajo.raportointi.PaivitaNakymatJob))
 
 (defn ajastus [asetukset tyyppi]
   (cron/schedule
@@ -60,7 +62,15 @@
         koul-trigger-daily (t/build
                              (t/with-identity "daily5")
                              (t/start-now)
-                             (t/with-schedule (ajastus asetukset :koulutustoimijoiden-tutkinnot)))]
+                             (t/with-schedule (ajastus asetukset :koulutustoimijoiden-tutkinnot)))
+        raportointi-job (j/build
+                          (j/of-type PaivitaNakymatJob)
+                          (j/with-identity "paivita-raportoinnin-nakymat"))
+        raportointi-trigger (t/build
+                              (t/with-identity "raportointi")
+                              (t/start-now)
+                              (t/with-schedule (ajastus asetukset :raportointi)))]
     (qs/schedule ldap-job ldap-trigger-daily)
     (qs/schedule org-job org-trigger-daily)
-    (qs/schedule koul-job koul-trigger-daily)))
+    (qs/schedule koul-job koul-trigger-daily)
+    (qs/schedule raportointi-job raportointi-trigger)))
