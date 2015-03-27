@@ -41,7 +41,7 @@ service iptables save
 
 # alustetaan aipal tietokanta ilman tauluja
 
-until service postgresql-9.2 status > /dev/null; do
+until service postgresql-9.4 status > /dev/null; do
   echo "Waiting for postgresql...\n"
   sleep 1
 done
