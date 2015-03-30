@@ -29,7 +29,9 @@
                 :kysely.tila :kysely.kaytettavissa
                 [(sql/subselect taulut/kysely_kysymysryhma
                    (sql/aggregate (count :*) :lkm)
-                   (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
+                   (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm]
+                [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
+                [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])
     (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
     (sql/order :luotuaika :desc)))
 
@@ -52,7 +54,9 @@
     (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
                 :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
                 :kysely.selite_fi :kysely.selite_sv
-                :kysely.tila :kysely.kaytettavissa)
+                :kysely.tila :kysely.kaytettavissa
+                [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
+                [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])
     (sql/where (= :kyselyid kyselyid))))
 
 (defn hae-organisaatiotieto
