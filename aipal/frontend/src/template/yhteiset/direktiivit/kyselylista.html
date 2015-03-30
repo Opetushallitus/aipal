@@ -5,7 +5,7 @@
       <accordion-heading>
         <i class="pull-left icon" ng-class="{'contract-icon': kysely.open, 'expand-icon': !kysely.open}"></i>
         <h3 class="e2e-kysely-nimi">{{kysely | lokalisoiKentta:'nimi'}}</h3>
-        <span class="text-muted" ng-if="kysely.tila === 'julkaistu'">
+        <span class="text-muted" ng-if="kysely.tila === 'julkaistu'" ng-class="{tulevaisuudessa: kysely.tulevaisuudessa}">
           {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
         </span>
         <span class="text-muted" ng-if="kysely.kysymysryhmien_lkm === 0">
