@@ -87,10 +87,10 @@
 (defn ^:private raportti-query [rajaukset taustakysymykset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* [:vastaus_jatkovastaus_valtakunnallinen_view :vastaus])
-    (sql/join :kysymys_vastaaja (and (= :vastaus.vastaajaid :kysymys_vastaaja.vastaajaid)
-                                     (if (= :uusi taustakysymykset)
-                                       :kysymys_vastaaja.uusi
-                                       :kysymys_vastaaja.vanha)))
+    (sql/join :kysymys_vastaaja_view (and (= :vastaus.vastaajaid :kysymys_vastaaja_view.vastaajaid)
+                                          (if (= :uusi taustakysymykset)
+                                            :kysymys_vastaaja_view.uusi
+                                            :kysymys_vastaaja_view.vanha)))
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus koulutustoimijat) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus
