@@ -85,19 +85,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.haeKyselyt = function () {
         seuranta.asetaLatausIndikaattori(Kysely.hae(), 'kyselylistaus')
         .success(function (data) {
-          var nyt = new Date();
-          _.forEach(data, function(kysely) {
-              kysely.tulevaisuudessa = kysely.voimassa_alkupvm && nyt < new Date(kysely.voimassa_alkupvm);
-              if (kysely.tila === 'luonnos') {
-                  kysely.sijainti = 'luonnos';
-              }
-              else if (kysely.kaytettavissa || new Date(kysely.voimassa_alkupvm) > nyt) {
-                  kysely.sijainti = 'julkaistu';
-              }
-              else {
-                  kysely.sijainti = 'suljettu';
-              }
-          });
           $scope.kyselyt = data;
           avaaMuistetutKyselyt();
           muistaAvattavatKyselyt();
