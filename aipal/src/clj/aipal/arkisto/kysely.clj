@@ -19,19 +19,25 @@
             [oph.korma.korma :refer [select-unique-or-nil select-unique]]
             [aipal.auditlog :as auditlog]))
 
+(defn kysely-kentat
+  [query]
+  (->
+    query
+    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
+                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
+                :kysely.tila :kysely.kaytettavissa
+                [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
+                [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])))
+
 (defn hae-kyselyt
   "Hae koulutustoimijan kyselyt"
   [koulutustoimija]
   (sql/select taulut/kysely
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
-                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                :kysely.tila :kysely.kaytettavissa
-                [(sql/subselect taulut/kysely_kysymysryhma
+    kysely-kentat
+    (sql/fields [(sql/subselect taulut/kysely_kysymysryhma
                    (sql/aggregate (count :*) :lkm)
-                   (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm]
-                [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
-                [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])
+                   (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
     (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
     (sql/order :luotuaika :desc)))
 
@@ -51,12 +57,8 @@
   "Hakee kyselyn tiedot pääavaimella"
   [kyselyid]
   (select-unique-or-nil taulut/kysely
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
-                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                :kysely.selite_fi :kysely.selite_sv
-                :kysely.tila :kysely.kaytettavissa
-                [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
-                [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])
+    kysely-kentat
+    (sql/fields :kysely.selite_fi :kysely.selite_sv)
     (sql/where (= :kyselyid kyselyid))))
 
 (defn hae-organisaatiotieto
