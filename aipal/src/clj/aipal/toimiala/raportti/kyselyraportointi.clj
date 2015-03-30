@@ -45,7 +45,7 @@
     (sql/where query {:vastaajatunnus.tutkintotunnus [in tutkinnot]})))
 
 (defn yhteiset-rajaukset
-  [query {:keys [tutkinnot koulutuksen_jarjestajat jarjestavat_oppilaitokset kyselyid kyselykertaid rahoitusmuotoid suorituskieli] :as parametrit}]
+  [query {:keys [tutkinnot koulutuksen_jarjestajat jarjestavat_oppilaitokset kyselyid kyselykertaid rahoitusmuotoid suorituskieli]}]
   (cond-> query
     tutkinnot (sql/where {:vastaajatunnus.tutkintotunnus [in tutkinnot]})
     koulutuksen_jarjestajat (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in koulutuksen_jarjestajat]})
@@ -111,7 +111,7 @@
     (for [kysymysryhma kysymysryhmat]
       (assoc kysymysryhma :vastaajien_maksimimaara vastaajien-maksimimaara))))
 
-(defn ^:private hae-kysymykset [{:keys [kyselykertaid kyselyid] :as parametrit}]
+(defn ^:private hae-kysymykset [{:keys [kyselykertaid kyselyid]}]
   (->
     (sql/select* :kysely)
     (sql/join :inner :kysely_kysymysryhma
@@ -154,7 +154,7 @@
                 :jatkokysymys.ei_teksti_sv)
     sql/exec))
 
-(defn hae-kysymysryhmat [{:keys [kyselykertaid kyselyid] :as parametrit}]
+(defn hae-kysymysryhmat [{:keys [kyselykertaid kyselyid]}]
   (->
     (sql/select* :kysely)
     (sql/join :inner :kysely_kysymysryhma
