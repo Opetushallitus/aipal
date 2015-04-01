@@ -220,8 +220,8 @@
              :kyselykertaid parametrit)]}
   (raportointi/muodosta-raportti (liita-vastaajien-maksimimaarat
                                    (hae-kysymysryhmat parametrit) parametrit)
-                                              (hae-kysymykset parametrit)
-                                              (hae-vastaukset parametrit)))
+                                 (hae-kysymykset parametrit)
+                                 (hae-vastaukset parametrit)))
 
 (defn paivita-parametrit [parametrit]
   (-> parametrit
