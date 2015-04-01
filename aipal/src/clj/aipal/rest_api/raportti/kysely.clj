@@ -54,6 +54,21 @@
                   (hae-kysymysryhmista kysymysryhmaid valtakunnalliset-kysymysryhmat))
                 kyselyn-kysymysryhmat))))
 
+(defn valitse-kyselyn-taustakysymykset
+  [valtakunnallinen-raportti]
+  (update-in valtakunnallinen-raportti
+             [:raportti]
+             (fn [kysymysryhmat]
+               (map (fn [kysymysryhma]
+                      (if (= (:kysymysryhmaid kysymysryhma)
+                             3341885)
+                        (update-in kysymysryhma [:kysymykset]
+                                   (fn [kysymykset]
+                                     (remove (fn [kysymys] (= (:kysymysid kysymys) 7312032))
+                                             kysymykset)))
+                        kysymysryhma))
+                    kysymysryhmat))))
+
 (defn ^:private lisaa-raporttiin-nimi [valtakunnallinen-raportti]
   (let [tekstit-fi (i18n/hae-tekstit "fi")
         tekstit-sv (i18n/hae-tekstit "sv")]
@@ -66,7 +81,8 @@
     (let [raportti (muodosta-kyselyn-raportti-parametreilla kyselyid parametrit)
           valtakunnallinen-raportti (some-> (muodosta-valtakunnallinen-vertailuraportti kyselyid parametrit)
                                       (lisaa-raporttiin-nimi)
-                                      (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti))]
+                                      (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti)
+                                      (valitse-kyselyn-taustakysymykset))]
       [raportti valtakunnallinen-raportti])
     (muodosta-kyselyn-tutkintojen-raportit-parametreilla kyselyid parametrit)))
 

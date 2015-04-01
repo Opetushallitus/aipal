@@ -36,7 +36,7 @@
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
          (sql/fields :kysymys.jarjestys
-                     :kysymys.kysymysid
+                     [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
                      :kysymys.kysymys_fi
                      :kysymys.kysymys_sv
                      :kysymys.kysymysryhmaid

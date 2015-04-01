@@ -89,10 +89,11 @@
 (defn yhdista-valtakunnalliset-taustakysymysryhmat [kysymysryhmat]
   (let [hakeutumisvaihe (some-value-with :kysymysryhmaid hakeutumisvaihe-id kysymysryhmat)
         suorittamisvaihe (some-value-with :kysymysryhmaid suorittamisvaihe-id kysymysryhmat)
-        taustakysymykset (assoc suorittamisvaihe
+        taustakysymykset (assoc (or hakeutumisvaihe suorittamisvaihe)
+                                :kysymysryhmaid suorittamisvaihe-id
                                 :nimi_fi "Näyttötutkintojen taustakysymykset"
                                 :nimi_sv "Bakgrundsfrågor gällande fristående examina")
         muut (remove (comp #{hakeutumisvaihe-id suorittamisvaihe-id} :kysymysryhmaid) kysymysryhmat)]
-    (if (and suorittamisvaihe hakeutumisvaihe)
+    (if (or hakeutumisvaihe suorittamisvaihe)
       (conj muut taustakysymykset)
       kysymysryhmat)))

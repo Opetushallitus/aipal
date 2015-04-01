@@ -180,7 +180,8 @@
 
 (defn valitse-kysymyksen-kentat
   [kysymys]
-  (select-keys kysymys [:kysymys_fi
+  (select-keys kysymys [:kysymysid
+                        :kysymys_fi
                         :kysymys_sv
                         :jakauma
                         :vapaatekstivastaukset

@@ -15,6 +15,7 @@
 (ns aipal.toimiala.raportti.kyselyraportointi
   (:require [clj-time.core :as time]
             [korma.core :as sql]
+            [aipal.toimiala.raportti.taustakysymykset :refer :all]
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
             [oph.korma.korma :refer [joda-date->sql-date]]
@@ -138,7 +139,7 @@
     (sql/order :kysely_kysymysryhma.jarjestys :ASC)
     (sql/order :kysymys.jarjestys :ASC)
     (sql/fields :kysymys.kysymysryhmaid
-                :kysymys.kysymysid
+                [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.vastaustyyppi
@@ -152,7 +153,10 @@
                 :jatkokysymys.ei_kysymys
                 :jatkokysymys.ei_teksti_fi
                 :jatkokysymys.ei_teksti_sv)
-    sql/exec))
+    sql/exec
+    (->>
+      (map (comp aseta-taustakysymyksen-jarjestys yhdista-taustakysymysten-kysymykset))
+      (sort-by (comp str :jarjestys)))))
 
 (defn hae-kysymysryhmat [{:keys [kyselykertaid kyselyid]}]
   (->
@@ -173,7 +177,8 @@
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
                 :kysymysryhma.nimi_sv)
-    sql/exec))
+    sql/exec
+    yhdista-valtakunnalliset-taustakysymysryhmat))
 
 (defn ^:private hae-vastaukset [{:keys [tutkinnot koulutuksen_jarjestajat rahoitusmuotoid suorituskieli
                                         jarjestavat_oppilaitokset vertailujakso_alkupvm vertailujakso_loppupvm]
