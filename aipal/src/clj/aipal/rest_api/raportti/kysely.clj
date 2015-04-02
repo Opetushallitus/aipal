@@ -19,10 +19,10 @@
             [oph.common.util.util :refer [muunna-avainsanoiksi]]
             [aipal.compojure-util :as cu]
             [aipal.rest-api.i18n :as i18n]
-            [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti muodosta-yhteenveto]]
+            [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
-            [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
+            [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]))
 
 (defn ^:private muodosta-kyselyn-raportti-parametreilla
   [kyselyid parametrit]
