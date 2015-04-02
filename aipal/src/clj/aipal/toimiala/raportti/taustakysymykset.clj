@@ -18,6 +18,8 @@
 (def vanhat-taustakysymykset-id 1)
 (def hakeutumisvaihe-id 3341884)
 (def suorittamisvaihe-id 3341885)
+(def taustakysymys-6a-id 7312039)
+(def taustakysymys-6b-id 7312032)
 
 (def taustakysymysten-mappaus-yksisuuntainen
   "Mappaa hakeutumisvaiheen taustakysymysten ID:t niitä vastaaviin suoritusvaiheen taustakysymyksiin.
@@ -52,8 +54,8 @@
 (defn lisaa-selite-taustakysymykseen
   [kysymys]
   (cond-> kysymys
-    (= (:kysymysid kysymys) 7312039) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6a_selite")
-    (= (:kysymysid kysymys) 7312032) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6b_selite")))
+    (= (:kysymysid kysymys) taustakysymys-6a-id) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6a_selite")
+    (= (:kysymysid kysymys) taustakysymys-6b-id) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6b_selite")))
 
 (def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
 
@@ -97,3 +99,39 @@
     (if (or hakeutumisvaihe suorittamisvaihe)
       (conj muut taustakysymykset)
       kysymysryhmat)))
+
+(defn ^:private poista-kysymys-kysymysryhmasta
+  [kysymysryhma poistettava-kysymys]
+  (update-in kysymysryhma [:kysymykset]
+             (fn [kysymykset]
+               (remove (fn [kysymys] (= (:kysymysid kysymys)
+                                        poistettava-kysymys))
+                       kysymykset))))
+
+(defn ^:private poista-taustakysymys-raportista
+  [valtakunnallinen-raportti poistettava-taustakysymys]
+  (update-in valtakunnallinen-raportti [:raportti]
+             (fn [kysymysryhmat]
+               (map (fn [kysymysryhma]
+                      (cond-> kysymysryhma (= (:kysymysryhmaid kysymysryhma)
+                                              suorittamisvaihe-id)
+                        (poista-kysymys-kysymysryhmasta poistettava-taustakysymys)))
+                    kysymysryhmat))))
+
+(defn ^:private poista-toinen-taustakysymys-raportista
+  [valtakunnallinen-raportti kyselyn-taustakysymys-6]
+  (let [toinen {taustakysymys-6a-id taustakysymys-6b-id
+                taustakysymys-6b-id taustakysymys-6a-id}]
+    (poista-taustakysymys-raportista valtakunnallinen-raportti (toinen kyselyn-taustakysymys-6))))
+
+(defn ^:private hae-raportista-taustakysymys-6
+  [raportti]
+  (let [kysymykset (mapcat :kysymykset (:raportti raportti))
+        kysymykset-idt (map :kysymysid kysymykset)]
+    (some #{taustakysymys-6a-id taustakysymys-6b-id}
+          kysymykset-idt)))
+
+(defn valitse-kyselyn-taustakysymykset
+  [valtakunnallinen-raportti kysely-raportti]
+  (let [taustakysymys-6 (hae-raportista-taustakysymys-6 kysely-raportti)]
+    (poista-toinen-taustakysymys-raportista valtakunnallinen-raportti taustakysymys-6)))
