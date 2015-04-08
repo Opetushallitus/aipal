@@ -184,7 +184,7 @@
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
         <h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>
         <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
-          ng-if="kysymys.jatkovastaukset.kylla.vastaustyyppi === 'asteikko'"
+          ng-if="kysymys.jatkovastaukset.kylla.vastaustyyppi === 'asteikko' || kysymys.jatkovastaukset.kylla.vastaustyyppi === 'likert_asteikko'"
           jakauma="kysymys.jatkovastaukset.kylla.jakauma"
           vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi"
           nimet="tulos.nimet">
