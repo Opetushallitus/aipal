@@ -39,6 +39,42 @@
     (let [kysymysryhmat [{:kysymysryhmaid 1} {:kysymysryhmaid hakeutumisvaihe-id} {:kysymysryhmaid suorittamisvaihe-id}]]
       (is (= (map :kysymysryhmaid (yhdista-valtakunnalliset-taustakysymysryhmat kysymysryhmat))
              [suorittamisvaihe-id 1]))))
+  (testing "Yhdistää pelkän hakeutumisvaiheen kysymysryhmän"
+    (let [kysymysryhmat [{:kysymysryhmaid hakeutumisvaihe-id}]]
+      (is (= (map :kysymysryhmaid (yhdista-valtakunnalliset-taustakysymysryhmat kysymysryhmat))
+             [suorittamisvaihe-id]))))
+  (testing "Yhdistää pelkän suorittamisvaiheen kysymysryhmän"
+     (let [kysymysryhmat [{:kysymysryhmaid suorittamisvaihe-id}]]
+       (is (= (map :kysymysryhmaid (yhdista-valtakunnalliset-taustakysymysryhmat kysymysryhmat))
+              [suorittamisvaihe-id]))))
   (testing "Jos hakeutumis- ja suorittamisvaiheen kysymyksiä ei löydy, ei tee mitään"
     (let [kysymysryhmat [{:kysymysryhmaid 1}]]
       (is (= (yhdista-valtakunnalliset-taustakysymysryhmat kysymysryhmat) kysymysryhmat)))))
+
+(deftest poista-kysymys-kysymysryhmasta-test
+  (let [poista-kysymys-kysymysryhmasta #'aipal.toimiala.raportti.taustakysymykset/poista-kysymys-kysymysryhmasta]
+    (is (= (poista-kysymys-kysymysryhmasta {:kysymykset [{:kysymysid 123}]} 123)
+           {:kysymykset []}))
+    (is (= (poista-kysymys-kysymysryhmasta {:kysymykset [{:kysymysid 123}]} 456)
+           {:kysymykset [{:kysymysid 123}]}))
+    (is (= (poista-kysymys-kysymysryhmasta {:kysymykset [{:kysymysid 123} {:kysymysid 456}]} 456)
+           {:kysymykset [{:kysymysid 123}]}))))
+
+(deftest poista-taustakysymys-raportista-test
+  (let [poista-taustakysymys-raportista #'aipal.toimiala.raportti.taustakysymykset/poista-taustakysymys-raportista]
+    (with-redefs [aipal.toimiala.raportti.taustakysymykset/poista-kysymys-kysymysryhmasta
+                  (fn [kysymysryhma kysymys]
+                    (assoc kysymysryhma :poistettu-kysymys kysymys))]
+      (is (= (poista-taustakysymys-raportista {:raportti [{:kysymysryhmaid suorittamisvaihe-id}]} 123)
+             {:raportti [{:poistettu-kysymys 123 :kysymysryhmaid suorittamisvaihe-id}]}))
+      (is (= (poista-taustakysymys-raportista {:raportti [{:kysymysryhmaid 123456}]} 123)
+             {:raportti [{:kysymysryhmaid 123456}]})))))
+
+(deftest hae-raportista-taustakysymys-6-test
+  (let [hae-raportista-taustakysymys-6 #'aipal.toimiala.raportti.taustakysymykset/hae-raportista-taustakysymys-6]
+    (is (= (hae-raportista-taustakysymys-6 {:raportti [{:kysymykset [{:kysymysid taustakysymys-6a-id}]}]})
+           taustakysymys-6a-id))
+    (is (= (hae-raportista-taustakysymys-6 {:raportti [{:kysymykset [{:kysymysid taustakysymys-6b-id}]}]})
+           taustakysymys-6b-id))
+    (is (= (hae-raportista-taustakysymys-6 {:raportti [{:kysymykset [{:kysymysid 1}]}]})
+           nil))))
