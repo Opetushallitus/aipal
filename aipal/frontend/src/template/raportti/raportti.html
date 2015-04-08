@@ -180,7 +180,7 @@
     </table>
 
     <div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">
-      <h3>{{$index + 1}}. {{i18n.raportit.jatkokysymykset}}</h3>
+      <h3>{{$index}}.1 {{i18n.raportit.jatkokysymykset}}</h3>
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
         <h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>
         <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
