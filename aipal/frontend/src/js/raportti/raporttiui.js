@@ -164,7 +164,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     });
 
     Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
-      $scope.koulutustoimijat = koulutustoimijat;
+      if ($scope.yllapitaja) {
+        $scope.koulutustoimijat = koulutustoimijat;
+      } else {
+        $scope.koulutustoimijat = _.where(koulutustoimijat, {ytunnus: $scope.kayttooikeudet.aktiivinen_rooli.organisaatio});
+      }
     });
 
     Tutkinto.haeVoimassaolevatTutkinnotHierarkiassa().success(function(koulutusalat) {
