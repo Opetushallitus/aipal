@@ -103,12 +103,14 @@
     (or (first k)
       (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
+(def kysely-num (atom 0))
+
 (defn lisaa-kysely!
   ([]
     (lisaa-kysely! {}))
   ([kysely]
     (let [koulutustoimija (anna-koulutustoimija!)]
-      (aipal.arkisto.kysely/lisaa! (merge {:nimi_fi "oletuskysely, testi"
+      (aipal.arkisto.kysely/lisaa! (merge {:nimi_fi (str "oletuskysely, testi " (swap! kysely-num inc))
                                            :koulutustoimija (:ytunnus koulutustoimija)
                                            :tila "julkaistu"}
                                           kysely)))))

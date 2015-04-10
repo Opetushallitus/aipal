@@ -80,13 +80,13 @@
       (avaa kyselyt-sivu)
       (testing
         "ensimmäisellä kyselyllä on kaksi kyselykertaa"
-        (let [kysely (nth (kyselyt) 0)]
+        (let [kysely (nth (kyselyt) 1)]
           (avaa-kysely kysely)
           (is (= (kyselyn-nimi kysely) "Kysely 1"))
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 1-1" "Kyselykerta: Kyselykerta 1-2"]))))
       (testing
         "toisella kyselyllä on yksi kyselykerta"
-        (let [kysely (nth (kyselyt) 1)]
+        (let [kysely (nth (kyselyt) 0)]
           (avaa-kysely kysely)
           (is (= (kyselyn-nimi kysely) "Kysely 2"))
           (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"])))))))

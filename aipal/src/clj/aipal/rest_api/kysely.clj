@@ -69,21 +69,24 @@
     (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
   (cu/defapi :kysely-luonti nil :post "/" [& kysely]
-    (let [kysely (paivita-arvot kysely
-                                [:voimassa_alkupvm :voimassa_loppupvm]
-                                parse-iso-date)]
-      (json-response
-        (let [{:keys [kyselyid]}
-              (arkisto/lisaa! (-> kysely
-                                (select-keys [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila])
-                                (assoc :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))))]
-          (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))
+    (let [kysely (assoc (paivita-arvot kysely
+                                      [:voimassa_alkupvm :voimassa_loppupvm]
+                                      parse-iso-date)
+                        :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
+      (if (arkisto/samanniminen-kysely? kysely)
+        {:status 400}
+        (json-response
+          (let [{:keys [kyselyid]}
+                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
+            (paivita-kysely! (assoc kysely :kyselyid kyselyid)))))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
-    (json-response
-      (paivita-kysely! (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid))
-                                      [:voimassa_alkupvm :voimassa_loppupvm]
-                                      parse-iso-date))))
+    (let [kysely (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid))
+                                [:voimassa_alkupvm :voimassa_loppupvm]
+                                parse-iso-date)]
+      (if (arkisto/samanniminen-kysely? kysely)
+        {:status 400}
+        (json-response (paivita-kysely! kysely)))))
 
   (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid" [kyselyid]
     (let [kyselyid (Integer/parseInt kyselyid)]

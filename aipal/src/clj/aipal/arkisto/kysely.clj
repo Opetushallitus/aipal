@@ -186,3 +186,14 @@
       (sql/fields :kysymysryhmaid))
     first
     :kysymysryhmaid))
+
+(defn samanniminen-kysely? [kysely]
+  "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kysely."
+  (boolean
+    (seq (sql/select taulut/kysely
+           (sql/where {:koulutustoimija (:koulutustoimija kysely)})
+           (sql/where (or (when (:nimi_fi kysely)
+                            {:nimi_fi (:nimi_fi kysely)})
+                          (when (:nimi_sv kysely)
+                            {:nimi_sv (:nimi_sv kysely)})))
+           (sql/where {:kyselyid [not= (:kyselyid kysely)]})))))
