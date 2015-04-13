@@ -173,8 +173,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
             $location.path('/kyselyt');
             ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
           })
-          .error(function () {
-            ilmoitus.virhe(i18n.hae('kysely.tallennus_epaonnistui'));
+          .error(function (virhe) {
+            ilmoitus.virhe(i18n.hae(virhe), i18n.hae('kysely.tallennus_epaonnistui'));
           });
         }
       };

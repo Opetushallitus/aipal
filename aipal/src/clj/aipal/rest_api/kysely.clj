@@ -74,7 +74,8 @@
                                       parse-iso-date)
                         :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
       (if (arkisto/samanniminen-kysely? kysely)
-        {:status 400}
+        {:status 400
+         :body "kysely.samanniminen_kysely"}
         (json-response
           (let [{:keys [kyselyid]}
                 (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
@@ -82,10 +83,11 @@
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
     (let [kysely (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid))
-                                [:voimassa_alkupvm :voimassa_loppupvm]
-                                parse-iso-date)]
-      (if (arkisto/samanniminen-kysely? kysely)
-        {:status 400}
+                               [:voimassa_alkupvm :voimassa_loppupvm]
+                               parse-iso-date)]
+      (if (arkisto/samanniminen-kysely? (assoc kysely :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)))
+        {:status 400
+         :body "kysely.samanniminen_kysely"}
         (json-response (paivita-kysely! kysely)))))
 
   (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid" [kyselyid]
