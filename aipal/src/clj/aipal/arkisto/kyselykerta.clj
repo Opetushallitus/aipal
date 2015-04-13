@@ -137,3 +137,14 @@
   "Hakee vastaustunnuksista tiedot kyselyn pääavaimella"
   [kyselyid]
   (hae-vastaustunnustiedot {:kyselykerta.kyselyid kyselyid}))
+
+(defn samanniminen-kyselykerta? [kyselykerta]
+  "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kyselykerta."
+  (boolean
+    (seq (sql/select taulut/kyselykerta
+           (sql/join :inner taulut/kysely (= :kyselykerta.kyselyid :kysely.kyselyid))
+           (sql/where {:kysely.koulutustoimija (sql/subselect taulut/kysely
+                                                 (sql/fields :koulutustoimija)
+                                                 (sql/where {:kyselyid (:kyselyid kyselykerta)}))})
+           (sql/where {:nimi (:nimi kyselykerta)})
+           (sql/where {:kyselykertaid [not= (:kyselykertaid kyselykerta)]})))))

@@ -165,6 +165,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
             .success(function(kyselykerta) {
               $scope.kyselykertaForm.$setPristine();
               $location.url('/kyselyt/' + $routeParams.kyselyid + '/kyselykerta/' + kyselykerta.kyselykertaid);
+            })
+            .error(function(virhe) {
+              ilmoitus.virhe(i18n.hae(virhe), i18n.hae('kyselykerta.tallennus_epaonnistui'));
             });
         } else {
           Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta)
@@ -172,8 +175,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
               $scope.kyselykertaForm.$setPristine();
               ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
             })
-            .error(function() {
-              ilmoitus.virhe(i18n.hae('kyselykerta.tallennus_epaonnistui'));
+            .error(function(virhe) {
+              ilmoitus.virhe(i18n.hae(virhe), i18n.hae('kyselykerta.tallennus_epaonnistui'));
             });
         }
       };

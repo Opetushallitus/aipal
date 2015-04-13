@@ -34,11 +34,18 @@
 
   (cu/defapi :kyselykerta-luonti kyselyid :post "/" [kyselyid kyselykerta]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (arkisto/lisaa! kyselyid kyselykerta-parsittu))))
+      (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselyid kyselyid))
+        {:status 400
+         :body "kyselykerta.samanniminen_kyselykerta"}
+        (json-response (arkisto/lisaa! kyselyid kyselykerta-parsittu)))))
 
   (cu/defapi :kyselykerta-muokkaus kyselykertaid :post "/:kyselykertaid" [kyselykertaid & kyselykerta]
-    (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (arkisto/paivita! (Integer/parseInt kyselykertaid) kyselykerta-parsittu))))
+    (let [kyselykertaid (Integer/parseInt kyselykertaid)
+          kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselykertaid kyselykertaid))
+        {:status 400
+         :body "kyselykerta.samanniminen_kyselykerta"}
+        (json-response (arkisto/paivita! kyselykertaid kyselykerta-parsittu)))))
 
   (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/lukitse" [kyselykertaid]
     (json-response (arkisto/lukitse! (Integer/parseInt kyselykertaid))))
