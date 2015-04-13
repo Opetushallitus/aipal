@@ -31,3 +31,10 @@ with nimet as
   join kysely k1 on kk1.kyselyid = k1.kyselyid
   where exists (select 1 from kyselykerta kk2 join kysely k2 on kk2.kyselyid = k2.kyselyid where kk1.nimi = kk2.nimi and kk1.kyselykertaid != kk2.kyselykertaid and k1.koulutustoimija = k2.koulutustoimija))
 update kyselykerta set nimi = nimet.nimi from nimet where nimet.kyselykertaid = kyselykerta.kyselykertaid;
+
+with nimet as 
+  (select kyselykertaid, kk1.nimi || ' ' || (row_number() over (partition by oppilaitos, kk1.nimi order by kyselykertaid)) as nimi
+  from kyselykerta kk1
+  join kysely k1 on kk1.kyselyid = k1.kyselyid
+  where exists (select 1 from kyselykerta kk2 join kysely k2 on kk2.kyselyid = k2.kyselyid where kk1.nimi = kk2.nimi and kk1.kyselykertaid != kk2.kyselykertaid and k1.oppilaitos = k2.oppilaitos))
+update kyselykerta set nimi = nimet.nimi from nimet where nimet.kyselykertaid = kyselykerta.kyselykertaid;
