@@ -216,6 +216,11 @@
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
     (kyselykerta-luonti? kyselyid)))
 
+(defn raportti-koulutustoimijoista? [koulutustoimijat]
+  (or (kayttaja/yllapitaja?)
+      (let [oma-koulutustoimija (-> *kayttaja* :aktiivinen-rooli :organisaatio)]
+        (clojure.set/subset? (set koulutustoimijat) #{oma-koulutustoimija}))))
+
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
@@ -258,7 +263,7 @@
     :tutkinto aipal-kayttaja?
     :oppilaitos aipal-kayttaja?
     :koulutustoimija aipal-kayttaja?
-    :valtakunnallinen-raportti aipal-kayttaja?
+    :valtakunnallinen-raportti raportti-koulutustoimijoista?
     :omat_tiedot aipal-kayttaja?
     :tiedote-luku aipal-kayttaja?
     :tiedote-muokkaus kayttaja/yllapitaja?})

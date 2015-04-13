@@ -66,7 +66,7 @@
                          [(koulutustoimija-vertailuraportti parametrit)])))
 
 (defn reitit [asetukset]
-  (cu/defapi :valtakunnallinen-raportti nil :post "/" [& parametrit]
+  (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :post "/" [& parametrit]
     (db/transaction
       (json-response
         (let [kaikki-raportit (for [raportti (luo-raportit parametrit)]
