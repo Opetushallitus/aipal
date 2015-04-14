@@ -18,7 +18,8 @@
             [korma.db :as db]
             [clj-time.core :as t]
             [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
-            [oph.common.util.util :refer [paivita-arvot muunna-avainsanoiksi]]
+            [oph.common.util.util :refer [paivita-arvot]]
+            [aipal.rest-api.raportti.yhteinen :as yhteinen]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv vertailuraportti-vertailujakso]]
@@ -78,17 +79,8 @@
                  {:raportoitavia (count naytettavat)
                   :virheelliset virheelliset}))))))
 
-(defn wrap-muunna-raportti-json-param [handler]
-  (fn [request]
-    (handler (if-let [raportti (get-in request [:query-params "raportti"])]
-               (let [muunnettu (muunna-avainsanoiksi (cheshire.core/parse-string raportti))]
-                 (merge-with merge request
-                             {:query-params {:parametrit muunnettu}}
-                             {:params {:parametrit muunnettu}}))
-               request))))
-
 (defn csv-reitit [asetukset]
-  (wrap-muunna-raportti-json-param
+  (yhteinen/wrap-muunna-raportti-json-param
     (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :get "/:kieli/csv" [kieli parametrit]
       (db/transaction
         (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
