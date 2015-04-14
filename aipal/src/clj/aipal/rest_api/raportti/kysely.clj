@@ -13,12 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.raportti.kysely
-  (:require [cheshire.core :as cheshire]
-            [korma.db :as db]
+  (:require [korma.db :as db]
             [oph.common.util.http-util :refer [json-response csv-download-response]]
-            [oph.common.util.util :refer [muunna-avainsanoiksi]]
             [aipal.compojure-util :as cu]
             [aipal.rest-api.i18n :as i18n]
+            [aipal.rest-api.raportti.yhteinen :as yhteinen]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti muodosta-yhteenveto]]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
@@ -94,16 +93,16 @@
         (muodosta-kyselyraportti (Integer/parseInt kyselyid) parametrit asetukset)))))
 
 (defn csv-reitit [asetukset]
-  (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/csv" [kyselyid & parametrit]
-    (db/transaction
-      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
-            raportit (muodosta-raportit-parametreilla (Integer/parseInt kyselyid) parametrit)
-            kieli (:kieli parametrit)]
-        (csv-download-response
-          (apply str
-                 (for [raportti raportit]
-                   (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-                     (muodosta-csv raportti kieli)
-                     (muodosta-tyhja-csv raportti kieli))))
-          "kysely.csv")))))
+  (yhteinen/wrap-muunna-raportti-json-param
+    (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/csv" [kyselyid parametrit]
+      (db/transaction
+        (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+              raportit (muodosta-raportit-parametreilla (Integer/parseInt kyselyid) parametrit)
+              kieli (:kieli parametrit)]
+          (csv-download-response
+            (apply str
+                   (for [raportti raportit]
+                     (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+                       (muodosta-csv raportti kieli)
+                       (muodosta-tyhja-csv raportti kieli))))
+            "kysely.csv"))))))

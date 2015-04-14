@@ -13,13 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.raportti.kyselykerta
-  (:require [cheshire.core :as cheshire]
-            [korma.db :as db]
+  (:require [korma.db :as db]
 
             [oph.common.util.http-util :refer [csv-download-response json-response]]
-            [oph.common.util.util :refer [muunna-avainsanoiksi]]
 
             [aipal.compojure-util :as cu]
+            [aipal.rest-api.raportti.yhteinen :as yhteinen]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti muodosta-yhteenveto]]
             [aipal.toimiala.raportti.raportointi :as raportointi]
@@ -57,11 +56,11 @@
         (muodosta-kyselykertaraportti kyselykertaid parametrit asetukset)))))
 
 (defn csv-reitit [asetukset]
-  (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/csv" [kyselykertaid & parametrit]
-    (db/transaction
-      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))
-            raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
-        (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-          (csv-download-response (raportointi/muodosta-csv raportti (:kieli parametrit)) "kyselykerta.csv")
-          (csv-download-response (raportointi/muodosta-tyhja-csv raportti (:kieli parametrit)) "kyselykerta_ei_vastaajia.csv"))))))
+  (yhteinen/wrap-muunna-raportti-json-param
+    (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/csv" [kyselykertaid parametrit]
+      (db/transaction
+        (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+              raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
+          (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+            (csv-download-response (raportointi/muodosta-csv raportti (:kieli parametrit)) "kyselykerta.csv")
+            (csv-download-response (raportointi/muodosta-tyhja-csv raportti (:kieli parametrit)) "kyselykerta_ei_vastaajia.csv")))))))
