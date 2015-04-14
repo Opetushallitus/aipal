@@ -83,13 +83,13 @@
     (handler (if-let [raportti (get-in request [:query-params "raportti"])]
                (let [muunnettu (muunna-avainsanoiksi (cheshire.core/parse-string raportti))]
                  (merge-with merge request
-                             {:query-params {:raportti muunnettu}}
-                             {:params {:raportti muunnettu}}))
+                             {:query-params {:parametrit muunnettu}}
+                             {:params {:parametrit muunnettu}}))
                request))))
 
 (defn csv-reitit [asetukset]
   (wrap-muunna-raportti-json-param
-    (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :get "/:kieli/csv" [kieli & {parametrit :raportti}]
+    (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :get "/:kieli/csv" [kieli parametrit]
       (db/transaction
         (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
           (csv-download-response
