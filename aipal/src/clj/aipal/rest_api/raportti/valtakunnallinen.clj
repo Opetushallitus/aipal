@@ -78,15 +78,24 @@
                  {:raportoitavia (count naytettavat)
                   :virheelliset virheelliset}))))))
 
+(defn wrap-muunna-raportti-json-param [handler]
+  (fn [request]
+    (handler (if-let [raportti (get-in request [:query-params "raportti"])]
+               (let [muunnettu (muunna-avainsanoiksi (cheshire.core/parse-string raportti))]
+                 (merge-with merge request
+                             {:query-params {:raportti muunnettu}}
+                             {:params {:raportti muunnettu}}))
+               request))))
+
 (defn csv-reitit [asetukset]
-  (cu/defapi :valtakunnallinen-raportti nil :get "/:kieli/csv" [kieli & parametrit]
-    (db/transaction
-      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-            parametrit (muunna-avainsanoiksi (cheshire.core/parse-string (:raportti parametrit)))]
-        (csv-download-response
-          (apply str
-                 (for [raportti (luo-raportit parametrit)]
-                   (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-                     (muodosta-csv raportti kieli)
-                     (muodosta-tyhja-csv raportti kieli))))
-          (str (:tyyppi parametrit) "raportti.csv"))))))
+  (wrap-muunna-raportti-json-param
+    (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :get "/:kieli/csv" [kieli & {parametrit :raportti}]
+      (db/transaction
+        (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
+          (csv-download-response
+            (apply str
+                   (for [raportti (luo-raportit parametrit)]
+                     (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+                       (muodosta-csv raportti kieli)
+                       (muodosta-tyhja-csv raportti kieli))))
+            (str (:tyyppi parametrit) "raportti.csv")))))))
