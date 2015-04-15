@@ -25,10 +25,16 @@
   </div>
 </div>
 
+<div class="raportti-tiedot">
+  <div ng-show="kieli==='fi'" ng-include="'template/raportti/raportti-info-fi.html'"></div>
+  <div ng-show="kieli==='sv'" ng-include="'template/raportti/raportti-info-sv.html'"></div>
+</div>
+
 <div class="raportti-tiedot" ng-if="tulos">
   <div>
     <h2>{{tulos | lokalisoiKentta:'nimi'}}</h2>
   </div>
+
   <div ng-show="tulos.yhteenveto.kysely_fi">
     {{'yleiset.kysely' | i18n }}: <b>{{tulos.yhteenveto | lokalisoiKentta:'kysely'}}</b>
   </div>
