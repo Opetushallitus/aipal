@@ -18,6 +18,7 @@
                  [org.clojure/core.cache "0.6.4"]
                  [ring/ring-core "1.2.1"]
                  [http-kit "2.1.18"]
+                 [clj-http "1.0.1"]
 
                  [compojure "1.1.5"]
                  [ring/ring-json "0.2.0"]
