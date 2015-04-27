@@ -17,13 +17,12 @@
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
-            [oph.korma.korma :refer [joda-date->sql-date]]
+            [oph.korma.common :refer [joda-date->sql-date]]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
             [aipal.arkisto.opintoala :as opintoala-arkisto]
             [aipal.arkisto.koulutusala :as koulutusala-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
-            [aipal.toimiala.raportti.taustakysymykset :refer :all]
-            [oph.korma.korma :refer [exec]]))
+            [aipal.toimiala.raportti.taustakysymykset :refer :all]))
 
 (defn ^:private hae-valtakunnalliset-kysymykset []
   (->> (sql/select :kysymys

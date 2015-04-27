@@ -40,13 +40,14 @@
 
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
-            [oph.korma.korma]
+            [oph.korma.common :refer [luo-db]]
 
             [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset] :rename {asetukset asetukset-promise}]
             [aipal.reitit :refer [build-id]]
             [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
-            [aipal.infra.eraajo :as eraajo]))
+            [aipal.infra.eraajo :as eraajo]
+            [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]))
 
 (schema.core/set-fn-validation! true)
 
@@ -83,11 +84,11 @@
     (anon-auth/enable-development-mode!))
   (if (and (:development-mode asetukset)
            (not (:enabled (:cas-auth-server asetukset))))
-    (anon-auth/auth-cas-user handler)
+    (anon-auth/auth-cas-user handler default-test-user-uid)
     (fn [request]
       (let [auth-handler (if (and (:development-mode asetukset)
                                   ((:headers request) "uid"))
-                           (anon-auth/auth-cas-user handler)
+                           (anon-auth/auth-cas-user handler default-test-user-uid)
                            (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
         (auth-handler request)))))
 
@@ -140,7 +141,7 @@
       wrap-kayttaja
       (auth-middleware asetukset)
       log-request-wrapper
-      
+
       (wrap-frame-options :deny)
       (wrap-session {:store session-store
                      :cookie-attrs {:http-only true
@@ -160,7 +161,7 @@
     (let [asetukset (hae-asetukset alkuasetukset)
           _ (deliver asetukset-promise asetukset)
           _ (konfiguroi-lokitus asetukset)
-          _ (oph.korma.korma/luo-db (:db asetukset))
+          _ (luo-db (:db asetukset))
           sammuta (hs/run-server (app asetukset)
                                  {:port (get-in asetukset [:server :port])})]
       (when (or (not (:development-mode asetukset))

@@ -21,7 +21,7 @@
     [clj-time.core :as time]
     [clj-time.core :as ctime]
     [korma.core :as sql]
-    [oph.korma.korma :refer [joda-datetime->sql-timestamp]]
+    [oph.korma.common :refer [joda-datetime->sql-timestamp]]
     [aipal.integraatio.sql.korma :as taulut]))
 
 (def default-koulutusala

@@ -15,7 +15,7 @@
 (ns aipal.arkisto.kyselypohja
   (:import java.sql.Date)
   (:require [korma.core :as sql]
-            [oph.korma.korma :refer [select-unique select-unique-or-nil]]
+            [oph.korma.common :refer [select-unique select-unique-or-nil]]
             [aipal.infra.kayttaja :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))

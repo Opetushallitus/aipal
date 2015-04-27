@@ -19,8 +19,8 @@
             [clojure.tools.logging :as log]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
-            [oph.korma.korma :refer :all]
-            [aipal.integraatio.sql.korma :as taulut]))
+            [aipal.integraatio.sql.korma :as taulut]
+            [oph.korma.common :refer [select-unique-or-nil update-unique]]))
 
 (defn hae-roolit [oid]
   (sql/select taulut/rooli_organisaatio

@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
-            [oph.korma.korma :refer [select-unique]]
+            [oph.korma.common :refer [select-unique]]
             [aipal.infra.kayttaja :refer [yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]

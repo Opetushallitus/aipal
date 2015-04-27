@@ -22,7 +22,7 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [oph.common.util.http-util :refer [parse-iso-date]]
-            [oph.korma.korma :refer [joda-date->sql-date]]))
+            [oph.korma.common :refer [joda-date->sql-date]]))
 
 (defn ^:integration-api paivita-koulutustoimijoiden-tutkinnot! []
   (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Aitusta")

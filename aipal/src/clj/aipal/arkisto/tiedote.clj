@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.tiedote
   (:require [korma.core :as sql]
-            [oph.korma.korma :refer [select-unique-or-nil]]
+            [oph.korma.common :refer [select-unique-or-nil]]
             [aipal.auditlog :as auditlog]
             [aipal.integraatio.sql.korma :as taulut]))
 

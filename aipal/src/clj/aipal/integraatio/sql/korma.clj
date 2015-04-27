@@ -15,7 +15,7 @@
 (ns aipal.integraatio.sql.korma
   (:require
     [korma.core :as sql]
-    [oph.korma.korma  :refer [defentity]]))
+    [oph.korma.common :refer [defentity]]))
 
 (declare kysymys koulutustoimija oppilaitos toimipaikka koulutusala opintoala tutkinto)
 

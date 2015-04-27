@@ -15,7 +15,7 @@
 (ns aipal.arkisto.organisaatiopalvelu
   (:require [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]
-            [oph.korma.korma :refer [select-unique-or-nil]]))
+            [oph.korma.common :refer [select-unique-or-nil]]))
 
 (defn hae-viimeisin-paivitys
   []

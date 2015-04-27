@@ -18,7 +18,7 @@
             [aipal.toimiala.raportti.taustakysymykset :refer :all]
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
-            [oph.korma.korma :refer [joda-date->sql-date]]
+            [oph.korma.common :refer [joda-date->sql-date]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
 
 (defn yhdista-ja-jarjesta-tutkinnot

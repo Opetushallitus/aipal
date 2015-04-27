@@ -15,7 +15,7 @@
 (ns infra.test.data
   (:require [korma.core :as sql]
             [korma.db :as db]
-            [oph.korma.korma :refer [select-unique-or-nil]]
+            [oph.korma.common :refer [select-unique-or-nil]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-uid]]))

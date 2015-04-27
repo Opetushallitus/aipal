@@ -21,7 +21,8 @@
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :refer [kayttaja]]
             [aipal.toimiala.kayttajaoikeudet :as ko]
-            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            oph.korma.common))
 
 (def testikayttaja-uid "MAN-O-TEST")
 (def testikayttaja-oid "OID.MAN-O-TEST")
@@ -44,7 +45,7 @@
                           :name (System/getenv "AIPAL_DB_NAME")
                           :user (System/getenv "AIPAL_DB_USER")
                           :password (System/getenv "AIPAL_DB_PASSWORD")})]
-      (oph.korma.korma/luo-db db-asetukset)))
+      (oph.korma.common/luo-db db-asetukset)))
     ([]
     (let [dev-asetukset (assoc oletusasetukset :development-mode true)
           asetukset (hae-asetukset dev-asetukset)]

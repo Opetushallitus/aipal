@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.integraatio.sql.korma :as taulut]
-            [oph.korma.korma :refer [select-unique-or-nil select-unique]]
+            [oph.korma.common :refer [select-unique-or-nil select-unique]]
             [aipal.auditlog :as auditlog]))
 
 (defn kysely-kentat

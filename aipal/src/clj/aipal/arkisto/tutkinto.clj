@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.tutkinto
   (:require [korma.core :as sql]
-            [oph.korma.korma :refer [select-unique-or-nil]]
+            [oph.korma.common :refer [select-unique-or-nil]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [pvm-mennyt-tai-tanaan? pvm-tuleva-tai-tanaan?]]))
 

@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [clojure.tools.logging :as log]
-            [oph.korma.korma :refer [select-unique select-unique-or-nil update-unique]]
+            [oph.korma.common :refer [select-unique select-unique-or-nil update-unique]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]

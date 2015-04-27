@@ -16,7 +16,7 @@
   (:require [clj-time.core :as time]
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :refer [kyselykerta]]
-            [oph.korma.korma :refer [select-unique-or-nil]]
+            [oph.korma.common :refer [select-unique-or-nil]]
             [aipal.arkisto.kysely :as arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.toimiala.raportti.kyselyraportointi :as kyselyraportointi]

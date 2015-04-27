@@ -15,7 +15,7 @@
 (ns aipal.arkisto.vastaajatunnus
   (:require [clojure.string :as st]
             [clojure.set :refer [rename-keys]]
-            [oph.korma.korma :refer [select-unique-or-nil]]
+            [oph.korma.common :refer [select-unique-or-nil]]
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
