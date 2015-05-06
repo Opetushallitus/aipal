@@ -5,7 +5,7 @@
             [compojure.route :as r]
             [stencil.core :as s]
 
-            [aitu.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
+            [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
             [aipal.asetukset :refer [service-path]]
             aipal.rest-api.i18n
             aipal.rest-api.kieli
