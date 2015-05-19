@@ -56,7 +56,8 @@
                  [clojure-csv/clojure-csv "2.0.1"]
 
                  [clj-http "1.0.1"]]
-  :plugins [[test2junit "1.0.1"]]
+  :plugins [[test2junit "1.0.1"]
+            [codox "0.8.12"]]
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/tools.namespace "0.2.4"]
                                   [clj-webdriver "0.6.0"]
