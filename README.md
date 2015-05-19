@@ -20,6 +20,7 @@ Aikuiskoulutuksen palautejärjestelmä.
 * aipal-hakemistossa oma readme-tiedosto. Frontend-hakemistossa myös.
 * OPH:n [Aitu-projekti](https://github.com/Opetushallitus/aitu) on ollut mallina ja monet käytännöt ja työkalut ovat samoja.
 
+Toteutuskoodilla on riippuvuus yleiskäyttöisiä kirjastofunktioita sisältävään [clojure-utils](https://github.com/Opetushallitus/clojure-utils) repositoryyn siten että molemmat täytyy paikallisesti kloonata rinnakkaisiin hakemistoihin.
 
 # Virtuaalikoneiden käyttö
 
@@ -28,3 +29,4 @@ Sovellusta voi ajaa paikallisesti [Vagrant](http://www.vagrantup.com/) ohjelman 
 # Kehitystyö
 
 Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
+
