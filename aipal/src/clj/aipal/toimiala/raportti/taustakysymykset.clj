@@ -43,13 +43,19 @@
    7312032 "6b"
    7312033 "7"})
 
-(defn aseta-taustakysymyksen-jarjestys
+(defn kysymysten-jarjestys-vertailu [k1 k2]
+  (if (or (contains? yhdistettyjen-taustakysymysten-jarjestys (:kysymysid k1))
+          (contains? yhdistettyjen-taustakysymysten-jarjestys (:kysymysid k2)))
+    (compare (str (:jarjestys k1)) (str (:jarjestys k2)))
+    (compare (:jarjestys k1) (:jarjestys k2))))
+
+(defn aseta-kysymyksen-jarjestys
   [kysymys]
   (let [id (:kysymysid kysymys)
-        jarjestys (yhdistettyjen-taustakysymysten-jarjestys id)]
-    (if jarjestys
-      (assoc kysymys :jarjestys jarjestys)
-      kysymys)))
+        taustakysymyksen-jarjestys (yhdistettyjen-taustakysymysten-jarjestys id)]
+    (if taustakysymyksen-jarjestys
+      (assoc kysymys :jarjestys taustakysymyksen-jarjestys)
+      (update-in kysymys [:jarjestys] inc))))
 
 (defn lisaa-selite-taustakysymykseen
   [kysymys]

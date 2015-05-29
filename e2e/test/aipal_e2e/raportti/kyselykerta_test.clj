@@ -100,33 +100,33 @@
                   :kysymys [{:kysymysid 1
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 1"
-                             :jarjestys 1
+                             :jarjestys 0
                              :vastaustyyppi "kylla_ei_valinta"}
                             {:kysymysid 2
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 2"
-                             :jarjestys 2
+                             :jarjestys 1
                              :vastaustyyppi "kylla_ei_valinta"}
                             {:kysymysid 3
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 3"
-                             :jarjestys 3
+                             :jarjestys 2
                              :max_vastaus 500
                              :vastaustyyppi "vapaateksti"}
                             {:kysymysid 4
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 4"
-                             :jarjestys 4
+                             :jarjestys 3
                              :vastaustyyppi "asteikko"}
                             {:kysymysid 5
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 5"
-                             :jarjestys 5
+                             :jarjestys 4
                              :vastaustyyppi "monivalinta"}
                             {:kysymysid 6
                              :kysymysryhmaid 1
                              :kysymys_fi "Kysymys 6"
-                             :jarjestys 6
+                             :jarjestys 5
                              :vastaustyyppi "likert_asteikko"}
                             {:kysymysid 99
                              :kysymysryhmaid 1

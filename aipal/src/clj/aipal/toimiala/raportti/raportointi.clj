@@ -18,7 +18,8 @@
             [aipal.rest-api.i18n :as i18n]
             [clj-time.core :as t]
             [oph.common.util.http-util :refer [parse-iso-date]]
-            [oph.common.util.util :refer [map-by]]))
+            [oph.common.util.util :refer [map-by]]
+            [aipal.toimiala.raportti.taustakysymykset :refer [kysymysten-jarjestys-vertailu]]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
@@ -172,7 +173,6 @@
                   "monivalinta" (kasittele-monivalintakysymys kysymys vastaukset)
                   "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset))]
     (-> kysymys
-      (update-in [:jarjestys] str)
       (assoc :vastaajien_lukumaara vastaajia
              :vastaajat vastaajat)
       (merge keskiarvo-ja-hajonta)
@@ -204,7 +204,7 @@
         kysymykset (for [kysymys kysymykset
                          :let [kysymyksen-vastaukset (id->vastaukset (:kysymysid kysymys))]]
                      (kasittele-kysymys kysymys kysymyksen-vastaukset))
-        kysymysryhmien-kysymykset (group-by :kysymysryhmaid (sort-by :jarjestys kysymykset))]
+        kysymysryhmien-kysymykset (group-by :kysymysryhmaid (sort kysymysten-jarjestys-vertailu kysymykset))]
     (for [kysymysryhma kysymysryhmat
           :let [kysymykset (kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))
                 vastaajat (reduce clojure.set/union (map :vastaajat kysymykset))]]
