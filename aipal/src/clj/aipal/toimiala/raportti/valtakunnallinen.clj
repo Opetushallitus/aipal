@@ -115,8 +115,9 @@
                 [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
                 [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
                 [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa]
+                [(sql/sqlfn count :vastaus.kylla_asteikko) :jatkovastaus_vastaajien_lukumaara]
                 [(sql/sqlfn avg :vastaus.kylla_asteikko) :jatkovastaus_keskiarvo]
-                [(sql/sqlfn stddev_samp :vastaus.kylla_asteikko) :keskihajonta]
+                [(sql/sqlfn stddev_samp :vastaus.kylla_asteikko) :jatkovastaus_keskihajonta]
                 [(sql/sqlfn jakauma :vastaus.kylla_asteikko) :jatkovastaus_jakauma]
                 [(sql/sqlfn array_agg :vastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
     (sql/group (sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid))

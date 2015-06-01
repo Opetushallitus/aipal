@@ -124,7 +124,10 @@
     {:kysymys_fi (:kylla_teksti_fi kysymys)
      :kysymys_sv (:kylla_teksti_sv kysymys)
      :jakauma (butlast (muodosta-asteikko-jakauman-esitys (muotoile-jakauma (:jatkovastaus_jakauma vastaukset)))) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
-     :vastaustyyppi (:kylla_vastaustyyppi kysymys)}))
+     :vastaustyyppi (:kylla_vastaustyyppi kysymys)
+     :vastaajien_lukumaara (:jatkovastaus_vastaajien_lukumaara vastaukset)
+     :keskiarvo (:jatkovastaus_keskiarvo vastaukset)
+     :keskihajonta (:jatkovastaus_keskihajonta vastaukset)}))
 
 (defn liita-ei-jatkovastaukset
   [kysymys vastaukset]

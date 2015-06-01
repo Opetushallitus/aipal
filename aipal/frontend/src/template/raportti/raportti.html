@@ -195,6 +195,44 @@
           vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi"
           nimet="tulos.nimet">
         </vaittama-kaavio>
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th class="report-table-question"></th>
+              <th ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2" class="report-table-percentage-field">{{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th>
+            </tr>
+            <tr>
+              <th class="report-table-question e2e-kysymys-taulukossa">{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</th>
+              <th ng-repeat-start="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" class="report-table-percentage-field">{{ 'raportti.vastpros' | i18n }}</th>
+              <th ng-repeat-end class="report-table-amount-header">n={{lukumaaratYhteensa(kysymys.jatkovastaukset.kylla.jakauma, i)}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="alkio in kysymys.jatkovastaukset.kylla.jakauma">
+              <td class="e2e-vaihtoehto">{{'kysymys.' + kysymys.jatkovastaukset.kylla.vastaustyyppi + '.' + alkio['vaihtoehto-avain'] | i18n}}</td>
+              <td ng-repeat-start="i in raporttiIndeksit(alkio.osuus)" class="report-table-percentage-field e2e-osuus">{{alkio.osuus[i]}}%</td>
+              <td ng-repeat-end class="report-table-amount-field e2e-vastausten-lukumaara">{{alkio.lukumaara[i]}}</td>
+            </tr>
+          </tbody>
+          <tfoot style="text-align: center">
+            <tr ng-if="kysymys.jatkovastaukset.kylla.keskiarvo !== undefined">
+              <td>{{ 'raportti.keskiarvo' | i18n }}</td>
+              <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ kysymys.jatkovastaukset.kylla.keskiarvo[i] | number:2 }}</td>
+            </tr>
+            <tr ng-if="kysymys.jatkovastaukset.kylla.keskihajonta !== undefined">
+              <td>{{ 'raportti.keskihajonta' | i18n }}</td>
+              <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ kysymys.jatkovastaukset.kylla.keskihajonta[i] | number:2 }}</td>
+            </tr>
+            <tr>
+              <td>{{'raportti.vastaajien_maara' | i18n }}</td>
+              <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ kysymys.jatkovastaukset.kylla.vastaajien_lukumaara[i] }}/{{ kysymysryhma.vastaajien_maksimimaara[i] }}</td>
+            </tr>
+            <tr>
+              <td>{{'raportti.vastausprosentti' | i18n }}</td>
+              <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ prosenttiosuus(kysymys.jatkovastaukset.kylla.vastaajien_lukumaara[i], kysymysryhma.vastaajien_maksimimaara[i]) }}%</td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
       <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
         <h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>
