@@ -13,7 +13,8 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.toimiala.raportti.taustakysymykset
-  (:require [oph.common.util.util :refer [some-value-with]]))
+  (:require [clj-time.core :as time]
+            [oph.common.util.util :refer [some-value-with]]))
 
 (def vanhat-taustakysymykset-id 1)
 (def hakeutumisvaihe-id 3341884)
@@ -49,13 +50,16 @@
     (compare (str (:jarjestys k1)) (str (:jarjestys k2)))
     (compare (:jarjestys k1) (:jarjestys k2))))
 
+(def ^:private uusi-aipal-kaytossa (time/date-time 2015 1 1))
+
 (defn aseta-kysymyksen-jarjestys
   [kysymys]
   (let [id (:kysymysid kysymys)
         taustakysymyksen-jarjestys (yhdistettyjen-taustakysymysten-jarjestys id)]
-    (if taustakysymyksen-jarjestys
-      (assoc kysymys :jarjestys taustakysymyksen-jarjestys)
-      (update-in kysymys [:jarjestys] inc))))
+    (cond
+      taustakysymyksen-jarjestys (assoc kysymys :jarjestys taustakysymyksen-jarjestys)
+      (time/before? (:luotuaika kysymys) uusi-aipal-kaytossa) kysymys
+      :else (update-in kysymys [:jarjestys] inc))))
 
 (defn lisaa-selite-taustakysymykseen
   [kysymys]

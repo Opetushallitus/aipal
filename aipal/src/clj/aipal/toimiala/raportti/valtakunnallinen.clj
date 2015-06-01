@@ -22,10 +22,11 @@
             [aipal.arkisto.opintoala :as opintoala-arkisto]
             [aipal.arkisto.koulutusala :as koulutusala-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
+            [aipal.integraatio.sql.korma :as taulut]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]))
 
 (defn ^:private hae-valtakunnalliset-kysymykset []
-  (->> (sql/select :kysymys
+  (->> (sql/select taulut/kysymys
          (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
          (sql/join :left :jatkokysymys
                    (= :jatkokysymys.jatkokysymysid
@@ -35,6 +36,7 @@
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
          (sql/fields :kysymys.jarjestys
+                     :kysymys.luotuaika
                      [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
                      :kysymys.kysymys_fi
                      :kysymys.kysymys_sv

@@ -17,6 +17,7 @@
             [korma.core :as sql]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]
             [aipal.toimiala.raportti.raportointi :as raportointi]
+            [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [paivita-arvot poista-tyhjat]]
             [oph.korma.common :refer [joda-date->sql-date]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
@@ -114,7 +115,7 @@
 
 (defn ^:private hae-kysymykset [{:keys [kyselykertaid kyselyid]}]
   (->
-    (sql/select* :kysely)
+    (sql/select* taulut/kysely)
     (sql/join :inner :kysely_kysymysryhma
               (= :kysely.kyselyid
                  :kysely_kysymysryhma.kyselyid))
@@ -139,6 +140,7 @@
     (sql/order :kysely_kysymysryhma.jarjestys :ASC)
     (sql/order :kysymys.jarjestys :ASC)
     (sql/fields :kysymys.kysymysryhmaid
+                :kysymys.luotuaika
                 [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
