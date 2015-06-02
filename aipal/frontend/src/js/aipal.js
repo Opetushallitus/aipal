@@ -50,6 +50,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.hakuvalitsin',
   'yhteiset.direktiivit.kyselylista',
   'yhteiset.direktiivit.rullaus',
+  'yhteiset.direktiivit.jakauma',
   'yhteiset.suodattimet.enumarvo',
   'yhteiset.suodattimet.i18n',
   'pasvaz.bindonce',
