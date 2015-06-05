@@ -16,7 +16,7 @@
 
 angular.module('yhteiset.direktiivit.auth', [])
 
-  .directive('auth', ['kayttooikeudet', function (kayttooikeudetService) {
+  .directive('auth', ['kayttooikeudet', function (kayttooikeudet) {
 
     return {
       restrict: 'E',
@@ -26,29 +26,13 @@ angular.module('yhteiset.direktiivit.auth', [])
       scope: true,
       link: function (scope, element, attrs) {
 
-        var kayttooikeudet;
         var roolit = attrs.roolit ? scope.$eval(attrs.roolit) : [];
         roolit.push('YLLAPITAJA');
 
         scope.sallittu = false;
 
-        function paivitaOikeus() {
-          scope.sallittu = onkoSallittu();
-        }
-
-        function onkoSallittu() {
-          if (kayttooikeudet && kayttooikeudet.$resolved) {
-            try {
-              return _.contains(roolit, kayttooikeudet.aktiivinen_rooli.rooli);
-            } catch (e) {
-            }
-          }
-          return false;
-        }
-
-        kayttooikeudetService.hae().then(function (oikeudet) {
-          kayttooikeudet = oikeudet;
-          paivitaOikeus();
+        kayttooikeudet.hae().then(function (oikeudet) {
+          scope.sallittu = _.contains(roolit, oikeudet.aktiivinen_rooli.rooli);
         });
 
       }
