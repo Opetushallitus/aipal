@@ -17,6 +17,12 @@
                         {{i18n.kysymysryhma.taustakysymykset}}
                     </label>
                 </div>
+                <div>
+                    <label>
+                        <input type="checkbox" ng-model="kysymysryhma.ntm_kysymykset">
+                        {{i18n.kysymysryhma.ntm_kysymykset}}
+                    </label>
+                </div>
             </div>
 
             <label ng-class="{pakollinen: !kysymysryhma.nimi_sv}"><span>{{i18n.kysymysryhma.nimi_fi}} ({{i18n.yleiset.nakyy_vastaajalle}})</span>

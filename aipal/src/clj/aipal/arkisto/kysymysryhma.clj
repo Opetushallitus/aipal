@@ -92,7 +92,7 @@
     (sql/select* taulut/kysymysryhma)
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv
                 :selite_fi :selite_sv
-                :taustakysymykset :valtakunnallinen :tila)))
+                :ntm_kysymykset :taustakysymykset :valtakunnallinen :tila)))
 
 (def kysymys-select
   (->
@@ -292,7 +292,7 @@
   (auditlog/kysymysryhma-muokkaus! (:kysymysryhmaid kysymysryhma))
   (->
     (sql/update* taulut/kysymysryhma)
-    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :selite_fi :selite_sv :valtakunnallinen :koulutustoimija :taustakysymykset]))
+    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :selite_fi :selite_sv :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset]))
     (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
     (sql/update)))
 

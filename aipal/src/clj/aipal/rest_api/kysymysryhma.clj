@@ -110,7 +110,7 @@
           (arkisto/hae-taustakysymysryhmat)
           (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) voimassa)))))
 
-  (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset taustakysymykset]
+  (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset taustakysymykset ntm_kysymykset]
     (lisaa-kysymysryhma! {:nimi_fi nimi_fi
                           :selite_fi selite_fi
                           :nimi_sv nimi_sv
@@ -120,6 +120,9 @@
                                               false)
                           :taustakysymykset (if (yllapitaja?)
                                               (true? taustakysymykset)
+                                              false)
+                          :ntm_kysymykset (if (yllapitaja?)
+                                              (true? ntm_kysymykset)
                                               false)
                           :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
                          kysymykset))
@@ -131,7 +134,8 @@
           korjaa-eos-vastaus-sallittu
           (assoc :kysymysryhmaid (Integer/parseInt kysymysryhmaid)
                  :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)
-                 :taustakysymykset (if (yllapitaja?) (true? (:taustakysymykset kysymysryhma)) false))))))
+                 :taustakysymykset (if (yllapitaja?) (true? (:taustakysymykset kysymysryhma)) false)
+                 :ntm_kysymykset (if (yllapitaja?) (true? (:ntm_kysymykset kysymysryhma)) false))))))
 
   (cu/defapi :kysymysryhma-poisto kysymysryhmaid :delete "/:kysymysryhmaid" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
