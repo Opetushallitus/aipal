@@ -14,9 +14,9 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.lokalisointi'])
+angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.lokalisointi'])
 
-  .directive('kysymysryhmalista', [function() {
+  .directive('kysymysryhmalista', ['kayttooikeudet', function(kayttooikeudet) {
     return {
       restrict: 'E',
       replace: true,
@@ -44,6 +44,9 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
           }
         });
 
+        $scope.yllapitaja = function() {
+          return kayttooikeudet.isYllapitaja();
+        };
         $scope.julkaiseKysymysryhmaModal = function(kysymysryhma) {
           var modalInstance = $modal.open({
             templateUrl: 'template/yhteiset/direktiivit/julkaise-kysymysryhma.html',
