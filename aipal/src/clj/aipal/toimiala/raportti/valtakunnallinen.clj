@@ -32,6 +32,7 @@
                    (= :jatkokysymys.jatkokysymysid
                       :kysymys.jatkokysymysid))
          (sql/where {:kysymysryhma.valtakunnallinen true
+                     :kysymysryhma.ntm_kysymykset false
                      :kysymys.kysymysid [not-in valtakunnalliset-duplikaattikysymykset]})
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
@@ -58,6 +59,7 @@
   (yhdista-valtakunnalliset-taustakysymysryhmat
     (sql/select :kysymysryhma
       (sql/where {:kysymysryhma.valtakunnallinen true
+                  :kysymysryhma.ntm_kysymykset false
                   :kysymysryhma.tila (sql/subselect :kysymysryhma
                                        (sql/fields :tila)
                                        (sql/where {:kysymysryhmaid taustakysymysryhmaid}))})
