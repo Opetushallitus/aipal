@@ -184,9 +184,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           return true;
         }
         var kysymysryhmat = _.reject($scope.kysely.kysymysryhmat, 'poistetaan_kyselysta');
+        var vainNtmKysymyksia = _.every(kysymysryhmat, 'ntm_kysymykset');
         var taustakysymysryhma = _.find(kysymysryhmat, 'taustakysymykset') !== undefined;
         var valtakunnallisia = _.find(kysymysryhmat, 'valtakunnallinen') !== undefined;
-        return !valtakunnallisia || taustakysymysryhma;
+        return !valtakunnallisia || vainNtmKysymyksia || taustakysymysryhma;
       };
 
       $scope.peruuta = function() {
