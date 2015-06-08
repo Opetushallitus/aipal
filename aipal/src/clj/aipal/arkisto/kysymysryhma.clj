@@ -26,7 +26,8 @@
       (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
       (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
                      (and {:kysymysryhma_organisaatio_view.valtakunnallinen true}
-                          (or {:kysymysryhma.lisattavissa true}
+                          (or {:kysymysryhma.lisattavissa true
+                               :kysymysryhma.ntm_kysymykset false}
                               (yllapitaja?)))))
       (cond->
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
