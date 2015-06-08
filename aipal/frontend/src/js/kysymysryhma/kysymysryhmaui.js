@@ -295,9 +295,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
 
     function sisaltaaAsteikkokysymyksen(){
-        return _.any($scope.kysymysryhma.kysymykset, function(k){
-          return k.vastaustyyppi === 'asteikko';
-        });
+      return _.any($scope.kysymysryhma.kysymykset, function(k){
+        return k.vastaustyyppi === 'asteikko';
+      });
     }
 
     _(['form.$valid', 'muokkaustila', 'kysymysryhma.kysymykset']).each(function(m){
