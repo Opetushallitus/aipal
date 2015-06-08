@@ -300,11 +300,18 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       });
     }
 
-    _(['form.$valid', 'muokkaustila', 'kysymysryhma.kysymykset']).each(function(m){
+    function onVirheellinenNtmKysymysryhma() {
+      return $scope.kysymysryhma.ntm_kysymykset &&
+        (!$scope.kysymysryhma.valtakunnallinen || $scope.kysymysryhma.taustakysymykset);
+    }
+
+    _(['form.$valid', 'muokkaustila', 'kysymysryhma.kysymykset', 'kysymysryhma.ntm_kysymykset',
+      'kysymysryhma.taustakysymykset', 'kysymysryhma.valtakunnallinen']).each(function(m){
       $scope.$watch(m, function(){
         $scope.tallennusSallittu = !($scope.form.$valid === false ||
                                      $scope.muokkaustila ||
-                                     sisaltaaAsteikkokysymyksen());
+                                     sisaltaaAsteikkokysymyksen() ||
+                                     onVirheellinenNtmKysymysryhma());
       }, true);
     });
   }])
