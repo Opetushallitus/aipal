@@ -50,7 +50,10 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
 
   function alustaController(injektiot) {
     $controller('KysymysryhmaController', _.assign({$scope: $scope}, injektiot));
-    $scope.form = { $setPristine: function() {} };
+    $scope.form = {
+      $setPristine: function() {},
+      $valid: true
+    };
   }
 
   function alustaControllerKopioimaan(kysymysryhmaid) {
@@ -148,45 +151,52 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
 
   it('antaa tallentaa, jos kaikki tiedot ovat kunnossa', function(){
     alustaController();
-    $scope.$digest();
-    expect($scope.tallennusSallittu).toBe(true);
+    expect($scope.tallennusSallittu()).toBe(true);
   });
 
   it('ei anna tallentaa, jos lomakkeen tiedoissa on virheitä', function(){
     alustaController();
     $scope.form.$valid = false;
-    $scope.$digest();
-    expect($scope.tallennusSallittu).toBe(false);
+    expect($scope.tallennusSallittu()).toBe(false);
   });
 
   it('ei anna tallentaa muokkaustilassa', function(){
     alustaController();
     $scope.lisaaKysymys();
-    $scope.$digest();
-    expect($scope.tallennusSallittu).toBe(false);
+    expect($scope.tallennusSallittu()).toBe(false);
   });
 
   it('antaa tallentaa, jos yksikään kysymys ei ole asteikko-tyyppinen', function(){
     alustaController();
     $scope.kysymysryhma.kysymykset = [{vastaustyyppi: 'likert_asteikko'}];
-    $scope.$digest();
-    expect($scope.tallennusSallittu).toBe(true);
+    expect($scope.tallennusSallittu()).toBe(true);
   });
 
   it('ei anna tallentaa, jos ryhmässä on asteikko-tyyppinen kysymys', function(){
     alustaController();
     $scope.kysymysryhma.kysymykset = [{vastaustyyppi: 'asteikko'}];
-    $scope.$digest();
-    expect($scope.tallennusSallittu).toBe(false);
+    expect($scope.tallennusSallittu()).toBe(false);
   });
 
   it('antaa tallentaa, jos asteikkokysymyksen vastaustyyppi vaihdetaan toiseksi', function(){
     alustaController();
     $scope.kysymysryhma.kysymykset = [{vastaustyyppi: 'asteikko'}];
-    $scope.$digest();
     $scope.kysymysryhma.kysymykset[0].vastaustyyppi = 'likert_asteikko';
-    $scope.$digest();
-    expect($scope.tallennusSallittu).toBe(true);
+    expect($scope.tallennusSallittu()).toBe(true);
+  });
+
+  it('ei anna tallentaa, jos ntm-kysymysryhmä ei ole merkitty valtakunnalliseksi', function(){
+    alustaController();
+    $scope.kysymysryhma.ntm_kysymykset = true;
+    $scope.kysymysryhma.valtakunnallinen = false;
+    expect($scope.tallennusSallittu()).toBe(false);
+  });
+
+  it('ei anna tallentaa, jos ntm-kysymysryhmä on merkitty taustakysymysryhmäksi', function(){
+    alustaController();
+    $scope.kysymysryhma.ntm_kysymykset = true;
+    $scope.kysymysryhma.taustakysymykset = true;
+    expect($scope.tallennusSallittu()).toBe(false);
   });
 
   it('hakee kopioitavan ryhmän tiedot palvelimelta', function(){

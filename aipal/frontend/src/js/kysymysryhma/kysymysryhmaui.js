@@ -300,20 +300,17 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       });
     }
 
-    function onVirheellinenNtmKysymysryhma() {
-      return $scope.kysymysryhma.ntm_kysymykset &&
-        (!$scope.kysymysryhma.valtakunnallinen || $scope.kysymysryhma.taustakysymykset);
+    function onValidiNtmKysymysryhma() {
+      return !$scope.kysymysryhma.ntm_kysymykset ||
+        (!!$scope.kysymysryhma.valtakunnallinen && !$scope.kysymysryhma.taustakysymykset);
     }
 
-    _(['form.$valid', 'muokkaustila', 'kysymysryhma.kysymykset', 'kysymysryhma.ntm_kysymykset',
-      'kysymysryhma.taustakysymykset', 'kysymysryhma.valtakunnallinen']).each(function(m){
-      $scope.$watch(m, function(){
-        $scope.tallennusSallittu = !($scope.form.$valid === false ||
-                                     $scope.muokkaustila ||
-                                     sisaltaaAsteikkokysymyksen() ||
-                                     onVirheellinenNtmKysymysryhma());
-      }, true);
-    });
+    $scope.tallennusSallittu = function() {
+      return $scope.form.$valid &&
+        !$scope.muokkaustila &&
+        !sisaltaaAsteikkokysymyksen() &&
+        onValidiNtmKysymysryhma();
+    };
   }])
 
   .controller('KysymysryhmaRakenneModalController', ['$modalInstance', '$scope', 'kysymysryhma', function($modalInstance, $scope, kysymysryhma) {
