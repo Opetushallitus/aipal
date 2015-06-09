@@ -26,6 +26,7 @@
    "kysymys"
    "kysely_kysymysryhma"
    "kysely_kysymys"
+   "kysymysryhma_kyselypohja"
    "kysymysryhma"
    "jatkokysymys"
    "kyselypohja"

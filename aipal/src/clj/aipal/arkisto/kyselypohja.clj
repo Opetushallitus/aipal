@@ -20,6 +20,16 @@
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
 
+(defn rajaa-ntm-kyselypohjat
+  [query kyselypohjaid]
+  (sql/where query
+             (or (not (sql/sqlfn :exists
+                                 (sql/subselect :kysymysryhma_kyselypohja
+                                   (sql/join :inner :kysymysryhma {:kysymysryhma.kysymysryhmaid :kysymysryhma_kyselypohja.kysymysryhmaid})
+                                   (sql/where (and {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid}
+                                                   {:kysymysryhma.ntm_kysymykset true})))))
+                 (yllapitaja?))))
+
 (defn hae-kyselypohjat
   ([organisaatio vain-voimassaolevat]
     (-> (sql/select* :kyselypohja)
@@ -30,6 +40,7 @@
                      (and {:kyselypohja_organisaatio_view.valtakunnallinen true}
                           (or {:kyselypohja.tila "julkaistu"}
                               (yllapitaja?)))))
+      (rajaa-ntm-kyselypohjat :kyselypohja.kyselypohjaid)
       (cond->
         vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
       (sql/order :muutettuaika :desc)
