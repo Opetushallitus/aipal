@@ -12,27 +12,27 @@
         {{kyselypohja |lokalisoiKentta:'nimi'}}
       </td>
       <td class="actions">
-          <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="kyselypohja.tila !== 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+          <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="kyselypohja.tila !== 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               <span class="fa fa-pencil"></span>
           </a>&nbsp;
 
-          <button class="btn btn-primary btn-sm" ng-click="palautaKyselypohjaLuonnokseksi(kyselypohja)" ng-if="kyselypohja.tila == 'julkaistu' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+          <button class="btn btn-primary btn-sm" ng-click="palautaKyselypohjaLuonnokseksi(kyselypohja)" ng-if="kyselypohja.tila == 'julkaistu' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.palauta_luonnokseksi' | i18n }}&nbsp;
               <span class="fa fa-reply"></span>
           </button>
-          <button class="btn btn-primary btn-sm" ng-click="palautaKyselypohjaJulkaistuksi(kyselypohja)" ng-if="kyselypohja.tila == 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+          <button class="btn btn-primary btn-sm" ng-click="palautaKyselypohjaJulkaistuksi(kyselypohja)" ng-if="kyselypohja.tila == 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.palauta_julkaistuksi' | i18n }}&nbsp;
               <span class="fa fa-reply"></span>
           </button>
-          <button class="btn btn-primary btn-sm" ng-click="julkaiseKyselypohja(kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+          <button class="btn btn-primary btn-sm" ng-click="julkaiseKyselypohja(kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.julkaise' | i18n }}&nbsp;
               <span class="fa fa-share"></span>
           </button>
-          <button class="btn btn-primary btn-sm" ng-click="suljeKyselypohja(kyselypohja)" ng-if="kyselypohja.tila == 'julkaistu' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+          <button class="btn btn-primary btn-sm" ng-click="suljeKyselypohja(kyselypohja)" ng-if="kyselypohja.tila == 'julkaistu' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.sulje' | i18n }}&nbsp;
               <span class="fa fa-close"></span>
           </button>
-          <button class="btn btn-primary btn-sm" ng-click="poistaKyselypohja(kyselypohjat, kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja)">
+          <button class="btn btn-primary btn-sm" ng-click="poistaKyselypohja(kyselypohjat, kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.poista' | i18n }}&nbsp;
               <span class="fa fa-trash"></span>
           </button>

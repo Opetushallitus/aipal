@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.lokalisointi'])
+angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.lokalisointi'])
 
   .directive('kyselypohjalista', [function() {
     return {
@@ -31,7 +31,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
           scope.valtakunnalliset = scope.$eval(attrs.valtakunnalliset);
         });
       },
-      controller: ['$filter', '$scope', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $scope, Kyselypohja, i18n, ilmoitus, varmistus) {
+      controller: ['$filter', '$scope', 'kayttooikeudet', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $scope, kayttooikeudet, Kyselypohja, i18n, ilmoitus, varmistus) {
         $scope.i18n = i18n;
         $scope.rajoitin = {
           tila: $scope.tila
@@ -43,6 +43,10 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             delete $scope.rajoitin.valtakunnallinen;
           }
         });
+
+        $scope.yllapitaja = function() {
+          return kayttooikeudet.isYllapitaja();
+        };
 
         $scope.julkaiseKyselypohja = function(kyselypohja) {
           varmistus.varmista(i18n.hae('kyselypohja.julkaise'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.julkaise_teksti'), i18n.hae('kyselypohja.julkaise')).then(function() {
