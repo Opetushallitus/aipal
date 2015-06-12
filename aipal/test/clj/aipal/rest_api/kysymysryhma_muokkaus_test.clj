@@ -2,7 +2,8 @@
   (:require [clojure.test :refer :all]
             [korma.core :as sql]
             [aipal.arkisto.kysymysryhma :as arkisto]
-            [aipal.rest-api.kysymysryhma :refer [paivita-kysymysryhma!]]))
+            [aipal.rest-api.kysymysryhma :refer [paivita-kysymysryhma!]]
+            [aipal.sql.test-data-util :as test-data]))
 
 (defn arkisto-stub-fixture [f]
   (with-redefs [arkisto/hae (fn [kysymysryhmaid] {})
@@ -62,3 +63,18 @@
     (is (= (:nimi_fi (paivita-kysymysryhma! {:kysymysryhmaid 1
                                              :nimi_fi "Uusi"}))
            "Uusi"))))
+
+(deftest paivita-ntm-kysymysryhma
+  (testing "ntm-kysymysryhman päivitys"
+    (let [kysymysryhma (merge test-data/default-kysymysryhma {:ntm_kysymykset true})
+          paivitetty-kysymysryhma (atom nil)]
+      (with-redefs [arkisto/paivita! (partial reset! paivitetty-kysymysryhma)]
+        (testing "on sallittu pääkäyttäjälle"
+          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly true)]
+            (paivita-kysymysryhma! kysymysryhma)
+            (is (true? (:ntm_kysymykset @paivitetty-kysymysryhma)))))
+
+        (testing "ei ole sallittu muille käyttäjille"
+          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)]
+            (paivita-kysymysryhma! kysymysryhma)
+            (is (false? (:ntm_kysymykset @paivitetty-kysymysryhma)))))))))
