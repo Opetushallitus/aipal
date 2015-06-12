@@ -109,3 +109,25 @@
         id2 (-> (test-data/lisaa-kysymysryhma! {:taustakysymykset true
                                                 :valtakunnallinen true} koulutustoimija) :kysymysryhmaid)]
     (is (= #{id1 id2} (set (map :kysymysryhmaid (hae-taustakysymysryhmat)))))))
+
+(deftest ^:integraatio hae-ntm-kysymysryhmat
+  (let [opetushallitus (test-data/lisaa-koulutustoimija! {:ytunnus "1111111-1"})
+        koulutustoimija (test-data/lisaa-koulutustoimija!)
+        {:keys [kysymysryhmaid]} (test-data/lisaa-kysymysryhma! {:ntm_kysymykset true
+                                                                 :taustakysymykset false
+                                                                 :tila "julkaistu"
+                                                                 :valtakunnallinen true}
+                                                                opetushallitus)
+        sisaltaa-kysymysryhman (fn [kysymysryhmat kysymysryhmaid]
+                                 (contains? (set (map :kysymysryhmaid kysymysryhmat))
+                                            kysymysryhmaid))]
+    (testing
+      "pääkäyttäjä näkee NTM-kysymysryhmän"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly true)]
+       (is (sisaltaa-kysymysryhman (hae-kysymysryhmat (:ytunnus opetushallitus))
+                                   kysymysryhmaid))))
+    (testing
+      "tavallinen käyttäjä ei näe NTM-kysymysryhmää"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)]
+        (is (not (sisaltaa-kysymysryhman (hae-kysymysryhmat (:ytunnus koulutustoimija))
+                                         kysymysryhmaid)))))))
