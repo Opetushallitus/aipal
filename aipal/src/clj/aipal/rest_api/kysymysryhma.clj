@@ -105,7 +105,12 @@
       (poista-kysymys! kysymys))))
 
 (defn paivita-kysymysryhma! [kysymysryhma]
-  (let [kysymysryhmaid (:kysymysryhmaid kysymysryhma)
+  (let [kysymysryhma (-> kysymysryhma
+                       korjaa-eos-vastaus-sallittu
+                       (assoc :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)
+                              :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
+                              :ntm_kysymykset (suodata-vain-yllapitajalle kysymysryhma :ntm_kysymykset)))
+        kysymysryhmaid (:kysymysryhmaid kysymysryhma)
         kysymykset (:kysymykset kysymysryhma)]
     (poista-kysymysryhman-kysymykset! kysymysryhmaid)
     (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
@@ -130,13 +135,7 @@
 
   (cu/defapi :kysymysryhma-muokkaus kysymysryhmaid :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
     (json-response
-      (paivita-kysymysryhma!
-        (-> kysymysryhma
-          korjaa-eos-vastaus-sallittu
-          (assoc :kysymysryhmaid (Integer/parseInt kysymysryhmaid)
-                 :valtakunnallinen (if (yllapitaja?) (true? (:valtakunnallinen kysymysryhma)) false)
-                 :taustakysymykset (if (yllapitaja?) (true? (:taustakysymykset kysymysryhma)) false)
-                 :ntm_kysymykset (if (yllapitaja?) (true? (:ntm_kysymykset kysymysryhma)) false))))))
+      (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid (Integer/parseInt kysymysryhmaid)))))
 
   (cu/defapi :kysymysryhma-poisto kysymysryhmaid :delete "/:kysymysryhmaid" [kysymysryhmaid]
     (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
