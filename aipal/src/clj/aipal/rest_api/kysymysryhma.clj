@@ -71,11 +71,25 @@
   (doseq [k (lisaa-jarjestys kysymykset)]
     (lisaa-kysymys! k kysymysryhmaid)))
 
+(defn ^:private valitse-kysymysryhman-peruskentat [kysymysryhma]
+  (select-keys kysymysryhma [:nimi_fi
+                             :nimi_sv
+                             :selite_fi
+                             :selite_sv]))
+
+(defn ^:private suodata-vain-yllapitajalle [kysymysryhma kentta]
+  (if (yllapitaja?)
+    (true? (kentta kysymysryhma))
+    false))
+
 (defn lisaa-kysymysryhma! [kysymysryhma kysymykset]
-  (let [kysymysryhma (arkisto/lisaa-kysymysryhma! kysymysryhma)
-        kysymysryhmaid (:kysymysryhmaid kysymysryhma)]
-    (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
-    (json-response kysymysryhma)))
+  (let [kysymysryhma (arkisto/lisaa-kysymysryhma! (merge (valitse-kysymysryhman-peruskentat kysymysryhma)
+                                                         {:koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)
+                                                          :ntm_kysymykset (suodata-vain-yllapitajalle kysymysryhma :ntm_kysymykset)
+                                                          :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
+                                                          :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)}))]
+    (lisaa-kysymykset-kysymysryhmaan! kysymykset (:kysymysryhmaid kysymysryhma))
+    kysymysryhma))
 
 (defn poista-kysymys! [kysymys]
   (when (= "monivalinta" (:vastaustyyppi kysymys))
@@ -110,22 +124,9 @@
           (arkisto/hae-taustakysymysryhmat)
           (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) voimassa)))))
 
-  (cu/defapi :kysymysryhma-luonti nil :post "/" [nimi_fi selite_fi nimi_sv selite_sv valtakunnallinen kysymykset taustakysymykset ntm_kysymykset]
-    (lisaa-kysymysryhma! {:nimi_fi nimi_fi
-                          :selite_fi selite_fi
-                          :nimi_sv nimi_sv
-                          :selite_sv selite_sv
-                          :valtakunnallinen (if (yllapitaja?)
-                                              (true? valtakunnallinen)
-                                              false)
-                          :taustakysymykset (if (yllapitaja?)
-                                              (true? taustakysymykset)
-                                              false)
-                          :ntm_kysymykset (if (yllapitaja?)
-                                              (true? ntm_kysymykset)
-                                              false)
-                          :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
-                         kysymykset))
+  (cu/defapi :kysymysryhma-luonti nil :post "/" [kysymykset & kysymysryhma]
+    (json-response
+      (lisaa-kysymysryhma! kysymysryhma kysymykset)))
 
   (cu/defapi :kysymysryhma-muokkaus kysymysryhmaid :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
     (json-response
