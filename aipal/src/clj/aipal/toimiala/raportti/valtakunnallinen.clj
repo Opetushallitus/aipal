@@ -57,10 +57,10 @@
 (defn hae-valtakunnalliset-kysymysryhmat [taustakysymysryhmaid]
   (yhdista-valtakunnalliset-taustakysymysryhmat
     (sql/select :kysymysryhma
-      (sql/where {:kysymysryhma.valtakunnallinen true
-                  :kysymysryhma.tila (sql/subselect :kysymysryhma
-                                       (sql/fields :tila)
-                                       (sql/where {:kysymysryhmaid taustakysymysryhmaid}))})
+      (sql/join :inner [:kysymysryhma_taustakysymysryhma_view :kr_tkr]
+                (and (= :kr_tkr.kysymysryhmaid :kysymysryhma.kysymysryhmaid)
+                     (= :kr_tkr.taustakysymysryhmaid taustakysymysryhmaid)))
+      (sql/where {:kysymysryhma.valtakunnallinen true})
       (sql/order :kysymysryhma.kysymysryhmaid :ASC)
       (sql/fields :kysymysryhmaid
                   :nimi_fi
@@ -204,7 +204,8 @@
 (defn paivita-nakymat []
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY kysymys_vastaaja_view;")
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")
-  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaaja_taustakysymysryhma_view;"))
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaaja_taustakysymysryhma_view;")
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY kysymysryhma_taustakysymysryhma_view;"))
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
