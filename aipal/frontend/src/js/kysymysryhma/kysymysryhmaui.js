@@ -302,7 +302,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     function onValidiNtmKysymysryhma() {
       return !$scope.kysymysryhma.ntm_kysymykset ||
-        (!!$scope.kysymysryhma.valtakunnallinen && !$scope.kysymysryhma.taustakysymykset);
+        !!$scope.kysymysryhma.valtakunnallinen;
     }
 
     $scope.tallennusSallittu = function() {
