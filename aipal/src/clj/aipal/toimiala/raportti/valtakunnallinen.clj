@@ -32,7 +32,6 @@
                    (= :jatkokysymys.jatkokysymysid
                       :kysymys.jatkokysymysid))
          (sql/where {:kysymysryhma.valtakunnallinen true
-                     :kysymysryhma.ntm_kysymykset false
                      :kysymys.kysymysid [not-in valtakunnalliset-duplikaattikysymykset]})
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
@@ -59,7 +58,6 @@
   (yhdista-valtakunnalliset-taustakysymysryhmat
     (sql/select :kysymysryhma
       (sql/where {:kysymysryhma.valtakunnallinen true
-                  :kysymysryhma.ntm_kysymykset false
                   :kysymysryhma.tila (sql/subselect :kysymysryhma
                                        (sql/fields :tila)
                                        (sql/where {:kysymysryhmaid taustakysymysryhmaid}))})
@@ -87,13 +85,12 @@
         :when (seq arvot)]
     {:id (->int kysymysid) :arvot (map ->int arvot)}))
 
-(defn ^:private raportti-query [rajaukset taustakysymykset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn ^:private raportti-query [rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* [:vastaus_jatkovastaus_valtakunnallinen_view :vastaus])
-    (sql/join :kysymys_vastaaja_view (and (= :vastaus.vastaajaid :kysymys_vastaaja_view.vastaajaid)
-                                          (if (= :uusi taustakysymykset)
-                                            :kysymys_vastaaja_view.uusi
-                                            :kysymys_vastaaja_view.vanha)))
+    (sql/join :inner :vastaaja_taustakysymysryhma_view
+              (and (= :vastaus.vastaajaid :vastaaja_taustakysymysryhma_view.vastaajaid)
+                   (= taustakysymysryhmaid :vastaaja_taustakysymysryhma_view.taustakysymysryhmaid)))
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus koulutustoimijat) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus
@@ -206,7 +203,8 @@
 
 (defn paivita-nakymat []
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY kysymys_vastaaja_view;")
-  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;"))
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaaja_taustakysymysryhma_view;"))
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
@@ -221,10 +219,7 @@
                         (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
                         alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        taustakysymykset (if (= taustakysymysryhmaid vanhat-taustakysymykset-id)
-                           :vanha
-                           :uusi)
-        data (raportti-query rajaukset taustakysymykset alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
+        data (raportti-query rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
     (merge
       (raportin-otsikko parametrit)
