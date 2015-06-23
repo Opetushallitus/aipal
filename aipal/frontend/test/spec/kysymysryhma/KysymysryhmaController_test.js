@@ -192,11 +192,12 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     expect($scope.tallennusSallittu()).toBe(false);
   });
 
-  it('ei anna tallentaa, jos ntm-kysymysryhmä on merkitty taustakysymysryhmäksi', function(){
+  it('antaa tallentaa, jos ntm-kysymysryhmä on merkitty taustakysymysryhmäksi', function(){
     alustaController();
     $scope.kysymysryhma.ntm_kysymykset = true;
     $scope.kysymysryhma.taustakysymykset = true;
-    expect($scope.tallennusSallittu()).toBe(false);
+    $scope.kysymysryhma.valtakunnallinen = true;
+    expect($scope.tallennusSallittu()).toBe(true);
   });
 
   it('hakee kopioitavan ryhmän tiedot palvelimelta', function(){
