@@ -204,8 +204,8 @@
 (defn paivita-nakymat []
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY kysymys_vastaaja_view;")
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")
-  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaaja_taustakysymysryhma_view;")
-  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY kysymysryhma_taustakysymysryhma_view;"))
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW vastaaja_taustakysymysryhma_view;")
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW kysymysryhma_taustakysymysryhma_view;"))
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
