@@ -202,7 +202,6 @@
     "kysely" (tutkintorakenne-otsikko parametrit)))
 
 (defn paivita-nakymat []
-  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY kysymys_vastaaja_view;")
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")
   (sql/exec-raw "REFRESH MATERIALIZED VIEW vastaaja_taustakysymysryhma_view;")
   (sql/exec-raw "REFRESH MATERIALIZED VIEW kysymysryhma_taustakysymysryhma_view;"))
