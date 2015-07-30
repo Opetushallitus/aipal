@@ -89,8 +89,8 @@
   (->
     (sql/select* [:vastaus_jatkovastaus_valtakunnallinen_view :vastaus])
     (sql/join :inner :vastaaja_taustakysymysryhma_view
-              (and (= :vastaus.vastaajaid :vastaaja_taustakysymysryhma_view.vastaajaid)
-                   (= taustakysymysryhmaid :vastaaja_taustakysymysryhma_view.taustakysymysryhmaid)))
+              {:vastaus.vastaajaid :vastaaja_taustakysymysryhma_view.vastaajaid
+               :vastaaja_taustakysymysryhma_view.taustakysymysryhmaid [in (mappaa-kysymysryhmaid taustakysymysryhmaid)]})
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus koulutustoimijat) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus) (sql/join :inner :vastaajatunnus
