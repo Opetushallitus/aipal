@@ -207,9 +207,9 @@
         kysymykset (for [kysymys kysymykset
                          :let [kysymyksen-vastaukset (id->vastaukset (:kysymysid kysymys))]]
                      (kasittele-kysymys kysymys kysymyksen-vastaukset))
-        kysymysryhmien-kysymykset (group-by :kysymysryhmaid (sort kysymysten-jarjestys-vertailu kysymykset))]
+        kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
     (for [kysymysryhma kysymysryhmat
-          :let [kysymykset (kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma))
+          :let [kysymykset (sort kysymysten-jarjestys-vertailu (kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma)))
                 vastaajat (reduce clojure.set/union (map :vastaajat kysymykset))]]
       (assoc kysymysryhma :kysymykset (map valitse-kysymyksen-kentat kysymykset)
                           :vastaajat vastaajat))))
