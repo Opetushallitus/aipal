@@ -55,7 +55,9 @@
   (when-let [kysely (hae-kysely kyselyid)]
     (let [parametrit (merge kysely parametrit)
           koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain parametrit)
-          tutkinto-otsikko (valtakunnallinen-raportti/raportin-otsikko parametrit)]
+          tutkinto-otsikko (valtakunnallinen-raportti/raportin-otsikko (merge parametrit
+                                                                              {:tyyppi "vertailu"
+                                                                               :tutkintorakennetaso "tutkinto"}))]
       (merge {:luontipvm (time/today)
               :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
               :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
