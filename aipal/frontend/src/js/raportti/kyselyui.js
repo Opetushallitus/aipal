@@ -34,9 +34,8 @@ angular.module('raportti.kyselyui', ['raportti.kyselykerta.jakaumakaavio',
     'kaavioApurit', 'kieli', 'Raportti', '$location', '$routeParams', '$scope',
     function(kaavioApurit, kieli, Raportti, $location, $routeParams, $scope) {
       Raportti.muodostaKyselyraportti($routeParams.kyselyid, {kieli: kieli})
-        .success(function(tulokset) {
-          $scope.tulokset = tulokset;
-          $scope.tulos = tulokset[0];
+        .success(function(tulos) {
+          $scope.tulos = tulos;
         })
         .error(function(value) {
           if (value.status !== 500) {
@@ -46,5 +45,6 @@ angular.module('raportti.kyselyui', ['raportti.kyselykerta.jakaumakaavio',
 
       $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
       $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
+      $scope.raporttiIndeksit = kaavioApurit.raporttiIndeksit;
     }
   ]);
