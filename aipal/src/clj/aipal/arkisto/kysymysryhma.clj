@@ -49,8 +49,10 @@
 (defn hae-taustakysymysryhmat
   []
   (-> (sql/select* taulut/kysymysryhma)
-    (sql/where {:taustakysymykset true
-                :valtakunnallinen true})
+    (sql/where (and {:taustakysymykset true
+                     :valtakunnallinen true}
+                    (or {:ntm_kysymykset false}
+                        (yllapitaja?))))
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
     (sql/order :muutettuaika :desc)
     sql/exec
