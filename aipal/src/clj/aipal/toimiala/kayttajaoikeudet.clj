@@ -73,6 +73,7 @@
   []
   (or (kayttaja/yllapitaja?)
       (kayttaja/vastuukayttaja?)
+      (kayttaja/ntm-vastuukayttaja?)
       (kayttaja/kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
           "OPL-KATSELIJA"
@@ -80,7 +81,8 @@
 
 (defn kysely-luonti? []
   (or (kayttaja/yllapitaja?)
-      (kayttaja/vastuukayttaja?)))
+      (kayttaja/vastuukayttaja?)
+      (kayttaja/ntm-vastuukayttaja?)))
 
 (defn kysely-muokkaus?
   "Onko kyselyn muokkaus sallittu."
@@ -88,14 +90,15 @@
   (and (kysely-on-luonnostilassa? kyselyid)
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kyselyssa?
-             #{"OPL-VASTUUKAYTTAJA"}
+             #{"OPL-VASTUUKAYTTAJA"
+               "OPL-NTMVASTUUKAYTTAJA"}
              kyselyid))))
 
 (defn kysely-tilamuutos?
   "Onko kyselyn tilan muutos (luonnos/julkaistu/suljettu) sallittu."
   [kyselyid]
   (or (kayttaja/yllapitaja?)
-      (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-VASTUUKAYTTAJA"} kyselyid)))
+      (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"} kyselyid)))
 
 (defn kysely-luku? [kyselyid]
   (or (kayttaja/yllapitaja?)
@@ -103,6 +106,7 @@
         #{"OPL-VASTUUKAYTTAJA"
           "OPL-KAYTTAJA"
           "OPL-KATSELIJA"
+          "OPL-NTMVASTUUKAYTTAJA"
           "OPH-KATSELIJA"}
         kyselyid)))
 
@@ -113,6 +117,7 @@
 (defn kysymysryhma-listaaminen? []
   (or (kayttaja/yllapitaja?)
       (kayttaja/vastuukayttaja?)
+      (kayttaja/ntm-vastuukayttaja?)
       (kayttaja/kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
           "OPL-KATSELIJA"
@@ -185,7 +190,8 @@
 
 (defn kyselypohja-listaaminen? []
   (or (kayttaja/yllapitaja?)
-      (kayttaja/vastuukayttaja?)))
+      (kayttaja/vastuukayttaja?)
+      (kayttaja/ntm-vastuukayttaja?)))
 
 (defn kyselypohja-luku? [kyselypohjaid]
   (or (kayttaja/yllapitaja?)
@@ -196,7 +202,8 @@
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kyselyssa?
              #{"OPL-VASTUUKAYTTAJA"
-               "OPL-KAYTTAJA"}
+               "OPL-KAYTTAJA"
+               "OPL-NTMVASTUUKAYTTAJA"}
              kyselyid))))
 
 (defn kyselykerta-lukittu? [kyselykertaid]

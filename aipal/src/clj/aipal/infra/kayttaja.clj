@@ -15,3 +15,7 @@
 (defn vastuukayttaja? []
   (kayttajalla-on-jokin-rooleista?
     #{"OPL-VASTUUKAYTTAJA"}))
+
+(defn ntm-vastuukayttaja? []
+  (kayttajalla-on-jokin-rooleista?
+   #{"OPL-NTMVASTUUKAYTTAJA"}))

@@ -15,20 +15,35 @@
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique]]
-            [aipal.infra.kayttaja :refer [yllapitaja?]]
+            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]))
+
+(defn ^:private rajaa-kayttajalle-sallittuihin-kysymysryhmiin [query organisaatio]
+  (let [koulutustoimijan-oma {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
+        valtakunnallinen     {:kysymysryhma_organisaatio_view.valtakunnallinen true}
+        lisattavissa         {:kysymysryhma.lisattavissa true}
+        ei-ntm-kysymyksia    {:kysymysryhma.ntm_kysymykset false}]
+    (cond
+      (yllapitaja?) (-> query
+                      (sql/where (or koulutustoimijan-oma
+                                     valtakunnallinen)))
+      (ntm-vastuukayttaja?) (-> query
+                          (sql/where (or koulutustoimijan-oma
+                                         (and valtakunnallinen
+                                              lisattavissa))))
+      :else (-> query
+              (sql/where (or koulutustoimijan-oma
+                             (and valtakunnallinen
+                                  lisattavissa
+                                  ei-ntm-kysymyksia)))))))
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
     (-> (sql/select* taulut/kysymysryhma)
       (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
-      (sql/where (or {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
-                     (and {:kysymysryhma_organisaatio_view.valtakunnallinen true}
-                          (or {:kysymysryhma.lisattavissa true
-                               :kysymysryhma.ntm_kysymykset false}
-                              (yllapitaja?)))))
+      (rajaa-kayttajalle-sallittuihin-kysymysryhmiin organisaatio)
       (cond->
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
       (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
