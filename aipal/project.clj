@@ -20,11 +20,11 @@
                  [http-kit "2.1.18"]
                  [clj-http "1.0.1"]
 
-                 [compojure "1.1.5"]
+                 [compojure "1.3.3"]
                  [ring/ring-json "0.2.0"]
                  [ring/ring-headers "0.1.0"]
                  [ring/ring-session-timeout "0.1.0"]
-                 [cheshire "5.2.0"]
+                 [cheshire "5.4.0"]
                  [metosin/compojure-api "0.8.2"]
                  [metosin/ring-swagger-ui "2.0.10-1"]
 
@@ -37,11 +37,11 @@
                  [org.clojure/tools.logging "0.2.6"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-api "1.7.5"]
-                 [clj-time "0.6.0"]
+                 [clj-time "0.9.0"]
                  [com.cemerick/valip "0.3.2"]
-                 [prismatic/schema "0.2.0"]
+                 [prismatic/schema "0.4.0"]
 
-                 [korma "0.3.0-RC6"]
+                 [korma "0.4.0"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
 
