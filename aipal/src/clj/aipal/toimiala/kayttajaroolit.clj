@@ -20,11 +20,12 @@
                         "KTVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
                         "KTKAYTTAJA" "OPL-KAYTTAJA"
                         "KTKATSELIJA" "OPL-KATSELIJA"
+                        "NTMVASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"
                         "YLKATSELIJA" "KATSELIJA"
                         "TKTKATSELIJA" "TTK-KATSELIJA"})
 
 ;; roolit jotka liittyvät koulutustoimijaan
-(def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})
+(def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA" "OPL-NTMVASTUUKAYTTAJA"})
 
 (def oph-roolit #{"YLLAPITAJA" "OPH-KATSELIJA"})
 
@@ -35,5 +36,6 @@
    "OPL-VASTUUKAYTTAJA" 2
    "OPL-KAYTTAJA" 3
    "OPL-KATSELIJA" 4
-   "KATSELIJA" 5
-   "TTK-KATSELIJA" 6})
+   "OPL-NTMVASTUUKAYTTAJA" 5
+   "KATSELIJA" 6
+   "TTK-KATSELIJA" 7})
