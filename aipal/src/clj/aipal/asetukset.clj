@@ -45,6 +45,7 @@
    :organisaatiopalvelu {:url s/Str}
    :eraajo Boolean
    :development-mode Boolean
+   :ominaisuus {s/Keyword Boolean}
    :raportointi-minimivastaajat s/Int
    :logback {:properties-file s/Str}
    :ajastus {:organisaatiopalvelu s/Str
@@ -76,6 +77,7 @@
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :eraajo false
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
+   :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
    :raportointi-minimivastaajat 5
    :logback {:properties-file "resources/logback.xml"}
    :ajastus {:organisaatiopalvelu "0 0 3 * * ?"

@@ -1,7 +1,8 @@
 <h2 class="visible-print">{{selectedTabName}}</h2>
 <div class="raportit">
   <tabset>
-    <tab class="hidden-print" heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu',i18n.raportit.vertailuraportti)">
+    <tab class="hidden-print" heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu',i18n.raportit.vertailuraportti)"
+         disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']">
       <h2 class="hidden-print">{{ 'raportit.vertailtavat_tutkinnot' | i18n }} *<ohje tunniste="vertailuraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
@@ -11,7 +12,8 @@
       <valintalista class="hidden-print" valittavat="koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
-    <tab class="hidden-print" heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys',i18n.raportit.kehitysraportti)">
+    <tab class="hidden-print" heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys',i18n.raportit.kehitysraportti)"
+         disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']">
       <h2 class="hidden-print">{{ 'raportit.tarkasteltava_tutkinto' | i18n }} <ohje tunniste="kehitysraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
