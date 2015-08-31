@@ -123,13 +123,17 @@
           "OPL-KATSELIJA"
           "OPH-KATSELIJA"})))
 
+(defn ^:private ntm-kysymysryhma? [kysymysryhmaid]
+  (:ntm_kysymykset (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false)))
+
 (defn kysymysryhma-luku? [kysymysryhmaid]
   (or (kayttaja/yllapitaja?)
       (kayttajalla-on-lukuoikeus-kysymysryhmaan? kysymysryhmaid)))
 
 (defn kysymysryhma-luonti? []
   (or (kayttaja/yllapitaja?)
-      (kayttaja/vastuukayttaja?)))
+      (kayttaja/vastuukayttaja?)
+      (kayttaja/ntm-vastuukayttaja?)))
 
 (defn kysymysryhma-on-tilassa? [tila kysymysryhmaid]
   (= tila (:tila (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false))))
@@ -148,7 +152,11 @@
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
              #{"OPL-VASTUUKAYTTAJA"}
-             kysymysryhmaid))))
+             kysymysryhmaid)
+           (and (ntm-kysymysryhma? kysymysryhmaid)
+                (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
+                 #{"OPL-NTMVASTUUKAYTTAJA"}
+                 kysymysryhmaid)))))
 
 (defn kysymysryhma-palautus-luonnokseksi? [kysymysryhmaid]
   (and (kysymysryhma-on-julkaistu? kysymysryhmaid)

@@ -24,15 +24,17 @@
   (let [koulutustoimijan-oma {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
         valtakunnallinen     {:kysymysryhma_organisaatio_view.valtakunnallinen true}
         lisattavissa         {:kysymysryhma.lisattavissa true}
+        ntm-kysymykset       {:kysymysryhma.ntm_kysymykset true}
         ei-ntm-kysymyksia    {:kysymysryhma.ntm_kysymykset false}]
     (cond
       (yllapitaja?) (-> query
                       (sql/where (or koulutustoimijan-oma
                                      valtakunnallinen)))
       (ntm-vastuukayttaja?) (-> query
-                          (sql/where (or koulutustoimijan-oma
-                                         (and valtakunnallinen
-                                              lisattavissa))))
+                              (sql/where (and ntm-kysymykset
+                                              (or koulutustoimijan-oma
+                                                  (and valtakunnallinen
+                                                       lisattavissa)))))
       :else (-> query
               (sql/where (or koulutustoimijan-oma
                              (and valtakunnallinen
