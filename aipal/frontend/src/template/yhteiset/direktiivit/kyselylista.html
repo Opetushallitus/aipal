@@ -14,7 +14,7 @@
       </accordion-heading>
 
       <div class="panel-tools-content">
-        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.tila === 'luonnos'">
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']" ng-if="kysely.tila === 'luonnos'">
           <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}" class="btn btn-primary pull-left">
             {{ 'kysely.muokkaa' | i18n }}&nbsp;
             <span class="fa fa-pencil"></span>
@@ -28,37 +28,37 @@
             <span class="fa fa-trash"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">
           <button class="btn btn-primary pull-left e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">
             {{ 'kyselykerta.uusi_kyselykerta' | i18n }}&nbsp;
             <span class="fa fa-plus"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.kaytettavissa && kysely.tila === 'julkaistu'">
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']" ng-if="kysely.kaytettavissa && kysely.tila === 'julkaistu'">
           <button class="btn btn-primary pull-left" ng-click="suljeKyselyModal(kysely)">
             {{ 'kysely.sulje' | i18n }}
             <span class="fa fa-close"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.tila === 'poistettu'">
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']" ng-if="kysely.tila === 'poistettu'">
           <button class="btn btn-primary pull-left" ng-click="palautaKysely(kysely)">
             {{ 'kysely.palauta' | i18n }}
             <span class="fa fa-check"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.kyselykerrat === null && kysely.tila === 'julkaistu'">
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']" ng-if="kysely.kyselykerrat === null && kysely.tila === 'julkaistu'">
           <button class="btn btn-primary pull-left" ng-click="palautaLuonnokseksi(kysely)">
             {{ 'kysely.palauta' | i18n }}
             <span class="fa fa-check"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA']">
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
           <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}/kopioi" class="btn btn-primary pull-left">
             {{ 'kysely.kopioi' | i18n }}&nbsp;
             <span class="fa fa-copy"></span>
           </a>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']" ng-if="kysely.tila !== 'luonnos'">
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']" ng-if="kysely.tila !== 'luonnos'">
           <a ng-href="#/raportit/kysely/{{kysely.kyselyid}}" class="btn btn-primary btn-sm pull-left">
             {{ 'kysely.raportti' | i18n }}&nbsp;
             <span class="glyphicon glyphicon-stats"></span>
@@ -77,7 +77,7 @@
         <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in (kysely.kyselykerrat|orderBy:kyselykertojen_lajitteluperuste)" class="kyselykerrat-container e2e-kyselykerrat">
           <h3 class="e2e-kyselykerta-nimi"><span ng-if="kyselykerta.lukittu" class="fa fa-lock" title="{{ 'yleiset.lukittu' | i18n }}">&nbsp;&nbsp;</span>{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta.nimi}}</h3>
           <span class="text-muted" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</span>
-          <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA']">
+          <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']">
             <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
               <span ng-if="!kyselykerta.lukittu && kysely.kaytettavissa">{{ 'yleiset.vastaajatunnukset' | i18n }}</span>
               <span ng-if="kyselykerta.lukittu || !kysely.kaytettavissa">{{ 'kyselykerta.nayta' | i18n }}</span>
@@ -97,7 +97,7 @@
               <span class="fa fa-trash"></span>
             </button>
           </auth>
-          <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']">
+          <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']">
             <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left e2e-nayta-raportti">
               {{ 'kysely.raportti' | i18n }}&nbsp;
               <span class="glyphicon glyphicon-stats"></span>

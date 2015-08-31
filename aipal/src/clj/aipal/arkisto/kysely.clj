@@ -15,6 +15,7 @@
 (ns aipal.arkisto.kysely
   (:require [korma.core :as sql]
             [aipal.arkisto.kyselykerta :as kyselykerta]
+            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.korma.common :refer [select-unique-or-nil select-unique]]
             [aipal.auditlog :as auditlog]))
@@ -29,16 +30,36 @@
                 [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
                 [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])))
 
+(defn ^:private kysely-sisaltaa-ntm-kysymysryhman [kyselyid]
+  (sql/sqlfn :exists
+             (sql/subselect :kysely_kysymysryhma
+               (sql/join :inner :kysymysryhma {:kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid})
+               (sql/where (and {:kysely_kysymysryhma.kyselyid kyselyid}
+                               {:kysymysryhma.ntm_kysymykset true})))))
+
+(defn ^:private rajaa-kayttajalle-sallittuihin-kyselyihin [query kyselyid koulutustoimija]
+  (let [koulutustoimijan-oma {:kysely_organisaatio_view.koulutustoimija koulutustoimija}
+        ntm-kysely           (kysely-sisaltaa-ntm-kysymysryhman kyselyid)]
+    (cond
+      (yllapitaja?)         (-> query
+                              (sql/where koulutustoimijan-oma))
+      (ntm-vastuukayttaja?) (-> query
+                              (sql/where (and koulutustoimijan-oma
+                                              ntm-kysely)))
+      :else                 (-> query
+                              (sql/where (and koulutustoimijan-oma
+                                              (not ntm-kysely)))))))
+
 (defn hae-kyselyt
   "Hae koulutustoimijan kyselyt"
   [koulutustoimija]
   (sql/select taulut/kysely
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
+    (rajaa-kayttajalle-sallittuihin-kyselyihin :kysely.kyselyid koulutustoimija)
     kysely-kentat
     (sql/fields [(sql/subselect taulut/kysely_kysymysryhma
                    (sql/aggregate (count :*) :lkm)
                    (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
-    (sql/where {:kysely_organisaatio_view.koulutustoimija koulutustoimija})
     (sql/order :luotuaika :desc)))
 
 ;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan

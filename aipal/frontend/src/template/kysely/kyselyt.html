@@ -1,7 +1,7 @@
 <h1>{{i18n.kysely.otsikko}} <ohje tunniste="kyselyt"></ohje></h1>
 
 <div class="row">
-    <auth roolit="['OPL-VASTUUKAYTTAJA']">
+    <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
         <button class="btn btn-primary pull-right e2e-luo-uusi-kysely" ng-click="luoUusiKysely()">
             {{ 'yleiset.luo_uusi_kysely' | i18n }}&nbsp;
             <span class="fa fa-plus"></span>
@@ -19,13 +19,13 @@
 <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'julkaistu'}" haku="hakuehto.teksti">
 </kyselylista>
 
-<auth roolit="['OPL-VASTUUKAYTTAJA']">
+<auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
     <h2>{{ 'yleiset.luonnokset' | i18n }}</h2>
     <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'luonnos'}" haku="hakuehto.teksti">
     </kyselylista>
 </auth>
 
-<auth roolit="['OPL-VASTUUKAYTTAJA']">
+<auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
   <div>
     <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
       <span ng-if="!naytaSuljetut">{{ 'yleiset.nayta_suljetut' | i18n }}</span>
