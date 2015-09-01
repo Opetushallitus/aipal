@@ -119,10 +119,6 @@
           "OPH-KATSELIJA"}
         kyselyid)))
 
-(defn kyselykerta-luku? [kyselykertaid]
-  (let [kyselykerta (kyselykerta-arkisto/hae-yksi (->int kyselykertaid))]
-    (kysely-luku? (:kyselyid kyselykerta))))
-
 (defn kysymysryhma-listaaminen? []
   (or (kayttaja/yllapitaja?)
       (kayttaja/vastuukayttaja?)
@@ -222,6 +218,10 @@
                "OPL-KAYTTAJA"
                "OPL-NTMVASTUUKAYTTAJA"}
              kyselyid))))
+
+(defn kyselykerta-luku? [kyselykertaid]
+  (let [kyselykerta (kyselykerta-arkisto/hae-yksi (->int kyselykertaid))]
+    (kysely-luku? (:kyselyid kyselykerta))))
 
 (defn kyselykerta-lukittu? [kyselykertaid]
   (:lukittu (kyselykerta-arkisto/hae-yksi (->int kyselykertaid))))
