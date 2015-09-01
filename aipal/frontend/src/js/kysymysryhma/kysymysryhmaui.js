@@ -19,6 +19,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
                                                'rest.kysymysryhma',
                                                'yhteiset.palvelut.i18n',
                                                'yhteiset.palvelut.ilmoitus',
+                                               'yhteiset.palvelut.kayttooikeudet',
                                                'yhteiset.palvelut.tallennusMuistutus',
                                                'yhteiset.palvelut.varmistus',
                                                'yhteiset.suodattimet.numerot'])
@@ -138,7 +139,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
   }])
 
-  .controller('KysymysryhmaController', ['$modal', '$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi', 'kopioi', function($modal, $routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi, kopioi) {
+  .controller('KysymysryhmaController', ['$modal', '$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi', 'kopioi', 'kayttooikeudet', function($modal, $routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi, kopioi, kayttooikeudet) {
     $scope.$watch('form', function(form) {
       tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
     });
@@ -146,7 +147,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     $scope.uusi = uusi;
 
     $scope.kysymysryhma = {
-      kysymykset: []
+      kysymykset: [],
+      ntm_kysymykset: kayttooikeudet.isNtmVastuuKayttaja()
     };
     if (kopioi || !uusi) {
       Kysymysryhma.hae($routeParams.kysymysryhmaid)
@@ -301,8 +303,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     }
 
     function onValidiNtmKysymysryhma() {
-      return !$scope.kysymysryhma.ntm_kysymykset ||
-        !!$scope.kysymysryhma.valtakunnallinen;
+      return !kayttooikeudet.isNtmVastuuKayttaja() ||
+        !!$scope.kysymysryhma.ntm_kysymykset;
     }
 
     $scope.tallennusSallittu = function() {

@@ -4,7 +4,7 @@
             [aipal.compojure-util :as cu]
             [clojure.tools.logging :as log]
             [aipal.arkisto.kysymysryhma :as arkisto]
-            [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]))
+            [aipal.infra.kayttaja :refer [*kayttaja* ntm-vastuukayttaja? yllapitaja?]]))
 
 (defn lisaa-jarjestys [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))
@@ -82,10 +82,16 @@
     (true? (kentta kysymysryhma))
     false))
 
+(defn ^:private suodata-vain-ntm-vastuukayttajille [kysymysryhma kentta]
+  (if (or (yllapitaja?)
+          (ntm-vastuukayttaja?))
+    (true? (kentta kysymysryhma))
+    false))
+
 (defn lisaa-kysymysryhma! [kysymysryhma kysymykset]
   (let [kysymysryhma (arkisto/lisaa-kysymysryhma! (merge (valitse-kysymysryhman-peruskentat kysymysryhma)
                                                          {:koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)
-                                                          :ntm_kysymykset (suodata-vain-yllapitajalle kysymysryhma :ntm_kysymykset)
+                                                          :ntm_kysymykset (suodata-vain-ntm-vastuukayttajille kysymysryhma :ntm_kysymykset)
                                                           :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
                                                           :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)}))]
     (lisaa-kysymykset-kysymysryhmaan! kysymykset (:kysymysryhmaid kysymysryhma))
@@ -109,7 +115,7 @@
                        korjaa-eos-vastaus-sallittu
                        (assoc :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)
                               :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
-                              :ntm_kysymykset (suodata-vain-yllapitajalle kysymysryhma :ntm_kysymykset)))
+                              :ntm_kysymykset (suodata-vain-ntm-vastuukayttajille kysymysryhma :ntm_kysymykset)))
         kysymysryhmaid (:kysymysryhmaid kysymysryhma)
         kysymykset (:kysymykset kysymysryhma)]
     (poista-kysymysryhman-kysymykset! kysymysryhmaid)

@@ -14,7 +14,8 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
 
     var oikeudet,
         yllapitaja,
-        impersonoitu;
+        impersonoitu,
+        ntmVastuuKayttaja;
 
     function paivitaOikeudet() {
       oikeudet = resource.get().$promise;
@@ -23,9 +24,14 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
       oikeudet.then(function(data){
         yllapitaja = false;
         impersonoitu = false;
+        ntmVastuuKayttaja = false;
 
         if(_.where(data.roolit, {rooli: 'YLLAPITAJA'}).length > 0){
           yllapitaja = true;
+        }
+
+        if(data.aktiivinen_rooli.rooli === 'OPL-NTMVASTUUKAYTTAJA'){
+          ntmVastuuKayttaja = true;
         }
 
         if(data.impersonoitu_kayttaja.trim().length > 0){
@@ -45,6 +51,9 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
       },
       isImpersonoitu: function(){
         return impersonoitu;
+      },
+      isNtmVastuuKayttaja: function() {
+        return ntmVastuuKayttaja;
       },
       paivita: paivitaOikeudet
     };

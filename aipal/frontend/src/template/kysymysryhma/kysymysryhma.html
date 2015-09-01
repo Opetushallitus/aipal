@@ -17,6 +17,8 @@
                         {{i18n.kysymysryhma.taustakysymykset}}
                     </label>
                 </div>
+            </div>
+            <div ng-if="yllapitaja || ntmVastuuKayttaja" class="checkbox">
                 <div>
                     <label>
                         <input type="checkbox" ng-model="kysymysryhma.ntm_kysymykset">
