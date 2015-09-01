@@ -218,3 +218,10 @@
                           (when (:nimi_sv kysely)
                             {:nimi_sv (:nimi_sv kysely)})))
            (sql/where {:kyselyid [not= (:kyselyid kysely)]})))))
+
+(defn ntm-kysely? [kyselyid]
+  "Onko NTM-kysely."
+  (boolean
+   (seq (sql/select taulut/kysely
+          (sql/where (and {:kyselyid kyselyid}
+                          (kysely-sisaltaa-ntm-kysymysryhman :kysely.kyselyid)))))))

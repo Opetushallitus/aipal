@@ -1,6 +1,7 @@
 (ns aipal.toimiala.kayttajaoikeudet
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
-  (:require [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
+  (:require [clojure.set :as set]
+            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.kysely :as kysely-arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
@@ -22,6 +23,9 @@
   ([]
     true))
 
+(defn ^:private ntm-kysely? [kyselyid]
+  (kysely-arkisto/ntm-kysely? (->int kyselyid)))
+
 (defn kayttajalla-on-jokin-rooleista-koulutustoimijassa? [roolit koulutustoimija]
   (let [aktiivinen-rooli (:aktiivinen-rooli *kayttaja*)
         rooli-koulutustoimijassa (when (= koulutustoimija (:organisaatio aktiivinen-rooli))
@@ -29,8 +33,13 @@
     (boolean (some #{rooli-koulutustoimijassa} roolit))))
 
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
-  (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))]
-    (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
+  (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))
+        ntm-roolit      #{"OPL-NTMVASTUUKAYTTAJA"}]
+    (kayttajalla-on-jokin-rooleista-koulutustoimijassa?
+     (cond
+       (ntm-kysely? kyselyid) (set/intersection roolit ntm-roolit)
+       :else                  (set/difference roolit ntm-roolit))
+     koulutustoimija)))
 
 (defn kayttajalla-on-jokin-rooleista-kysymysryhmassa? [roolit kysymysryhmaid]
   (let [koulutustoimija (:koulutustoimija (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid)))]
@@ -234,7 +243,7 @@
 (defn raportti-koulutustoimijoista? [koulutustoimijat]
   (or (kayttaja/yllapitaja?)
       (let [oma-koulutustoimija (-> *kayttaja* :aktiivinen-rooli :organisaatio)]
-        (clojure.set/subset? (set koulutustoimijat) #{oma-koulutustoimija}))))
+        (set/subset? (set koulutustoimijat) #{oma-koulutustoimija}))))
 
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
