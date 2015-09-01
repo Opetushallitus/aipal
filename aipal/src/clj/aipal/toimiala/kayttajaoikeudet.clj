@@ -26,15 +26,20 @@
 (defn ^:private ntm-kysely? [kyselyid]
   (kysely-arkisto/ntm-kysely? (->int kyselyid)))
 
+(defn ^:private ntm-kysymysryhma? [kysymysryhmaid]
+  (:ntm_kysymykset (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false)))
+
 (defn kayttajalla-on-jokin-rooleista-koulutustoimijassa? [roolit koulutustoimija]
   (let [aktiivinen-rooli (:aktiivinen-rooli *kayttaja*)
         rooli-koulutustoimijassa (when (= koulutustoimija (:organisaatio aktiivinen-rooli))
                                    (:rooli aktiivinen-rooli))]
     (boolean (some #{rooli-koulutustoimijassa} roolit))))
 
+(def ^:private ntm-roolit
+  #{"OPL-NTMVASTUUKAYTTAJA"})
+
 (defn kayttajalla-on-jokin-rooleista-kyselyssa? [roolit kyselyid]
-  (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))
-        ntm-roolit      #{"OPL-NTMVASTUUKAYTTAJA"}]
+  (let [koulutustoimija (:koulutustoimija (kysely-arkisto/hae-organisaatiotieto (->int kyselyid)))]
     (kayttajalla-on-jokin-rooleista-koulutustoimijassa?
      (cond
        (ntm-kysely? kyselyid) (set/intersection roolit ntm-roolit)
@@ -43,7 +48,11 @@
 
 (defn kayttajalla-on-jokin-rooleista-kysymysryhmassa? [roolit kysymysryhmaid]
   (let [koulutustoimija (:koulutustoimija (kysymysryhma-arkisto/hae-organisaatiotieto (->int kysymysryhmaid)))]
-    (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
+    (kayttajalla-on-jokin-rooleista-koulutustoimijassa?
+     (cond
+       (ntm-kysymysryhma? kysymysryhmaid) (set/intersection roolit ntm-roolit)
+       :else                              (set/difference roolit ntm-roolit))
+     koulutustoimija)))
 
 (defn kayttajalla-on-jokin-rooleista-kyselypohjassa? [roolit kyselypohjaid]
   (let [koulutustoimija (:koulutustoimija (kyselypohja-arkisto/hae-organisaatiotieto (->int kyselypohjaid)))]
@@ -128,9 +137,6 @@
           "OPL-KATSELIJA"
           "OPH-KATSELIJA"})))
 
-(defn ^:private ntm-kysymysryhma? [kysymysryhmaid]
-  (:ntm_kysymykset (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false)))
-
 (defn kysymysryhma-luku? [kysymysryhmaid]
   (or (kayttaja/yllapitaja?)
       (kayttajalla-on-lukuoikeus-kysymysryhmaan? kysymysryhmaid)))
@@ -156,18 +162,14 @@
   (and (kysymysryhma-on-luonnostilassa? kysymysryhmaid)
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
-             #{"OPL-VASTUUKAYTTAJA"}
-             kysymysryhmaid)
-           (and (ntm-kysymysryhma? kysymysryhmaid)
-                (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
-                 #{"OPL-NTMVASTUUKAYTTAJA"}
-                 kysymysryhmaid)))))
+             #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"}
+             kysymysryhmaid))))
 
 (defn kysymysryhma-palautus-luonnokseksi? [kysymysryhmaid]
   (and (kysymysryhma-on-julkaistu? kysymysryhmaid)
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
-             #{"OPL-VASTUUKAYTTAJA"}
+             #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"}
              kysymysryhmaid))))
 
 (defn kysymysryhma-julkaisu? [kysymysryhmaid]
@@ -175,13 +177,13 @@
            (kysymysryhma-on-luonnostilassa? kysymysryhmaid))
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
-             #{"OPL-VASTUUKAYTTAJA"}
+             #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"}
              kysymysryhmaid))))
 
 (defn kysymysryhma-sulkeminen? [kysymysryhmaid]
   (or (kayttaja/yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kysymysryhmassa?
-        #{"OPL-VASTUUKAYTTAJA"}
+        #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"}
         kysymysryhmaid)))
 
 (defn kyselypohja-muokkaus? [kyselypohjaid]
