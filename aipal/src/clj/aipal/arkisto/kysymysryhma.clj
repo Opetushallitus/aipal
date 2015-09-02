@@ -27,19 +27,19 @@
         ntm-kysymykset       {:kysymysryhma.ntm_kysymykset true}
         ei-ntm-kysymyksia    {:kysymysryhma.ntm_kysymykset false}]
     (cond
-      (yllapitaja?) (-> query
-                      (sql/where (or koulutustoimijan-oma
-                                     valtakunnallinen)))
+      (yllapitaja?)         (-> query
+                              (sql/where (or koulutustoimijan-oma
+                                             valtakunnallinen)))
       (ntm-vastuukayttaja?) (-> query
                               (sql/where (and (or koulutustoimijan-oma
                                                   (and valtakunnallinen
                                                        lisattavissa))
                                               ntm-kysymykset)))
-      :else (-> query
-              (sql/where (and (or koulutustoimijan-oma
-                                  (and valtakunnallinen
-                                       lisattavissa))
-                              ei-ntm-kysymyksia))))))
+      :else                 (-> query
+                              (sql/where (and (or koulutustoimijan-oma
+                                                  (and valtakunnallinen
+                                                       lisattavissa))
+                                              ei-ntm-kysymyksia))))))
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
