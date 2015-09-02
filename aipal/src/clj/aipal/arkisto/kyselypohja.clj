@@ -16,19 +16,37 @@
   (:import java.sql.Date)
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique select-unique-or-nil]]
-            [aipal.infra.kayttaja :refer [yllapitaja?]]
+            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
 
-(defn rajaa-ntm-kyselypohjat
-  [query kyselypohjaid]
-  (sql/where query
-             (or (not (sql/sqlfn :exists
-                                 (sql/subselect :kysymysryhma_kyselypohja
-                                   (sql/join :inner :kysymysryhma {:kysymysryhma.kysymysryhmaid :kysymysryhma_kyselypohja.kysymysryhmaid})
-                                   (sql/where (and {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid}
-                                                   {:kysymysryhma.ntm_kysymykset true})))))
-                 (yllapitaja?))))
+(defn ^:private kyselypohja-sisaltaa-ntm-kysymysryhman [kyselypohjaid]
+  (sql/sqlfn :exists
+             (sql/subselect :kysymysryhma_kyselypohja
+               (sql/join :inner :kysymysryhma {:kysymysryhma.kysymysryhmaid :kysymysryhma_kyselypohja.kysymysryhmaid})
+               (sql/where (and {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid}
+                               {:kysymysryhma.ntm_kysymykset true})))))
+
+(defn ^:private rajaa-kayttajalle-sallittuihin-kyselypohjiin
+  [query kyselypohjaid koulutustoimija]
+  (let [koulutustoimijan-oma {:kyselypohja_organisaatio_view.koulutustoimija koulutustoimija}
+        valtakunnallinen     {:kyselypohja_organisaatio_view.valtakunnallinen true}
+        julkaistu            {:kyselypohja.tila "julkaistu"}
+        ntm-kyselypohja      (kyselypohja-sisaltaa-ntm-kysymysryhman kyselypohjaid)]
+    (cond
+      (yllapitaja?)         (-> query
+                              (sql/where (or koulutustoimijan-oma
+                                             valtakunnallinen)))
+      (ntm-vastuukayttaja?) (-> query
+                              (sql/where (and (or koulutustoimijan-oma
+                                                  (and valtakunnallinen
+                                                       julkaistu))
+                                              ntm-kyselypohja)))
+      :else                 (-> query
+                              (sql/where (and (or koulutustoimijan-oma
+                                                  (and valtakunnallinen
+                                                       julkaistu))
+                                              (not ntm-kyselypohja)))))))
 
 (defn hae-kyselypohjat
   ([organisaatio vain-voimassaolevat]
@@ -36,11 +54,7 @@
       (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
       (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.valtakunnallinen :kyselypohja.tila
                   [:kyselypohja.kaytettavissa :voimassa])
-      (sql/where (or {:kyselypohja_organisaatio_view.koulutustoimija organisaatio}
-                     (and {:kyselypohja_organisaatio_view.valtakunnallinen true}
-                          (or {:kyselypohja.tila "julkaistu"}
-                              (yllapitaja?)))))
-      (rajaa-ntm-kyselypohjat :kyselypohja.kyselypohjaid)
+      (rajaa-kayttajalle-sallittuihin-kyselypohjiin :kyselypohja.kyselypohjaid organisaatio)
       (cond->
         vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
       (sql/order :muutettuaika :desc)
