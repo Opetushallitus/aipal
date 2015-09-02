@@ -201,7 +201,8 @@
 
 (defn kyselypohja-luonti? []
   (or (kayttaja/yllapitaja?)
-      (kayttaja/vastuukayttaja?)))
+      (kayttaja/vastuukayttaja?)
+      (kayttaja/ntm-vastuukayttaja?)))
 
 (defn kyselypohja-listaaminen? []
   (or (kayttaja/yllapitaja?)
