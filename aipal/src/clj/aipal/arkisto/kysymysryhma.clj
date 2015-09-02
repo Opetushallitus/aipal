@@ -31,15 +31,15 @@
                       (sql/where (or koulutustoimijan-oma
                                      valtakunnallinen)))
       (ntm-vastuukayttaja?) (-> query
-                              (sql/where (and ntm-kysymykset
-                                              (or koulutustoimijan-oma
+                              (sql/where (and (or koulutustoimijan-oma
                                                   (and valtakunnallinen
-                                                       lisattavissa)))))
+                                                       lisattavissa))
+                                              ntm-kysymykset)))
       :else (-> query
-              (sql/where (or koulutustoimijan-oma
-                             (and valtakunnallinen
-                                  lisattavissa
-                                  ei-ntm-kysymyksia)))))))
+              (sql/where (and (or koulutustoimijan-oma
+                                  (and valtakunnallinen
+                                       lisattavissa))
+                              ei-ntm-kysymyksia))))))
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
