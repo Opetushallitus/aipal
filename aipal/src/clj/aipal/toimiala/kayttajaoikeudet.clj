@@ -29,6 +29,9 @@
 (defn ^:private ntm-kysymysryhma? [kysymysryhmaid]
   (:ntm_kysymykset (kysymysryhma-arkisto/hae (->int kysymysryhmaid) false)))
 
+(defn ^:private ntm-kyselypohja? [kyselypohjaid]
+  (kyselypohja-arkisto/ntm-kyselypohja? (->int kyselypohjaid)))
+
 (defn kayttajalla-on-jokin-rooleista-koulutustoimijassa? [roolit koulutustoimija]
   (let [aktiivinen-rooli (:aktiivinen-rooli *kayttaja*)
         rooli-koulutustoimijassa (when (= koulutustoimija (:organisaatio aktiivinen-rooli))
@@ -56,7 +59,11 @@
 
 (defn kayttajalla-on-jokin-rooleista-kyselypohjassa? [roolit kyselypohjaid]
   (let [koulutustoimija (:koulutustoimija (kyselypohja-arkisto/hae-organisaatiotieto (->int kyselypohjaid)))]
-    (kayttajalla-on-jokin-rooleista-koulutustoimijassa? roolit koulutustoimija)))
+    (kayttajalla-on-jokin-rooleista-koulutustoimijassa?
+     (cond
+       (ntm-kyselypohja? kyselypohjaid) (set/intersection roolit ntm-roolit)
+       :else                            (set/difference roolit ntm-roolit))
+     koulutustoimija)))
 
 (defn hae-kyselyn-tila [kyselyid]
   (:tila (kysely-arkisto/hae (->int kyselyid))))
@@ -189,14 +196,14 @@
 (defn kyselypohja-muokkaus? [kyselypohjaid]
   (or (kayttaja/yllapitaja?)
       (kayttajalla-on-jokin-rooleista-kyselypohjassa?
-        #{"OPL-VASTUUKAYTTAJA"}
+        #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"}
         kyselypohjaid)))
 
 (defn kyselypohja-poisto? [kyselypohjaid]
   (and (kyselypohja-on-luonnostilassa? kyselypohjaid)
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kyselypohjassa?
-             #{"OPL-VASTUUKAYTTAJA"}
+             #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"}
              kyselypohjaid))))
 
 (defn kyselypohja-luonti? []

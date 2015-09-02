@@ -126,3 +126,10 @@
   (select-unique :kyselypohja_organisaatio_view
     (sql/fields :koulutustoimija :valtakunnallinen)
     (sql/where {:kyselypohjaid kyselypohjaid})))
+
+(defn ntm-kyselypohja? [kyselypohjaid]
+  "Onko NTM-kyselypohja?"
+  (boolean
+   (seq (sql/select taulut/kyselypohja
+          (sql/where (and {:kyselypohjaid kyselypohjaid}
+                          (kyselypohja-sisaltaa-ntm-kysymysryhman :kyselypohja.kyselypohjaid)))))))
