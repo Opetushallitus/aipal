@@ -107,13 +107,15 @@
 
 (defn lisaa-kysely!
   ([]
-    (lisaa-kysely! {}))
+   (lisaa-kysely! {}))
   ([kysely]
-    (let [koulutustoimija (anna-koulutustoimija!)]
-      (aipal.arkisto.kysely/lisaa! (merge {:nimi_fi (str "oletuskysely, testi " (swap! kysely-num inc))
-                                           :koulutustoimija (:ytunnus koulutustoimija)
-                                           :tila "julkaistu"}
-                                          kysely)))))
+   (let [koulutustoimija (anna-koulutustoimija!)]
+     (lisaa-kysely! kysely koulutustoimija)))
+  ([kysely koulutustoimija]
+   (aipal.arkisto.kysely/lisaa! (merge {:nimi_fi (str "oletuskysely, testi " (swap! kysely-num inc))
+                                        :koulutustoimija (:ytunnus koulutustoimija)
+                                        :tila "julkaistu"}
+                                       kysely))))
 
 (defn lisaa-kyselykerta!
   ([]
