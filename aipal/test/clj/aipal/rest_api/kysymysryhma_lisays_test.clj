@@ -28,7 +28,14 @@
             (lisaa-kysymysryhma! kysymysryhma [])
             (is (true? (:ntm_kysymykset @lisatty-kysymysryhma)))))
 
+        (testing "on sallittu ntm-vastuukäyttäjälle"
+          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                        aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly true)]
+            (lisaa-kysymysryhma! kysymysryhma [])
+            (is (true? (:ntm_kysymykset @lisatty-kysymysryhma)))))
+
         (testing "ei ole sallittu muille käyttäjille"
-          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)]
+          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                        aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
             (lisaa-kysymysryhma! kysymysryhma [])
             (is (false? (:ntm_kysymykset @lisatty-kysymysryhma)))))))))

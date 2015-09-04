@@ -74,7 +74,14 @@
             (paivita-kysymysryhma! kysymysryhma)
             (is (true? (:ntm_kysymykset @paivitetty-kysymysryhma)))))
 
+        (testing "on sallittu ntm-vastuukäyttäjälle"
+          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                        aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly true)]
+            (paivita-kysymysryhma! kysymysryhma)
+            (is (true? (:ntm_kysymykset @paivitetty-kysymysryhma)))))
+
         (testing "ei ole sallittu muille käyttäjille"
-          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)]
+          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                        aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
             (paivita-kysymysryhma! kysymysryhma)
             (is (false? (:ntm_kysymykset @paivitetty-kysymysryhma)))))))))
