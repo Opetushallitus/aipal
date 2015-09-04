@@ -63,13 +63,22 @@
   ([organisaatio]
     (hae-kysymysryhmat organisaatio false)))
 
+(defn ^:private rajaa-kayttajalle-sallittuihin-taustakysymysryhmiin [query]
+  (let [ntm-kysymykset       {:kysymysryhma.ntm_kysymykset true}
+        ei-ntm-kysymyksia    {:kysymysryhma.ntm_kysymykset false}]
+    (cond
+      (yllapitaja?)         query
+      (ntm-vastuukayttaja?) (-> query
+                              (sql/where ntm-kysymykset))
+      :else                 (-> query
+                              (sql/where ei-ntm-kysymyksia)))))
+
 (defn hae-taustakysymysryhmat
   []
   (-> (sql/select* taulut/kysymysryhma)
     (sql/where (and {:taustakysymykset true
-                     :valtakunnallinen true}
-                    (or {:ntm_kysymykset false}
-                        (yllapitaja?))))
+                     :valtakunnallinen true}))
+    rajaa-kayttajalle-sallittuihin-taustakysymysryhmiin
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
     (sql/order :muutettuaika :desc)
     sql/exec
