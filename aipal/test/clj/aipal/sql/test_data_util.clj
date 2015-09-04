@@ -132,6 +132,13 @@
                                                                  :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
                                                                 kyselykerta))))
 
+(defn lisaa-kyselykerrat!
+  ([kyselykerrat]
+    (lisaa-kyselykerrat! kyselykerrat (lisaa-kysely!)))
+  ([kyselykerrat kysely]
+   (for [kyselykerta kyselykerrat]
+     (lisaa-kyselykerta! kyselykerta kysely))))
+
 (defn lisaa-vastaajatunnus!
   ([]
     (lisaa-vastaajatunnus! {} (lisaa-kyselykerta!)))
@@ -141,6 +148,20 @@
     (aipal.arkisto.vastaajatunnus/lisaa! (merge {:kyselykertaid (:kyselykertaid kyselykerta)
                                                  :vastaajien_lkm 1}
                                                 vastaajatunnus))))
+
+(defn lisaa-vastaaja!
+  [vastaaja vastaajatunnus]
+  (sql/insert taulut/vastaaja
+    (sql/values (merge {:kyselykertaid (:kyselykertaid vastaajatunnus)
+                        :vastaajatunnusid (:vastaajatunnusid vastaajatunnus)}
+                       vastaaja))))
+
+(defn lisaa-vastaajat!
+  ([vastaajat]
+   (lisaa-vastaajat! vastaajat (lisaa-vastaajatunnus!)))
+  ([vastaajat vastaajatunnus]
+   (for [vastaaja vastaajat]
+     (lisaa-vastaaja! vastaaja vastaajatunnus))))
 
 (defn lisaa-kysymysryhma!
   ([uusi-kysymysryhma koulutustoimija]

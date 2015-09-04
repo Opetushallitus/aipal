@@ -1,106 +1,80 @@
 (ns aipal.arkisto.kyselykerta-sql-test
   (:require [clojure.test :refer :all]
             [korma.core :as sql]
-            [aipal.sql.test-util :refer [tietokanta-fixture]]
+            [aipal.arkisto.kyselykerta :refer :all]
             [aipal.integraatio.sql.korma :as taulut]
-            [aipal.arkisto.kyselykerta :as arkisto]
+            [aipal.sql.test-data-util :as test-data]
+            [aipal.sql.test-util :refer [tietokanta-fixture]]
             [oph.common.util.util :refer [some-value
-                                          some-value-with]]
-            [aipal.sql.test-data-util :as test-data]))
+                                          some-value-with]]))
 
 (use-fixtures :each tietokanta-fixture)
 
-(defn lisaa-kysely!
-  ([]
-   (lisaa-kysely! {}))
-  ([kysely]
-   (lisaa-kysely! kysely (test-data/lisaa-koulutustoimija!)))
-  ([kysely koulutustoimija]
-   (test-data/lisaa-kysely! kysely koulutustoimija)))
-
 (defn lisaa-kyselykerta-johon-on-vastattu!
   ([kyselykerta]
-   (lisaa-kyselykerta-johon-on-vastattu! kyselykerta (lisaa-kysely!)))
-  ([{:keys [kyselykertaid]} {:keys [kyselyid]}]
-    (sql/insert taulut/kyselykerta
-                (sql/values {:nimi "", :kyselyid kyselyid, :voimassa_alkupvm (sql/raw "now()"),
-                             :kyselykertaid kyselykertaid}))
-    (sql/insert taulut/vastaajatunnus
-                (sql/values {:vastaajatunnusid 1, :kyselykertaid kyselykertaid, :tunnus "",
-                             :vastaajien_lkm 1}))
-    (sql/insert taulut/vastaaja
-                (sql/values {:kyselykertaid kyselykertaid, :vastaajatunnusid 1}))))
+   (lisaa-kyselykerta-johon-on-vastattu! kyselykerta (test-data/lisaa-kysely!)))
+  ([kyselykerta kysely]
+   (let [kyselykerta      (test-data/lisaa-kyselykerta! kyselykerta kysely)
+         [vastaajatunnus] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 1} kyselykerta)
+         _                (test-data/lisaa-vastaaja! {:vastannut true} vastaajatunnus)]
+     kyselykerta)))
 
 (defn lisaa-kyselykerta-ilman-vastaajia!
   ([kyselykerta]
-   (lisaa-kyselykerta-ilman-vastaajia! kyselykerta (lisaa-kysely!)))
-  ([{:keys [kyselykertaid]} {:keys [kyselyid]}]
-   (sql/insert taulut/kyselykerta
-     (sql/values {:nimi "", :kyselyid kyselyid, :voimassa_alkupvm (sql/raw "now()"),
-                  :kyselykertaid kyselykertaid}))))
+   (lisaa-kyselykerta-ilman-vastaajia! kyselykerta (test-data/lisaa-kysely!)))
+  ([kyselykerta kysely]
+   (test-data/lisaa-kyselykerta! kyselykerta kysely)))
 
 ;; Kyselykerta on poistettavissa, jos sillä ei ole yhtään vastaajaa.
 (deftest ^:integraatio hae-kaikki-kyselykerta-poistettavissa
-  (let [kysely (lisaa-kysely!)]
-    (lisaa-kyselykerta-johon-on-vastattu! {:kyselykertaid 1} kysely)
-    (lisaa-kyselykerta-ilman-vastaajia! {:kyselykertaid 2} kysely)
-    (is (:poistettavissa (some-value-with :kyselykertaid 2
-                                          (arkisto/hae-kaikki (:koulutustoimija kysely)))))))
+  (let [kysely       (test-data/lisaa-kysely!)
+        _            (lisaa-kyselykerta-johon-on-vastattu! {} kysely)
+        kyselykerta2 (lisaa-kyselykerta-ilman-vastaajia! {} kysely)]
+    (is (:poistettavissa (some-value-with :kyselykertaid (:kyselykertaid kyselykerta2)
+                                          (hae-kaikki (:koulutustoimija kysely)))))))
 
 (deftest ^:integraatio kyselykerta-poistettavissa
-  (let [kysely (lisaa-kysely!)]
-    (lisaa-kyselykerta-johon-on-vastattu! {:kyselykertaid 1} kysely)
-    (lisaa-kyselykerta-ilman-vastaajia! {:kyselykertaid 2} kysely)
-    (is (arkisto/poistettavissa? 2))))
+  (let [kysely       (test-data/lisaa-kysely!)
+        _            (lisaa-kyselykerta-johon-on-vastattu! {} kysely)
+        kyselykerta2 (lisaa-kyselykerta-ilman-vastaajia! {} kysely)]
+    (is (poistettavissa? (:kyselykertaid kyselykerta2)))))
 
 ;; Kyselykerta ei ole poistettavissa, jos sillä on yksikin vastaaja.
 (deftest ^:integraatio hae-kaikki-kyselykerta-ei-poistettavissa
-  (let [kysely (lisaa-kysely!)]
-    (lisaa-kyselykerta-johon-on-vastattu! {:kyselykertaid 1} kysely)
-    (is (not (:poistettavissa (some-value-with :kyselykertaid 1
-                                               (arkisto/hae-kaikki (:koulutustoimija kysely))))))))
+  (let [kysely      (test-data/lisaa-kysely!)
+        kyselykerta (lisaa-kyselykerta-johon-on-vastattu! {} kysely)]
+    (is (not (:poistettavissa (some-value-with :kyselykertaid (:kyselykerta kyselykerta)
+                                               (hae-kaikki (:koulutustoimija kysely))))))))
 
 (deftest ^:integraatio kyselykerta-ei-poistettavissa
-  (lisaa-kyselykerta-johon-on-vastattu! {:kyselykertaid 1})
-  (is (not (arkisto/poistettavissa? 1))))
+  (let [kyselykerta (lisaa-kyselykerta-johon-on-vastattu! {})]
+    (is (not (poistettavissa? (:kyselykertaid kyselykerta))))))
 
 ;; Poistaminen poistaa kyselykerran.
 (deftest ^:integraatio poista-kyselykerta
-  (let [kysely (lisaa-kysely!)]
-    (lisaa-kyselykerta-ilman-vastaajia! {:kyselykertaid 1} kysely)
-    (lisaa-kyselykerta-ilman-vastaajia! {:kyselykertaid 2} kysely)
-    (arkisto/poista! 1)
-    (is (= (set (map :kyselykertaid (sql/select taulut/kyselykerta)))
-           #{-1 2}))))
+  (let [kysely                      (test-data/lisaa-kysely!)
+        [kyselykerta1 kyselykerta2] (test-data/lisaa-kyselykerrat! [{} {}] kysely)]
+    (poista! (:kyselykertaid kyselykerta1))
+    (let [kyselykerrat (set (map :kyselykertaid (hae-kaikki (:koulutustoimija kysely))))]
+      (is (not (contains? kyselykerrat (:kyselykertaid kyselykerta1))))
+      (is (contains? kyselykerrat (:kyselykertaid kyselykerta2)))) ))
 
 ;; Poistaminen poistaa kyselykertaan liittyvät vastaajatunnukset.
 (deftest ^:integraatio poista-vastaajatunnukset
-  (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid 1}))
-  (sql/insert taulut/vastaajatunnus
-    (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "1",
-                 :vastaajien_lkm 1}))
-  (sql/insert taulut/vastaajatunnus
-    (sql/values {:vastaajatunnusid 2, :kyselykertaid -1, :tunnus "2",
-                 :vastaajien_lkm 1}))
-  (arkisto/poista! 1)
-  (is (= (map :vastaajatunnusid (sql/select taulut/vastaajatunnus))
-         [2])))
+  (let [[kyselykerta1 kyselykerta2] (test-data/lisaa-kyselykerrat! [{} {}])
+        [vastaajatunnus1] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 1} kyselykerta1)
+        [vastaajatunnus2] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 1} kyselykerta2)]
+    (poista! (:kyselykertaid kyselykerta1))
+    (is (= (map :vastaajatunnusid (sql/select taulut/vastaajatunnus))
+           [(:vastaajatunnusid vastaajatunnus2)]))))
 
-(deftest ^:integraatio hae-kaikki-test
+(deftest ^:integraatio hae-kaikki-kyselykerta-jolla-monta-vastaajaa-test
   (testing
     "vastaajien määrä ei vaikuta kyselykertoihin (OPH-1254)"
-    (let [kysely (lisaa-kysely!)]
-      (sql/insert taulut/kyselykerta
-                  (sql/values {:nimi "", :kyselyid (:kyselyid kysely), :voimassa_alkupvm (sql/raw "now()"),
-                               :kyselykertaid 1}))
-      (sql/insert taulut/vastaajatunnus
-                  (sql/values {:vastaajatunnusid 1, :kyselykertaid 1, :tunnus "",
-                               :vastaajien_lkm 2}))
-      (sql/insert taulut/vastaaja
-                  (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
-      (sql/insert taulut/vastaaja
-                  (sql/values {:kyselykertaid 1, :vastaajatunnusid 1}))
-
-      (is (= (count (filter #(= (:kyselykertaid %) 1) (arkisto/hae-kaikki (:koulutustoimija kysely)))) 1)))))
+    (let [kysely         (test-data/lisaa-kysely!)
+          kyselykerta    (test-data/lisaa-kyselykerta! {} kysely)
+          [vastaajatunnus] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 2} kyselykerta)]
+      (test-data/lisaa-vastaajat! [{} {}] vastaajatunnus)
+      (is (= (count (filter #(= (:kyselykertaid %) (:kyselykertaid kyselykerta))
+                            (hae-kaikki (:koulutustoimija kysely))))
+             1)))))
