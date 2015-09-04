@@ -117,6 +117,10 @@
                                         :tila "julkaistu"}
                                        kysely))))
 
+(defn lisaa-kysymysryhma-kyselyyn!
+  [kysymysryhma {:keys [kyselyid]}]
+  (aipal.arkisto.kysely/lisaa-kysymysryhma! kyselyid kysymysryhma))
+
 (defn lisaa-kyselykerta!
   ([]
     (lisaa-kyselykerta! {} (lisaa-kysely!)))
