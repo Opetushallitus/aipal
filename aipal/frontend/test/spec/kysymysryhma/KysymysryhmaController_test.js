@@ -54,6 +54,27 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
       $setPristine: function() {},
       $valid: true
     };
+    $httpBackend.expectGET(/api\/kayttaja/).respond({
+      impersonoitu_kayttaja: '',
+      sukunimi: 'Pääkäyttäjä',
+      etunimi: 'Pekka',
+      aktiivinen_rooli: {
+        koulutustoimija_sv: null,
+        koulutustoimija_fi: 'Testi-Opetushallitus',
+        rooli_organisaatio_id: 1767,
+        organisaatio: '9876543-2',
+        rooli: 'YLLAPITAJA'
+      },
+      uid: 'T-1001',
+      voimassa: true,
+      roolit: [{
+        koulutustoimija_sv: null,
+        koulutustoimija_fi: 'Testi-Opetushallitus',
+        rooli_organisaatio_id: 1767,
+        organisaatio: '9876543-2',
+        rooli: 'YLLAPITAJA'
+      }],
+      oid: 'OID.T-1001'});
   }
 
   function alustaControllerKopioimaan(kysymysryhmaid) {
@@ -185,11 +206,11 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     expect($scope.tallennusSallittu()).toBe(true);
   });
 
-  it('ei anna tallentaa, jos ntm-kysymysryhmä ei ole merkitty valtakunnalliseksi', function(){
+  it('antaa tallentaa, jos ntm-kysymysryhmä on merkitty valtakunnalliseksi', function(){
     alustaController();
     $scope.kysymysryhma.ntm_kysymykset = true;
     $scope.kysymysryhma.valtakunnallinen = false;
-    expect($scope.tallennusSallittu()).toBe(false);
+    expect($scope.tallennusSallittu()).toBe(true);
   });
 
   it('antaa tallentaa, jos ntm-kysymysryhmä on merkitty taustakysymysryhmäksi', function(){
