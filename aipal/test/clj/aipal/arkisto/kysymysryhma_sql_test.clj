@@ -127,7 +127,42 @@
        (is (sisaltaa-kysymysryhman (hae-kysymysryhmat (:ytunnus opetushallitus))
                                    kysymysryhmaid))))
     (testing
+      "NTM-vastuukäyttäjä näkee NTM-kysymysryhmän"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly true)]
+        (is (sisaltaa-kysymysryhman (hae-kysymysryhmat (:ytunnus koulutustoimija))
+                                    kysymysryhmaid))))
+    (testing
       "tavallinen käyttäjä ei näe NTM-kysymysryhmää"
-      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)]
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
         (is (not (sisaltaa-kysymysryhman (hae-kysymysryhmat (:ytunnus koulutustoimija))
+                                         kysymysryhmaid)))))))
+
+(deftest ^:integraatio hae-ntm-taustakysymysryhmat
+  (let [opetushallitus (test-data/lisaa-koulutustoimija! {:ytunnus "1111111-1"})
+        {:keys [kysymysryhmaid]} (test-data/lisaa-kysymysryhma! {:ntm_kysymykset true
+                                                                 :taustakysymykset true
+                                                                 :tila "julkaistu"
+                                                                 :valtakunnallinen true}
+                                                                opetushallitus)
+        sisaltaa-kysymysryhman (fn [kysymysryhmat kysymysryhmaid]
+                                 (contains? (set (map :kysymysryhmaid kysymysryhmat))
+                                            kysymysryhmaid))]
+    (testing
+      "pääkäyttäjä näkee NTM-taustakysymysryhmän"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly true)]
+       (is (sisaltaa-kysymysryhman (hae-taustakysymysryhmat)
+                                   kysymysryhmaid))))
+    (testing
+      "NTM-vastuukäyttäjä näkee NTM-taustakysymysryhmän"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly true)]
+        (is (sisaltaa-kysymysryhman (hae-taustakysymysryhmat)
+                                    kysymysryhmaid))))
+    (testing
+      "tavallinen käyttäjä ei näe NTM-taustakysymysryhmää"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
+        (is (not (sisaltaa-kysymysryhman (hae-taustakysymysryhmat)
                                          kysymysryhmaid)))))))
