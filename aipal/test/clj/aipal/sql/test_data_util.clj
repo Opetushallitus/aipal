@@ -152,9 +152,10 @@
     (let [default-kyselypohja (assoc default-kyselypohja :koulutustoimija (:ytunnus koulutustoimija))
           kyselypohja (merge default-kyselypohja uusi-kyselypohja)]
       (sql/insert taulut/kyselypohja (sql/values [kyselypohja]))))
+  ([uusi-kyselypohja]
+    (lisaa-kyselypohja! uusi-kyselypohja (lisaa-koulutustoimija!)))
   ([]
-    (let [koulutustoimija (lisaa-koulutustoimija!)]
-      (lisaa-kyselypohja! default-kyselypohja koulutustoimija))))
+    (lisaa-kyselypohja! default-kyselypohja)))
 
 (defn lisaa-kysymys!
   [uusi-kysymys]
