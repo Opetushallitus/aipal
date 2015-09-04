@@ -78,3 +78,32 @@
       (is (= (count (filter #(= (:kyselykertaid %) (:kyselykertaid kyselykerta))
                             (hae-kaikki (:koulutustoimija kysely))))
              1)))))
+
+(deftest ^:integraatio hae-kaikki-ntm-kyselykerrat-test
+  (let [kysymysryhma          (test-data/lisaa-kysymysryhma! {:ntm_kysymykset true
+                                                              :taustakysymykset false
+                                                              :tila "julkaistu"
+                                                              :valtakunnallinen true})
+        kysely                (test-data/lisaa-kysely!)
+        _                     (test-data/lisaa-kysymysryhma-kyselyyn! kysymysryhma kysely)
+        kyselykerta           (test-data/lisaa-kyselykerta! {} kysely)
+        sisaltaa-kyselykerran (fn [kyselykerrat kyselykertaid]
+                                (some #{kyselykertaid}
+                                      (map :kyselykertaid kyselykerrat)))]
+    (testing
+      "pääkäyttäjä näkee NTM-kyselykerran"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly true)]
+        (is (sisaltaa-kyselykerran (hae-kaikki (:koulutustoimija kysely))
+                                   (:kyselykertaid kyselykerta)))))
+    (testing
+      "NTM-vastuukäyttäjä näkee NTM-kyselykerran"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly true)]
+        (is (sisaltaa-kyselykerran (hae-kaikki (:koulutustoimija kysely))
+                                   (:kyselykertaid kyselykerta)))))
+    (testing
+      "tavallinen käyttäjä ei näe NTM-kyselykertaa"
+      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
+                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
+        (is (not (sisaltaa-kyselykerran (hae-kaikki (:koulutustoimija kysely))
+                                        (:kyselykertaid kyselykerta))))))))

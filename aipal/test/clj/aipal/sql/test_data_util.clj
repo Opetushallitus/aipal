@@ -168,9 +168,10 @@
     (let [default-kysymysryhma (assoc default-kysymysryhma :koulutustoimija (:ytunnus koulutustoimija))
           kysymysryhma (merge default-kysymysryhma uusi-kysymysryhma)]
       (sql/insert taulut/kysymysryhma (sql/values [kysymysryhma]))))
+  ([uusi-kysymysryhma]
+    (lisaa-kysymysryhma! uusi-kysymysryhma (lisaa-koulutustoimija!)))
   ([]
-    (let [koulutustoimija (lisaa-koulutustoimija!)]
-      (lisaa-kysymysryhma! default-kysymysryhma koulutustoimija))))
+    (lisaa-kysymysryhma! default-kysymysryhma)))
 
 (defn lisaa-kyselypohja!
   ([uusi-kyselypohja koulutustoimija]
