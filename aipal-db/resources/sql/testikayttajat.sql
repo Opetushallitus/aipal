@@ -81,6 +81,9 @@ insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values ('7654321-2', 'OPL-VASTUUKAYTTAJA', 'OID.8086', true);
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
+values ('7654321-2', 'OPL-NTMVASTUUKAYTTAJA', 'OID.8086', true);
+
+insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values ('7654321-2', 'OPL-KATSELIJA', 'OID.6502', true);
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
