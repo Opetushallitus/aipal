@@ -31,7 +31,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
           scope.valtakunnalliset = scope.$eval(attrs.valtakunnalliset);
         });
       },
-      controller: ['$filter', '$modal', '$scope', 'Kysymysryhma', 'i18n', 'ilmoitus', 'varmistus', function($filter, $modal, $scope, Kysymysryhma, i18n, ilmoitus, varmistus) {
+      controller: ['$location', '$filter', '$modal', '$scope', 'Kysymysryhma', 'i18n', 'ilmoitus', 'varmistus', function($location, $filter, $modal, $scope, Kysymysryhma, i18n, ilmoitus, varmistus) {
         $scope.i18n = i18n;
         $scope.rajoitin = {
           tila: $scope.tila
@@ -62,6 +62,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .success(function(uusiKysymysryhma) {
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.julkaisu_onnistui'));
+                $location.url('/kysymysryhmat/');
               })
               .error(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.julkaisu_epaonnistui'));
@@ -75,6 +76,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .success(function(uusiKysymysryhma) {
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.sulkeminen_onnistui'));
+                $location.url('/kysymysryhmat/');
               })
               .error(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.sulkeminen_epaonnistui'));
@@ -90,6 +92,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .success(function() {
                 kysymysryhmalista.splice(kysymysryhmaindex, 1);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.poistaminen_onnistui'));
+                $location.url('/kysymysryhmat/');
               })
               .error(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.poistaminen_epaonnistui'));
@@ -103,6 +106,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .success(function(uusiKysymysryhma) {
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.palautus_julkaistuksi_onnistui'));
+                $location.url('/kysymysryhmat/');
               })
               .error(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.palautus_julkaistuksi_epaonnistui'));
@@ -116,6 +120,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .success(function(uusiKysymysryhma) {
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.palautus_luonnokseksi_onnistui'));
+                $location.url('/kysymysryhmat/');
               })
               .error(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.palautus_luonnokseksi_epaonnistui'));

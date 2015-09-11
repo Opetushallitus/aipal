@@ -31,7 +31,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
           scope.valtakunnalliset = scope.$eval(attrs.valtakunnalliset);
         });
       },
-      controller: ['$filter', '$scope', 'kayttooikeudet', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($filter, $scope, kayttooikeudet, Kyselypohja, i18n, ilmoitus, varmistus) {
+      controller: ['$location', '$filter', '$scope', 'kayttooikeudet', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($location, $filter, $scope, kayttooikeudet, Kyselypohja, i18n, ilmoitus, varmistus) {
         $scope.i18n = i18n;
         $scope.rajoitin = {
           tila: $scope.tila
@@ -53,6 +53,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.julkaistu'));
               _.assign(kyselypohja, uusiKyselypohja);
+              $location.url('/kyselypohjat/');
             }).error(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
             });
@@ -66,6 +67,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             Kyselypohja.poista(kyselypohjaid).success(function() {
               kyselypohjalista.splice(kyselypohjaindex, 1);
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_onnistui'));
+              $location.url('/kyselypohjat/');
             }).error(function() {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_epaonnistui'));
             });
@@ -76,7 +78,9 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
           varmistus.varmista(i18n.hae('kyselypohja.palauta_luonnokseksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_luonnokseksi_teksti'), i18n.hae('kyselypohja.palauta_luonnokseksi')).then(function() {
             Kyselypohja.palautaLuonnokseksi(kyselypohja).success(function(uusiKyselypohja) {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_luonnokseksi_onnistui'));
+
               _.assign(kyselypohja, uusiKyselypohja);
+              $location.url('/kyselypohjat/');
             }).error(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.palautus_luonnokseksi_epaonnistui'));
             });
@@ -88,6 +92,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.suljettu'));
               _.assign(kyselypohja, uusiKyselypohja);
+              $location.url('/kyselypohjat/');
             }).error(function() {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.sulkeminen_epaonnistui'));
             });
@@ -99,6 +104,7 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_julkaistuksi_onnistui'));
               _.assign(kyselypohja, uusiKyselypohja);
+              $location.url('/kyselypohjat/');
             }).error(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.palautus_julkaistuksi_epaonnistui'));
             });
