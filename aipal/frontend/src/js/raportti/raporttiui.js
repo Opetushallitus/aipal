@@ -64,8 +64,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
-    function($scope, Koulutustoimija, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Oppilaitos', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, Oppilaitos, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.kieli = kieli;
@@ -228,14 +228,25 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
 
     $scope.raportti.koulutustoimijat = [];
+    $scope.raportti.oppilaitokset = [];
     $scope.raportti.koulutuksen_jarjestajat = [];
     $scope.raportti.jarjestavat_oppilaitokset = [];
+    $scope.oppilaitokset = [];
     $scope.vaihdaValinta = function(elementti, taulukko, idAvain) {
       if (_.remove($scope.raportti[taulukko], function(item) { return item === elementti[idAvain]; }).length === 0) {
         elementti.valittu = true;
         $scope.raportti[taulukko].push(elementti[idAvain]);
+        if(taulukko === 'koulutustoimijat') {
+          Oppilaitos.haeKoulutustoimijanOppilaitokset(elementti[idAvain]).success(function(oppilaitokset) {
+            $scope.oppilaitokset = $scope.oppilaitokset.concat(oppilaitokset);
+          });
+        }
       } else {
         delete elementti.valittu;
+        if(taulukko === 'koulutustoimijat') {
+          _.remove($scope.oppilaitokset, {koulutustoimija: elementti[idAvain]}); 
+        }
+        
       }
     };
 

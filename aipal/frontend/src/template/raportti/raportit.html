@@ -10,6 +10,9 @@
       <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>
       <div class="hidden-print">{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
       <valintalista class="hidden-print" valittavat="koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
+      <h3 class="hidden-print">{{ 'raportit.oppilaitokset' | i18n }}</h3>
+      <div class="hidden-print">{{ 'raportit.vertailtavat_oppilaitokset' | i18n }}</div>
+      <valintalista class="hidden-print" valittavat="oppilaitokset" hakuteksti="{{ 'raportit.hae_oppilaitoksia' | i18n }}" valitse="vaihdaValinta(valittava, 'oppilaitokset', 'oppilaitoskoodi')"></valintalista>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys',i18n.raportit.kehitysraportti)"
@@ -20,6 +23,9 @@
       <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>
       <div class="hidden-print">{{ 'raportit.vertailtavat_koulutustoimijat' | i18n }}</div>
       <valintalista class="hidden-print" valittavat="koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutustoimijat', 'ytunnus')"></valintalista>
+      <h3 class="hidden-print">{{ 'raportit.oppilaitokset' | i18n }}</h3>
+      <div class="hidden-print">{{ 'raportit.vertailtavat_oppilaitokset' | i18n }}</div>
+      <valintalista class="hidden-print" valittavat="oppilaitokset" hakuteksti="{{ 'raportit.hae_oppilaitoksia' | i18n }}" valitse="vaihdaValinta(valittava, 'oppilaitokset', 'oppilaitoskoodi')"></valintalista>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </tab>
     <tab class="hidden-print" heading="{{ 'raportit.vertaa_koulutustoimijoita' | i18n }}" select="vaihdaTyyppi('koulutustoimijat',i18n.raportit.vertaa_koulutustoimijoita)" ng-show="yllapitaja">
