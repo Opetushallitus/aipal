@@ -158,17 +158,17 @@
   [m kentat]
   (not-every? nil? (vals (select-keys m kentat))))
 
-(defn jatkokysymys?
-  [kysymys]
-  (onko-jokin-kentista-annettu? kysymys jatkokysymykset-kentat))
-
 (defn kylla-jatkokysymys?
   [kysymys]
-  (onko-jokin-kentista-annettu? kysymys kylla-jatkokysymykset-kentat))
+  (onko-jokin-kentista-annettu? kysymys [:kylla_teksti_fi :kylla_teksti_sv]))
 
 (defn ei-jatkokysymys?
   [kysymys]
-  (onko-jokin-kentista-annettu? kysymys ei-jatkokysymykset-kentat))
+  (onko-jokin-kentista-annettu? kysymys [:ei_teksti_fi :ei_teksti_sv]))
+
+(defn jatkokysymys?
+  [kysymys]
+  (or (kylla-jatkokysymys? kysymys) (ei-jatkokysymys? kysymys)))
 
 (defn poista-nil-kentat
   [m]
