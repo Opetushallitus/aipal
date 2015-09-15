@@ -85,7 +85,7 @@
         :when (seq arvot)]
     {:id (->int kysymysid) :arvot (map ->int arvot)}))
 
-(defn ^:private raportti-query [rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus]
+(defn ^:private raportti-query [rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat oppilaitokset koulutusalatunnus opintoalatunnus tutkintotunnus]
   (->
     (sql/select* [:vastaus_jatkovastaus_valtakunnallinen_view :vastaus])
     (sql/join :inner :vastaaja_taustakysymysryhma_view
@@ -104,7 +104,8 @@
       koulutustoimijat (->
                          (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaaja.kyselykertaid))
                          (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
-                         (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
+                         (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]}))
+      oppilaitokset (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in oppilaitokset]}))
     (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
@@ -214,12 +215,13 @@
         opintoalatunnus (when (= "opintoala" (:tutkintorakennetaso parametrit)) (first (:opintoalat parametrit)))
         koulutusalatunnus (when (= "koulutusala" (:tutkintorakennetaso parametrit)) (first (:koulutusalat parametrit)))
         koulutustoimijat (not-empty (:koulutustoimijat parametrit))
+        oppilaitokset (not-empty (:oppilaitokset parametrit))
         taustakysymysryhmaid (Integer/parseInt (:taustakysymysryhmaid parametrit))
         kysymysryhmat (liita-vastaajien-maksimimaarat
                         (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
                         alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
         kysymykset (hae-valtakunnalliset-kysymykset)
-        data (raportti-query rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus)
+        data (raportti-query rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat oppilaitokset koulutusalatunnus opintoalatunnus tutkintotunnus)
         raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
     (merge
       (raportin-otsikko parametrit)
