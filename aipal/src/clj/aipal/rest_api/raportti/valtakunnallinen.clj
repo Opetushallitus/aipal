@@ -30,10 +30,12 @@
 (defn kehitysraportti-vertailuraportti-parametrit [parametrit]
   (let [parametrit (assoc parametrit :koulutustoimijat [])]
     (case (:tutkintorakennetaso parametrit)
-      "tutkinto" (assoc parametrit :tutkintorakennetaso "opintoala"
-                                   :opintoalat [(:opintoala (tutkinto-arkisto/hae (first (:tutkinnot parametrit))))])
-      "opintoala" (assoc parametrit :tutkintorakennetaso "koulutusala"
-                                    :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))])
+      "tutkinto" (assoc parametrit
+                        :tutkintorakennetaso "opintoala"
+                        :opintoalat [(:opintoala (tutkinto-arkisto/hae (first (:tutkinnot parametrit))))])
+      "opintoala" (assoc parametrit
+                         :tutkintorakennetaso "koulutusala"
+                         :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))])
       "koulutusala" parametrit)))
 
 (defn ^:private muodosta-opintoalavertailun-parametrit [koulutusalat]
