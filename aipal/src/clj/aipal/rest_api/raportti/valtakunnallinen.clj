@@ -57,19 +57,16 @@
     (muodosta-opintoalavertailun-parametrit koulutusalat)))
 
 (defn ^:private tutkintojen-vertailutiedon-parametrit [parametrit]
-  (let [parametrit   (assoc parametrit :koulutustoimijat [])
-        opintoalat   (map (comp :opintoala tutkinto-arkisto/hae) (:tutkinnot parametrit))
+  (let [opintoalat   (map (comp :opintoala tutkinto-arkisto/hae) (:tutkinnot parametrit))
         koulutusalat (map (comp :koulutusala opintoala-arkisto/hae) opintoalat)]
-    (merge parametrit (muodosta-tutkintovertailun-parametrit opintoalat koulutusalat))))
+    (muodosta-tutkintovertailun-parametrit opintoalat koulutusalat)))
 
 (defn ^:private opintoalojen-vertailutiedon-parametrit [parametrit]
-  (let [parametrit   (assoc parametrit :koulutustoimijat [])
-        koulutusalat (map (comp :koulutusala opintoala-arkisto/hae) (:opintoalat parametrit))]
-    (merge parametrit (muodosta-opintoalavertailun-parametrit koulutusalat))))
+  (let [koulutusalat (map (comp :koulutusala opintoala-arkisto/hae) (:opintoalat parametrit))]
+    (muodosta-opintoalavertailun-parametrit koulutusalat)))
 
 (defn ^:private koulutusalojen-vertailutiedon-parametrit [parametrit]
-  (let [parametrit   (assoc parametrit :koulutustoimijat [])]
-    (merge parametrit (muodosta-koulutusalavertailun-parametrit))))
+  (muodosta-koulutusalavertailun-parametrit))
 
 (defn lisaa-vertailuraportille-otsikko [raportti]
   (merge raportti {:nimi_fi "Valtakunnallinen"
