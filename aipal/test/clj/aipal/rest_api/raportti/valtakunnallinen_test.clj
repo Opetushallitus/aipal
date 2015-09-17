@@ -9,4 +9,4 @@
     [799]     []    {:tutkintorakennetaso "opintoala", :opintoalat [799]}
     [799 799] []    {:tutkintorakennetaso "opintoala", :opintoalat [799]}
     [799 801] [7 7] {:tutkintorakennetaso "koulutusala", :koulutusalat [7]}
-    [603 703] [6 7] {:tutkintorakennetaso "koulutusala", :koulutusalat nil}))
+    [603 703] [6 7] {:tutkintorakennetaso "koulutusala", :koulutusalat []}))

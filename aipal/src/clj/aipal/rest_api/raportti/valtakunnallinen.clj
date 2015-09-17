@@ -40,12 +40,15 @@
                            :tutkintorakennetaso "koulutusala"
                            :koulutusalat []))))
 
+(defn ^:private muodosta-koulutusalavertailun-parametrit []
+  {:tutkintorakennetaso "koulutusala"
+   :koulutusalat []})
+
 (defn ^:private muodosta-opintoalavertailun-parametrit [koulutusalat]
   (if (apply = koulutusalat)
     {:tutkintorakennetaso "koulutusala"
      :koulutusalat [(first koulutusalat)]}
-    {:tutkintorakennetaso "koulutusala"
-     :koulutusalat nil}))
+    (muodosta-koulutusalavertailun-parametrit)))
 
 (defn ^:private muodosta-tutkintovertailun-parametrit [opintoalat koulutusalat]
   (if (apply = opintoalat)
@@ -63,6 +66,10 @@
   (let [parametrit   (assoc parametrit :koulutustoimijat [])
         koulutusalat (map (comp :koulutusala opintoala-arkisto/hae) (:opintoalat parametrit))]
     (merge parametrit (muodosta-opintoalavertailun-parametrit koulutusalat))))
+
+(defn ^:private koulutusalojen-vertailutiedon-parametrit [parametrit]
+  (let [parametrit   (assoc parametrit :koulutustoimijat [])]
+    (merge parametrit (muodosta-koulutusalavertailun-parametrit))))
 
 (defn lisaa-vertailuraportille-otsikko [raportti]
   (merge raportti {:nimi_fi "Valtakunnallinen"
@@ -109,7 +116,12 @@
                                 [(vertailuraportti-vertailuraportti
                                   parametrit
                                   (opintoalojen-vertailutiedon-parametrit parametrit))])
-                 "koulutusala" (for [koulutusala (:koulutusalat parametrit)] (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala]))))
+                 "koulutusala" (concat
+                                (for [koulutusala (:koulutusalat parametrit)]
+                                  (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala])))
+                                [(vertailuraportti-vertailuraportti
+                                  parametrit
+                                  (koulutusalojen-vertailutiedon-parametrit parametrit))]))
     "kehitys" (concat [(raportti/muodosta parametrit)] [(kehitysraportti-vertailuraportti parametrit)])
     "koulutustoimijat" (concat
                          (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija])))
