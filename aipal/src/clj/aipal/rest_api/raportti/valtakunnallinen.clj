@@ -36,7 +36,9 @@
       "opintoala" (assoc parametrit
                          :tutkintorakennetaso "koulutusala"
                          :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))])
-      "koulutusala" parametrit)))
+      "koulutusala" (assoc parametrit
+                           :tutkintorakennetaso "koulutusala"
+                           :koulutusalat []))))
 
 (defn ^:private muodosta-opintoalavertailun-parametrit [koulutusalat]
   (if (apply = koulutusalat)
