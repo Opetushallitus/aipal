@@ -100,29 +100,30 @@
 
 (defn luo-raportit [parametrit]
   (case (:tyyppi parametrit)
-    "vertailu" (case (:tutkintorakennetaso parametrit)
-                 "tutkinto"    (concat
-                                (for [tutkinto (:tutkinnot parametrit)]
-                                  (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
-                                [(vertailuraportti-vertailuraportti
-                                  parametrit
-                                  (tutkintojen-vertailutiedon-parametrit parametrit))])
-                 "opintoala"   (concat
-                                (for [opintoala (:opintoalat parametrit)]
-                                  (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
-                                [(vertailuraportti-vertailuraportti
-                                  parametrit
-                                  (opintoalojen-vertailutiedon-parametrit parametrit))])
-                 "koulutusala" (concat
-                                (for [koulutusala (:koulutusalat parametrit)]
-                                  (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala])))
-                                [(vertailuraportti-vertailuraportti
-                                  parametrit
-                                  (koulutusalojen-vertailutiedon-parametrit parametrit))]))
-    "kehitys" (concat [(raportti/muodosta parametrit)] [(kehitysraportti-vertailuraportti parametrit)])
+    "vertailu"         (case (:tutkintorakennetaso parametrit)
+                         "tutkinto"    (concat
+                                        (for [tutkinto (:tutkinnot parametrit)]
+                                          (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
+                                        [(vertailuraportti-vertailuraportti
+                                          parametrit
+                                          (tutkintojen-vertailutiedon-parametrit parametrit))])
+                         "opintoala"   (concat
+                                        (for [opintoala (:opintoalat parametrit)]
+                                          (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
+                                        [(vertailuraportti-vertailuraportti
+                                          parametrit
+                                          (opintoalojen-vertailutiedon-parametrit parametrit))])
+                         "koulutusala" (concat
+                                        (for [koulutusala (:koulutusalat parametrit)]
+                                          (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala])))
+                                        [(vertailuraportti-vertailuraportti
+                                          parametrit
+                                          (koulutusalojen-vertailutiedon-parametrit parametrit))]))
+    "kehitys"          (concat [(raportti/muodosta parametrit)] [(kehitysraportti-vertailuraportti parametrit)])
     "koulutustoimijat" (concat
-                         (for [koulutustoimija (:koulutustoimijat parametrit)] (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija])))
-                         [(koulutustoimija-vertailuraportti parametrit)])))
+                        (for [koulutustoimija (:koulutustoimijat parametrit)]
+                          (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija])))
+                        [(koulutustoimija-vertailuraportti parametrit)])))
 
 (defn reitit [asetukset]
   (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :post "/" [& parametrit]
