@@ -108,34 +108,34 @@
 ; Vertailun aineisto vuosi taaksepäin raportointijakson loppupäivästä.
 ; Eli raportoinnin rajaus voi olla 1kk, mutta vertailuluku lasketaan vuoden aineistosta.
 ; Jos raportoinnin rajaus on yli 1 vuosi, otetaan vertailuluku samalta ajalta.
-(deftest vertailuraportti-vertailujakso-test
+(deftest valtakunnallinen-raportti-vertailujakso-test
   (testing "alkupvm ja loppupvm asetettu ja alle vuosi, vertailu vuosi taaksepäin"
     (is (=
           {:vertailujakso_alkupvm "2013-12-29"
            :vertailujakso_loppupvm "2014-12-29"}
-          (vertailuraportti-vertailujakso "2014-01-01" "2014-12-29"))))
+          (valtakunnallinen-raportti-vertailujakso "2014-01-01" "2014-12-29"))))
   (testing "alkupvm ja loppupvm asetettu ja yli vuosi"
     (is (=
           {:vertailujakso_alkupvm "2013-01-01"
            :vertailujakso_loppupvm "2014-12-01"}
-          (vertailuraportti-vertailujakso "2013-01-01" "2014-12-01"))))
+          (valtakunnallinen-raportti-vertailujakso "2013-01-01" "2014-12-01"))))
   (testing "loppupvm asetettu"
     (is (=
           {:vertailujakso_alkupvm nil
            :vertailujakso_loppupvm "2014-12-31"}
-          (vertailuraportti-vertailujakso nil "2014-12-31"))))
+          (valtakunnallinen-raportti-vertailujakso nil "2014-12-31"))))
   (testing "alkupvm asetettu"
     (is (=
           {:vertailujakso_alkupvm "2013-01-01"
            :vertailujakso_loppupvm nil}
-          (vertailuraportti-vertailujakso "2013-01-01" nil))))
+          (valtakunnallinen-raportti-vertailujakso "2013-01-01" nil))))
   (testing "alkupvm asetettu, ja alle vuoden tästä päivämäärästä"
     (is (=
           {:vertailujakso_alkupvm (.toString (t/minus (t/today) (t/years 1)))
            :vertailujakso_loppupvm nil}
-          (vertailuraportti-vertailujakso (.toString (t/today)) nil))))
+          (valtakunnallinen-raportti-vertailujakso (.toString (t/today)) nil))))
   (testing "alkupvm ja loppupvm ei asetettu"
     (is (=
           {:vertailujakso_alkupvm nil
            :vertailujakso_loppupvm nil}
-          (vertailuraportti-vertailujakso nil nil)))))
+          (valtakunnallinen-raportti-vertailujakso nil nil)))))

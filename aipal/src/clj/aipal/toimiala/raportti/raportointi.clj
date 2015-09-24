@@ -285,7 +285,7 @@
       raportti
       (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))))
 
-(defn vertailuraportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
+(defn valtakunnallinen-raportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
   (let [alkupvm (parse-iso-date vertailujakso_alkupvm)
         loppupvm (or (parse-iso-date vertailujakso_loppupvm) (t/today))
         vertailupvm (t/minus loppupvm (t/years 1))]
