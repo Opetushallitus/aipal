@@ -91,12 +91,14 @@
       lisaa-vertailuraportille-otsikko)))
 
 (defn koulutustoimija-valtakunnallinen-raportti [parametrit]
-  (-> (raportti/muodosta (merge
-                          parametrit
+  (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
+        vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
+        parametrit (merge parametrit
                           {:koulutustoimijat []
                            :tyyppi "vertailu"}
-                          (valtakunnallinen-raportti-vertailujakso (:vertailujakso_alkupvm parametrit) (:vertailujakso_loppupvm parametrit))))
-    lisaa-vertailuraportille-otsikko))
+                          (valtakunnallinen-raportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm))]
+    (-> (raportti/muodosta parametrit)
+      lisaa-vertailuraportille-otsikko)))
 
 (defn luo-raportit [parametrit]
   (apply concat
