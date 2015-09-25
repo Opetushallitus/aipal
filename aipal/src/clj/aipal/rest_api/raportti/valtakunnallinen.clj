@@ -27,7 +27,7 @@
             [aipal.arkisto.opintoala :as opintoala-arkisto]))
 
 ; Valtakunnallinen vertailuraportti on ilman koulutustoimijoita, ylemmälle tutkintohierarkian tasolle
-(defn kehitysraportti-valtakunnallinen-raportti-tutkintotason-parametrit [parametrit]
+(defn ^:private kehitysraportti-valtakunnallinen-raportti-tutkintotason-parametrit [parametrit]
   (case (:tutkintorakennetaso parametrit)
     "tutkinto"    {:tutkintorakennetaso "opintoala"
                    :opintoalat [(:opintoala (tutkinto-arkisto/hae (first (:tutkinnot parametrit))))]}
@@ -64,40 +64,36 @@
 (defn ^:private koulutusalojen-vertailutiedon-parametrit [parametrit]
   (muodosta-koulutusalavertailun-parametrit))
 
-(defn lisaa-vertailuraportille-otsikko [raportti]
-  (merge raportti {:nimi_fi "Valtakunnallinen"
-                   :nimi_sv "Valtakunnallinen (sv)"}))
+(defn ^:private vertailuraportti-valtakunnallinen-raportti-tutkintotason-parametrit [parametrit]
+  (case (:tutkintorakennetaso parametrit)
+    "tutkinto"    (tutkintojen-vertailutiedon-parametrit parametrit)
+    "opintoala"   (opintoalojen-vertailutiedon-parametrit parametrit)
+    "koulutusala" (koulutusalojen-vertailutiedon-parametrit parametrit)))
 
-(defn vertailuraportti-valtakunnallinen-raportti [parametrit tutkintotason-parametrit]
+(defn ^:private muodosta-valtakunnallinen-raportti [parametrit tutkintotason-parametrit]
   (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
         vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
         parametrit (merge parametrit
                           {:koulutustoimijat []
-                           :tyyppi "vertailu"}
+                           :tyyppi "valtakunnallinen"}
                           (valtakunnallinen-raportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm)
                           tutkintotason-parametrit)]
-    (-> (raportti/muodosta parametrit)
-      lisaa-vertailuraportille-otsikko)))
+    (raportti/muodosta parametrit)))
 
-(defn kehitysraportti-valtakunnallinen-raportti [parametrit]
-  (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
-        vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
-        parametrit (merge parametrit
-                          {:koulutustoimijat []}
-                          (valtakunnallinen-raportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm)
-                          (kehitysraportti-valtakunnallinen-raportti-tutkintotason-parametrit parametrit))]
-    (-> (raportti/muodosta parametrit)
-      lisaa-vertailuraportille-otsikko)))
+(defn ^:private vertailuraportti-valtakunnallinen-raportti [parametrit]
+  (muodosta-valtakunnallinen-raportti
+   parametrit
+   (vertailuraportti-valtakunnallinen-raportti-tutkintotason-parametrit parametrit)))
 
-(defn koulutustoimija-valtakunnallinen-raportti [parametrit]
-  (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
-        vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
-        parametrit (merge parametrit
-                          {:koulutustoimijat []
-                           :tyyppi "vertailu"}
-                          (valtakunnallinen-raportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm))]
-    (-> (raportti/muodosta parametrit)
-      lisaa-vertailuraportille-otsikko)))
+(defn ^:private kehitysraportti-valtakunnallinen-raportti [parametrit]
+  (muodosta-valtakunnallinen-raportti
+   parametrit
+   (kehitysraportti-valtakunnallinen-raportti-tutkintotason-parametrit parametrit)))
+
+(defn ^:private koulutustoimija-valtakunnallinen-raportti [parametrit]
+  (muodosta-valtakunnallinen-raportti
+   parametrit
+   nil))
 
 (defn luo-raportit [parametrit]
   (apply concat
@@ -105,19 +101,13 @@
            "vertailu"         (case (:tutkintorakennetaso parametrit)
                                 "tutkinto"    [(for [tutkinto (:tutkinnot parametrit)]
                                                  (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
-                                               [(vertailuraportti-valtakunnallinen-raportti
-                                                 parametrit
-                                                 (tutkintojen-vertailutiedon-parametrit parametrit))]]
+                                               [(vertailuraportti-valtakunnallinen-raportti parametrit)]]
                                 "opintoala"   [(for [opintoala (:opintoalat parametrit)]
                                                  (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
-                                               [(vertailuraportti-valtakunnallinen-raportti
-                                                 parametrit
-                                                 (opintoalojen-vertailutiedon-parametrit parametrit))]]
+                                               [(vertailuraportti-valtakunnallinen-raportti parametrit)]]
                                 "koulutusala" [(for [koulutusala (:koulutusalat parametrit)]
                                                  (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala])))
-                                               [(vertailuraportti-valtakunnallinen-raportti
-                                                 parametrit
-                                                 (koulutusalojen-vertailutiedon-parametrit parametrit))]])
+                                               [(vertailuraportti-valtakunnallinen-raportti parametrit)]])
            "kehitys"          [[(raportti/muodosta parametrit)]
                                [(kehitysraportti-valtakunnallinen-raportti parametrit)]]
            "koulutustoimijat" [(for [koulutustoimija (:koulutustoimijat parametrit)]

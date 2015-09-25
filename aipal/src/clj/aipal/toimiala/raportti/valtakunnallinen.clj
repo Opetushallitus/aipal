@@ -200,7 +200,9 @@
                      (tutkintorakenne-otsikko parametrit))
     "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
                          (nimet (koulutustoimija-arkisto/hae ytunnus)))
-    "kysely" (tutkintorakenne-otsikko parametrit)))
+    "kysely" (tutkintorakenne-otsikko parametrit)
+    "valtakunnallinen" {:nimi_fi "Valtakunnallinen"
+                        :nimi_sv "Valtakunnallinen (sv)"}))
 
 (defn paivita-nakymat []
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")
