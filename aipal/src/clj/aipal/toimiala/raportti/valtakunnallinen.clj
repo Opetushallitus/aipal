@@ -23,6 +23,7 @@
             [aipal.arkisto.koulutusala :as koulutusala-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.integraatio.sql.korma :as taulut]
+            [aipal.rest-api.i18n :as i18n]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]))
 
 (defn ^:private hae-valtakunnalliset-kysymykset []
@@ -193,16 +194,18 @@
                      (nimet (koulutusala-arkisto/hae koulutusalatunnus)))))
 
 (defn raportin-otsikko [parametrit]
-  (case (:tyyppi parametrit)
-    "vertailu" (tutkintorakenne-otsikko parametrit)
-    "kehitys" (merge {:nimi_fi "Kaikki tutkinnot"
-                      :nimi_sv "Kaikki tutkinnot (sv)"}
-                     (tutkintorakenne-otsikko parametrit))
-    "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
-                         (nimet (koulutustoimija-arkisto/hae ytunnus)))
-    "kysely" (tutkintorakenne-otsikko parametrit)
-    "valtakunnallinen" {:nimi_fi "Valtakunnallinen"
-                        :nimi_sv "Valtakunnallinen (sv)"}))
+  (let [tekstit-fi (i18n/hae-tekstit "fi")
+        tekstit-sv (i18n/hae-tekstit "sv")]
+    (case (:tyyppi parametrit)
+      "vertailu" (tutkintorakenne-otsikko parametrit)
+      "kehitys" (merge {:nimi_fi (get-in tekstit-fi [:raportit :kaikki_tutkinnot])
+                        :nimi_sv (get-in tekstit-sv [:raportit :kaikki_tutkinnot])}
+                       (tutkintorakenne-otsikko parametrit))
+      "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
+                           (nimet (koulutustoimija-arkisto/hae ytunnus)))
+      "kysely" (tutkintorakenne-otsikko parametrit)
+      "valtakunnallinen" {:nimi_fi (get-in tekstit-fi [:yleiset :valtakunnallinen])
+                          :nimi_sv (get-in tekstit-sv [:yleiset :valtakunnallinen])})))
 
 (defn paivita-nakymat []
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")
