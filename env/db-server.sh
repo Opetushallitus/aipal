@@ -14,10 +14,6 @@ app_host=$2
 id_rsa_pub=$3
 admin_user="${system}admin"
 
-sysctl -w net.ipv6.conf.default.disable_ipv6=1
-sysctl -w net.ipv6.conf.all.disable_ipv6=1
-echo "options single-request" >> /etc/resolv.conf
-
 software/postgresql.sh
 
 useradd $admin_user
