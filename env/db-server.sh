@@ -14,6 +14,9 @@ app_host=$2
 id_rsa_pub=$3
 admin_user="${system}admin"
 
+sed -ri 's/(debuglevel)=[0-9]*/\1=10/' /etc/yum.conf
+export URLGRABBER_DEBUG=1
+
 software/postgresql.sh
 
 useradd $admin_user

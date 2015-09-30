@@ -15,6 +15,9 @@ admin_user="${system}admin"
 
 set -x
 
+sed -ri 's/(debuglevel)=[0-9]*/\1=10/' /etc/yum.conf
+export URLGRABBER_DEBUG=1
+
 software/jre.sh
 software/httpd.sh
 
