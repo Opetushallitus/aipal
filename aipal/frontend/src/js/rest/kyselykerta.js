@@ -32,11 +32,8 @@ angular.module('rest.kyselykerta', [])
       tallenna: function(kyselykertaId, kyselykerta) {
         return $http.post('api/kyselykerta/' + kyselykertaId, kyselykerta);
       },
-      lukitse: function(kyselykertaId) {
-        return $http.put('api/kyselykerta/' + kyselykertaId + '/lukitse');
-      },
-      avaa: function(kyselykertaId) {
-        return $http.put('api/kyselykerta/' + kyselykertaId + '/avaa');
+      lukitse: function(kyselykertaId, lukitse) {
+        return $http.put('api/kyselykerta/' + kyselykertaId + '/lukitse', {lukitse: lukitse});
       },
       poista: function(kyselykertaId) {
         return $http.delete('api/kyselykerta/' + kyselykertaId);

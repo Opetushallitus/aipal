@@ -47,11 +47,8 @@
          :body "kyselykerta.samanniminen_kyselykerta"}
         (json-response (arkisto/paivita! kyselykertaid kyselykerta-parsittu)))))
 
-  (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/lukitse" [kyselykertaid]
-    (json-response (arkisto/aseta-lukittu! (Integer/parseInt kyselykertaid) true)))
-
-  (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/avaa" [kyselykertaid]
-    (json-response (arkisto/aseta-lukittu! (Integer/parseInt kyselykertaid) false)))
+  (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/lukitse" [kyselykertaid lukitse]
+    (json-response (arkisto/aseta-lukittu! (Integer/parseInt kyselykertaid) lukitse)))
 
   (cu/defapi :kyselykerta-poisto kyselykertaid :delete "/:kyselykertaid" [kyselykertaid]
     (arkisto/poista! (Integer/parseInt kyselykertaid))
