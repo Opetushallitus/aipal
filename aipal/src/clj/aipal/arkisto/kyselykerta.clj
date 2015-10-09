@@ -82,14 +82,16 @@
   (auditlog/kyselykerta-muokkaus! kyselykertaid :lukittu)
   (sql/update taulut/kyselykerta
     (sql/set-fields {:lukittu true})
-    (sql/where {:kyselykertaid kyselykertaid})))
+    (sql/where {:kyselykertaid kyselykertaid}))
+  (hae-yksi kyselykertaid))
 
 (defn avaa!
   [kyselykertaid]
   (auditlog/kyselykerta-muokkaus! kyselykertaid :avattu)
   (sql/update taulut/kyselykerta
     (sql/set-fields {:lukittu false})
-    (sql/where {:kyselykertaid kyselykertaid})))
+    (sql/where {:kyselykertaid kyselykertaid}))
+  (hae-yksi kyselykertaid))
 
 (defn poista! [id]
   {:pre [(poistettavissa? id)]}
