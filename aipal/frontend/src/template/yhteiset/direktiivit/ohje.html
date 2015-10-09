@@ -1,18 +1,18 @@
 <div class="ohje">
-  <div class="ohje-popup" ng-class="{muokkaus : muokkaus}" ng-show="nayta">
+  <div class="ohje-popup ng-hide" ng-class="{muokkaus : muokkaus}" ng-show="nayta">
     <button class="icon delete-icon sulje" ng-click="piilotaOhje()"></button>
-    <p ng-hide="muokkaus" ng-repeat="kappale in ohjeteksti">{{kappale.sisalto}}</p>
+    <p ng-hide="muokkaus" ng-repeat="kappale in ohjeteksti" ng-bind="kappale.sisalto"></p>
     <fieldset ng-show="muokkaus">
-      <label>{{i18n.ohjeteksti_suomeksi}}</label>
+      <label ng-bind="i18n.ohjeteksti_suomeksi"></label>
       <textarea ng-model="ohje.teksti_fi"></textarea>
     </fieldset>
     <fieldset ng-show="muokkaus">
-      <label>{{i18n.ohjeteksti_ruotsiksi}}</label>
+      <label ng-bind="i18n.ohjeteksti_ruotsiksi"></label>
       <textarea ng-model="ohje.teksti_sv"></textarea>
     </fieldset>
-    <a ng-if="$parent.yllapitaja" ng-hide="muokkaus" href="" class="ajax-link" ng-click="muokkaa()">{{i18n.muokkaa_ohjetta}}</a>
+    <a ng-if="$parent.yllapitaja" ng-hide="muokkaus" href="" class="ajax-link" ng-click="muokkaa()" ng-bind="i18n.muokkaa_ohjetta"></a>
     <tallenna disabloi-pyyntojen-ajaksi="['ohjeen-muokkaus']" ng-click="tallennaOhje()" ng-show="muokkaus" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
-    <a ng-if="$parent.yllapitaja" ng-show="muokkaus" href="" class="ajax-link" ng-click="peruutaMuokkaus()">{{i18n.peruuta_muokkaus}}</a>
+    <a ng-if="$parent.yllapitaja" ng-show="muokkaus" href="" class="ajax-link" ng-click="peruutaMuokkaus()" ng-bind="i18n.peruuta_muokkaus"></a>
   </div>
   <div class="avaa" ng-click="naytaOhje()"></div>
 </div>
