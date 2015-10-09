@@ -77,19 +77,11 @@
         first
         :kyselyid)))
 
-(defn lukitse!
-  [kyselykertaid]
-  (auditlog/kyselykerta-muokkaus! kyselykertaid :lukittu)
-  (sql/update taulut/kyselykerta
-    (sql/set-fields {:lukittu true})
-    (sql/where {:kyselykertaid kyselykertaid}))
-  (hae-yksi kyselykertaid))
-
-(defn avaa!
-  [kyselykertaid]
-  (auditlog/kyselykerta-muokkaus! kyselykertaid :avattu)
-  (sql/update taulut/kyselykerta
-    (sql/set-fields {:lukittu false})
+(defn aseta-lukittu!
+  [kyselykertaid lukitse]
+  (auditlog/kyselykerta-muokkaus! kyselykertaid (if lukitse :lukittu :avattu))
+  (sql/update :kyselykerta
+    (sql/set-fields {:lukittu lukitse})
     (sql/where {:kyselykertaid kyselykertaid}))
   (hae-yksi kyselykertaid))
 

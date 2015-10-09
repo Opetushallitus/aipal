@@ -48,10 +48,10 @@
         (json-response (arkisto/paivita! kyselykertaid kyselykerta-parsittu)))))
 
   (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/lukitse" [kyselykertaid]
-    (json-response (arkisto/lukitse! (Integer/parseInt kyselykertaid))))
+    (json-response (arkisto/aseta-lukittu! (Integer/parseInt kyselykertaid) true)))
 
   (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/avaa" [kyselykertaid]
-    (json-response (arkisto/avaa! (Integer/parseInt kyselykertaid))))
+    (json-response (arkisto/aseta-lukittu! (Integer/parseInt kyselykertaid) false)))
 
   (cu/defapi :kyselykerta-poisto kyselykertaid :delete "/:kyselykertaid" [kyselykertaid]
     (arkisto/poista! (Integer/parseInt kyselykertaid))
