@@ -265,7 +265,7 @@
     :kieli aipal-kayttaja?
     :vastaajatunnus aipal-kayttaja?
     :vastaajatunnus-tilamuutos kyselykerta-muokkaus?
-    :vastaajatunnus-poisto kyselykerta-muokkaus?
+    :vastaajatunnus-poisto vastaajatunnus-muokkaus?
     :vastaajatunnus-luonti kyselykerta-muokkaus?
     :vastaajatunnus-muokkaus vastaajatunnus-muokkaus?
     :kysely kyselyiden-listaaminen?

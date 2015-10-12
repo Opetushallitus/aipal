@@ -118,22 +118,24 @@
                     <td>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}}</td>
                     <td class="nowrap actions">
-                        <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm && muokkaustila">
+                        <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
                             <a ng-if="tunnus.vastausten_lkm === 0" ng-click="poistaTunnus(tunnus)">
                                 <span class="fa fa-remove"></span>
                             </a>
                             &nbsp;
-                            <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
-                                <span class="fa fa-lock"></span>
-                            </a>
-                            <a ng-if="!tunnus.lukittu" ng-click="lukitseTunnus(tunnus, true)">
-                                <span class="fa fa-unlock"></span>
-                            </a>
-                            &nbsp;
-                            <a href="mailto:?subject={{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/{{tunnus.tunnus}}"
-                               title="{{i18n.vastaajatunnus.laheta}}">
-                                <span class="fa fa-envelope"></span>
-                            </a>
+                            <span ng-if="muokkaustila">
+                                <a ng-if="tunnus.lukittu" ng-click="lukitseTunnus(tunnus, false)">
+                                    <span class="fa fa-lock"></span>
+                                </a>
+                                <a ng-if="!tunnus.lukittu" ng-click="lukitseTunnus(tunnus, true)">
+                                    <span class="fa fa-unlock"></span>
+                                </a>
+                                &nbsp;
+                                <a href="mailto:?subject={{i18n.vastaajatunnus.vastaa}}: {{ kysely | lokalisoiKentta:'nimi' }}&body={{vastausBaseUrl}}/{{tunnus.tunnus}}"
+                                   title="{{i18n.vastaajatunnus.laheta}}">
+                                    <span class="fa fa-envelope"></span>
+                                </a>
+                            </span>
                         </span>
                     </td>
                 </tr>
