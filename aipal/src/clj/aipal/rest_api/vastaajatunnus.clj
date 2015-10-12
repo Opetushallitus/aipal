@@ -29,6 +29,14 @@
   (cu/defapi :vastaajatunnus-tilamuutos kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" [kyselykertaid vastaajatunnusid lukitse]
     (json-response (vastaajatunnus/aseta-lukittu! (Integer/parseInt kyselykertaid) (Integer/parseInt vastaajatunnusid) lukitse)))
 
+  (cu/defapi :vastaajatunnus-muokkaus kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/muokkaa-lukumaaraa" [kyselykertaid vastaajatunnusid lukumaara]
+    (let [kyselykertaid (Integer/parseInt kyselykertaid)
+          vastaajatunnusid (Integer/parseInt vastaajatunnusid)
+          vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
+      (if (and (> lukumaara 0) (>= lukumaara vastaajat))
+        (json-response (vastaajatunnus/muokkaa-lukumaaraa kyselykertaid vastaajatunnusid lukumaara))
+        {:status 403})))
+
   (cu/defapi :vastaajatunnus-poisto kyselykertaid :delete "/:kyselykertaid/tunnus/:vastaajatunnusid" [kyselykertaid vastaajatunnusid]
     (let [vastaajatunnusid (Integer/parseInt vastaajatunnusid)
           vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]

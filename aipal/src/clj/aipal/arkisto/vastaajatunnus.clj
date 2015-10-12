@@ -168,3 +168,10 @@
       (sql/where {:vastaajatunnusid vastaajatunnusid}))
     first
     :cnt))
+
+(defn muokkaa-lukumaaraa
+  [kyselykertaid vastaajatunnusid lukumaara]
+  (sql/update :vastaajatunnus
+    (sql/set-fields {:vastaajien_lkm lukumaara})
+    (sql/where {:kyselykertaid kyselykertaid
+                :vastaajatunnusid vastaajatunnusid})))

@@ -255,6 +255,11 @@
       (let [oma-koulutustoimija (-> *kayttaja* :aktiivinen-rooli :organisaatio)]
         (set/subset? (set koulutustoimijat) #{oma-koulutustoimija}))))
 
+(defn vastaajatunnus-muokkaus? [kyselykertaid]
+  (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
+    (and (kysely-on-julkaistu? kyselyid)
+         (kyselykerta-luonti? kyselyid))))
+
 (def kayttajatoiminnot
   `{:logitus aipal-kayttaja?
     :kieli aipal-kayttaja?
@@ -262,6 +267,7 @@
     :vastaajatunnus-tilamuutos kyselykerta-muokkaus?
     :vastaajatunnus-poisto kyselykerta-muokkaus?
     :vastaajatunnus-luonti kyselykerta-muokkaus?
+    :vastaajatunnus-muokkaus vastaajatunnus-muokkaus?
     :kysely kyselyiden-listaaminen?
     :kysely-luonti kysely-luonti?
     :kysely-luku kysely-luku?
