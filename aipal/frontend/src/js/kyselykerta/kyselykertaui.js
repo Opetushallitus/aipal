@@ -181,6 +181,22 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         }
       };
 
+      $scope.muokkaaVastaajienMaaraa = function(tunnus) {
+        var modalInstance = $modal.open({
+          templateUrl: 'template/kyselykerta/muokkaa-vastaajia.html',
+          controller: 'MuokkaaVastaajiaModalController',
+          resolve: {
+            tunnus: function() { return tunnus; }
+          }
+        });
+
+        modalInstance.result.then(function(vastaajien_lkm) {
+          Vastaajatunnus.muokkaaVastaajienLukumaaraa($scope.kyselykertaid, tunnus.vastaajatunnusid, vastaajien_lkm).success(function() {
+            tunnus.vastaajien_lkm = vastaajien_lkm;
+          });
+        });
+      };
+
       $scope.poistaTunnus = function(tunnus) {
         varmistus.varmista(i18n.hae('vastaajatunnus.poista_otsikko'), null, i18n.hae('vastaajatunnus.poista_teksti'), i18n.hae('yleiset.poista')).then(function() {
           Vastaajatunnus.poista($scope.kyselykertaid, tunnus.vastaajatunnusid).success(function() {
@@ -258,4 +274,19 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       var rahoitusmuotoid = $scope.vastaajatunnus.rahoitusmuotoid;
       return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined || $scope.rahoitusmuodotmap[rahoitusmuotoid].rahoitusmuoto !== 'ei_rahoitusmuotoa');
     };
-  }]);
+  }])
+
+  .controller('MuokkaaVastaajiaModalController', ['$modalInstance', '$scope', 'i18n', 'tunnus', function($modalInstance, $scope, i18n, tunnus) {
+    $scope.i18n = i18n;
+
+    $scope.minimi = Math.max(1, tunnus.vastausten_lkm);
+    $scope.vastausten_lkm = tunnus.vastausten_lkm;
+    $scope.vastaajien_lkm = tunnus.vastaajien_lkm;
+
+    $scope.save = function() {
+      $modalInstance.close(parseInt($scope.vastaajien_lkm));
+    };
+
+    $scope.cancel = $modalInstance.dismiss;
+  }])
+;

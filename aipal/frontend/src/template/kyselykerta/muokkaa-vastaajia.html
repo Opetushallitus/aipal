@@ -1,0 +1,17 @@
+<form name="form">
+
+<div class="modal-header">
+  <h4 ng-bind="i18n.kyselykerta.muokkaa_vastaajatunnuste_maaraa"></h4>
+</div>
+
+<div class="modal-body">
+  {{ vastausten_lkm }} /
+  <input type="number" min="{{minimi}}" ng-model="vastaajien_lkm" required>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary pull-left" ng-click="save()" ng-disabled="form.$invalid" ng-bind="i18n.yleiset.tallenna"></button>
+  <button class="btn btn-default pull-left" ng-click="cancel()" ng-bind="i18n.yleiset.peruuta"></button>
+</div>
+
+</form>
