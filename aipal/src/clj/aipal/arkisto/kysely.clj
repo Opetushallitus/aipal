@@ -41,7 +41,7 @@
     (sql/fields [(sql/subselect taulut/kysely_kysymysryhma
                    (sql/aggregate (count :*) :lkm)
                    (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
-    (sql/order :luotuaika :desc)))
+    (sql/order :kyselyid :desc)))
 
 ;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan
 (defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat]
