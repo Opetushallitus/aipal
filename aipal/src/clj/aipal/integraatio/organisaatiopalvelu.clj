@@ -143,9 +143,8 @@
     (haluttu-tyyppi? koodi) :oppilaitos
     (:toimipistekoodi koodi) :toimipaikka))
 
-(defn generoi-oid->y-tunnus [koulutustoimijakoodit oppilaitoskoodit]
-  (loop [oid->ytunnus (into {} (for [kt koulutustoimijakoodit]
-                                 [(:oid kt) (y-tunnus kt)]))
+(defn generoi-oid->y-tunnus [koulutustoimijat-oid->ytunnus oppilaitoskoodit]
+  (loop [oid->ytunnus koulutustoimijat-oid->ytunnus
          oppilaitoskoodit oppilaitoskoodit]
     (let [uudet (for [o oppilaitoskoodit
                       :when (contains? oid->ytunnus (:parentOid o))]
@@ -173,8 +172,10 @@
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
                                   (koulutustoimija-arkisto/paivita! y-tunnus uusi-kt))))))
 
-(defn ^:private ^:integration-api paivita-oppilaitokset! [koodit koulutustoimijakoodit]
-  (let [oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit koodit)
+(defn ^:private ^:integration-api paivita-oppilaitokset! [koodit]
+  (let [oid->ytunnus (generoi-oid->y-tunnus (into {} (for [k (koulutustoimija-arkisto/hae-kaikki)]
+                                                       [(:oid k) (:ytunnus k)])) 
+                                            koodit)
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
     (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
@@ -196,16 +197,14 @@
 
 
 (defn ^:private ^:integration-api paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
-  (let [oid->oppilaitostunnus (into {} (for [o oppilaitoskoodit]
+  (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)]
                                          [(:oid o) (:oppilaitosKoodi o)]))
-        oid->ytunnus (generoi-oid->y-tunnus koulutustoimijakoodit oppilaitoskoodit)
         toimipaikat (->> (toimipaikka-arkisto/hae-kaikki)
                       (map-by :toimipaikkakoodi))]
     (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
-            ;; Poistetaan toimipaikat joille ei löydy oppilaitosta tai koulutustoimijaa
-            ;; Oppilaitoksella on oltava koulutustoimija, toimipaikalla on oltava oppilaitos
-            :when (and (oid->oppilaitostunnus (:parentOid koodi))
-                       (oid->ytunnus (:parentOid koodi)))
+            ;; Poistetaan toimipaikat joille ei löydy oppilaitosta
+            ;; Toimipaikalla on oltava oppilaitos
+            :when (oid->oppilaitostunnus (:parentOid koodi))
             :let [toimipaikkakoodi (:toimipistekoodi koodi)
                   oppilaitos (oid->oppilaitostunnus (:parentOid koodi))
                   vanha-toimipaikka (toimipaikan-kentat (get toimipaikat toimipaikkakoodi))
@@ -243,6 +242,6 @@
         (oppilaitos-arkisto/aseta-kaikki-vanhentuneiksi!)
         (toimipaikka-arkisto/aseta-kaikki-vanhentuneiksi!))
       (paivita-koulutustoimijat! koulutustoimijakoodit)
-      (paivita-oppilaitokset! oppilaitoskoodit koulutustoimijakoodit)
-      (paivita-toimipaikat! toimipaikkakoodit oppilaitoskoodit koulutustoimijakoodit)
+      (paivita-oppilaitokset! oppilaitoskoodit)
+      (paivita-toimipaikat! toimipaikkakoodit)
       (organisaatiopalvelu-arkisto/tallenna-paivitys! nyt))))
