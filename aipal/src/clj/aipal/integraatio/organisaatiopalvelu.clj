@@ -218,6 +218,15 @@
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                                     (toimipaikka-arkisto/paivita! toimipaikkakoodi uusi-toimipaikka))))))
 
+(defn ^:integration-api ^:private paivita-haetut-organisaatiot! [koodit]
+  (let [koodit-tyypeittain (group-by tyyppi koodit)
+        koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
+        oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
+        toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
+    (paivita-koulutustoimijat! koulutustoimijakoodit)
+    (paivita-oppilaitokset! oppilaitoskoodit)
+    (paivita-toimipaikat! toimipaikkakoodit)))
+
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
@@ -230,18 +239,12 @@
           koodit (if viimeisin-paivitys
                    (hae-muuttuneet url viimeisin-paivitys)
                    (hae-kaikki url))
-          koodit-tyypeittain (group-by tyyppi koodit)
-          _ (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
-          koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
-          oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
-          toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
+          _ (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")]
       (when-not viimeisin-paivitys
         ;; Ajetaan käytännössä vain kerran. Konversiossa on tuotu organisaatioita, joita ei käytetä eikä haeta organisaatiopalvelusta
         ;; ja tällä tavalla saadaan ne merkittyä vanhentuneiksi.
         (koulutustoimija-arkisto/aseta-kaikki-vanhentuneiksi!)
         (oppilaitos-arkisto/aseta-kaikki-vanhentuneiksi!)
         (toimipaikka-arkisto/aseta-kaikki-vanhentuneiksi!))
-      (paivita-koulutustoimijat! koulutustoimijakoodit)
-      (paivita-oppilaitokset! oppilaitoskoodit)
-      (paivita-toimipaikat! toimipaikkakoodit)
+      (paivita-haetut-organisaatiot! koodit)
       (organisaatiopalvelu-arkisto/tallenna-paivitys! nyt))))
