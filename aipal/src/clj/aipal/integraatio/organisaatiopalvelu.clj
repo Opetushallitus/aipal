@@ -94,6 +94,7 @@
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
    :ytunnus (y-tunnus koodi)
+   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
    :voimassa (voimassa? koodi)})
 
 (defn ^:private koodi->oppilaitos [koodi]
@@ -107,6 +108,7 @@
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
    :oppilaitoskoodi (:oppilaitosKoodi koodi)
+   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
    :voimassa (voimassa? koodi)})
 
 (defn ^:private koodi->toimipaikka [koodi]
@@ -120,10 +122,11 @@
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
    :toimipaikkakoodi (:toimipistekoodi koodi)
+   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
    :voimassa (voimassa? koodi)})
 
 (def ^:private yhteiset-kentat [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
-                                :postinumero :postitoimipaikka :www_osoite :voimassa])
+                                :postinumero :postitoimipaikka :www_osoite :voimassa :lakkautuspaiva])
 
 (defn ^:private koulutustoimijan-kentat [koulutustoimija]
   (when koulutustoimija
@@ -153,7 +156,7 @@
         (recur (into oid->ytunnus uudet) (remove #(contains? oid->ytunnus (:parentOid %)) oppilaitoskoodit))
         (do
           (doseq [oppilaitos oppilaitoskoodit]
-            (log/warn "Oppilaitos ilman parenttia:" (:oppilaitoskoodi oppilaitos)))
+            (log/warn "Oppilaitos ilman parenttia:" (:oppilaitosKoodi oppilaitos)))
           oid->ytunnus)))))
 
 (defn ^:private ^:integration-api paivita-koulutustoimijat! [koodit]
@@ -170,10 +173,11 @@
                           (koulutustoimija-arkisto/lisaa! uusi-kt))
         (not= vanha-kt uusi-kt) (do
                                   (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
-                                  (koulutustoimija-arkisto/paivita! y-tunnus uusi-kt))))))
+                                  (koulutustoimija-arkisto/paivita! y-tunnus uusi-kt)))))
+  (koulutustoimija-arkisto/laske-voimassaolo!))
 
 (defn ^:private ^:integration-api paivita-oppilaitokset! [koodit]
-  (let [oid->ytunnus (generoi-oid->y-tunnus (into {} (for [k (koulutustoimija-arkisto/hae-kaikki)]
+  (let [oid->ytunnus (generoi-oid->y-tunnus (into {} (for [k (koulutustoimija-arkisto/hae-kaikki-organisaatiopalvelulle)]
                                                        [(:oid k) (:ytunnus k)])) 
                                             koodit)
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
@@ -193,10 +197,11 @@
                                   (oppilaitos-arkisto/lisaa! uusi-oppilaitos))
         (not= vanha-oppilaitos uusi-oppilaitos) (do
                                                   (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
-                                                  (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos))))))
+                                                  (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos)))))
+  (oppilaitos-arkisto/laske-voimassaolo!))
 
 
-(defn ^:private ^:integration-api paivita-toimipaikat! [koodit oppilaitoskoodit koulutustoimijakoodit]
+(defn ^:private ^:integration-api paivita-toimipaikat! [koodit]
   (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)]
                                          [(:oid o) (:oppilaitosKoodi o)]))
         toimipaikat (->> (toimipaikka-arkisto/hae-kaikki)
@@ -216,7 +221,8 @@
                                    (toimipaikka-arkisto/lisaa! uusi-toimipaikka))
         (not= vanha-toimipaikka uusi-toimipaikka) (do
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
-                                                    (toimipaikka-arkisto/paivita! toimipaikkakoodi uusi-toimipaikka))))))
+                                                    (toimipaikka-arkisto/paivita! toimipaikkakoodi uusi-toimipaikka)))))
+  (toimipaikka-arkisto/laske-voimassaolo!))
 
 (defn ^:integration-api ^:private paivita-haetut-organisaatiot! [koodit]
   (let [koodit-tyypeittain (group-by tyyppi koodit)

@@ -70,3 +70,8 @@
   []
   (sql/update taulut/koulutustoimija
     (sql/set-fields {:voimassa false})))
+
+(defn ^:integration-api laske-voimassaolo! []
+  (sql/update taulut/koulutustoimija
+    (sql/set-fields {:voimassa false})
+    (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))

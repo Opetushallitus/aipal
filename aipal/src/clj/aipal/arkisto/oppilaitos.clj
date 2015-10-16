@@ -47,3 +47,8 @@
     (sql/where {:koulutustoimija koulutustoimija
                 :voimassa true})
     sql/exec))
+
+(defn ^:integration-api laske-voimassaolo! []
+  (sql/update taulut/oppilaitos
+    (sql/set-fields {:voimassa false})
+    (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))

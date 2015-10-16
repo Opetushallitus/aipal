@@ -38,3 +38,8 @@
     (sql/select* taulut/toimipaikka)
     (sql/order :toimipaikkakoodi)
     sql/exec))
+
+(defn ^:integration-api laske-voimassaolo! []
+  (sql/update taulut/toimipaikka
+    (sql/set-fields {:voimassa false})
+    (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))
