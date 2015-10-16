@@ -19,7 +19,7 @@
             [aipal.arkisto.organisaatiopalvelu :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
             [clj-time.coerce :as time-coerce]
-            [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value]]
+            [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value muutos]]
             [clojure.tools.logging :as log]
             [korma.db :as db]))
 
@@ -172,7 +172,7 @@
                           (log/info "Uusi koulutustoimija: " (:ytunnus uusi-kt))
                           (koulutustoimija-arkisto/lisaa! uusi-kt))
         (not= vanha-kt uusi-kt) (do
-                                  (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt))
+                                  (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt) (muutos vanha-kt uusi-kt))
                                   (koulutustoimija-arkisto/paivita! y-tunnus uusi-kt)))))
   (koulutustoimija-arkisto/laske-voimassaolo!))
 
@@ -196,7 +196,7 @@
                                   (log/info "Uusi oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
                                   (oppilaitos-arkisto/lisaa! uusi-oppilaitos))
         (not= vanha-oppilaitos uusi-oppilaitos) (do
-                                                  (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos))
+                                                  (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos) (muutos vanha-oppilaitos uusi-oppilaitos))
                                                   (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos)))))
   (oppilaitos-arkisto/laske-voimassaolo!))
 
@@ -220,7 +220,7 @@
                                    (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
                                    (toimipaikka-arkisto/lisaa! uusi-toimipaikka))
         (not= vanha-toimipaikka uusi-toimipaikka) (do
-                                                    (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
+                                                    (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka) (muutos vanha-toimipaikka uusi-toimipaikka))
                                                     (toimipaikka-arkisto/paivita! toimipaikkakoodi uusi-toimipaikka)))))
   (toimipaikka-arkisto/laske-voimassaolo!))
 
