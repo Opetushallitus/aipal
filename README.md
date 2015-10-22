@@ -32,7 +32,7 @@ Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Java-virtuaalik
 
 # Dokumentaatio
 
-Katso [Aipal dokumentaatio](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n Confluencesta. Confluenceen tulee näkyviin arkkitehtuurin yleiskuvat ja vastaavat asiat.
+Katso [Aipal dokumentaatio](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n Confluencesta. Confluenceen tulee näkyviin [arkkitehtuurin yleiskuvat](https://confluence.csc.fi/display/OPHPALV/Aipal+Arkkitehtuuri) ja vastaavat asiat.
 
 
 
