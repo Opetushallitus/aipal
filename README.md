@@ -30,3 +30,10 @@ Sovellusta voi ajaa paikallisesti [Vagrant](http://www.vagrantup.com/) ohjelman 
 
 Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
 
+# Dokumentaatio
+
+Katso [Aipal dokumentaatio](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n Confluencesta. Confluenceen tulee näkyviin arkkitehtuurin yleiskuvat ja vastaavat asiat.
+
+
+
+
