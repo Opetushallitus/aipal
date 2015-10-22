@@ -73,14 +73,13 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn koodiston-uusin-versio
   [asetukset koodisto]
-  ;; Koodistopalvelussa ei ole vielä hyväksyttyjä versioita
-  1 #_(loop [versio nil]
-        (when-let [json (get-json-from-url (str (:url asetukset)
-                                                koodisto
-                                                (when versio (str "?koodistoVersio=" versio))))]
-          (if (= "HYVAKSYTTY" (:tila json))
-            (:versio json)
-            (recur (dec (:versio json)))))))
+  (loop [versio nil]
+     (when-let [json (get-json-from-url (str (:url asetukset)
+                                             koodisto
+                                             (when versio (str "?koodistoVersio=" versio))))]
+       (if (= "HYVAKSYTTY" (:tila json))
+         (:versio json)
+         (recur (dec (:versio json)))))))
 
 (defn ^:private lisaa-opintoalaan-koulutusala
   [asetukset opintoala]
@@ -111,18 +110,16 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-koulutusalat
   [asetukset]
-  (let [koodistoversio (koodiston-uusin-versio asetukset "koulutusalaoph2002")]
-    (->> (hae-koodit asetukset "koulutusalaoph2002" koodistoversio)
-      (map koodi->koulutusala)
-      (map #(dissoc % :kuvaus_fi :kuvaus_sv)))))
+  (->> (hae-koodit asetukset "koulutusalaoph2002")
+    (map koodi->koulutusala)
+    (map #(dissoc % :kuvaus_fi :kuvaus_sv))))
 
 (defn hae-opintoalat
   [asetukset]
-  (let [koodistoversio (koodiston-uusin-versio asetukset "opintoalaoph2002")]
-    (->> (hae-koodit asetukset "opintoalaoph2002" koodistoversio)
-      (map koodi->opintoala)
-      (map (partial lisaa-opintoalaan-koulutusala asetukset))
-      (map #(dissoc % :kuvaus_fi :kuvaus_sv)))))
+  (->> (hae-koodit asetukset "opintoalaoph2002")
+    (map koodi->opintoala)
+    (map (partial lisaa-opintoalaan-koulutusala asetukset))
+    (map #(dissoc % :kuvaus_fi :kuvaus_sv))))
 
 (defn muutokset
   [uusi vanha]
@@ -158,7 +155,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-opintoala-muutokset
   [asetukset]
-  (let [opintoala-kentat [:nimi_fi :nimi_sv :opintoalatunnus]
+  (let [opintoala-kentat [:nimi_fi :nimi_sv :opintoalatunnus :koulutusala]
         vanhat (into {} (for [opintoala (opintoala-arkisto/hae-kaikki)]
                           [(:opintoalatunnus opintoala) (select-keys opintoala opintoala-kentat)]))
         uudet (map-by :opintoalatunnus
@@ -202,7 +199,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                 (first ala))
         muuttuneet (for [[alakoodi ala] koulutusalat
                          :when (map? ala)]
-                     (uudet-arvot ala))]
+                     (assoc (uudet-arvot ala) :koulutusalatunnus alakoodi))]
     (tallenna-uudet-koulutusalat! uudet)
     (tallenna-muuttuneet-koulutusalat! muuttuneet)))
 
@@ -224,9 +221,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                 (first ala))
         muuttuneet (for [[alakoodi ala] opintoalat
                          :when (map? ala)]
-                     (uudet-arvot ala))]
+                     (assoc (uudet-arvot ala) :opintoalatunnus alakoodi))]
     (tallenna-uudet-opintoalat! (filter :koulutusala uudet))
-    (tallenna-muuttuneet-opintoalat! (filter :koulutusala muuttuneet))))
+    (tallenna-muuttuneet-opintoalat! muuttuneet)))
 
 (defn ^:integration-api tallenna-uudet-tutkinnot! [tutkinnot]
   (doseq [tutkinto tutkinnot]
@@ -236,7 +233,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn ^:integration-api tallenna-muuttuneet-tutkinnot! [tutkinnot]
   (doseq [tutkinto tutkinnot
           :let [tunnus (:tutkintotunnus tutkinto)
-                tutkintotunnus (dissoc tutkinto :tutkintotunnus)]]
+                tutkinto (dissoc tutkinto :tutkintotunnus)]]
     (log/info "Päivitetään tutkinto " tunnus ", muutokset: " tutkinto)
     (tutkinto-arkisto/paivita! tunnus tutkinto)))
 
@@ -246,9 +243,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                 (first tutkinto))
         muuttuneet (for [[tunnus tutkinto] tutkinnot
                          :when (map? tutkinto)]
-                     (uudet-arvot tutkinto))]
+                     (assoc (uudet-arvot tutkinto) :tutkintotunnus tunnus))]
     (tallenna-uudet-tutkinnot! (filter :opintoala uudet))
-    (tallenna-muuttuneet-tutkinnot! (filter :opintoala muuttuneet))))
+    (tallenna-muuttuneet-tutkinnot! muuttuneet)))
 
 (defn ^:integration-api paivita-tutkinnot! [asetukset]
   (try

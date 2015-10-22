@@ -43,6 +43,7 @@
                       :password (s/maybe s/Str)}
    :vastaus-base-url s/Str
    :organisaatiopalvelu {:url s/Str}
+   :koodistopalvelu {:url s/Str}
    :eraajo Boolean
    :development-mode Boolean
    :ominaisuus {s/Keyword Boolean}
@@ -51,7 +52,8 @@
    :ajastus {:organisaatiopalvelu s/Str
              :kayttooikeuspalvelu s/Str
              :koulutustoimijoiden-tutkinnot s/Str
-             :raportointi s/Str}})
+             :raportointi s/Str
+             :tutkinnot s/Str}})
 
 (def oletusasetukset
   {:server {:port 8082
@@ -75,6 +77,7 @@
                       :password "salasana"}
    :vastaus-base-url "http://192.168.50.1:8083"
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
+   :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
    :eraajo false
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
@@ -83,7 +86,8 @@
    :ajastus {:organisaatiopalvelu "0 0 3 * * ?"
              :kayttooikeuspalvelu "0 0 4 * * ?"
              :koulutustoimijoiden-tutkinnot "0 0 5 * * ?"
-             :raportointi "0 30 5 * * ?"}})
+             :raportointi "0 30 5 * * ?"
+             :tutkinnot "0 0 2 * * ?"}})
 
 (defn hae-asetukset
   ([alkuasetukset] (lue-asetukset alkuasetukset Asetukset "aipal.properties"))

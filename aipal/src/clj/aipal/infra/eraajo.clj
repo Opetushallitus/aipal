@@ -23,11 +23,13 @@
             aipal.infra.eraajo.kayttajat
             aipal.infra.eraajo.organisaatiot
             aipal.infra.eraajo.koulutustoimijoiden-tutkinnot
-            aipal.infra.eraajo.raportointi)
+            aipal.infra.eraajo.raportointi
+            aipal.infra.eraajo.tutkinnot)
   (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
            aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob
-           aipal.infra.eraajo.raportointi.PaivitaNakymatJob))
+           aipal.infra.eraajo.raportointi.PaivitaNakymatJob
+           aipal.infra.eraajo.tutkinnot.PaivitaTutkinnotJob))
 
 (defn ajastus [asetukset tyyppi]
   (cron/schedule
@@ -69,8 +71,16 @@
         raportointi-trigger (t/build
                               (t/with-identity "raportointi")
                               (t/start-now)
-                              (t/with-schedule (ajastus asetukset :raportointi)))]
+                              (t/with-schedule (ajastus asetukset :raportointi)))
+        tutkinnot-job (j/build
+                        (j/of-type PaivitaTutkinnotJob)
+                        (j/with-identity "paivita-tutkinnot"))
+        tutkinnot-trigger (t/build
+                            (t/with-identity "tutkinnot")
+                            (t/start-now)
+                            (t/with-schedule (ajastus asetukset :tutkinnot)))]
     (qs/schedule ldap-job ldap-trigger-daily)
     (qs/schedule org-job org-trigger-daily)
     (qs/schedule koul-job koul-trigger-daily)
-    (qs/schedule raportointi-job raportointi-trigger)))
+    (qs/schedule raportointi-job raportointi-trigger)
+    (qs/schedule tutkinnot-job tutkinnot-trigger)))
