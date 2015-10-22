@@ -139,7 +139,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                           [(:tutkintotunnus tutkinto) (select-keys tutkinto tutkinto-kentat)]))
         uudet (->> (hae-tutkinnot asetukset)
                 (map (partial lisaa-opintoala-ja-tyyppi asetukset))
-                (filter (comp #{"02" "03"} :tyyppi))
+                (filter (comp #{"06" "12"} :tyyppi))
                 (map #(select-keys % tutkinto-kentat))
                 (map-by :tutkintotunnus))]
     (muutokset uudet vanhat)))
