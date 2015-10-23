@@ -66,6 +66,14 @@
   []
   (sql/delete taulut/koulutustoimija_ja_tutkinto))
 
+(defn ^:integration-api poista-koulutustoimijat-ilman-oppilaitoksia-ja-kayttajia!
+  []
+  (sql/delete taulut/koulutustoimija
+    (sql/where (and (sql/sqlfn "not exists" (sql/subselect taulut/oppilaitos
+                                             (sql/where {:oppilaitos.koulutustoimija :koulutustoimija.ytunnus})))
+                    (sql/sqlfn "not exists" (sql/subselect taulut/rooli_organisaatio
+                                             (sql/where {:rooli_organisaatio.organisaatio :koulutustoimija.ytunnus})))))))
+
 (defn ^:integration-api aseta-kaikki-vanhentuneiksi!
   []
   (sql/update taulut/koulutustoimija

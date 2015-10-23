@@ -37,19 +37,7 @@
 
 ;; Koodistopalvelun oppilaitostyyppikoodistosta
 (def ^:private halutut-tyypit
-  #{"oppilaitostyyppi_21" ;; Ammatilliset oppilaitokset
-    "oppilaitostyyppi_22" ;; Ammatilliset erityisoppilaitokset
-    "oppilaitostyyppi_23" ;; Ammatilliset erikoisoppilaitokset
-    "oppilaitostyyppi_24" ;; Ammatilliset aikuiskoulutuskeskukset
-    "oppilaitostyyppi_41" ;; Ammattikorkeakoulut
-    "oppilaitostyyppi_42" ;; Yliopistot
-    "oppilaitostyyppi_61" ;; Musiikkioppilaitokset
-    "oppilaitostyyppi_62" ;; Liikunnan koulutuskeskukset
-    "oppilaitostyyppi_63" ;; Kansanopistot
-    "oppilaitostyyppi_65" ;; Opintokeskukset
-    "oppilaitostyyppi_93" ;; Muut koulutuksen järjestäjät
-    "oppilaitostyyppi_99" ;; Muut oppilaitokset
-    "oppilaitostyyppi_xx" ;; Tyyppi ei tiedossa
+  #{"oppilaitostyyppi_41" ;; Ammattikorkeakoulut
     })
 
 (defn ^:private haluttu-tyyppi? [koodi]
@@ -168,11 +156,9 @@
                   vanha-kt (koulutustoimijan-kentat (get koulutustoimijat y-tunnus))]
             :when y-tunnus]
       (cond
-        (nil? vanha-kt) (do
-                          (log/info "Uusi koulutustoimija: " (:ytunnus uusi-kt))
-                          (koulutustoimija-arkisto/lisaa! uusi-kt))
+        (nil? vanha-kt) (koulutustoimija-arkisto/lisaa! uusi-kt)
         (not= vanha-kt uusi-kt) (do
-                                  (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt) (muutos vanha-kt uusi-kt))
+                                  (log/info "Muuttunut koulutustoimija: " (:ytunnus uusi-kt) (muutos vanha-kt uusi-kt) vanha-kt uusi-kt)
                                   (koulutustoimija-arkisto/paivita! y-tunnus uusi-kt)))))
   (koulutustoimija-arkisto/laske-voimassaolo!))
 
@@ -231,7 +217,8 @@
         toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit)
-    (paivita-toimipaikat! toimipaikkakoodit)))
+    (paivita-toimipaikat! toimipaikkakoodit)
+    (koulutustoimija-arkisto/poista-koulutustoimijat-ilman-oppilaitoksia-ja-kayttajia!)))
 
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
@@ -241,11 +228,12 @@
           _ (when viimeisin-paivitys
               (log/info "Edellinen päivitys:" (str viimeisin-paivitys)))
           url (get asetukset "url")
+          vanhat-koulutustoimijat (set (map :ytunnus (koulutustoimija-arkisto/hae-kaikki)))
           nyt (time/now)
           koodit (if viimeisin-paivitys
                    (hae-muuttuneet url viimeisin-paivitys)
-                   (hae-kaikki url))
-          _ (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")]
+                   (hae-kaikki url))]
+      (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
       (when-not viimeisin-paivitys
         ;; Ajetaan käytännössä vain kerran. Konversiossa on tuotu organisaatioita, joita ei käytetä eikä haeta organisaatiopalvelusta
         ;; ja tällä tavalla saadaan ne merkittyä vanhentuneiksi.
@@ -253,4 +241,7 @@
         (oppilaitos-arkisto/aseta-kaikki-vanhentuneiksi!)
         (toimipaikka-arkisto/aseta-kaikki-vanhentuneiksi!))
       (paivita-haetut-organisaatiot! koodit)
-      (organisaatiopalvelu-arkisto/tallenna-paivitys! nyt))))
+      (organisaatiopalvelu-arkisto/tallenna-paivitys! nyt)
+      (let [nykyiset-koulutustoimijat (set (map :ytunnus (koulutustoimija-arkisto/hae-kaikki)))]
+        (doseq [kt (clojure.set/difference nykyiset-koulutustoimijat vanhat-koulutustoimijat)]
+          (log/info "Uusi koulutustoimija" kt))))))
