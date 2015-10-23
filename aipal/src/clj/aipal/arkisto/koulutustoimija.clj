@@ -46,7 +46,7 @@
   []
   (sql/select taulut/koulutustoimija
     (sql/fields :ytunnus :nimi_fi :nimi_sv :osoite :postinumero :postitoimipaikka
-                :puhelin :www_osoite :sahkoposti :oid :voimassa)))
+                :puhelin :www_osoite :sahkoposti :oid :voimassa :lakkautuspaiva)))
 
 (defn hae-kaikki-joissa-oid
   []
