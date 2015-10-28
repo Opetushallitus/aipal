@@ -15,27 +15,19 @@
 (ns aipal.toimiala.kayttajaroolit
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330")
 
-(def ldap-ryhma->rooli {"OPHPAAKAYTTAJA" "YLLAPITAJA"
-                        "OPHKATSELIJA" "OPH-KATSELIJA"
-                        "KTVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
-                        "KTKAYTTAJA" "OPL-KAYTTAJA"
-                        "KTKATSELIJA" "OPL-KATSELIJA"
-                        "NTMVASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"
-                        "YLKATSELIJA" "KATSELIJA"
-                        "TKTKATSELIJA" "TTK-KATSELIJA"})
+(def ldap-ryhma->rooli {"YLLAPITAJA" "YLLAPITAJA"
+                        "AMKVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
+                        "AMKKAYTTAJA" "OPL-KAYTTAJA"
+                        "AMKKATSELIJA" "OPL-KATSELIJA"})
 
 ;; roolit jotka liittyvät koulutustoimijaan
-(def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA" "OPL-NTMVASTUUKAYTTAJA"})
+(def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})
 
-(def oph-roolit #{"YLLAPITAJA" "OPH-KATSELIJA"})
+(def oph-roolit #{"YLLAPITAJA"})
 
 (def roolijarjestys
   "Roolien prioriteettijärjestys, jolla valitaan aktiivinen rooli jos käyttäjä ei ole sitä valinnut"
   {"YLLAPITAJA" 0
-   "OPH-KATSELIJA" 1
    "OPL-VASTUUKAYTTAJA" 2
    "OPL-KAYTTAJA" 3
-   "OPL-KATSELIJA" 4
-   "OPL-NTMVASTUUKAYTTAJA" 5
-   "KATSELIJA" 6
-   "TTK-KATSELIJA" 7})
+   "OPL-KATSELIJA" 4})
