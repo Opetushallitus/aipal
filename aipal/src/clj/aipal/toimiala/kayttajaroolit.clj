@@ -18,7 +18,8 @@
 (def ldap-ryhma->rooli {"YLLAPITAJA" "YLLAPITAJA"
                         "AMKVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
                         "AMKKAYTTAJA" "OPL-KAYTTAJA"
-                        "AMKKATSELIJA" "OPL-KATSELIJA"})
+                        "AMKKATSELIJA" "OPL-KATSELIJA"
+                        "KATSELIJA" "KATSELIJA"})
 
 ;; roolit jotka liittyvät koulutustoimijaan
 (def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})
@@ -30,4 +31,5 @@
   {"YLLAPITAJA" 0
    "OPL-VASTUUKAYTTAJA" 2
    "OPL-KAYTTAJA" 3
-   "OPL-KATSELIJA" 4})
+   "OPL-KATSELIJA" 4
+   "KATSELIJA" 6})
