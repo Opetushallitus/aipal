@@ -14,6 +14,7 @@
 
 (ns aipal.arkisto.koulutustoimija
   (:require [korma.core :as sql]
+            [aipal.integraatio.kayttooikeuspalvelu :refer [oph-koulutustoimija]]
             [aipal.integraatio.sql.korma :as taulut])
   (:use [aipal.integraatio.sql.korma]))
 
@@ -72,7 +73,8 @@
     (sql/where (and (sql/sqlfn "not exists" (sql/subselect taulut/oppilaitos
                                              (sql/where {:oppilaitos.koulutustoimija :koulutustoimija.ytunnus})))
                     (sql/sqlfn "not exists" (sql/subselect taulut/rooli_organisaatio
-                                             (sql/where {:rooli_organisaatio.organisaatio :koulutustoimija.ytunnus})))))))
+                                             (sql/where {:rooli_organisaatio.organisaatio :koulutustoimija.ytunnus})))
+                    {:koulutustoimija.ytunnus [not= (:ytunnus oph-koulutustoimija)]})))) ;; Ei poisteta ylläpitäjä-käyttäjän koulutustoimijaa
 
 (defn ^:integration-api aseta-kaikki-vanhentuneiksi!
   []
