@@ -40,7 +40,8 @@
    :ldap-auth-server {:host s/Str
                       :port s/Int
                       :user (s/maybe s/Str)
-                      :password (s/maybe s/Str)}
+                      :password (s/maybe s/Str)
+                      :ssl Boolean}
    :vastaus-base-url s/Str
    :organisaatiopalvelu {:url s/Str}
    :koodistopalvelu {:url s/Str}
@@ -74,7 +75,8 @@
    :ldap-auth-server {:host "localhost"
                       :port 10389
                       :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
-                      :password "salasana"}
+                      :password "salasana"
+                      :ssl false}
    :vastaus-base-url "http://192.168.50.1:8083"
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
