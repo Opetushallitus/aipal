@@ -24,16 +24,6 @@ values ('OID.T-700', 'T-700', 'Uolevi', 'Katselija', true);
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values ('9876543-2', 'YLLAPITAJA', 'OID.T-1001', 'true');
 
-insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values ('9876543-2', 'OPH-KATSELIJA', 'OID.T-800', 'true');
-
-insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'TTK-KATSELIJA', 'OID.T-850', 'true');
-
-insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values (null, 'KATSELIJA', 'OID.T-700', 'true');
-
-
 -- testiorganisaatiot käyttöoikeuksia varten
 insert into koulutustoimija (ytunnus, nimi_fi, sahkoposti, puhelin, osoite, postinumero, postitoimipaikka, www_osoite, oid )
   values ('2345678-0', 'Ruikonperän opistoaste', 'ruikonpera@solita.fi', '+35850505050', 'Perämäkkylän ohitustie 2', '00310', 'Ylijyrmylä', 'http://www.solita.fi', '1.2.246.777.888.9999999999');
@@ -79,9 +69,6 @@ values ('OID.68000', '68000', 'Mirka', 'Otorola', true );
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values ('7654321-2', 'OPL-VASTUUKAYTTAJA', 'OID.8086', true);
-
-insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
-values ('7654321-2', 'OPL-NTMVASTUUKAYTTAJA', 'OID.8086', true);
 
 insert into rooli_organisaatio(organisaatio, rooli, kayttaja, voimassa)
 values ('7654321-2', 'OPL-KATSELIJA', 'OID.6502', true);
