@@ -19,10 +19,10 @@
             [aipal.toimiala.kayttajaroolit :refer [koulutustoimija-roolit
                                                    oph-roolit]]))
 
-(def oph-koulutustoimija {:ytunnus "0829731-2"})
+(def oph-koulutustoimija {:ytunnus "0920632-0"})
 
 (defn ryhma-cn-filter [ldap-ryhma]
-  {:filter (str "cn=APP_AIPAL_" ldap-ryhma "_*")})
+  {:filter (str "cn=APP_AMKPAL_" ldap-ryhma "_*")})
 
 (defn jasen-filter [jasen-dn]
   {:filter (str "uniqueMember=" jasen-dn)})
@@ -76,7 +76,7 @@
             ryhmat (ldap/search yhteys ryhma-base (jasen-filter (kayttaja-dn uid)))
             roolit (for [ldap-ryhma ryhmat
                          :let [koulutustoimija-oid (last (s/split (:cn ldap-ryhma) #"_"))
-                               ryhma (second (re-matches #"APP_AIPAL_(.*)_[\d.]+" (:cn ldap-ryhma)))
+                               ryhma (second (re-matches #"APP_AMKPAL_(.*)_[\d.]+" (:cn ldap-ryhma)))
                                rooli (ryhma->rooli ryhma)
                                koulutustoimija (or (oid->ytunnus koulutustoimija-oid)
                                                    (when (contains? oph-roolit rooli)
