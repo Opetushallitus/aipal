@@ -20,7 +20,7 @@
 (defn hae-viimeisin-paivitys
   []
   (:paivitetty (select-unique-or-nil taulut/organisaatiopalvelu_log
-                 (sql/order :paivitetty :desc)
+                 (sql/order :id :desc)
                  (sql/limit 1)
                  (sql/fields :paivitetty))))
 
