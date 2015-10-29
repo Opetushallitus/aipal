@@ -21,7 +21,7 @@ insert into rahoitusmuoto (rahoitusmuotoid, rahoitusmuoto)
 
 drop table rahoitusmuoto_tmp;
 
--- Opetushallitukselle organisaatio
+-- CSC:lle organisaatio
 insert into koulutustoimija (ytunnus, nimi_fi)
-  select '0829731-2', 'Opetushallitus'
-  where not exists (select 1 from koulutustoimija where ytunnus = '0829731-2');
+  select '0920632-0', 'CSC-Tieteen tietotekniikan keskus Oy'
+  where not exists (select 1 from koulutustoimija where ytunnus = '0920632-0');
