@@ -218,6 +218,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     $scope.vastaajatunnus = {
       henkilokohtainen: true,
       koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
+      rahoitusmuotoid: 5,
       suorituskieli: 'fi',
       tutkinto: viimeksiValittuTutkinto,
       vastaajien_lkm: 1
