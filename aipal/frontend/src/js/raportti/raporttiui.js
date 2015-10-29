@@ -71,6 +71,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     $scope.raportti.kieli = kieli;
     $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
+    $scope.raportti.rahoitusmuotoid = 5;
     $scope.printgraphs = true;
     $scope.printfreetext = true;
     $scope.$watch('raportti', function(uusi) {
@@ -127,7 +128,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
       }
       // Säilytetään rahoitusmuodon ja suorituskielen valinta kysely- ja kyselykertasivuilla
       else {
-        delete $scope.raportti.rahoitusmuotoid;
+        //delete $scope.raportti.rahoitusmuotoid;
         delete $scope.raportti.suorituskieli;
       }
     };
