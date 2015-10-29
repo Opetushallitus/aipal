@@ -26,12 +26,15 @@
     (if-let [ohje (arkisto/hae ohjetunniste)]
       (response-or-404 ohje)
       {:status 200}))
+
   (PUT "/:ohjetunniste" []
     :body-params [ohjetunniste :- s/Str
                   teksti_fi :- s/Str
-                  teksti_sv :- s/Str]
+                  teksti_sv :- s/Str
+                  teksti_en :- s/Str]
     :kayttooikeus :ohje_muokkaus
     (arkisto/muokkaa-tai-luo-uusi! {:ohjetunniste ohjetunniste
                                     :teksti_fi teksti_fi
-                                    :teksti_sv teksti_sv})
+                                    :teksti_sv teksti_sv
+                                    :teksti_en teksti_en})
     {:status 200}))

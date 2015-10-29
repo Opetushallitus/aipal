@@ -80,7 +80,7 @@
          :body "kysely.samanniminen_kysely"}
         (response-or-404
           (let [{:keys [kyselyid]}
-                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
+                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
             (paivita-kysely! (assoc kysely :kyselyid kyselyid)))))))
 
   (POST "/:kyselyid" []

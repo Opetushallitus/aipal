@@ -29,8 +29,8 @@
               (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
     (sql/join :inner :koulutustoimija
               (= :koulutustoimija.ytunnus :kysely_organisaatio_view.koulutustoimija))
-    (sql/fields :kysely.kyselyid [:kysely.nimi_fi :kysely_fi] [:kysely.nimi_sv :kysely_sv] :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
+    (sql/fields :kysely.kyselyid [:kysely.nimi_fi :kysely_fi] [:kysely.nimi_sv :kysely_sv] [:kysely.nimi_en :kysely_en] :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
+                [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv] [:koulutustoimija.nimi_en :koulutustoimija_en])
     (sql/where {:kyselyid kyselyid})))
 
 (defn muodosta-yhteenveto [kyselyid parametrit]
@@ -63,5 +63,6 @@
               :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
               :raportti (map raportointi/laske-kysymysryhman-vastaajat (kyselyraportointi/muodosta-raportti parametrit))
               :nimi_fi (:kysely_fi kysely)
-              :nimi_sv (:kysely_sv kysely)}
+              :nimi_sv (:kysely_sv kysely)
+              :nimi_en (:kysely_en kysely)}
              tutkinto-otsikko))))

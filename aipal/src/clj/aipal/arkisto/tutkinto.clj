@@ -45,7 +45,7 @@
     (sql/join taulut/tutkinto
               (= :tutkinto.tutkintotunnus :koulutustoimija_ja_tutkinto.tutkinto))
     (sql/where {:koulutustoimija y-tunnus})
-    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm :tutkinto.siirtymaajan_loppupvm [:koulutustoimija_ja_tutkinto.voimassa_alkupvm :sopimus_alkupvm] [:koulutustoimija_ja_tutkinto.voimassa_loppupvm :sopimus_loppupvm])))
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm :tutkinto.siirtymaajan_loppupvm [:koulutustoimija_ja_tutkinto.voimassa_alkupvm :sopimus_alkupvm] [:koulutustoimija_ja_tutkinto.voimassa_loppupvm :sopimus_loppupvm])))
 
 (defn tutkinto-voimassa? [tutkinto]
   (let [{alkupvm :voimassa_alkupvm
@@ -60,12 +60,12 @@
 
 (defn tutkinnot-hierarkiaksi
   [tutkinnot]
-  (let [opintoalatMap (group-by #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv]) tutkinnot)
+  (let [opintoalatMap (group-by #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :opintoala_nimi_en :koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv :koulutusala_nimi_en]) tutkinnot)
         opintoalat (for [[opintoala tutkinnot] opintoalatMap]
-                     (assoc opintoala :tutkinnot (sort-by :tutkintotunnus (map #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot))))
-        koulutusalatMap (group-by #(select-keys % [:koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv]) opintoalat)
+                     (assoc opintoala :tutkinnot (sort-by :tutkintotunnus (map #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv :nimi_en]) tutkinnot))))
+        koulutusalatMap (group-by #(select-keys % [:koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv :koulutusala_nimi_en]) opintoalat)
         koulutusalat (for [[koulutusala opintoalat] koulutusalatMap]
-                       (assoc koulutusala :opintoalat (sort-by :opintoalatunnus (map #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :tutkinnot]) opintoalat))))]
+                       (assoc koulutusala :opintoalat (sort-by :opintoalatunnus (map #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :opintoala_nimi_en :tutkinnot]) opintoalat))))]
     (sort-by :koulutusalatunnus koulutusalat)))
 
 (defn hae-tutkinnot
@@ -73,10 +73,10 @@
   (sql/select taulut/tutkinto
     (sql/join :inner taulut/opintoala (= :opintoala.opintoalatunnus :tutkinto.opintoala))
     (sql/join :inner taulut/koulutusala (= :koulutusala.koulutusalatunnus :opintoala.koulutusala))
-    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
                 :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm :tutkinto.siirtymaajan_loppupvm
-                :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv]
-                :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv])))
+                :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv] [:opintoala.nimi_en :opintoala_nimi_en]
+                :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv] [:koulutusala.nimi_en :koulutusala_nimi_en])))
 
 (defn hae-voimassaolevat-tutkinnot []
   (tutkinnot-hierarkiaksi

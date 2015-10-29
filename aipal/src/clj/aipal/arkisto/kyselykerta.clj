@@ -110,7 +110,7 @@
     (sql/modifier "distinct")
     (sql/join :inner taulut/vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/join :inner taulut/koulutustoimija (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
-    (sql/fields :koulutustoimija.ytunnus :koulutustoimija.nimi_fi :koulutustoimija.nimi_sv)
+    (sql/fields :koulutustoimija.ytunnus :koulutustoimija.nimi_fi :koulutustoimija.nimi_sv :koulutustoimija.nimi_en)
     (sql/where kyselykerta-where)))
 
 (defn hae-oppilaitostiedot
@@ -120,7 +120,7 @@
     (sql/modifier "distinct")
     (sql/join :inner taulut/vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/join :inner taulut/oppilaitos (= :oppilaitos.oppilaitoskoodi :vastaajatunnus.valmistavan_koulutuksen_oppilaitos))
-    (sql/fields :oppilaitos.oppilaitoskoodi :oppilaitos.nimi_fi :oppilaitos.nimi_sv)
+    (sql/fields :oppilaitos.oppilaitoskoodi :oppilaitos.nimi_fi :oppilaitos.nimi_sv :oppilaitos.nimi_en)
     (sql/where kyselykerta-where)))
 
 (defn hae-vastaustunnustiedot

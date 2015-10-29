@@ -23,7 +23,8 @@
   []
   (when-let [tiedote (select-unique-or-nil taulut/tiedote)]
     {:fi (:teksti_fi tiedote)
-     :sv (:teksti_sv tiedote)}))
+     :sv (:teksti_sv tiedote)
+     :en (:teksti_en tiedote)}))
 
 (defn poista-ja-lisaa!
   "Poistaa vanhan tiedotteen ja lisää uuden."
@@ -32,7 +33,8 @@
   (sql/delete taulut/tiedote)
   (sql/insert taulut/tiedote
     (sql/values {:teksti_fi (:fi tiedote)
-                 :teksti_sv (:sv tiedote)})))
+                 :teksti_sv (:sv tiedote)
+                 :teksti_en (:en tiedote)})))
 
 (defn poista!
   "Poistaa tiedotteen."

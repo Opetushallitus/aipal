@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.vastaajatunnus
   (:require [clojure.string :as st]
-            [clojure.set :refer [rename-keys]]
+            [oph.common.util.util :refer [select-and-rename-keys]]
             [oph.korma.common :refer [select-unique-or-nil]]
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]
@@ -30,9 +30,9 @@
     (sql/join :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
     (sql/join :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa
-                :tutkinto.nimi_fi :tutkinto.nimi_sv
-                :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv]
-                :oppilaitos.oppilaitoskoodi [:oppilaitos.nimi_fi :oppilaitos_nimi_fi] [:oppilaitos.nimi_sv :oppilaitos_nimi_sv]
+                :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
+                :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv] [:koulutustoimija.nimi_en :koulutustoimija_nimi_en]
+                :oppilaitos.oppilaitoskoodi [:oppilaitos.nimi_fi :oppilaitos_nimi_fi] [:oppilaitos.nimi_sv :oppilaitos_nimi_sv] [:oppilaitos.nimi_en :oppilaitos_nimi_en]
                 [(sql/raw "COALESCE(COALESCE(vastaajatunnus.voimassa_loppupvm, kyselykerta.voimassa_loppupvm, kysely.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE)") :muokattavissa]
                 :voimassa_alkupvm :voimassa_loppupvm)
     (sql/fields [(sql/subselect taulut/vastaaja
@@ -44,29 +44,23 @@
 
 (defn ^:private erota-tutkinto
   [vastaajatunnus]
-  (let [tutkinto (select-keys vastaajatunnus [:nimi_fi :nimi_sv :tutkintotunnus])]
+  (let [tutkinto (select-keys vastaajatunnus [:nimi_fi :nimi_sv :nimi_en :tutkintotunnus])]
     (some-> vastaajatunnus
-      (dissoc :nimi_fi :nimi_sv :tutkintotunnus)
+      (dissoc :nimi_fi :nimi_sv :nimi_en :tutkintotunnus)
       (assoc :tutkinto tutkinto))))
 
 (defn ^:private erota-koulutustoimija
   [vastaajatunnus]
-  (let [koulutustoimija (rename-keys
-                          (select-keys vastaajatunnus [:ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv])
-                          {:koulutustoimija_nimi_fi :nimi_fi
-                           :koulutustoimija_nimi_sv :nimi_sv})]
+  (let [koulutustoimija (select-and-rename-keys vastaajatunnus [:ytunnus [:koulutustoimija_nimi_fi :nimi_fi] [:koulutustoimija_nimi_sv :nimi_sv] [:koulutustoimija_nimi_sv :nimi_sv]])]
     (some-> vastaajatunnus
-      (dissoc :ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv)
+      (dissoc :ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :koulutustoimija_nimi_en)
       (assoc :valmistavan_koulutuksen_jarjestaja koulutustoimija))))
 
 (defn ^:private erota-oppilaitos
   [vastaajatunnus]
-  (let [oppilaitos (rename-keys
-                     (select-keys vastaajatunnus [:oppilaitoskoodi :oppilaitos_nimi_fi :oppilaitos_nimi_sv])
-                     {:oppilaitos_nimi_fi :nimi_fi
-                      :oppilaitos_nimi_sv :nimi_sv})]
+  (let [oppilaitos (select-and-rename-keys vastaajatunnus [:oppilaitoskoodi [:oppilaitos_nimi_fi :nimi_fi] [:oppilaitos_nimi_sv :nimi_sv] [:oppilaitos_nimi_en :nimi_en]])]
     (some-> vastaajatunnus
-      (dissoc :oppilaitoskoodi :oppilaitos_nimi_fi :oppilaitos_nimi_sv)
+      (dissoc :oppilaitoskoodi :oppilaitos_nimi_fi :oppilaitos_nimi_sv :oppilaitos_nimi_en)
       (assoc :valmistavan_koulutuksen_oppilaitos oppilaitos))))
 
 (defn hae-kyselykerralla
@@ -86,7 +80,7 @@
   (first
     (sql/select taulut/vastaajatunnus
       (sql/join :inner taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-      (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv)
+      (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en)
       (sql/where (and (= :vastaajatunnus.kyselykertaid kyselykertaid)
                       [(sql/sqlfn :exists (sql/subselect :koulutustoimija_ja_tutkinto
                                             (sql/where {:koulutustoimija_ja_tutkinto.tutkinto :tutkinto.tutkintotunnus

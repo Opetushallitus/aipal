@@ -48,8 +48,8 @@
       (rajaa-kayttajalle-sallittuihin-kysymysryhmiin organisaatio)
       (cond->
         vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
-      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv
-                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
+      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.nimi_en
+                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.selite_en :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
                   :kysymysryhma.lisattavissa :kysymysryhma.tila
                   [(sql/subselect taulut/kysymys
                      (sql/aggregate (count :*) :lkm)
@@ -79,7 +79,7 @@
     (sql/where (and {:taustakysymykset true
                      :valtakunnallinen true}))
     rajaa-kayttajalle-sallittuihin-taustakysymysryhmiin
-    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv)
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en)
     (sql/order :muutettuaika :desc)
     sql/exec
     yhdista-valtakunnalliset-taustakysymysryhmat))
@@ -111,7 +111,7 @@
   [kysymysid]
   (->
     (sql/select* :monivalintavaihtoehto)
-    (sql/fields :jarjestys :teksti_fi :teksti_sv)
+    (sql/fields :jarjestys :teksti_fi :teksti_sv :teksti_en)
     (sql/order :jarjestys)
     (sql/where {:kysymysid kysymysid})
     (sql/exec)))
@@ -119,19 +119,19 @@
 (def kysymysryhma-select
   (->
     (sql/select* taulut/kysymysryhma)
-    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv
-                :selite_fi :selite_sv
+    (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en
+                :selite_fi :selite_sv :selite_en
                 :ntm_kysymykset :taustakysymykset :valtakunnallinen :tila)))
 
 (def kysymys-select
   (->
     (sql/select* taulut/kysymys)
     (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
-    (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv :kysymys.luotuaika
+    (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv :kysymys.kysymys_en :kysymys.luotuaika
                 :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi :kysymys.eos_vastaus_sallittu
                 :kysymys.max_vastaus :kysymys.monivalinta_max :kysymys.jarjestys
-                :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
-                :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv
+                :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.kylla_teksti_en
+                :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.ei_teksti_en
                 :jatkokysymys.kylla_vastaustyyppi
                 [:jatkokysymys.max_vastaus :jatkokysymys_max_vastaus])
     (sql/order :kysymys.jarjestys)))
@@ -144,11 +144,13 @@
 (def kylla-jatkokysymykset-kentat
   [:kylla_teksti_fi
    :kylla_teksti_sv
+   :kylla_teksti_en
    :kylla_vastaustyyppi])
 
 (def ei-jatkokysymykset-kentat
   [:ei_teksti_fi
    :ei_teksti_sv
+   :ei_teksti_en
    :jatkokysymys_max_vastaus])
 
 (def jatkokysymykset-kentat
@@ -160,11 +162,11 @@
 
 (defn kylla-jatkokysymys?
   [kysymys]
-  (onko-jokin-kentista-annettu? kysymys [:kylla_teksti_fi :kylla_teksti_sv]))
+  (onko-jokin-kentista-annettu? kysymys [:kylla_teksti_fi :kylla_teksti_sv :kylla_teksti_en]))
 
 (defn ei-jatkokysymys?
   [kysymys]
-  (onko-jokin-kentista-annettu? kysymys [:ei_teksti_fi :ei_teksti_sv]))
+  (onko-jokin-kentista-annettu? kysymys [:ei_teksti_fi :ei_teksti_sv :ei_teksti_en]))
 
 (defn jatkokysymys?
   [kysymys]
@@ -258,12 +260,12 @@
   ([kyselyid]
     (->
       (sql/select* taulut/kysymysryhma)
-      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :kuvaus_fi :kuvaus_sv :tila :valtakunnallinen :taustakysymykset :ntm_kysymykset)
+      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :ntm_kysymykset) 
       (sql/with taulut/kysymys
-        (sql/fields :kysymysid :kysymys_fi :kysymys_sv :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
+        (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
                     :jatkokysymys.jatkokysymysid
-                    :jatkokysymys.kylla_kysymys :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv
-                    :jatkokysymys.ei_kysymys :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.kylla_vastaustyyppi)
+                    :jatkokysymys.kylla_kysymys :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.kylla_teksti_en
+                    :jatkokysymys.ei_kysymys :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.ei_teksti_en :jatkokysymys.kylla_vastaustyyppi)
         (cond->
           kyselyid (->
                      (sql/fields [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
@@ -321,7 +323,7 @@
   (auditlog/kysymysryhma-muokkaus! (:kysymysryhmaid kysymysryhma))
   (->
     (sql/update* taulut/kysymysryhma)
-    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :selite_fi :selite_sv :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset]))
+    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset]))
     (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
     (sql/update)))
 
