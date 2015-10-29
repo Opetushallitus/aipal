@@ -1,0 +1,20 @@
+insert into kieli (kieli) values ('en');
+
+alter table jatkokysymys add column kylla_teksti_en varchar(500);
+alter table jatkokysymys add column ei_teksti_en varchar(500);
+alter table koulutusala add column nimi_en varchar(200);
+alter table koulutustoimija add column nimi_en varchar(200);
+alter table kysely add column nimi_en varchar(200);
+alter table kysely add column selite_en text;
+alter table kyselypohja add column nimi_en varchar(200);
+alter table kyselypohja add column selite_en text;
+alter table kysymys add column kysymys_en varchar(500);
+alter table kysymysryhma add column nimi_en varchar(200);
+alter table kysymysryhma add column selite_en text;
+alter table monivalintavaihtoehto add column teksti_en varchar(400);
+alter table ohje add column teksti_en varchar(400);
+alter table opintoala add column nimi_en varchar(200);
+alter table oppilaitos add column nimi_en varchar(200);
+alter table tiedote add column teksti_en text;
+alter table toimipaikka add column nimi_en varchar(200);
+alter table tutkinto add column nimi_en varchar(200);
