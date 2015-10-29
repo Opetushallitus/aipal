@@ -52,7 +52,7 @@
   ([organisaatio vain-voimassaolevat]
     (-> (sql/select* :kyselypohja)
       (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
-      (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.valtakunnallinen :kyselypohja.tila
+      (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.nimi_en :kyselypohja.valtakunnallinen :kyselypohja.tila
                   [:kyselypohja.kaytettavissa :voimassa])
       (rajaa-kayttajalle-sallittuihin-kyselypohjiin :kyselypohja.kyselypohjaid organisaatio)
       (cond->
@@ -67,7 +67,7 @@
   (select-unique-or-nil taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})))
 
-(def muokattavat-kentat [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :valtakunnallinen])
+(def muokattavat-kentat [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :valtakunnallinen])
 
 (defn tallenna-kyselypohjan-kysymysryhmat!
   [kyselypohjaid kysymysryhmat]

@@ -24,8 +24,9 @@
     (if-let [ohje (arkisto/hae ohjetunniste)]
       (json-response ohje)
       {:status 200}))
-  (cu/defapi :ohje_muokkaus nil :put "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv]
+  (cu/defapi :ohje_muokkaus nil :put "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv teksti_en]
     (arkisto/muokkaa-tai-luo-uusi! {:ohjetunniste ohjetunniste
                                     :teksti_fi teksti_fi
-                                    :teksti_sv teksti_sv})
+                                    :teksti_sv teksti_sv
+                                    :teksti_en teksti_en})
     {:status 200}))

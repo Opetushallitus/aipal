@@ -114,14 +114,14 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   [asetukset]
   (->> (hae-koodit asetukset "koulutusalaoph2002")
     (map koodi->koulutusala)
-    (map #(dissoc % :kuvaus_fi :kuvaus_sv))))
+    (map #(dissoc % :kuvaus_fi :kuvaus_sv :kuvaus_en))))
 
 (defn hae-opintoalat
   [asetukset]
   (->> (hae-koodit asetukset "opintoalaoph2002")
     (map koodi->opintoala)
     (map (partial lisaa-opintoalaan-koulutusala asetukset))
-    (map #(dissoc % :kuvaus_fi :kuvaus_sv))))
+    (map #(dissoc % :kuvaus_fi :kuvaus_sv :kuvaus_en))))
 
 (defn muutokset
   [uusi vanha]

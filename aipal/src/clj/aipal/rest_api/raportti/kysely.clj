@@ -56,10 +56,12 @@
 
 (defn ^:private lisaa-raporttiin-nimi [valtakunnallinen-raportti]
   (let [tekstit-fi (i18n/hae-tekstit "fi")
-        tekstit-sv (i18n/hae-tekstit "sv")]
+        tekstit-sv (i18n/hae-tekstit "sv")
+        tekstit-en (i18n/hae-tekstit "en")]
     (-> valtakunnallinen-raportti
       (assoc :nimi_fi (get-in tekstit-fi [:yleiset :valtakunnallinen]))
-      (assoc :nimi_sv (get-in tekstit-sv [:yleiset :valtakunnallinen])))))
+      (assoc :nimi_sv (get-in tekstit-sv [:yleiset :valtakunnallinen]))
+      (assoc :nimi_en (get-in tekstit-en [:yleiset :valtakunnallinen])))))
 
 (defn ^:private muodosta-raportit-parametreilla [kyselyid parametrit]
   (if (empty? (:tutkinnot parametrit))

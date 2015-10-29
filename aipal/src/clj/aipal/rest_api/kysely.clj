@@ -78,7 +78,7 @@
          :body "kysely.samanniminen_kysely"}
         (json-response
           (let [{:keys [kyselyid]}
-                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
+                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
             (paivita-kysely! (assoc kysely :kyselyid kyselyid)))))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]

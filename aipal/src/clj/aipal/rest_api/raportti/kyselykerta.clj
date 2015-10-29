@@ -43,7 +43,8 @@
              (yhdistaminen/yhdista-raportit naytettavat))
            {:nimi nimi
             :nimet [{:nimi_fi nimi
-                     :nimi_sv nimi}]
+                     :nimi_sv nimi
+                     :nimi_en nimi}]
             :raportoitavia (count naytettavat)
             :virheelliset virheelliset}
            (when (seq naytettavat)

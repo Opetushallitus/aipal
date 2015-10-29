@@ -58,7 +58,7 @@
       (päivitä-polusta [:kylla] yhdistä-kaikki-kentät)
       (päivitä-polusta [:kylla :jakauma] yhdistä-vektorit)
       (päivitä-polusta [:kylla :jakauma :*] yhdistä-kaikki-kentät)
-      (päivitä-polusta [:kylla] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
+      (päivitä-polusta [:kylla] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :kysymys_en :vastaustyyppi] yhdistä-samat))
       (päivitä-polusta [:kylla :jakauma :*] (partial päivitä-kentät [:vaihtoehto-avain] yhdistä-samat)))
     (assoc jatkovastaukset :kylla nil)))
 
@@ -67,7 +67,7 @@
     (->> jatkovastaukset
       (päivitä-polusta [:ei] yhdistä-kaikki-kentät)
       (päivitä-polusta [:ei] käsittele-vapaatekstivastaukset)
-      (päivitä-polusta [:ei] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat)))
+      (päivitä-polusta [:ei] (partial päivitä-kentät [:kysymys_fi :kysymys_sv :kysymys_en :vastaustyyppi] yhdistä-samat)))
     (assoc jatkovastaukset :ei nil)))
 
 (defn käsittele-kysymyksen-jatkovastaukset [kysymys]
@@ -79,13 +79,14 @@
     (assoc kysymys :jatkovastaukset nil)))
 
 (defn nimet-yhteen-listaan [data]
-  (let [zipped (map vector (:nimi_fi data) (:nimi_sv data))
+  (let [zipped (map vector (:nimi_fi data) (:nimi_sv data) (:nimi_en data))
         nimet (for [z zipped] {:nimi_fi (first z)
-                               :nimi_sv (second z)})]
+                               :nimi_sv (second z)
+                               :nimi_en (nth z 2)})]
     (->
       data
       (assoc :nimet nimet)
-      (dissoc :nimi_fi :nimi_sv))))
+      (dissoc :nimi_fi :nimi_sv :nimi_en))))
 
 (defn yhdista-raportit [raportit]
   (->> raportit
@@ -98,9 +99,9 @@
     (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] yhdistä-kaikki-kentät)
     (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-vapaatekstivastaukset)
     (päivitä-polusta [:raportti :* :kysymykset :*] käsittele-kysymyksen-jatkovastaukset)
-    (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto-avain] yhdistä-samat))
-    (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymysid :kysymys_fi :kysymys_sv :vastaustyyppi] yhdistä-samat))
-    (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv] yhdistä-samat))
+    (päivitä-polusta [:raportti :* :kysymykset :* :jakauma :*] (partial päivitä-kentät [:jarjestys :vaihtoehto_fi :vaihtoehto_sv :vaihtoehto_en :vaihtoehto-avain] yhdistä-samat))
+    (päivitä-polusta [:raportti :* :kysymykset :*] (partial päivitä-kentät [:jarjestys :eos_vastaus_sallittu :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :vastaustyyppi] yhdistä-samat))
+    (päivitä-polusta [:raportti :*] (partial päivitä-kentät [:kysymysryhmaid :nimi_fi :nimi_sv :nimi_en] yhdistä-samat))
     nimet-yhteen-listaan
     (päivitä-kentät [:luontipvm] first)))
 

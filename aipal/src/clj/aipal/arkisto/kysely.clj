@@ -25,7 +25,7 @@
   [query]
   (->
     query
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv
+    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.nimi_en
                 :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
                 :kysely.tila :kysely.kaytettavissa
                 [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
@@ -60,7 +60,7 @@
   [kyselyid]
   (select-unique-or-nil taulut/kysely
     kysely-kentat
-    (sql/fields :kysely.selite_fi :kysely.selite_sv)
+    (sql/fields :kysely.selite_fi :kysely.selite_sv :kysely.selite_en)
     (sql/where (= :kyselyid kyselyid))))
 
 (defn hae-organisaatiotieto
@@ -83,7 +83,7 @@
   (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
   (->
     (sql/update* taulut/kysely)
-    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila]))
+    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila]))
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
 
@@ -197,7 +197,9 @@
            (sql/where (or (when (:nimi_fi kysely)
                             {:nimi_fi (:nimi_fi kysely)})
                           (when (:nimi_sv kysely)
-                            {:nimi_sv (:nimi_sv kysely)})))
+                            {:nimi_sv (:nimi_sv kysely)})
+                          (when (:nimi_en kysely)
+                            {:nimi_en (:nimi_en kysely)})))
            (sql/where {:kyselyid [not= (:kyselyid kysely)]})))))
 
 (defn ntm-kysely? [kyselyid]

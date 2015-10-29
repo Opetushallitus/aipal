@@ -41,6 +41,7 @@
                      [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
                      :kysymys.kysymys_fi
                      :kysymys.kysymys_sv
+                     :kysymys.kysymys_en
                      :kysymys.kysymysryhmaid
                      :kysymys.eos_vastaus_sallittu
                      :kysymys.vastaustyyppi
@@ -48,10 +49,12 @@
                      :jatkokysymys.kylla_kysymys
                      :jatkokysymys.kylla_teksti_fi
                      :jatkokysymys.kylla_teksti_sv
+                     :jatkokysymys.kylla_teksti_en
                      :jatkokysymys.kylla_vastaustyyppi
                      :jatkokysymys.ei_kysymys
                      :jatkokysymys.ei_teksti_fi
-                     :jatkokysymys.ei_teksti_sv))
+                     :jatkokysymys.ei_teksti_sv
+                     :jatkokysymys.ei_teksti_en))
     (map (comp aseta-kysymyksen-jarjestys yhdista-taustakysymysten-kysymykset))
     (sort kysymysten-jarjestys-vertailu)))
 
@@ -65,7 +68,8 @@
       (sql/order :kysymysryhma.kysymysryhmaid :ASC)
       (sql/fields :kysymysryhmaid
                   :nimi_fi
-                  :nimi_sv))))
+                  :nimi_sv
+                  :nimi_en))))
 
 (defn generoi-joinit [query ehdot]
   (reduce (fn [query {:keys [id arvot]}]
@@ -186,7 +190,7 @@
              alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus rahoitusmuoto suorituskieli))))
 
 (defn ^:private nimet [juttu]
-  (select-keys juttu [:nimi_fi :nimi_sv]))
+  (select-keys juttu [:nimi_fi :nimi_sv :nimi_en]))
 
 (defn ^:private tutkintorakenne-otsikko [parametrit]
   (case (:tutkintorakennetaso parametrit)
@@ -199,17 +203,20 @@
 
 (defn raportin-otsikko [parametrit]
   (let [tekstit-fi (i18n/hae-tekstit "fi")
-        tekstit-sv (i18n/hae-tekstit "sv")]
+        tekstit-sv (i18n/hae-tekstit "sv")
+        tekstit-en (i18n/hae-tekstit "en")]
     (case (:tyyppi parametrit)
       "vertailu" (tutkintorakenne-otsikko parametrit)
       "kehitys" (merge {:nimi_fi (get-in tekstit-fi [:raportit :kaikki_tutkinnot])
-                        :nimi_sv (get-in tekstit-sv [:raportit :kaikki_tutkinnot])}
+                        :nimi_sv (get-in tekstit-sv [:raportit :kaikki_tutkinnot])
+                        :nimi_en (get-in tekstit-en [:raportit :kaikki_tutkinnot])}
                        (tutkintorakenne-otsikko parametrit))
       "koulutustoimijat" (let [ytunnus (first (:koulutustoimijat parametrit))]
                            (nimet (koulutustoimija-arkisto/hae ytunnus)))
       "kysely" (tutkintorakenne-otsikko parametrit)
       "valtakunnallinen" {:nimi_fi (get-in tekstit-fi [:yleiset :valtakunnallinen])
-                          :nimi_sv (get-in tekstit-sv [:yleiset :valtakunnallinen])})))
+                          :nimi_sv (get-in tekstit-sv [:yleiset :valtakunnallinen])
+                          :nimi_en (get-in tekstit-en [:yleiset :valtakunnallinen])})))
 
 (defn paivita-nakymat []
   (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")

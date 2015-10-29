@@ -29,8 +29,8 @@
     (sql/join :inner :koulutustoimija
               (= :koulutustoimija.ytunnus :kysely_organisaatio_view.koulutustoimija))
     (sql/fields :kyselykerta.kyselykertaid [:kyselykerta.nimi :kyselykerta] :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
-                [:kysely.nimi_fi :kysely_fi] [:kysely.nimi_sv :kysely_sv]
-                [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
+                [:kysely.nimi_fi :kysely_fi] [:kysely.nimi_sv :kysely_sv] [:kysely.nimi_en :kysely_en]
+                [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv] [:koulutustoimija.nimi_en :koulutustoimija_en])
     (sql/where {:kyselykertaid kyselykertaid})
 
     sql/exec

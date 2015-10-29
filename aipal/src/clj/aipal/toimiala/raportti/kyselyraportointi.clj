@@ -25,18 +25,18 @@
 (defn yhdista-ja-jarjesta-tutkinnot
   [tutkinnot]
   (->>
-    (let [tutkinnot (group-by #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv]) tutkinnot)]
+    (let [tutkinnot (group-by #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv :nimi_en]) tutkinnot)]
       (for [[tutkinto lukumaarat] tutkinnot]
         (assoc tutkinto :vastaajien_lukumaara (reduce + 0 (map :vastaajien_lkm lukumaarat)))))
     (sort-by :tutkintotunnus)))
 
 (defn koulutustoimijat-hierarkiaksi
   [vastaajatunnus-tiedot parametrit]
-  (let [koulutustoimijat (group-by #(select-keys % [:ytunnus :koulutustoimija_fi :koulutustoimija_sv]) vastaajatunnus-tiedot)]
+  (let [koulutustoimijat (group-by #(select-keys % [:ytunnus :koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_en]) vastaajatunnus-tiedot)]
     (for [[koulutustoimija tutkinnot] koulutustoimijat]
       (-> (if (:ytunnus koulutustoimija)
             (dissoc koulutustoimija :ytunnus)
-            (select-keys parametrit [:koulutustoimija_fi :koulutustoimija_sv]))
+            (select-keys parametrit [:koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_en]))
         (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
                :vastaajien_lukumaara (reduce + 0 (map :vastaajien_lkm tutkinnot)))))))
 
@@ -74,7 +74,7 @@
               (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
     (sql/join :left :tutkinto
               (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv
+    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
                 [(sql/subselect :vastaaja
                                 (sql/aggregate (count :*) :vastaajien_lkm)
                                 (sql/where (or (nil? vertailujakso_alkupvm)
@@ -82,7 +82,7 @@
                                 (sql/where (or (nil? vertailujakso_loppupvm)
                                                (<= :vastaaja.luotuaika vertailujakso_loppupvm)))
                                 (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajien_lkm]
-                :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv])
+                :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv] [:koulutustoimija.nimi_en :koulutustoimija_en])
     sql/exec
     (koulutustoimijat-hierarkiaksi parametrit)))
 
@@ -144,6 +144,7 @@
                 [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
+                :kysymys.kysymys_en
                 :kysymys.vastaustyyppi
                 :kysymys.eos_vastaus_sallittu
                 :kysymys.jarjestys
@@ -151,10 +152,12 @@
                 :jatkokysymys.kylla_kysymys
                 :jatkokysymys.kylla_teksti_fi
                 :jatkokysymys.kylla_teksti_sv
+                :jatkokysymys.kylla_teksti_en
                 :jatkokysymys.kylla_vastaustyyppi
                 :jatkokysymys.ei_kysymys
                 :jatkokysymys.ei_teksti_fi
-                :jatkokysymys.ei_teksti_sv)
+                :jatkokysymys.ei_teksti_sv
+                :jatkokysymys.ei_teksti_en)
     sql/exec
     (->>
       (map (comp aseta-kysymyksen-jarjestys yhdista-taustakysymysten-kysymykset))
@@ -178,7 +181,8 @@
     (sql/order :kysely_kysymysryhma.jarjestys :ASC)
     (sql/fields :kysymysryhma.kysymysryhmaid
                 :kysymysryhma.nimi_fi
-                :kysymysryhma.nimi_sv)
+                :kysymysryhma.nimi_sv
+                :kysymysryhma.nimi_en)
     sql/exec
     yhdista-valtakunnalliset-taustakysymysryhmat))
 

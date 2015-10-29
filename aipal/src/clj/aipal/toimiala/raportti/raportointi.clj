@@ -24,7 +24,7 @@
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
     (sql/select* :monivalintavaihtoehto)
-    (sql/fields :jarjestys :teksti_fi :teksti_sv)
+    (sql/fields :jarjestys :teksti_fi :teksti_sv :teksti_en)
     (sql/where {:kysymysid kysymysid})
     sql/exec))
 
@@ -84,6 +84,7 @@
                 osuus (laske-osuus lukumaara yhteensa)]]
       {:vaihtoehto_fi (:teksti_fi vaihtoehto)
        :vaihtoehto_sv (:teksti_sv vaihtoehto)
+       :vaihtoehto_en (:teksti_en vaihtoehto)
        :lukumaara lukumaara
        :osuus (prosentteina osuus)
        :jarjestys (:jarjestys vaihtoehto)})))
@@ -123,6 +124,7 @@
   (when (:kylla_kysymys kysymys)
     {:kysymys_fi (:kylla_teksti_fi kysymys)
      :kysymys_sv (:kylla_teksti_sv kysymys)
+     :kysymys_en (:kylla_teksti_en kysymys)
      :jakauma (butlast (muodosta-asteikko-jakauman-esitys (muotoile-jakauma (:jatkovastaus_jakauma vastaukset)))) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
      :vastaustyyppi (:kylla_vastaustyyppi kysymys)
      :vastaajien_lukumaara (or (:jatkovastaus_vastaajien_lukumaara vastaukset) 0)
@@ -135,6 +137,7 @@
     (let [ei-vastaukset (:jatkovastaus_vapaatekstit vastaukset)]
       {:kysymys_fi (:ei_teksti_fi kysymys)
        :kysymys_sv (:ei_teksti_sv kysymys)
+       :kysymys_en (:ei_teksti_en kysymys)
        :vapaatekstivastaukset (when ei-vastaukset
                                 (for [v (.getArray ei-vastaukset)
                                       :when v]
@@ -186,6 +189,7 @@
   (select-keys kysymys [:kysymysid
                         :kysymys_fi
                         :kysymys_sv
+                        :kysymys_en
                         :jakauma
                         :vapaatekstivastaukset
                         :vastaajien_lukumaara

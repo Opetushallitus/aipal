@@ -21,6 +21,7 @@
                         :vastaustyyppi
                         :kysymys_fi
                         :kysymys_sv
+                        :kysymys_en
                         :max_vastaus
                         :monivalinta_max
                         :jarjestys]))
@@ -28,14 +29,17 @@
 (defn valitse-jatkokysymyksen-kentat [jatkokysymys]
   (select-keys jatkokysymys [:kylla_teksti_fi
                              :kylla_teksti_sv
+                             :kylla_teksti_en
                              :ei_teksti_fi
                              :ei_teksti_sv
+                             :ei_teksti_en
                              :max_vastaus]))
 
 (defn valitse-vaihtoehdon-kentat [vaihtoehto]
   (select-keys vaihtoehto [:jarjestys
                            :teksti_fi
-                           :teksti_sv]))
+                           :teksti_sv
+                           :teksti_en]))
 
 (defn muodosta-jatkokysymys [kysymys]
   (when (and (= "kylla_ei_valinta" (:vastaustyyppi kysymys))
@@ -74,8 +78,10 @@
 (defn ^:private valitse-kysymysryhman-peruskentat [kysymysryhma]
   (select-keys kysymysryhma [:nimi_fi
                              :nimi_sv
+                             :nimi_en
                              :selite_fi
-                             :selite_sv]))
+                             :selite_sv
+                             :selite_en]))
 
 (defn ^:private suodata-vain-yllapitajalle [kysymysryhma kentta]
   (if (yllapitaja?)

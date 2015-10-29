@@ -28,7 +28,8 @@
               (= :rooli_organisaatio.organisaatio :koulutustoimija.ytunnus))
     (sql/fields :rooli :organisaatio :rooli_organisaatio_id
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi]
-                [:koulutustoimija.nimi_sv :koulutustoimija_sv])
+                [:koulutustoimija.nimi_sv :koulutustoimija_sv]
+                [:koulutustoimija.nimi_en :koulutustoimija_en])
     (sql/where {:kayttaja oid
                 :voimassa true})))
 

@@ -89,11 +89,13 @@
           esitys (fn [lukumaara-1 osuus-1 lukumaara-2 osuus-2]
                    [{:vaihtoehto_fi "vaihtoehto 1"
                      :vaihtoehto_sv nil
+                     :vaihtoehto_en nil
                      :lukumaara lukumaara-1
                      :osuus osuus-1
                      :jarjestys 1}
                     {:vaihtoehto_fi "vaihtoehto 2"
                      :vaihtoehto_sv nil
+                     :vaihtoehto_en nil
                      :lukumaara lukumaara-2
                      :osuus osuus-2
                      :jarjestys 2}])]
