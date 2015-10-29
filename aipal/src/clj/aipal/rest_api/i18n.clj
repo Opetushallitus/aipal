@@ -22,8 +22,10 @@
             [oph.common.util.http-util :refer [response-or-404]]
             [oph.common.util.util :refer [pisteavaimet->puu]]))
 
+(defn validoi-kieli []
+  (schema/pred #(some #{%} ["fi" "sv" "en"])))
 
-(def Kieli (schema/enum "fi" "sv"))
+(def Kieli (schema/enum "fi" "sv" "en"))
 
 (defn hae-tekstit [kieli]
   (ResourceBundle/clearCache)
