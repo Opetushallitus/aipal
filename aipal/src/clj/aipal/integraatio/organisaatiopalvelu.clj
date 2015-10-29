@@ -50,6 +50,9 @@
 (defn ^:private nimi-sv [koodi]
   ((some-fn :sv :fi :en) (:nimi koodi)))
 
+(defn ^:private nimi-en [koodi]
+  ((some-fn :en :fi :sv) (:nimi koodi)))
+
 (defn ^:private postinumero [koodi]
   (when-let [postinumerokoodi (get-in koodi [:postiosoite :postinumeroUri])]
     (subs postinumerokoodi 6)))
@@ -74,6 +77,7 @@
 (defn ^:private koodi->koulutustoimija [koodi]
   {:nimi_fi (nimi koodi)
    :nimi_sv (nimi-sv koodi)
+   :nimi_en (nimi-en koodi)
    :oid (:oid koodi)
    :sahkoposti (email koodi)
    :puhelin (puhelin koodi)
@@ -88,6 +92,7 @@
 (defn ^:private koodi->oppilaitos [koodi]
   {:nimi_fi (nimi koodi)
    :nimi_sv (nimi-sv koodi)
+   :nimi_en (nimi-en koodi)
    :oid (:oid koodi)
    :sahkoposti (email koodi)
    :puhelin (puhelin koodi)
@@ -102,6 +107,7 @@
 (defn ^:private koodi->toimipaikka [koodi]
   {:nimi_fi (nimi koodi)
    :nimi_sv (nimi-sv koodi)
+   :nimi_en (nimi-en koodi)
    :oid (:oid koodi)
    :sahkoposti (email koodi)
    :puhelin (puhelin koodi)
@@ -113,7 +119,7 @@
    :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
    :voimassa (voimassa? koodi)})
 
-(def ^:private yhteiset-kentat [:nimi_fi :nimi_sv :oid :sahkoposti :puhelin :osoite
+(def ^:private yhteiset-kentat [:nimi_fi :nimi_sv :nimi_en :oid :sahkoposti :puhelin :osoite
                                 :postinumero :postitoimipaikka :www_osoite :voimassa :lakkautuspaiva])
 
 (defn ^:private koulutustoimijan-kentat [koulutustoimija]
