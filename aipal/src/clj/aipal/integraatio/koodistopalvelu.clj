@@ -31,9 +31,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   [koodi arvokentta]
   (when koodi
     (let [metadata_fi (first (filter #(= "FI" (:kieli %)) (:metadata koodi)))
-          metadata_sv (first (filter #(= "SV" (:kieli %)) (:metadata koodi)))]
+          metadata_sv (first (filter #(= "SV" (:kieli %)) (:metadata koodi)))
+          metadata_en (first (filter #(= "EN" (:kieli %)) (:metadata koodi)))]
       {:nimi_fi (:nimi metadata_fi)
        :nimi_sv (:nimi metadata_sv)
+       :nimi_en (:nimi metadata_en)
        :voimassa_alkupvm (some-> (:voimassaAlkuPvm koodi) parse-ymd)
        :voimassa_loppupvm (some-> (:voimassaLoppuPvm koodi) parse-ymd)
        :koodiUri (:koodiUri koodi)
@@ -135,7 +137,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-tutkinto-muutokset
   [asetukset]
-  (let [tutkinto-kentat [:nimi_fi :nimi_sv :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala]
+  (let [tutkinto-kentat [:nimi_fi :nimi_sv :nimi_en :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala]
         vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
                           [(:tutkintotunnus tutkinto) (select-keys tutkinto tutkinto-kentat)]))
         uudet (->> (hae-tutkinnot asetukset)
@@ -147,7 +149,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-koulutusala-muutokset
   [asetukset]
-  (let [koulutusala-kentat [:nimi_fi :nimi_sv :koulutusalatunnus]
+  (let [koulutusala-kentat [:nimi_fi :nimi_sv :nimi_en :koulutusalatunnus]
         vanhat (into {} (for [koulutusala (koulutusala-arkisto/hae-kaikki)]
                           [(:koulutusalatunnus koulutusala) (select-keys koulutusala koulutusala-kentat)]))
         uudet (map-by :koulutusalatunnus
@@ -156,7 +158,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-opintoala-muutokset
   [asetukset]
-  (let [opintoala-kentat [:nimi_fi :nimi_sv :opintoalatunnus :koulutusala]
+  (let [opintoala-kentat [:nimi_fi :nimi_sv :nimi_en :opintoalatunnus :koulutusala]
         vanhat (into {} (for [opintoala (opintoala-arkisto/hae-kaikki)]
                           [(:opintoalatunnus opintoala) (select-keys opintoala opintoala-kentat)]))
         uudet (map-by :opintoalatunnus
