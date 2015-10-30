@@ -30,7 +30,7 @@
             <label ng-class="{pakollinen: !kysymysryhma.nimi_sv}"><span>{{i18n.kysymysryhma.nimi}} ({{i18n.yleiset.suomeksi}}) ({{i18n.yleiset.nakyy_vastaajalle}})</span>
                 <input type="text" class="form-control e2e-kysymysryhma-nimi-fi" ng-model="kysymysryhma.nimi_fi" maxlength="200" autofocus ng-required="!kysymysryhma.nimi_sv"/>
             </label>
-            <label>{{i18n.kysymysryhma.selite_fi}}
+            <label>{{i18n.kysymysryhma.selite}} ({{i18n.yleiset.suomeksi}})
                 <input type="text" class="form-control" ng-model="kysymysryhma.selite_fi" maxlength="200" />
             </label>
 
@@ -41,7 +41,7 @@
                 <input type="text" class="form-control" ng-model="kysymysryhma.nimi_sv" maxlength="200" ng-required="!kysymysryhma.nimi_fi"/>
             </label>
 
-            <label>{{i18n.kysymysryhma.selite_sv}}
+            <label>{{i18n.kysymysryhma.selite}} ({{i18n.yleiset.ruotsiksi}})
                 <input class="form-control" ng-model="kysymysryhma.selite_sv" maxlength="200" />
             </label>
         </div>
