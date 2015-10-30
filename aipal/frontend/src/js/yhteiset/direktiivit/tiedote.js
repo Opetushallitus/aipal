@@ -28,7 +28,8 @@ angular.module('yhteiset.direktiivit.tiedote',
         };
         $scope.tallenna = function(){
           var tiedote = {fi: $scope.tiedoteFi,
-                         sv: $scope.tiedoteSv};
+                         sv: $scope.tiedoteSv,
+                         en: $scope.tiedoteEn};
           Tiedote.tallenna(tiedote).success(function(){
             ilmoitus.onnistuminen(i18n.hae('tiedote.tallennus_onnistui'));
             $scope.naytettavaTiedote = tiedote[kieli];
@@ -41,6 +42,7 @@ angular.module('yhteiset.direktiivit.tiedote',
           $scope.naytettavaTiedote = tiedote[kieli];
           $scope.tiedoteFi = tiedote.fi;
           $scope.tiedoteSv = tiedote.sv;
+          $scope.tiedoteEn = tiedote.en;
         });
       }
     };
