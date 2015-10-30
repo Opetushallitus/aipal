@@ -14,7 +14,8 @@
 
 (ns aipalvastaus.rest-api.i18n
   (:import (java.util Locale
-                      ResourceBundle))
+                      ResourceBundle
+                      ResourceBundle$Control))
   (:require [compojure.core :as c]
             [schema.core :as schema]
             [oph.common.util.http-util :refer [json-response-nocache]]
@@ -25,7 +26,7 @@
 
 (defn hae-tekstit [kieli]
   (ResourceBundle/clearCache)
-  (let [bundle (ResourceBundle/getBundle "i18n/tekstit" (Locale. kieli))]
+  (let [bundle (ResourceBundle/getBundle "i18n/tekstit" (Locale. kieli) (ResourceBundle$Control/getNoFallbackControl ResourceBundle$Control/FORMAT_PROPERTIES))]
     (->> (for [key (.keySet bundle)]
            [(keyword key) (.getString bundle key)])
          (into {})
