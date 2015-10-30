@@ -40,6 +40,7 @@ angular.module('aipal', [
   'yhteiset.direktiivit.popup-ikkuna',
   'yhteiset.direktiivit.pvm-valitsin',
   'yhteiset.direktiivit.kyselypohjalista',
+  'yhteiset.direktiivit.kysymys-tekstit',
   'yhteiset.direktiivit.kysymysryhma-accordion',
   'yhteiset.direktiivit.kysymysryhmalista',
   'yhteiset.direktiivit.latausindikaattori',

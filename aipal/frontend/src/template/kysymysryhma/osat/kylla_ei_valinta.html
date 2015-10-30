@@ -6,19 +6,9 @@
             <input type="checkbox" ng-model="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys"> {{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}
         </label>
     </div>
-    <div ng-show="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys">
+    <div ng-if="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys">
       <div class="panel well">
-          <div class="form-group">
-            <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_sv}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.suomeksi}})</span>
-                <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.kylla_teksti_fi" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys && !aktiivinenKysymys.jatkokysymys.kylla_teksti_sv"></textarea>
-            </label>
-          </div>
-
-          <div class="form-group">
-              <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_fi}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.ruotsiksi}})</span>
-                  <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.kylla_teksti_sv" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys && !aktiivinenKysymys.jatkokysymys.kylla_teksti_fi"></textarea>
-              </label>
-          </div>
+          <kysymys-tekstit kysymys="aktiivinenKysymys.jatkokysymys" kentta="kylla_teksti"></kysymys-tekstit>
 
             <strong>{{i18n.kysymys.naytettava_asteikko}}</strong><br />
             {{i18n.kysymys.likert_asteikko_valinnat}}
@@ -30,19 +20,9 @@
             <input type="checkbox" ng-model="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys"> {{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
         </label>
     </div>
-    <div ng-show="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys">
+    <div ng-if="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys">
         <div class="panel well">
-            <div class="form-group">
-                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_sv}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.suomeksi}})</span>
-                    <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.ei_teksti_fi" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys && !aktiivinenKysymys.jatkokysymys.ei_teksti_sv"></textarea>
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_fi}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.ruotsiksi}})</span>
-                    <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.ei_teksti_sv" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys && !aktiivinenKysymys.jatkokysymys.ei_teksti_fi"></textarea>
-                </label>
-            </div>
+            <kysymys-tekstit kysymys="aktiivinenKysymys.jatkokysymys" kentta="ei_teksti"></kysymys-tekstit>
 
             <label>{{i18n.kysymys.vastauksen_maksimipituus}}
                 <select ng-model="aktiivinenKysymys.jatkokysymys.max_vastaus"

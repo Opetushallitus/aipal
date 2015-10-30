@@ -1,0 +1,11 @@
+<div class="form-group">
+  <label ng-class="{pakollinen: !kysymys[kentta + '_sv']}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.suomeksi}})</span>
+    <textarea class="form-control e2e-kysymys-suomeksi" ng-model="kysymys[kentta + '_fi']" rows="5" maxlength="500" ng-required="!kysymys[kentta + '_sv']"></textarea>
+  </label>
+</div>
+
+<div class="form-group">
+  <label ng-class="{pakollinen: !kysymys[kentta + '_fi']}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.ruotsiksi}})</span>
+    <textarea class="form-control" ng-model="kysymys[kentta + '_sv']" rows="5" maxlength="500" ng-required="!kysymys[kentta + '_fi']"></textarea>
+  </label>
+</div>
