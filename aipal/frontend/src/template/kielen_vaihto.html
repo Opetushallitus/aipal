@@ -1,7 +1,7 @@
 
 
 <ul class="kielen-vaihto">
-  <li ng-repeat="k in [{tunnus: 'fi', teksti: 'suomeksi'}, {tunnus: 'sv', teksti: 'ruotsiksi'}]" ng-class="{valittu: kieli === k.tunnus, 'ei-valittu': kieli !== k.tunnus}">
+  <li ng-repeat="k in [{tunnus: 'fi', teksti: 'suomeksi'}, {tunnus: 'sv', teksti: 'ruotsiksi'}, {tunnus: 'en', teksti: 'englanniksi'}]" ng-class="{valittu: kieli === k.tunnus, 'ei-valittu': kieli !== k.tunnus}">
     <a ng-if="kieli !== k.tunnus" ng-click="asetaKieli(k.tunnus)" title="{{i18n.yleiset[k.teksti]}}" ng-bind="k.tunnus.toUpperCase()"></a>
     <span ng-if="kieli === k.tunnus" ng-bind="k.tunnus.toUpperCase()"></span>
   </li>
