@@ -9,13 +9,13 @@
     <div ng-show="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys">
       <div class="panel well">
           <div class="form-group">
-            <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_sv}"><span>{{i18n.kysymys.kysymys_suomeksi}}</span>
+            <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_sv}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.suomeksi}})</span>
                 <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.kylla_teksti_fi" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys && !aktiivinenKysymys.jatkokysymys.kylla_teksti_sv"></textarea>
             </label>
           </div>
 
           <div class="form-group">
-              <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_fi}"><span>{{i18n.kysymys.kysymys_ruotsiksi}}</span>
+              <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.kylla_teksti_fi}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.ruotsiksi}})</span>
                   <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.kylla_teksti_sv" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys && !aktiivinenKysymys.jatkokysymys.kylla_teksti_fi"></textarea>
               </label>
           </div>
@@ -33,13 +33,13 @@
     <div ng-show="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys">
         <div class="panel well">
             <div class="form-group">
-                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_sv}"><span>{{i18n.kysymys.kysymys_suomeksi}}</span>
+                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_sv}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.suomeksi}})</span>
                     <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.ei_teksti_fi" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys && !aktiivinenKysymys.jatkokysymys.ei_teksti_sv"></textarea>
                 </label>
             </div>
 
             <div class="form-group">
-                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_fi}"><span>{{i18n.kysymys.kysymys_ruotsiksi}}</span>
+                <label ng-class="{pakollinen: !aktiivinenKysymys.jatkokysymys.ei_teksti_fi}"><span>{{i18n.yleiset.kysymys}} ({{i18n.yleiset.ruotsiksi}})</span>
                     <textarea class="form-control" ng-model="aktiivinenKysymys.jatkokysymys.ei_teksti_sv" rows="5" maxlength="500" ng-required="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys && !aktiivinenKysymys.jatkokysymys.ei_teksti_fi"></textarea>
                 </label>
             </div>
