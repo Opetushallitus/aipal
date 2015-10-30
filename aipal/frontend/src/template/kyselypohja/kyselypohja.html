@@ -13,14 +13,14 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label ng-class="{pakollinen: !kyselypohja.nimi_sv}"><span>{{i18n.kyselypohja.nimi_suomeksi}}</span>
+        <label ng-class="{pakollinen: !kyselypohja.nimi_sv}"><span>{{i18n.kyselypohja.nimi}} ({{i18n.yleiset.suomeksi}})</span>
           <input type="text" class="form-control" ng-model="kyselypohja.nimi_fi" ng-required="!kyselypohja.nimi_sv"/>
         </label>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label ng-class="{pakollinen: !kyselypohja.nimi_fi}"><span>{{i18n.kyselypohja.nimi_ruotsiksi}}</span>
+        <label ng-class="{pakollinen: !kyselypohja.nimi_fi}"><span>{{i18n.kyselypohja.nimi}} ({{i18n.yleiset.ruotsiksi}})</span>
           <input type="text" class="form-control" ng-model="kyselypohja.nimi_sv" ng-required="!kyselypohja.nimi_fi">
         </label>
       </div>
@@ -29,14 +29,14 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label><span>{{i18n.kyselypohja.kuvaus_suomeksi}}</span>
+        <label><span>{{i18n.kyselypohja.kuvaus}} ({{i18n.yleiset.suomeksi}})</span>
           <input type="text" class="form-control" ng-model="kyselypohja.selite_fi">
         </label>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label><span>{{i18n.kyselypohja.kuvaus_ruotsiksi}}</span>
+        <label><span>{{i18n.kyselypohja.kuvaus}} ({{i18n.yleiset.ruotsiksi}})</span>
           <input type="text" class="form-control" ng-model="kyselypohja.selite_sv">
         </label>
       </div>
