@@ -47,7 +47,7 @@ module.exports = function(config) {
       'src/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'src/bower_components/angular-placeholder-tai/lib/tai-placeholder.js',
       'src/bower_components/angular-bindonce/bindonce.min.js',
-      'src/bower_components/lodash/dist/lodash.js',
+      'src/bower_components/lodash/lodash.js',
       'src/bower_components/stacktrace/stacktrace.js',
       'src/bower_components/AngularJS-Toaster/toaster.js',
       'src/bower_components/angular-mocks/angular-mocks.js',

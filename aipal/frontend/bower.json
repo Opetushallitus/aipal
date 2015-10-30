@@ -13,7 +13,7 @@
     "angular-bootstrap": "0.12.0",
     "angular-placeholder-tai": "1.0.1",
     "jquery": "2.1.3",
-    "lodash": "2.4.1",
+    "lodash": "3.10.1",
     "angular-loading-bar": "0.6.0",
     "stacktrace": "0.6.4",
     "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.28",
