@@ -30,6 +30,9 @@ angular.module('aipalvastaus', [
     $scope.baseUrl = _.has($window, 'hakuBaseUrl') ?  $window.hakuBaseUrl : '';
 
     $scope.kielet = {};
+    Kielet.hae('en').then(function(kieli) {
+      $scope.kielet.en = kieli;
+    });
     Kielet.hae('fi').then(function(kieli) {
       $scope.kielet.fi = kieli;
     });
@@ -38,7 +41,7 @@ angular.module('aipalvastaus', [
     });
 
     $scope.vastauksienKieli = function(kysymys) {
-      var prioriteettiJarjestys = [kieli, 'fi', 'sv'];
+      var prioriteettiJarjestys = [kieli, 'fi', 'sv', 'en'];
 
       var tulos = kieli;
       _.forEach(prioriteettiJarjestys, function(k) {
