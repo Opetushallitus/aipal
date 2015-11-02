@@ -25,17 +25,29 @@ angular.module('aipalvastaus', [
     'ngPostMessage'
   ])
 
-  .controller('AipalvastausController', ['$scope', '$window', 'i18n', 'kieli', function($scope, $window, i18n, kieli){
+  .controller('AipalvastausController', ['$scope', '$window', 'i18n', 'Kielet', 'kieli', function($scope, $window, i18n, Kielet, kieli){
     $scope.i18n = i18n;
     $scope.baseUrl = _.has($window, 'hakuBaseUrl') ?  $window.hakuBaseUrl : '';
 
-    $scope.vastauksetToisellaKielella = function(kysymys) {
-      if (kieli === 'sv') {
-        return kysymys.kysymys_sv === '';
-      }
-      else {
-        return kysymys.kysymys_fi === '';
-      }
+    $scope.kielet = {};
+    Kielet.hae('fi').then(function(kieli) {
+      $scope.kielet.fi = kieli;
+    });
+    Kielet.hae('sv').then(function(kieli) {
+      $scope.kielet.sv = kieli;
+    });
+
+    $scope.vastauksienKieli = function(kysymys) {
+      var prioriteettiJarjestys = [kieli, 'fi', 'sv'];
+
+      var tulos = kieli;
+      _.forEach(prioriteettiJarjestys, function(k) {
+        if (kysymys['kysymys_' + k]) {
+          tulos = k;
+          return false; // forEach
+        }
+      });
+      return tulos;
     };
   }])
 

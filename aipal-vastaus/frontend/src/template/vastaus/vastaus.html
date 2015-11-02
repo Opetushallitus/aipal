@@ -7,7 +7,7 @@
     <h2>{{kysymysryhma | lokalisoiKentta:'nimi'}}</h2>
     <p>{{kysymysryhma | lokalisoiKentta:'kuvaus'}}</p>
 
-    <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys" id="k{{kysymys.kysymysid}}" ng-init="erikieli = vastauksetToisellaKielella(kysymys)">
+    <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys" id="k{{kysymys.kysymysid}}" ng-init="vastausKieli = vastauksienKieli(kysymys)">
       <ng-form name="kysymysForm" class="kysymysForm">
         <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
@@ -19,20 +19,17 @@
         <div ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'" class="vastaus_valinnat">
           <label style="display: block">
             <input type="radio" ng-model="kysymys.vastaus" value="kylla" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
-            <span ng-if="!erikieli" ng-bind="i18n.yleiset.kylla"></span>
-            <span ng-if="erikieli" ng-bind="i18n.toinenkieli.yleiset.kylla"></span>
+            <span ng-bind="kielet[vastausKieli].yleiset.kylla"></span>
           </label>
           <label style="display: block">
             <input type="radio" ng-model="kysymys.vastaus" value="ei" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
-            <span ng-if="!erikieli" ng-bind="i18n.yleiset.ei"></span>
-            <span ng-if="erikieli" ng-bind="i18n.toinenkieli.yleiset.ei"></span>
+            <span ng-bind="kielet[vastausKieli].yleiset.ei"></span>
           </label>
           <div class="jatkokysymys" ng-if="kysymys.vastaus === 'kylla' && kysymys.kylla_kysymys">
             <h4>{{kysymys | lokalisoiKentta:'kylla_teksti'}}</h4>
             <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
               <input type="radio" ng-model="kysymys.jatkovastaus_kylla" ng-value="vaihtoehto" name="kysymys_kylla_{{kysymys.kysymysid}}">
-              <span ng-if="!erikieli" ng-bind="i18n.yleiset[kysymys.kylla_vastaustyyppi][vaihtoehto]"></span>
-              <span ng-if="erikieli" ng-bind="i18n.toinenkieli.yleiset[kysymys.kylla_vastaustyyppi][vaihtoehto]"></span>
+              <span ng-bind="kielet[vastausKieli].yleiset[kysymys.kylla_vastaustyyppi][vaihtoehto]"></span>
             </label>
           </div>
           <div class="jatkokysymys" ng-if="kysymys.vastaus === 'ei' && kysymys.ei_kysymys">
@@ -45,16 +42,14 @@
         <div ng-if="kysymys.vastaustyyppi == 'asteikko'" class="vastaus_valinnat">
           <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
             <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
-            <span ng-if="!erikieli" ng-bind="i18n.yleiset.asteikko[vaihtoehto]"></span>
-            <span ng-if="erikieli" ng-bind="i18n.toinenkieli.yleiset.asteikko[vaihtoehto]"></span>
+            <span ng-bind="kielet[vastausKieli].yleiset.asteikko[vaihtoehto]"></span>
           </label>
         </div>
 
         <div ng-if="kysymys.vastaustyyppi == 'likert_asteikko'" class="vastaus_valinnat">
           <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
             <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
-            <span ng-if="!erikieli" ng-bind="i18n.yleiset.likert_asteikko[vaihtoehto]"></span>
-            <span ng-if="erikieli" ng-bind="i18n.toinenkieli.yleiset.likert_asteikko[vaihtoehto]"></span>
+            <span ng-bind="kielet[vastausKieli].yleiset.likert_asteikko[vaihtoehto]"></span>
           </label>
         </div>
 
