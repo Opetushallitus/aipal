@@ -1,6 +1,6 @@
 <ul class="kielen-vaihto">
-  <li class="ei-valittu fi" ng-if="kieli!='fi'"><a ng-click="asetaKieli('fi')" title="{{i18n.yleiset.suomeksi}}">{{i18n.yleiset.suomeksi}}</a></li>
-  <li class="valittu fi" ng-if="kieli=='fi'"><span>{{i18n.yleiset.suomeksi}}</span></li>
-  <li class="ei-valittu sv" ng-if="kieli!='sv'"><a ng-click="asetaKieli('sv')" title="{{i18n.yleiset.ruotsiksi}}">{{i18n.yleiset.ruotsiksi}}</a></li>
-  <li class="valittu sv" ng-if="kieli=='sv'"><span>{{i18n.yleiset.ruotsiksi}}</span></li>
+  <li ng-repeat="k in vaihtoehdot" ng-class="{valittu: kieli === k.tunnus, 'ei-valittu': kieli !== k.tunnus}">
+    <a ng-if="kieli !== k.tunnus" ng-click="asetaKieli(k.tunnus)" ng-bind="i18n.yleiset[k.teksti]"></a>
+    <span ng-if="kieli === k.tunnus" ng-bind="i18n.yleiset[k.teksti]"></span>
+  </li>
 </ul>
