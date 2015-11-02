@@ -22,7 +22,7 @@
             [oph.common.util.util :refer [pisteavaimet->puu]]))
 
 (defn validoi-kieli []
-  (schema/pred (fn[k] (or (= k "fi")(= k "sv")))))
+  (schema/pred #(some #{%} ["fi" "sv" "en"])))
 
 (defn hae-tekstit [kieli]
   (ResourceBundle/clearCache)
