@@ -21,7 +21,7 @@
             [oph.common.util.http-util :refer [response-nocache]]
             [oph.common.util.util :refer [pisteavaimet->puu]]))
 
-(def Kieli (s/enum "fi" "sv"))
+(def Kieli (s/enum "fi" "sv" "en"))
 
 (defn hae-tekstit [kieli]
   (ResourceBundle/clearCache)
