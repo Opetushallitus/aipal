@@ -19,6 +19,7 @@ angular.module('aipalvastaus', [
     'vastaus.vastausui',
     'yhteiset.direktiivit.copyright',
     'yhteiset.palvelut.i18n',
+    'yhteiset.palvelut.kielet',
     'yhteiset.palvelut.lokalisointi',
     'ngRoute',
     'ngPostMessage'
