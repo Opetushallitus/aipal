@@ -61,7 +61,7 @@ angular.module('aipalvastaus', [
       templateUrl : 'template/kielen_vaihto.html',
       replace: true,
       link: function(scope) {
-        scope.vaihtoehdot = [{tunnus: 'fi', teksti: 'suomeksi'}, {tunnus: 'sv', teksti: 'ruotsiksi'}];
+        scope.vaihtoehdot = [{tunnus: 'fi', teksti: 'suomeksi'}, {tunnus: 'sv', teksti: 'ruotsiksi'}, {tunnus: 'en', teksti: 'englanniksi'}];
         scope.kieli = kieli;
         scope.asetaKieli = function(kieli) {
           localStorage.setItem('kieli', kieli);
