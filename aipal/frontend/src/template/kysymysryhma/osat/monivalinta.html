@@ -12,12 +12,16 @@
     <li ng-repeat="vaihtoehto in aktiivinenKysymys.monivalintavaihtoehdot">
         <div class="well">
             <div class="form-group">
-              <label ng-class="{pakollinen: !vaihtoehto.teksti_sv}"><span>{{i18n.yleiset.suomeksi}}</span>
-                <input class="form-control" type="text" ng-model="vaihtoehto.teksti_fi" size="80" maxlength="200" ng-required="!vaihtoehto.teksti_sv"/>
+              <label ng-class="{pakollinen: !(vaihtoehto.teksti_en || vaihtoehto.teksti_sv)}"><span>{{i18n.yleiset.suomeksi}}</span>
+                <input class="form-control" type="text" ng-model="vaihtoehto.teksti_fi" size="80" maxlength="200" ng-required="!(vaihtoehto.teksti_en || vaihtoehto.teksti_sv)"/>
               </label>
 
-              <label ng-class="{pakollinen: !vaihtoehto.teksti_fi}"><span>{{i18n.yleiset.ruotsiksi}}</span>
-                <input class="form-control" type="text" ng-model="vaihtoehto.teksti_sv" size="80" maxlength="200" ng-required="!vaihtoehto.teksti_fi"/>
+              <label ng-class="{pakollinen: !(vaihtoehto.teksti_en || vaihtoehto.teksti_fi)}"><span>{{i18n.yleiset.ruotsiksi}}</span>
+                <input class="form-control" type="text" ng-model="vaihtoehto.teksti_sv" size="80" maxlength="200" ng-required="!(vaihtoehto.teksti_en || vaihtoehto.teksti_fi)"/>
+              </label>
+
+              <label ng-class="{pakollinen: !(vaihtoehto.teksti_fi || vaihtoehto.teksti_sv)}"><span>{{i18n.yleiset.englanniksi}}</span>
+                <input class="form-control" type="text" ng-model="vaihtoehto.teksti_en" size="80" maxlength="200" ng-required="!(vaihtoehto.teksti_fi || vaihtoehto.teksti_sv)"/>
               </label>
               <button class="btn btn-icon delete" ng-show="aktiivinenKysymys.monivalintavaihtoehdot.length > 2" ng-click="poistaVaihtoehto(aktiivinenKysymys,$index)">
                   <span class="fa fa-close"></span>
