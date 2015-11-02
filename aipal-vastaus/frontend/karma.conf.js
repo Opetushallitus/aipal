@@ -31,7 +31,7 @@ module.exports = function(config) {
       'src/bower_components/angular/angular.js',
       'src/bower_components/angular-route/angular-route.js',
       'src/bower_components/angular-resource/angular-resource.js',
-      'src/bower_components/lodash/dist/lodash.js',
+      'src/bower_components/lodash/lodash.js',
       'src/bower_components/angular-mocks/angular-mocks.js',
       'src/bower_components/aituaipaljs/src/js/**/*.js',
       'src/bower_components/AngularJS-Toaster/toaster.js',
