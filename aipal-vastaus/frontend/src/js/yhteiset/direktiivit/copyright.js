@@ -20,7 +20,7 @@ angular.module('yhteiset.direktiivit.copyright', [])
     return {
       restrict: 'A',
       replace : true,
-      template : '<span>Copyright &copy; Opetushallitus {{vuosi}} <span class="separator">|</span> <a href="http://www.oph.fi">www.oph.fi</a></span>',
+      template : '<span>Copyright &copy; Opetus ja kulttuuriministeriö {{vuosi}} <span class="separator">|</span> <a href="http://www.minedu.fi/">www.minedu.fi</a></span>',
       scope : {},
       link : function(scope) {
         scope.vuosi = new Date().getFullYear();
