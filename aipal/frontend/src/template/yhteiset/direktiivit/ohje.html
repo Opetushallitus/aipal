@@ -10,6 +10,10 @@
       <label><span ng-bind="i18n.ohjeteksti"></span> (<span ng-bind="i18n.yleiset.ruotsiksi"></span>)</label>
       <textarea ng-model="ohje.teksti_sv"></textarea>
     </fieldset>
+    <fieldset ng-show="muokkaus">
+      <label><span ng-bind="i18n.ohjeteksti"></span> (<span ng-bind="i18n.yleiset.englanniksi"></span>)</label>
+      <textarea ng-model="ohje.teksti_en"></textarea>
+    </fieldset>
     <a ng-if="$parent.yllapitaja" ng-hide="muokkaus" href="" class="ajax-link" ng-click="muokkaa()" ng-bind="i18n.muokkaa_ohjetta"></a>
     <tallenna disabloi-pyyntojen-ajaksi="['ohjeen-muokkaus']" ng-click="tallennaOhje()" ng-show="muokkaus" teksti="{{i18n.yleiset.tallenna}}"></tallenna>
     <a ng-if="$parent.yllapitaja" ng-show="muokkaus" href="" class="ajax-link" ng-click="peruutaMuokkaus()" ng-bind="i18n.peruuta_muokkaus"></a>
