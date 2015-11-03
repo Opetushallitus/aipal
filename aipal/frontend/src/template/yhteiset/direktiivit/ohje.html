@@ -3,11 +3,11 @@
     <button class="icon delete-icon sulje" ng-click="piilotaOhje()"></button>
     <p ng-hide="muokkaus" ng-repeat="kappale in ohjeteksti" ng-bind="kappale.sisalto"></p>
     <fieldset ng-show="muokkaus">
-      <label ng-bind="i18n.ohjeteksti_suomeksi"></label>
+      <label><span ng-bind="i18n.ohjeteksti"></span> (<span ng-bind="i18n.yleiset.suomeksi"></span>)</label>
       <textarea ng-model="ohje.teksti_fi"></textarea>
     </fieldset>
     <fieldset ng-show="muokkaus">
-      <label ng-bind="i18n.ohjeteksti_ruotsiksi"></label>
+      <label><span ng-bind="i18n.ohjeteksti"></span> (<span ng-bind="i18n.yleiset.ruotsiksi"></span>)</label>
       <textarea ng-model="ohje.teksti_sv"></textarea>
     </fieldset>
     <a ng-if="$parent.yllapitaja" ng-hide="muokkaus" href="" class="ajax-link" ng-click="muokkaa()" ng-bind="i18n.muokkaa_ohjetta"></a>
