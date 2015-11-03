@@ -1,6 +1,6 @@
 /*
-* pikock http://www.pikock.com/ , autreplanete http://www.autreplanete.com/ 
-*  
+* pikock http://www.pikock.com/ , autreplanete http://www.autreplanete.com/
+*
 **/
 
 
@@ -13,7 +13,7 @@
 
 
 // Brand Colors
-@brand-primary: #a3007a;
+@brand-primary: #588a70;
 @brand-success: #5cb85c;
 @brand-warning: #f0ad4e;
 @brand-danger: #d9534f;
@@ -102,7 +102,7 @@
 @input-bg: #fff;
 @input-bg-disabled: @gray-lighter;
 @input-color: @gray;
-@input-border: #a3007a;
+@input-border: #588a70;
 @input-border-radius: @border-radius-base;
 @input-color-placeholder: @gray-light;
 @input-height-base: (@line-height-computed + (@padding-base-vertical * 2) + 2);
@@ -188,7 +188,7 @@
 @pagination-disabled-border: #ddd;
 @pager-bg: @pagination-bg;
 @pager-border: @pagination-border;
-@pager-border-radius: 0px;
+@pager-border-radius: 15px;
 @pager-hover-bg: @pagination-hover-bg;
 @pager-active-bg: @pagination-active-bg;
 @pager-active-color: @pagination-active-color;
@@ -251,4 +251,162 @@
 @icon-font-name: glyphicons-halflings-regular;
 
 
+// Private
+@zindex-navbar: 1000;
+@zindex-dropdown: 1000;
+@zindex-popover: 1010;
+@zindex-tooltip: 1030;
+@zindex-navbar-fixed: 1030;
+@zindex-modal-background: 1040;
+@zindex-modal: 1050;
+@screen-xs: 480px;
+@screen-xs-min: @screen-xs;
+@screen-phone: @screen-xs-min;
+@screen-sm: 768px;
+@screen-sm-min: @screen-sm;
+@screen-tablet: @screen-sm-min;
+@screen-md: 992px;
+@screen-desktop-min: @screen-md;
+@screen-desktop: @screen-md-min;
+@screen-lg: 1200px;
+@screen-lg-desktop-min: @screen-lg;
+@screen-lg-desktop: @screen-lg-min;
+@screen-xs-max: (@screen-sm - 1);
+@screen-sm-max: (@screen-md - 1);
+@screen-md-max: (@screen-lg - 1);
+@grid-columns: 12;
+@grid-gutter-width: 30px;
+@grid-float-breakpoint: @screen-tablet;
+@navbar-collapse-max-height: 340px;
+@navbar-inverse-color: @gray-light;
+@navbar-inverse-bg: #222;
+@navbar-inverse-border: darken(@navbar-inverse-bg, 10%);
+@navbar-inverse-link-color: @gray-light;
+@navbar-inverse-link-hover-color: #fff;
+@navbar-inverse-link-hover-bg: transparent;
+@navbar-inverse-link-active-color: @navbar-inverse-link-hover-color;
+@navbar-inverse-link-active-bg: darken(@navbar-inverse-bg, 10%);
+@navbar-inverse-link-disabled-color: #444;
+@navbar-inverse-link-disabled-bg: transparent;
+@navbar-inverse-brand-color: @navbar-inverse-link-color;
+@navbar-inverse-brand-hover-color: #fff;
+@navbar-inverse-brand-hover-bg: transparent;
+@navbar-inverse-toggle-hover-bg: #333;
+@navbar-inverse-toggle-icon-bar-bg: #fff;
+@navbar-inverse-toggle-border-color: #333;
+@pager-border-radius: 15px;
+@pager-disabled-color: @gray-light;
+@modal-inner-padding: 20px;
+@modal-title-padding: 15px;
+@modal-title-line-height: @line-height-base;
+@modal-content-bg: #fff;
+@modal-content-border-color: rgba(0,0,0,.2);
+@modal-content-fallback-border-color: #999;
+@modal-backdrop-bg: #000;
+@modal-header-border-color: #e5e5e5;
+@modal-footer-border-color: @modal-header-border-color;
+@alert-padding: 15px;
+@alert-border-radius: @border-radius-base;
+@alert-link-font-weight: bold;
+@alert-success-bg: @state-success-bg;
+@alert-success-text: @state-success-text;
+@alert-success-border: @state-success-border;
+@alert-info-bg: @state-info-bg;
+@alert-info-text: @state-info-text;
+@alert-info-border: @state-info-border;
+@alert-warning-bg: @state-warning-bg;
+@alert-warning-text: @state-warning-text;
+@alert-warning-border: @state-warning-border;
+@alert-danger-bg: @state-danger-bg;
+@alert-danger-text: @state-danger-text;
+@alert-danger-border: @state-danger-border;
+@progress-bg: #f5f5f5;
+@progress-bar-color: #fff;
+@progress-bar-bg: @brand-primary;
+@progress-bar-success-bg: @brand-success;
+@progress-bar-warning-bg: @brand-warning;
+@progress-bar-danger-bg: @brand-danger;
+@progress-bar-info-bg: @brand-info;
+@panel-bg: #fff;
+@panel-inner-border: #ddd;
+@panel-border-radius: @border-radius-base;
+@panel-footer-bg: #f5f5f5;
+@panel-body-padding: 15px;
+@panel-default-text: @gray-dark;
+@panel-default-border: #ddd;
+@panel-default-heading-bg: #f5f5f5;
+@panel-primary-text: #fff;
+@panel-primary-border: @brand-primary;
+@panel-primary-heading-bg: @brand-primary;
+@panel-success-text: @state-success-text;
+@panel-success-border: @state-success-border;
+@panel-success-heading-bg: @state-success-bg;
+@panel-warning-text: @state-warning-text;
+@panel-warning-border: @state-warning-border;
+@panel-warning-heading-bg: @state-warning-bg;
+@panel-danger-text: @state-danger-text;
+@panel-danger-border: @state-danger-border;
+@panel-danger-heading-bg: @state-danger-bg;
+@panel-info-text: @state-info-text;
+@panel-info-border: @state-info-border;
+@panel-info-heading-bg: @state-info-bg;
+@thumbnail-padding: 4px;
+@thumbnail-bg: @body-bg;
+@thumbnail-border: #ddd;
+@thumbnail-border-radius: @border-radius-base;
+@thumbnail-caption-color: @text-color;
+@thumbnail-caption-padding: 9px;
+@well-bg: #f5f5f5;
+@well-border: darken(@well-bg, 7%);
+@badge-color:: #fff;
+@badge-link-hover-color: #fff;
+@badge-bg: @gray-light;
+@badge-active-color: @link-color;
+@badge-active-bg: #fff;
+@badge-font-weight: bold;
+@badge-line-height: 1;
+@badge-border-radius: 10px;
+@breadcrumb-padding-vertical: 8px;
+@breadcrumb-padding-horizontal: 15px;
+@breadcrumb-bg: #f5f5f5;
+@breadcrumb-color: #ccc;
+@breadcrumb-active-color: @gray-light;
+@breadcrumb-separator: ;
+@carousel-text-shadow: 0 1px 2px rgba(0,0,0,.6);
+@carousel-control-color: #fff;
+@carousel-control-width: 15%;
+@carousel-control-opacity: .5;
+@carousel-control-font-size: 20px;
+@carousel-indicator-active-bg: #fff;
+@carousel-indicator-border-color: #fff;
+@carousel-caption-color: #fff;
+@close-color: #000;
+@close-font-weight: bold;
+@close-text-shadow: 0 1px 0 #fff;
+@code-color: #c7254e;
+@code-bg: #f9f2f4;
+@kbd-color: #fff;
+@kbd-bg: #333;
+@pre-bg: #f5f5f5;
+@pre-color: @gray-dark;
+@pre-border-color: #ccc;
+@pre-scrollable-max-height: 340px;
+@text-muted: @gray-light;
+@abbr-border-color: @gray-light;
+@headings-small-color: @gray-light;
+@blockquote-small-color: @gray-light;
+@blockquote-border-color: @gray-lighter;
+@page-header-border-color: @gray-lighter;
+@hr-border: @gray-lighter;
+@component-offset-horizontal: 180px;
+@container-tablet: ((720px + @grid-gutter-width));
+@container-desktop: ((940px + @grid-gutter-width));
+@container-lg-desktop: ((1140px + @grid-gutter-width));
+@container-sm: @container-tablet;
+@container-md: @container-desktop;
+@container-lg: @container-large-desktop;
+
+
 // My Variables
+@badge-color: : #fff;
+@breadcrumb-separator: ;
