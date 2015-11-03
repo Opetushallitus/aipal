@@ -77,7 +77,7 @@
 
       ;; luo vastaajatunnuksia
       (kyselykerta-sivu/luo-vastaajatunnuksia)
-      (kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
+      #_(kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
       (kyselykerta-sivu/lisaa-vastaajatunnukset)
 
       ;; vastaa kyselyyn
