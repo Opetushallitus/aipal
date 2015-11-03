@@ -28,7 +28,7 @@
             [ring.util.response :as response]
             [cheshire.generate :as json-gen]
             schema.core
-            [aitu.infra.print-wrapper :refer [log-request-wrapper]]
+            [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
@@ -55,13 +55,13 @@
     (r/not-found "Not found")))
 
 (defn sammuta [palvelin]
-  (log/info "Sammutetaan Aipal vastaussovellus")
+  (log/info "Sammutetaan vastaussovellus")
   ((:sammuta palvelin))
   (log/info "Palvelin sammutettu"))
 
 (defn kaynnista! [oletusasetukset]
   (try
-    (log/info "Käynnistetään Aipal vastaussovellus, versio" @build-id)
+    (log/info "Käynnistetään vastaussovellus, versio" @build-id)
     (let [luetut-asetukset (hae-asetukset)
           _ (konfiguroi-lokitus luetut-asetukset)
           _ (aipalvastaus.sql.korma/luo-db (:db luetut-asetukset))
