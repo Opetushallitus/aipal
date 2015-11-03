@@ -160,7 +160,7 @@
 
 (defn ^:integration-api kaynnista! [alkuasetukset]
   (try
-    (log/info "Käynnistetään Aipal, versio " @build-id)
+    (log/info "Käynnistetään Avop, versio " @build-id)
     (let [asetukset (hae-asetukset alkuasetukset)
           _ (deliver asetukset-promise asetukset)
           _ (konfiguroi-lokitus asetukset)
