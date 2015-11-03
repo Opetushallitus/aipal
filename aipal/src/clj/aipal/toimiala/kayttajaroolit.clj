@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.toimiala.kayttajaroolit
-  "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330")
+  "https://confluence.csc.fi/pages/viewpage.action?pageId=53514648")
 
 (def ldap-ryhma->rooli {"YLLAPITAJA" "YLLAPITAJA"
                         "AMKVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
