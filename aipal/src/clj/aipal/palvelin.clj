@@ -44,7 +44,7 @@
 
             [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset] :rename {asetukset asetukset-promise}]
             [aipal.reitit :refer [build-id]]
-            [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
+            [avop.infra.kayttaja.middleware :refer [wrap-avop-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.infra.eraajo :as eraajo]
             [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]))
@@ -141,7 +141,7 @@
       wrap-not-modified
       wrap-expires
 
-      wrap-kayttaja
+      wrap-avop-kayttaja
       (auth-middleware asetukset)
       log-request-wrapper
 
