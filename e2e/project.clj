@@ -17,8 +17,10 @@
                  [korma "0.3.2"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [solita/opetushallitus-aitu-e2e "0.21.0"]
-                 [clj-time "0.6.0"]]
+                 [clj-time "0.6.0"]
+                 [com.jolbox/bonecp "0.8.0.RELEASE"]]
   :plugins [[test2junit "1.0.1"]]
+  :source-paths ["src/" "../../clojure-utils/src/clj"]
 
   :test-selectors {:ie (fn [m] (not (or (:no-ie m) (:vastaus m))))
                    :no-ie :no-ie
