@@ -104,8 +104,8 @@ header {
   width: 271px;
   float: right;
   margin-right: $marginM;
-  background: transparent url('../img/opetushallitus.svg') 0 center no-repeat;
-  .no-svg & {background-image: url('../img/opetushallitus.gif')}
+  background: transparent url('../img/okm-logo-fi.svg') 0 center no-repeat;
+  .no-svg & {background-image: url('../img/okm-logo-fi.png');}
   &.kiitos{
     float: none;
     height: 100px;
