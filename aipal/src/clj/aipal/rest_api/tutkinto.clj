@@ -20,6 +20,8 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (c/defroutes reitit
+  (cu/defapi :tutkinto nil :get "/voimassaolevat-listana" []
+    (json-response (tutkinto/hae-voimassaolevat-tutkinnot-listana)))
   (cu/defapi :tutkinto nil :get "/voimassaolevat" []
     (json-response (tutkinto/hae-voimassaolevat-tutkinnot)))
   (cu/defapi :tutkinto nil :get "/vanhentuneet" []

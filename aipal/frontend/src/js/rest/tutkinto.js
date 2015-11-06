@@ -17,6 +17,9 @@
 angular.module('rest.tutkinto', [])
   .factory('Tutkinto', ['$http', function($http) {
     return {
+      haeVoimassaolevatTutkinnotListassa: function() {
+        return $http.get('api/tutkinto/voimassaolevat-listana', {params: {nocache: Date.now()}});
+      },
       haeVoimassaolevatTutkinnotHierarkiassa: function() {
         return $http.get('api/tutkinto/voimassaolevat', {params: {nocache: Date.now()}});
       },
