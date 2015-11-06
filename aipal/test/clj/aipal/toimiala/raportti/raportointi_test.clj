@@ -52,7 +52,7 @@
                      :lukumaara lkm-eos
                      :osuus osuus-eos}])]
       (are [kuvaus jakauma odotettu-tulos]
-           (is (= (muodosta-asteikko-jakauman-esitys jakauma) odotettu-tulos) kuvaus)
+           (is (= (muodosta-asteikko-jakauman-esitys jakauma 5) odotettu-tulos) kuvaus)
            "ei vastauksia" {1 0 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0)
            "yksi vastaus" {1 1 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 1 100 0 0 0 0 0 0 0 0)
            "monta vastausta, sama vaihtoehto" {1 2 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 2 100 0 0 0 0 0 0 0 0)
