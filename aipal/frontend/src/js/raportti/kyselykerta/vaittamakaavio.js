@@ -30,9 +30,9 @@ angular.module('raportti.kyselykerta.vaittamakaavio', ['raportti.kyselykerta.kaa
         var raportoitavia = scope.jakauma[0].osuus.length,
           viivastonLeveys;
         if(scope.eos) {
-          viivastonLeveys = 6*(raportoitavia + 2)*25;
+          viivastonLeveys = (scope.jakauma.length + 1)*(raportoitavia + 2)*25;
         } else {
-          viivastonLeveys = 5*(raportoitavia + 2)*25;
+          viivastonLeveys = (scope.jakauma.length)*(raportoitavia + 2)*25;
         }
         var asetukset = {
           palkinLeveys: 25,
