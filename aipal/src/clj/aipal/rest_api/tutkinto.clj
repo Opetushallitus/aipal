@@ -20,6 +20,9 @@
             [oph.common.util.http-util :refer [response-or-404]]))
 
 (defroutes reitit
+   (GET "/voimassaolevat-listana" []
+        :kayttooikeus :tutkinto
+        (response-or-404 (tutkinto/hae-voimassaolevat-tutkinnot-listana)))
   (GET "/voimassaolevat" []
     :kayttooikeus :tutkinto
     (response-or-404 (tutkinto/hae-voimassaolevat-tutkinnot)))

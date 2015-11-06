@@ -100,7 +100,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         $scope.kielet = _.pluck(kielet, 'kieli');
       });
 
-      Tutkinto.koulutustoimijanTutkinnot().success(function(tutkinnot) {
+      Tutkinto.haeVoimassaolevatTutkinnotListassa().success(function(tutkinnot) {
         $scope.tutkinnot = tutkinnot;
       });
 

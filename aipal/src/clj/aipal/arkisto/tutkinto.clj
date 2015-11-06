@@ -78,6 +78,12 @@
                 :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv] [:opintoala.nimi_en :opintoala_nimi_en]
                 :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv] [:koulutusala.nimi_en :koulutusala_nimi_en])))
 
+(defn hae-voimassaolevat-tutkinnot-listana []
+  (->> 
+    (hae-tutkinnot)
+    (filter tutkinto-voimassa?)
+    (map #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv :nimi_en]))))
+
 (defn hae-voimassaolevat-tutkinnot []
   (tutkinnot-hierarkiaksi
     (filter tutkinto-voimassa? (hae-tutkinnot))))
