@@ -32,27 +32,20 @@
 (deftest muodosta-asteikko-jakauman-esitys-test
   (testing
     "muodosta asteikko-jakauman esitys:"
-    (let [esitys (fn [lkm-eos osuus-eos lkm-1 osuus-1 lkm-2 osuus-2 lkm-3 osuus-3 lkm-4 osuus-4 lkm-5 osuus-5]
-                   [{:vaihtoehto-avain "1"
-                     :lukumaara lkm-1
-                     :osuus osuus-1}
-                    {:vaihtoehto-avain "2"
-                     :lukumaara lkm-2
-                     :osuus osuus-2}
-                    {:vaihtoehto-avain "3"
-                     :lukumaara lkm-3
-                     :osuus osuus-3}
-                    {:vaihtoehto-avain "4"
-                     :lukumaara lkm-4
-                     :osuus osuus-4}
-                    {:vaihtoehto-avain "5"
-                     :lukumaara lkm-5
-                     :osuus osuus-5}
-                    {:vaihtoehto-avain "eos"
-                     :lukumaara lkm-eos
-                     :osuus osuus-eos}])]
+    (let [esitys (fn [lkm-eos osuus-eos & lukumaarat-ja-osuudet]
+                   (let [lukumaarat (take-nth 2 lukumaarat-ja-osuudet)
+                         osuudet (take-nth 2 (rest lukumaarat-ja-osuudet))
+                         index-lkm-osuus (map vector (map inc (range)) lukumaarat osuudet)]
+                     (conj (vec (for [[index lkm osuus] index-lkm-osuus]
+                             {:vaihtoehto-avain (str index)
+                              :lukumaara        lkm
+                              :osuus            osuus}))
+                           {:vaihtoehto-avain "eos"
+                            :lukumaara        lkm-eos
+                            :osuus            osuus-eos}))
+                   )]
       (are [kuvaus jakauma odotettu-tulos]
-           (is (= (muodosta-asteikko-jakauman-esitys jakauma 5) odotettu-tulos) kuvaus)
+           (is (= (muodosta-asteikko-jakauman-esitys jakauma (-> jakauma count (- 1))) odotettu-tulos) kuvaus)
            "ei vastauksia" {1 0 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0)
            "yksi vastaus" {1 1 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 1 100 0 0 0 0 0 0 0 0)
            "monta vastausta, sama vaihtoehto" {1 2 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 2 100 0 0 0 0 0 0 0 0)
