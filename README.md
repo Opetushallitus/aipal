@@ -1,17 +1,18 @@
-AIPAL
+AVOP
 =====
 
-Aikuiskoulutuksen palautejärjestelmä. 
+Korkeakoulujen opiskelijapalautejärjestelmän lähdekoodi ja toteutus sijaitsee tässä repositoryssa. 
 
+Toteutus perustuu suurimmaksi osaksi Opetushallituksen Aipal-järjestelmään, joten lähdekoodissa ja dokumentaatiossa viitataan Aipaliin. Kaikkien viittausten muuttaminen johtaisi ylimääräisiin ongelmiin kun muutoksia halutaan tuoda molempien järjestelmien lähdekoodiin. Aipal-järjestelmän lähdekoodi löytyy [Opetushallituksen Aipal-repositorysta](https://github.com/Opetushallitus/aipal). 
 
 # Repositoryn sisältö ja rakenne
 
-* **aipal**  - Varsinainen AIPAL-sovellus
-* **aipal/frontend** - AIPAL käyttöliittymätoteutus
+* **aipal**  - Varsinainen AVOP-sovellus
+* **aipal/frontend** - AVOP käyttöliittymätoteutus
 * **aipal-vastaus** - Vastaus-sovellus, jonka avulla palautetta kirjataan sisään
 * **dev-scripts** - Kehitystyön avuksi tarkoitettuja skriptejä.
 * **aipal-db** - Flyway-kirjastoon perustuva työkalu tietokannan automatisoituun hallintaan
-* **e2e** - end-to-end selaintestit AIPAL-sovellukselle
+* **e2e** - end-to-end selaintestit sovellukselle
 * **vagrant** - virtuaalikonekonfiguraatiot sovelluksen ajamiseksi virtuaalikoneessa
 * **env** - virtuaalikoneiden asetustiedostot
 
