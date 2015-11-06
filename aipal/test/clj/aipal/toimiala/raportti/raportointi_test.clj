@@ -50,7 +50,12 @@
            "yksi vastaus" {1 1 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 1 100 0 0 0 0 0 0 0 0)
            "monta vastausta, sama vaihtoehto" {1 2 2 0 3 0 4 0 5 0 :eos 0} (esitys 0 0 2 100 0 0 0 0 0 0 0 0)
            "monta vastausta, eri vaihtoehto" {1 1 2 1 3 0 4 0 5 0 :eos 0} (esitys 0 0 1 50 1 50 0 0 0 0 0 0)
-           "EOS-vastaus" {1 0 2 0 3 0 4 0 5 0 :eos 1} (esitys 1 100 0 0 0 0 0 0 0 0 0 0)))))
+           "EOS-vastaus" {1 0 2 0 3 0 4 0 5 0 :eos 1} (esitys 1 100 0 0 0 0 0 0 0 0 0 0)
+           "ei vastauksia 7" {1 0 2 0 3 0 4 0 5 0 6 0 7 0 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+           "yksi vastaus 7" {1 0 2 0 3 0 4 0 5 0 6 0 7 1 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 100)
+           "monta vastausta, sama vaihtoehto 7" {1 0 2 0 3 0 4 0 5 0 6 0 7 2 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 100)
+           "monta vastausta, eri vaihtoehto 7" {1 0 2 0 3 0 4 0 5 0 6 1 7 1 :eos 0} (esitys 0 0 0 0 0 0 0 0 0 0 0 0 1 50 1 50)
+           "EOS-vastaus 7" {1 0 2 0 3 0 4 0 5 0 6 0 7 0 :eos 1} (esitys 1 100 0 0 0 0 0 0 0 0 0 0 0 0 0 0)))))
 
 (deftest muodosta-kylla-ei-jakauman-esitys-test
   (testing
