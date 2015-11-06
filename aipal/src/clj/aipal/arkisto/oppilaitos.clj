@@ -43,7 +43,7 @@
   [koulutustoimija]
   (->
     (sql/select* taulut/oppilaitos)
-    (sql/fields :oppilaitoskoodi :koulutustoimija :nimi_fi :nimi_sv)
+    (sql/fields :oppilaitoskoodi :koulutustoimija :nimi_fi :nimi_sv :nimi_en)
     (sql/where {:koulutustoimija koulutustoimija
                 :voimassa true})
     sql/exec))
