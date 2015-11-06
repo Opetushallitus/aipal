@@ -39,20 +39,17 @@
   (Math/round (double (* osuus 100))))
 
 (defn muodosta-asteikko-jakauman-esitys
-  [jakauma]
-  (let [jakauma (merge {1 0, 2 0, 3 0, 4 0, 5 0, :eos 0} jakauma)
+  [jakauma vaihtoehtoja]
+  (let [vaihtoehdot (range 1 (+ vaihtoehtoja 1))
+        jakauma (merge (into {:eos 0} (for [x vaihtoehdot] {x 0})) jakauma)
         yhteensa (reduce + (vals jakauma))
         tiedot-vaihtoehdolle (fn [avain lukumaara]
                                {:vaihtoehto-avain avain
                                 :lukumaara lukumaara
                                 :osuus (prosentteina
                                          (laske-osuus (or lukumaara 0) yhteensa))})]
-    [(tiedot-vaihtoehdolle "1" (jakauma 1))
-     (tiedot-vaihtoehdolle "2" (jakauma 2))
-     (tiedot-vaihtoehdolle "3" (jakauma 3))
-     (tiedot-vaihtoehdolle "4" (jakauma 4))
-     (tiedot-vaihtoehdolle "5" (jakauma 5))
-     (tiedot-vaihtoehdolle "eos" (jakauma :eos))]))
+    (conj (vec (for [x vaihtoehdot] (tiedot-vaihtoehdolle (str x) (jakauma x))))
+          (tiedot-vaihtoehdolle "eos" (jakauma :eos)))))
 
 (defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]
@@ -94,7 +91,7 @@
     kysymys
     (update-in kysymys [:jakauma] butlast))) ;; EOS-vastaus on aina jakauman viimeinen
 
-(def asteikkotyyppi? #{"asteikko" "likert_asteikko" "arvosana"})
+(def asteikkotyyppi? #{"asteikko" "likert_asteikko" "arvosana" "arvosana7"})
 
 (defn muotoile-jakauma [jakauma]
   (when jakauma
@@ -104,12 +101,13 @@
   (when vastaukset
     (frequencies (keep keyword (.getArray vastaukset)))))
 
-(defn kasittele-asteikkokysymys [kysymys vastaukset]
+(defn kasittele-asteikkokysymys [kysymys vastaukset vaihtoehtoja]
   (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
     (assoc kysymys :jakauma (muodosta-asteikko-jakauman-esitys
                               (if (:eos_vastaus_sallittu kysymys)
                                 (assoc jakauma :eos (or (:en_osaa_sanoa vastaukset) 0))
-                                jakauma)))))
+                                jakauma)
+                              vaihtoehtoja))))
 
 (defn kasittele-monivalintakysymys [kysymys vastaukset]
   (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
@@ -125,7 +123,7 @@
     {:kysymys_fi (:kylla_teksti_fi kysymys)
      :kysymys_sv (:kylla_teksti_sv kysymys)
      :kysymys_en (:kylla_teksti_en kysymys)
-     :jakauma (butlast (muodosta-asteikko-jakauman-esitys (muotoile-jakauma (:jatkovastaus_jakauma vastaukset)))) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
+     :jakauma (butlast (muodosta-asteikko-jakauman-esitys (muotoile-jakauma (:jatkovastaus_jakauma vastaukset)) 5)) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
      :vastaustyyppi (:kylla_vastaustyyppi kysymys)
      :vastaajien_lukumaara (or (:jatkovastaus_vastaajien_lukumaara vastaukset) 0)
      :keskiarvo (or (:jatkovastaus_keskiarvo vastaukset) 0)
@@ -172,10 +170,11 @@
         keskiarvo-ja-hajonta (when (asteikkotyyppi? (:vastaustyyppi kysymys))
                                (select-keys vastaukset [:keskiarvo :keskihajonta]))
         kysymys (case (:vastaustyyppi kysymys)
-                  "arvosana" (kasittele-asteikkokysymys kysymys vastaukset)
-                  "asteikko" (kasittele-asteikkokysymys kysymys vastaukset)
+                  "arvosana" (kasittele-asteikkokysymys kysymys vastaukset 5)
+                  "arvosana7" (doto (kasittele-asteikkokysymys kysymys vastaukset 7) clojure.pprint/pprint)
+                  "asteikko" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "kylla_ei_valinta" (kasittele-kyllaei-kysymys kysymys vastaukset)
-                  "likert_asteikko" (kasittele-asteikkokysymys kysymys vastaukset)
+                  "likert_asteikko" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "monivalinta" (kasittele-monivalintakysymys kysymys vastaukset)
                   "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset))]
     (-> kysymys
