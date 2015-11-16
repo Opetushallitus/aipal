@@ -60,8 +60,10 @@
     (sql/values {:ytunnus "org"
                  :nimi_fi "Organisaatio"}))
   (sql/insert taulut/kayttaja
-    (sql/values [{:oid "oid1"}
-                 {:oid "oid2"}]))
+    (sql/values [{:oid "oid1"
+                  :uid "uid1"}
+                 {:oid "oid2"
+                  :uid "uid2"}]))
   (sql/insert taulut/kayttajarooli
     (sql/values [{:roolitunnus "testirooli1"}
                  {:roolitunnus "testirooli2"}]))
@@ -87,7 +89,8 @@
     (sql/values {:ytunnus "org"
                  :nimi_fi "Organisaatio"}))
   (sql/insert taulut/kayttaja
-    (sql/values [{:oid "oid1"}]))
+    (sql/values [{:oid "oid1"
+                  :uid "uid1"}]))
   (sql/insert taulut/kayttajarooli
     (sql/values [{:roolitunnus "testirooli1"}
                  {:roolitunnus "testirooli2"}]))
