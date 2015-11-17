@@ -74,7 +74,7 @@
           :password "readaituaipal"}
    :ldap-auth-server {:host "localhost"
                       :port 10389
-                      :user "cn=aituserv,ou=People,dc=opintopolku,dc=fi"
+                      :user "uid=amkpal,ou=People,dc=opintopolku,dc=fi"
                       :password "salasana"
                       :ssl false}
    :vastaus-base-url "http://192.168.50.1:8083"
