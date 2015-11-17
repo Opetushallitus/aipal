@@ -86,6 +86,7 @@
                   :kysely.selite_fi
                   :kysely.selite_sv
                   :kysely.selite_en
+                  :uudelleenohjaus_url
                   :tutkinto.tutkintotunnus
                   [:tutkinto.nimi_fi :tutkinto_nimi_fi]
                   [:tutkinto.nimi_sv :tutkinto_nimi_sv]
