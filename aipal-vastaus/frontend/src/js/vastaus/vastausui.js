@@ -12,6 +12,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         templateUrl: 'template/vastaus/lukittu.html'
       })
       .when('/kiitos', {
+        controller: 'KiitosController',
         templateUrl: 'template/vastaus/kiitos.html'
       })
       .when('/preview', {
@@ -70,7 +71,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
     function tallenna($scope) {
       $scope.tallennaNappiDisabloitu = true;
       Vastaus.tallenna($scope.tunnus, keraaVastausdata($scope.data), function() {
-        $location.url('/kiitos');
+        $location.url('/kiitos' + (($scope.data.uudelleenohjaus_url) ? '?redirect=' + encodeURIComponent($scope.data.uudelleenohjaus_url) : ''));
         $scope.vastausForm.$setPristine();
         scrollTo(0,0);
       }, function(){
@@ -160,5 +161,16 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.$on('$messageIncoming', function (event, data){
         $scope.data = angular.fromJson(data.message);
       });
+    }
+  ])
+  .controller('KiitosController', [
+    '$location', '$timeout', '$window',
+    function($location, $timeout, $window) {
+      var redirectUrl = $location.search().redirect;
+      if (redirectUrl) {
+        $timeout(function() {
+          $window.location.href = redirectUrl;
+        }, 2000);
+      }
     }
   ]);
