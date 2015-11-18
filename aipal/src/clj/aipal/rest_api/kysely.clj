@@ -61,8 +61,18 @@
     (assert (kysymysryhma-luku? (:kysymysryhmaid kysymysryhma)))
     (assert (kysymysryhma-on-julkaistu? (:kysymysryhmaid kysymysryhma)))
     (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
-  (arkisto/muokkaa-kyselya! kysely)
-  kysely)
+  (arkisto/muokkaa-kyselya! kysely))
+
+(defn _400 [body] {:status 400 :body body})
+
+(defn valid-url? "jäljittelee angular-puolen äärisimppeliä validointia"
+  [url]
+  (let [cnt (count url)]
+    (or (= cnt 0) (and (<= cnt 2000) (not (nil? (re-matches #"^http(s?):\/\/(.*)$", url)))))))
+
+(c/defroutes reitit
+  (cu/defapi :kysely nil :get "/" []
+    (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
 (defroutes reitit
   (GET  "/" []
@@ -94,6 +104,7 @@
         {:status 400
          :body "kysely.samanniminen_kysely"}
         (response-or-404 (paivita-kysely! kysely)))))
+
 
   (DELETE "/:kyselyid" []
     :path-params [kyselyid :- s/Int]

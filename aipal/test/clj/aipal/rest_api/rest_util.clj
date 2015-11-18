@@ -18,11 +18,19 @@
     (binding [i18n/*locale* testi-locale]
       (f))))
 
-(defn mock-request-uid [app url method uid params]
-  (peridot/request app url
-    :request-method method
-    :headers {"uid" uid}
-    :params params))
+(defn mock-request-uid
+  ([app url method uid params]
+   (peridot/request app url
+                    :request-method method
+                    :headers {"uid" uid}
+                    :params params))
+  ([app url method uid params body]
+   (peridot/request app url
+                    :request-method method
+                    :headers {"uid" uid}
+                    :content-type "application/json"
+                    :body (cheshire/generate-string body)
+                    :params params)))
 
 (defn session []
   (let [asetukset (-> oletusasetukset
@@ -36,12 +44,16 @@
       (peridot/content-type "application/json"))))
 
 (defn rest-kutsu
-  "Tekee yksinkertaisen simuloidun rest-kutsun. Peridot-sessio suljetaan
-lopuksi. Soveltuu yksinkertaisiin testitapauksiin."
-  [url method params]
-  (-> (session)
-    (mock-request-uid url method "T-1001" params)
-    :response))
+  "Tekee yksink ertaisen simuloidun rest-kutsun. Peridot-sessio suljetaan
+lopuksi. Soveltuuyksinkertaisiin testitapauksiin."
+  ([url method params]
+   (-> (session)
+       (mock-request-uid url method "T-1001" params)
+       :response))
+  ([url method params body]
+   (-> (session)
+       (mock-request-uid url method "T-1001" params body)
+       :response)))
 
 (defn body-json [response]
   (cheshire/parse-string (slurp (:body response)) true))
