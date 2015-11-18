@@ -115,7 +115,10 @@
                         <div>{{tunnus.valmistavan_koulutuksen_jarjestaja | lokalisoiKentta: 'nimi'}}</div>
                         <div>{{tunnus.valmistavan_koulutuksen_oppilaitos | lokalisoiKentta: 'nimi'}}</div>
                     </td>
-                    <td>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</td>
+                    <td>
+                        <div>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</div>
+                        <div><span ng-show="tunnus.tutkinto.tutkintotunnus">{{ tunnus.suorituskieli }}</span></div>
+                    </td>
                     <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}} <a ng-click="muokkaaVastaajienMaaraa(tunnus)"><span class="fa fa-pencil"></span></a></td>
                     <td class="nowrap actions">
                         <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
