@@ -1,5 +1,6 @@
 (ns aipal.rest-api.kysely-test
   (:require [aipal.rest-api.kysely :refer [lisaa-kysymysryhma! paivita-kysely! lisakysymysten-lukumaara]]
+            [aipal.rest-api.rest-util :refer [rest-kutsu body-json]]
             aipal.toimiala.kayttajaoikeudet)
   (:use clojure.test))
 
@@ -24,8 +25,12 @@
                                                              (swap! kysely->kysymysryhma dissoc kyselyid))
                 aipal.arkisto.kysely/hae-kysymysten-poistettavuus (fn [kysymysryhmaid] (@kysymysryhma->kysymys kysymysryhmaid))
                 aipal.arkisto.kysely/muokkaa-kyselya! identity
+                aipal.toimiala.kayttajaoikeudet/kysely-luonti? (constantly true)
                 aipal.toimiala.kayttajaoikeudet/kysymysryhma-luku? (constantly true)
-                aipal.toimiala.kayttajaoikeudet/kysymysryhma-on-julkaistu? (constantly true)]
+                aipal.toimiala.kayttajaoikeudet/kysymysryhma-on-julkaistu? (constantly true)
+
+                aipal.arkisto.kysely/lisaa! identity                ;;#((assoc % :kyselyid 123))
+                aipal.arkisto.kysely/samanniminen-kysely? (constantly false)]
     (f)))
 
 (defn aseta-fake-kannan-kysymysryhma! [kysymysryhmaid kysymykset]
@@ -91,3 +96,14 @@
   (testing "ei pitäisi laskea poistettuja"
     (let [kysymysryhmat [{:valtakunnallinen false :kysymykset [{:kysymysid 1 :poistettu true} {:kysymysid 2}]}]]
       (is (= (lisakysymysten-lukumaara kysymysryhmat) 1)))))
+
+(deftest kysely-uusi-kysymys-rest-test
+  (let [params {:url "/api/kysely/" :method :post :params {}
+                 :body {:nimi_fi "f00" :kysymysryhmat [] :voimassa_alkupvm "2015-11-18" :uudelleenohjaus_url "http://www.hs.fi"}}]
+    (testing "pitäisi onnistua normaalisti oikealla datalla"
+      (let [response (rest-kutsu (:url params) (:method params) (:params params))]
+        (is (= (:status response) 200))))
+    (testing "pitäisi epäonnistua väärällä urlilla"
+      (let [response (rest-kutsu (:url params) (:method params) (:params params) (assoc (:body params) :uudelleenohjaus_url "http:/w"))]
+        (is (= (:status response) 400))))))
+

@@ -64,6 +64,13 @@
     (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
   (arkisto/muokkaa-kyselya! kysely))
 
+(defn _400 [body] {:status 400 :body body})
+
+(defn valid-url? "jäljittelee angular-puolen äärisimppeliä validointia"
+  [url]
+  (let [cnt (count url)]
+    (or (= cnt 0) (and (<= cnt 2000) (not (nil? (re-matches #"^http(s?):\/\/(.*)$", url)))))))
+
 (c/defroutes reitit
   (cu/defapi :kysely nil :get "/" []
     (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
@@ -73,22 +80,24 @@
                                       [:voimassa_alkupvm :voimassa_loppupvm]
                                       parse-iso-date)
                         :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
-      (if (arkisto/samanniminen-kysely? kysely)
-        {:status 400
-         :body "kysely.samanniminen_kysely"}
-        (json-response
-          (let [{:keys [kyselyid]}
-                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
-            (paivita-kysely! (assoc kysely :kyselyid kyselyid)))))))
+      (cond (arkisto/samanniminen-kysely? kysely) (_400 "kysely.samanniminen_kysely")
+            (not (valid-url? (:uudelleenohjaus_url kysely))) (_400 "url.rikki")
+            :else (json-response
+                    (let [{:keys [kyselyid]}
+                          (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv
+                                                         :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila
+                                                         :koulutustoimija]))]
+                      (paivita-kysely! (assoc kysely :kyselyid kyselyid)))))))
 
   (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
-    (let [kysely (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid))
-                               [:voimassa_alkupvm :voimassa_loppupvm]
-                               parse-iso-date)]
-      (if (arkisto/samanniminen-kysely? (assoc kysely :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)))
-        {:status 400
-         :body "kysely.samanniminen_kysely"}
-        (json-response (paivita-kysely! kysely)))))
+    (let [kysely (assoc (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid))
+                                 [:voimassa_alkupvm :voimassa_loppupvm]
+                                 parse-iso-date)
+                   :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
+      (cond (arkisto/samanniminen-kysely? kysely)
+            (_400 "kysely.samanniminen_kysely")
+            (not (valid-url? (:uudelleenohjaus_url kysely))) (_400 "url.rikki")
+            :else (json-response (paivita-kysely! kysely)))))
 
   (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid" [kyselyid]
     (let [kyselyid (Integer/parseInt kyselyid)]

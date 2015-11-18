@@ -45,7 +45,7 @@
 
     <h3>{{i18n.yleiset.uudelleenohjaus}}</h3>
     <label>{{ i18n.yleiset.uudelleenohjaus_selite }}
-      <input type="url" class="form-control" name="uudelleenohjaus_url" ng-model="kysely.uudelleenohjaus_url">
+      <input type="url" class="form-control" name="uudelleenohjaus_url" ng-model="kysely.uudelleenohjaus_url" ng-maxlength="2000">
       <span ng-show="kysely.uudelleenohjaus_url.length > 0 && kyselyForm.uudelleenohjaus_url.$valid">
         <i class="fa fa-check"></i>
         <a href="{{kysely.uudelleenohjaus_url}}" target="_blank">{{ i18n.yleiset.uudelleenohjaus_kokeile }}</a>
