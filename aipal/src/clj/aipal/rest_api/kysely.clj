@@ -51,11 +51,11 @@
   [kysymysryhmat]
   (some :valtakunnallinen kysymysryhmat))
 
+(def ^:const max-kysymyksia 50)
+
 (defn paivita-kysely!
   [kysely]
-  (let [valtakunnallisia (valtakunnallisia-ryhmia? (:kysymysryhmat kysely))
-        max-kysymyksia (if valtakunnallisia 10 30)]
-    (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) max-kysymyksia))))
+  (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) max-kysymyksia)))
   (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
   (arkisto/poista-kysymykset! (:kyselyid kysely))
   (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
