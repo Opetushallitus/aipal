@@ -221,7 +221,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       rahoitusmuotoid: 5,
       suorituskieli: 'fi',
       tutkinto: viimeksiValittuTutkinto,
-      vastaajien_lkm: 1
+      vastaajien_lkm: 1,
+      koulutusmuoto: null
     };
     $scope.kielet = kielet;
     $scope.rahoitusmuodot = rahoitusmuodot;
