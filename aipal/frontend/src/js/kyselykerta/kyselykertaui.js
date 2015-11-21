@@ -261,7 +261,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).success(function (oppilaitokset) {
           console.log(oppilaitokset);
 
-          if (oppilaitokset.length == 1) {
+          if (oppilaitokset.length === 1) {
             $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = oppilaitokset[0];
           } else {
             $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
