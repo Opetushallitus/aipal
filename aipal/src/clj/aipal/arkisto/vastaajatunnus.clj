@@ -29,12 +29,14 @@
     (sql/join :left taulut/oppilaitos (= :oppilaitos.oppilaitoskoodi :vastaajatunnus.valmistavan_koulutuksen_oppilaitos))
     (sql/join :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
     (sql/join :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+    (sql/join :left taulut/toimipaikka (= :toimipaikka.toimipaikkakoodi :vastaajatunnus.valmistavan_koulutuksen_toimipaikka))
     (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa :suorituskieli
                 :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
                 :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv] [:koulutustoimija.nimi_en :koulutustoimija_nimi_en]
                 :oppilaitos.oppilaitoskoodi [:oppilaitos.nimi_fi :oppilaitos_nimi_fi] [:oppilaitos.nimi_sv :oppilaitos_nimi_sv] [:oppilaitos.nimi_en :oppilaitos_nimi_en]
                 [(sql/raw "COALESCE(COALESCE(vastaajatunnus.voimassa_loppupvm, kyselykerta.voimassa_loppupvm, kysely.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE)") :muokattavissa]
-                :voimassa_alkupvm :voimassa_loppupvm)
+                :toimipaikka.toimipaikkakoodi [:toimipaikka.nimi_fi :toimipaikka_nimi_fi] [:toimipaikka.nimi_sv :toimipaikka_nimi_sv] [:toimipaikka.nimi_en :toimipaikka_nimi_en]
+                :koulutusmuoto :voimassa_alkupvm :voimassa_loppupvm)
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
@@ -63,6 +65,14 @@
       (dissoc :oppilaitoskoodi :oppilaitos_nimi_fi :oppilaitos_nimi_sv :oppilaitos_nimi_en)
       (assoc :valmistavan_koulutuksen_oppilaitos oppilaitos))))
 
+(defn ^:private erota-toimipaikka
+  [vastaajatunnus]
+  (let [toimipaikka (select-and-rename-keys vastaajatunnus [:toimipaikkakoodi [:toimipaikka_nimi_fi :nimi_fi] [:toimipaikka_nimi_sv :nimi_sv] [:toimipaikka_nimi_en :nimi_en]])]
+    (some-> vastaajatunnus
+            (dissoc :toimipaikkakoodi :toimipaikka_nimi_fi :toimipaikka_nimi_sv :toimipaikka_nimi_en)
+            (assoc :valmistavan_koulutuksen_toimipaikka toimipaikka))))
+
+
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
   [kyselykertaid]
@@ -72,7 +82,8 @@
     (->>
       (map erota-tutkinto)
       (map erota-koulutustoimija)
-      (map erota-oppilaitos))))
+      (map erota-oppilaitos)
+      (map erota-toimipaikka))))
 
 (defn hae-viimeisin-tutkinto
   "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
@@ -131,12 +142,14 @@
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
         valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
+        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
         vastaajatunnus (-> vastaajatunnus
-                         (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos)
+                         (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos :koulutuksen_toimipaikka )
                          (assoc :vastaajien_lkm vastaajien-lkm
                                 :tutkintotunnus tutkintotunnus
                                 :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
-                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos))]
+                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
+                                :valmistavan_koulutuksen_toimipaikka valmistavan-koulutuksen-toimipaikka))]
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)

@@ -17,7 +17,7 @@
 angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.tutkinto', 'rest.koulutustoimija', 'rest.kieli',
                                              'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
                                              'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus',
-                                             'yhteiset.palvelut.varmistus'])
+                                             'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.varmistus'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -42,21 +42,21 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
   .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm',
     function(Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm) {
       $scope.muokkaustila = true;
-      $scope.$watch('kyselykertaForm', function(form) {
+      $scope.$watch('kyselykertaForm', function (form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
-      $scope.luoTunnuksiaDialogi = function() {
+      $scope.luoTunnuksiaDialogi = function () {
         var kyselykertaId = $routeParams.kyselykertaid;
 
         var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/tunnusten-luonti.html',
           controller: 'LuoTunnuksiaModalController',
           resolve: {
-            kielet: function() {
+            kielet: function () {
               return $scope.kielet;
             },
-            rahoitusmuodot: function() {
+            rahoitusmuodot: function () {
               return $scope.rahoitusmuodot;
             },
             tutkinnot: function() {
@@ -213,82 +213,112 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
-  .controller('LuoTunnuksiaModalController', ['$uibModalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
-                                              function($uibModalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat, kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
-    $scope.vastaajatunnus = {
-      henkilokohtainen: true,
-      koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
-      rahoitusmuotoid: 5,
-      suorituskieli: 'fi',
-      tutkinto: viimeksiValittuTutkinto,
-      vastaajien_lkm: 1,
-      koulutusmuoto: null
-    };
-    $scope.kielet = kielet;
-    $scope.rahoitusmuodot = rahoitusmuodot;
-    $scope.rahoitusmuodotmap = _.indexBy(rahoitusmuodot, 'rahoitusmuotoid');
-    $scope.kyselykerta = kyselykerta;
-    var tanaan = new Date();
-    tanaan.setUTCHours(0,0,0,0);
-    var alkupvm = new Date(kyselykerta.voimassa_alkupvm),
-      loppupvm = kyselykerta.voimassa_loppupvm ? new Date(kyselykerta.voimassa_loppupvm) : alkupvm;
-    $scope.menneisyydessa =  !_.isNull(kyselykerta.voimassa_loppupvm) && loppupvm < tanaan;
-    var oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
-    $scope.oletusalkupvm = oletusalkupvm;
 
-    $scope.tutkinnot = tutkinnot;
+  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet',
+    'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
+    'viimeksiValittuTutkinto', 'kayttooikeudet',
+    function ($modalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat,
+              kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto, kayttooikeudet) {
+      $scope.vastaajatunnus = {
+        henkilokohtainen: true,
+        koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
+        rahoitusmuotoid: 5,
+        suorituskieli: 'fi',
+        tutkinto: viimeksiValittuTutkinto,
+        vastaajien_lkm: 1,
+        koulutusmuoto: null
+      };
 
-    $scope.koulutustoimijat = koulutustoimijat;
-    $scope.naytaLisaa = function() {
-      $scope.rullausrajoite += 5;
-    };
-    $scope.nollaaRajoite = function() {
-      $scope.rullausrajoite = 20;
-    };
-    $scope.nollaaRajoite();
+      $scope.isYllapitaja = kayttooikeudet.isYllapitaja();
 
-    function haeOppilaitokset(koulutustoimija) {
-      Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).success(function(oppilaitokset) {
-        $scope.oppilaitokset = oppilaitokset;
-        $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
-      });
-    }
-    haeOppilaitokset(aktiivinenKoulutustoimija.ytunnus);
-    $scope.$watch('vastaajatunnus.koulutuksen_jarjestaja', function(koulutustoimija) {
-      haeOppilaitokset(koulutustoimija.ytunnus);
-    });
+      $scope.kielet = kielet;
+      $scope.rahoitusmuodot = rahoitusmuodot;
+      $scope.rahoitusmuodotmap = _.indexBy(rahoitusmuodot, 'rahoitusmuotoid');
+      $scope.kyselykerta = kyselykerta;
+      var tanaan = new Date();
+      tanaan.setUTCHours(0, 0, 0, 0);
+      var alkupvm = new Date(kyselykerta.voimassa_alkupvm),
+        loppupvm = kyselykerta.voimassa_loppupvm ? new Date(kyselykerta.voimassa_loppupvm) : alkupvm;
+      $scope.menneisyydessa = !_.isNull(kyselykerta.voimassa_loppupvm) && loppupvm < tanaan;
+      var oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
+      $scope.oletusalkupvm = oletusalkupvm.toISOString().slice(0, 10);
 
-    $scope.luoTunnuksia = function(vastaajatunnus) {
-      $uibModalInstance.close(vastaajatunnus);
-    };
-    $scope.cancel = function () {
-      $uibModalInstance.dismiss('cancel');
-    };
-    $scope.lokalisoiNimi = function(tutkinto) {
-      if(typeof tutkinto === 'object') {
-        return $filter('lokalisoiKentta')(tutkinto, 'nimi');
-      } else {
-        return tutkinto;
+      $scope.tutkinnot = tutkinnot;
+
+      $scope.koulutustoimijat = koulutustoimijat;
+
+      $scope.toimipaikat = [];
+
+      $scope.naytaLisaa = function () {
+        $scope.rullausrajoite += 5;
+      };
+      $scope.nollaaRajoite = function () {
+        $scope.rullausrajoite = 20;
+      };
+      $scope.nollaaRajoite();
+
+      function haeOppilaitokset(koulutustoimija) {
+        Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).success(function (oppilaitokset) {
+          console.log(oppilaitokset);
+
+          if (oppilaitokset.length == 1) {
+            $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = oppilaitokset[0];
+          } else {
+            $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
+          }
+          $scope.oppilaitokset = oppilaitokset;
+        });
       }
-    };
 
-    $scope.tutkintoPakollinen = function() {
-      var rahoitusmuotoid = $scope.vastaajatunnus.rahoitusmuotoid;
-      return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined || $scope.rahoitusmuodotmap[rahoitusmuotoid].rahoitusmuoto !== 'ei_rahoitusmuotoa');
-    };
-  }])
+      function haeToimipaikat(oppilaitos) {
+        Oppilaitos.haeOppilaitoksenToimipaikat(oppilaitos).success(function (toimipaikat) {
+          $scope.toimipaikat = toimipaikat;
+        });
+      }
 
-  .controller('MuokkaaVastaajiaModalController', ['$uibModalInstance', '$scope', 'i18n', 'tunnus', function($uibModalInstance, $scope, i18n, tunnus) {
-    $scope.i18n = i18n;
+      haeOppilaitokset(aktiivinenKoulutustoimija.ytunnus);
+      $scope.$watch('vastaajatunnus.koulutuksen_jarjestaja', function (koulutustoimija) {
+        haeOppilaitokset(koulutustoimija.ytunnus);
+      });
 
-    $scope.minimi = Math.max(1, tunnus.vastausten_lkm);
-    $scope.vastausten_lkm = tunnus.vastausten_lkm;
-    $scope.vastaajien_lkm = tunnus.vastaajien_lkm;
+      $scope.$watch('vastaajatunnus.koulutuksen_jarjestaja_oppilaitos', function (oppilaitos) {
+        if (oppilaitos && oppilaitos.oppilaitoskoodi) {
+          haeToimipaikat(oppilaitos.oppilaitoskoodi);
+        }
+      });
 
-    $scope.save = function() {
-      $uibModalInstance.close(parseInt($scope.vastaajien_lkm));
-    };
+      $scope.luoTunnuksia = function (vastaajatunnus) {
+        $modalInstance.close(vastaajatunnus);
+      };
+      $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+      };
+      $scope.lokalisoiNimi = function (tutkinto) {
+        if (typeof tutkinto === 'object') {
+          return $filter('lokalisoiKentta')(tutkinto, 'nimi');
+        } else {
+          return tutkinto;
+        }
+      };
 
-    $scope.cancel = $uibModalInstance.dismiss;
-  }])
-;
+      $scope.tutkintoPakollinen = function () {
+        var rahoitusmuotoid = $scope.vastaajatunnus.rahoitusmuotoid;
+        return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined ||
+          $scope.rahoitusmuodotmap[rahoitusmuotoid].rahoitusmuoto !== 'ei_rahoitusmuotoa');
+      };
+    }])
+
+  .controller('MuokkaaVastaajiaModalController', ['$modalInstance', '$scope', 'i18n', 'tunnus',
+    function ($modalInstance, $scope, i18n, tunnus) {
+      $scope.i18n = i18n;
+
+      $scope.minimi = Math.max(1, tunnus.vastausten_lkm);
+      $scope.vastausten_lkm = tunnus.vastausten_lkm;
+      $scope.vastaajien_lkm = tunnus.vastaajien_lkm;
+
+      $scope.save = function () {
+        $modalInstance.close(parseInt($scope.vastaajien_lkm));
+      };
+
+      $scope.cancel = $modalInstance.dismiss;
+    }]);

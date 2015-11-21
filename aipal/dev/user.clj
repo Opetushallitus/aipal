@@ -52,6 +52,11 @@
                              :enabled true})
     (assoc-in [:server :base-url] "http://192.168.50.1:8082")))
 
+(defn eraaja-organisaatiot! []
+  (require 'aipal.infra.eraajo.organisaatiot)
+  ((ns-resolve 'aipal.infra.eraajo.organisaatiot 'paivita-organisaatiot!)
+    {"url" (((repl-asetukset) :organisaatiopalvelu) :url)}))
+
 (defn ^:private kaynnista! []
   {:pre [(not @palvelin)]
    :post [@palvelin]}

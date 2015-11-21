@@ -297,6 +297,7 @@
     :rahoitusmuoto aipal-kayttaja?
     :tutkinto aipal-kayttaja?
     :oppilaitos aipal-kayttaja?
+    :toimipaikka aipal-kayttaja?
     :koulutustoimija aipal-kayttaja?
     :valtakunnallinen-raportti raportti-koulutustoimijoista?
     :omat_tiedot aipal-kayttaja?
