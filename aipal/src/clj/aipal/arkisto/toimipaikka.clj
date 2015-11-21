@@ -43,3 +43,8 @@
   (sql/update taulut/toimipaikka
     (sql/set-fields {:voimassa false})
     (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))
+
+(defn ^:integration-api hae-oppilaitoksen-toimipaikat [oppilaitos]
+  (sql/select taulut/toimipaikka
+              (sql/fields :toimipaikkakoodi :oppilaitos :nimi_fi :nimi_sv :nimi_en)
+              (sql/where {:oppilaitos oppilaitos})))

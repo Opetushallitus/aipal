@@ -20,6 +20,10 @@ angular.module('rest.oppilaitos', [])
       haeKoulutustoimijanOppilaitokset: function(koulutustoimija) {
         return $http.get('api/oppilaitos', {params: {nocache: Date.now(),
                                                      koulutustoimija: koulutustoimija}});
+      },
+      haeOppilaitoksenToimipaikat: function(oppilaitos) {
+        return $http.get('api/toimipaikka', {params: {nocache: Date.now(),
+          oppilaitos: oppilaitos}});
       }
     };
   }]);

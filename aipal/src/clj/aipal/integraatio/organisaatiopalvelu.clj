@@ -194,8 +194,9 @@
 
 
 (defn ^:private ^:integration-api paivita-toimipaikat! [koodit]
-  (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)]
-                                         [(:oid o) (:oppilaitosKoodi o)]))
+  (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)
+                                             :when (:oid o)]
+                                         [(:oid o) (:oppilaitoskoodi o)]))
         toimipaikat (->> (toimipaikka-arkisto/hae-kaikki)
                       (map-by :toimipaikkakoodi))]
     (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit

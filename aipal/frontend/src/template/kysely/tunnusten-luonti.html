@@ -57,7 +57,7 @@
         </select>
       </label>
     </div>
-    <div class="form-group">
+    <div class="form-group" ng-show="isYllapitaja">
       <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}} *
         <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled" required="true">
           <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
@@ -68,16 +68,25 @@
       </label>
     </div>
     <div class="form-group">
-      <label>{{i18n.vastaajatunnus.koulutuksen_jarjestava_oppilaitos}}
-        <ui-select ng-model="vastaajatunnus.koulutuksen_jarjestaja_oppilaitos" ng-disabled="disabled">
-          <ui-select-match allow-clear>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+      <label>{{i18n.vastaajatunnus.koulutuksen_jarjestava_oppilaitos}} *
+        <ui-select ng-model="vastaajatunnus.koulutuksen_jarjestaja_oppilaitos" ng-disabled="disabled" required="true">
+          <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
           <ui-select-choices repeat="oppilaitos in oppilaitokset | filter: $select.search | orderByLokalisoitu:'nimi'">
             <div ng-bind-html="oppilaitos | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
           </ui-select-choices>
         </ui-select>
       </label>
     </div>
-
+    <div class="form-group">
+      <label>{{i18n.vastaajatunnus.koulutuksen_jarjestava_toimipiste}}
+        <ui-select ng-model="vastaajatunnus.koulutuksen_toimipaikka" ng-disabled="disabled">
+          <ui-select-match allow-clear>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+          <ui-select-choices rullaus="naytaLisaa()" repeat="toimipaikka in toimipaikat | filter: $select.search | orderByLokalisoitu:'nimi'">
+            <div ng-bind-html="toimipaikka | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </label>
+    </div>
     <div>
       <h3>{{i18n.vastaajatunnus.koulutusmuoto}}</h3>
       <div class="form-group">
