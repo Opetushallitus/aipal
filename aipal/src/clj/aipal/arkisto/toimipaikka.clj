@@ -46,5 +46,5 @@
 
 (defn ^:integration-api hae-oppilaitoksen-toimipaikat [oppilaitos]
   (sql/select taulut/toimipaikka
-              (sql/fields :toimipaikkakoodi :oppilaitos :nimi_fi :nimi_sv :nimi_en)
+              (sql/fields :toimipaikkakoodi :oppilaitos :nimi_fi :nimi_sv :nimi_en :kunta)
               (sql/where {:oppilaitos oppilaitos})))

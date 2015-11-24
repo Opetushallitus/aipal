@@ -24,7 +24,7 @@
             [korma.db :as db]))
 
 (defn halutut-kentat [koodi]
-  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid :lakkautusPvm]))
+  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid :lakkautusPvm :kotipaikkaUri]))
 
 (defn hae-kaikki [url]
   (let [oids (get-json-from-url url)]
@@ -43,6 +43,11 @@
 (defn ^:private haluttu-tyyppi? [koodi]
   (when-let [tyyppi (:oppilaitosTyyppiUri koodi)]
     (contains? halutut-tyypit (subs tyyppi 0 19))))
+
+(defn ^:private kunta [koodi]
+  (if (:kotipaikkaUri koodi)
+    (clojure.string/replace (:kotipaikkaUri koodi) #"kunta_", "")
+    ""))
 
 (defn ^:private nimi [koodi]
   ((some-fn :fi :sv :en) (:nimi koodi)))
@@ -105,7 +110,8 @@
    :voimassa (voimassa? koodi)})
 
 (defn ^:private koodi->toimipaikka [koodi]
-  {:nimi_fi (nimi koodi)
+  {:kunta (kunta koodi)
+   :nimi_fi (nimi koodi)
    :nimi_sv (nimi-sv koodi)
    :nimi_en (nimi-en koodi)
    :oid (:oid koodi)

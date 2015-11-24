@@ -36,7 +36,7 @@
                 :oppilaitos.oppilaitoskoodi [:oppilaitos.nimi_fi :oppilaitos_nimi_fi] [:oppilaitos.nimi_sv :oppilaitos_nimi_sv] [:oppilaitos.nimi_en :oppilaitos_nimi_en]
                 [(sql/raw "COALESCE(COALESCE(vastaajatunnus.voimassa_loppupvm, kyselykerta.voimassa_loppupvm, kysely.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE)") :muokattavissa]
                 :toimipaikka.toimipaikkakoodi [:toimipaikka.nimi_fi :toimipaikka_nimi_fi] [:toimipaikka.nimi_sv :toimipaikka_nimi_sv] [:toimipaikka.nimi_en :toimipaikka_nimi_en]
-                :koulutusmuoto :voimassa_alkupvm :voimassa_loppupvm)
+                :kunta :koulutusmuoto :voimassa_alkupvm :voimassa_loppupvm)
     (sql/fields [(sql/subselect taulut/vastaaja
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
@@ -106,7 +106,8 @@
     first
     erota-tutkinto
     erota-koulutustoimija
-    erota-oppilaitos))
+    erota-oppilaitos
+    erota-toimipaikka))
 
 (defn luo-satunnainen-tunnus
   [pituus]
@@ -143,10 +144,12 @@
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
         valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
         valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
+        kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
         vastaajatunnus (-> vastaajatunnus
                          (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos :koulutuksen_toimipaikka )
                          (assoc :vastaajien_lkm vastaajien-lkm
                                 :tutkintotunnus tutkintotunnus
+                                :kunta kunta
                                 :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
                                 :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
                                 :valmistavan_koulutuksen_toimipaikka valmistavan-koulutuksen-toimipaikka))]
