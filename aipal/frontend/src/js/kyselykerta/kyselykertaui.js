@@ -301,6 +301,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
         }
       };
 
+      //AVOP-45: deprecated, always required
       $scope.tutkintoPakollinen = function () {
         var rahoitusmuotoid = $scope.vastaajatunnus.rahoitusmuotoid;
         return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined ||
