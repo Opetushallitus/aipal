@@ -74,7 +74,8 @@
                               (t/with-schedule (ajastus asetukset :raportointi)))
         tutkinnot-job (j/build
                         (j/of-type PaivitaTutkinnotJob)
-                        (j/with-identity "paivita-tutkinnot"))
+                        (j/with-identity "paivita-tutkinnot")
+                        (j/using-job-data {"asetukset" (:koodistopalvelu asetukset)}))
         tutkinnot-trigger (t/build
                             (t/with-identity "tutkinnot")
                             (t/start-now)
