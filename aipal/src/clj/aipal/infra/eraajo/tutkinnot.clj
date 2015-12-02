@@ -31,4 +31,4 @@
    org.quartz.Job
    (execute [this ctx]
      (let [{asetukset "asetukset"} (qc/from-job-data ctx)]
-       (paivita-tutkinnot! asetukset))))
+       (paivita-tutkinnot! (clojure.walk/keywordize-keys asetukset)))))
