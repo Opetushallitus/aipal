@@ -31,7 +31,7 @@
   (select-unique-or-nil taulut/kayttaja (sql/where {:oid oid})))
 
 (defn hae-voimassaoleva [uid]
-  (select-unique-or-nil taulut/kayttaja (sql/where {:uid uid, :voimassa true})))
+  (select-unique-or-nil taulut/kayttaja (sql/where {(sql/sqlfn lower :uid) (sql/sqlfn lower uid), :voimassa true})))
 
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
