@@ -26,8 +26,6 @@
                  [compojure "1.4.0"]
                  [http-kit "2.1.18"]
                  [korma "0.4.0"]
-                 [metosin/compojure-api "0.8.2"]
-                 [metosin/ring-swagger-ui "2.0.10-1"]
                  [org.clojars.noidi/clj-cas-client "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1" :exclusions [ring]]
                  [org.clojars.pntblnk/clj-ldap "0.0.9"]
                  [org.clojure/clojure "1.5.1"]
