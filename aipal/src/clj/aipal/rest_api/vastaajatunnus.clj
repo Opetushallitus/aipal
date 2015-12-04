@@ -32,7 +32,7 @@
   (cu/defapi :vastaajatunnus-muokkaus kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/muokkaa-lukumaaraa" [kyselykertaid vastaajatunnusid lukumaara]
     (let [kyselykertaid (Integer/parseInt kyselykertaid)
           vastaajatunnusid (Integer/parseInt vastaajatunnusid)
-          vastaajatunnus (vastaajatunnus/hae vastaajatunnusid)
+          vastaajatunnus (vastaajatunnus/hae kyselykertaid vastaajatunnusid)
           vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
       (if (not (:muokattavissa vastaajatunnus))
         (throw (IllegalArgumentException. "Vastaajatunnus ei ole enää muokattavissa")))

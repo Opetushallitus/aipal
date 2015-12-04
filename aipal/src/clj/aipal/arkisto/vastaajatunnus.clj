@@ -92,9 +92,10 @@
                                                         :koulutustoimija_ja_tutkinto.koulutustoimija koulutustoimija})))]))
       (sql/order :vastaajatunnus.luotuaika :desc))))
 
-(defn hae [id]
+(defn hae [kyselykertaid vastaajatunnusid]
   (-> vastaajatunnus-select
-    (sql/where {:vastaajatunnusid id})
+    (sql/where {:kyselykertaid kyselykertaid
+                :vastaajatunnusid vastaajatunnusid})
     sql/exec
     first
     erota-tutkinto
@@ -122,9 +123,8 @@
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
-                             (sql/values vastaajatunnus))
-                         :vastaajatunnusid
-                         hae)]
+                             (sql/values vastaajatunnus)))
+        vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
     (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
     vastaajatunnus))
 
@@ -156,7 +156,7 @@
     (sql/where {:kyselykertaid kyselykertaid
                 :vastaajatunnusid vastaajatunnusid}))
   ;; haetaan vastaajatunnus, jotta saadaan kaytettavissa arvo
-  (hae vastaajatunnusid))
+  (hae kyselykertaid vastaajatunnusid))
 
 (defn poista! [kyselykertaid vastaajatunnusid]
   (auditlog/vastaajatunnus-poisto! vastaajatunnusid kyselykertaid)

@@ -32,7 +32,7 @@
       (lisaa! {:kyselykertaid k
                :vastaajatunnusid 2
                :vastaajien_lkm 22})
-      (is (= (:vastaajien_lkm (hae 1))
+      (is (= (:vastaajien_lkm (hae k 1))
              11)))))
 
 (deftest ^:integraatio lisays
