@@ -73,22 +73,16 @@
              6)))))
 
 (deftest ^:integraatio muokattavissa-tieto-lasketaan-oikein
-  (testing "vastaajatunnus.voimassa_loppupvm tänään"
-    (let [vastaajatunnus (first (lisaa-vastaajatunnus! {:voimassa_loppupvm (c/to-date-time (ctime/now))}))]
-      (is (:muokattavissa vastaajatunnus))))
-  (testing "vastaajatunnus.voimassa_loppupvm liian vanha"
-    (let [vastaajatunnus (first (lisaa-vastaajatunnus! {:voimassa_loppupvm (c/to-date-time (ctime/date-time 2015 1 1))}))]
-      (is (not (:muokattavissa vastaajatunnus)))))
-  (testing "kysely.voimassa_loppupvm tänään, muut null"
-    (let [kysely (lisaa-kysely! {:voimassa_loppupvm (c/to-date-time (ctime/now))})
-          kyselykerta (lisaa-kyselykerta! {:voimassa_loppupvm nil} kysely)
-          vastaajatunnus (first (lisaa-vastaajatunnus! {:voimassa_loppupvm nil} kyselykerta))]
-      (is (:muokattavissa vastaajatunnus))))
-  (testing "kysely/kyselykerta/vastaajatunnus voimassa_loppupvm null kaikissa"
-    (let [kysely (lisaa-kysely! {:voimassa_loppupvm nil})
-          kyselykerta (lisaa-kyselykerta! {:voimassa_loppupvm nil} kysely)
-          vastaajatunnus (first (lisaa-vastaajatunnus! {:voimassa_loppupvm nil} kyselykerta))]
-      (is (:muokattavissa vastaajatunnus)))))
+  (let [testaa (fn [selite kysely_loppupvm kyselykerta_loppupvm vastaajatunnus_loppupvm voimassa_odotettu]
+                 (let [kysely (lisaa-kysely! {:voimassa_loppupvm (c/to-date-time kysely_loppupvm)})
+                       kyselykerta (lisaa-kyselykerta! {:voimassa_loppupvm (c/to-date-time kyselykerta_loppupvm)} kysely)
+                       vastaajatunnus (first (lisaa-vastaajatunnus! {:voimassa_loppupvm (c/to-date-time vastaajatunnus_loppupvm)} kyselykerta))]
+                   (testing selite
+                     (is (= (:muokattavissa vastaajatunnus) voimassa_odotettu)))))]
+    (testaa "vastaajatunnus.voimassa_loppupvm tänään" nil nil (ctime/now) true)
+    (testaa "vastaajatunnus.voimassa_loppupvm liian vanha" nil nil (ctime/date-time 2015 1 1) false)
+    (testaa "kysely.voimassa_loppupvm tänään, muut null" (ctime/now) nil nil true)
+    (testaa "kysely/kyselykerta/vastaajatunnus voimassa_loppupvm null kaikissa" nil nil nil true)))
 
 (defn vastaajatunnus-gen [kyselykertaid]
   (gen/hash-map :kyselykertaid (gen/return kyselykertaid)
