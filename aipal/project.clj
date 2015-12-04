@@ -23,7 +23,7 @@
                  [clojurewerkz/quartzite "1.3.0"]
                  [com.cemerick/valip "0.3.2"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
-                 [compojure "1.3.3"]
+                 [compojure "1.4.0"]
                  [http-kit "2.1.18"]
                  [korma "0.4.0"]
                  [metosin/compojure-api "0.8.2"]
