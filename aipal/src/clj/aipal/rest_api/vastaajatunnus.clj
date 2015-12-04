@@ -32,7 +32,10 @@
   (cu/defapi :vastaajatunnus-muokkaus kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/muokkaa-lukumaaraa" [kyselykertaid vastaajatunnusid lukumaara]
     (let [kyselykertaid (Integer/parseInt kyselykertaid)
           vastaajatunnusid (Integer/parseInt vastaajatunnusid)
+          vastaajatunnus (vastaajatunnus/hae vastaajatunnusid)
           vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
+      (if (not (:muokattavissa vastaajatunnus))
+        (throw (IllegalArgumentException. "Vastaajatunnus ei ole enää muokattavissa")))
       (if (and (> lukumaara 0) (>= lukumaara vastaajat))
         (json-response (vastaajatunnus/muokkaa-lukumaaraa kyselykertaid vastaajatunnusid lukumaara))
         {:status 403})))
