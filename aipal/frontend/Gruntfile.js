@@ -25,7 +25,7 @@ module.exports = function (grunt) {
     connect: {
       server: {
         options: {
-          port: 3000,
+          port: 3002,
           debug: true,
           base: 'src',
           middleware: function (connect, options) {
@@ -67,7 +67,7 @@ module.exports = function (grunt) {
           'src/compiled_css/main.css'
         ],
         options: {
-          livereload: true
+          livereload: 35731
         }
       }
     },
