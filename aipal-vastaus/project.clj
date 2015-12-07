@@ -23,7 +23,7 @@
                  [compojure "1.1.8"]
                  [http-kit "2.1.18"]
                  [korma "0.3.2"]
-                 [org.clojure/clojure "1.5.1"]
+                 [org.clojure/clojure "1.7.0"]
                  [org.clojure/tools.logging "0.3.0"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
                  [org.slf4j/slf4j-api "1.7.5"]
