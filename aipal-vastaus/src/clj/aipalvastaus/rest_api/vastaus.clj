@@ -53,12 +53,19 @@
            (or (kylla-jatkovastaus-validi? vastaus kysymys)
                (ei-jatkovastaus-validi? vastaus kysymys)))))
 
+(defn monivalintavastaus-validi?
+  [vastaus kysymys]
+  (let [kysymyksen-monivalintavaihtoehtoidt (set (map :jarjestys (:monivalintavaihtoehdot kysymys)))]
+    (every? true? (for [vastaus-arvo (:vastaus vastaus)]
+                    (contains? kysymyksen-monivalintavaihtoehtoidt vastaus-arvo)))))
+
 (defn validoi-vastaukset
   [vastaukset kysymykset]
   (if (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
                       (for [vastaus vastaukset
                             :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
                         (when (and kysymys
+                                   (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
                                    (jatkovastaus-validi? vastaus kysymys))
                           true))))
     vastaukset

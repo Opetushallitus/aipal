@@ -203,3 +203,15 @@
   (testing "jatkovastausta ei tallenneta jos jatkokysymysid:tä ei löydy"
     (v/tallenna-jatkovastaus! {:jatkovastaus_kylla "vastaus"})
     (is (= @jatkokysymysid->jatkovastaus {}))))
+
+(deftest monivalintavastaukset-tasmaavat-monivalintavaihtoehtoihin
+  (let [kysymykset [{:kysymysid 1
+                     :vastaustyyppi "monivalinta"
+                     :monivalintavaihtoehdot [{:monivalintavaihtoehtoid 12345 :jarjestys 1}, {:monivalintavaihtoehtoid 23456 :jarjestys 2}]}]]
+    (testing "monivalinta-kysymysten vastaukset viittaavat oikeisiin monivalintavaihtoehtoihin"
+      (is (some?
+            (v/validoi-vastaukset [{:kysymysid 1 :vastaus [1 2]}] kysymykset)))
+      (is (nil?
+            (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
+      (is (nil?
+            (v/validoi-vastaukset [{:kysymysid 1 :vastaus [9999]}] kysymykset))))))
