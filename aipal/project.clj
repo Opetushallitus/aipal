@@ -28,7 +28,7 @@
                  [korma "0.4.0"]
                  [org.clojars.noidi/clj-cas-client "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1" :exclusions [ring]]
                  [org.clojars.pntblnk/clj-ldap "0.0.9"]
-                 [org.clojure/clojure "1.5.1"]
+                 [org.clojure/clojure "1.7.0"]
                  [org.clojure/core.cache "0.6.4"]
                  [org.clojure/tools.logging "0.2.6"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
