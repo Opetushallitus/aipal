@@ -63,8 +63,8 @@
 (defn numerovalintavastaus-validi?
   [vastaus kysymys]
   (every? true? (for [vastaus-arvo (:vastaus vastaus)]
-                  (or (and (:eos_vastaus_sallittu kysymys) (= vastaus-arvo "EOS"))
-                      (<= 1 vastaus-arvo 5)))))
+                     (or (and (:eos_vastaus_sallittu kysymys) (= vastaus-arvo "EOS"))
+                         (and (integer? vastaus-arvo) (<= 1 vastaus-arvo 5))))))
 
 (defn ^:private vastausvalinnat-valideja?
   [vastaukset kysymykset]
