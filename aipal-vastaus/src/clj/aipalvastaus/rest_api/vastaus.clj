@@ -66,6 +66,11 @@
                      (or (and (:eos_vastaus_sallittu kysymys) (= vastaus-arvo "EOS"))
                          (and (integer? vastaus-arvo) (<= 1 vastaus-arvo 5))))))
 
+(defn kylla-ei-vastaus-validi?
+  [vastaus kysymys]
+  (or (and (:eos_vastaus_sallittu kysymys) (= (:vastaus vastaus) ["EOS"]))
+      (every? #{"kylla" "ei"} (:vastaus vastaus))))
+
 (defn ^:private vastausvalinnat-valideja?
   [vastaukset kysymykset]
   (every?
@@ -74,6 +79,7 @@
       (for [vastaus vastaukset
             :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
         (and kysymys
+             (or (not= "kylla_ei_valinta" (:vastaustyyppi kysymys)) (kylla-ei-vastaus-validi? vastaus kysymys))
              (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
              (or (nil? (#{"arvosana" "asteikko" "likert_asteikko"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys))
              (jatkovastaus-validi? vastaus kysymys))))))
