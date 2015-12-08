@@ -78,9 +78,18 @@
              (or (nil? (#{"arvosana" "asteikko" "likert_asteikko"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys))
              (jatkovastaus-validi? vastaus kysymys))))))
 
+(defn ^:private pakollisille-kysymyksille-loytyy-vastaukset?
+  [vastaukset kysymykset]
+  (every?
+    seq
+    (for [kysymys kysymykset
+          :when (:pakollinen kysymys)]
+      (filter #(= (:kysymysid %) (:kysymysid kysymys)) vastaukset))))
+
 (defn validoi-vastaukset
   [vastaukset kysymykset]
-  (if (vastausvalinnat-valideja? vastaukset kysymykset)
+  (if (and (vastausvalinnat-valideja? vastaukset kysymykset)
+           (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset))
     vastaukset
     (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia.")))
 

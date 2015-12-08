@@ -204,6 +204,14 @@
     (v/tallenna-jatkovastaus! {:jatkovastaus_kylla "vastaus"})
     (is (= @jatkokysymysid->jatkovastaus {}))))
 
+(deftest pakollisiin-kysymyksiin-on-vastaukset
+  (let [kysymykset [{:kysymysid 1
+                     :pakollinen true
+                     :vastaustyyppi "arvosana"}]]
+    (testing "pakollisiin kysymyksiin on vastaukset"
+      (is (some? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [1]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [] kysymykset))))))
+
 (deftest monivalintavastaukset-tasmaavat-monivalintavaihtoehtoihin
   (let [kysymykset [{:kysymysid 1
                      :vastaustyyppi "monivalinta"
