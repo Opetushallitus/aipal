@@ -219,12 +219,9 @@
                      :monivalintavaihtoehdot [{:monivalintavaihtoehtoid 12345 :jarjestys 1}, {:monivalintavaihtoehtoid 23456 :jarjestys 2}]}]]
     (testing "monivalinta-kysymysten vastaukset viittaavat oikeisiin monivalintavaihtoehtoihin"
       (is (some? (v/validoi-vastaukset [{:kysymysid 1 :vastaus ["EOS"]}] kysymykset)))
-      (is (some?
-            (v/validoi-vastaukset [{:kysymysid 1 :vastaus [1 2]}] kysymykset)))
-      (is (nil?
-            (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
-      (is (nil?
-            (v/validoi-vastaukset [{:kysymysid 1 :vastaus [9999]}] kysymykset))))))
+      (is (some? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [1 2]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [9999]}] kysymykset))))))
 
 (deftest numerovalintavastaukset-tasmaavat-vaihtoehtoihin
   (let [kysymykset [{:kysymysid 1 :vastaustyyppi "arvosana"}
@@ -232,16 +229,11 @@
                     {:kysymysid 3 :vastaustyyppi "likert_asteikko"}
                     {:kysymysid 4 :vastaustyyppi "arvosana" :eos_vastaus_sallittu true}]]
     (testing "numerovalinta-vastaukset täsmäävät arvosana/asteikko/likert_asteikko -vaihtoehtoihin"
-      (is (nil?
-            (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
-      (is (nil?
-            (v/validoi-vastaukset [{:kysymysid 2 :vastaus [6]}] kysymykset)))
-      (is (nil?
-            (v/validoi-vastaukset [{:kysymysid 3 :vastaus [-1]}] kysymykset)))
-      (is (some?
-            (v/validoi-vastaukset [{:kysymysid 4 :vastaus [3]}] kysymykset)))
-      (is (some?
-            (v/validoi-vastaukset [{:kysymysid 4 :vastaus ["EOS"]}] kysymykset))))))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 2 :vastaus [6]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 3 :vastaus [-1]}] kysymykset)))
+      (is (some? (v/validoi-vastaukset [{:kysymysid 4 :vastaus [3]}] kysymykset)))
+      (is (some? (v/validoi-vastaukset [{:kysymysid 4 :vastaus ["EOS"]}] kysymykset))))))
 
 (deftest eos-vastaukset
   (let [vastaustyypit ["arvosana" "asteikko" "likert_asteikko" "kylla_ei_valinta" "monivalinta"]
