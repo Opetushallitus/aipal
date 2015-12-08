@@ -59,6 +59,11 @@
     (every? true? (for [vastaus-arvo (:vastaus vastaus)]
                     (contains? kysymyksen-monivalintavaihtoehtoidt vastaus-arvo)))))
 
+(defn numerovalintavastaus-validi?
+  [vastaus kysymys]
+  (every? true? (for [vastaus-arvo (:vastaus vastaus)]
+                  (<= 1 vastaus-arvo 5))))
+
 (defn validoi-vastaukset
   [vastaukset kysymykset]
   (if (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
@@ -66,6 +71,7 @@
                             :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
                         (when (and kysymys
                                    (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
+                                   (or (nil? (#{"arvosana" "asteikko" "likert_asteikko"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys))
                                    (jatkovastaus-validi? vastaus kysymys))
                           true))))
     vastaukset
