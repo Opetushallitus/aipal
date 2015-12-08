@@ -66,16 +66,21 @@
                   (or (and (:eos_vastaus_sallittu kysymys) (= vastaus-arvo "EOS"))
                       (<= 1 vastaus-arvo 5)))))
 
+(defn ^:private vastausvalinnat-valideja?
+  [vastaukset kysymykset]
+  (every?
+    identity
+    (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
+      (for [vastaus vastaukset
+            :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
+        (and kysymys
+             (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
+             (or (nil? (#{"arvosana" "asteikko" "likert_asteikko"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys))
+             (jatkovastaus-validi? vastaus kysymys))))))
+
 (defn validoi-vastaukset
   [vastaukset kysymykset]
-  (if (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
-                      (for [vastaus vastaukset
-                            :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
-                        (when (and kysymys
-                                   (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
-                                   (or (nil? (#{"arvosana" "asteikko" "likert_asteikko"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys))
-                                   (jatkovastaus-validi? vastaus kysymys))
-                          true))))
+  (if (vastausvalinnat-valideja? vastaukset kysymykset)
     vastaukset
     (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia.")))
 
