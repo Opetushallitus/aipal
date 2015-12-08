@@ -207,8 +207,10 @@
 (deftest monivalintavastaukset-tasmaavat-monivalintavaihtoehtoihin
   (let [kysymykset [{:kysymysid 1
                      :vastaustyyppi "monivalinta"
+                     :eos_vastaus_sallittu true
                      :monivalintavaihtoehdot [{:monivalintavaihtoehtoid 12345 :jarjestys 1}, {:monivalintavaihtoehtoid 23456 :jarjestys 2}]}]]
     (testing "monivalinta-kysymysten vastaukset viittaavat oikeisiin monivalintavaihtoehtoihin"
+      (is (some? (v/validoi-vastaukset [{:kysymysid 1 :vastaus ["EOS"]}] kysymykset)))
       (is (some?
             (v/validoi-vastaukset [{:kysymysid 1 :vastaus [1 2]}] kysymykset)))
       (is (nil?

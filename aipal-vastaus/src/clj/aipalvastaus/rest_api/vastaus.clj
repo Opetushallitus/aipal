@@ -57,7 +57,8 @@
   [vastaus kysymys]
   (let [kysymyksen-monivalintavaihtoehtoidt (set (map :jarjestys (:monivalintavaihtoehdot kysymys)))]
     (every? true? (for [vastaus-arvo (:vastaus vastaus)]
-                    (contains? kysymyksen-monivalintavaihtoehtoidt vastaus-arvo)))))
+                    (or (and (:eos_vastaus_sallittu kysymys) (= vastaus-arvo "EOS"))
+                        (contains? kysymyksen-monivalintavaihtoehtoidt vastaus-arvo))))))
 
 (defn numerovalintavastaus-validi?
   [vastaus kysymys]
