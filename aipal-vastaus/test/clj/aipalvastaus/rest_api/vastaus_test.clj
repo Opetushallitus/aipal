@@ -219,11 +219,16 @@
 (deftest numerovalintavastaukset-tasmaavat-vaihtoehtoihin
   (let [kysymykset [{:kysymysid 1 :vastaustyyppi "arvosana"}
                     {:kysymysid 2 :vastaustyyppi "asteikko"}
-                    {:kysymysid 3 :vastaustyyppi "likert_asteikko"}]]
+                    {:kysymysid 3 :vastaustyyppi "likert_asteikko"}
+                    {:kysymysid 4 :vastaustyyppi "arvosana" :eos_vastaus_sallittu true}]]
     (testing "numerovalinta-vastaukset täsmäävät arvosana/asteikko/likert_asteikko -vaihtoehtoihin"
       (is (nil?
             (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
       (is (nil?
             (v/validoi-vastaukset [{:kysymysid 2 :vastaus [6]}] kysymykset)))
       (is (nil?
-            (v/validoi-vastaukset [{:kysymysid 3 :vastaus [-1]}] kysymykset))))))
+            (v/validoi-vastaukset [{:kysymysid 3 :vastaus [-1]}] kysymykset)))
+      (is (some?
+            (v/validoi-vastaukset [{:kysymysid 4 :vastaus [3]}] kysymykset)))
+      (is (some?
+            (v/validoi-vastaukset [{:kysymysid 4 :vastaus ["EOS"]}] kysymykset))))))
