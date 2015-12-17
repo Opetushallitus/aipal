@@ -26,21 +26,4 @@ Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Java-virtuaalik
 
 ## Erityiset riippuvuudet 
 
-Toteutuskoodilla on riippuvuus yleiskäyttöisiä kirjastofunktioita sisältävään [clojure-utils](https://github.com/Opetushallitus/clojure-utils) repositoryyn joka on git submodulena.
-
-Lisäksi käyttöliittymätoteutuksessa on riippuvuutena [aituaipaljs](https://github.com/Opetushallitus/aituaipaljs). Tätä repositorya ei tarvitse kloonata itselleen kehitystyötä varten.
-
-Selaintesteissä käytettävä kirjasto löytyy valmiiksi paketoituna [Clojars palvelusta](https://clojars.org/solita/opetushallitus-aitu-e2e). Tämän komponentin lähdekoodi on [Aitun repositoryssa](https://github.com/Opetushallitus/aitu/tree/master/aitu-common-e2e).
-
-# Virtuaalikoneiden käyttö
-
-Sovellusta voi ajaa paikallisesti [Vagrant](http://www.vagrantup.com/) ohjelman avulla. Virtuaalikoneiden ajamisesta huolehtii [https://www.virtualbox.org/](Oracle Virtualbox). Molemmat ovat ilmaisia ohjelmia. Virtuaalikoneissa ajetaan [CentOS](http://www.centos.org/) Linux-käyttöjärjestelmää ja palvelinohjelmistoina erilaisia avoimen lähdekoodin ilmaisia sovelluksia, kuten [PostgreSQL](http://www.postgresql.org/).
-
-# Dokumentaatio
-
-Järjestelmän toimintaan liittyvä yleinen dokumentaatio löytyy [Aipal wiki-sivulta](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n julkisesta palvelusta. Confluenceen tulee näkyviin [arkkitehtuurin yleiskuvat](https://confluence.csc.fi/display/OPHPALV/Aipal+Arkkitehtuuri) ja vastaavat asiat.
-
-* Automaattisesti generoituva tietokantadokumentaatio: [Aipal tietokanta](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal/)
-* Aipal backend Clojure docs: [Palvelin, Clojure docs](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-doc/)
-* Aipal [Eastwood](https://github.com/jonase/eastwood) lint: [Palvelin, viimeisin Eastwood analyysi](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-lint/aipal-warnings.txt)
-
+Katso [Aipal dokumentaatio](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n Confluencesta. Confluenceen tulee näkyviin [arkkitehtuurin yleiskuvat](https://confluence.csc.fi/display/OPHPALV/Aipal+Arkkitehtuuri) ja vastaavat asiat.
