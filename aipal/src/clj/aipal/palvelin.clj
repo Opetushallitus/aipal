@@ -108,7 +108,7 @@
           {:status 403
            :headers {"Content-Type" "text/plain; charset=utf-8"
                      "X-Kayttooikeudet-Forbidden" "true"}
-           :body "Käyttöoikeudet eivät riitä"}
+           :body "yleiset.virhe_kayttoikeudet_eivat_riita"}
           (throw e))))))
 
 (defn wrap-internal-forbidden [handler]
