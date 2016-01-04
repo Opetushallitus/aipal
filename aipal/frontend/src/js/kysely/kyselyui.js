@@ -159,9 +159,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
       $scope.tallenna = function () {
         poistaKysymysryhmat();
-        var maxKysymyksia = 10;
+        var maxKysymyksia = 50;
         if (!apu.valtakunnallisiaRyhmia($scope.kysely)) {
-          maxKysymyksia = 30;
+          maxKysymyksia = 50;
         }
         if (apu.laskeLisakysymykset($scope.kysely) > maxKysymyksia) {
           ilmoitus.virhe(i18n.hae('kysely.liian_monta_lisakysymysta'));
