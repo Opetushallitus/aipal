@@ -41,6 +41,10 @@
     (sql/fields [(sql/subselect taulut/kysely_kysymysryhma
                    (sql/aggregate (count :*) :lkm)
                    (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
+    (sql/fields [(sql/raw (str "NOT EXISTS (SELECT 1"
+                               " FROM (vastaaja JOIN vastaajatunnus ON vastaajatunnus.vastaajatunnusid = vastaaja.vastaajatunnusid) JOIN kyselykerta ON kyselykerta.kyselykertaid = vastaajatunnus.kyselykertaid"
+                               " WHERE (kyselykerta.kyselyid = kysely.kyselyid))"
+                               " AND tila IN ('luonnos', 'suljettu')")) :poistettavissa])
     (sql/order :kyselyid :desc)))
 
 ;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan
