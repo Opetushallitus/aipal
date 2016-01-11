@@ -1,7 +1,6 @@
 (ns aipal.toimiala.kayttajaoikeudet
   "https://knowledge.solita.fi/pages/viewpage.action?pageId=61901330"
   (:require [clojure.set :as set]
-            [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.kysely :as kysely-arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]

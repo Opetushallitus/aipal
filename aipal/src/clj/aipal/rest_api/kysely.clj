@@ -14,8 +14,6 @@
 
 (ns aipal.rest-api.kysely
   (:require [compojure.core :as c]
-            [korma.db :as db]
-            [schema.core :as schema]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysely :as arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
