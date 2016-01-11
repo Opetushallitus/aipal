@@ -23,6 +23,8 @@
             {{ 'kysely.julkaise' | i18n }}&nbsp;
             <span class="fa fa-share"></span>
           </button>
+        </auth>
+        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']" ng-if="kysely.poistettavissa">
           <button class="btn btn-primary pull-left e2e-poista-kysely" ng-click="poistaKyselyModal(kyselyt, kysely)">
             {{ 'kysely.poista' | i18n }}&nbsp;
             <span class="fa fa-trash"></span>
