@@ -89,11 +89,10 @@
          :body "kysely.samanniminen_kysely"}
         (json-response (paivita-kysely! kysely)))))
 
-  (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid" [kyselyid :<< as-int]
-    (let [kyselyid kyselyid]
-      (if (= (:tila (arkisto/hae kyselyid)) "luonnos")
-        (arkisto/poista-kysely! kyselyid)
-        {:status 403})))
+  (cu/defapi :kysely-poisto kyselyid :delete "/:kyselyid" [kyselyid :<< as-int]
+    (if (arkisto/kysely-poistettavissa? kyselyid)
+      (arkisto/poista-kysely! kyselyid)
+      {:status 403}))
 
   (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/vastaustunnustiedot" [kyselyid :<< as-int]
     (json-response (kyselykerta-arkisto/hae-vastaustunnustiedot-kyselylta kyselyid)))

@@ -108,21 +108,16 @@
       (kayttaja/vastuukayttaja?)
       (kayttaja/ntm-vastuukayttaja?)))
 
+(defn kysely-yleinen-muokkausoikeus?
+  [kyselyid]
+  (or (kayttaja/yllapitaja?)
+      (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"} kyselyid)))
+
 (defn kysely-muokkaus?
   "Onko kyselyn muokkaus sallittu."
   [kyselyid]
   (and (kysely-on-luonnostilassa? kyselyid)
-       (or (kayttaja/yllapitaja?)
-           (kayttajalla-on-jokin-rooleista-kyselyssa?
-             #{"OPL-VASTUUKAYTTAJA"
-               "OPL-NTMVASTUUKAYTTAJA"}
-             kyselyid))))
-
-(defn kysely-tilamuutos?
-  "Onko kyselyn tilan muutos (luonnos/julkaistu/suljettu) sallittu."
-  [kyselyid]
-  (or (kayttaja/yllapitaja?)
-      (kayttajalla-on-jokin-rooleista-kyselyssa? #{"OPL-VASTUUKAYTTAJA" "OPL-NTMVASTUUKAYTTAJA"} kyselyid)))
+       (kysely-yleinen-muokkausoikeus? kyselyid)))
 
 (defn kysely-luku? [kyselyid]
   (or (kayttaja/yllapitaja?)
@@ -271,7 +266,8 @@
     :kysely-luonti kysely-luonti?
     :kysely-luku kysely-luku?
     :kysely-muokkaus kysely-muokkaus?
-    :kysely-tilamuutos kysely-tilamuutos?
+    :kysely-tilamuutos kysely-yleinen-muokkausoikeus?
+    :kysely-poisto kysely-yleinen-muokkausoikeus?
     :kysely-raportti kysely-luku?
     :kyselykerta-luku kyselykerta-luku?
     :kyselykerta-raportti kyselykerta-luku?
