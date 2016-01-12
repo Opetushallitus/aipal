@@ -18,7 +18,7 @@
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
-            [oph.korma.common :refer [select-unique-or-nil select-unique]]
+            [oph.korma.common :refer [select-unique-or-nil select-unique unique-or-nil]]
             [aipal.auditlog :as auditlog]))
 
 (defn kysely-kentat
@@ -68,10 +68,13 @@
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"
   [kyselyid]
-  (select-unique-or-nil taulut/kysely
+  (->
+    kysely-poistettavissa-query
     kysely-kentat
     (sql/fields :kysely.selite_fi :kysely.selite_sv)
-    (sql/where (= :kyselyid kyselyid))))
+    (sql/where (= :kyselyid kyselyid))
+    sql/exec
+    unique-or-nil))
 
 (defn hae-organisaatiotieto
   "Hakee kyselyn luoneen organisaation tiedot"
