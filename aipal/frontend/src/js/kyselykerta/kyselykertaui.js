@@ -213,8 +213,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
-  .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
-                                              function($modalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat, kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
+  .controller('LuoTunnuksiaModalController', ['$uibModalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet', 'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija', 'viimeksiValittuTutkinto',
+                                              function($uibModalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat, kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto) {
     $scope.vastaajatunnus = {
       henkilokohtainen: true,
       koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
@@ -257,10 +257,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     });
 
     $scope.luoTunnuksia = function(vastaajatunnus) {
-      $modalInstance.close(vastaajatunnus);
+      $uibModalInstance.close(vastaajatunnus);
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
     $scope.lokalisoiNimi = function(tutkinto) {
       if(typeof tutkinto === 'object') {
@@ -276,7 +276,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     };
   }])
 
-  .controller('MuokkaaVastaajiaModalController', ['$modalInstance', '$scope', 'i18n', 'tunnus', function($modalInstance, $scope, i18n, tunnus) {
+  .controller('MuokkaaVastaajiaModalController', ['$uibModalInstance', '$scope', 'i18n', 'tunnus', function($uibModalInstance, $scope, i18n, tunnus) {
     $scope.i18n = i18n;
 
     $scope.minimi = Math.max(1, tunnus.vastausten_lkm);
@@ -284,9 +284,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     $scope.vastaajien_lkm = tunnus.vastaajien_lkm;
 
     $scope.save = function() {
-      $modalInstance.close(parseInt($scope.vastaajien_lkm));
+      $uibModalInstance.close(parseInt($scope.vastaajien_lkm));
     };
 
-    $scope.cancel = $modalInstance.dismiss;
+    $scope.cancel = $uibModalInstance.dismiss;
   }])
 ;

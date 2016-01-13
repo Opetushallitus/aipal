@@ -261,38 +261,38 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     }
   ])
 
-  .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'Kyselypohja', function ($modalInstance, $scope, Kyselypohja) {
+  .controller('LisaaKyselypohjaModalController', ['$uibModalInstance', '$scope', 'Kyselypohja', function ($uibModalInstance, $scope, Kyselypohja) {
     Kyselypohja.haeVoimassaolevat()
     .success(function (data) {
       $scope.kyselypohjat = data;
     });
     $scope.tallenna = function (kyselypohjaId) {
-      $modalInstance.close(kyselypohjaId);
+      $uibModalInstance.close(kyselypohjaId);
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 
-  .controller('LisaaKysymysryhmaModalController', ['$modalInstance', '$scope', 'Kysymysryhma', function ($modalInstance, $scope, Kysymysryhma) {
+  .controller('LisaaKysymysryhmaModalController', ['$uibModalInstance', '$scope', 'Kysymysryhma', function ($uibModalInstance, $scope, Kysymysryhma) {
     $scope.outerscope = {};
     Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
     });
     $scope.tallenna = function (kysymysryhmaid) {
-      $modalInstance.close(kysymysryhmaid);
+      $uibModalInstance.close(kysymysryhmaid);
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 
-  .controller('AvaaEsikatseluModalController', ['$modalInstance', '$scope', 'vastausBaseUrl', '$sce', function ($modalInstance, $scope, vastausBaseUrl, $sce) {
+  .controller('AvaaEsikatseluModalController', ['$uibModalInstance', '$scope', 'vastausBaseUrl', '$sce', function ($uibModalInstance, $scope, vastausBaseUrl, $sce) {
     $scope.getVastausBaseUrl = function(){
       return $sce.trustAsResourceUrl(vastausBaseUrl+'/#/preview/');
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 ;

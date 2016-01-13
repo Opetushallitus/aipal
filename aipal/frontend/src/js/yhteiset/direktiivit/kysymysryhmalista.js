@@ -131,10 +131,10 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
     };
   }])
 
-  .controller('JulkaiseKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function ($modalInstance, $scope, kysymysryhma) {
+  .controller('JulkaiseKysymysryhmaModalController', ['$uibModalInstance', '$scope', 'kysymysryhma', function ($uibModalInstance, $scope, kysymysryhma) {
     $scope.kysymysryhma = kysymysryhma;
 
-    $scope.julkaise = $modalInstance.close;
-    $scope.cancel = $modalInstance.dismiss;
+    $scope.julkaise = $uibModalInstance.close;
+    $scope.cancel = $uibModalInstance.dismiss;
   }])
 ;

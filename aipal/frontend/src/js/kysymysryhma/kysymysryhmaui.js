@@ -315,10 +315,10 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
   }])
 
-  .controller('KysymysryhmaRakenneModalController', ['$modalInstance', '$scope', 'kysymysryhma', function($modalInstance, $scope, kysymysryhma) {
+  .controller('KysymysryhmaRakenneModalController', ['$uibModalInstance', '$scope', 'kysymysryhma', function($uibModalInstance, $scope, kysymysryhma) {
     $scope.kysymysryhma = kysymysryhma;
 
     $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);
