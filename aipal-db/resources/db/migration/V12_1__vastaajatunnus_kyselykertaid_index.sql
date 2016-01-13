@@ -1,0 +1,1 @@
+CREATE INDEX vastaajatunnus_kyselykertaid_idx ON vastaajatunnus(kyselykertaid);
