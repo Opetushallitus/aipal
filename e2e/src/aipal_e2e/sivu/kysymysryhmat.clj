@@ -14,7 +14,8 @@
 
 (ns aipal-e2e.sivu.kysymysryhmat
   (:require [clj-webdriver.taxi :as w]
-            [aipal-e2e.util :refer :all]))
+            [aipal-e2e.util :refer :all]
+            [aitu-e2e.util :refer [odota-kunnes odota-ja-klikkaa]]))
 
 (def kysymysryhmat-sivu "/#/kysymysryhmat")
 
@@ -22,10 +23,11 @@
   (avaa kysymysryhmat-sivu))
 
 (defn luo-uusi []
-  (w/click {:css ".e2e-luo-uusi-kysymysryhma"}))
+  (odota-ja-klikkaa {:css ".e2e-luo-uusi-kysymysryhma"}))
 
 (defn julkaise []
-  (w/click {:css ".e2e-julkaise-kysymysryhma"}))
+  (odota-ja-klikkaa {:css ".e2e-julkaise-kysymysryhma"}))
 
 (defn vahvista-julkaisu []
-  (w/click {:css ".e2e-vahvista-kysymysryhman-julkaisu"}))
+  (odota-kunnes (w/present? {:css ".modal-dialog"}))
+  (odota-ja-klikkaa {:css ".e2e-vahvista-kysymysryhman-julkaisu"}))
