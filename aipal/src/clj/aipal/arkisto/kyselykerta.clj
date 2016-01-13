@@ -32,9 +32,9 @@
                     :kyselykerta.lukittu :kyselykerta.luotuaika
                     :kyselykerta.kaytettavissa
                     [(sql/raw "vastaaja.vastaajaid is null") :poistettavissa])
-        (sql/fields [(sql/raw (str "(SELECT SUM(vastaajien_lkm) FROM vastaajatunnus WHERE kyselykertaid = kyselykerta.kyselykertaid)"
+        (sql/fields [(sql/raw (str "(SELECT SUM(vastaajien_lkm) FROM vastaajatunnus WHERE vastaajatunnus.kaytettavissa AND kyselykertaid = kyselykerta.kyselykertaid)"
                                    " > (SELECT COUNT(*) FROM vastaajatunnus JOIN vastaaja ON vastaajatunnus.vastaajatunnusid = vastaaja.vastaajatunnusid"
-                                   " WHERE vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid)")) :vastaamattomia])
+                                   " WHERE vastaajatunnus.kaytettavissa AND vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid)")) :vastaamattomia])
         (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin :kysely.kyselyid koulutustoimija)
         (sql/order :kyselykerta.kyselykertaid :ASC))))
 
