@@ -34,7 +34,7 @@
 
 (defn kysely-linkki [kysely-elementti]
   (w/find-element-under kysely-elementti
-                        {:css "a"}))
+                        {:css ".panel-heading"}))
 
 (defn kyselykerran-nimi [kyselykerta-elementti]
   (w/find-element-under kyselykerta-elementti {:css ".e2e-kyselykerta-nimi"}))
