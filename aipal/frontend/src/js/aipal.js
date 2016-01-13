@@ -101,8 +101,8 @@ angular.module('aipal', [
     $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
-  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', '$filter',
-              function ($location, $modal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs, $filter) {
+  .controller('AipalController', ['$location', '$uibModal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', '$filter',
+              function ($location, $uibModal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs, $filter) {
     $scope.aipalOminaisuus = _.has($window, 'aipalOminaisuus') ? $window.aipalOminaisuus : {};
     $scope.i18n = i18n;
     $scope.breadcrumbs = breadcrumbs;
@@ -116,7 +116,7 @@ angular.module('aipal', [
     };
     $scope.timestamp = Date.now();
     $scope.valitse = function () {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'template/impersonointi.html',
         controller: 'ImpersonointiModalController'
       });
@@ -132,7 +132,7 @@ angular.module('aipal', [
       });
     };
     $scope.vaihdaRoolia = function () {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'template/roolit.html',
         controller: 'RoolitModalController',
         resolve: {

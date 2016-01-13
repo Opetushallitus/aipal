@@ -112,8 +112,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta', '$timeout', 'kopioi',
-    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta, $timeout, kopioi) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$uibModal', 'seuranta', '$timeout', 'kopioi',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $uibModal, seuranta, $timeout, kopioi) {
       var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
       $scope.$watch('kyselyForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -196,7 +196,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.lisaaKyselypohjaModal = function () {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/lisaa-kyselypohja.html',
           controller: 'LisaaKyselypohjaModalController'
         });
@@ -213,7 +213,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.lisaaKysymysryhmaModal = function() {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
           controller: 'LisaaKysymysryhmaModalController'
         });
@@ -249,7 +249,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           }, 1000);
         };
 
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'template/kysely/esikatsele.html',
           controller: 'AvaaEsikatseluModalController',
           windowClass: 'preview-modal-window',

@@ -60,8 +60,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       });
   }])
 
-  .controller('KysymysryhmatController', ['$filter', '$scope', '$modal', 'Kysymysryhma',
-                                          function($filter, $scope, $modal, Kysymysryhma) {
+  .controller('KysymysryhmatController', ['$filter', '$scope', '$uibModal', 'Kysymysryhma',
+                                          function($filter, $scope, $uibModal, Kysymysryhma) {
     $scope.latausValmis = false;
     Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
       // angular-tablesort haluaa lajitella rivioliosta löytyvän (filtteröidyn)
@@ -139,7 +139,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
   }])
 
-  .controller('KysymysryhmaController', ['$modal', '$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi', 'kopioi', 'kayttooikeudet', function($modal, $routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi, kopioi, kayttooikeudet) {
+  .controller('KysymysryhmaController', ['$uibModal', '$routeParams', '$scope', '$location', 'Kysymysryhma', 'i18n', 'ilmoitus', 'kysymysApurit', 'tallennusMuistutus', 'uusi', 'kopioi', 'kayttooikeudet', function($uibModal, $routeParams, $scope, $location, Kysymysryhma, i18n, ilmoitus, apu, tallennusMuistutus, uusi, kopioi, kayttooikeudet) {
     $scope.$watch('form', function(form) {
       tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
     });
@@ -267,7 +267,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
 
     $scope.naytaRakenneModal = function() {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'template/kysymysryhma/rakenne.html',
         controller: 'KysymysryhmaRakenneModalController',
         resolve: {
