@@ -43,6 +43,7 @@
   (w/click (kysely-linkki kysely-elementti)))
 
 (defn ^:private kyselykerrat-kyselylle [kysely-elementti]
+  (w/present? (w/find-element-under kysely-elementti {:css ".e2e-kyselykerrat"}))
   (let [kyselykerrat (w/find-elements-under kysely-elementti
                                             {:css ".e2e-kyselykerrat"})]
     (->> kyselykerrat
@@ -50,6 +51,7 @@
         (map w/text))))
 
 (defn uusi-kyselykerta-kyselylle [kysely-elementti]
+  (odota-kunnes (w/present? (w/find-element-under kysely-elementti {:css ".e2e-uusi-kyselykerta"})))
   (w/find-element-under kysely-elementti {:css ".e2e-uusi-kyselykerta"}))
 
 (defn uusi-kysely []
