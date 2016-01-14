@@ -40,7 +40,9 @@
 
 (defn avaa-kysely [kysely-elementti]
   (odota-kunnes (w/present? (kysely-linkki kysely-elementti)))
-  (w/click (kysely-linkki kysely-elementti)))
+  (let [kysely-auki (-> kysely-elementti (w/attribute :class) (.contains "panel-open"))]
+    (when (not kysely-auki)
+      (w/click (kysely-linkki kysely-elementti)))))
 
 (defn ^:private kyselykerrat-kyselylle [kysely-elementti]
   (w/present? (w/find-element-under kysely-elementti {:css ".e2e-kyselykerrat"}))
