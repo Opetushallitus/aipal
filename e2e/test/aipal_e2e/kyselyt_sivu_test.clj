@@ -40,6 +40,7 @@
   (w/find-element-under kyselykerta-elementti {:css ".e2e-kyselykerta-nimi"}))
 
 (defn avaa-kysely [kysely-elementti]
+  (odota-kunnes (w/present? (kysely-linkki kysely-elementti)))
   (w/click (kysely-linkki kysely-elementti)))
 
 (defn ^:private kyselykerrat-kyselylle [kysely-elementti]
