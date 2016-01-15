@@ -1,15 +1,17 @@
 <h1>{{i18n.kyselypohja.breadcrumb_kyselypohja}} <ohje tunniste="kyselypohjat"></ohje></h1>
 
 <div class="row">
+  <div class="col-sm-6 col-sm-push-6" style="text-align: right">
     <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
-        <button class="btn btn-primary pull-right" ng-click="luoUusiKyselypohja()">
-            {{ 'kyselypohja.luo_uusi' | i18n }}&nbsp;
-            <span class="fa fa-plus"></span>
-        </button>
+      <a class="btn btn-primary" ng-click="luoUusiKyselypohja()" style="margin: 0;">
+        {{ 'kyselypohja.luo_uusi' | i18n }}&nbsp;
+        <span class="fa fa-plus"></span>
+      </a>
     </auth>
-    <div class="col-md-4">
-        <input type="text" class="icon search-icon-input form-control" ng-model="hakuehto.teksti" placeholder="{{i18n.kyselypohja.etsi}}">
-    </div>
+  </div>
+  <div class="col-sm-6 col-sm-pull-6">
+    <input type="text" class="icon search-icon-input form-control" ng-model="hakuehto.teksti" placeholder="{{i18n.kyselypohja.etsi}}">
+  </div>
 </div>
 
 <h2>{{i18n.yleiset.julkaistut}}</h2>
