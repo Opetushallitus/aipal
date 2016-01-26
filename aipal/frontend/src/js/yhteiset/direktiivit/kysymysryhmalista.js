@@ -31,7 +31,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
           scope.valtakunnalliset = scope.$eval(attrs.valtakunnalliset);
         });
       },
-      controller: ['$location', '$filter', '$modal', '$scope', 'Kysymysryhma', 'i18n', 'ilmoitus', 'varmistus', function($location, $filter, $modal, $scope, Kysymysryhma, i18n, ilmoitus, varmistus) {
+      controller: ['$location', '$filter', '$uibModal', '$scope', 'Kysymysryhma', 'i18n', 'ilmoitus', 'varmistus', function($location, $filter, $uibModal, $scope, Kysymysryhma, i18n, ilmoitus, varmistus) {
         $scope.i18n = i18n;
         $scope.rajoitin = {
           tila: $scope.tila
@@ -48,7 +48,7 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
           return kayttooikeudet.isYllapitaja();
         };
         $scope.julkaiseKysymysryhmaModal = function(kysymysryhma) {
-          var modalInstance = $modal.open({
+          var modalInstance = $uibModal.open({
             templateUrl: 'template/yhteiset/direktiivit/julkaise-kysymysryhma.html',
             controller: 'JulkaiseKysymysryhmaModalController',
             resolve: {
@@ -131,10 +131,10 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
     };
   }])
 
-  .controller('JulkaiseKysymysryhmaModalController', ['$modalInstance', '$scope', 'kysymysryhma', function ($modalInstance, $scope, kysymysryhma) {
+  .controller('JulkaiseKysymysryhmaModalController', ['$uibModalInstance', '$scope', 'kysymysryhma', function ($uibModalInstance, $scope, kysymysryhma) {
     $scope.kysymysryhma = kysymysryhma;
 
-    $scope.julkaise = $modalInstance.close;
-    $scope.cancel = $modalInstance.dismiss;
+    $scope.julkaise = $uibModalInstance.close;
+    $scope.cancel = $uibModalInstance.dismiss;
   }])
 ;

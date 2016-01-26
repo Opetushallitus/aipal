@@ -101,8 +101,8 @@ angular.module('aipal', [
     $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
-  .controller('AipalController', ['$location', '$modal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', '$filter',
-              function ($location, $modal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs, $filter) {
+  .controller('AipalController', ['$location', '$uibModal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', '$filter',
+              function ($location, $uibModal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs, $filter) {
     $scope.aipalOminaisuus = _.has($window, 'aipalOminaisuus') ? $window.aipalOminaisuus : {};
     $scope.i18n = i18n;
     $scope.breadcrumbs = breadcrumbs;
@@ -116,7 +116,7 @@ angular.module('aipal', [
     };
     $scope.timestamp = Date.now();
     $scope.valitse = function () {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'template/impersonointi.html',
         controller: 'ImpersonointiModalController'
       });
@@ -132,7 +132,7 @@ angular.module('aipal', [
       });
     };
     $scope.vaihdaRoolia = function () {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'template/roolit.html',
         controller: 'RoolitModalController',
         resolve: {
@@ -188,28 +188,28 @@ angular.module('aipal', [
 
   }])
 
-  .controller('ImpersonointiModalController', ['$modalInstance', '$scope', 'i18n', function($modalInstance, $scope, i18n) {
+  .controller('ImpersonointiModalController', ['$uibModalInstance', '$scope', 'i18n', function($uibModalInstance, $scope, i18n) {
     $scope.i18n = i18n;
     $scope.impersonointi = {
       impersonoitava: {}
     };
     $scope.impersonoi = function() {
-      $modalInstance.close($scope.impersonointi.impersonoitava);
+      $uibModalInstance.close($scope.impersonointi.impersonoitava);
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 
-  .controller('RoolitModalController', ['$modalInstance', '$scope', 'i18n', 'roolit', 'aktiivinenRooli', function($modalInstance, $scope, i18n, roolit, aktiivinenRooli) {
+  .controller('RoolitModalController', ['$uibModalInstance', '$scope', 'i18n', 'roolit', 'aktiivinenRooli', function($uibModalInstance, $scope, i18n, roolit, aktiivinenRooli) {
     $scope.i18n = i18n;
     $scope.roolit = roolit;
     $scope.rooli = aktiivinenRooli;
     $scope.valitseRooli = function() {
-      $modalInstance.close($scope.rooli);
+      $uibModalInstance.close($scope.rooli);
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 

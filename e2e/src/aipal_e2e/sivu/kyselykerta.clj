@@ -26,9 +26,11 @@
 
 (defn luo-vastaajatunnuksia []
   (odota-kunnes (w/present? {:css ".e2e-luo-vastaajatunnuksia"}))
-  (w/click {:css ".e2e-luo-vastaajatunnuksia"}))
+  (w/click {:css ".e2e-luo-vastaajatunnuksia"})
+  (odota-kunnes (w/present? {:css ".modal-dialog"})))
 
 (defn valitse-vastaajatunnuksen-rahoitusmuoto [rahoitusmuoto]
+  (odota-kunnes (w/present? {:css ".e2e-vastaajatunnuksen-rahoitusmuoto"}))
   (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" rahoitusmuoto))
 
 (defn valitse-vastaajatunnuksen-tutkinto [tutkinto]

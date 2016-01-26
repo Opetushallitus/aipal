@@ -21,7 +21,7 @@ describe('kysely.kyselyui.KyselyController', function(){
   var $controller;
   var $routeParams;
   var $location;
-  var $modal;
+  var $uibModal;
   var $q;
   var ilmoitus;
 
@@ -40,11 +40,11 @@ describe('kysely.kyselyui.KyselyController', function(){
     $provide.value('ilmoitus', ilmoitus);
   }));
 
-  beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$modal_, _$q_){
+  beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$uibModal_, _$q_){
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $controller = _$controller_;
-    $modal = _$modal_;
+    $uibModal = _$uibModal_;
     $q = _$q_;
   }));
 
@@ -95,7 +95,7 @@ describe('kysely.kyselyui.KyselyController', function(){
     $httpBackend.whenGET(/api\/kysymysryhma\/123\??.*/).respond({kysymysryhmaid: 123});
 
     alustaController();
-    spyOn($modal, 'open').and.returnValue({result: $q.when(123)});
+    spyOn($uibModal, 'open').and.returnValue({result: $q.when(123)});
     $scope.lisaaKysymysryhmaModal();
     $httpBackend.flush();
 

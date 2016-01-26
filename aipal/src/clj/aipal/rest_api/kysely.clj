@@ -14,8 +14,7 @@
 
 (ns aipal.rest-api.kysely
   (:require [compojure.core :as c]
-            [korma.db :as db]
-            [schema.core :as schema]
+            [compojure.coercions :refer [as-int]]
             [aipal.compojure-util :as cu]
             [aipal.arkisto.kysely :as arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
@@ -81,8 +80,8 @@
                 (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :selite_fi :selite_sv :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
             (paivita-kysely! (assoc kysely :kyselyid kyselyid)))))))
 
-  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid & kysely]
-    (let [kysely (paivita-arvot (assoc kysely :kyselyid (Integer/parseInt kyselyid))
+  (cu/defapi :kysely-muokkaus kyselyid :post "/:kyselyid" [kyselyid :<< as-int & kysely]
+    (let [kysely (paivita-arvot (assoc kysely :kyselyid kyselyid)
                                [:voimassa_alkupvm :voimassa_loppupvm]
                                parse-iso-date)]
       (if (arkisto/samanniminen-kysely? (assoc kysely :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)))
@@ -90,33 +89,32 @@
          :body "kysely.samanniminen_kysely"}
         (json-response (paivita-kysely! kysely)))))
 
-  (cu/defapi :kysely-muokkaus kyselyid :delete "/:kyselyid" [kyselyid]
-    (let [kyselyid (Integer/parseInt kyselyid)]
-      (if (= (:tila (arkisto/hae kyselyid)) "luonnos")
-        (arkisto/poista-kysely! kyselyid)
-        {:status 403})))
+  (cu/defapi :kysely-poisto kyselyid :delete "/:kyselyid" [kyselyid :<< as-int]
+    (if (arkisto/kysely-poistettavissa? kyselyid)
+      (arkisto/poista-kysely! kyselyid)
+      {:status 403}))
 
-  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/vastaustunnustiedot" [kyselyid]
-    (json-response (kyselykerta-arkisto/hae-vastaustunnustiedot-kyselylta (Integer/parseInt kyselyid))))
+  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid/vastaustunnustiedot" [kyselyid :<< as-int]
+    (json-response (kyselykerta-arkisto/hae-vastaustunnustiedot-kyselylta kyselyid)))
 
-  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid]
-    (json-response (when-let [kysely (arkisto/hae (Integer/parseInt kyselyid))]
-                     (assoc kysely :kysymysryhmat (kysymysryhma-arkisto/hae-kyselysta (Integer/parseInt kyselyid))))))
+  (cu/defapi :kysely-luku kyselyid :get "/:kyselyid" [kyselyid :<< as-int]
+    (json-response (when-let [kysely (arkisto/hae kyselyid)]
+                     (assoc kysely :kysymysryhmat (kysymysryhma-arkisto/hae-kyselysta kyselyid)))))
 
-  (cu/defapi :kysely-tilamuutos kyselyid :put "/julkaise/:kyselyid" [kyselyid]
-    (let [kyselyid (Integer/parseInt kyselyid)]
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/julkaise/:kyselyid" [kyselyid :<< as-int]
+    (let [kyselyid kyselyid]
       (if (> (arkisto/laske-kysymysryhmat kyselyid) 0)
         (json-response (arkisto/julkaise-kysely! kyselyid))
         {:status 403})))
 
-  (cu/defapi :kysely-tilamuutos kyselyid :put "/sulje/:kyselyid" [kyselyid]
-    (json-response (arkisto/sulje-kysely! (Integer/parseInt kyselyid))))
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/sulje/:kyselyid" [kyselyid :<< as-int]
+    (json-response (arkisto/sulje-kysely! kyselyid)))
 
-  (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta/:kyselyid" [kyselyid]
-    (json-response (arkisto/julkaise-kysely! (Integer/parseInt kyselyid))))
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta/:kyselyid" [kyselyid :<< as-int]
+    (json-response (arkisto/julkaise-kysely! kyselyid)))
 
-  (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta-luonnokseksi/:kyselyid" [kyselyid]
-    (let [kyselyid (Integer/parseInt kyselyid)]
+  (cu/defapi :kysely-tilamuutos kyselyid :put "/palauta-luonnokseksi/:kyselyid" [kyselyid :<< as-int]
+    (let [kyselyid kyselyid]
       (if (= (arkisto/laske-kyselykerrat kyselyid) 0)
         (json-response (arkisto/palauta-luonnokseksi! kyselyid))
         {:status 403}))))

@@ -18,7 +18,7 @@
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
-            [oph.korma.common :refer [select-unique-or-nil select-unique]]
+            [oph.korma.common :refer [select-unique-or-nil select-unique unique-or-nil]]
             [aipal.auditlog :as auditlog]))
 
 (defn kysely-kentat
@@ -31,17 +31,27 @@
                 [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
                 [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])))
 
+(def ^:private kysely-poistettavissa-query
+  (->
+    (sql/select* taulut/kysely)
+    (sql/fields [(sql/raw (str "NOT EXISTS (SELECT 1"
+                               " FROM (vastaaja JOIN vastaajatunnus ON vastaajatunnus.vastaajatunnusid = vastaaja.vastaajatunnusid) JOIN kyselykerta ON kyselykerta.kyselykertaid = vastaajatunnus.kyselykertaid"
+                               " WHERE (kyselykerta.kyselyid = kysely.kyselyid))"
+                               " AND tila IN ('luonnos', 'suljettu')")) :poistettavissa])))
+
 (defn hae-kyselyt
   "Hae koulutustoimijan kyselyt"
   [koulutustoimija]
-  (sql/select taulut/kysely
+  (->
+    kysely-poistettavissa-query
     (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
     (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin :kysely.kyselyid koulutustoimija)
     kysely-kentat
     (sql/fields [(sql/subselect taulut/kysely_kysymysryhma
                    (sql/aggregate (count :*) :lkm)
                    (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
-    (sql/order :kyselyid :desc)))
+    (sql/order :kyselyid :desc)
+    sql/exec))
 
 ;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan
 (defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat]
@@ -58,10 +68,13 @@
 (defn hae
   "Hakee kyselyn tiedot pääavaimella"
   [kyselyid]
-  (select-unique-or-nil taulut/kysely
+  (->
+    kysely-poistettavissa-query
     kysely-kentat
     (sql/fields :kysely.selite_fi :kysely.selite_sv)
-    (sql/where (= :kyselyid kyselyid))))
+    (sql/where (= :kyselyid kyselyid))
+    sql/exec
+    unique-or-nil))
 
 (defn hae-organisaatiotieto
   "Hakee kyselyn luoneen organisaation tiedot"
@@ -206,3 +219,11 @@
    (seq (sql/select taulut/kysely
           (sql/where (and {:kyselyid kyselyid}
                           (kysely-util/kysely-sisaltaa-ntm-kysymysryhman :kysely.kyselyid)))))))
+
+(defn kysely-poistettavissa? [kyselyid]
+  (->
+    kysely-poistettavissa-query
+    (sql/where {:kyselyid kyselyid})
+    sql/exec
+    first
+    :poistettavissa))
