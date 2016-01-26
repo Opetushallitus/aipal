@@ -30,7 +30,7 @@
             aipal.rest-api.tiedote
             [aipal.infra.kayttaja :refer [*kayttaja*]]
 
-            [aitu.infra.status :refer [status]]))
+            [oph.common.infra.status :refer [status]]))
 
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
                        (.trim (slurp resource))
