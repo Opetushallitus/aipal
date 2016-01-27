@@ -127,8 +127,9 @@
     (sql/fields :koulutustoimija :valtakunnallinen)
     (sql/where {:kyselypohjaid kyselypohjaid})))
 
-(defn ntm-kyselypohja? [kyselypohjaid]
+(defn ntm-kyselypohja?
   "Onko NTM-kyselypohja?"
+  [kyselypohjaid]
   (boolean
    (seq (sql/select taulut/kyselypohja
           (sql/where (and {:kyselypohjaid kyselypohjaid}

@@ -202,8 +202,9 @@
     first
     :kysymysryhmaid))
 
-(defn samanniminen-kysely? [kysely]
+(defn samanniminen-kysely?
   "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kysely."
+   [kysely]
   (boolean
     (seq (sql/select taulut/kysely
            (sql/where {:koulutustoimija (:koulutustoimija kysely)})
@@ -213,8 +214,9 @@
                             {:nimi_sv (:nimi_sv kysely)})))
            (sql/where {:kyselyid [not= (:kyselyid kysely)]})))))
 
-(defn ntm-kysely? [kyselyid]
+(defn ntm-kysely?
   "Onko NTM-kysely."
+   [kyselyid]
   (boolean
    (seq (sql/select taulut/kysely
           (sql/where (and {:kyselyid kyselyid}

@@ -48,6 +48,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn koodi->opintoala [koodi]
   (koodi->kasite koodi :opintoalatunnus))
 
+; https://virkailija.opintopolku.fi/koodisto-service/rest/json/koulutusalaoph2002/koodi?koodistoVersio=1
 (defn ^:private hae-koodit
   "Hakee kaikki koodit annetusta koodistosta ja asettaa koodin koodiarvon avaimeksi arvokentta"
   ([asetukset koodisto] (get-json-from-url (str (:url asetukset) koodisto "/koodi")))
@@ -174,8 +175,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
              :when v]
          [k (first v)])))
 
-(defn muuttunut [[tutkintotunnus muutos]]
+(defn muuttunut
   "Jos muutos on tietojen muuttuminen, palauttaa muuttuneet tiedot, muuten nil"
+  [[tutkintotunnus muutos]]
   (when (and (map? muutos)
              (not-every? nil? (vals muutos)))
     (merge {:tutkintotunnus tutkintotunnus}
