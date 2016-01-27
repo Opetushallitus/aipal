@@ -19,7 +19,7 @@ Toteutus perustuu suurimmaksi osaksi Opetushallituksen Aipal-järjestelmään, j
 
 # Kehitystyöhön liittyviä ohjeita
 
-Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
+Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Oracle Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
 
 * aipal-hakemistossa oma readme-tiedosto. Frontend-hakemistossa myös.
 * OPH:n [Aitu-projekti](https://github.com/Opetushallitus/aitu) on ollut mallina ja monet käytännöt ja työkalut ovat samoja.
