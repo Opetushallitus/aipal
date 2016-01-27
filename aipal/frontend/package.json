@@ -24,7 +24,7 @@
     "grunt-sass": "1.0.0",
     "grunt-usemin": "2.0.2",
     "jshint-stylish": "0.1.5",
-    "karma": "0.13.10",
+    "karma": "0.13.19",
     "karma-chrome-launcher": "0.2.1",
     "karma-firefox-launcher": "0.1.6",
     "karma-html2js-preprocessor": "0.1.0",
