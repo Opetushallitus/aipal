@@ -5,6 +5,10 @@ Korkeakoulujen opiskelijapalautejärjestelmän lähdekoodi ja toteutus sijaitsee
 
 Toteutus perustuu suurimmaksi osaksi Opetushallituksen Aipal-järjestelmään, joten lähdekoodissa ja dokumentaatiossa viitataan Aipaliin. Kaikkien viittausten muuttaminen johtaisi ylimääräisiin ongelmiin kun muutoksia halutaan tuoda molempien järjestelmien lähdekoodiin. Aipal-järjestelmän lähdekoodi löytyy [Opetushallituksen Aipal-repositorysta](https://github.com/Opetushallitus/aipal). 
 
+Asentamisesta varten kannattaa katsoa [Aitu-projekti](https://github.com/Opetushallitus/aitu). Muutamia eroja:
+
+koneet nimet ovat aipal-db ja aipal-app 
+
 # Repositoryn sisältö ja rakenne
 
 * **aipal**  - Varsinainen AVOP-sovellus
@@ -18,22 +22,19 @@ Toteutus perustuu suurimmaksi osaksi Opetushallituksen Aipal-järjestelmään, j
 
 # Kehitystyöhön liittyviä ohjeita
 
-Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Oracle Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
-
-* aipal-hakemistossa oma readme-tiedosto. Frontend-hakemistossa myös.
-* OPH:n [Aitu-projekti](https://github.com/Opetushallitus/aitu) on ollut mallina ja monet käytännöt ja työkalut ovat samoja.
-
-Toteutuskoodilla on riippuvuus yleiskäyttöisiä kirjastofunktioita sisältävään [clojure-utils](https://github.com/Opetushallitus/clojure-utils) repositoryyn siten että molemmat täytyy paikallisesti kloonata rinnakkaisiin hakemistoihin.
+Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama k
 
 ## Erityiset riippuvuudet
 
-Lisäksi käyttöliittymätoteutuksessa on riippuvuutena [aituaipaljs](https://github.com/Opetushallitus/aituaipaljs). Tätä repositorya ei tarvitse kloonata itselleen kehitystyötä varten.
-
-Selaintesteissä käytettävä kirjasto löytyy valmiiksi paketoituna [Clojars palvelusta](https://clojars.org/solita/opetushallitus-aitu-e2e). Tämän komponentin lähdekoodi on [Aitun repositoryssa](https://github.com/Opetushallitus/aitu/tree/master/aitu-common-e2e).
+Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Samat riippuvuudet on käytössä tässä.
 
 # Virtuaalikoneiden käyttö
 
-Sovellusta voi ajaa paikallisesti [Vagrant](http://www.vagrantup.com/) ohjelman avulla. Virtuaalikoneiden ajamisesta huolehtii [https://www.virtualbox.org/](Oracle Virtualbox). Molemmat ovat ilmaisia ohjelmia. Virtuaalikoneissa ajetaan [CentOS](http://www.centos.org/) Linux-käyttöjärjestelmää ja palvelinohjelmistoina erilaisia avoimen lähdekoodin ilmaisia sovelluksia, kuten [PostgreSQL](http://www.postgresql.org/).
+Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama käytäntö.
+
+Sovelluksen asennus virtuaalikoneeseen
+
+HUOM! Ensimmäinen kerta ennen kun ajetaan **deploy.sh** skripti tietokannan skeema pitaisi olla luottu. Aja **create-db-schema** ennen.
 
 # Dokumentaatio
 
