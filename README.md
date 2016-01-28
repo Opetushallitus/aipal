@@ -22,7 +22,7 @@ koneet nimet ovat aipal-db ja aipal-app
 
 # Kehitystyöhön liittyviä ohjeita
 
-Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama k
+Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama käytäntö.
 
 ## Erityiset riippuvuudet
 
@@ -34,7 +34,7 @@ Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama käytänt�
 
 Sovelluksen asennus virtuaalikoneeseen
 
-HUOM! Ensimmäinen kerta ennen kun ajetaan **deploy.sh** skripti tietokannan skeema pitaisi olla luottu. Aja **create-db-schema** ennen.
+HUOM! Ensimmäinen kerta ennen kun ajetaan **deploy.sh** skripti tietokannan skeema pitaisi olla etukäteen luottu. Aja **create-db-schema** ennen.
 
 # Dokumentaatio
 
