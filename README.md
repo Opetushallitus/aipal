@@ -6,6 +6,10 @@ Korkeakoulujen opiskelijapalautejärjestelmän lähdekoodi ja toteutus sijaitsee
 
 Toteutus perustuu suurimmaksi osaksi Opetushallituksen Aipal-järjestelmään, joten lähdekoodissa ja dokumentaatiossa viitataan Aipaliin. Kaikkien viittausten muuttaminen johtaisi ylimääräisiin ongelmiin kun muutoksia halutaan tuoda molempien järjestelmien lähdekoodiin. Aipal-järjestelmän lähdekoodi löytyy [Opetushallituksen Aipal-repositorysta](https://github.com/Opetushallitus/aipal). 
 
+Asentamisesta varten kannattaa katsoa [Aitu-projekti](https://github.com/Opetushallitus/aitu). Muutamia eroja:
+
+koneet nimet ovat aipal-db ja aipal-app 
+
 # Repositoryn sisältö ja rakenne
 
 * **aipal**  - Varsinainen AVOP-sovellus
@@ -19,11 +23,6 @@ Toteutus perustuu suurimmaksi osaksi Opetushallituksen Aipal-järjestelmään, j
 
 # Kehitystyöhön liittyviä ohjeita
 
-Koodi on enimmäkseen [Clojurea](http://clojure.org/). Tarvitset Oracle Java-virtuaalikoneen ja [leiningen](http://leiningen.org/) työkalun.
 
-* aipal-hakemistossa oma readme-tiedosto. Frontend-hakemistossa myös.
-* OPH:n [Aitu-projekti](https://github.com/Opetushallitus/aitu) on ollut mallina ja monet käytännöt ja työkalut ovat samoja.
-
-## Erityiset riippuvuudet 
 
 Katso [Aipal dokumentaatio](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n Confluencesta. Confluenceen tulee näkyviin [arkkitehtuurin yleiskuvat](https://confluence.csc.fi/display/OPHPALV/Aipal+Arkkitehtuuri) ja vastaavat asiat.
