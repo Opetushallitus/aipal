@@ -23,6 +23,19 @@ koneet nimet ovat aipal-db ja aipal-app
 
 # Kehitystyöhön liittyviä ohjeita
 
+Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama käytäntö.
+
+## Erityiset riippuvuudet
+
+Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Samat riippuvuudet on käytössä tässä.
+
+# Virtuaalikoneiden käyttö
+
+Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama käytäntö.
+
+Sovelluksen asennus virtuaalikoneeseen
+
+HUOM! Ensimmäinen kerta ennen kun ajetaan **deploy.sh** skripti tietokannan skeema pitaisi olla etukäteen luottu. Aja **create-db-schema** ennen.
 
 
 Katso [Aipal dokumentaatio](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n Confluencesta. Confluenceen tulee näkyviin [arkkitehtuurin yleiskuvat](https://confluence.csc.fi/display/OPHPALV/Aipal+Arkkitehtuuri) ja vastaavat asiat.
