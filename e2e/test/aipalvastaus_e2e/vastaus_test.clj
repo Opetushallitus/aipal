@@ -19,7 +19,7 @@
             [aipalvastaus-e2e.util :refer :all]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]))
- 
+
 (defn vastaus-sivu [tunnus] (str "/#/vastaus/" tunnus))
 (defn kyselyn-otsikko [] (w/text {:css "#content h1"}))
 (defn kyselyn-selite [] (w/text {:css "p.selite"}))

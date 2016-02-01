@@ -1,9 +1,8 @@
 (ns aipal.arkisto.koulutustoimija-sql-test
-  (:require 
+  (:require
     [aipal.sql.test-util :refer :all]
     [aipal.sql.test-data-util :refer :all]
-    [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
-  )
+    [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto])
   (:use clojure.test))
 
 (use-fixtures :each tietokanta-fixture)

@@ -128,7 +128,6 @@
     (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
     vastaajatunnus))
 
-
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))

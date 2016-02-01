@@ -21,7 +21,6 @@
   (let [fo (kayttaja-arkisto/hae-voimassaoleva "uid")]
     (throw (RuntimeException. "forced"))))
 
-
 (defn checked-throws []
   (let [fo (kayttaja-arkisto/hae-voimassaoleva "uid")]
     (throw (Exception. "forced"))))
@@ -38,9 +37,7 @@
         (with-sql-kayttaja "foobar"
           (runtime-throws)))))
 
-
 ; Testataan LDAP-haku reaaliaikaisesti
-
 (defn with-ldap-haku-mock [f]
   (let [foobar-ldap {:oid "foobar"
                      :uid "foobar-uid"

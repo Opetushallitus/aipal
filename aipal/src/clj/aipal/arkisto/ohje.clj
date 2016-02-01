@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.ohje
-  (:require 
+  (:require
     [korma.core :as sql]
     [aipal.auditlog :as auditlog]))
 

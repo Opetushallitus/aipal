@@ -25,7 +25,6 @@
 (defn validoi-kieli []
   (schema/pred (fn[k] (or (= k "fi")(= k "sv")))))
 
-
 (defn hae-tekstit [kieli]
   (ResourceBundle/clearCache)
   (let [bundle (ResourceBundle/getBundle "i18n/tekstit" (Locale. kieli) (ResourceBundle$Control/getNoFallbackControl ResourceBundle$Control/FORMAT_PROPERTIES))]

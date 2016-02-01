@@ -23,4 +23,4 @@
 (deftest ^:integraatio tarkista-puuttuvat-triggerit
   (testing "tarkistetaan että kaikilla omilla tauluilla on ainakin joku update/insert triggeri"
     (let [vialliset-taulut (tarkista-triggerit)]
-     (is (empty? vialliset-taulut) (str "viallisia tauluja! " vialliset-taulut)))))   
+     (is (empty? vialliset-taulut) (str "viallisia tauluja! " vialliset-taulut)))))
