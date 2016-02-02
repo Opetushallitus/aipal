@@ -1,0 +1,3 @@
+[submodule "aipal/clojure-utils"]
+	path = aipal/clojure-utils
+	url = https://github.com/opetushallitus/clojure-utils
