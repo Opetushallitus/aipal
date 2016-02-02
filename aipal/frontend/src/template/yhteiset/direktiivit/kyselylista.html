@@ -79,7 +79,7 @@
         <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in (kysely.kyselykerrat|orderBy:kyselykertojen_lajitteluperuste)" class="kyselykerrat-container e2e-kyselykerrat">
           <h3 class="e2e-kyselykerta-nimi"><span ng-if="kyselykerta.lukittu" class="fa fa-lock" title="{{ 'yleiset.lukittu' | i18n }}">&nbsp;&nbsp;</span>{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta.nimi}}</h3>
           <p class="text-muted" style="margin-bottom: 0" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</p>
-          <span class="text-info pull-right" ng-if="kyselykerta.vastaamattomia"><span class="fa fa-info-circle"></span> {{ 'kyselykerta.kayttamattomia_vastaajatunnuksia' | i18n }}</span>
+          <span class="text-info pull-right" ng-if="kyselykerta.vastaajien_lkm > kyselykerta.vastaajia"><span class="fa fa-info-circle"></span> {{ 'kyselykerta.kayttamattomia_vastaajatunnuksia' | i18n }}</span>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']">
             <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
               <span ng-if="!kyselykerta.lukittu && kysely.kaytettavissa">{{ 'yleiset.vastaajatunnukset' | i18n }}</span>
