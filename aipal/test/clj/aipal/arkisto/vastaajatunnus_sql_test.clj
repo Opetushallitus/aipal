@@ -94,5 +94,5 @@
     (let [k (:kyselykertaid (lisaa-kyselykerta!))]
       (prop/for-all [vastaajatunnus (vastaajatunnus-gen k)]
         (sql/delete taulut/vastaajatunnus)
-        (= (lisaa! vastaajatunnus)
-           (hae-kyselykerralla k))))))
+        (= (set (lisaa! vastaajatunnus))
+           (set (hae-kyselykerralla k)))))))
