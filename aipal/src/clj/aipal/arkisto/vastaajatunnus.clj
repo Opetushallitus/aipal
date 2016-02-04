@@ -39,7 +39,8 @@
                    (sql/aggregate (count :*) :count)
                    (sql/where {:vastannut true
                                :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
-    (sql/order :luotuaika :DESC)))
+    (sql/order :luotuaika :DESC)
+    (sql/order :vastaajatunnusid :DESC)))
 
 (defn ^:private erota-tutkinto
   [vastaajatunnus]
