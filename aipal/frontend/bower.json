@@ -16,7 +16,7 @@
     "lodash": "3.10.1",
     "angular-loading-bar": "0.6.0",
     "stacktrace": "0.6.4",
-    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.1.28",
+    "aituaipaljs": "https://github.com/Opetushallitus/aituaipaljs.git#0.2.1",
     "angular-ui-select2": "0.0.5",
     "select2": "3.4.8",
     "ng-breadcrumbs": "https://github.com/solita/ng-breadcrumbs.git#0.4.1",
