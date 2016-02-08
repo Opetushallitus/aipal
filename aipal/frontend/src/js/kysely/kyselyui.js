@@ -112,8 +112,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$uibModal', 'seuranta', '$timeout', 'kopioi',
-    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $uibModal, seuranta, $timeout, kopioi) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$uibModal', 'seuranta', '$timeout', 'kopioi', 'pvm',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $uibModal, seuranta, $timeout, kopioi, pvm) {
       var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
       $scope.$watch('kyselyForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -123,7 +123,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)
           .success(function(kysely) {
-            $scope.kysely = kysely;
+            $scope.kysely = pvm.parsePvm(kysely);
             if(kopioi) {
               tallennusFn = Kysely.luoUusi;
               $scope.kysely.tila = 'luonnos';
@@ -148,7 +148,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       else {
         $scope.kysely = {
           kysymysryhmat: [],
-          voimassa_alkupvm: new Date().toISOString().slice(0, 10)
+          voimassa_alkupvm: new Date()
         };
         tallennusFn = Kysely.luoUusi;
       }

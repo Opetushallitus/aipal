@@ -39,8 +39,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus',
-    function(Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm',
+    function(Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm) {
       $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -113,7 +113,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       });
 
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
-        $scope.kysely = kysely;
+        $scope.kysely = pvm.parsePvm(kysely);
         if(!kysely.kaytettavissa) { $scope.muokkaustila = false; }
       }).error(function() {
         $location.url('/');
@@ -126,7 +126,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
           });
         Kyselykerta.haeYksi($scope.kyselykertaid)
           .success(function(kyselykerta) {
-            $scope.kyselykerta = kyselykerta;
+            $scope.kyselykerta = pvm.parsePvm(kyselykerta);
             if (kyselykerta.lukittu) { $scope.muokkaustila = false; }
           })
           .error(function() {
@@ -232,7 +232,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       loppupvm = kyselykerta.voimassa_loppupvm ? new Date(kyselykerta.voimassa_loppupvm) : alkupvm;
     $scope.menneisyydessa =  !_.isNull(kyselykerta.voimassa_loppupvm) && loppupvm < tanaan;
     var oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
-    $scope.oletusalkupvm = oletusalkupvm.toISOString().slice(0, 10);
+    $scope.oletusalkupvm = oletusalkupvm;
 
     $scope.tutkinnot = tutkinnot;
 
