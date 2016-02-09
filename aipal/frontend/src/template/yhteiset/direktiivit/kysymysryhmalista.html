@@ -19,7 +19,8 @@
         </a>
       </auth>
       <auth roolit="['OPL-VASTUUKAYTTAJA', 'OPL-NTMVASTUUKAYTTAJA']"  ng-if="yllapitaja() || !k.valtakunnallinen">
-        <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}/kopioi" class="e2e-kopioi-kysymysryhma">
+        <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}/kopioi" class="btn btn-default btn-sm e2e-kopioi-kysymysryhma">
+          {{ 'kysymysryhma.kopioi' | i18n }}&nbsp;
           <span class="fa fa-copy"></span>
         </a>
       </auth>
