@@ -67,7 +67,7 @@
     <div class="center-block" ng-show="tunnukset.length>0">
       <div class="yhteenveto">
         <h2>{{'vastaajatunnus.vastauksia'|i18n}} {{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h2>
-        <progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></progressbar>
+        <uib-progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti() | number:0}}%</span></uib-progressbar>
       </div>
     </div>
 
@@ -100,7 +100,7 @@
                         {{'i18n.vastaajatunnus.vastausprosentti'|i18n}}
                     </td>
                     <td>
-                        <progressbar value="getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0"><span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span></progressbar>
+                        <uib-progressbar value="getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0"><span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span></uib-progressbar>
                     </td>
                     <td></td>
                 </tr>
