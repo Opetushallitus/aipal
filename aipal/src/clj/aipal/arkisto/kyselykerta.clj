@@ -75,7 +75,8 @@
   (auditlog/kyselykerta-muokkaus! kyselykertaid)
   (sql/update taulut/kyselykerta
     (sql/set-fields (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu]))
-    (sql/where {:kyselykertaid kyselykertaid})))
+    (sql/where {:kyselykertaid kyselykertaid}))
+  (assoc kyselykertadata :kyselykertaid kyselykertaid))
 
 (defn kyselykertaid->kyselyid
   [kyselykertaid]

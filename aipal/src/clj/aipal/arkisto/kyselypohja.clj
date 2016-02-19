@@ -86,7 +86,8 @@
   (tallenna-kyselypohjan-kysymysryhmat! kyselypohjaid (:kysymysryhmat kyselypohja))
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
-    (sql/set-fields (select-keys kyselypohja muokattavat-kentat))))
+    (sql/set-fields (select-keys kyselypohja muokattavat-kentat)))
+  kyselypohja)
 
 (defn luo-kyselypohja!
   [kyselypohja]
@@ -100,7 +101,8 @@
   [kyselypohjaid tila]
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
-    (sql/set-fields {:tila tila})))
+    (sql/set-fields {:tila tila}))
+  (hae-kyselypohja kyselypohjaid))
 
 (defn julkaise-kyselypohja! [kyselypohjaid]
   (auditlog/kyselypohja-muokkaus! kyselypohjaid :julkaistu)

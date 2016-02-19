@@ -177,4 +177,6 @@
   (sql/update :vastaajatunnus
     (sql/set-fields {:vastaajien_lkm lukumaara})
     (sql/where {:kyselykertaid kyselykertaid
-                :vastaajatunnusid vastaajatunnusid})))
+                :vastaajatunnusid vastaajatunnusid}))
+  ;; haetaan vastaajatunnus, jotta saadaan palautettua muokattu tunnus
+  (hae kyselykertaid vastaajatunnusid))
