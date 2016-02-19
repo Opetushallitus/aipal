@@ -13,18 +13,18 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.raportti.valtakunnallinen
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
-            [korma.db :as db]
-            [clj-time.core :as t]
-            [oph.common.util.http-util :refer [json-response parse-iso-date csv-download-response]]
-            [oph.common.util.util :refer [paivita-arvot]]
+  (:require [clj-time.core :as t]
+            [compojure.api.core :refer [GET POST]]
+            [schema.core :as s]
+            aipal.compojure-util
             [aipal.rest-api.raportti.yhteinen :as yhteinen]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv valtakunnallinen-raportti-vertailujakso]]
             [aipal.arkisto.tutkinto :as tutkinto-arkisto]
-            [aipal.arkisto.opintoala :as opintoala-arkisto]))
+            [aipal.arkisto.opintoala :as opintoala-arkisto]
+            [oph.common.util.http-util :refer [csv-download-response parse-iso-date response-or-404]]
+            [oph.common.util.util :refer [paivita-arvot]]))
 
 ; Valtakunnallinen vertailuraportti on ilman koulutustoimijoita, ylemmälle tutkintohierarkian tasolle
 (defn ^:private kehitysraportti-valtakunnallinen-raportti-tutkintotason-parametrit [parametrit]
@@ -115,27 +115,30 @@
                                [(koulutustoimija-valtakunnallinen-raportti parametrit)]])))
 
 (defn reitit [asetukset]
-  (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :post "/" [& parametrit]
-    (db/transaction
-      (json-response
-        (let [kaikki-raportit (for [raportti (luo-raportit parametrit)]
-                                 (ei-riittavasti-vastaajia raportti asetukset))
-              naytettavat (filter (comp nil? :virhe) kaikki-raportit)
-              virheelliset (filter :virhe kaikki-raportit)]
-          (merge (when (seq naytettavat)
-                   (yhdistaminen/yhdista-raportit naytettavat))
-                 {:raportoitavia (count naytettavat)
-                  :virheelliset virheelliset}))))))
+  (POST "/" [& parametrit]
+    :body [parametrit s/Any]
+    :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
+    (response-or-404
+      (let [kaikki-raportit (for [raportti (luo-raportit parametrit)]
+                               (ei-riittavasti-vastaajia raportti asetukset))
+            naytettavat (filter (comp nil? :virhe) kaikki-raportit)
+            virheelliset (filter :virhe kaikki-raportit)]
+        (merge (when (seq naytettavat)
+                 (yhdistaminen/yhdista-raportit naytettavat))
+               {:raportoitavia (count naytettavat)
+                :virheelliset virheelliset})))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param
-    (cu/defapi :valtakunnallinen-raportti (:koulutustoimijat parametrit) :get "/:kieli/csv" [kieli parametrit]
-      (db/transaction
-        (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
-          (csv-download-response
-            (apply str
-                   (for [raportti (luo-raportit parametrit)]
-                     (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-                       (muodosta-csv raportti kieli)
-                       (muodosta-tyhja-csv raportti kieli))))
-            (str (:tyyppi parametrit) "raportti.csv")))))))
+    (GET "/:kieli/csv" [kieli parametrit]
+      :path-params [kieli]
+      :query-params [parametrit]
+      :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
+      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
+        (csv-download-response
+          (apply str
+                 (for [raportti (luo-raportit parametrit)]
+                   (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+                     (muodosta-csv raportti kieli)
+                     (muodosta-tyhja-csv raportti kieli))))
+          (str (:tyyppi parametrit) "raportti.csv"))))))

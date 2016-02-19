@@ -3,7 +3,8 @@
             [clojure.java.io :as io]
 
             [cheshire.core :as cheshire]
-            [compojure.core :as c]
+            [compojure.api.exception :as ex]
+            [compojure.api.sweet :refer [api context swagger-routes GET]]
             [compojure.route :as r]
             [stencil.core :as s]
 
@@ -36,50 +37,56 @@
                        "dev")))
 
 (defn reitit [asetukset]
-  (c/routes
-    (c/GET "/" [] {:status 200
-                   :headers {"Content-type" "text/html; charset=utf-8"
-                             "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}
-                   :body (s/render-file
-                           "public/app/index.html"
-                           (merge {:base-url (-> asetukset :server :base-url)
-                                   :vastaus-base-url (-> asetukset :vastaus-base-url)
-                                   :current-user (:nimi *kayttaja*)
-                                   :build-id @build-id
-                                   :development-mode (pr-str (:development-mode asetukset))
-                                   :ominaisuus (cheshire/generate-string (:ominaisuus asetukset))}
-                                  (when-let [cas-url (-> asetukset :cas-auth-server :url)]
-                                    {:logout-url (str cas-url "/logout")})))})
-    (c/GET "/status" [] (s/render-file "status" (assoc (status)
-                                                  :asetukset (with-out-str
-                                                               (pprint
-                                                                 (clojure.walk/postwalk (fn [elem]
-                                                                                          (if (and (coll? elem)
-                                                                                                   (= (first elem) :password))
-                                                                                            [:password "*****"]
-                                                                                            elem))
-                                                                                        asetukset)))
-                                                  :build-id @build-id)))
-    (c/context "/api/jslog" [] (wrap-tarkasta-csrf-token aipal.rest_api.js-log/reitit))
-
-    (c/context "/api/i18n" [] aipal.rest-api.i18n/reitit)
-    (c/context "/api/kieli" [] aipal.rest-api.kieli/reitit)
-    (c/context "/api/kyselykerta" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselykerta/reitit))
-    (c/context "/api/kyselypohja" [] (wrap-tarkasta-csrf-token aipal.rest-api.kyselypohja/reitit))
-    (c/context "/api/ohje" [] (wrap-tarkasta-csrf-token aipal.rest-api.ohje/reitit))
-    (c/context "/api/oppilaitos" [] (wrap-tarkasta-csrf-token aipal.rest-api.oppilaitos/reitit))
-    (c/context "/api/rahoitusmuoto" [] (wrap-tarkasta-csrf-token aipal.rest-api.rahoitusmuoto/reitit))
-    (c/context "/api/raportti/kysely" [] (aipal.rest-api.raportti.kysely/csv-reitit asetukset))
-    (c/context "/api/raportti/kysely" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.kysely/reitit asetukset)))
-    (c/context "/api/raportti/kyselykerta" [] (aipal.rest-api.raportti.kyselykerta/csv-reitit asetukset))
-    (c/context "/api/raportti/kyselykerta" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.kyselykerta/reitit asetukset)))
-    (c/context "/api/raportti/valtakunnallinen" [] (aipal.rest-api.raportti.valtakunnallinen/csv-reitit asetukset))
-    (c/context "/api/raportti/valtakunnallinen" [] (wrap-tarkasta-csrf-token (aipal.rest-api.raportti.valtakunnallinen/reitit asetukset)))
-    (c/context "/api/kysely" [] (wrap-tarkasta-csrf-token aipal.rest-api.kysely/reitit))
-    (c/context "/api/kysymysryhma" [] (wrap-tarkasta-csrf-token aipal.rest-api.kysymysryhma/reitit))
-    (c/context "/api/vastaajatunnus" [] (wrap-tarkasta-csrf-token aipal.rest-api.vastaajatunnus/reitit))
-    (c/context "/api/kayttaja" [] (wrap-tarkasta-csrf-token aipal.rest-api.kayttaja/reitit))
-    (c/context "/api/tutkinto" [] (wrap-tarkasta-csrf-token aipal.rest-api.tutkinto/reitit))
-    (c/context "/api/koulutustoimija" [] (wrap-tarkasta-csrf-token aipal.rest-api.koulutustoimija/reitit))
-    (c/context "/api/tiedote" [] (wrap-tarkasta-csrf-token aipal.rest-api.tiedote/reitit))
+  (api
+    {:exceptions {:handlers {:schema.core/error ex/schema-error-handler}}}
+    (swagger-routes
+        {:ui "/api-docs"
+         :spec "/swagger.json"
+         :data {:info {:title "AIPAL API"
+                       :description "AIPALin rajapinnat. Sisältää sekä integraatiorajapinnat muihin järjestelmiin, että AIPALin sisäiseen käyttöön tarkoitetut rajapinnat."}
+                :basePath (str (service-path (get-in asetukset [:server :base-url])))}})
+    (GET "/" [] {:status 200
+                 :headers {"Content-type" "text/html; charset=utf-8"
+                           "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}
+                 :body (s/render-file
+                         "public/app/index.html"
+                         (merge {:base-url (-> asetukset :server :base-url)
+                                 :vastaus-base-url (-> asetukset :vastaus-base-url)
+                                 :current-user (:nimi *kayttaja*)
+                                 :build-id @build-id
+                                 :development-mode (pr-str (:development-mode asetukset))
+                                 :ominaisuus (cheshire/generate-string (:ominaisuus asetukset))}
+                                (when-let [cas-url (-> asetukset :cas-auth-server :url)]
+                                  {:logout-url (str cas-url "/logout")})))})
+    (GET "/status" [] (s/render-file "status" (assoc (status)
+                                                :asetukset (with-out-str
+                                                             (pprint
+                                                               (clojure.walk/postwalk (fn [elem]
+                                                                                        (if (and (coll? elem)
+                                                                                                 (= (first elem) :password))
+                                                                                          [:password "*****"]
+                                                                                          elem))
+                                                                                      asetukset)))
+                                                :build-id @build-id)))
+    (context "/api/jslog" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest_api.js-log/reitit)
+    (context "/api/i18n" [] aipal.rest-api.i18n/reitit)
+    (context "/api/kieli" [] aipal.rest-api.kieli/reitit)
+    (context "/api/kyselykerta" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kyselykerta/reitit)
+    (context "/api/kyselypohja" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kyselypohja/reitit)
+    (context "/api/ohje" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.ohje/reitit)
+    (context "/api/oppilaitos" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.oppilaitos/reitit)
+    (context "/api/rahoitusmuoto" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.rahoitusmuoto/reitit)
+    (context "/api/raportti/kysely" [] (aipal.rest-api.raportti.kysely/csv-reitit asetukset))
+    (context "/api/raportti/kysely" [] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.kysely/reitit asetukset))
+    (context "/api/raportti/kyselykerta" [] (aipal.rest-api.raportti.kyselykerta/csv-reitit asetukset))
+    (context "/api/raportti/kyselykerta" [] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.kyselykerta/reitit asetukset))
+    (context "/api/raportti/valtakunnallinen" [] (aipal.rest-api.raportti.valtakunnallinen/csv-reitit asetukset))
+    (context "/api/raportti/valtakunnallinen" [] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.valtakunnallinen/reitit asetukset))
+    (context "/api/kysely" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kysely/reitit)
+    (context "/api/kysymysryhma" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kysymysryhma/reitit)
+    (context "/api/vastaajatunnus" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.vastaajatunnus/reitit)
+    (context "/api/kayttaja" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kayttaja/reitit)
+    (context "/api/tutkinto" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkinto/reitit)
+    (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
+    (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (r/not-found "Not found")))

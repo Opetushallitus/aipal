@@ -1,10 +1,11 @@
 (ns aipal.rest-api.kysymysryhma
-  (:require [compojure.core :as c]
-            [oph.common.util.http-util :refer [json-response]]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes DELETE GET POST PUT]]
             [clojure.tools.logging :as log]
+            [schema.core :as s]
             [aipal.arkisto.kysymysryhma :as arkisto]
-            [aipal.infra.kayttaja :refer [*kayttaja* ntm-vastuukayttaja? yllapitaja?]]))
+            aipal.compojure-util
+            [aipal.infra.kayttaja :refer [*kayttaja* ntm-vastuukayttaja? yllapitaja?]]
+            [oph.common.util.http-util :refer [response-or-404]]))
 
 (defn lisaa-jarjestys [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))
@@ -120,57 +121,73 @@
         kysymykset (:kysymykset kysymysryhma)]
     (poista-kysymysryhman-kysymykset! kysymysryhmaid)
     (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
-    (arkisto/paivita! kysymysryhma)))
+    (arkisto/paivita! kysymysryhma)
+    kysymysryhma))
 
 (defn poista-kysymysryhma! [kysymysryhmaid]
   (poista-kysymysryhman-kysymykset! kysymysryhmaid)
   (arkisto/poista! kysymysryhmaid))
 
-(c/defroutes reitit
-  (cu/defapi :kysymysryhma-listaaminen nil :get "/" [taustakysymysryhmat voimassa]
-    (let [taustakysymysryhmat (Boolean/parseBoolean taustakysymysryhmat)
-          voimassa (Boolean/parseBoolean voimassa)]
-      (json-response
-        (if taustakysymysryhmat
-          (arkisto/hae-taustakysymysryhmat)
-          (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) voimassa)))))
+(defroutes reitit
+  (GET "/" []
+    :query-params [{taustakysymysryhmat :- Boolean false}
+                   {voimassa :- Boolean false}]
+    :kayttooikeus :kysymysryhma-listaaminen
+    (response-or-404
+      (if taustakysymysryhmat
+        (arkisto/hae-taustakysymysryhmat)
+        (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) voimassa))))
 
-  (cu/defapi :kysymysryhma-luonti nil :post "/" [kysymykset & kysymysryhma]
-    (json-response
-      (lisaa-kysymysryhma! kysymysryhma kysymykset)))
+  (POST "/" []
+    :body [kysymysryhma s/Any]
+    :kayttooikeus :kysymysryhma-luonti
+    (response-or-404 (lisaa-kysymysryhma! kysymysryhma (:kysymykset kysymysryhma))))
 
-  (cu/defapi :kysymysryhma-muokkaus kysymysryhmaid :put "/:kysymysryhmaid" [kysymysryhmaid & kysymysryhma]
-    (json-response
-      (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid (Integer/parseInt kysymysryhmaid)))))
+  (PUT "/:kysymysryhmaid" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :body [kysymysryhma s/Any]
+    :kayttooikeus [:kysymysryhma-muokkaus kysymysryhmaid]
+    (response-or-404 (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid kysymysryhmaid))))
 
-  (cu/defapi :kysymysryhma-poisto kysymysryhmaid :delete "/:kysymysryhmaid" [kysymysryhmaid]
-    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
-      (poista-kysymysryhma! kysymysryhmaid)))
+  (DELETE "/:kysymysryhmaid" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :kayttooikeus [:kysymysryhma-poisto kysymysryhmaid]
+    (poista-kysymysryhma! kysymysryhmaid)
+    {:status 204})
 
-  (cu/defapi :kysymysryhma-julkaisu kysymysryhmaid :put "/:kysymysryhmaid/julkaise" [kysymysryhmaid]
-    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
-      (if (pos? (arkisto/laske-kysymykset kysymysryhmaid))
-        (json-response (arkisto/julkaise! kysymysryhmaid))
-        {:status 403})))
+  (PUT "/:kysymysryhmaid/julkaise" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :kayttooikeus [:kysymysryhma-julkaisu kysymysryhmaid]
+    (if (pos? (arkisto/laske-kysymykset kysymysryhmaid))
+      (response-or-404 (arkisto/julkaise! kysymysryhmaid))
+      {:status 403}))
 
-  (cu/defapi :kysymysryhma-palautus-luonnokseksi kysymysryhmaid :put "/:kysymysryhmaid/palauta" [kysymysryhmaid]
-    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
-      (if (and
-            (zero? (arkisto/laske-kyselyt kysymysryhmaid))
-            (zero? (arkisto/laske-kyselypohjat kysymysryhmaid)))
-        (json-response (arkisto/palauta-luonnokseksi! kysymysryhmaid))
-        {:status 403})))
+  (PUT "/:kysymysryhmaid/palauta" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :kayttooikeus [:kysymysryhma-palautus-luonnokseksi kysymysryhmaid]
+    (if (and
+          (zero? (arkisto/laske-kyselyt kysymysryhmaid))
+          (zero? (arkisto/laske-kyselypohjat kysymysryhmaid)))
+      (response-or-404 (arkisto/palauta-luonnokseksi! kysymysryhmaid))
+      {:status 403}))
 
-  (cu/defapi :kysymysryhma-sulkeminen kysymysryhmaid :put "/:kysymysryhmaid/sulje" [kysymysryhmaid]
-    (let [kysymysryhmaid (Integer/parseInt kysymysryhmaid)]
-      (json-response (arkisto/sulje! kysymysryhmaid))))
+  (PUT "/:kysymysryhmaid/sulje" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :kayttooikeus [:kysymysryhma-sulkeminen kysymysryhmaid]
+    (response-or-404 (arkisto/sulje! kysymysryhmaid)))
 
-  (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid" [kysymysryhmaid]
-    (json-response (arkisto/hae (Integer/parseInt kysymysryhmaid))))
+  (GET "/:kysymysryhmaid" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
+    (response-or-404 (arkisto/hae kysymysryhmaid)))
 
   ;; Muuten sama kuin ylläoleva, mutta haettaessa vuoden 2015 taustakysymysryhmiä yhdistää hakeutumis- ja suoritusvaiheen kysymysryhmät
-  (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/taustakysymysryhma/:kysymysryhmaid" [kysymysryhmaid]
-    (json-response (arkisto/hae-taustakysymysryhma (Integer/parseInt kysymysryhmaid))))
+  (GET "/taustakysymysryhma/:kysymysryhmaid" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
+    (response-or-404 (arkisto/hae-taustakysymysryhma kysymysryhmaid)))
 
-  (cu/defapi :kysymysryhma-luku kysymysryhmaid :get "/:kysymysryhmaid/esikatselu" [kysymysryhmaid]
-    (json-response (arkisto/hae-esikatselulle (Integer/parseInt kysymysryhmaid)))))
+  (GET "/:kysymysryhmaid/esikatselu" []
+    :path-params [kysymysryhmaid :- s/Int]
+    :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
+    (response-or-404 (arkisto/hae-esikatselulle kysymysryhmaid))))

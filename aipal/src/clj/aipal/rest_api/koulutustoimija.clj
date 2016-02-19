@@ -13,14 +13,16 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.koulutustoimija
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes GET]]
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
-            [oph.common.util.http-util :refer [json-response]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            aipal.compojure-util
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-  (cu/defapi :koulutustoimija nil :get "/aktiivinen" []
-    (json-response (koulutustoimija/hae (:aktiivinen-koulutustoimija *kayttaja*))))
-  (cu/defapi :koulutustoimija nil :get "/" []
-    (json-response (koulutustoimija/hae-kaikki))))
+(defroutes reitit
+  (GET "/aktiivinen" []
+    :kayttooikeus :koulutustoimija
+    (response-or-404 (koulutustoimija/hae (:aktiivinen-koulutustoimija *kayttaja*))))
+  (GET "/" []
+    :kayttooikeus :koulutustoimija
+    (response-or-404 (koulutustoimija/hae-kaikki))))

@@ -13,11 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.rahoitusmuoto
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes GET]]
             [aipal.arkisto.rahoitusmuoto :as rahoitusmuoto]
-            [oph.common.util.http-util :refer [json-response]]))
+            aipal.compojure-util
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-  (cu/defapi :rahoitusmuoto nil :get "/" []
-    (json-response (rahoitusmuoto/hae-kaikki))))
+(defroutes reitit
+  (GET "/" []
+    :kayttooikeus :rahoitusmuoto
+    (response-or-404 (rahoitusmuoto/hae-kaikki))))

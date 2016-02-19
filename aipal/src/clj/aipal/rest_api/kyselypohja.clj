@@ -13,52 +13,70 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.kyselypohja
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
-            [korma.db :as db]
+  (:require [compojure.api.core :refer [defroutes DELETE GET POST PUT]]
+            [schema.core :as s]
             [aipal.arkisto.kyselypohja :as arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
+            aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
-            [oph.common.util.util :refer [paivita-arvot]]
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]))
+            [oph.common.util.http-util :refer [parse-iso-date response-or-404]]
+            [oph.common.util.util :refer [paivita-arvot]]))
 
-(c/defroutes reitit
-  (cu/defapi :kyselypohja-listaaminen nil :get "/" [voimassa]
-    (json-response (arkisto/hae-kyselypohjat (:aktiivinen-koulutustoimija *kayttaja*) (Boolean/parseBoolean voimassa))))
+(defroutes reitit
+  (GET "/" []
+    :query-params [{voimassa :- Boolean false}]
+    :kayttooikeus :kyselypohja-listaaminen
+    (response-or-404 (arkisto/hae-kyselypohjat (:aktiivinen-koulutustoimija *kayttaja*) voimassa)))
 
-  (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid" [kyselypohjaid]
-    (let [kyselypohjaid (Integer/parseInt kyselypohjaid)
-          kyselypohja (arkisto/hae-kyselypohja kyselypohjaid)
+  (GET "/:kyselypohjaid" []
+    :path-params [kyselypohjaid :- s/Int]
+    :kayttooikeus [:kyselypohja-luku kyselypohjaid]
+    (let [kyselypohja (arkisto/hae-kyselypohja kyselypohjaid)
           kysymysryhmat (kysymysryhma-arkisto/hae-kyselypohjasta kyselypohjaid)]
       (when kyselypohja
-        (json-response (assoc kyselypohja :kysymysryhmat kysymysryhmat)))))
+        (response-or-404 (assoc kyselypohja :kysymysryhmat kysymysryhmat)))))
 
-  (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/julkaise" [kyselypohjaid]
-    (json-response (arkisto/julkaise-kyselypohja! (Integer/parseInt kyselypohjaid))))
+  (PUT "/:kyselypohjaid/julkaise" []
+    :path-params [kyselypohjaid :- s/Int]
+    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+    (response-or-404 (arkisto/julkaise-kyselypohja! kyselypohjaid)))
 
-  (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/palauta" [kyselypohjaid]
-    (json-response (arkisto/palauta-kyselypohja-luonnokseksi! (Integer/parseInt kyselypohjaid))))
+  (PUT "/:kyselypohjaid/palauta" []
+    :path-params [kyselypohjaid :- s/Int]
+    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+    (response-or-404 (arkisto/palauta-kyselypohja-luonnokseksi! kyselypohjaid)))
 
-  (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid/sulje" [kyselypohjaid]
-    (json-response (arkisto/sulje-kyselypohja! (Integer/parseInt kyselypohjaid))))
+  (PUT "/:kyselypohjaid/sulje" []
+    :path-params [kyselypohjaid :- s/Int]
+    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+    (response-or-404 (arkisto/sulje-kyselypohja! kyselypohjaid)))
 
-  (cu/defapi :kyselypohja-muokkaus kyselypohjaid :put "/:kyselypohjaid" [kyselypohjaid & kyselypohja]
+  (PUT "/:kyselypohjaid" []
+    :path-params [kyselypohjaid :- s/Int]
+    :body [kyselypohja s/Any]
+    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
     (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
           valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
-      (json-response (arkisto/tallenna-kyselypohja! (Integer/parseInt kyselypohjaid) (assoc kyselypohja :valtakunnallinen valtakunnallinen)))))
+      (response-or-404 (arkisto/tallenna-kyselypohja! kyselypohjaid (assoc kyselypohja :valtakunnallinen valtakunnallinen)))))
 
-  (cu/defapi :kyselypohja-luonti nil :post "/" [& kyselypohja]
+  (POST "/" []
+    :body [kyselypohja s/Any]
+    :kayttooikeus :kyselypohja-luonti
     (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
           valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
-      (json-response
+      (response-or-404
         (arkisto/luo-kyselypohja!
           (assoc kyselypohja
                  :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)
                  :valtakunnallinen valtakunnallinen)))))
 
-  (cu/defapi :kyselypohja-luku kyselypohjaid :get "/:kyselypohjaid/kysymysryhmat" [kyselypohjaid]
-    (json-response (kysymysryhma-arkisto/hae-kyselypohjasta (Integer/parseInt kyselypohjaid))))
+  (GET "/:kyselypohjaid/kysymysryhmat" []
+    :path-params [kyselypohjaid :- s/Int]
+    :kayttooikeus [:kyselypohja-luku kyselypohjaid]
+    (response-or-404 (kysymysryhma-arkisto/hae-kyselypohjasta kyselypohjaid)))
 
-  (cu/defapi :kyselypohja-poisto kyselypohjaid :delete "/:kyselypohjaid" [kyselypohjaid]
-    (let [kyselypohjaid (Integer/parseInt kyselypohjaid)]
-      (arkisto/poista-kyselypohja! kyselypohjaid))))
+  (DELETE "/:kyselypohjaid" []
+    :path-params [kyselypohjaid :- s/Int]
+    :kayttooikeus [:kyselypohja-poisto kyselypohjaid]
+    (arkisto/poista-kyselypohja! kyselypohjaid)
+    {:status 204}))
