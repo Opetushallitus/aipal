@@ -13,15 +13,17 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus.rest-api.kyselykerta
-  (:require [compojure.core :as c]
+  (:require [compojure.api.core :refer [defroutes GET]]
             [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response-nocache]]
+            [schema.core :as s]
+            [oph.common.util.http-util :refer [response-nocache]]
             [aipalvastaus.sql.kyselykerta :as kysely]
             [aipalvastaus.sql.vastaaja :as vastaaja]))
 
-(c/defroutes reitit
-  (c/GET "/:tunnus" [tunnus]
+(defroutes reitit
+  (GET "/:tunnus" []
+    :path-params [tunnus :- s/Str]
     (db/transaction
-      (json-response-nocache
+      (response-nocache
         (when (vastaaja/validoi-vastaajatunnus tunnus)
           (kysely/hae tunnus))))))

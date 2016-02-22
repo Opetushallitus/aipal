@@ -16,7 +16,8 @@
   (:gen-class)
   (:require [clojure.java.io :as io]
             [clojure.tools.logging :as log]
-            [compojure.core :as c]
+            [compojure.api.exception :as ex]
+            [compojure.api.sweet :refer [api context swagger-routes GET]]
             [compojure.route :as r]
             [org.httpkit.server :as hs]
             [ring.middleware.json :refer [wrap-json-params]]
@@ -29,7 +30,7 @@
             [cheshire.generate :as json-gen]
             schema.core
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
-            [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset]]
+            [aipalvastaus.asetukset :refer [oletusasetukset hae-asetukset service-path]]
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [stencil.core :as s]
@@ -45,12 +46,19 @@
                                  "dev")))
 
 (defn ^:private reitit [asetukset]
-  (c/routes
-    (c/context "/api/i18n" [] aipalvastaus.rest-api.i18n/reitit)
-    (c/context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
-    (c/context "/api/vastaus" [] aipalvastaus.rest-api.vastaus/reitit)
-    (c/GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
-    (c/GET ["/:tunnus" :tunnus #"[0-9a-zA-Z]{6,13}"] [tunnus]
+  (api
+    {:exceptions {:handlers {:schema.core/error ex/schema-error-handler}}}
+    (swagger-routes
+        {:ui "/api-docs"
+         :spec "/swagger.json"
+         :data {:info {:title "AIPAL-vastaus API"
+                       :description "AIPAL-vastauksen rajapinnat."}
+                :basePath (str (service-path (get-in asetukset [:server :base-url])))}})
+    (context "/api/i18n" [] aipalvastaus.rest-api.i18n/reitit)
+    (context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
+    (context "/api/vastaus" [] aipalvastaus.rest-api.vastaus/reitit)
+    (GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
+    (GET ["/:tunnus" :tunnus #"[0-9a-zA-Z]{6,13}"] [tunnus]
            (response/redirect (str (-> asetukset :server :base-url) "/#/vastaus/" tunnus)))
     (r/not-found "Not found")))
 
@@ -72,10 +80,7 @@
           _ (log/info "Käynnistetään palvelin porttiin" portti)
           sammuta (hs/run-server (->
                                    (reitit luetut-asetukset)
-                                   wrap-keyword-params
-                                   wrap-json-params
                                    (wrap-resource "public/app")
-                                   wrap-params
                                    wrap-content-type
                                    (wrap-frame-options {:allow-from  (:aipal-base-url luetut-asetukset)})
                                    log-request-wrapper

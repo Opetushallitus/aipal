@@ -13,11 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus.rest-api.vastaus
-  (:require [compojure.core :as c]
+  (:require [compojure.api.core :refer [defroutes POST]]
             [korma.db :as db]
             [schema.core :as schema]
             [clojure.tools.logging :as log]
-            [oph.common.util.http-util :refer [json-response-nocache]]
+            [oph.common.util.http-util :refer [response-nocache]]
             [aipalvastaus.sql.vastaus :as arkisto]
             [aipalvastaus.sql.kyselykerta :as kysely-arkisto]
             [aipalvastaus.sql.vastaaja :as vastaaja]
@@ -134,14 +134,15 @@
     (vastaaja/paivata-vastaaja! vastaajaid)
     true))
 
-(c/defroutes reitit
-  (c/POST "/:vastaajatunnus" [vastaajatunnus vastaukset]
+(defroutes reitit
+  (POST "/:vastaajatunnus" []
+    :path-params [vastaajatunnus :- schema/Str]
+    :body-params [vastaukset :- [KayttajanVastaus]]
     (db/transaction
-      (schema/validate [KayttajanVastaus] vastaukset)
       (let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaajatunnus))]
         (if (and vastaajaid
                  (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus)))
-          (json-response-nocache "OK")
+          (response-nocache "OK")
           (do
             (log/error (str "Vastausten (" vastaajatunnus ") tallentaminen epäonnistui."))
             (db/rollback)
