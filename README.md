@@ -1,7 +1,10 @@
 AIPAL
 =====
 
-Aikuiskoulutuksen palautejärjestelmä. 
+Aikuiskoulutuksen palautejärjestelmä.
+
+Automaattinen Travis CI ajo: [![Build Status](https://travis-ci.org/Opetushallitus/aipal.svg?branch=master)](https://travis-ci.org/Opetushallitus/aipal)
+
 
 # Repositoryn sisältö ja rakenne
 
@@ -36,3 +39,8 @@ Sovellusta voi ajaa paikallisesti [Vagrant](http://www.vagrantup.com/) ohjelman 
 # Dokumentaatio
 
 Järjestelmän toimintaan liittyvä yleinen dokumentaatio löytyy [Aipal wiki-sivulta](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n julkisesta palvelusta. Confluenceen tulee näkyviin [arkkitehtuurin yleiskuvat](https://confluence.csc.fi/display/OPHPALV/Aipal+Arkkitehtuuri) ja vastaavat asiat.
+
+* Automaattisesti generoituva tietokantadokumentaatio: (http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal/)
+* Aipal backend Clojure docs: (http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-doc/)
+* Aipal E[astwood](https://github.com/jonase/eastwood) lint: (http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-lint/aipal.warnings.txt)
+
