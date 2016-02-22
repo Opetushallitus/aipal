@@ -40,7 +40,7 @@ Sovellusta voi ajaa paikallisesti [Vagrant](http://www.vagrantup.com/) ohjelman 
 
 Järjestelmän toimintaan liittyvä yleinen dokumentaatio löytyy [Aipal wiki-sivulta](https://confluence.csc.fi/pages/viewpage.action?pageId=53517029) CSC:n julkisesta palvelusta. Confluenceen tulee näkyviin [arkkitehtuurin yleiskuvat](https://confluence.csc.fi/display/OPHPALV/Aipal+Arkkitehtuuri) ja vastaavat asiat.
 
-* Automaattisesti generoituva tietokantadokumentaatio: (http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal/)
-* Aipal backend Clojure docs: (http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-doc/)
-* Aipal E[astwood](https://github.com/jonase/eastwood) lint: (http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-lint/aipal.warnings.txt)
+* Automaattisesti generoituva tietokantadokumentaatio: [Aipal tietokanta](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal/)
+* Aipal backend Clojure docs: [Palvelin, Clojure docs](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-doc/)
+* Aipal [Eastwood](https://github.com/jonase/eastwood) lint: [Palvelin, viimeisin Eastwood analyysi](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-lint/aipal.warnings.txt)
 
