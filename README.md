@@ -42,5 +42,5 @@ Järjestelmän toimintaan liittyvä yleinen dokumentaatio löytyy [Aipal wiki-si
 
 * Automaattisesti generoituva tietokantadokumentaatio: [Aipal tietokanta](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal/)
 * Aipal backend Clojure docs: [Palvelin, Clojure docs](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-doc/)
-* Aipal [Eastwood](https://github.com/jonase/eastwood) lint: [Palvelin, viimeisin Eastwood analyysi](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-lint/aipal.warnings.txt)
+* Aipal [Eastwood](https://github.com/jonase/eastwood) lint: [Palvelin, viimeisin Eastwood analyysi](http://opetushallitus-docs.s3-website-eu-west-1.amazonaws.com/aipal-lint/aipal-warnings.txt)
 
