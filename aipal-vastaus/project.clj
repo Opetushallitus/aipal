@@ -23,7 +23,9 @@
                  [compojure "1.4.0"]
                  [http-kit "2.1.19"]
                  [korma "0.4.2"]
+                 [metosin/compojure-api "1.0.0"]
                  [org.clojure/clojure "1.8.0"]
+                 [org.clojure/core.cache "0.6.4"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.slf4j/slf4j-api "1.7.16"]
@@ -37,7 +39,7 @@
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/tools.namespace "0.2.11"]
                                   [clj-webdriver "0.7.2"]
-                                  [ring-mock "0.3.0"]]}
+                                  [ring/ring-mock "0.3.0"]]}
              :uberjar {:main aipalvastaus.palvelin
                        :aot :all}}
   :source-paths ["src/clj" "clojure-utils/src/clj"]
