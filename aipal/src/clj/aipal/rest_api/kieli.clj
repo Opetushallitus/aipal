@@ -13,11 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.kieli
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes GET]]
             [aipal.arkisto.kieli :as kieli]
-            [oph.common.util.http-util :refer [json-response]]))
+            aipal.compojure-util
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-  (cu/defapi :kieli nil :get "/" []
-    (json-response (kieli/hae-kaikki))))
+(defroutes reitit
+  (GET "/" []
+    :kayttooikeus :kieli
+    (response-or-404 (kieli/hae-kaikki))))

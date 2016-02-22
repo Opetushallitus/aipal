@@ -13,17 +13,20 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.tutkinto
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes GET]]
             [aipal.arkisto.tutkinto :as tutkinto]
-            [oph.common.util.http-util :refer [json-response]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            aipal.compojure-util
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-  (cu/defapi :tutkinto nil :get "/voimassaolevat" []
-    (json-response (tutkinto/hae-voimassaolevat-tutkinnot)))
-  (cu/defapi :tutkinto nil :get "/vanhentuneet" []
-    (json-response (tutkinto/hae-vanhentuneet-tutkinnot)))
-  (cu/defapi :tutkinto nil :get "/koulutustoimija" []
+(defroutes reitit
+  (GET "/voimassaolevat" []
+    :kayttooikeus :tutkinto
+    (response-or-404 (tutkinto/hae-voimassaolevat-tutkinnot)))
+  (GET "/vanhentuneet" []
+    :kayttooikeus :tutkinto
+    (response-or-404 (tutkinto/hae-vanhentuneet-tutkinnot)))
+  (GET "/koulutustoimija" []
+    :kayttooikeus :tutkinto
     (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
-      (json-response (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus)))))
+      (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus)))))

@@ -13,44 +13,62 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.vastaajatunnus
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]
+  (:require [compojure.api.core :refer [defroutes DELETE GET POST PUT]]
+            [schema.core :as s]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
-            [oph.common.util.util :refer [paivita-arvot]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            aipal.compojure-util
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [oph.common.util.http-util :refer [parse-iso-date response-or-404]]
+            [oph.common.util.util :refer [paivita-arvot]]))
 
-(c/defroutes reitit
-  (cu/defapi :vastaajatunnus-luonti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & vastaajatunnus]
+(defroutes reitit
+  (POST "/:kyselykertaid" []
+    :path-params [kyselykertaid :- s/Int]
+    :body [vastaajatunnus s/Any]
+    :kayttooikeus [:vastaajatunnus-luonti kyselykertaid]
     (let [vastaajatunnus (paivita-arvot vastaajatunnus [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (json-response (vastaajatunnus/lisaa!
-                       (assoc vastaajatunnus :kyselykertaid (Integer/parseInt kyselykertaid))))))
+      (response-or-404 (vastaajatunnus/lisaa!
+                         (assoc vastaajatunnus :kyselykertaid kyselykertaid)))))
 
-  (cu/defapi :vastaajatunnus-tilamuutos kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" [kyselykertaid vastaajatunnusid lukitse]
-    (json-response (vastaajatunnus/aseta-lukittu! (Integer/parseInt kyselykertaid) (Integer/parseInt vastaajatunnusid) lukitse)))
+  (POST "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" []
+    :path-params [kyselykertaid :- s/Int
+                  vastaajatunnusid :- s/Int]
+    :body-params [lukitse :- Boolean]
+    :kayttooikeus [:vastaajatunnus-tilamuutos kyselykertaid]
+    (response-or-404 (vastaajatunnus/aseta-lukittu! kyselykertaid vastaajatunnusid lukitse)))
 
-  (cu/defapi :vastaajatunnus-muokkaus kyselykertaid :post "/:kyselykertaid/tunnus/:vastaajatunnusid/muokkaa-lukumaaraa" [kyselykertaid vastaajatunnusid lukumaara]
-    (let [kyselykertaid (Integer/parseInt kyselykertaid)
-          vastaajatunnusid (Integer/parseInt vastaajatunnusid)
-          vastaajatunnus (vastaajatunnus/hae kyselykertaid vastaajatunnusid)
+  (POST "/:kyselykertaid/tunnus/:vastaajatunnusid/muokkaa-lukumaaraa" []
+    :path-params [kyselykertaid :- s/Int
+                  vastaajatunnusid :- s/Int]
+    :body-params [lukumaara :- s/Int]
+    :kayttooikeus [:vastaajatunnus-muokkaus kyselykertaid]
+    (let [vastaajatunnus (vastaajatunnus/hae kyselykertaid vastaajatunnusid)
           vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
-      (if (not (:muokattavissa vastaajatunnus))
+      (when-not (:muokattavissa vastaajatunnus)
         (throw (IllegalArgumentException. "Vastaajatunnus ei ole enää muokattavissa")))
-      (if (and (> lukumaara 0) (>= lukumaara vastaajat))
-        (json-response (vastaajatunnus/muokkaa-lukumaaraa kyselykertaid vastaajatunnusid lukumaara))
+      (if (and (pos? lukumaara) (>= lukumaara vastaajat))
+        (response-or-404 (vastaajatunnus/muokkaa-lukumaaraa kyselykertaid vastaajatunnusid lukumaara))
         {:status 403})))
 
-  (cu/defapi :vastaajatunnus-poisto kyselykertaid :delete "/:kyselykertaid/tunnus/:vastaajatunnusid" [kyselykertaid vastaajatunnusid]
-    (let [vastaajatunnusid (Integer/parseInt vastaajatunnusid)
-          vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
-      (if (= vastaajat 0)
-        (json-response (vastaajatunnus/poista! (Integer/parseInt kyselykertaid) vastaajatunnusid))
+  (DELETE "/:kyselykertaid/tunnus/:vastaajatunnusid" []
+    :path-params [kyselykertaid :- s/Int
+                  vastaajatunnusid :- s/Int]
+    :kayttooikeus [:vastaajatunnus-poisto kyselykertaid]
+    (let [vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
+      (if (zero? vastaajat)
+        (do
+          (vastaajatunnus/poista! kyselykertaid vastaajatunnusid)
+          {:status 204})
         {:status 403})))
 
-  (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid" [kyselykertaid]
-    (json-response (vastaajatunnus/hae-kyselykerralla (java.lang.Integer/parseInt kyselykertaid))))
+  (GET "/:kyselykertaid" []
+    :path-params [kyselykertaid :- s/Int]
+    :kayttooikeus :vastaajatunnus
+    (response-or-404 (vastaajatunnus/hae-kyselykerralla kyselykertaid)))
 
-  (cu/defapi :vastaajatunnus nil :get "/:kyselykertaid/tutkinto" [kyselykertaid]
-    (if-let [tutkinto (vastaajatunnus/hae-viimeisin-tutkinto (java.lang.Integer/parseInt kyselykertaid) (:aktiivinen-koulutustoimija *kayttaja*))]
-      (json-response tutkinto)
+  (GET "/:kyselykertaid/tutkinto" []
+    :path-params [kyselykertaid :- s/Int]
+    :kayttooikeus :vastaajatunnus
+    (if-let [tutkinto (vastaajatunnus/hae-viimeisin-tutkinto kyselykertaid (:aktiivinen-koulutustoimija *kayttaja*))]
+      (response-or-404 tutkinto)
       {:status 200})))

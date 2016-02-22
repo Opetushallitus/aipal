@@ -13,10 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest_api.js-log
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes POST]]
+            aipal.compojure-util
             [oph.rest_api.js-log :refer :all]))
 
-(c/defroutes reitit
-  (cu/defapi :logitus nil :post "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
+(defroutes reitit
+  (POST "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
+    :kayttooikeus :logitus
     (logita virheenUrl userAgent virheviesti stackTrace cause)))
