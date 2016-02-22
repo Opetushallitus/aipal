@@ -49,11 +49,11 @@
   (api
     {:exceptions {:handlers {:schema.core/error ex/schema-error-handler}}}
     (swagger-routes
-        {:ui "/api-docs"
-         :spec "/swagger.json"
-         :data {:info {:title "AIPAL-vastaus API"
-                       :description "AIPAL-vastauksen rajapinnat."}
-                :basePath (str (service-path (get-in asetukset [:server :base-url])))}})
+      {:ui (when (:development-mode asetukset) "/api-docs")
+       :spec "/swagger.json"
+       :data {:info {:title "AIPAL-vastaus API"
+                     :description "AIPAL-vastauksen rajapinnat."}
+              :basePath (str (service-path (get-in asetukset [:server :base-url])))}})
     (context "/api/i18n" [] aipalvastaus.rest-api.i18n/reitit)
     (context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
     (context "/api/vastaus" [] aipalvastaus.rest-api.vastaus/reitit)
