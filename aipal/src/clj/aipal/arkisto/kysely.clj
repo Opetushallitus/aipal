@@ -56,8 +56,11 @@
 ;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan
 (defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat]
   (let [kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
-    (for [kysely kyselyt]
-      (assoc kysely :kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))))))
+    (for [kysely kyselyt
+          :let [kyselyn-kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))]]
+      (assoc kysely :kyselykerrat kyselyn-kyselykerrat
+                    :vastaajia (reduce + (map :vastaajia kyselyn-kyselykerrat))
+                    :vastaajatunnuksia (reduce + (map :vastaajatunnuksia kyselyn-kyselykerrat))))))
 
 (defn hae-kaikki
   [koulutustoimija]
