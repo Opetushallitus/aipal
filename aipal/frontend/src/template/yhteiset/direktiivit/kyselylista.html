@@ -6,10 +6,14 @@
         <i class="pull-left icon" ng-class="{'contract-icon': kysely.open, 'expand-icon': !kysely.open}"></i>
         <h3 class="e2e-kysely-nimi">{{kysely | lokalisoiKentta:'nimi'}}</h3>
         <span class="text-muted" ng-if="kysely.tila === 'julkaistu'" ng-class="{tulevaisuudessa: kysely.tulevaisuudessa}">
-          {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
+          {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}.
         </span>
         <span class="text-muted" ng-if="kysely.kysymysryhmien_lkm === 0">
           {{ 'kysely.ei_kysymysryhmia' | i18n }}
+        </span>
+        <span class="text-muted">
+          {{ 'yleiset.vastaajia' | i18n }}: {{kysely.vastaajia}}/{{kysely.vastaajatunnuksia}}
+          <span ng-if="kysely.vastaajatunnuksia > 0">({{kysely.vastaajia / kysely.vastaajatunnuksia * 100 | number:1}} %)</span>
         </span>
       </uib-accordion-heading>
 
@@ -78,7 +82,14 @@
         </div>
         <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in (kysely.kyselykerrat|orderBy:kyselykertojen_lajitteluperuste)" class="kyselykerrat-container e2e-kyselykerrat">
           <h3 class="e2e-kyselykerta-nimi"><span ng-if="kyselykerta.lukittu" class="fa fa-lock" title="{{ 'yleiset.lukittu' | i18n }}">&nbsp;&nbsp;</span>{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta.nimi}}</h3>
-          <p class="text-muted" style="margin-bottom: 0" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}</p>
+          <p>
+            <span class="text-muted" style="margin-bottom: 0" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}.
+            </span>
+            <span class="text-muted">
+              {{ 'yleiset.vastaajia' | i18n }}: {{kyselykerta.vastaajia}}/{{kyselykerta.vastaajatunnuksia}}
+              <span ng-if="kyselykerta.vastaajatunnuksia > 0">({{kyselykerta.vastaajia / kyselykerta.vastaajatunnuksia * 100 | number:1}} %)</span>
+            </span>
+          </p>
           <span class="text-info pull-right" ng-if="kyselykerta.aktiivisia_vastaajatunnuksia > kyselykerta.aktiivisia_vastaajia"><span class="fa fa-info-circle"></span> {{ 'kyselykerta.kayttamattomia_vastaajatunnuksia' | i18n }}</span>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']">
             <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
