@@ -5,6 +5,7 @@
          disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']">
       <h2 class="hidden-print">{{ 'raportit.vertailtavat_tutkinnot' | i18n }} *<ohje tunniste="vertailuraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/tutkintotyyppi.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>
@@ -21,6 +22,7 @@
          disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']">
       <h2 class="hidden-print">{{ 'raportit.tarkasteltava_tutkinto' | i18n }} <ohje tunniste="kehitysraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
+      <ng-include class="hidden-print" src="'template/raportti/osat/tutkintotyyppi.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <h3 class="hidden-print">{{ 'raportit.koulutustoimijat' | i18n }}</h3>

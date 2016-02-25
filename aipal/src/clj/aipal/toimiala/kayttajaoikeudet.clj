@@ -301,6 +301,7 @@
     :ohje_muokkaus kayttaja/yllapitaja?
     :rahoitusmuoto aipal-kayttaja?
     :tutkinto aipal-kayttaja?
+    :tutkintotyyppi aipal-kayttaja?
     :oppilaitos aipal-kayttaja?
     :koulutustoimija aipal-kayttaja?
     :valtakunnallinen-raportti raportti-koulutustoimijoista?

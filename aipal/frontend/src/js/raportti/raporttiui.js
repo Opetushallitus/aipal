@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kyselykerta.kaavioapurit', 'yhteiset.direktiivit.valintalista'])
+angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkintotyyppi', 'raportti.kyselykerta.kaavioapurit', 'yhteiset.direktiivit.valintalista'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/raportit', {
@@ -64,8 +64,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Oppilaitos', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
-    function($scope, Koulutustoimija, Oppilaitos, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Oppilaitos', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'Tutkintotyyppi', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, Oppilaitos, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, Tutkintotyyppi, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.kieli = kieli;
@@ -184,6 +184,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'raportti.kys
     });
     Kieli.haeKaikki().success(function(kielet) {
       $scope.kielet = _.pluck(kielet, 'kieli');
+    });
+    Tutkintotyyppi.haeKaikki(function(tutkintotyypit) {
+      $scope.tutkintotyypit = _.pluck(tutkintotyypit, 'tutkintotyyppi');
     });
 
     $scope.piilotaTutkintorakenneVaihto = function() {
