@@ -18,6 +18,7 @@
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
+            [oph.common.util.util :refer [max-date]]
             [oph.korma.common :refer [select-unique-or-nil select-unique unique-or-nil]]
             [aipal.auditlog :as auditlog]))
 
@@ -60,7 +61,8 @@
           :let [kyselyn-kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))]]
       (assoc kysely :kyselykerrat kyselyn-kyselykerrat
                     :vastaajia (reduce + (map :vastaajia kyselyn-kyselykerrat))
-                    :vastaajatunnuksia (reduce + (map :vastaajatunnuksia kyselyn-kyselykerrat))))))
+                    :vastaajatunnuksia (reduce + (map :vastaajatunnuksia kyselyn-kyselykerrat))
+                    :viimeisin_vastaus (reduce max-date nil (map :viimeisin_vastaus kyselyn-kyselykerrat))))))
 
 (defn hae-kaikki
   [koulutustoimija]

@@ -14,6 +14,7 @@
         <span class="text-small">
           {{ 'yleiset.vastaajia' | i18n }}: {{kysely.vastaajia}}/{{kysely.vastaajatunnuksia}}
           <span ng-if="kysely.vastaajatunnuksia > 0">({{kysely.vastaajia / kysely.vastaajatunnuksia * 100 | number:1}} %).</span>
+          <span ng-if="kysely.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kysely.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
         </span>
       </uib-accordion-heading>
 
@@ -88,6 +89,7 @@
             <span class="text-small">
               {{ 'yleiset.vastaajia' | i18n }}: {{kyselykerta.vastaajia}}/{{kyselykerta.vastaajatunnuksia}}
               <span ng-if="kyselykerta.vastaajatunnuksia > 0">({{kyselykerta.vastaajia / kyselykerta.vastaajatunnuksia * 100 | number:1}} %).</span>
+              <span ng-if="kyselykerta.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kyselykerta.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
             </span>
           </p>
           <span class="text-info pull-right" ng-if="kyselykerta.aktiivisia_vastaajatunnuksia > kyselykerta.aktiivisia_vastaajia"><span class="fa fa-info-circle"></span> {{ 'kyselykerta.kayttamattomia_vastaajatunnuksia' | i18n }}</span>
