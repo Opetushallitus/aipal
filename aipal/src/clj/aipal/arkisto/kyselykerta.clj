@@ -81,8 +81,8 @@
 (defn kyselykertaid->kyselyid
   [kyselykertaid]
   (let [result (sql/select taulut/kyselykerta
-    (sql/fields :kyselyid)
-    (sql/where {:kyselykertaid kyselykertaid}))]
+                 (sql/fields :kyselyid)
+                 (sql/where {:kyselykertaid kyselykertaid}))]
     (-> result
         first
         :kyselyid)))
