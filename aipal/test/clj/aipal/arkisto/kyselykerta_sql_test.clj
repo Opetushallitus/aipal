@@ -4,7 +4,7 @@
             [aipal.arkisto.kyselykerta :refer :all]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.sql.test-data-util :as test-data]
-            [aipal.sql.test-util :refer [tietokanta-fixture]]
+            [aipal.sql.test-util :refer [tietokanta-fixture] :as test-util]
             [oph.common.util.util :refer [some-value
                                           some-value-with]]))
 
@@ -65,7 +65,7 @@
         [vastaajatunnus1] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 1} kyselykerta1)
         [vastaajatunnus2] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 1} kyselykerta2)]
     (poista! (:kyselykertaid kyselykerta1))
-    (is (= (map :vastaajatunnusid (sql/select taulut/vastaajatunnus))
+    (is (= (map :vastaajatunnusid (sql/select taulut/vastaajatunnus (sql/where {:luotu_kayttaja test-util/testikayttaja-oid})))
            [(:vastaajatunnusid vastaajatunnus2)]))))
 
 (deftest ^:integraatio hae-kaikki-kyselykerta-jolla-monta-vastaajaa-test
