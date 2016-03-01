@@ -242,7 +242,12 @@
 
 (defn kyselykerta-poisto? [kyselykertaid]
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
-    (kyselykerta-luonti? kyselyid)))
+    (or (kayttaja/yllapitaja?)
+        (kayttajalla-on-jokin-rooleista-kyselyssa?
+          #{"OPL-VASTUUKAYTTAJA"
+            "OPL-KAYTTAJA"
+            "OPL-NTMVASTUUKAYTTAJA"}
+          kyselyid))))
 
 (defn raportti-koulutustoimijoista? [koulutustoimijat]
   (or (kayttaja/yllapitaja?)
