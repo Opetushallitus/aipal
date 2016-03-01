@@ -257,7 +257,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
       if ($scope.raportti.tyyppi === 'vertailu') {
         return ($scope.raportti.tutkintorakennetaso === 'tutkinto' && $scope.raportti.tutkinnot.length > 0) ||
           ($scope.raportti.tutkintorakennetaso === 'opintoala' && $scope.raportti.opintoalat.length > 0) ||
-          ($scope.raportti.tutkintorakennetaso === 'koulutusala' && $scope.raportti.koulutusalat.length > 0);
+          ($scope.raportti.tutkintorakennetaso === 'koulutusala' && $scope.raportti.koulutusalat.length > 0) ||
+          $scope.raportti.tutkintotyyppi;
       }
       else if ($scope.raportti.tyyppi === 'koulutustoimijat') {
         return $scope.raportti.koulutustoimijat.length > 0;
