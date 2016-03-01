@@ -18,6 +18,7 @@
             aipal.rest-api.kysymysryhma
             aipal.rest-api.ohje
             aipal.rest-api.oppilaitos
+            aipal.rest-api.toimipaikka
             aipal.rest-api.rahoitusmuoto
             aipal.rest-api.raportti.kysely
             aipal.rest-api.raportti.kyselykerta
@@ -76,6 +77,7 @@
     (context "/api/ohje" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.ohje/reitit)
     (context "/api/oppilaitos" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.oppilaitos/reitit)
     (context "/api/rahoitusmuoto" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.rahoitusmuoto/reitit)
+    (context "/api/toimipaikka" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.toimipaikka/reitit)
     (context "/api/raportti/kysely" [] (aipal.rest-api.raportti.kysely/csv-reitit asetukset))
     (context "/api/raportti/kysely" [] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.kysely/reitit asetukset))
     (context "/api/raportti/kyselykerta" [] (aipal.rest-api.raportti.kyselykerta/csv-reitit asetukset))
