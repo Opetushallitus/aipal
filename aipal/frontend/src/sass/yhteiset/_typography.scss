@@ -16,8 +16,13 @@ p {
   line-height: $baseline;
 }
 
-.text-muted, .text-small {
+.text-muted {
   font-size: 0.8em;
+}
+
+.tilastot {
+  font-size: 13px;
+  line-height: 1.1;
 }
 
 h1 {

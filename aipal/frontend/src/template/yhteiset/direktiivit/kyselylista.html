@@ -5,17 +5,18 @@
       <uib-accordion-heading>
         <i class="pull-left icon" ng-class="{'contract-icon': kysely.open, 'expand-icon': !kysely.open}"></i>
         <h3 class="e2e-kysely-nimi">{{kysely | lokalisoiKentta:'nimi'}}</h3>
-        <span class="text-small" ng-if="kysely.tila === 'julkaistu'" ng-class="{tulevaisuudessa: kysely.tulevaisuudessa}">
-          {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}.
-        </span>
-        <span class="text-small" ng-if="kysely.kysymysryhmien_lkm === 0">
-          {{ 'kysely.ei_kysymysryhmia' | i18n }}
-        </span>
-        <span class="text-small">
+        <span class="tilastot pull-right">
           {{ 'yleiset.vastaajia' | i18n }}: {{kysely.vastaajia}}/{{kysely.vastaajatunnuksia}}
-          <span ng-if="kysely.vastaajatunnuksia > 0">({{kysely.vastaajia / kysely.vastaajatunnuksia * 100 | number:1}} %).</span>
+          <span ng-if="kysely.vastaajatunnuksia > 0">({{kysely.vastaajia / kysely.vastaajatunnuksia * 100 | number:1}} %).</span><br/>
           <span ng-if="kysely.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kysely.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
         </span>
+        <span class="tilastot" ng-if="kysely.tila === 'julkaistu'" ng-class="{tulevaisuudessa: kysely.tulevaisuudessa}">
+          {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
+        </span>
+        <span class="tilastot" ng-if="kysely.kysymysryhmien_lkm === 0">
+          {{ 'kysely.ei_kysymysryhmia' | i18n }}
+        </span>
+        <span class="clearfix"></span>
       </uib-accordion-heading>
 
       <div class="panel-tools-content">
@@ -82,17 +83,19 @@
           <a ng-hide="kyselykertojen_lajitteluperuste == 'nimi'" ng-click="kyselykertojen_lajitteluperuste = 'nimi'">{{'kysely.kyselykertojen_lajitteluperuste_nimi'|i18n}}</a>
         </div>
         <div ng-show="kysely.kyselykerrat.length > 0" ng-repeat="kyselykerta in (kysely.kyselykerrat|orderBy:kyselykertojen_lajitteluperuste)" class="kyselykerrat-container e2e-kyselykerrat">
-          <h3 class="e2e-kyselykerta-nimi"><span ng-if="kyselykerta.lukittu" class="fa fa-lock" title="{{ 'yleiset.lukittu' | i18n }}">&nbsp;&nbsp;</span>{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta.nimi}}</h3>
-          <p>
-            <span class="text-small" style="margin-bottom: 0" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}.
+          <div>
+            <h3 class="e2e-kyselykerta-nimi"><span ng-if="kyselykerta.lukittu" class="fa fa-lock" title="{{ 'yleiset.lukittu' | i18n }}">&nbsp;&nbsp;</span>{{ 'yleiset.kyselykerta' | i18n }}: {{kyselykerta.nimi}}</h3>
+            <span class="tilastot" style="margin-bottom: 0" ng-if="!kyselykerta.lukittu">{{ 'yleiset.voimassa' | i18n }}: {{kyselykerta.voimassa_alkupvm | voimassaoloAika:  kyselykerta.voimassa_loppupvm}}
             </span>
-            <span class="text-small">
-              {{ 'yleiset.vastaajia' | i18n }}: {{kyselykerta.vastaajia}}/{{kyselykerta.vastaajatunnuksia}}
-              <span ng-if="kyselykerta.vastaajatunnuksia > 0">({{kyselykerta.vastaajia / kyselykerta.vastaajatunnuksia * 100 | number:1}} %).</span>
-              <span ng-if="kyselykerta.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kyselykerta.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
+            <span class="tilastot pull-right">
+              <p class="tilastot">
+                {{ 'yleiset.vastaajia' | i18n }}: {{kyselykerta.vastaajia}}/{{kyselykerta.vastaajatunnuksia}}
+                <span ng-if="kyselykerta.vastaajatunnuksia > 0">({{kyselykerta.vastaajia / kyselykerta.vastaajatunnuksia * 100 | number:1}} %).</span><br/>
+                <span ng-if="kyselykerta.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kyselykerta.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
+              </p>
+              <span class="text-info" ng-if="kyselykerta.aktiivisia_vastaajatunnuksia > kyselykerta.aktiivisia_vastaajia"><span class="fa fa-info-circle"></span> {{ 'kyselykerta.kayttamattomia_vastaajatunnuksia' | i18n }}</span>
             </span>
-          </p>
-          <span class="text-info pull-right" ng-if="kyselykerta.aktiivisia_vastaajatunnuksia > kyselykerta.aktiivisia_vastaajia"><span class="fa fa-info-circle"></span> {{ 'kyselykerta.kayttamattomia_vastaajatunnuksia' | i18n }}</span>
+          </div>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']">
             <a ng-href="#/kyselyt/{{kysely.kyselyid}}/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left">
               <span ng-if="!kyselykerta.lukittu && kysely.kaytettavissa">{{ 'yleiset.vastaajatunnukset' | i18n }}</span>
