@@ -38,10 +38,23 @@
   (testing "on poistettavissa jos vastaajia ei löydy"
     (testing "ja tila on luonnos"
       (let [kysely (test-data/lisaa-kysely! {:tila "luonnos"})]
-        (is (kysely-poistettavissa? (:kyselyid kysely)))))
+        (is (kysely-poistettavissa? (:kyselyid kysely)))
+        (poista-kysely! (:kyselyid kysely))))
     (testing "ja tila on suljettu"
       (let [kysely (test-data/lisaa-kysely! {:tila "suljettu"})]
-        (is (kysely-poistettavissa? (:kyselyid kysely))))))
+        (is (kysely-poistettavissa? (:kyselyid kysely)))
+        (poista-kysely! (:kyselyid kysely))))
+    (testing "ja tila on suljettu, yksi kyselykerta"
+      (let [kysely (test-data/lisaa-kysely! {:tila "suljettu"})
+            kyselykerta (test-data/lisaa-kyselykerta! {} kysely)]
+        (is (kysely-poistettavissa? (:kyselyid kysely)))
+        (poista-kysely! (:kyselyid kysely))))
+    (testing "ja tila on suljettu, yksi kyselykerta, ja vastaajatunnuksia"
+      (let [kysely (test-data/lisaa-kysely! {:tila "suljettu"})
+            kyselykerta (test-data/lisaa-kyselykerta! {} kysely)
+            [vastaajatunnus] (test-data/lisaa-vastaajatunnus! {} kyselykerta)]
+        (is (kysely-poistettavissa? (:kyselyid kysely)))
+        (poista-kysely! (:kyselyid kysely)))))
   (testing "ei ole poistettavissa"
     (testing "jos tila on julkaistu"
       (let [kysely (test-data/lisaa-kysely! {:tila "julkaistu"})]

@@ -125,6 +125,10 @@
 
 (defn poista-kysely! [kyselyid]
   (auditlog/kysely-poisto! kyselyid)
+  (sql/delete taulut/vastaajatunnus
+    (sql/where {:kyselykertaid [in (sql/subselect taulut/kyselykerta (sql/fields :kyselykertaid) (sql/where {:kyselyid kyselyid}))]}))
+  (sql/delete taulut/kyselykerta
+    (sql/where {:kyselyid kyselyid}))
   (sql/delete taulut/kysely_kysymysryhma
     (sql/where {:kyselyid kyselyid}))
   (sql/delete taulut/kysely_kysymys
