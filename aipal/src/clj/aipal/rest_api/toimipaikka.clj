@@ -13,11 +13,12 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.toimipaikka
-  (:require [compojure.core :as c]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes GET]]
+            aipal.compojure-util
             [aipal.arkisto.toimipaikka :as toimipaikka]
-            [oph.common.util.http-util :refer [json-response]]))
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-             (cu/defapi :toimipaikka nil :get "/" [oppilaitos]
-                        (json-response (toimipaikka/hae-oppilaitoksen-toimipaikat oppilaitos))))
+(defroutes reitit
+             (GET "/" [oppilaitos] 
+             	:kayttooikeus :toimipaikka
+                        (response-or-404 (toimipaikka/hae-oppilaitoksen-toimipaikat oppilaitos))))

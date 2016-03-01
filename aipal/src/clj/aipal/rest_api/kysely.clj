@@ -70,10 +70,6 @@
   (let [cnt (count url)]
     (or (= cnt 0) (and (<= cnt 2000) (not (nil? (re-matches #"^http(s?):\/\/(.*)$", url)))))))
 
-(c/defroutes reitit
-  (cu/defapi :kysely nil :get "/" []
-    (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
-
 (defroutes reitit
   (GET  "/" []
     :kayttooikeus :kysely
