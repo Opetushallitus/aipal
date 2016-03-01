@@ -37,7 +37,8 @@
   (let [kysely       (test-data/lisaa-kysely!)
         _            (lisaa-kyselykerta-johon-on-vastattu! {} kysely)
         kyselykerta2 (lisaa-kyselykerta-ilman-vastaajia! {} kysely)]
-    (is (poistettavissa? (:kyselykertaid kyselykerta2)))))
+    (is (poistettavissa? (:kyselykertaid kyselykerta2)))
+    (poista! (:kyselykertaid kyselykerta2))))
 
 ;; Kyselykerta ei ole poistettavissa, jos sillä on yksikin vastaaja.
 (deftest ^:integraatio hae-kaikki-kyselykerta-ei-poistettavissa
