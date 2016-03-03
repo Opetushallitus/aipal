@@ -29,6 +29,12 @@
   (w/click {:css ".e2e-luo-vastaajatunnuksia"})
   (odota-kunnes (w/present? {:css ".modal-dialog"})))
 
+(defn valitse-vastaajatunnusten-maara [maara]
+  (odota-kunnes (w/present? {:css "#vastaajien_maara"}))
+  (w/clear "#vastaajien_maara")
+  (w/input-text "#vastaajien_maara" maara)
+  (w/click ".e2e-vastaajatunnus-henkilokohtainen"))
+
 (defn valitse-vastaajatunnuksen-rahoitusmuoto [rahoitusmuoto]
   (odota-kunnes (w/present? {:css ".e2e-vastaajatunnuksen-rahoitusmuoto"}))
   (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" rahoitusmuoto))
