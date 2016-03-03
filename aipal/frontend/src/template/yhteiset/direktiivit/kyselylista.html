@@ -111,16 +111,18 @@
               {{ 'yleiset.avaa' | i18n }}&nbsp;
               <span class="fa fa-unlock"></span>
             </button>
+          </auth>
+          <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']">
+            <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left e2e-nayta-raportti" ng-disabled="kyselykerta.vastaajia < 5">
+              {{ 'kysely.raportti' | i18n }}&nbsp;
+              <span class="glyphicon glyphicon-stats"></span>
+            </a>
+          </auth>
+          <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']">
             <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)" ng-disabled="!kyselykerta.poistettavissa">
               {{ 'kyselykerta.poista' | i18n }}&nbsp;
               <span class="fa fa-trash"></span>
             </button>
-          </auth>
-          <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']">
-            <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left e2e-nayta-raportti">
-              {{ 'kysely.raportti' | i18n }}&nbsp;
-              <span class="glyphicon glyphicon-stats"></span>
-            </a>
           </auth>
         </div>
         <span ng-show="!kysely.kyselykerrat.length" class="text-small">{{ 'kysely.ei_kyselykertoja' | i18n }}</span>
