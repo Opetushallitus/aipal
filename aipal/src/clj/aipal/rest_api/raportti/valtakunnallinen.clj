@@ -132,7 +132,7 @@
     :body [parametrit s/Any]
     :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
     (response-or-404
-      (let [kaikki-raportit (for [raportti (luo-raportit parametrit)]
+      (let [kaikki-raportit (for [raportti (luo-raportit (yhteinen/korjaa-numero-avaimet parametrit))]
                                (ei-riittavasti-vastaajia raportti asetukset))
             naytettavat (filter (comp nil? :virhe) kaikki-raportit)
             virheelliset (filter :virhe kaikki-raportit)]

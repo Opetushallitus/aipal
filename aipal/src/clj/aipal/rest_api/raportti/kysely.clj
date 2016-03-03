@@ -92,7 +92,7 @@
     :path-params [kyselyid :- s/Int]
     :body [parametrit s/Any]
     :kayttooikeus [:kysely-raportti kyselyid]
-    (response-or-404 (muodosta-kyselyraportti kyselyid parametrit asetukset))))
+    (response-or-404 (muodosta-kyselyraportti kyselyid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param

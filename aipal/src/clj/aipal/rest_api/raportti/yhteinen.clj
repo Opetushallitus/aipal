@@ -24,3 +24,19 @@
                              {:query-params {:parametrit muunnettu}}
                              {:params {:parametrit muunnettu}}))
                request))))
+
+(defn numero? [s]
+  (try
+    (Integer/parseInt s)
+    true
+    (catch NumberFormatException _
+      false)))
+
+(defn korjaa-numero-avaimet
+  "Muuttaa annetusta mapista stringeiksi kaikki keyword-avaimet, jotka koostuvat pelkistä numeroista"
+  [m]
+  (clojure.walk/postwalk (fn [x]
+                           (if (and (keyword? x) (numero? (name x)))
+                             (name x)
+                             x))
+                         m))
