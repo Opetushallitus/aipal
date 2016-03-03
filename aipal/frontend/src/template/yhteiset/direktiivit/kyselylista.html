@@ -67,7 +67,7 @@
           </a>
         </auth>
         <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']" ng-if="kysely.tila !== 'luonnos'">
-          <a ng-href="#/raportit/kysely/{{kysely.kyselyid}}" class="btn btn-primary pull-left">
+          <a ng-href="#/raportit/kysely/{{kysely.kyselyid}}" class="btn btn-primary pull-left" ng-disabled="kysely.vastaajia < 5">
             {{ 'kysely.raportti' | i18n }}&nbsp;
             <span class="glyphicon glyphicon-stats"></span>
           </a>
