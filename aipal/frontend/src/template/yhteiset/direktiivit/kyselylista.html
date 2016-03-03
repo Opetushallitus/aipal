@@ -119,7 +119,7 @@
             </a>
           </auth>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']">
-            <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)" ng-disabled="!kyselykerta.poistettavissa">
+            <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)" ng-if="kyselykerta.poistettavissa">
               {{ 'kyselykerta.poista' | i18n }}&nbsp;
               <span class="fa fa-trash"></span>
             </button>
