@@ -223,3 +223,11 @@
    (seq (sql/select taulut/kysely
           (sql/where (and {:kyselyid kyselyid}
                           (kysely-util/kysely-sisaltaa-ntm-kysymysryhman :kysely.kyselyid)))))))
+
+(defn kysely-poistettavissa? [kyselyid]
+  (->
+    kysely-poistettavissa-query
+    (sql/where {:kyselyid kyselyid})
+    sql/exec
+    first
+    :poistettavissa))
