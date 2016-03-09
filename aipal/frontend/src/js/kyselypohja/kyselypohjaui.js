@@ -53,9 +53,10 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     });
   }])
 
-  .controller('KyselypohjaController', ['$location', '$modal', '$routeParams', '$scope', 'Kyselypohja', 'Kysymysryhma', 'i18n', 'ilmoitus', 'tallennusMuistutus', function($location, $modal, $routeParams, $scope, Kyselypohja, Kysymysryhma, i18n, ilmoitus, tallennusMuistutus) {
+  .controller('KyselypohjaController', ['$location', '$uibModal', '$routeParams', '$scope', 'Kyselypohja', 'Kysymysryhma', 'i18n', 'ilmoitus', 'tallennusMuistutus', 'pvm', 
+    function($location, $uibModal, $routeParams, $scope, Kyselypohja, Kysymysryhma, i18n, ilmoitus, tallennusMuistutus, pvm) {
     $scope.lisaaKysymysryhmaModal = function() {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
         controller: 'LisaaKysymysryhmaModalController'
       });
@@ -111,7 +112,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
 
     if ($routeParams.kyselypohjaid) {
       Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
-        $scope.kyselypohja = kyselypohja;
+        $scope.kyselypohja = pvm.parsePvm(kyselypohja);
       }).error(function(data, status) {
         if (status !== 500) {
           $location.url('/kyselypohjat');
@@ -120,7 +121,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     } else {
       $scope.kyselypohja = {
         kysymysryhmat: [],
-        voimassa_alkupvm: new Date().toISOString().slice(0, 10)
+        voimassa_alkupvm: new Date()
       };
     }
   }])

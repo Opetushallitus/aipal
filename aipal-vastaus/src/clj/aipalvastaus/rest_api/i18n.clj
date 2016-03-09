@@ -16,13 +16,12 @@
   (:import (java.util Locale
                       ResourceBundle
                       ResourceBundle$Control))
-  (:require [compojure.core :as c]
-            [schema.core :as schema]
-            [oph.common.util.http-util :refer [json-response-nocache]]
+  (:require [compojure.api.core :refer [defroutes GET]]
+            [schema.core :as s]
+            [oph.common.util.http-util :refer [response-nocache]]
             [oph.common.util.util :refer [pisteavaimet->puu]]))
 
-(defn validoi-kieli []
-  (schema/pred #(some #{%} ["fi" "sv" "en"])))
+(def Kieli (s/enum "fi" "sv" "en"))
 
 (defn hae-tekstit [kieli]
   (ResourceBundle/clearCache)
@@ -32,7 +31,7 @@
          (into {})
          pisteavaimet->puu)))
 
-(c/defroutes reitit
-  (c/GET "/:kieli" [kieli :as req]
-    (schema/validate (validoi-kieli) kieli)
-    (json-response-nocache (hae-tekstit kieli))))
+(defroutes reitit
+  (GET "/:kieli" []
+    :path-params [kieli :- Kieli]
+    (response-nocache (hae-tekstit kieli))))

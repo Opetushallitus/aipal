@@ -108,7 +108,7 @@
           {:status 403
            :headers {"Content-Type" "text/plain; charset=utf-8"
                      "X-Kayttooikeudet-Forbidden" "true"}
-           :body "Käyttöoikeudet eivät riitä"}
+           :body "yleiset.virhe_kayttoikeudet_eivat_riita"}
           (throw e))))))
 
 (defn wrap-internal-forbidden [handler]
@@ -121,22 +121,17 @@
 (defn app
   "Ring-wrapperit ja compojure-reitit ilman HTTP-palvelinta"
   [asetukset]
-  (require 'aipal.reitit)
   (json-gen/add-encoder org.joda.time.LocalDate
               (fn [c json-generator]
                 (.writeString json-generator (.toString c "yyyy-MM-dd"))))
   (json-gen/add-encoder org.joda.time.DateTime
       (fn [c json-generator]
         (.writeString json-generator (.toString c))))
-  (let [session-store (memory-store)
-        reitit ((eval 'aipal.reitit/reitit) asetukset)]
-    (-> reitit
+  (let [session-store (memory-store)]
+    (-> (aipal.reitit/reitit asetukset)
       wrap-internal-forbidden
-      wrap-keyword-params
-      wrap-json-params
       (wrap-resource "public/app")
       (auth-removeticket asetukset)
-      wrap-params
       wrap-content-type
       wrap-not-modified
       wrap-expires

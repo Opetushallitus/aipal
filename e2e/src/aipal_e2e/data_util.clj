@@ -32,7 +32,6 @@
             [aipal-e2e.tietokanta.yhteys :as yhteys]
             [aipal-e2e.tietokanta.data :refer [tyhjenna-testidata!]]))
 
-
 (def ^:private koulutustoimija-tiedot {:luo-fn koulutustoimija/lisaa!
                                        :poista-fn #(koulutustoimija/poista! (:ytunnus %))
                                        :default (for [i (iterate inc 1)]

@@ -213,6 +213,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
     }]
   )
 
+
   .controller('LuoTunnuksiaModalController', ['$modalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet',
     'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
     'viimeksiValittuTutkinto', 'kayttooikeudet',
@@ -285,7 +286,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
           haeToimipaikat(oppilaitos.oppilaitoskoodi);
         }
       });
-
 
       $scope.luoTunnuksia = function (vastaajatunnus) {
         $modalInstance.close(vastaajatunnus);

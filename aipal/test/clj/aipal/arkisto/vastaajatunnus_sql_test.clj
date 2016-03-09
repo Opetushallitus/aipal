@@ -1,11 +1,10 @@
 (ns aipal.arkisto.vastaajatunnus-sql-test
   (:require [clojure.test :refer :all]
-            [clojure.test.check :as tc]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
             [clojure.test.check.clojure-test :refer [defspec]]
-            [clj-time.core :as time]
-            clj-time.coerce
+            [clj-time.core :as ctime]
+            [clj-time.coerce :as c]
             [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.sql.test-util :refer :all]
@@ -34,7 +33,7 @@
       (lisaa! {:kyselykertaid k
                :vastaajatunnusid 2
                :vastaajien_lkm 22})
-      (is (= (:vastaajien_lkm (hae 1))
+      (is (= (:vastaajien_lkm (hae k 1))
              11)))))
 
 (deftest ^:integraatio lisays
@@ -73,6 +72,18 @@
       (is (= (count (hae-kyselykerralla k))
              6)))))
 
+(deftest ^:integraatio muokattavissa-tieto-lasketaan-oikein
+  (let [testaa (fn [selite kysely_loppupvm kyselykerta_loppupvm vastaajatunnus_loppupvm voimassa_odotettu]
+                 (let [kysely (lisaa-kysely! {:voimassa_loppupvm (c/to-date-time kysely_loppupvm)})
+                       kyselykerta (lisaa-kyselykerta! {:voimassa_loppupvm (c/to-date-time kyselykerta_loppupvm)} kysely)
+                       vastaajatunnus (first (lisaa-vastaajatunnus! {:voimassa_loppupvm (c/to-date-time vastaajatunnus_loppupvm)} kyselykerta))]
+                   (testing selite
+                     (is (= (:muokattavissa vastaajatunnus) voimassa_odotettu)))))]
+    (testaa "vastaajatunnus.voimassa_loppupvm tänään" nil nil (ctime/now) true)
+    (testaa "vastaajatunnus.voimassa_loppupvm liian vanha" nil nil (ctime/date-time 2015 1 1) false)
+    (testaa "kysely.voimassa_loppupvm tänään, muut null" (ctime/now) nil nil true)
+    (testaa "kysely/kyselykerta/vastaajatunnus voimassa_loppupvm null kaikissa" nil nil nil true)))
+
 (defn vastaajatunnus-gen [kyselykertaid]
   (gen/hash-map :kyselykertaid (gen/return kyselykertaid)
                 :henkilokohtainen gen/boolean
@@ -83,5 +94,5 @@
     (let [k (:kyselykertaid (lisaa-kyselykerta!))]
       (prop/for-all [vastaajatunnus (vastaajatunnus-gen k)]
         (sql/delete taulut/vastaajatunnus)
-        (= (lisaa! vastaajatunnus)
-           (hae-kyselykerralla k))))))
+        (= (set (lisaa! vastaajatunnus))
+           (set (hae-kyselykerralla k)))))))

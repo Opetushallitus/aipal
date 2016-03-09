@@ -18,14 +18,14 @@
             [oph.source-util :refer :all]))
 
 (deftest audit-log-kutsut-ovat-olemassa
-  (is (empty? (vastaavat-muodot "src/clj" audit-log-kutsu-puuttuu? 
+  (is (empty? (vastaavat-muodot "src/clj" audit-log-kutsu-puuttuu?
                 :ohita ["src/clj/aipal/auditlog.clj"
                         "src/clj/aipal/rest_api/kysely.clj"
                         "src/clj/aipal/rest_api/kysymysryhma.clj"]))))
 
 (deftest js-debug-test
   (is (empty? (js-console-log-calls))))
- 
+
 (deftest properties-encoding-test
   (testing "etsitään merkkejä jotka eivät ole ns. printable charactereita. Ääkköset ovat näitä enkoodaussyistä"
     (is (empty? (vastaavat-rivit "resources/i18n"

@@ -13,18 +13,26 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.ohje
-  (:require [compojure.core :as c]
+  (:require [compojure.api.core :refer [defroutes GET PUT]]
+            [schema.core :as s]
             [aipal.arkisto.ohje :as arkisto]
-            [oph.common.util.http-util :refer [json-response]]
-            [aipal.compojure-util :as cu]
-            [cheshire.core :as cheshire]))
+            aipal.compojure-util
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-  (cu/defapi :ohjeet_luku nil :get "/:ohjetunniste" [ohjetunniste]
+(defroutes reitit
+  (GET "/:ohjetunniste" []
+    :path-params [ohjetunniste :- s/Str]
+    :kayttooikeus :ohjeet_luku
     (if-let [ohje (arkisto/hae ohjetunniste)]
-      (json-response ohje)
+      (response-or-404 ohje)
       {:status 200}))
-  (cu/defapi :ohje_muokkaus nil :put "/:ohjetunniste" [ohjetunniste teksti_fi teksti_sv teksti_en]
+
+  (PUT "/:ohjetunniste" []
+    :body-params [ohjetunniste :- s/Str
+                  teksti_fi :- s/Str
+                  teksti_sv :- s/Str
+                  teksti_en :- s/Str]
+    :kayttooikeus :ohje_muokkaus
     (arkisto/muokkaa-tai-luo-uusi! {:ohjetunniste ohjetunniste
                                     :teksti_fi teksti_fi
                                     :teksti_sv teksti_sv

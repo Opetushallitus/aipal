@@ -1,5 +1,9 @@
 *.swp
 ansible/aipal_vagrant/salasanat/
+/aipal/.idea/
+/aipal/*.iml
+/e2e/.idea/
+/e2e/*.iml
 /e2e/screenshot-*.png
 .idea
 *.iml

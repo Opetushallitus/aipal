@@ -19,7 +19,7 @@
             tunnukseton (rest-kutsu (str "/api/vastaajatunnus/" kyselykerta-ilman-tunnuksia) :get {})]
         (is (= (:status tunnukseton) 200))
         (is (= (:status tunnuksellinen) 200))
-        (is (= "[]" (:body tunnukseton)))
+        (is (= "[]" (slurp (:body tunnukseton))))
         (is (= (:kyselykertaid (first (body-json tunnuksellinen)))
                kyselykerta))))))
 

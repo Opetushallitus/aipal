@@ -358,7 +358,8 @@
   [kysymysryhmaid tila]
   (sql/update taulut/kysymysryhma
     (sql/set-fields {:tila tila})
-    (sql/where {:kysymysryhmaid kysymysryhmaid})))
+    (sql/where {:kysymysryhmaid kysymysryhmaid}))
+  (hae kysymysryhmaid))
 
 (defn julkaise!
   [kysymysryhmaid]

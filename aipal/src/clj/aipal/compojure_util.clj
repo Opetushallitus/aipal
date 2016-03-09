@@ -1,9 +1,16 @@
 (ns aipal.compojure-util
-  (:require [oph.compojure-util :as oph-cjure]
+  (:require compojure.api.meta
+            [oph.compojure-util :as cu]
             [aipal.toimiala.kayttajaoikeudet :as ko]))
 
-(defmacro defapi
-  "Esittelee rajapinta-funktion sisältäen käyttöoikeuksien tarkastamisen ja tietokanta-transaktion hallinnan."
-  [toiminto konteksti-arg http-method path args & body]
-  (let [auth-map ko/toiminnot]
-    `(oph-cjure/defapi  ~auth-map ~toiminto ~konteksti-arg ~http-method ~path ~args ~@body)))
+(defmethod compojure.api.meta/restructure-param :kayttooikeus
+  [_ kayttooikeus_spec {:keys [body] :as acc}]
+  "Käyttoikeuslaajennos compojure-apin rajapintoihin. Esim:
+
+  :kayttooikeus :jasenesitys-poisto
+  :kayttooikeus [:jasenesitys-poisto jasenyysid]"
+
+  (let [[kayttooikeus konteksti] (if (vector? kayttooikeus_spec) kayttooikeus_spec [kayttooikeus_spec])]
+    (-> acc
+        (assoc-in [:swagger :description] (str "Käyttöoikeus " kayttooikeus " , konteksti: " (or konteksti "N/A")))
+        (assoc :body [`(cu/autorisoitu-transaktio ~ko/toiminnot ~kayttooikeus ~konteksti ~@body)]))))

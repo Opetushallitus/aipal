@@ -13,21 +13,20 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.raportti.kyselykerta
-  (:require [korma.db :as db]
-
-            [oph.common.util.http-util :refer [csv-download-response json-response]]
-
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [GET POST]]
+            [schema.core :as s]
+            aipal.compojure-util
             [aipal.rest-api.raportti.yhteinen :as yhteinen]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
             [aipal.toimiala.raportti.kyselykerta :refer [muodosta-raportti muodosta-yhteenveto]]
             [aipal.toimiala.raportti.raportointi :as raportointi]
-            [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]))
+            [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]
+            [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (defn muodosta-raportti-parametreilla
   [kyselykertaid parametrit]
   (let [parametrit (paivita-parametrit parametrit)
-        raportti (muodosta-raportti (Integer/parseInt kyselykertaid) parametrit)]
+        raportti (muodosta-raportti kyselykertaid parametrit)]
     (assoc raportti :parametrit parametrit)))
 
 (defn muodosta-kyselykertaraportti
@@ -37,7 +36,7 @@
                    asetukset)
         naytettavat (filter (comp nil? :virhe) [raportti])
         virheelliset (filter :virhe [raportti])
-        yhteenveto (muodosta-yhteenveto (Integer/parseInt kyselykertaid) (paivita-parametrit parametrit))
+        yhteenveto (muodosta-yhteenveto kyselykertaid (paivita-parametrit parametrit))
         nimi (:kyselykerta yhteenveto)]
     (merge (when (seq naytettavat)
              (yhdistaminen/yhdista-raportit naytettavat))
@@ -51,17 +50,20 @@
              {:yhteenveto yhteenveto}))))
 
 (defn reitit [asetukset]
-  (cu/defapi :kyselykerta-raportti kyselykertaid :post "/:kyselykertaid" [kyselykertaid & parametrit]
-    (db/transaction
-      (json-response
-        (muodosta-kyselykertaraportti kyselykertaid parametrit asetukset)))))
+  (POST "/:kyselykertaid" []
+    :path-params [kyselykertaid :- s/Int]
+    :body [parametrit s/Any]
+    :kayttooikeus [:kyselykerta-raportti kyselykertaid]
+    (response-or-404 (muodosta-kyselykertaraportti kyselykertaid parametrit asetukset))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param
-    (cu/defapi :kyselykerta-raportti kyselykertaid :get "/:kyselykertaid/csv" [kyselykertaid parametrit]
-      (db/transaction
-        (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-              raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
-          (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-            (csv-download-response (raportointi/muodosta-csv raportti (:kieli parametrit)) "kyselykerta.csv")
-            (csv-download-response (raportointi/muodosta-tyhja-csv raportti (:kieli parametrit)) "kyselykerta_ei_vastaajia.csv")))))))
+    (GET "/:kyselykertaid/csv" []
+      :path-params [kyselykertaid :- s/Int]
+      :query-params [parametrit]
+      :kayttooikeus [:kyselykerta-raportti kyselykertaid]
+      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
+        (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+          (csv-download-response (raportointi/muodosta-csv raportti (:kieli parametrit)) "kyselykerta.csv")
+          (csv-download-response (raportointi/muodosta-tyhja-csv raportti (:kieli parametrit)) "kyselykerta_ei_vastaajia.csv"))))))

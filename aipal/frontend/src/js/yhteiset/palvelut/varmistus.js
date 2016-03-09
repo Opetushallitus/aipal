@@ -15,12 +15,12 @@
 'use strict';
 
 angular.module('yhteiset.palvelut.varmistus', [])
-  .factory('varmistus', ['$modal', '$q', function($modal, $q) {
+  .factory('varmistus', ['$uibModal', '$q', function($uibModal, $q) {
     return {
       varmista: function(otsikko, alaotsikko, teksti, vahvistusnappi) {
         var deferred = $q.defer();
 
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'template/yhteiset/palvelut/varmistus.html',
           controller: 'VarmistusModalController',
           resolve: {
@@ -46,7 +46,7 @@ angular.module('yhteiset.palvelut.varmistus', [])
     };
   }])
 
-  .controller('VarmistusModalController', ['$modalInstance', '$scope', 'i18n', 'tekstit', function($modalInstance, $scope, i18n, tekstit) {
+  .controller('VarmistusModalController', ['$uibModalInstance', '$scope', 'i18n', 'tekstit', function($uibModalInstance, $scope, i18n, tekstit) {
     $scope.i18n = i18n;
 
     $scope.otsikko = tekstit.otsikko;
@@ -54,7 +54,7 @@ angular.module('yhteiset.palvelut.varmistus', [])
     $scope.teksti = tekstit.teksti;
     $scope.vahvistusnappi = tekstit.vahvistusnappi;
 
-    $scope.ok = $modalInstance.close;
-    $scope.cancel = $modalInstance.dismiss;
+    $scope.ok = $uibModalInstance.close;
+    $scope.cancel = $uibModalInstance.dismiss;
   }])
 ;

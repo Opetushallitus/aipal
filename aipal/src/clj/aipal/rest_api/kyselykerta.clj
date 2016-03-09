@@ -13,43 +13,57 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.kyselykerta
-  (:require [compojure.core :as c]
-            [korma.db :as db]
-            [schema.core :as schema]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [defroutes DELETE GET POST PUT]]
+            [schema.core :as s]
             [aipal.arkisto.kyselykerta :as arkisto]
-            [oph.common.util.http-util :refer [json-response parse-iso-date]]
-            [oph.common.util.util :refer [paivita-arvot]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            aipal.compojure-util
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [oph.common.util.http-util :refer [parse-iso-date response-or-404]]
+            [oph.common.util.util :refer [paivita-arvot]]))
 
-(c/defroutes reitit
-  (cu/defapi :kysely nil :get "/" []
-    (json-response (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
+(defroutes reitit
+  (GET "/" []
+    :kayttooikeus :kysely
+    (response-or-404 (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
-  (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid/vastaustunnustiedot" [kyselykertaid]
-    (json-response (arkisto/hae-vastaustunnustiedot-kyselykerralta (Integer/parseInt kyselykertaid))))
+  (GET "/:kyselykertaid/vastaustunnustiedot" []
+    :path-params [kyselykertaid :- s/Int]
+    :kayttooikeus [:kyselykerta-luku kyselykertaid]
+    (response-or-404 (arkisto/hae-vastaustunnustiedot-kyselykerralta kyselykertaid)))
 
-  (cu/defapi :kyselykerta-luku kyselykertaid :get "/:kyselykertaid" [kyselykertaid]
-    (json-response (arkisto/hae-yksi (Integer/parseInt kyselykertaid))))
+  (GET "/:kyselykertaid" []
+    :path-params [kyselykertaid :- s/Int]
+    :kayttooikeus [:kyselykerta-luku kyselykertaid]
+    (response-or-404 (arkisto/hae-yksi kyselykertaid)))
 
-  (cu/defapi :kyselykerta-luonti kyselyid :post "/" [kyselyid kyselykerta]
+  (POST "/" []
+    :body-params [kyselyid :- s/Int
+                  kyselykerta]
+    :kayttooikeus [:kyselykerta-luonti kyselyid]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselyid kyselyid))
-        {:status 400
-         :body "kyselykerta.samanniminen_kyselykerta"}
-        (json-response (arkisto/lisaa! kyselyid kyselykerta-parsittu)))))
+                    (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselyid kyselyid))
+                      {:status 400
+                       :body "kyselykerta.samanniminen_kyselykerta"}
+                      (response-or-404 (arkisto/lisaa! kyselyid kyselykerta-parsittu)))))
 
-  (cu/defapi :kyselykerta-muokkaus kyselykertaid :post "/:kyselykertaid" [kyselykertaid & kyselykerta]
-    (let [kyselykertaid (Integer/parseInt kyselykertaid)
-          kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+  (POST "/:kyselykertaid" []
+    :path-params [kyselykertaid :- s/Int]
+    :body [kyselykerta s/Any]
+    :kayttooikeus [:kyselykerta-muokkaus kyselykertaid]
+    (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
       (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselykertaid kyselykertaid))
         {:status 400
          :body "kyselykerta.samanniminen_kyselykerta"}
-        (json-response (arkisto/paivita! kyselykertaid kyselykerta-parsittu)))))
+        (response-or-404 (arkisto/paivita! kyselykertaid kyselykerta-parsittu)))))
 
-  (cu/defapi :kyselykerta-tilamuutos kyselykertaid :put "/:kyselykertaid/lukitse" [kyselykertaid lukitse]
-    (json-response (arkisto/aseta-lukittu! (Integer/parseInt kyselykertaid) lukitse)))
+  (PUT "/:kyselykertaid/lukitse" []
+    :path-params [kyselykertaid :- s/Int]
+    :body-params [lukitse :- Boolean]
+    :kayttooikeus [:kyselykerta-tilamuutos kyselykertaid]
+    (response-or-404 (arkisto/aseta-lukittu! kyselykertaid lukitse)))
 
-  (cu/defapi :kyselykerta-poisto kyselykertaid :delete "/:kyselykertaid" [kyselykertaid]
-    (arkisto/poista! (Integer/parseInt kyselykertaid))
+  (DELETE "/:kyselykertaid" []
+    :path-params [kyselykertaid :- s/Int]
+    :kayttooikeus [:kyselykerta-poisto kyselykertaid]
+    (arkisto/poista! kyselykertaid)
     {:status 204}))

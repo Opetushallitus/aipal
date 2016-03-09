@@ -24,24 +24,8 @@ describe('Palvelut: pvm', function () {
     pvmService = pvm;
   }));
 
-  it('Muuttaa p.k.vvvv formaattia olevan stringin date:ksi ', function() {
-    var tulos = pvmService.parsiPvm('28.1.2014');
-    expect(tulos).toEqual(new Date(2014, 0, 28));
+  it('Muuttaa voimassa_alkupvm ja voimassa_loppupvm dateksi', function() {
+    var tulos = pvmService.parsePvm({'voimassa_alkupvm': '2014-01-28', 'voimassa_loppupvm': '2014-01-29'});
+    expect(tulos).toEqual({'voimassa_alkupvm': new Date('2014-01-28'), 'voimassa_loppupvm': new Date('2014-01-29')});
   });
-
-  it('Muuttaa pp.kk.vvvv formaattia olevan stringin date:ksi', function() {
-    var tulos = pvmService.parsiPvm('27.05.2014');
-    expect(tulos).toEqual(new Date(2014, 4, 27));
-  });
-
-  it('Palauttaa null jos päivämäärästring ei sisällä kolmea pisteellä erotettua osaa', function() {
-    var tulos = pvmService.parsiPvm('03.2013');
-    expect(tulos).toEqual(null);
-  });
-
-  it('Palauttaa null jos päivämäärää ei ole olemassa', function() {
-    var tulos = pvmService.parsiPvm('30.02.2013');
-    expect(tulos).toEqual(null);
-  });
-
 });

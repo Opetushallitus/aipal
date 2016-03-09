@@ -18,7 +18,6 @@
     [aipal.arkisto.kyselykerta]
     [aipal.arkisto.koulutustoimija]
     [aipal.arkisto.vastaajatunnus]
-    [clj-time.core :as time]
     [clj-time.core :as ctime]
     [korma.core :as sql]
     [oph.korma.common :refer [joda-datetime->sql-timestamp]]

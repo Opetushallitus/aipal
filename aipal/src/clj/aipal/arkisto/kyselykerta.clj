@@ -21,19 +21,28 @@
 
 (defn hae-kaikki
   "Hae kaikki koulutustoimijan kyselykerrat"
-  ([koulutustoimija]
-      (sql/select taulut/kyselykerta
-        (sql/modifier "distinct")
-        (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
-        (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kysely.kyselyid))
-        (sql/join :left :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid))
-        (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
-                    :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
-                    :kyselykerta.lukittu :kyselykerta.luotuaika
-                    :kyselykerta.kaytettavissa
-                    [(sql/raw "vastaaja.vastaajaid is null") :poistettavissa])
-        (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin :kysely.kyselyid koulutustoimija)
-        (sql/order :kyselykerta.kyselykertaid :ASC))))
+  [koulutustoimija]
+  (sql/select :kyselykerta
+    (sql/modifier "distinct")
+    (sql/join :inner :kyselykerta_kaytettavissa {:kyselykerta.kyselykertaid :kyselykerta_kaytettavissa.kyselykertaid})
+    (sql/join :inner :kysely {:kysely.kyselyid :kyselykerta.kyselyid})
+    (sql/join :inner :kysely_organisaatio_view {:kysely_organisaatio_view.kyselyid :kysely.kyselyid})
+    (sql/join :left :vastaajatunnus {:vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid})
+    (sql/join :left :vastaajatunnus_kaytettavissa {:vastaajatunnus.vastaajatunnusid :vastaajatunnus_kaytettavissa.vastaajatunnusid})
+    (sql/join :left :vastaaja {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})
+    (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
+                :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+                :kyselykerta.lukittu :kyselykerta.luotuaika
+                :kyselykerta_kaytettavissa.kaytettavissa
+                [(sql/raw "count(vastaaja.vastaajaid) = 0") :poistettavissa]
+                [(sql/raw "sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :vastaajien_lkm]
+                [(sql/raw "count(vastaaja.vastaajaid) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :vastaajia])
+    (sql/group :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
+               :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
+               :kyselykerta.lukittu :kyselykerta.luotuaika
+               :kyselykerta_kaytettavissa.kaytettavissa)
+    (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin :kysely.kyselyid koulutustoimija)
+    (sql/order :kyselykerta.kyselykertaid :ASC)))
 
 (defn poistettavissa? [id]
   (empty?
@@ -66,7 +75,8 @@
   (auditlog/kyselykerta-muokkaus! kyselykertaid)
   (sql/update taulut/kyselykerta
     (sql/set-fields (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu]))
-    (sql/where {:kyselykertaid kyselykertaid})))
+    (sql/where {:kyselykertaid kyselykertaid}))
+  (assoc kyselykertadata :kyselykertaid kyselykertaid))
 
 (defn kyselykertaid->kyselyid
   [kyselykertaid]

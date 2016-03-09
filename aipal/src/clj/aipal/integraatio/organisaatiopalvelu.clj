@@ -176,7 +176,7 @@
 
 (defn ^:private ^:integration-api paivita-oppilaitokset! [koodit]
   (let [oid->ytunnus (generoi-oid->y-tunnus (into {} (for [k (koulutustoimija-arkisto/hae-kaikki-organisaatiopalvelulle)]
-                                                       [(:oid k) (:ytunnus k)])) 
+                                                       [(:oid k) (:ytunnus k)]))
                                             koodit)
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
@@ -197,7 +197,6 @@
                                                   (log/info "Muuttunut oppilaitos: " (:oppilaitoskoodi uusi-oppilaitos) (muutos vanha-oppilaitos uusi-oppilaitos))
                                                   (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos)))))
   (oppilaitos-arkisto/laske-voimassaolo!))
-
 
 (defn ^:private ^:integration-api paivita-toimipaikat! [koodit]
   (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)

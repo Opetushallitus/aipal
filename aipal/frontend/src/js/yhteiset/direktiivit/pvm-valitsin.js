@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('yhteiset.direktiivit.pvm-valitsin', ['yhteiset.palvelut.pvm'])
+angular.module('yhteiset.direktiivit.pvm-valitsin', [])
 
  .directive('pvmValitsin', [function() {
     return {
@@ -42,29 +42,5 @@ angular.module('yhteiset.direktiivit.pvm-valitsin', ['yhteiset.palvelut.pvm'])
           scope.opened = true;
         };
       }
-    };
-  }])
-
-  .directive('formatteddate', ['$filter', 'pvm', function ($filter, pvm) {
-    function parseDate(viewValue) {
-      if(typeof viewValue === 'string' && viewValue !== '') {
-        var parsittu = pvm.parsiPvm(viewValue);
-        if(parsittu) {
-          return parsittu;
-        } else {
-          return 'Invalid date';
-        }
-      }
-      return viewValue;
-    }
-
-    return {
-      link: function (scope, element, attrs, ctrl) {
-        ctrl.$parsers.unshift(parseDate);
-      },
-      priority: 1, //<-- Formatteddate- direktiivin link funktio suoritetaan datepickerin link funktion jälkeen.
-                   //    Näin saadaan custom parsefuktio parseriketjun ensimmäiseksi
-      restrict: 'A',
-      require: 'ngModel'
     };
   }]);

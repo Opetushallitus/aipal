@@ -13,22 +13,25 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.tiedote
-  (:require [compojure.core :as c]
+  (:require [compojure.api.core :refer [defroutes DELETE GET POST]]
+            [schema.core :as s]
             [aipal.arkisto.tiedote :as arkisto]
-            [oph.common.util.http-util :refer [json-response]]
             [aipal.compojure-util :as cu]
-            [cheshire.core :as cheshire]))
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-  (cu/defapi :tiedote-luku nil :get "/" []
-    (json-response (or (arkisto/hae) {})))
+(defroutes reitit
+  (GET "/" []
+    :kayttooikeus :tiedote-luku
+    (response-or-404 (or (arkisto/hae) {})))
 
-  (cu/defapi :tiedote-muokkaus nil :post "/" request
-    (let [tiedote (arkisto/poista-ja-lisaa! (select-keys (:params request)
-                                                         [:fi :sv]))]
-        {:status 200
-         :body (cheshire/generate-string tiedote)}))
+  (POST "/" request
+    :body-params [fi :- s/Str
+                  sv :- s/Str]
+    :kayttooikeus :tiedote-muokkaus
+    (response-or-404 (arkisto/poista-ja-lisaa! {:fi fi
+                                                :sv sv})))
 
-  (cu/defapi :tiedote-muokkaus nil :delete "/" []
+  (DELETE "/" []
+    :kayttooikeus :tiedote-muokkaus
     (arkisto/poista!)
     {:status 200}))

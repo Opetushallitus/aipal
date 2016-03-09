@@ -56,4 +56,4 @@ lopuksi. Soveltuuyksinkertaisiin testitapauksiin."
        :response)))
 
 (defn body-json [response]
-  (cheshire/parse-string (:body response) true))
+  (cheshire/parse-string (slurp (:body response)) true))

@@ -13,11 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus.rest-api.vastaus
-  (:require [compojure.core :as c]
+  (:require [compojure.api.core :refer [defroutes POST]]
             [korma.db :as db]
             [schema.core :as schema]
             [clojure.tools.logging :as log]
-            [oph.common.util.http-util :refer [json-response-nocache]]
+            [oph.common.util.http-util :refer [response-nocache]]
             [aipalvastaus.sql.vastaus :as arkisto]
             [aipalvastaus.sql.kyselykerta :as kysely-arkisto]
             [aipalvastaus.sql.vastaaja :as vastaaja]
@@ -53,14 +53,49 @@
            (or (kylla-jatkovastaus-validi? vastaus kysymys)
                (ei-jatkovastaus-validi? vastaus kysymys)))))
 
+(defn monivalintavastaus-validi?
+  [vastaus kysymys]
+  (let [kysymyksen-monivalintavaihtoehtoidt (set (map :jarjestys (:monivalintavaihtoehdot kysymys)))]
+    (every? true? (for [vastaus-arvo (:vastaus vastaus)]
+                    (or (and (:eos_vastaus_sallittu kysymys) (= vastaus-arvo "EOS"))
+                        (contains? kysymyksen-monivalintavaihtoehtoidt vastaus-arvo))))))
+
+(defn numerovalintavastaus-validi?
+  [vastaus kysymys]
+  (every? true? (for [vastaus-arvo (:vastaus vastaus)]
+                     (or (and (:eos_vastaus_sallittu kysymys) (= vastaus-arvo "EOS"))
+                         (and (integer? vastaus-arvo) (<= 1 vastaus-arvo 5))))))
+
+(defn kylla-ei-vastaus-validi?
+  [vastaus kysymys]
+  (or (and (:eos_vastaus_sallittu kysymys) (= (:vastaus vastaus) ["EOS"]))
+      (every? #{"kylla" "ei"} (:vastaus vastaus))))
+
+(defn ^:private vastausvalinnat-valideja?
+  [vastaukset kysymykset]
+  (every?
+    identity
+    (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
+      (for [vastaus vastaukset
+            :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
+        (and kysymys
+             (or (not= "kylla_ei_valinta" (:vastaustyyppi kysymys)) (kylla-ei-vastaus-validi? vastaus kysymys))
+             (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
+             (or (nil? (#{"arvosana" "asteikko" "likert_asteikko"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys))
+             (jatkovastaus-validi? vastaus kysymys))))))
+
+(defn ^:private pakollisille-kysymyksille-loytyy-vastaukset?
+  [vastaukset kysymykset]
+  (every?
+    seq
+    (for [kysymys kysymykset
+          :when (:pakollinen kysymys)]
+      (filter #(= (:kysymysid %) (:kysymysid kysymys)) vastaukset))))
+
 (defn validoi-vastaukset
   [vastaukset kysymykset]
-  (if (every? true? (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
-                      (for [vastaus vastaukset
-                            :let [kysymys (kysymysid->kysymys (:kysymysid vastaus))]]
-                        (when (and kysymys
-                                   (jatkovastaus-validi? vastaus kysymys))
-                          true))))
+  (if (and (vastausvalinnat-valideja? vastaukset kysymykset)
+           (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset))
     vastaukset
     (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia.")))
 
@@ -99,14 +134,15 @@
     (vastaaja/paivata-vastaaja! vastaajaid)
     true))
 
-(c/defroutes reitit
-  (c/POST "/:vastaajatunnus" [vastaajatunnus vastaukset]
+(defroutes reitit
+  (POST "/:vastaajatunnus" []
+    :path-params [vastaajatunnus :- schema/Str]
+    :body-params [vastaukset :- [KayttajanVastaus]]
     (db/transaction
-      (schema/validate [KayttajanVastaus] vastaukset)
       (let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaajatunnus))]
         (if (and vastaajaid
                  (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus)))
-          (json-response-nocache "OK")
+          (response-nocache "OK")
           (do
             (log/error (str "Vastausten (" vastaajatunnus ") tallentaminen epäonnistui."))
             (db/rollback)

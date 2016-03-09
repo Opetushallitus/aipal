@@ -15,7 +15,7 @@
 (ns aipal-e2e.sivu.kyselyt
   (:require [clj-webdriver.taxi :as w]
             [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer [odota-angular-pyyntoa]]))
+            [aitu-e2e.util :refer [odota-angular-pyyntoa odota-ja-klikkaa]]))
 
 (def kyselyt-sivu "/#/kyselyt")
 
@@ -23,7 +23,7 @@
   (avaa kyselyt-sivu))
 
 (defn luo-uusi-kysely []
-  (w/click {:css ".e2e-luo-uusi-kysely"}))
+  (odota-ja-klikkaa {:css ".e2e-luo-uusi-kysely"}))
 
 (defn avaa-ensimmainen-kysely []
   (w/click {:css ".e2e-kysely-nimi"}))

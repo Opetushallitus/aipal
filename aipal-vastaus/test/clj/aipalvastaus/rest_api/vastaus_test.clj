@@ -203,3 +203,52 @@
   (testing "jatkovastausta ei tallenneta jos jatkokysymysid:tä ei löydy"
     (v/tallenna-jatkovastaus! {:jatkovastaus_kylla "vastaus"})
     (is (= @jatkokysymysid->jatkovastaus {}))))
+
+(deftest pakollisiin-kysymyksiin-on-vastaukset
+  (let [kysymykset [{:kysymysid 1
+                     :pakollinen true
+                     :vastaustyyppi "arvosana"}]]
+    (testing "pakollisiin kysymyksiin on vastaukset"
+      (is (some? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [1]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [] kysymykset))))))
+
+(deftest monivalintavastaukset-tasmaavat-monivalintavaihtoehtoihin
+  (let [kysymykset [{:kysymysid 1
+                     :vastaustyyppi "monivalinta"
+                     :eos_vastaus_sallittu true
+                     :monivalintavaihtoehdot [{:monivalintavaihtoehtoid 12345 :jarjestys 1}, {:monivalintavaihtoehtoid 23456 :jarjestys 2}]}]]
+    (testing "monivalinta-kysymysten vastaukset viittaavat oikeisiin monivalintavaihtoehtoihin"
+      (is (some? (v/validoi-vastaukset [{:kysymysid 1 :vastaus ["EOS"]}] kysymykset)))
+      (is (some? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [1 2]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [9999]}] kysymykset))))))
+
+(deftest numerovalintavastaukset-tasmaavat-vaihtoehtoihin
+  (let [kysymykset [{:kysymysid 1 :vastaustyyppi "arvosana"}
+                    {:kysymysid 2 :vastaustyyppi "asteikko"}
+                    {:kysymysid 3 :vastaustyyppi "likert_asteikko"}
+                    {:kysymysid 4 :vastaustyyppi "arvosana" :eos_vastaus_sallittu true}]]
+    (testing "numerovalinta-vastaukset täsmäävät arvosana/asteikko/likert_asteikko -vaihtoehtoihin"
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 1 :vastaus [-1]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 2 :vastaus [6]}] kysymykset)))
+      (is (nil? (v/validoi-vastaukset [{:kysymysid 3 :vastaus [-1]}] kysymykset)))
+      (is (some? (v/validoi-vastaukset [{:kysymysid 4 :vastaus [3]}] kysymykset)))
+      (is (some? (v/validoi-vastaukset [{:kysymysid 4 :vastaus ["EOS"]}] kysymykset))))))
+
+(deftest eos-vastaukset
+  (let [vastaustyypit ["arvosana" "asteikko" "likert_asteikko" "kylla_ei_valinta" "monivalinta"]
+        luo-eos-kysymykset (fn [eos_vastaus_sallittu]
+                             (for [[kysymysid vastaustyyppi] (map vector (iterate inc 1) vastaustyypit)]
+                               {:kysymysid kysymysid :vastaustyyppi vastaustyyppi :eos_vastaus_sallittu eos_vastaus_sallittu}))]
+    (testing "EOS-vastausta ei saa antaa kysymyksille joissa EOS-vastaus ei ole sallittu"
+      (let [kysymykset (luo-eos-kysymykset false)]
+        (doseq [kysymys kysymykset]
+          (testing (str ", vastaustyyppi: " (:vastaustyyppi kysymys))
+            (is (nil?
+                  (v/validoi-vastaukset [{:kysymysid (:kysymysid kysymys) :vastaus ["EOS"]}] kysymykset)))))))
+    (testing "EOS-vastauksen saa antaa kysymyksille joissa EOS-vastaus on sallittu"
+      (let [kysymykset (luo-eos-kysymykset true)]
+        (doseq [kysymys kysymykset]
+          (testing (str ", vastaustyyppi: " (:vastaustyyppi kysymys))
+            (is (some?
+                  (v/validoi-vastaukset [{:kysymysid (:kysymysid kysymys) :vastaus ["EOS"]}] kysymykset)))))))))

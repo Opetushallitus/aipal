@@ -1,0 +1,59 @@
+sudo: required
+language: clojure
+
+addons:
+  postgresql: '9.3'
+
+services:
+- postgresql
+
+before_install:
+- sudo apt-get install graphviz
+- cd aipal-db
+
+before_script:
+- psql --file=../env/local/db-server/dev.sql
+
+script:
+- lein run 'postgresql://aipal_adm:aipal-adm@127.0.0.1:5432/aipal' -u aipal_user --clear
+  -t
+- cd ../aipal
+- lein doc
+- mkdir eastwood
+- lein eastwood "{:out \"eastwood/aipal-warnings.txt\"}" || true
+- cd ../db-docs
+- generate-schemadocs.sh
+- cd ..
+
+deploy:
+- provider: s3
+  access_key_id: $ARTIFACTS_ID
+  secret_access_key:
+    secure: B3a0wgKji7D6BHzEGHT0Nj8A+YGduQNt+vz7B476sCW4GDuWWGfkhBsXapMMSBleJqsbLa67yQ6e2yvDijvcN3/870PAKmreYaoHGw+We5J/Qq0UI1Q/JHTCOxTCKRIzESsjlsUMDyEx/4l/U6NVdLQcowpkPLdYLBQhYZgdjeE=    
+  bucket: opetushallitus-docs
+  local-dir: db-docs/schemadocs
+  upload-dir: aipal
+  acl: public_read
+  skip_cleanup: true
+  region: eu-west-1
+- provider: s3
+  access_key_id: $ARTIFACTS_ID
+  secret_access_key:
+    secure: B3a0wgKji7D6BHzEGHT0Nj8A+YGduQNt+vz7B476sCW4GDuWWGfkhBsXapMMSBleJqsbLa67yQ6e2yvDijvcN3/870PAKmreYaoHGw+We5J/Qq0UI1Q/JHTCOxTCKRIzESsjlsUMDyEx/4l/U6NVdLQcowpkPLdYLBQhYZgdjeE=
+  bucket: opetushallitus-docs
+  local-dir: aipal/doc
+  upload-dir: aipal-doc
+  acl: public_read
+  skip_cleanup: true
+  region: eu-west-1
+- provider: s3
+  access_key_id: $ARTIFACTS_ID
+  secret_access_key:
+    secure: B3a0wgKji7D6BHzEGHT0Nj8A+YGduQNt+vz7B476sCW4GDuWWGfkhBsXapMMSBleJqsbLa67yQ6e2yvDijvcN3/870PAKmreYaoHGw+We5J/Qq0UI1Q/JHTCOxTCKRIzESsjlsUMDyEx/4l/U6NVdLQcowpkPLdYLBQhYZgdjeE=
+  bucket: opetushallitus-docs
+  local-dir: aipal/eastwood
+  upload-dir: aipal-lint
+  acl: public_read
+  skip_cleanup: true
+  region: eu-west-1
+

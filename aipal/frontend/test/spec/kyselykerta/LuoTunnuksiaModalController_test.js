@@ -25,7 +25,7 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
 
   beforeEach(module('ui.bootstrap.modal'));
   beforeEach(module(function($provide){
-    $provide.value('$modalInstance', {});
+    $provide.value('$uibModalInstance', {});
     $provide.value('kielet', {});
     $provide.value('rahoitusmuodot', {});
     $provide.value('tutkinnot', {});

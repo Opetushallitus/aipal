@@ -17,21 +17,31 @@
 angular.module('yhteiset.palvelut.pvm', ['ngResource'])
 
   .factory('pvm',['$filter', function($filter) {
-    return {
-      parsiPvm : function(pvm) {
-        if(pvm) {
-          try {
-            var parts = pvm.split('.');
-            var parsittu = new Date(parts[2], parts[1] - 1, parts[0]);
-            if(parsittu.getDate().toString() === parts[0] && parsittu.getMonth() === parts[1] -1 && parsittu.getFullYear().toString() === parts[2]) {
-              return parsittu;
-            }
-          } catch(e) {}
-        }
-        return null;
-      },
-      dateToPvm : function(date) {
-        return $filter('date')(date, 'dd.MM.yyyy');
+    var parsePvm = function(data) {
+      if(data.voimassa_alkupvm) {
+        data.voimassa_alkupvm = new Date(data.voimassa_alkupvm);
       }
+      if(data.voimassa_loppupvm) {
+        data.voimassa_loppupvm = new Date(data.voimassa_loppupvm);
+      }
+      return data;
+    };
+    var dateToPvm = function(date) {
+      return $filter('date')(date, 'yyyy-MM-dd');
+    };
+    var formatPvm = function(d) {
+      var data = _.cloneDeep(d);
+      if(data.voimassa_alkupvm) {
+        data.voimassa_alkupvm = dateToPvm(data.voimassa_alkupvm);
+      }
+      if(data.voimassa_loppupvm) {
+        data.voimassa_loppupvm = dateToPvm(data.voimassa_loppupvm);
+      }
+      return data;
+    };
+    return {
+      parsePvm : parsePvm,
+      formatPvm: formatPvm,
+      dateToPvm : dateToPvm
     };
   }]);

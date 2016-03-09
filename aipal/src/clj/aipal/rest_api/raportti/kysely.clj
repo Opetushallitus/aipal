@@ -13,16 +13,17 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.raportti.kysely
-  (:require [korma.db :as db]
-            [oph.common.util.http-util :refer [json-response csv-download-response]]
-            [aipal.compojure-util :as cu]
+  (:require [compojure.api.core :refer [GET POST]]
+            [schema.core :as s]
+            aipal.compojure-util
             [aipal.rest-api.i18n :as i18n]
             [aipal.rest-api.raportti.yhteinen :as yhteinen]
             [aipal.toimiala.raportti.kysely :refer [muodosta-raportti muodosta-valtakunnallinen-vertailuraportti muodosta-yhteenveto]]
             [aipal.toimiala.raportti.kyselyraportointi :refer [paivita-parametrit]]
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.taustakysymykset :as taustakysymykset]
-            [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]))
+            [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
+            [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (defn ^:private muodosta-kyselyn-raportti-parametreilla
   [kyselyid parametrit]
@@ -89,22 +90,25 @@
             :virheelliset virheelliset})))
 
 (defn reitit [asetukset]
-  (cu/defapi :kysely-raportti kyselyid :post "/:kyselyid" [kyselyid & parametrit]
-    (db/transaction
-      (json-response
-        (muodosta-kyselyraportti (Integer/parseInt kyselyid) parametrit asetukset)))))
+  (POST "/:kyselyid" []
+    :path-params [kyselyid :- s/Int]
+    :body [parametrit s/Any]
+    :kayttooikeus [:kysely-raportti kyselyid]
+    (response-or-404 (muodosta-kyselyraportti kyselyid parametrit asetukset))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param
-    (cu/defapi :kysely-raportti kyselyid :get "/:kyselyid/csv" [kyselyid parametrit]
-      (db/transaction
-        (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
-              raportit (muodosta-raportit-parametreilla (Integer/parseInt kyselyid) parametrit)
-              kieli (:kieli parametrit)]
-          (csv-download-response
-            (apply str
-                   (for [raportti raportit]
-                     (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
-                       (muodosta-csv raportti kieli)
-                       (muodosta-tyhja-csv raportti kieli))))
-            "kysely.csv"))))))
+    (GET "/:kyselyid/csv" []
+      :path-params [kyselyid :- s/Int]
+      :query-params [parametrit]
+      :kayttooikeus [:kysely-raportti kyselyid]
+      (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
+            raportit (muodosta-raportit-parametreilla kyselyid parametrit)
+            kieli (:kieli parametrit)]
+        (csv-download-response
+          (apply str
+                 (for [raportti raportit]
+                   (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+                     (muodosta-csv raportti kieli)
+                     (muodosta-tyhja-csv raportti kieli))))
+          "kysely.csv")))))

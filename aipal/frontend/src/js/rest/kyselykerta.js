@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('rest.kyselykerta', [])
+angular.module('rest.kyselykerta', ['yhteiset.palvelut.pvm'])
   .factory('Kyselykerta', ['$http', function($http) {
     return {
       hae: function() {

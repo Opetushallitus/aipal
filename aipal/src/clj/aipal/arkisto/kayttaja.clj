@@ -24,14 +24,13 @@
              :refer [jarjestelma-oid integraatio-uid integraatio-oid
                      konversio-oid vastaaja-oid]]))
 
-
 (defn hae
   "Hakee käyttäjätunnuksen perusteella."
   [oid]
   (select-unique-or-nil taulut/kayttaja (sql/where {:oid oid})))
 
 (defn hae-voimassaoleva [uid]
-  (select-unique-or-nil taulut/kayttaja (sql/where {:uid uid, :voimassa true})))
+  (select-unique-or-nil taulut/kayttaja (sql/where {(sql/sqlfn lower :uid) (sql/sqlfn lower uid), :voimassa true})))
 
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
@@ -71,7 +70,8 @@
                                     (sql/fields :rooli_organisaatio_id)
                                     (sql/where {:rooli "YLLAPITAJA"
                                                 :kayttaja :kayttaja.oid})))
-                                {:oid [not-in [jarjestelma-oid konversio-oid integraatio-oid vastaaja-oid]]})))
+                                {:oid [not-in [jarjestelma-oid konversio-oid integraatio-oid vastaaja-oid]]
+                                 :voimassa true})))
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))

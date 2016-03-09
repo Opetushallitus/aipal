@@ -1,18 +1,18 @@
-<accordion close-others="true">
+<uib-accordion close-others="true">
   <div ui-sortable="sortableOptions" ng-model="kysymysryhmat">
     <div ng-repeat="kysymysryhma in kysymysryhmat">
         <a href="" class="pull-right trash" ng-click="poistaTaiPalautaKysymysryhma(kysymysryhma)">
           <span class="fa fa-trash"></span>
         </a>
-        <accordion-group is-open="group.open">
-          <accordion-heading>
+        <uib-accordion-group is-open="group.open">
+          <uib-accordion-heading>
             <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': group.open, 'glyphicon-chevron-right': !group.open}"></i>
             <span ng-class="{removed: kysymysryhma.poistetaan_kyselysta}">
               <strong ng-if="kysymysryhma.taustakysymykset">{{ 'kysymysryhma.taustakysymykset' | i18n }}:</strong>
               <strong ng-if="kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset">{{ 'kysymysryhma.valtakunnallinen' | i18n }}:</strong>
               {{kysymysryhma | lokalisoiKentta:'nimi' }}
             </span>
-          </accordion-heading>
+          </uib-accordion-heading>
           <ol class="kysymykset">
             <li ng-repeat="kysymys in kysymysryhma.kysymykset">
               <span ng-class="{removed: kysymys.poistettu}">{{kysymys | lokalisoiKentta:'kysymys'}}</span>&nbsp;
@@ -22,7 +22,7 @@
               </span>
             </li>
           </ol>
-        </accordion-group>
+        </uib-accordion-group>
     </div>
   </div>
-</accordion>
+</uib-accordion>

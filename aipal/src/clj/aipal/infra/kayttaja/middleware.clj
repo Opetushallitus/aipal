@@ -8,7 +8,7 @@
     "Användningen av responssystemet AIPAL förutsätter användarrättigheter. I din användarkod finns ej användarrättigheter. "
     "Kontakta vid behov huvudanvändaren för AIPAL i din egen organisation eller Utbildningsstyrelsens AIPAL-rådgivning (aipal@oph.fi). "))
 
-(defn wrap-kayttaja 
+(defn wrap-kayttaja
   ([handler paasykielletty-virheilmoitus]
     (fn [request]
       ;; CAS-middleware lisää käyttäjätunnuksen :username-avaimen alle

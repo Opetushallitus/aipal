@@ -13,36 +13,40 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.kayttaja
-  (:require [compojure.core :as c]
+  (:require [compojure.api.core :refer [defroutes GET POST]]
+            [schema.core :as s]
             [aipal.arkisto.kayttaja :as arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
-            [oph.common.util.http-util :refer [json-response]]
-            [aipal.toimiala.kayttajaoikeudet :as ko]
-            [aipal.compojure-util :as cu]
-            [korma.db :as db]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            aipal.compojure-util
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [oph.common.util.http-util :refer [response-or-404]]))
 
-(c/defroutes reitit
-  (cu/defapi :impersonointi nil :post "/impersonoi" [:as {session :session}, oid]
+(defroutes reitit
+  (POST "/impersonoi" [:as {session :session}, oid]
+    :kayttooikeus :impersonointi
     {:status 200
      :session (assoc session :impersonoitu-oid oid)})
 
-  (cu/defapi :impersonointi-lopetus nil :post "/lopeta-impersonointi" {session :session}
+  (POST "/lopeta-impersonointi" {session :session}
+    :kayttooikeus :impersonointi-lopetus
     {:status 200
      :session (dissoc session :impersonoitu-oid)})
 
-  (cu/defapi :roolin-valinta nil :post "/rooli" {{rooli :rooli_organisaatio_id} :params
-                                                 session :session}
+  (POST "/rooli" {{rooli :rooli_organisaatio_id} :params
+                  session :session}
+    :kayttooikeus :roolin-valinta
     {:status 200
      :session (assoc session :rooli rooli)})
-
-  (cu/defapi :impersonointi nil :get "/impersonoitava" [termi]
-    (json-response (arkisto/hae-impersonoitava-termilla termi)))
-
-  (cu/defapi :omat_tiedot nil :get "/" []
+  (GET "/impersonoitava" [termi]
+    :kayttooikeus :impersonointi
+    :query-params [termi :- s/Str]
+    (response-or-404 (arkisto/hae-impersonoitava-termilla termi)))
+  (GET "/" []
+    :kayttooikeus :omat_tiedot
     (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:aktiivinen-oid *kayttaja*))]
-      (json-response (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)
-                                     :aktiivinen_rooli (:aktiivinen-rooli *kayttaja*)))))
-
-  (cu/defapi :kayttajan_tiedot oid :get "/:oid" [oid]
+      (response-or-404 (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)
+                                       :aktiivinen_rooli (:aktiivinen-rooli *kayttaja*)))))
+  (GET "/:oid" []
+    :path-params [oid :- s/Str]
+    :kayttooikeus [:kayttajan_tiedot oid]
     true))

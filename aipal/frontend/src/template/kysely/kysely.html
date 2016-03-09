@@ -98,8 +98,8 @@
 
     <div lataus-indikaattori metodi-id="kyselynTallennus" viesti="{{'i18n.yleiset.tallennataan' | i18n}}" virheviesti="{{'i18n.yleiset.tallennus_epaonnistui' | i18n}}" yrita-uudelleen="tallenna()">
       <br>
-      <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid || !validoiKysymysryhmat()" ng-click="tallenna()">
-          {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="fa fa-save e2e-tallenna-kysely"></span>
+      <button class="btn btn-primary pull-left e2e-tallenna-kysely" ng-disabled="!kyselyForm.$valid || !validoiKysymysryhmat()" ng-click="tallenna()">
+          {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="fa fa-save"></span>
       </button>
         <button class="btn btn-primary pull-left" ng-disabled="!kyselyForm.$valid" ng-click="esikatseleModal()">
             {{'i18n.yleiset.esikatsele'| i18n}}&nbsp;<span class="fa fa-search"></span>

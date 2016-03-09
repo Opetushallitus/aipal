@@ -21,7 +21,7 @@ describe('kysely.kyselyui.KyselykertaController', function(){
   var $controller;
   var $routeParams;
   var $location;
-  var $modal;
+  var $uibModal;
   var $q;
 
   beforeEach(module('ui.bootstrap','kyselykerta.kyselykertaui','mock.yhteiset.palvelut.i18n'));
@@ -49,11 +49,11 @@ describe('kysely.kyselyui.KyselykertaController', function(){
       $provide.value('uusi', false);
     }));
 
-    beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$modal_, _$q_){
+    beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$uibModal_, _$q_){
       $scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       $controller = _$controller_;
-      $modal = _$modal_;
+      $uibModal = _$uibModal_;
       $q = _$q_;
     }));
 
@@ -114,11 +114,11 @@ describe('kysely.kyselyui.KyselykertaController', function(){
       $provide.value('uusi', true);
     }));
 
-    beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$modal_, _$q_){
+    beforeEach(inject(function($rootScope, _$httpBackend_, _$controller_, _$uibModal_, _$q_){
       $scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       $controller = _$controller_;
-      $modal = _$modal_;
+      $uibModal = _$uibModal_;
       $q = _$q_;
     }));
 

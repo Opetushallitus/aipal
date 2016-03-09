@@ -112,8 +112,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
   }])
 
   .controller('KyselyController', [
-    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$modal', 'seuranta', '$timeout', 'kopioi',
-    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $modal, seuranta, $timeout, kopioi) {
+    'Kysely', 'Kyselypohja', 'Kysymysryhma', 'kyselyApurit', 'i18n', 'tallennusMuistutus', '$routeParams', '$route', '$scope', 'ilmoitus', '$location', '$uibModal', 'seuranta', '$timeout', 'kopioi', 'pvm',
+    function (Kysely, Kyselypohja, Kysymysryhma, apu, i18n, tallennusMuistutus, $routeParams, $route, $scope, ilmoitus, $location, $uibModal, seuranta, $timeout, kopioi, pvm) {
       var tallennusFn = $routeParams.kyselyid ? Kysely.tallenna : Kysely.luoUusi;
       $scope.$watch('kyselyForm', function(form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -123,7 +123,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)
           .success(function(kysely) {
-            $scope.kysely = kysely;
+            $scope.kysely = pvm.parsePvm(kysely);
             if(kopioi) {
               tallennusFn = Kysely.luoUusi;
               $scope.kysely.tila = 'luonnos';
@@ -148,7 +148,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       else {
         $scope.kysely = {
           kysymysryhmat: [],
-          voimassa_alkupvm: new Date().toISOString().slice(0, 10)
+          voimassa_alkupvm: new Date()
         };
         tallennusFn = Kysely.luoUusi;
       }
@@ -196,7 +196,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.lisaaKyselypohjaModal = function () {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/lisaa-kyselypohja.html',
           controller: 'LisaaKyselypohjaModalController'
         });
@@ -213,7 +213,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       $scope.lisaaKysymysryhmaModal = function() {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
           controller: 'LisaaKysymysryhmaModalController'
         });
@@ -249,7 +249,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           }, 1000);
         };
 
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'template/kysely/esikatsele.html',
           controller: 'AvaaEsikatseluModalController',
           windowClass: 'preview-modal-window',
@@ -261,38 +261,38 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     }
   ])
 
-  .controller('LisaaKyselypohjaModalController', ['$modalInstance', '$scope', 'Kyselypohja', function ($modalInstance, $scope, Kyselypohja) {
+  .controller('LisaaKyselypohjaModalController', ['$uibModalInstance', '$scope', 'Kyselypohja', function ($uibModalInstance, $scope, Kyselypohja) {
     Kyselypohja.haeVoimassaolevat()
     .success(function (data) {
       $scope.kyselypohjat = data;
     });
     $scope.tallenna = function (kyselypohjaId) {
-      $modalInstance.close(kyselypohjaId);
+      $uibModalInstance.close(kyselypohjaId);
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 
-  .controller('LisaaKysymysryhmaModalController', ['$modalInstance', '$scope', 'Kysymysryhma', function ($modalInstance, $scope, Kysymysryhma) {
+  .controller('LisaaKysymysryhmaModalController', ['$uibModalInstance', '$scope', 'Kysymysryhma', function ($uibModalInstance, $scope, Kysymysryhma) {
     $scope.outerscope = {};
     Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
     });
     $scope.tallenna = function (kysymysryhmaid) {
-      $modalInstance.close(kysymysryhmaid);
+      $uibModalInstance.close(kysymysryhmaid);
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 
-  .controller('AvaaEsikatseluModalController', ['$modalInstance', '$scope', 'vastausBaseUrl', '$sce', function ($modalInstance, $scope, vastausBaseUrl, $sce) {
+  .controller('AvaaEsikatseluModalController', ['$uibModalInstance', '$scope', 'vastausBaseUrl', '$sce', function ($uibModalInstance, $scope, vastausBaseUrl, $sce) {
     $scope.getVastausBaseUrl = function(){
       return $sce.trustAsResourceUrl(vastausBaseUrl+'/#/preview/');
     };
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }])
 ;
