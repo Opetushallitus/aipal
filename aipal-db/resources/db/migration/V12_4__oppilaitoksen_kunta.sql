@@ -1,2 +1,0 @@
-ALTER TABLE toimipaikka ADD COLUMN kunta VARCHAR(3);
-ALTER TABLE vastaajatunnus ALTER COLUMN kunta TYPE VARCHAR(3) USING kunta::VARCHAR(3)
