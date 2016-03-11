@@ -26,6 +26,12 @@
             [aipalvastaus-e2e.util :as aipalvastaus]
             [aitu-e2e.util :refer [with-webdriver]]))
 
+(defn vastaa-kyselyyn! [vastaajatunnus-url]
+  (vastaus-sivu/avaa-sivu vastaajatunnus-url "UUSI KYSELY")
+  (vastaus-sivu/valitse-ensimmaisen-kysymyksen-ensimmainen-vaihtoehto)
+  (vastaus-sivu/tallenna-vastaukset)
+  (is (vastaus-sivu/vastaaminen-onnistui?)))
+
 (deftest koko-putki-test
   (with-webdriver
     (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
@@ -77,23 +83,18 @@
 
       ;; luo vastaajatunnuksia
       (kyselykerta-sivu/luo-vastaajatunnuksia)
-      #_(kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
+      (kyselykerta-sivu/valitse-vastaajatunnusten-maara "5")
+      (kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
       (kyselykerta-sivu/lisaa-vastaajatunnukset)
 
       ;; vastaa kyselyyn
       (let [vastaajatunnus-url (kyselykerta-sivu/ensimmaisen-vastaajatunnuksen-url)]
-        (vastaus-sivu/avaa-sivu vastaajatunnus-url "UUSI KYSELY")
-
         (try
-          (vastaus-sivu/valitse-ensimmaisen-kysymyksen-ensimmainen-vaihtoehto)
-          (vastaus-sivu/tallenna-vastaukset)
-
-          (is (vastaus-sivu/vastaaminen-onnistui?))
-
+          (dotimes [_ 5]
+            (vastaa-kyselyyn! vastaajatunnus-url))
           (kyselyt-sivu/avaa-sivu)
           (kyselyt-sivu/nayta-raportti)
           (is (= (kyselykertaraportti-sivu/ensimmaisen-kysymyksen-ensimmaisen-vaihtoehdon-vastausten-lukumaara)
-                 "1") )
-
+                 "5"))
           (finally
             (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))))

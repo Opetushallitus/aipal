@@ -58,6 +58,9 @@
 (defentity kieli
   (sql/pk :kieli))
 
+(defentity tutkintotyyppi
+  (sql/pk :tutkintotyyppi))
+
 (defentity kayttaja
   (sql/pk :oid))
 

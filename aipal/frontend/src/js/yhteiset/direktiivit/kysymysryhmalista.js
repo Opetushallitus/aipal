@@ -69,6 +69,18 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               });
           });
         };
+        
+        $scope.naytaRakenneModal = function(kysymysryhma) {
+            $uibModal.open({
+              templateUrl: 'template/kysymysryhma/rakenne.html',
+              controller: 'KysymysryhmaRakenneModalController',
+              resolve: {
+                kysymysryhma: function() {
+                  return Kysymysryhma.hae(kysymysryhma.kysymysryhmaid).then(function(response) { return response.data; });
+                }
+              }
+            });
+          };        
 
         $scope.suljeKysymysryhma = function(kysymysryhma) {
           varmistus.varmista(i18n.hae('kysymysryhma.sulje'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.sulje_teksti'), i18n.hae('kysymysryhma.sulje')).then(function() {

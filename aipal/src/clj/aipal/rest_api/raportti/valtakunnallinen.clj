@@ -73,7 +73,7 @@
 (defn ^:private muodosta-valtakunnallinen-raportti [parametrit tutkintotason-parametrit]
   (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
         vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
-        parametrit (merge parametrit
+        parametrit (merge (dissoc parametrit :tutkintotyyppi)
                           {:koulutustoimijat []
                            :tyyppi "valtakunnallinen"}
                           (valtakunnallinen-raportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm)
@@ -95,19 +95,32 @@
    parametrit
    nil))
 
+(defn ^:private luo-tutkintotyyppi-raportit [parametrit]
+  [[(raportti/muodosta parametrit)]
+   [(muodosta-valtakunnallinen-raportti parametrit nil)]])
+
+(defn ^:private luo-vertailuraportit [parametrit]
+  (case (:tutkintorakennetaso parametrit)
+    "tutkinto"    (if-let [tutkinnot (seq (:tutkinnot parametrit))]
+                    [(for [tutkinto tutkinnot]
+                       (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
+                     [(vertailuraportti-valtakunnallinen-raportti parametrit)]]
+                    (luo-tutkintotyyppi-raportit parametrit))
+    "opintoala"   (if-let [opintoalat (seq (:opintoalat parametrit))]
+                    [(for [opintoala opintoalat]
+                       (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
+                     [(vertailuraportti-valtakunnallinen-raportti parametrit)]]
+                    (luo-tutkintotyyppi-raportit parametrit))
+    "koulutusala" (if-let [koulutusalat (seq (:koulutusalat parametrit))]
+                    [(for [koulutusala koulutusalat]
+                       (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala])))
+                     [(vertailuraportti-valtakunnallinen-raportti parametrit)]]
+                    (luo-tutkintotyyppi-raportit parametrit))))
+
 (defn luo-raportit [parametrit]
   (apply concat
          (case (:tyyppi parametrit)
-           "vertailu"         (case (:tutkintorakennetaso parametrit)
-                                "tutkinto"    [(for [tutkinto (:tutkinnot parametrit)]
-                                                 (raportti/muodosta (assoc parametrit :tutkinnot [tutkinto])))
-                                               [(vertailuraportti-valtakunnallinen-raportti parametrit)]]
-                                "opintoala"   [(for [opintoala (:opintoalat parametrit)]
-                                                 (raportti/muodosta (assoc parametrit :opintoalat [opintoala])))
-                                               [(vertailuraportti-valtakunnallinen-raportti parametrit)]]
-                                "koulutusala" [(for [koulutusala (:koulutusalat parametrit)]
-                                                 (raportti/muodosta (assoc parametrit :koulutusalat [koulutusala])))
-                                               [(vertailuraportti-valtakunnallinen-raportti parametrit)]])
+           "vertailu"         (luo-vertailuraportit parametrit)
            "kehitys"          [[(raportti/muodosta parametrit)]
                                [(kehitysraportti-valtakunnallinen-raportti parametrit)]]
            "koulutustoimijat" [(for [koulutustoimija (:koulutustoimijat parametrit)]
@@ -119,7 +132,7 @@
     :body [parametrit s/Any]
     :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
     (response-or-404
-      (let [kaikki-raportit (for [raportti (luo-raportit parametrit)]
+      (let [kaikki-raportit (for [raportti (luo-raportit (yhteinen/korjaa-numero-avaimet parametrit))]
                                (ei-riittavasti-vastaajia raportti asetukset))
             naytettavat (filter (comp nil? :virhe) kaikki-raportit)
             virheelliset (filter :virhe kaikki-raportit)]
