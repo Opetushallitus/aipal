@@ -14,6 +14,7 @@
 
 (ns aipal.arkisto.toimipaikka
   (:require [korma.core :as sql]
+            [oph.korma.common :refer [select-unique-or-nil]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn ^:integration-api lisaa!
@@ -48,3 +49,9 @@
   (sql/select taulut/toimipaikka
               (sql/fields :toimipaikkakoodi :oppilaitos :nimi_fi :nimi_sv :nimi_en :kunta)
               (sql/where {:oppilaitos oppilaitos})))
+
+
+(defn hae-oppilaitoksen-ja-kunta-toimipaikka [oppilaitos kunta]
+  (select-unique-or-nil taulut/toimipaikka
+    (sql/where {:oppilaitos oppilaitos :kunta kunta
+       :voimassa true})))

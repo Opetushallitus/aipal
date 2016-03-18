@@ -102,6 +102,7 @@
     (doto flyway
       (.setDataSource datasource)
       (.setLocations (into-array String ["/db/migration"]))
+      (.setOutOfOrder true)
       (cond->
         tyhjenna (.clean)
         kantaversio (.setTarget kantaversio))

@@ -25,6 +25,7 @@
             aipal.rest-api.raportti.valtakunnallinen
             aipal.rest_api.js-log
             aipal.rest-api.vastaajatunnus
+            aipal.rest-api.avopvastaajatunnus
             aipal.rest-api.kayttaja
             aipal.rest-api.tutkinto
             aipal.rest-api.koulutustoimija
@@ -91,4 +92,5 @@
     (context "/api/tutkinto" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkinto/reitit)
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
+    (context "/api/public/luovastaajatunnus" [] aipal.rest-api.avopvastaajatunnus/reitit)
     (r/not-found "Not found")))

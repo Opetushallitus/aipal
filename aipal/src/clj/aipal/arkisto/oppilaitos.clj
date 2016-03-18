@@ -14,6 +14,7 @@
 
 (ns aipal.arkisto.oppilaitos
   (:require [korma.core :as sql]
+            [oph.korma.common :refer [select-unique-or-nil]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn ^:integration-api lisaa!
@@ -38,6 +39,13 @@
     (sql/select* taulut/oppilaitos)
     (sql/order :oppilaitoskoodi)
     sql/exec))
+
+
+(defn hae
+  [oppilaitosid]
+  (select-unique-or-nil taulut/oppilaitos
+    (sql/where {:oppilaitoskoodi oppilaitosid
+       :voimassa true})))
 
 (defn hae-koulutustoimijan-oppilaitokset
   [koulutustoimija]
