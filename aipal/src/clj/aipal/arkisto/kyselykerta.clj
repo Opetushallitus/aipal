@@ -35,8 +35,11 @@
                 :kyselykerta.lukittu :kyselykerta.luotuaika
                 :kyselykerta_kaytettavissa.kaytettavissa
                 [(sql/raw "count(vastaaja.vastaajaid) = 0") :poistettavissa]
-                [(sql/raw "sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :vastaajien_lkm]
-                [(sql/raw "count(vastaaja.vastaajaid) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :vastaajia])
+                [(sql/raw "sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :aktiivisia_vastaajatunnuksia]
+                [(sql/raw "count(vastaaja.vastaajaid) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :aktiivisia_vastaajia]
+                [(sql/raw "count(vastaajatunnus.vastaajien_lkm)") :vastaajatunnuksia]
+                [(sql/raw "count(vastaaja.vastaajaid)") :vastaajia]
+                [(sql/raw "max(vastaaja.luotuaika)") :viimeisin_vastaus])
     (sql/group :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
                :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
                :kyselykerta.lukittu :kyselykerta.luotuaika
@@ -81,8 +84,8 @@
 (defn kyselykertaid->kyselyid
   [kyselykertaid]
   (let [result (sql/select taulut/kyselykerta
-    (sql/fields :kyselyid)
-    (sql/where {:kyselykertaid kyselykertaid}))]
+                 (sql/fields :kyselyid)
+                 (sql/where {:kyselykertaid kyselykertaid}))]
     (-> result
         first
         :kyselyid)))

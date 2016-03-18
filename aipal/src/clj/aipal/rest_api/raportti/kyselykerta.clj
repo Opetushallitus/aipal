@@ -54,7 +54,7 @@
     :path-params [kyselykertaid :- s/Int]
     :body [parametrit s/Any]
     :kayttooikeus [:kyselykerta-raportti kyselykertaid]
-    (response-or-404 (muodosta-kyselykertaraportti kyselykertaid parametrit asetukset))))
+    (response-or-404 (muodosta-kyselykertaraportti kyselykertaid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param

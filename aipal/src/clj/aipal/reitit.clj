@@ -28,6 +28,7 @@
             aipal.rest-api.avopvastaajatunnus
             aipal.rest-api.kayttaja
             aipal.rest-api.tutkinto
+            aipal.rest-api.tutkintotyyppi
             aipal.rest-api.koulutustoimija
             aipal.rest-api.tiedote
             [aipal.infra.kayttaja :refer [*kayttaja*]]
@@ -90,6 +91,7 @@
     (context "/api/vastaajatunnus" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.vastaajatunnus/reitit)
     (context "/api/kayttaja" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kayttaja/reitit)
     (context "/api/tutkinto" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkinto/reitit)
+    (context "/api/tutkintotyyppi" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (context "/api/public/luovastaajatunnus" [] aipal.rest-api.avopvastaajatunnus/reitit)

@@ -18,6 +18,7 @@
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
+            [oph.common.util.util :refer [max-date]]
             [oph.korma.common :refer [select-unique-or-nil select-unique unique-or-nil]]
             [aipal.auditlog :as auditlog]))
 
@@ -56,8 +57,12 @@
 ;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan
 (defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat]
   (let [kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
-    (for [kysely kyselyt]
-      (assoc kysely :kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))))))
+    (for [kysely kyselyt
+          :let [kyselyn-kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))]]
+      (assoc kysely :kyselykerrat kyselyn-kyselykerrat
+                    :vastaajia (reduce + (map :vastaajia kyselyn-kyselykerrat))
+                    :vastaajatunnuksia (reduce + (map :vastaajatunnuksia kyselyn-kyselykerrat))
+                    :viimeisin_vastaus (reduce max-date nil (map :viimeisin_vastaus kyselyn-kyselykerrat))))))
 
 (defn hae-kaikki
   [koulutustoimija]
@@ -125,6 +130,10 @@
 
 (defn poista-kysely! [kyselyid]
   (auditlog/kysely-poisto! kyselyid)
+  (sql/delete taulut/vastaajatunnus
+    (sql/where {:kyselykertaid [in (sql/subselect taulut/kyselykerta (sql/fields :kyselykertaid) (sql/where {:kyselyid kyselyid}))]}))
+  (sql/delete taulut/kyselykerta
+    (sql/where {:kyselyid kyselyid}))
   (sql/delete taulut/kysely_kysymysryhma
     (sql/where {:kyselyid kyselyid}))
   (sql/delete taulut/kysely_kysymys

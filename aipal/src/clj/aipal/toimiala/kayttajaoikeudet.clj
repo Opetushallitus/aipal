@@ -242,7 +242,12 @@
 
 (defn kyselykerta-poisto? [kyselykertaid]
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
-    (kyselykerta-luonti? kyselyid)))
+    (or (kayttaja/yllapitaja?)
+        (kayttajalla-on-jokin-rooleista-kyselyssa?
+          #{"OPL-VASTUUKAYTTAJA"
+            "OPL-KAYTTAJA"
+            "OPL-NTMVASTUUKAYTTAJA"}
+          kyselyid))))
 
 (defn raportti-koulutustoimijoista? [koulutustoimijat]
   (or (kayttaja/yllapitaja?)
@@ -296,6 +301,7 @@
     :ohje_muokkaus kayttaja/yllapitaja?
     :rahoitusmuoto aipal-kayttaja?
     :tutkinto aipal-kayttaja?
+    :tutkintotyyppi aipal-kayttaja?
     :oppilaitos aipal-kayttaja?
     :toimipaikka aipal-kayttaja?
     :koulutustoimija aipal-kayttaja?
