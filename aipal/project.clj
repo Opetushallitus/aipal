@@ -37,7 +37,6 @@
                  [org.slf4j/slf4j-api "1.7.16"]
                  [peridot "0.4.3"]
                  [prismatic/schema "1.0.5"]
-                 [buddy/buddy-auth "0.9.0"]
                  [ring/ring-core "1.4.0"]
                  [ring/ring-headers "0.1.3"]
                  [ring/ring-json "0.4.0"]
