@@ -93,10 +93,10 @@
               {:vastaus.vastaajaid :vastaaja_taustakysymysryhma_view.vastaajaid
                :vastaaja_taustakysymysryhma_view.taustakysymysryhmaid [in (mappaa-kysymysryhmaid taustakysymysryhmaid)]})
     (cond->
-      (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi koulutustoimijat rahoitusmuoto suorituskieli) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
-      (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi rahoitusmuoto suorituskieli) (sql/join :inner :vastaajatunnus
-                                                                                                               (and (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid)
-                                                                                                                    (or (nil? tutkintotunnus) (= :vastaajatunnus.tutkintotunnus tutkintotunnus))))
+      (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi koulutustoimijat rahoitusmuoto suorituskieli oppilaitokset) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
+      (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi rahoitusmuoto suorituskieli oppilaitokset) (sql/join :inner :vastaajatunnus
+                                                                                                                               (and (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid)
+                                                                                                                                    (or (nil? tutkintotunnus) (= :vastaajatunnus.tutkintotunnus tutkintotunnus))))
       (or opintoalatunnus koulutusalatunnus tutkintotyyppi) (sql/join :inner :tutkinto
                                                                     (and (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus)
                                                                          (or (nil? opintoalatunnus) (= :tutkinto.opintoala opintoalatunnus))))
