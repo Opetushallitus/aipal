@@ -22,7 +22,8 @@ angular.module('yhteiset.direktiivit.valintalista', [])
       scope: {
         'valittavat': '=',
         'valitse': '&',
-        'hakuteksti': '@'
+        'hakuteksti': '@',
+        'pieni': '='
       },
       templateUrl: 'template/yhteiset/direktiivit/valintalista.html',
       controller: ['$scope', function($scope) {

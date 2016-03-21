@@ -17,6 +17,9 @@
 
 .raportit .valitsin {
   height: 20em;
+  &.pieni {
+    height: 10em;
+  }
   overflow: auto;
   list-style-type: none;
   margin-left: 0em;
