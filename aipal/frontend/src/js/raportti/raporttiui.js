@@ -283,6 +283,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         });
     };
 
+    $scope.taustakysymysValittu = function(kysymysid) {
+      return _.some($scope.raportti.kysymykset[kysymysid].monivalinnat);
+    };
+
+    $scope.vaihtoehtoValittu = function(kysymysid, jarjestys) {
+      return $scope.raportti.kysymykset[kysymysid].monivalinnat[jarjestys];
+    };
+
     kyselykertaValilehti.alusta($scope);
     kyselyValilehti.alusta($scope);
 

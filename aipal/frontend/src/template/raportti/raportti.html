@@ -30,6 +30,19 @@
   <div ng-show="kieli==='sv'" ng-include="'template/raportti/raportti-info-sv.html'"></div>
 </div>
 
+<h2 class="visible-print">{{'raportti.rajaus_taustakysymyksilla' | i18n}}</h2>
+
+<div class="raportti-tiedot visible-print">
+  <div ng-repeat="kysymys in taustakysymysryhma.kysymykset" ng-if="taustakysymysValittu(kysymys.kysymysid)">
+    {{kysymys.jarjestys}}. {{kysymys | lokalisoiKentta:'kysymys'}}
+    <ul>
+      <li ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" ng-if="vaihtoehtoValittu(kysymys.kysymysid, vaihtoehto.jarjestys)">
+        {{vaihtoehto | lokalisoiKentta:'teksti'}}
+      </li>
+    </ul>
+  </div>
+</div>
+
 <div class="raportti-tiedot" ng-if="tulos">
   <div>
     <h2>{{tulos | lokalisoiKentta:'nimi'}}</h2>
