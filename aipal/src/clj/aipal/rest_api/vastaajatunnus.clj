@@ -18,6 +18,7 @@
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [clojure.tools.logging :as log]
             [oph.common.util.http-util :refer [parse-iso-date response-or-404]]
             [oph.common.util.util :refer [paivita-arvot]]))
 
@@ -27,6 +28,8 @@
     :body [vastaajatunnus s/Any]
     :kayttooikeus [:vastaajatunnus-luonti kyselykertaid]
     (let [vastaajatunnus (paivita-arvot vastaajatunnus [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
+      (log/info (format "%s" (assoc vastaajatunnus :kyselykertaid kyselykertaid)))
+      (log/info (type (assoc vastaajatunnus :kyselykertaid kyselykertaid)))
       (response-or-404 (vastaajatunnus/lisaa!
                          (assoc vastaajatunnus :kyselykertaid kyselykertaid)))))
 

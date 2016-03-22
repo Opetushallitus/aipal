@@ -37,24 +37,26 @@
 (def auth-backend (jws-backend {:secret secret}))
 
 (defn avop->arvo-map
-  [{:keys [kuntaid kieli koulutusid tyyppi tutkintoid oppilaitosid kyselykertanimi]}]
+  [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto opiskeluoikeustyyppi laajuus kyselykerran_nimi]}]
   (let [
-        oppilaitos (oppilaitos/hae oppilaitosid)
-        koulutustoimija (koulutustoimija/hae oppilaitosid)
+        ;;kunta <- no need
+        ;;opiskeluoikeustyyppi <- no need
+        ;;laajuus <- no need
+        ent_oppilaitos (oppilaitos/hae oppilaitos)
+        ent_koulutustoimija (koulutustoimija/hae oppilaitos)
         ;;toimipaikka (toimipaikka/hae-oppilaitoksen-toimipaikka oppilaitosid)
         ;;toimipaikka nil
-        tutkinto (tutkinto/hae tutkintoid)
-        koulutusmuoto tyyppi
-        kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykertanimi oppilaitosid)]
+        ent_tutkinto (tutkinto/hae koulutus)]
+        ;kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
     {
-     :henkilokohtainen "true"
-     :koulutksen_jarjestaja_oppilaitos oppilaitos
-     :koulutksen_jarjestaja  koulutustoimija
+     :henkilokohtainen true
+     :koulutksen_jarjestaja_oppilaitos ent_oppilaitos
+     :koulutksen_jarjestaja  ent_koulutustoimija
      :koulutksen_toimipaikka nil
      :koulutusmuoto koulutusmuoto
      :rahoitusmuotoid 5
      :suorituskieli kieli
-     :tutkinto tutkinto
+     :tutkinto ent_tutkinto
      :vastaajien_lkm 1
      :voimassa_alkupvm (alkupvm)
      :voimassa_loppupvm (loppupvm)
@@ -66,5 +68,6 @@
   (POST "/" []
     :body [avopdata s/Any]
     (log/info (format "%s" (avop->arvo-map avopdata)))
+    (log/info (type (avop->arvo-map avopdata)))
     (let [vastaajatunnus (avop->arvo-map avopdata)]
       (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))))
