@@ -63,6 +63,17 @@
     (auditlog/kyselykerta-luonti! kyselyid (:nimi kyselykerta-data))
     kyselykerta))
 
+(defn hae-nimella-ja-oppilaitoksella
+  "Hae kyselykerta nimella ja oppilaitoksella"
+  [kyselykertanimi oppilaitosid]
+  (sql/select taulut/kyselykerta
+     (sql/modifier "distinct")
+     (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+     (sql/join :inner taulut/oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
+     (sql/fields :kyselykerta.kyselykertaid)   
+     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false
+      })))
+
 (defn hae-yksi
   "Hae kyselykerta tunnuksella"
   [kyselykertaid]

@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute', 'rest.tutkinto', 'rest.koulutustoimija', 'rest.kieli',
+angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.bootstrap','ngRoute', 'rest.tutkinto', 'rest.koulutustoimija', 'rest.kieli',
                                              'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
                                              'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus',
                                              'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.varmistus'])
@@ -49,7 +49,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ngRoute'
       $scope.luoTunnuksiaDialogi = function () {
         var kyselykertaId = $routeParams.kyselykertaid;
 
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/tunnusten-luonti.html',
           controller: 'LuoTunnuksiaModalController',
           resolve: {
