@@ -63,16 +63,18 @@
     (auditlog/kyselykerta-luonti! kyselyid (:nimi kyselykerta-data))
     kyselykerta))
 
+;avop.fi
 (defn hae-nimella-ja-oppilaitoksella
   "Hae kyselykerta nimella ja oppilaitoksella"
   [kyselykertanimi oppilaitosid]
-  (sql/select taulut/kyselykerta
+  (first (sql/select taulut/kyselykerta
      (sql/modifier "distinct")
      (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
      (sql/join :inner taulut/oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
      (sql/fields :kyselykerta.kyselykertaid)   
      (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false
-      })))
+      }))))
+;end avop.fi
 
 (defn hae-yksi
   "Hae kyselykerta tunnuksella"

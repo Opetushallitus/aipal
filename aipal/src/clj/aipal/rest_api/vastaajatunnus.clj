@@ -29,7 +29,6 @@
     :kayttooikeus [:vastaajatunnus-luonti kyselykertaid]
     (let [vastaajatunnus (paivita-arvot vastaajatunnus [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
       (log/info (format "%s" (assoc vastaajatunnus :kyselykertaid kyselykertaid)))
-      (log/info (type (assoc vastaajatunnus :kyselykertaid kyselykertaid)))
       (response-or-404 (vastaajatunnus/lisaa!
                          (assoc vastaajatunnus :kyselykertaid kyselykertaid)))))
 

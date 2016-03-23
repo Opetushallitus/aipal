@@ -14,7 +14,7 @@
 
 (ns aipal.arkisto.tutkinto
   (:require [korma.core :as sql]
-            [oph.korma.common :refer [select-unique-or-nil]]
+            [oph.korma.common :refer [select-unique-or-nil select-unique]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [pvm-mennyt-tai-tanaan? pvm-tuleva-tai-tanaan?]]))
 
@@ -38,6 +38,14 @@
   [tutkintotunnus]
   (select-unique-or-nil taulut/tutkinto
     (sql/where {:tutkintotunnus tutkintotunnus})))
+
+;;avop.fi
+(defn hae-kentat
+  [tutkintotunnus]
+  (select-unique taulut/tutkinto
+    (sql/fields :tutkintotunnus :nimi_fi :nimi_en :nimi_en)
+    (sql/where {:tutkintotunnus tutkintotunnus})))
+;;end avop.fi
 
 (defn hae-koulutustoimijan-tutkinnot
   [y-tunnus]

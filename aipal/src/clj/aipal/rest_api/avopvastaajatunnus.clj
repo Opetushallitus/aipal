@@ -25,12 +25,13 @@
             [aipal.arkisto.kysely :as kysely]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [clojure.tools.logging :as log]
+            [cheshire.core :as cheshire]
             [clj-time.core :as time]
             aipal.compojure-util
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [oph.common.util.http-util :refer [response-or-404 response-validation-error]]))
 
 
-(defn alkupvm [] (time/now))
+(defn alkupvm [] (time/today))
 (defn loppupvm [] (time/plus (alkupvm) (time/months 6)))
 ;;TODO: To move it to vault
 (def secret "secret")
@@ -43,31 +44,33 @@
         ;;opiskeluoikeustyyppi <- no need
         ;;laajuus <- no need
         ent_oppilaitos (oppilaitos/hae oppilaitos)
-        ent_koulutustoimija (koulutustoimija/hae oppilaitos)
-        ;;toimipaikka (toimipaikka/hae-oppilaitoksen-toimipaikka oppilaitosid)
-        ;;toimipaikka nil
-        ent_tutkinto (tutkinto/hae koulutus)]
-        ;kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
+        ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
+        ent_tutkinto (tutkinto/hae-kentat koulutus)
+        kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
     {
+     :voimassa_alkupvm (alkupvm)
+     :voimassa_loppupvm (loppupvm)
+     :suorituskieli kieli
+     :vastaajien_lkm 1
+     :rahoitusmuotoid 5
      :henkilokohtainen true
      :koulutksen_jarjestaja_oppilaitos ent_oppilaitos
      :koulutksen_jarjestaja  ent_koulutustoimija
-     :koulutksen_toimipaikka nil
+     :tutkinto ent_oppilaitos
      :koulutusmuoto koulutusmuoto
-     :rahoitusmuotoid 5
-     :suorituskieli kieli
-     :tutkinto ent_tutkinto
-     :vastaajien_lkm 1
-     :voimassa_alkupvm (alkupvm)
-     :voimassa_loppupvm (loppupvm)
-     :kyselykertaid 1
+     ;:kyselykertaid kyselykerta-id
+     :kyselykertaid 2
      }))
 
 
 (defroutes reitit
   (POST "/" []
     :body [avopdata s/Any]
-    (log/info (format "%s" (avop->arvo-map avopdata)))
-    (log/info (type (avop->arvo-map avopdata)))
-    (let [vastaajatunnus (avop->arvo-map avopdata)]
-      (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))))
+    (try
+      (log/info (format "%s" (avop->arvo-map avopdata)))
+      (let [vastaajatunnus (avop->arvo-map avopdata)]
+        (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))
+      (catch java.lang.AssertionError ex 
+        (response-validation-error "Mandatory fields are missing or not found")
+      ))
+    ))
