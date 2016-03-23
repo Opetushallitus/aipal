@@ -13,29 +13,40 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.avopvastaajatunnus
-  (:require [compojure.api.core :refer [defroutes POST GET]]
+  (:require [compojure.api.sweet :refer :all]
             [schema.core :as s]
-            [buddy.auth.backends.token :refer (jws-backend)]
-            [buddy.auth.middleware :refer (wrap-authentication)]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
             [aipal.arkisto.oppilaitos :as oppilaitos]
             [aipal.arkisto.tutkinto :as tutkinto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
-            [aipal.arkisto.toimipaikka :as toimipaikka]
-            [aipal.arkisto.kysely :as kysely]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [clojure.tools.logging :as log]
+
+            [buddy.auth.backends.token :refer (jws-backend)]
+            [buddy.auth.middleware :refer (wrap-authentication)]
+            [buddy.auth :refer [authenticated?]]
+
+            [ring.util.http-response :refer [unauthorized]]
             [cheshire.core :as cheshire]
             [clj-time.core :as time]
             aipal.compojure-util
             [oph.common.util.http-util :refer [response-or-404 response-validation-error]]))
 
 
-(defn alkupvm [] (time/today))
-(defn loppupvm [] (time/plus (alkupvm) (time/months 6)))
+
+
 ;;TODO: To move it to vault
 (def secret "secret")
 (def auth-backend (jws-backend {:secret secret}))
+
+(defn alkupvm [] (time/today))
+(defn loppupvm [] (time/plus (alkupvm) (time/months 6)))
+
+(defn auth-mw [handler]
+  (fn [request]
+    (if (authenticated? request)
+      (handler request)
+      (unauthorized {:error "Invalid Token"}))))
 
 (defn avop->arvo-map
   [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto opiskeluoikeustyyppi laajuus kyselykerran_nimi]}]
@@ -65,7 +76,8 @@
 (defroutes reitit
   (wrap-authentication (POST "/" []
     :body [avopdata s/Any]
-    ;:header-params [authorization :- String]
+    :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
+    :header-params [authorization :- String]
    (try
       ;(log/info (format "%s" (avop->arvo-map avopdata)))
       (let [vastaajatunnus (avop->arvo-map avopdata)]
@@ -76,4 +88,4 @@
       (catch Exception e2
          (response-validation-error (format "Unexpected error: %s" (.getMessage e2)))
       )
-    )) auth-backend))
+    )) auth-backend ))

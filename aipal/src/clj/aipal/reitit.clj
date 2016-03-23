@@ -35,6 +35,7 @@
 
             [oph.common.infra.status :refer [status]]))
 
+
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
                        (.trim (slurp resource))
                        "dev")))
@@ -94,5 +95,5 @@
     (context "/api/tutkintotyyppi" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
-    (context "/api/public/luovastaajatunnus" [] aipal.rest-api.avopvastaajatunnus/reitit)
+    (context "/api/public/luovastaajatunnus" [] aipal.rest-api.avopvastaajatunnus/reitit )
     (r/not-found "Not found")))
