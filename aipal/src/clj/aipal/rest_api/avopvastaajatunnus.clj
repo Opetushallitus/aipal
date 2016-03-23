@@ -63,9 +63,10 @@
 
 
 (defroutes reitit
-  (POST "/" []
+  (wrap-authentication (POST "/" []
     :body [avopdata s/Any]
-    (try
+    ;:header-params [authorization :- String]
+   (try
       ;(log/info (format "%s" (avop->arvo-map avopdata)))
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))
@@ -75,4 +76,4 @@
       (catch Exception e2
          (response-validation-error (format "Unexpected error: %s" (.getMessage e2)))
       )
-    )))
+    )) auth-backend)
