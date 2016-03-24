@@ -24,19 +24,29 @@
 
             [buddy.auth.backends.token :refer (jws-backend)]
             [buddy.auth.middleware :refer (wrap-authentication)]
-            [buddy.auth :refer [authenticated?]]
-
-            [ring.util.http-response :refer [unauthorized]]
+            [buddy.auth :refer [authenticated? throw-unauthorized]]
             [cheshire.core :as cheshire]
             [clj-time.core :as time]
             aipal.compojure-util
-            [oph.common.util.http-util :refer [response-or-404 response-validation-error]]))
+            [oph.common.util.http-util :refer [response-or-404]]))
 
 
 
 
 ;;TODO: To move it to vault
 (def secret "secret")
+
+
+;;TODO: To move it to clojure-utils or use an already existing function
+;;avop.fi 
+(defn response-validation-error
+  ([message]
+    {:status 400
+      :headers {"Content-Type" "application/json"}
+      :body (cheshire/generate-string message)
+    }))
+;;end avop.fi
+
 (def auth-backend (jws-backend {:secret secret}))
 
 (defn alkupvm [] (time/today))
@@ -46,7 +56,7 @@
   (fn [request]
     (if (authenticated? request)
       (handler request)
-      (unauthorized {:error "Invalid Token"}))))
+      (throw-unauthorized))))
 
 (defn avop->arvo-map
   [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto opiskeluoikeustyyppi laajuus kyselykerran_nimi]}]
