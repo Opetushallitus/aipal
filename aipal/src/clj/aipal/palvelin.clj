@@ -27,11 +27,12 @@
             [ring.middleware.not-modified :refer [wrap-not-modified]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
+            [ring.util.request :refer [path-info request-url]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
             schema.core
-
+            
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
 
@@ -42,7 +43,7 @@
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.common :refer [luo-db]]
 
-            [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset] :rename {asetukset asetukset-promise}]
+            [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset kehitysmoodi?] :rename {asetukset asetukset-promise}]
             [aipal.reitit :refer [build-id]]
             [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
@@ -69,6 +70,7 @@
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
 
+
 (defn auth-removeticket
   [handler asetukset]
   (fn [request]
@@ -76,22 +78,37 @@
       (resp/redirect (service-url asetukset))
       (handler request))))
 
+(def swagger-resources
+  "Swagger API resources, not authenticated using CAS"
+  #{"/api-docs" "/swagger.json" "/fi/swagger.json"})
+
 (defn auth-middleware
   [handler asetukset]
-  (when (and (:development-mode asetukset)
-             (:unsafe-https (:cas-auth-server asetukset))
-             (:enabled (:cas-auth-server asetukset)))
+  (when (and (kehitysmoodi? asetukset)
+          (:unsafe-https (:cas-auth-server asetukset))
+          (:enabled (:cas-auth-server asetukset)))
     (anon-auth/enable-development-mode!))
-  (if (and (:development-mode asetukset)
-           (not (:enabled (:cas-auth-server asetukset))))
-    (anon-auth/auth-cas-user handler default-test-user-uid)
-    (fn [request]
-      (let [auth-handler (if (and (:development-mode asetukset)
-                                  ((:headers request) "uid"))
-                           (anon-auth/auth-cas-user handler default-test-user-uid)
-                           (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
-        (auth-handler request)))))
 
+  (fn [request]
+      (let [cas-handler (wrap-kayttaja handler)
+            anon-auth-handler (anon-auth/auth-cas-user cas-handler default-test-user-uid)
+            fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
+            auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
+      (cond
+        (some #(.startsWith (path-info request) %) swagger-resources)
+          (do
+            (log/info "swagger API docs are public, no auth")
+            (handler request))
+        (and (kehitysmoodi? asetukset) (not (:enabled (:cas-auth-server asetukset))))
+          (do
+           (log/info "development, no CAS")
+           (anon-auth-handler request))
+        (and (kehitysmoodi? asetukset) ((:headers request) "uid"))
+          (do
+            (log/info "development, fake CAS")
+            (fake-auth-handler request))
+        :else (auth-handler request)))))
+ 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
@@ -135,8 +152,7 @@
       wrap-content-type
       wrap-not-modified
       wrap-expires
-
-      wrap-kayttaja
+      
       (auth-middleware asetukset)
       log-request-wrapper
 
