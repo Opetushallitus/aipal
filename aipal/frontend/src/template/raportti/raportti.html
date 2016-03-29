@@ -171,6 +171,22 @@
         </vaittama-kaavio>
         <jakauma kysymys="kysymys.jatkovastaukset.kylla" kysymysryhma="kysymysryhma" nimet="tulos.nimet"></jakauma>
       </div>
+      <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
+        <h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>
+        <div ng-if="!printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n}})</div>
+        <table ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)"
+               class="report-table" 
+               ng-class="{ 'hidden-print': !printfreetext}">
+          <thead>
+            <tr><th>{{'raportti.vastaukset' |i18n}}: {{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vapaatekstivastaukset">
+              <td><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div ng-if="kysymys.vastaustyyppi === 'vapaateksti' && !printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n }})</div>
