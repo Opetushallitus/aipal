@@ -138,7 +138,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
   .controller('KyselypohjaModalController', ['$uibModalInstance', '$scope', 'kyselypohja', 'Kyselypohja', function($uibModalInstance, $scope, kyselypohja, Kyselypohja) {
 
     /* Luo Kyselypohjista kysymykset -arrayn jota rakenne.html -template ymmärtää */
-    var kysymykset = new Array();
+    var kysymykset = [];
 
     // Otsikon kielimuuttujaa varten
     $scope.view = 'kyselypohjat';
