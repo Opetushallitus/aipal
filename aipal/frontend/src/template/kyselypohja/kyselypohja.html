@@ -80,6 +80,8 @@
   <button class="btn btn-primary pull-left" ng-disabled="!kyselypohjaForm.$valid" ng-click="tallenna()">
     {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="fa fa-save"></span>
   </button>
+
+  <button class="btn btn-primary pull-left" ng-disabled="!kyselypohja.kysymysryhmat.length" ng-click="naytaRakenneModal()">{{'i18n.kysymysryhma.nayta_rakenne'| i18n}}&nbsp;<span class="fa fa-search"></span></button>
   <button class="btn btn-default pull-left" ng-click="peruuta()">{{'i18n.yleiset.peruuta' | i18n}}</button>
 </form>
 

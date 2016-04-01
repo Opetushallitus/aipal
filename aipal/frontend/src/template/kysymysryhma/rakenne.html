@@ -1,8 +1,8 @@
 <div class="modal-header">
   <a class="pull-right" ng-click="cancel()">X</a>
-  <h4>{{ 'kysymysryhma.rakenne' | i18n }}</h4>
+  <h4 ng-if="view=='kyselypohjat'">{{ 'kyselypohja.rakenne' | i18n }}</h4>
+  <h4 ng-if="view=='kysymysryhma'">{{ 'kysymysryhma.rakenne' | i18n }}</h4>
 </div>
-
 <div class="modal-body">
   <h3>{{ kysymysryhma | lokalisoiKentta:'nimi' }}</h3>
 
