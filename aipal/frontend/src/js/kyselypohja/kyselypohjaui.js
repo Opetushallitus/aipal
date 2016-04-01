@@ -135,10 +135,10 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       };
     }
   }])
-  .controller('KyselypohjaModalController', ['$uibModalInstance', '$scope', 'kyselypohja', 'Kyselypohja', 'pvm', function($uibModalInstance, $scope, kyselypohja, Kyselypohja, pvm) {
+  .controller('KyselypohjaModalController', ['$uibModalInstance', '$scope', 'kyselypohja', 'Kyselypohja', function($uibModalInstance, $scope, kyselypohja, Kyselypohja) {
 
     /* Luo Kyselypohjista kysymykset -arrayn jota rakenne.html -template ymmärtää */
-    var kysymykset = new Array;
+    var kysymykset = new Array();
 
     // Otsikon kielimuuttujaa varten
     $scope.view = 'kyselypohjat';
@@ -148,7 +148,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         if(!x.poistetaan_kyselysta) {
           _.each(x.kysymykset, function(y){
             kysymykset.push(y);
-          })
+          });
         }
       });
       $scope.kysymysryhma = {kysymykset: kysymykset};
@@ -157,10 +157,6 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     if(!kyselypohja.kysymysryhmat) {
       Kyselypohja.hae(kyselypohja.kyselypohjaid).success(function(kyselypohja) {
         setKysymykset(kyselypohja);
-      }).error(function(data, status) {
-        if (status !== 500) {
-          $location.url('/kyselypohjat');
-        }
       });
     }else{
       setKysymykset(kyselypohja);
