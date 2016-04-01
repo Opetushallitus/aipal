@@ -276,6 +276,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
         .success(function(tulos) {
           $scope.tulos = tulos;
+          $scope.$parent.timestamp = new Date(); 
         }).error(function(data, status) {
           if (status !== 500) {
             ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
@@ -349,6 +350,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
               $scope.tulos = tulos;
+              $scope.$parent.timestamp = new Date();
             })
             .error(function(value) {
               if (value.status !== 500) {
@@ -416,6 +418,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, raportti), 'raportinMuodostus')
             .success(function(tulos) {
               $scope.tulos = tulos;
+              $scope.$parent.timestamp = new Date(); 
             })
             .error(function(value) {
               if (value.status !== 500) {

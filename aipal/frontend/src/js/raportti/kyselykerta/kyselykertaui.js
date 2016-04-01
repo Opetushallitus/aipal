@@ -37,6 +37,7 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
       Raportti.muodostaKyselykertaraportti($routeParams.kyselykertaid, {})
         .success(function onSuccess(tulos) {
           $scope.tulos = tulos;
+          $scope.$parent.timestamp = new Date(); 
         })
         .error(function onError(value) {
           if (value.status !== 500) {
