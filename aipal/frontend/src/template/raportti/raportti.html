@@ -55,7 +55,7 @@
     {{'yleiset.kyselykerta' | i18n }}: <b class="e2e-yhteenveto-kyselykerta">{{tulos.yhteenveto.kyselykerta}}</b>
   </div>
   <div class="hidden-print" ng-show="tulos.luontipvm">
-    {{'raportti.raportin_luontipaiva' | i18n }}: <b class="e2e-luontipvm">{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</b>
+    {{'raportti.raportin_luontipaiva' | i18n }}: <b class="e2e-luontipvm">{{tulos.luontipvm | date: 'dd.MM.yyyy HH:mm'}}</b>
   </div>
   <div ng-show="tulos.parametrit.vertailujakso_alkupvm || tulos.parametrit.vertailujakso_loppupvm">
     <span ng-show="raportti.tyyppi=='kyselykerta' || raportti.tyyppi=='kysely'">{{'raportit.raportin_aikajakso' | i18n }}:</span>

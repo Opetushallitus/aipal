@@ -45,7 +45,7 @@
   (when-let [kyselykerta (hae-kyselykerta kyselykertaid)]
     (let [parametrit (merge kyselykerta parametrit)
           koulutustoimijatiedot (kyselyraportointi/hae-vastaajatunnusten-tiedot-koulutustoimijoittain parametrit)]
-      {:luontipvm (time/today)
+      {:luontipvm (time/now)
        :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
        :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
        :raportti (map raportointi/laske-kysymysryhman-vastaajat (kyselyraportointi/muodosta-raportti parametrit))

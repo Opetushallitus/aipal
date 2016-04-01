@@ -243,7 +243,7 @@
        raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
    (merge
      (raportin-otsikko parametrit)
-     {:luontipvm (time/today)
+     {:luontipvm (time/now)
       :raportti (map raportointi/laske-kysymysryhman-vastaajat raportti)
       :parametrit parametrit
       :vastaajien_lukumaara (count (reduce clojure.set/union (map :vastaajat raportti)))
