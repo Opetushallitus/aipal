@@ -103,7 +103,7 @@
           (do
             (log/info "swagger API docs are public, no auth")
             (handler request))
-        (and #(.startsWith (path-info request) %) public-api)
+        (some #(.startsWith (path-info request) %) public-api)
           (do
             (log/info "public API method, no CAS auth")
             (handler request))
