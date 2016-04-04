@@ -2,11 +2,11 @@
   (:require [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
 
 (def unauthorized-virheilmoitus
-  (str
-    "AIPAL-palautejärjestelmän käyttö edellyttää käyttöoikeuksia, jotka sinun käyttäjätunnukseltasi puuttuvat. "
-    "Tarvittaessa ota yhteyttä oman organisaatiosi AIPAL-koulutustoimijan pääkäyttäjään tai Opetushallituksen AIPAL-neuvontaan (aipal@oph.fi).\n\n"
-    "Användningen av responssystemet AIPAL förutsätter användarrättigheter. I din användarkod finns ej användarrättigheter. "
-    "Kontakta vid behov huvudanvändaren för AIPAL i din egen organisation eller Utbildningsstyrelsens AIPAL-rådgivning (aipal@oph.fi). "))
+   (str
+      "AVOP-palautejärjestelmän käyttö edellyttää käyttöoikeuksia, jotka sinun käyttäjätunnukseltasi puuttuvat. "
+      "Tarvittaessa ota yhteyttä oman organisaatiosi AVOP-koulutustoimijan pääkäyttäjään tai OKM:n AVOP-neuvontaan (avop@postit.csc.fi).\n\n"
+      "Användningen av responssystemet AVOP förutsätter användarrättigheter. I din användarkod finns ej användarrättigheter. "
+      "Kontakta vid behov huvudanvändaren för AVOP i din egen organisation eller UBS AVOP-rådgivning (avop@postit.csc.fi). "))
 
 (defn wrap-kayttaja
   ([handler paasykielletty-virheilmoitus]

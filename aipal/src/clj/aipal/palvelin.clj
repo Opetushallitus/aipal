@@ -20,6 +20,7 @@
             [clojure.java.io :as io]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
+            [ring.util.request :refer [path-info]]
             [ring.middleware.json :refer [wrap-json-params]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.params :refer [wrap-params]]
@@ -44,7 +45,7 @@
 
             [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset] :rename {asetukset asetukset-promise}]
             [aipal.reitit :refer [build-id]]
-            [avop.infra.kayttaja.middleware :refer [wrap-avop-kayttaja]]
+            [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.infra.eraajo :as eraajo]
             [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]))
@@ -76,21 +77,45 @@
       (resp/redirect (service-url asetukset))
       (handler request))))
 
+(def swagger-resources
+  "Swagger API resources, not authenticated using CAS"
+  #{"/api-docs" "/swagger.json" "/fi/swagger.json"})
+
+
+(def public-api
+  "Public API methods, not authenticated using CAS"
+  #{"/api/public"})
+
 (defn auth-middleware
   [handler asetukset]
-  (when (and (:development-mode asetukset)
-             (:unsafe-https (:cas-auth-server asetukset))
-             (:enabled (:cas-auth-server asetukset)))
+  (when (and (:development-mode? asetukset)
+          (:unsafe-https (:cas-auth-server asetukset))
+          (:enabled (:cas-auth-server asetukset)))
     (anon-auth/enable-development-mode!))
-  (if (and (:development-mode asetukset)
-           (not (:enabled (:cas-auth-server asetukset))))
-    (anon-auth/auth-cas-user handler default-test-user-uid)
-    (fn [request]
-      (let [auth-handler (if (and (:development-mode asetukset)
-                                  ((:headers request) "uid"))
-                           (anon-auth/auth-cas-user handler default-test-user-uid)
-                           (cas handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?))]
-        (auth-handler request)))))
+
+  (fn [request]
+      (let [cas-handler (wrap-kayttaja handler)
+            anon-auth-handler (anon-auth/auth-cas-user cas-handler default-test-user-uid)
+            fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
+            auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
+      (cond
+        (some #(.startsWith (path-info request) %) swagger-resources)
+          (do
+            (log/info "swagger API docs are public, no auth")
+            (handler request))
+        (and #(.startsWith (path-info request) %) public-api)
+          (do
+            (log/info "public API method, no CAS auth")
+            (handler request))
+        (and (:development-mode? asetukset) (not (:enabled (:cas-auth-server asetukset))))
+          (do
+           (log/info "development, no CAS")
+           (anon-auth-handler request))
+        (and (:development-mode? asetukset) ((:headers request) "uid"))
+          (do
+            (log/info "development, fake CAS")
+            (fake-auth-handler request))
+        :else (auth-handler request)))))
 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
@@ -136,7 +161,6 @@
       wrap-not-modified
       wrap-expires
 
-      wrap-avop-kayttaja
       (auth-middleware asetukset)
       log-request-wrapper
 
