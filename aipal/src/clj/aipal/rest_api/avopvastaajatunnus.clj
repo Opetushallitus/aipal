@@ -95,8 +95,9 @@
       (log/info (format "%s" (avop->arvo-map avopdata)))
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))
-      (catch java.lang.AssertionError e1 
-        (on-validation-error "Mandatory fields are missing or not found")
+      (catch java.lang.AssertionError e1
+        (log/error (format "Mandatory fields missing: %s" (.getMessage e1))) 
+        (on-validation-error (format "Mandatory fields are missing or not found"))
       )
       (catch Exception e2
          (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))

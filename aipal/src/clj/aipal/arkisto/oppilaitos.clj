@@ -15,6 +15,7 @@
 (ns aipal.arkisto.oppilaitos
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique]]
+            [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn ^:integration-api lisaa!
