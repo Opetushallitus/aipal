@@ -16,6 +16,7 @@
   (:require [korma.core :as sql]
             [aipal.arkisto.kysely-util :as kysely-util]
             [oph.korma.common :refer [select-unique]]
+            [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
 
@@ -78,9 +79,10 @@
 (defn hae-nimella
    "Hae kyselykerta nimella"
    [kyselykertanimi]
+   (log/info (format "Finding kyselykerta by name %s" kyselykertanimi))
   (select-unique taulut/kyselykerta
     (sql/fields :kyselykertaid )
-    (sql/where {:nimi kyselykertanimi})))
+    (sql/where {:nimi kyselykertanimi :lukittu false})))
 ;end avop.fi
 
 (defn hae-yksi
