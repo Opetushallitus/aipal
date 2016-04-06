@@ -44,7 +44,6 @@
 ;;avopfi
 (defn hae
   [oppilaitosid]
-  (log/info (format "Finding oppilaitos by ID %s" oppilaitosid))
   (select-unique taulut/oppilaitos
     (sql/fields :oppilaitoskoodi :koulutustoimija :nimi_fi :nimi_sv :nimi_en)
     (sql/where {:oppilaitoskoodi oppilaitosid

@@ -78,11 +78,11 @@
      :vastaajien_lkm 1
      :rahoitusmuotoid 5
      :henkilokohtainen true
-     :koulutksen_jarjestaja_oppilaitos (cheshire.core/generate-string ent_oppilaitos)
-     :koulutksen_jarjestaja  (cheshire.core/generate-string ent_koulutustoimija)
-     :tutkinto (cheshire.core/generate-string ent_tutkinto)
+     :koulutksen_jarjestaja_oppilaitos ent_oppilaitos
+     :koulutksen_jarjestaja  ent_koulutustoimija
+     :tutkinto ent_tutkinto
      :koulutusmuoto koulutusmuoto
-     :kyselykertaid kyselykerta-id
+     :kyselykertaid (kyselykerta-id :kyselykertaid)
      }))
 
 
@@ -96,7 +96,7 @@
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))
       (catch java.lang.AssertionError e1
-        (log/error (format "Mandatory fields missing: %s" (.getMessage e1))) 
+        (log/error e1 "Mandatory fields missing") 
         (on-validation-error (format "Mandatory fields are missing or not found"))
       )
       (catch Exception e2

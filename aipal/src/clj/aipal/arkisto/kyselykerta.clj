@@ -79,7 +79,6 @@
 (defn hae-nimella
    "Hae kyselykerta nimella"
    [kyselykertanimi]
-   (log/info (format "Finding kyselykerta by name %s" kyselykertanimi))
   (select-unique taulut/kyselykerta
     (sql/fields :kyselykertaid )
     (sql/where {:nimi kyselykertanimi :lukittu false})))
