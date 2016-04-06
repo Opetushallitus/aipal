@@ -100,6 +100,7 @@
         (on-validation-error (format "Mandatory fields are missing or not found"))
       )
       (catch Exception e2
+         (log/error e2 "Unexpected error")
          (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))
       )
     )) auth-backend ))
