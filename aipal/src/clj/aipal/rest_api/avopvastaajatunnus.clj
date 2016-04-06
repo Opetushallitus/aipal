@@ -37,17 +37,20 @@
 (def secret "secret")
 
 
-;;TODO: To move it to clojure-utils or use an already existing function
-;;avop.fi 
-(defn response-validation-error
-  ([message]
+(defn on-validation-error [message]
     {:status 400
       :headers {"Content-Type" "application/json"}
-      :body (cheshire/generate-string message)
-    }))
-;;end avop.fi
+      :body {:status 400
+              :detail message}
+    })
 
-(def auth-backend (jws-backend {:secret secret}))
+(defn on-403 [request]
+  {:status  403
+   :headers {"Content-Type" "application/json"}
+   :body   {:status 403
+            :detail  (str "Access to " (:uri request) " is forbidden")}})
+
+(def auth-backend (jws-backend {:secret secret :token-name "Bearer"}))
 
 (defn alkupvm [] (time/today))
 (defn loppupvm [] (time/plus (alkupvm) (time/months 6)))
@@ -56,7 +59,7 @@
   (fn [request]
     (if (authenticated? request)
       (handler request)
-      (throw-unauthorized))))
+      (on-403 request))))
 
 (defn avop->arvo-map
   [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto opiskeluoikeustyyppi laajuus kyselykerran_nimi]}]
@@ -89,13 +92,13 @@
     :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
    (try
-      ;(log/info (format "%s" (avop->arvo-map avopdata)))
+      (log/info (format "%s" (avop->arvo-map avopdata)))
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))
       (catch java.lang.AssertionError e1 
-        (response-validation-error "Mandatory fields are missing or not found")
+        (on-validation-error "Mandatory fields are missing or not found")
       )
       (catch Exception e2
-         (response-validation-error (format "Unexpected error: %s" (.getMessage e2)))
+         (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))
       )
     )) auth-backend ))
