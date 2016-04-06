@@ -160,6 +160,32 @@
                      (take tunnusten-lkm))]
         (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
 
+
+;;AVOP.FI FIXME:temporary method without auditlog
+(defn lisaa-avopfi! [vastaajatunnus]
+  {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
+  (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
+        vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
+        tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
+        valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
+        valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
+        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
+        kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
+        vastaajatunnus (-> vastaajatunnus
+                         (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos :koulutuksen_toimipaikka )
+                         (assoc :vastaajien_lkm vastaajien-lkm
+                                :tutkintotunnus tutkintotunnus
+                                :kunta kunta
+                                :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
+                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
+                                :valmistavan_koulutuksen_toimipaikka valmistavan-koulutuksen-toimipaikka))]
+    (doall
+      (for [tunnus (->> (luo-tunnuksia 6)
+                     (remove vastaajatunnus-olemassa?)
+                     (take tunnusten-lkm))]
+        (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
+;;END AVOP.FI
+
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
   (sql/update taulut/vastaajatunnus

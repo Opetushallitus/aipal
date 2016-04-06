@@ -94,7 +94,7 @@
    (try
       (log/info (format "%s" (avop->arvo-map avopdata)))
       (let [vastaajatunnus (avop->arvo-map avopdata)]
-        (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus)))
+        (response-or-404 (vastaajatunnus/lisaa-avopfi! vastaajatunnus)))
       (catch java.lang.AssertionError e1
         (log/error e1 "Mandatory fields missing") 
         (on-validation-error (format "Mandatory fields are missing or not found"))
