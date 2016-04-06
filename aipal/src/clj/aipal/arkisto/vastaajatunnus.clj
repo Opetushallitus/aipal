@@ -130,6 +130,7 @@
     (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
+  (log/info (storing "Storing: %s" vastaajatunnus)) 
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                              (sql/values vastaajatunnus)))
         vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
@@ -138,7 +139,6 @@
 
 
 (defn lisaa! [vastaajatunnus]
-  (log/info (format "VT: %s" vastaajatunnus)) 
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
@@ -146,7 +146,7 @@
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
         valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
-        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
+        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:valmistavan_koulutuksen_toimipaikka :toimipaikkakoodi])
         kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
         vastaajatunnus (-> vastaajatunnus
                          (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos :koulutuksen_toimipaikka )
@@ -165,33 +165,28 @@
 
 ;;AVOP.FI FIXME:temporary method without auditlog
 (defn ^:private tallenna-vastaajatunnus-avopfi! [vastaajatunnus]
+  (log/info (storing "VT: %s" vastaajatunnus)) 
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                              (sql/values vastaajatunnus)))
         vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
     vastaajatunnus))
 
 (defn lisaa-avopfi! [vastaajatunnus]
-  (log/info (format "VT: %s" vastaajatunnus)) 
-  {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
-  (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
-        vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
+  (let [vastaajien-lkm 1
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
         valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
-        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
-        kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
         vastaajatunnus (-> vastaajatunnus
-                         (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos :koulutuksen_toimipaikka )
+                         (dissoc :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos)
                          (assoc :vastaajien_lkm vastaajien-lkm
                                 :tutkintotunnus tutkintotunnus
-                                :kunta kunta
                                 :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
                                 :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
-                                :valmistavan_koulutuksen_toimipaikka valmistavan-koulutuksen-toimipaikka))]
+                                :valmistavan_koulutuksen_toimipaikka nil))]
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)
-                     (take tunnusten-lkm))]
+                     (take vastaajien-lkm))]
         (tallenna-vastaajatunnus-avopfi! (assoc vastaajatunnus :tunnus tunnus))))))
 
 ;;END AVOP.FI
