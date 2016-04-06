@@ -71,7 +71,7 @@
         ent_oppilaitos (oppilaitos/hae oppilaitos)
         ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
         ent_tutkinto (tutkinto/hae-kentat koulutus)
-        ent_toimipaikka (toimipaikka/hae-oppilaitoksen-toimipaikka oppilaitos)
+        ent_toimipaikka (toimipaikka/hae-toimipaikka oppilaitos)
         kyselykerta-id (kyselykerta/hae-nimella kyselykerran_nimi)]
     {
      :voimassa_alkupvm (alkupvm)

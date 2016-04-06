@@ -55,3 +55,10 @@
   (select-unique-or-nil taulut/toimipaikka
     (sql/where {:oppilaitos oppilaitosid
        :voimassa true})))
+
+;;AVOP.fi
+(defn hae-toimipaikka [oppilaitosid]
+  (first 
+    (sql/select taulut/toimipaikka
+      (sql/where {:oppilaitos oppilaitosid :voimassa true}))))
+;;AVOP.fi
