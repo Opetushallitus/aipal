@@ -162,6 +162,12 @@
 
 
 ;;AVOP.FI FIXME:temporary method without auditlog
+(defn ^:private tallenna-vastaajatunnus-avopfi! [vastaajatunnus]
+  (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
+                             (sql/values vastaajatunnus)))
+        vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
+    vastaajatunnus))
+    
 (defn lisaa-avopfi! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
@@ -183,7 +189,8 @@
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)
                      (take tunnusten-lkm))]
-        (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
+        (tallenna-vastaajatunnus-avopfi! (assoc vastaajatunnus :tunnus tunnus))))))
+
 ;;END AVOP.FI
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
