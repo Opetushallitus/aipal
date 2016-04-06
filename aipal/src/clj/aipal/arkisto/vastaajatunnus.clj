@@ -17,6 +17,7 @@
             [oph.common.util.util :refer [select-and-rename-keys]]
             [oph.korma.common :refer [select-unique-or-nil]]
             [korma.core :as sql]
+            [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
 
@@ -137,6 +138,7 @@
 
 
 (defn lisaa! [vastaajatunnus]
+  (log/info (format "VT: %s" vastaajatunnus)) 
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
@@ -167,8 +169,9 @@
                              (sql/values vastaajatunnus)))
         vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
     vastaajatunnus))
-    
+
 (defn lisaa-avopfi! [vastaajatunnus]
+  (log/info (format "VT: %s" vastaajatunnus)) 
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))

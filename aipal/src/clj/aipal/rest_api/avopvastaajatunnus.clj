@@ -92,7 +92,6 @@
     :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
    (try
-      (log/info (format "%s" (avop->arvo-map avopdata)))
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (response-or-404 (vastaajatunnus/lisaa-avopfi! vastaajatunnus)))
       (catch java.lang.AssertionError e1
