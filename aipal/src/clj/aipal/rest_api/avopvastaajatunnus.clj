@@ -18,6 +18,7 @@
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
             [aipal.arkisto.oppilaitos :as oppilaitos]
             [aipal.arkisto.tutkinto :as tutkinto]
+            [aipal.arkisto.toimipaikka :as toimipaikka]
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [clojure.tools.logging :as log]
@@ -70,6 +71,7 @@
         ent_oppilaitos (oppilaitos/hae oppilaitos)
         ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
         ent_tutkinto (tutkinto/hae-kentat koulutus)
+        ent_toimipaikka (toimipaikka/hae-oppilaitoksen-toimipaikka oppilaitos)
         kyselykerta-id (kyselykerta/hae-nimella kyselykerran_nimi)]
     {
      :voimassa_alkupvm (alkupvm)
@@ -81,6 +83,7 @@
      :koulutksen_jarjestaja_oppilaitos ent_oppilaitos
      :koulutksen_jarjestaja  ent_koulutustoimija
      :tutkinto ent_tutkinto
+     :koulutuksen_toimipaikka ent_toimipaikka
      :koulutusmuoto koulutusmuoto
      :kyselykertaid (kyselykerta-id :kyselykertaid)
      }))
