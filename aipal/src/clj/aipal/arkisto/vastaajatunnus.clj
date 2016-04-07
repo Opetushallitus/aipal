@@ -172,21 +172,11 @@
     vastaajatunnus))
 
 (defn lisaa-avopfi! [vastaajatunnus]
-  (let [tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
-        valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
-        valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
-        vastaajatunnus (-> vastaajatunnus
-                         (dissoc :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos)
-                         (assoc :vastaajien_lkm 1
-                                :tutkintotunnus tutkintotunnus
-                                :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
-                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
-                                :valmistavan_koulutuksen_toimipaikka nil))]
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)
                      (take 1))]
-        (tallenna-vastaajatunnus-avopfi! (assoc vastaajatunnus :tunnus tunnus))))))
+        (tallenna-vastaajatunnus-avopfi! (assoc vastaajatunnus :tunnus tunnus)))))
 
 ;;END AVOP.FI
 

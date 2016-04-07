@@ -71,13 +71,15 @@
         ent_tutkinto (tutkinto/hae-kentat koulutus)
         kyselykerta-id (kyselykerta/hae-nimella kyselykerran_nimi)]
     {
+     :vastaajien_lkm 1
      :voimassa_alkupvm (alkupvm)
      :voimassa_loppupvm (loppupvm)
      :suorituskieli kieli
      :rahoitusmuotoid 5
-     :koulutksen_jarjestaja_oppilaitos ent_oppilaitos ;;oppilaitoskoodi
-     :koulutksen_jarjestaja  ent_koulutustoimija ;;ytunnus
-     :tutkinto ent_tutkinto ;;tutkintotunnus
+     :valmistavan_koulutuksen_toimipaikka nil
+     :valmistavan-koulutuksen-jarjestaja (ent_koulutustoimija :ytunnus)
+     :valmistavan-koulutuksen-oppilaitos (ent_oppilaitos :oppilaitoskoodi)
+     :tutkintotunnus (ent_tutkinto :tutkintotunnus)
      :kunta kunta
      :koulutusmuoto koulutusmuoto
      :kyselykertaid (kyselykerta-id :kyselykertaid)
