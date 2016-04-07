@@ -19,6 +19,8 @@
             [korma.core :as sql]
             [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]
+            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [aipal.auditlog :as auditlog]))
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
@@ -163,21 +165,13 @@
         (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
 
 
-;;AVOP.FI FIXME:temporary method without auditlog
-(defn ^:private tallenna-vastaajatunnus-avopfi! [vastaajatunnus]
-  (log/info (format "VT: %s" vastaajatunnus)) 
-  (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
-                             (sql/values vastaajatunnus)))
-        vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
-    vastaajatunnus))
-
+;;AVOP.FI FIXME: binding manually to INTEGRAATIO user
 (defn lisaa-avopfi! [vastaajatunnus]
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)
                      (take 1))]
-        (tallenna-vastaajatunnus-avopfi! (assoc vastaajatunnus :tunnus tunnus)))))
-
+      (with-kayttaja integraatio-uid nil nil (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
 ;;END AVOP.FI
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
