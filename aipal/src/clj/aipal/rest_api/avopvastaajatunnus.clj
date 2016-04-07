@@ -90,7 +90,7 @@
      }))
 
 
-(defroutes reitit
+(defroutes reitit [asetukset]
   (wrap-authentication (POST "/" []
     :body [avopdata s/Any]
     :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
