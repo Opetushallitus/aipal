@@ -288,7 +288,10 @@
 (defn valtakunnallinen-raportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
   (let [alkupvm (parse-iso-date vertailujakso_alkupvm)
         loppupvm (or (parse-iso-date vertailujakso_loppupvm) (t/today))
-        vertailupvm (t/minus loppupvm (t/years 1))]
+        vertailupvm (->
+                      loppupvm
+                      (t/minus (t/years 1))
+                      (t/plus (t/days 1)))]
     (if (and alkupvm (<= (.compareTo alkupvm vertailupvm) 0))
       {:vertailujakso_alkupvm vertailujakso_alkupvm
        :vertailujakso_loppupvm vertailujakso_loppupvm}
