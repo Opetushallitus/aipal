@@ -45,7 +45,7 @@
 (defn hae
   [oppilaitosid]
   (select-unique taulut/oppilaitos
-    (sql/fields :oppilaitoskoodi :koulutustoimija :nimi_fi :nimi_sv :nimi_en)
+    (sql/fields :oppilaitoskoodi)
     (sql/where {:oppilaitoskoodi oppilaitosid
        :voimassa true})))
 ;;end avopfi

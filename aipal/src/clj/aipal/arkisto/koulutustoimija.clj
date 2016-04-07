@@ -38,7 +38,7 @@
 (defn hae-kentat
   [y-tunnus]
   (first (sql/select taulut/koulutustoimija
-           (sql/fields :ytunnus :nimi_fi :nimi_sv :nimi_en)
+           (sql/fields :ytunnus)
            (sql/where {:ytunnus y-tunnus}))))
 
 ;;end avopfi

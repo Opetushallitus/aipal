@@ -43,7 +43,7 @@
 (defn hae-kentat
   [tutkintotunnus]
   (select-unique taulut/tutkinto
-    (sql/fields :tutkintotunnus :nimi_fi :nimi_en :nimi_en)
+    (sql/fields :tutkintotunnus)
     (sql/where {:tutkintotunnus tutkintotunnus})))
 ;;end avop.fi
 
