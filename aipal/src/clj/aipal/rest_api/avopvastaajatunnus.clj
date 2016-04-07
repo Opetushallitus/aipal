@@ -77,8 +77,8 @@
      :suorituskieli kieli
      :rahoitusmuotoid 5
      :valmistavan_koulutuksen_toimipaikka nil
-     :valmistavan-koulutuksen-jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus])) 
-     :valmistavan-koulutuksen-oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
+     :valmistavan_koulutuksen_jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus])) 
+     :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
      :tutkintotunnus (ent_tutkinto :tutkintotunnus)
      :kunta kunta
      :koulutusmuoto koulutusmuoto
