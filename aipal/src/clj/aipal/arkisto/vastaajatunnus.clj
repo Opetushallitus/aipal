@@ -130,7 +130,7 @@
     (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
-  (log/info (storing "Storing: %s" vastaajatunnus)) 
+  (log/info (format "Storing: %s" vastaajatunnus)) 
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                              (sql/values vastaajatunnus)))
         vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
@@ -165,7 +165,7 @@
 
 ;;AVOP.FI FIXME:temporary method without auditlog
 (defn ^:private tallenna-vastaajatunnus-avopfi! [vastaajatunnus]
-  (log/info (storing "VT: %s" vastaajatunnus)) 
+  (log/info (format "VT: %s" vastaajatunnus)) 
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                              (sql/values vastaajatunnus)))
         vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
