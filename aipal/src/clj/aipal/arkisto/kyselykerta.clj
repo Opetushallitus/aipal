@@ -65,23 +65,22 @@
     kyselykerta))
 
 ;avop.fi
-;(defn hae-nimella-ja-oppilaitoksella
-;  "Hae kyselykerta nimella ja oppilaitoksella"
-;  [kyselykertanimi oppilaitosid]
-;  (first (sql/select taulut/kyselykerta
-;     (sql/modifier "distinct")
-;     (sql/join :inner taulut/kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
-;     (sql/join :inner taulut/oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
-;     (sql/fields :kyselykerta.kyselykertaid)   
-;     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false
-;      }))))
+(defn hae-nimella-ja-oppilaitoksella
+  "Hae kyselykerta nimella ja oppilaitoksella"
+  [kyselykertanimi oppilaitosid]
+  (first (sql/select taulut/kyselykerta
+     (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+     (sql/join :inner :oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
+     (sql/fields :kyselykerta.kyselykertaid)   
+     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false
+     }))))
 
-(defn hae-nimella
-   "Hae kyselykerta nimella"
-   [kyselykertanimi]
-  (select-unique taulut/kyselykerta
-    (sql/fields :kyselykertaid )
-    (sql/where {:nimi kyselykertanimi :lukittu false})))
+;(defn hae-nimella
+;   "Hae kyselykerta nimella"
+;   [kyselykertanimi]
+;  (select-unique taulut/kyselykerta
+;   (sql/fields :kyselykertaid )
+;   (sql/where {:nimi kyselykertanimi :lukittu false})))
 ;end avop.fi
 
 (defn hae-yksi

@@ -74,7 +74,7 @@
         ent_oppilaitos (oppilaitos/hae oppilaitos)
         ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
         ent_tutkinto (tutkinto/hae-kentat koulutus)
-        kyselykerta-id (kyselykerta/hae-nimella kyselykerran_nimi)]
+        kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
     {
      :vastaajien_lkm 1
      :voimassa_alkupvm (alkupvm)
@@ -98,7 +98,7 @@
     :header-params [authorization :- String]
    (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
-        (on-response (vastaajatunnus/lisaa-avopfi! vastaajatunnus)))
+        (on-response (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus))))
       (catch java.lang.AssertionError e1
         (log/error e1 "Mandatory fields missing") 
         (on-validation-error (format "Mandatory fields are missing or not found"))
