@@ -38,8 +38,7 @@
 (defn on-response [message]
     {:status 200
       :headers {"Content-Type" "application/json"}
-      :body {:status 200 
-              :detail message}
+      :body {:tunnus message}
     })
 
 (defn on-validation-error [message]
@@ -98,7 +97,7 @@
     :header-params [authorization :- String]
    (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
-        (on-response (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus))))
+        (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
       (catch java.lang.AssertionError e1
         (log/error e1 "Mandatory fields missing") 
         (on-validation-error (format "Mandatory fields are missing or not found"))
