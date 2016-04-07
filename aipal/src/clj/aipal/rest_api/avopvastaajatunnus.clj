@@ -89,13 +89,12 @@
      :kyselykertaid (kyselykerta-id :kyselykertaid)
      }))
 
-
-(defroutes reitit [asetukset]
+(defn reitit [asetukset]
   (wrap-authentication (POST "/" []
     :body [avopdata s/Any]
     :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-   (try
+    (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
       (catch java.lang.AssertionError e1
@@ -106,4 +105,4 @@
          (log/error e2 "Unexpected error")
          (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))
       )
-    )) auth-backend ))
+    )) auth-backend))
