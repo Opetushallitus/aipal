@@ -2,7 +2,9 @@
 <div class="raportit">
   <uib-tabset>
     <uib-tab class="hidden-print" heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu',i18n.raportit.vertailuraportti)"
-         disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']">
+         disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']"
+         uib-popover="{{ 'raportit.vertailuraportti_ohje' | i18n }}" popover-trigger="mouseenter" popover-placement="bottom">
+          
       <h2 class="hidden-print">{{ 'raportit.vertailtavat_tutkinnot' | i18n }} *<ohje tunniste="vertailuraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkintotyyppi.html'"></ng-include>
@@ -19,7 +21,8 @@
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </uib-tab>
     <uib-tab class="hidden-print" heading="{{ 'raportit.kehitysraportti' | i18n }}" select="vaihdaTyyppi('kehitys',i18n.raportit.kehitysraportti)"
-         disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']">
+         disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']"
+         uib-popover="{{ 'raportit.kehitysraportti_ohje' | i18n }}" popover-trigger="mouseenter" popover-placement="bottom">
       <h2 class="hidden-print">{{ 'raportit.tarkasteltava_tutkinto' | i18n }} <ohje tunniste="kehitysraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkintotyyppi.html'"></ng-include>
@@ -47,7 +50,8 @@
       <ng-include class="hidden-print" src="'template/raportti/osat/suorituskieli.html'"></ng-include>
       <ng-include src="'template/raportti/osat/yhteinen.html'"></ng-include>
     </uib-tab>
-    <uib-tab class="hidden-print" heading="{{ 'raportit.kyselykertaraportti' | i18n }}" active="kyselykertaraportitValittu" select="vaihdaTyyppi('kyselykerta', i18n.raportit.kyselykertaraportti)">
+    <uib-tab class="hidden-print" heading="{{ 'raportit.kyselykertaraportti' | i18n }}" active="kyselykertaraportitValittu" select="vaihdaTyyppi('kyselykerta', i18n.raportit.kyselykertaraportti)"
+        uib-popover="{{ 'raportit.kyselykertaraportti_ohje' | i18n }}" popover-trigger="mouseenter" popover-placement="bottom">
       <h2 class="hidden-print">{{ 'raportit.kyselykertaraportti_otsikko' | i18n }} *<ohje tunniste="kyselykertaraportti"></ohje></h2>
       <div class="btn-group tutkintorakennetaso">
         <label class="btn btn-primary" ng-model="tilafilterKyselykerta.tila" uib-btn-radio="'avoin'">{{ 'yleiset.avoimet' | i18n }}</label>
@@ -65,7 +69,8 @@
       <ng-include class="hidden-print" src="'template/raportti/osat/suorituskieli.html'"></ng-include>
       <ng-include src="'template/raportti/osat/kyselykertaraportit.html'"></ng-include>
     </uib-tab>
-    <uib-tab class="hidden-print" heading="{{ 'raportit.kyselyraportti' | i18n }}" select="vaihdaTyyppi('kysely', i18n.raportit.kyselyraportti)">
+    <uib-tab class="hidden-print" heading="{{ 'raportit.kyselyraportti' | i18n }}" select="vaihdaTyyppi('kysely', i18n.raportit.kyselyraportti)"
+         uib-popover="{{ 'raportit.kyselyraportti_ohje' | i18n }}" popover-trigger="mouseenter" popover-placement="bottom">
       <h2 class="hidden-print">{{ 'raportit.kyselyraportti_otsikko' | i18n }} *<ohje tunniste="kyselyraportti"></ohje></h2>
       <div class="btn-group tutkintorakennetaso">
         <label class="btn btn-primary" ng-model="tilafilter.tila" uib-btn-radio="'julkaistu'">{{ 'yleiset.julkaistut' | i18n }}</label>
