@@ -27,8 +27,7 @@
             [buddy.auth :refer [authenticated? throw-unauthorized]]
             [cheshire.core :as cheshire]
             [clj-time.core :as time]
-            aipal.compojure-util
-            [oph.common.util.http-util :refer [response-or-404]]))
+            aipal.compojure-util))
 
 
 
@@ -36,6 +35,12 @@
 ;;TODO: To move it to vault
 (def secret "secret")
 
+(defn on-response [message]
+    {:status 200
+      :headers {"Content-Type" "application/json"}
+      :body {:status 200 
+              :detail message}
+    })
 
 (defn on-validation-error [message]
     {:status 400
@@ -93,7 +98,7 @@
     :header-params [authorization :- String]
    (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
-        (response-or-404 (vastaajatunnus/lisaa-avopfi! vastaajatunnus)))
+        (on-response (get-in (vastaajatunnus/lisaa-avopfi! vastaajatunnus) [:tunnus] )))
       (catch java.lang.AssertionError e1
         (log/error e1 "Mandatory fields missing") 
         (on-validation-error (format "Mandatory fields are missing or not found"))
