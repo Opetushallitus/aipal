@@ -68,7 +68,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   [koodi]
   ((kuuluu-koodistoon "koulutusalaoph2002") koodi))
 
-(defn ^:private tutkintotyyppi-koodi?
+(defn ^:private tyyppikoodi?
   [koodi]
   ((kuuluu-koodistoon "tutkintotyyppi") koodi))
 
@@ -110,7 +110,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   [asetukset tutkinto]
   (let [alakoodit (hae-alakoodit asetukset tutkinto)
         opintoala (some-value opintoala-koodi? alakoodit)
-        tyyppi (some-value tutkintotyyppi-koodi? alakoodit)
+        tyyppi (some-value tyyppikoodi? alakoodit)
         tutkintotyyppi (some-value tutkintotyyppikoodi? alakoodit)]
     (assoc tutkinto
            :opintoala (:koodiArvo opintoala)
