@@ -98,7 +98,7 @@
     :header-params [authorization :- String]
    (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
-        (on-response (get-in (vastaajatunnus/lisaa-avopfi! vastaajatunnus) [:tunnus] )))
+        (on-response (get-in (get (vastaajatunnus/lisaa-avopfi! vastaajatunnus) 0) [:tunnus] )))
       (catch java.lang.AssertionError e1
         (log/error e1 "Mandatory fields missing") 
         (on-validation-error (format "Mandatory fields are missing or not found"))
