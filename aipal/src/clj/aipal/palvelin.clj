@@ -43,7 +43,7 @@
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.common :refer [luo-db]]
 
-            [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset] :rename {asetukset asetukset-promise}]
+            [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset kehitysmoodi?] :rename {asetukset asetukset-promise}]
             [aipal.reitit :refer [build-id]]
             [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
@@ -88,7 +88,7 @@
 
 (defn auth-middleware
   [handler asetukset]
-  (when (and (:development-mode? asetukset)
+  (when (and (kehitysmoodi? asetukset)
           (:unsafe-https (:cas-auth-server asetukset))
           (:enabled (:cas-auth-server asetukset)))
     (anon-auth/enable-development-mode!))
@@ -107,15 +107,18 @@
           (do
             (log/info "public API method, no CAS auth")
             (handler request))
-        (and (:development-mode? asetukset) (not (:enabled (:cas-auth-server asetukset))))
+        (and (kehitysmoodi? asetukset) (not (:enabled (:cas-auth-server asetukset))))
           (do
            (log/info "development, no CAS")
            (anon-auth-handler request))
-        (and (:development-mode? asetukset) ((:headers request) "uid"))
+        (and (kehitysmoodi? asetukset) ((:headers request) "uid"))
           (do
             (log/info "development, fake CAS")
             (fake-auth-handler request))
-        :else (auth-handler request)))))
+        :else 
+          (do
+            (log/info "normal CAS authenticated request")
+            (auth-handler request))))))
 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))

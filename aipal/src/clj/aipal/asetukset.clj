@@ -93,6 +93,10 @@
              :raportointi "0 30 5 * * ?"
              :tutkinnot "0 0 2 * * ?"}})
 
+(defn kehitysmoodi?
+  [asetukset]
+  (true? (:development-mode asetukset)))
+
 (defn hae-asetukset
   ([alkuasetukset] (lue-asetukset alkuasetukset Asetukset "aipal.properties"))
   ([] (hae-asetukset oletusasetukset)))
