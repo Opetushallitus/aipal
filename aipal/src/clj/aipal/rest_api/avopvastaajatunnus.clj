@@ -21,7 +21,8 @@
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [clojure.tools.logging :as log]
-
+            
+            [aipal.reitit :refer (avopfi-shared-secret)]
             [buddy.auth.backends.token :refer (jws-backend)]
             [buddy.auth.middleware :refer (wrap-authentication)]
             [buddy.auth :refer [authenticated? throw-unauthorized]]
@@ -30,10 +31,6 @@
             aipal.compojure-util))
 
 
-
-
-;;TODO: To move it to vault
-(def secret "secret")
 
 (defn on-response [message]
     {:status 200
@@ -54,7 +51,7 @@
    :body   {:status 403
             :detail  (str "Access to " (:uri request) " is forbidden")}})
 
-(def auth-backend (jws-backend {:secret secret :token-name "Bearer"}))
+(def auth-backend [shared-secret] (jws-backend {:secret shared-secret :token-name "Bearer"}))
 
 (defn alkupvm [] (time/today))
 (defn loppupvm [] (time/plus (alkupvm) (time/months 6)))
@@ -90,12 +87,12 @@
      }))
 
 
-(defroutes reitit
+(defn reitit [asetukset]
   (wrap-authentication (POST "/" []
     :body [avopdata s/Any]
     :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-   (try
+  (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
       (catch java.lang.AssertionError e1
@@ -106,4 +103,4 @@
          (log/error e2 "Unexpected error")
          (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))
       )
-    )) auth-backend ))
+    )) (auth-backend (get-in asetukset [:avopfi-shared-secret]))))

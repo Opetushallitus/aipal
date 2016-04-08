@@ -41,6 +41,7 @@
                        "dev")))
 
 (defn reitit [asetukset]
+  (def ^:dynamic avopfi-shared-secret (get-in asetukset [:avopfi-shared-secret] ))
   (api
     {:exceptions {:handlers {:schema.core/error ex/schema-error-handler}}}
     (swagger-routes
@@ -94,6 +95,6 @@
     (context "/api/tutkinto" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkinto/reitit)
     (context "/api/tutkintotyyppi" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
-    (context "/api/public/luovastaajatunnus" [] aipal.rest-api.avopvastaajatunnus/reitit )
+    (context "/api/public/luovastaajatunnus" [] (aipal.rest-api.avopvastaajatunnus/reitit asetukset))
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (r/not-found "Not found")))

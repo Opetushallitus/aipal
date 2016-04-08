@@ -43,6 +43,7 @@
                       :password (s/maybe s/Str)
                       :ssl Boolean}
    :vastaus-base-url s/Str
+   :avopfi-shared-secret s/Str
    :organisaatiopalvelu {:url s/Str}
    :koodistopalvelu {:url s/Str}
    :eraajo Boolean
@@ -78,6 +79,7 @@
                       :password "salasana"
                       :ssl false}
    :vastaus-base-url "http://192.168.50.1:8083"
+   :avopfi-shared-secret "secret"
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
    :eraajo false
