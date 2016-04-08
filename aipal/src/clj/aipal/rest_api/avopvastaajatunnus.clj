@@ -50,7 +50,10 @@
    :body   {:status 403
             :detail  (str "Access to " (:uri request) " is forbidden")}})
 
-(def auth-backend [shared-secret] (jws-backend {:secret shared-secret :token-name "Bearer"}))
+(defn set-shared-secret [asetukset] 
+  (def shared-secret (get-in asetukset [:avopfi-shared-secret] )))
+
+(def auth-backend  (jws-backend {:secret shared-secret :token-name "Bearer"}))
 
 (defn alkupvm [] (time/today))
 (defn loppupvm [] (time/plus (alkupvm) (time/months 6)))
@@ -86,11 +89,12 @@
      }))
 
 
-(defroutes reitit
+(defn reitit [asetukset]
   (wrap-authentication (POST "/" []
     :body [avopdata s/Any]
     :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
+   (set-shared-secret asetukset)
    (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))

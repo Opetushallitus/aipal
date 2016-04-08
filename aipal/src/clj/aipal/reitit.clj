@@ -41,7 +41,6 @@
                        "dev")))
 
 (defn reitit [asetukset]
-  (def ^:dynamic avopfi-shared-secret (get-in asetukset [:avopfi-shared-secret] ))
   (api
     {:exceptions {:handlers {:schema.core/error ex/schema-error-handler}}}
     (swagger-routes
