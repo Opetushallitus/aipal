@@ -21,8 +21,7 @@
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [clojure.tools.logging :as log]
-            
-            [aipal.reitit :refer (avopfi-shared-secret)]
+
             [buddy.auth.backends.token :refer (jws-backend)]
             [buddy.auth.middleware :refer (wrap-authentication)]
             [buddy.auth :refer [authenticated? throw-unauthorized]]
@@ -87,12 +86,12 @@
      }))
 
 
-(defn reitit [asetukset]
+(defroutes reitit
   (wrap-authentication (POST "/" []
     :body [avopdata s/Any]
     :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-  (try
+   (try
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
       (catch java.lang.AssertionError e1
@@ -103,4 +102,4 @@
          (log/error e2 "Unexpected error")
          (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))
       )
-    )) (auth-backend (get-in asetukset [:avopfi-shared-secret]))))
+    )) auth-backend ))
