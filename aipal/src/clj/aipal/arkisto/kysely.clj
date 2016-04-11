@@ -19,6 +19,7 @@
             [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [max-date]]
+                        [clojure.tools.logging :as log]
             [oph.korma.common :refer [select-unique-or-nil select-unique unique-or-nil]]
             [aipal.auditlog :as auditlog]))
 
