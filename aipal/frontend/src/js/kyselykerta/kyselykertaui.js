@@ -135,7 +135,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       }
       else {
         $scope.tunnukset = [];
-        $scope.kyselykerta = {};
+        $scope.kyselykerta = {
+          voimassa_alkupvm: new Date()
+        };
       }
 
       $scope.getVastaustenLkm = function(rahoitusmuotoid){
