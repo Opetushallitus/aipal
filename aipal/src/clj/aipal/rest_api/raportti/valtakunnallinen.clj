@@ -26,31 +26,44 @@
             [oph.common.util.http-util :refer [csv-download-response parse-iso-date response-or-404]]
             [oph.common.util.util :refer [paivita-arvot]]))
 
-; Valtakunnallinen vertailuraportti on ilman koulutustoimijoita, ylemmälle tutkintohierarkian tasolle
 (defn ^:private kehitysraportti-valtakunnallinen-raportti-tutkintotason-parametrit [parametrit]
-  (case (:tutkintorakennetaso parametrit)
-    "tutkinto"    {:tutkintorakennetaso "opintoala"
-                   :opintoalat [(:opintoala (tutkinto-arkisto/hae (first (:tutkinnot parametrit))))]}
-    "opintoala"   {:tutkintorakennetaso "koulutusala"
-                   :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))]}
-    "koulutusala" {:tutkintorakennetaso "koulutusala"
-                   :koulutusalat []}))
+  (if (seq (:koulutustoimijat parametrit))
+    (case (:tutkintorakennetaso parametrit)
+      "tutkinto"    {:tutkintorakennetaso "tutkinto"
+                     :tutkinnot (:tutkinnot parametrit)}
+      "opintoala"   {:tutkintorakennetaso "opintoala"
+                     :opintoalat (:opintoalat parametrit)}
+      "koulutusala" {:tutkintorakennetaso "koulutusala"
+                     :koulutusalat (:koulutusalat parametrit)})
+    (case (:tutkintorakennetaso parametrit)
+      "tutkinto"    {:tutkintorakennetaso "opintoala"
+                     :opintoalat [(:opintoala (tutkinto-arkisto/hae (first (:tutkinnot parametrit))))]}
+      "opintoala"   {:tutkintorakennetaso "koulutusala"
+                     :koulutusalat [(:koulutusala (opintoala-arkisto/hae (first (:opintoalat parametrit))))]}
+      "koulutusala" {:tutkintorakennetaso "koulutusala"
+                     :koulutusalat []})))
 
 (defn ^:private muodosta-koulutusalavertailun-parametrit []
   {:tutkintorakennetaso "koulutusala"
    :koulutusalat []})
 
 (defn ^:private muodosta-opintoalavertailun-parametrit [koulutusalat]
-  (if (apply = koulutusalat)
+  (if (and (seq koulutusalat) (apply = koulutusalat))
     {:tutkintorakennetaso "koulutusala"
      :koulutusalat [(first koulutusalat)]}
     (muodosta-koulutusalavertailun-parametrit)))
 
 (defn ^:private muodosta-tutkintovertailun-parametrit [opintoalat koulutusalat]
-  (if (apply = opintoalat)
+  (if (and (seq opintoalat) (apply = opintoalat))
     {:tutkintorakennetaso "opintoala"
      :opintoalat [(first opintoalat)]}
     (muodosta-opintoalavertailun-parametrit koulutusalat)))
+
+(defn ^:private muodosta-koulutustoimijakohtaisen-vertailutiedon-parametrit [tutkinnot opintoalat koulutusalat]
+  (if (and (seq tutkinnot) (apply = tutkinnot))
+    {:tutkintorakennetaso "tutkinto"
+     :tutkinnot [(first tutkinnot)]}
+    (muodosta-tutkintovertailun-parametrit opintoalat koulutusalat)))
 
 (defn ^:private tutkintojen-vertailutiedon-parametrit [parametrit]
   (let [opintoalat   (map (comp :opintoala tutkinto-arkisto/hae) (:tutkinnot parametrit))
@@ -64,16 +77,29 @@
 (defn ^:private koulutusalojen-vertailutiedon-parametrit [parametrit]
   (muodosta-koulutusalavertailun-parametrit))
 
-(defn ^:private vertailuraportti-valtakunnallinen-raportti-tutkintotason-parametrit [parametrit]
+(defn ^:private koulutustoimijakohtaisen-vertailutiedon-parametrit [parametrit]
   (case (:tutkintorakennetaso parametrit)
-    "tutkinto"    (tutkintojen-vertailutiedon-parametrit parametrit)
-    "opintoala"   (opintoalojen-vertailutiedon-parametrit parametrit)
-    "koulutusala" (koulutusalojen-vertailutiedon-parametrit parametrit)))
+    "tutkinto"    (let [tutkinnot    (:tutkinnot parametrit)
+                        opintoalat   (map (comp :opintoala tutkinto-arkisto/hae) (:tutkinnot parametrit))
+                        koulutusalat (map (comp :koulutusala opintoala-arkisto/hae) opintoalat)]
+                    (muodosta-koulutustoimijakohtaisen-vertailutiedon-parametrit tutkinnot opintoalat koulutusalat))
+    "opintoala"   (let [opintoalat   (:opintoalat parametrit)
+                        koulutusalat (map (comp :koulutusala opintoala-arkisto/hae) opintoalat)]
+                    (muodosta-tutkintovertailun-parametrit opintoalat koulutusalat))
+    "koulutusala" (muodosta-opintoalavertailun-parametrit (:koulutusalat parametrit))))
+
+(defn ^:private vertailuraportti-valtakunnallinen-raportti-tutkintotason-parametrit [parametrit]
+  (if (seq (:koulutustoimijat parametrit))
+    (koulutustoimijakohtaisen-vertailutiedon-parametrit parametrit)
+    (case (:tutkintorakennetaso parametrit)
+      "tutkinto"    (tutkintojen-vertailutiedon-parametrit parametrit)
+      "opintoala"   (opintoalojen-vertailutiedon-parametrit parametrit)
+      "koulutusala" (koulutusalojen-vertailutiedon-parametrit parametrit))))
 
 (defn ^:private muodosta-valtakunnallinen-raportti [parametrit tutkintotason-parametrit]
   (let [vertailujakso_alkupvm (:vertailujakso_alkupvm parametrit)
         vertailujakso_loppupvm (:vertailujakso_loppupvm parametrit)
-        parametrit (merge (dissoc parametrit :tutkintotyyppi)
+        parametrit (merge (select-keys parametrit [:taustakysymysryhmaid])
                           {:koulutustoimijat []
                            :tyyppi "valtakunnallinen"}
                           (valtakunnallinen-raportti-vertailujakso vertailujakso_alkupvm vertailujakso_loppupvm)
@@ -93,7 +119,7 @@
 (defn ^:private koulutustoimija-valtakunnallinen-raportti [parametrit]
   (muodosta-valtakunnallinen-raportti
    parametrit
-   nil))
+   (koulutustoimijakohtaisen-vertailutiedon-parametrit parametrit)))
 
 (defn ^:private luo-tutkintotyyppi-raportit [parametrit]
   [[(raportti/muodosta parametrit)]

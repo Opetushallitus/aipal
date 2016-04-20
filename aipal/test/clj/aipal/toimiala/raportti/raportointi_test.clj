@@ -111,7 +111,7 @@
 (deftest valtakunnallinen-raportti-vertailujakso-test
   (testing "alkupvm ja loppupvm asetettu ja alle vuosi, vertailu vuosi taaksepäin"
     (is (=
-          {:vertailujakso_alkupvm "2013-12-29"
+          {:vertailujakso_alkupvm "2013-12-30"
            :vertailujakso_loppupvm "2014-12-29"}
           (valtakunnallinen-raportti-vertailujakso "2014-01-01" "2014-12-29"))))
   (testing "alkupvm ja loppupvm asetettu ja yli vuosi"
@@ -131,7 +131,7 @@
           (valtakunnallinen-raportti-vertailujakso "2013-01-01" nil))))
   (testing "alkupvm asetettu, ja alle vuoden tästä päivämäärästä"
     (is (=
-          {:vertailujakso_alkupvm (.toString (t/minus (t/today) (t/years 1)))
+          {:vertailujakso_alkupvm (.toString (-> (t/today) (t/minus (t/years 1)) (t/plus (t/days 1))))
            :vertailujakso_loppupvm nil}
           (valtakunnallinen-raportti-vertailujakso (.toString (t/today)) nil))))
   (testing "alkupvm ja loppupvm ei asetettu"

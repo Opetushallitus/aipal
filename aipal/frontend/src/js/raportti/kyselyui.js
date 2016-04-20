@@ -36,6 +36,7 @@ angular.module('raportti.kyselyui', ['raportti.kyselykerta.jakaumakaavio',
       Raportti.muodostaKyselyraportti($routeParams.kyselyid, {kieli: kieli})
         .success(function(tulos) {
           $scope.tulos = tulos;
+          $scope.$parent.timestamp = new Date(); 
         })
         .error(function(value) {
           if (value.status !== 500) {

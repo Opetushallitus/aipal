@@ -35,12 +35,15 @@
   (cron/schedule
     (cron/cron-schedule (get-in asetukset [:ajastus tyyppi]))))
 
+(def ajastin (promise))
+
 (defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
-  (qs/initialize)
+  (when-not (realized? ajastin)
+    (deliver ajastin (qs/initialize)))
   (log/info "Poistetaan vanhat jobit ennen uudelleenkäynnistystä")
-  (qs/clear!)
-  (qs/start)
+  (qs/clear! @ajastin)
+  (qs/start @ajastin)
   (log/info "Eräajomoottori käynnistetty")
   (let [ldap-job (j/build
                    (j/of-type PaivitaKayttajatLdapistaJob)
@@ -80,8 +83,8 @@
                             (t/with-identity "tutkinnot")
                             (t/start-now)
                             (t/with-schedule (ajastus asetukset :tutkinnot)))]
-    (qs/schedule ldap-job ldap-trigger-daily)
-    (qs/schedule org-job org-trigger-daily)
-    (qs/schedule koul-job koul-trigger-daily)
-    (qs/schedule raportointi-job raportointi-trigger)
-    (qs/schedule tutkinnot-job tutkinnot-trigger)))
+    (qs/schedule @ajastin ldap-job ldap-trigger-daily)
+    (qs/schedule @ajastin org-job org-trigger-daily)
+    (qs/schedule @ajastin koul-job koul-trigger-daily)
+    (qs/schedule @ajastin raportointi-job raportointi-trigger)
+    (qs/schedule @ajastin tutkinnot-job tutkinnot-trigger)))

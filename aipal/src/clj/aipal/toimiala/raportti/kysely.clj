@@ -58,7 +58,7 @@
           tutkinto-otsikko (valtakunnallinen-raportti/raportin-otsikko (merge parametrit
                                                                               {:tyyppi "vertailu"
                                                                                :tutkintorakennetaso "tutkinto"}))]
-      (merge {:luontipvm (time/today)
+      (merge {:luontipvm (time/now)
               :vastaajien_maksimimaara (kyselyraportointi/hae-vastaajien-maksimimaara parametrit)
               :vastaajien_lukumaara (kyselyraportointi/laske-vastaajat-yhteensa koulutustoimijatiedot)
               :raportti (map raportointi/laske-kysymysryhman-vastaajat (kyselyraportointi/muodosta-raportti parametrit))

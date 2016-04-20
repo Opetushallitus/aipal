@@ -11,7 +11,7 @@
       <td>
         {{kyselypohja |lokalisoiKentta:'nimi'}}
       </td>
-      <td class="actions">
+      <td class="actions" style="width: 40%;">
           <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="kyselypohja.tila !== 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               <span class="fa fa-pencil"></span>
           </a>&nbsp;
@@ -35,6 +35,10 @@
           <button class="btn btn-primary btn-sm" ng-click="poistaKyselypohja(kyselypohjat, kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.poista' | i18n }}&nbsp;
               <span class="fa fa-trash"></span>
+          </button>
+          <button class="btn btn-primary btn-sm" ng-click="naytaRakenneModal(kyselypohja)">
+            {{'i18n.kysymysryhma.nayta_rakenne'| i18n}}&nbsp;
+            <span class="fa fa-search"></span>
           </button>
       </td>
     </tr>

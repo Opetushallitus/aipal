@@ -73,6 +73,16 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
     };
 
+    $scope.naytaRakenneModal = function() {
+      $uibModal.open({
+        templateUrl: 'template/kysymysryhma/rakenne.html',
+        controller: 'KyselypohjaModalController',
+        resolve: {
+          kyselypohja: function() { return $scope.kyselypohja; }
+        }
+      });
+    };
+
     $scope.poistaTaiPalautaKysymysryhma = function(kysymysryhma) {
       kysymysryhma.poistetaan_kyselysta = !kysymysryhma.poistetaan_kyselysta;
     };
@@ -124,5 +134,37 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         voimassa_alkupvm: new Date()
       };
     }
+  }])
+  .controller('KyselypohjaModalController', ['$uibModalInstance', '$scope', 'kyselypohja', 'Kyselypohja', function($uibModalInstance, $scope, kyselypohja, Kyselypohja) {
+
+    /* Luo Kyselypohjista kysymykset -arrayn jota rakenne.html -template ymmärtää */
+    var kysymykset = [];
+
+    // Otsikon kielimuuttujaa varten
+    $scope.view = 'kyselypohjat';
+
+    var setKysymykset = function(kyselypohja) {
+      _.each(kyselypohja.kysymysryhmat, function(x){
+        if(!x.poistetaan_kyselysta) {
+          _.each(x.kysymykset, function(y){
+            kysymykset.push(y);
+          });
+        }
+      });
+      $scope.kysymysryhma = {kysymykset: kysymykset};
+    };
+
+    if(!kyselypohja.kysymysryhmat) {
+      Kyselypohja.hae(kyselypohja.kyselypohjaid).success(function(kyselypohja) {
+        setKysymykset(kyselypohja);
+      });
+    }else{
+      setKysymykset(kyselypohja);
+    }
+
+    $scope.cancel = function() {
+      $uibModalInstance.dismiss('cancel');
+    };
+
   }])
 ;

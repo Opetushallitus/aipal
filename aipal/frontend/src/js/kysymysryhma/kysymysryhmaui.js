@@ -318,6 +318,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
   .controller('KysymysryhmaRakenneModalController', ['$uibModalInstance', '$scope', 'kysymysryhma', function($uibModalInstance, $scope, kysymysryhma) {
     $scope.kysymysryhma = kysymysryhma;
+    $scope.view = 'kysymysryhma';
 
     $scope.cancel = function() {
       $uibModalInstance.dismiss('cancel');

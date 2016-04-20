@@ -30,6 +30,19 @@
   <div ng-show="kieli==='sv'" ng-include="'template/raportti/raportti-info-sv.html'"></div>
 </div>
 
+<h2 class="visible-print">{{'raportti.rajaus_taustakysymyksilla' | i18n}}</h2>
+
+<div class="raportti-tiedot visible-print">
+  <div ng-repeat="kysymys in taustakysymysryhma.kysymykset" ng-if="taustakysymysValittu(kysymys.kysymysid)">
+    {{kysymys.jarjestys}}. {{kysymys | lokalisoiKentta:'kysymys'}}
+    <ul>
+      <li ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" ng-if="vaihtoehtoValittu(kysymys.kysymysid, vaihtoehto.jarjestys)">
+        {{vaihtoehto | lokalisoiKentta:'teksti'}}
+      </li>
+    </ul>
+  </div>
+</div>
+
 <div class="raportti-tiedot" ng-if="tulos">
   <div>
     <h2>{{tulos | lokalisoiKentta:'nimi'}}</h2>
@@ -42,7 +55,7 @@
     {{'yleiset.kyselykerta' | i18n }}: <b class="e2e-yhteenveto-kyselykerta">{{tulos.yhteenveto.kyselykerta}}</b>
   </div>
   <div class="hidden-print" ng-show="tulos.luontipvm">
-    {{'raportti.raportin_luontipaiva' | i18n }}: <b class="e2e-luontipvm">{{tulos.luontipvm | date: 'dd.MM.yyyy'}}</b>
+    {{'raportti.raportin_luontipaiva' | i18n }}: <b class="e2e-luontipvm">{{tulos.luontipvm | date: 'dd.MM.yyyy HH:mm'}}</b>
   </div>
   <div ng-show="tulos.parametrit.vertailujakso_alkupvm || tulos.parametrit.vertailujakso_loppupvm">
     <span ng-show="raportti.tyyppi=='kyselykerta' || raportti.tyyppi=='kysely'">{{'raportit.raportin_aikajakso' | i18n }}:</span>
@@ -157,6 +170,22 @@
           nimet="tulos.nimet">
         </vaittama-kaavio>
         <jakauma kysymys="kysymys.jatkovastaukset.kylla" kysymysryhma="kysymysryhma" nimet="tulos.nimet"></jakauma>
+      </div>
+      <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
+        <h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>
+        <div ng-if="!printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n}})</div>
+        <table ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)"
+               class="report-table" 
+               ng-class="{ 'hidden-print': !printfreetext}">
+          <thead>
+            <tr><th>{{'raportti.vastaukset' |i18n}}: {{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vapaatekstivastaukset">
+              <td><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 

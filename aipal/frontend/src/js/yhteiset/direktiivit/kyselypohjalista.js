@@ -31,11 +31,22 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
           scope.valtakunnalliset = scope.$eval(attrs.valtakunnalliset);
         });
       },
-      controller: ['$location', '$filter', '$scope', 'kayttooikeudet', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($location, $filter, $scope, kayttooikeudet, Kyselypohja, i18n, ilmoitus, varmistus) {
+      controller: ['$uibModal', '$location', '$filter', '$scope', 'kayttooikeudet', 'Kyselypohja', 'i18n', 'ilmoitus', 'varmistus', function($uibModal, $location, $filter, $scope, kayttooikeudet, Kyselypohja, i18n, ilmoitus, varmistus) {
         $scope.i18n = i18n;
         $scope.rajoitin = {
           tila: $scope.tila
         };
+
+        $scope.naytaRakenneModal = function(kyselypohja) {
+          $uibModal.open({
+            templateUrl: 'template/kysymysryhma/rakenne.html',
+            controller: 'KyselypohjaModalController',
+            resolve: {
+              kyselypohja: function() { return kyselypohja; }
+            }
+          });
+        };
+
         $scope.$watch('valtakunnalliset', function(valtakunnalliset) {
           if (valtakunnalliset !== undefined) {
             $scope.rajoitin.valtakunnallinen = valtakunnalliset;

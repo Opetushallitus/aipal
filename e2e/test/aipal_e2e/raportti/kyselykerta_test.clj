@@ -210,7 +210,8 @@
           (is (= (kyselykerran-tietojen-kentta "kyselykerta") "Kyselykerta 1")))
         (testing
           "raportin luontipäivä"
-          (is (= (raportin-luontipvm) tanaan-kayttoliittyman-muodossa)))
+          (is (= (subs (raportin-luontipvm) 0 10) tanaan-kayttoliittyman-muodossa))
+          (is (= (count (raportin-luontipvm)) 16))) ; kellonaika on mukana. Ei voi vastaavalla tavalla testata kuin päivämäärää
         (testing
           "ensimmäisen valintakysymyksen vastausten jakauma"
           (let [kysymys (nth (kysymykset) 0)]
