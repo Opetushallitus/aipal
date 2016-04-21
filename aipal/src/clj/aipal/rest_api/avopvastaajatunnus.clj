@@ -51,6 +51,7 @@
             :detail  (str "Access to " (:uri request) " is forbidden")}})
 
 (defn get-shared-secret [asetukset] 
+  (log/info (format "Settings: %s" asetukset))
   (get-in asetukset [:avopfi-shared-secret] ))
    
 (defn auth-backend [asetukset] (jws-backend {:secret (get-shared-secret asetukset) :token-name "Bearer"}))
