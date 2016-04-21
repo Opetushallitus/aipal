@@ -127,6 +127,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         Kyselykerta.haeYksi($scope.kyselykertaid)
           .success(function(kyselykerta) {
             $scope.kyselykerta = kyselykerta;
+
+            if($scope.kyselykerta.voimassa_alkupvm) { // bootstrap datepicker takes in a javascript date
+              $scope.kyselykerta.voimassa_alkupvm = new Date($scope.kyselykerta.voimassa_alkupvm);
+            }
             if (kyselykerta.lukittu) { $scope.muokkaustila = false; }
           })
           .error(function() {
@@ -135,7 +139,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       }
       else {
         $scope.tunnukset = [];
-        $scope.kyselykerta = {};
+        $scope.kyselykerta = {
+          voimassa_alkupvm: new Date()
+        };
       }
 
       $scope.getVastaustenLkm = function(rahoitusmuotoid){
