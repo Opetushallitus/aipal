@@ -147,8 +147,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       }
       else {
         $scope.kysely = {
-          kysymysryhmat: [],
-          voimassa_alkupvm: new Date()
+          kysymysryhmat: []
         };
         tallennusFn = Kysely.luoUusi;
       }

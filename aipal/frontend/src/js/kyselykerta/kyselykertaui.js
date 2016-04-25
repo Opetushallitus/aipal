@@ -39,8 +39,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus',
-    function (Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm',
+    function (Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm) {
       $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function (form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -126,7 +126,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           });
         Kyselykerta.haeYksi($scope.kyselykertaid)
           .success(function(kyselykerta) {
-            $scope.kyselykerta = kyselykerta;
+            $scope.kyselykerta = pvm.parsePvm(kyselykerta);
 
             if($scope.kyselykerta.voimassa_alkupvm) { // bootstrap datepicker takes in a javascript date
               $scope.kyselykerta.voimassa_alkupvm = new Date($scope.kyselykerta.voimassa_alkupvm);
@@ -140,7 +140,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       else {
         $scope.tunnukset = [];
         $scope.kyselykerta = {
-          voimassa_alkupvm: new Date()
+          voimassa_alkupvm: new Date(),
+          voimassa_loppupvm: new Date()
         };
       }
 
