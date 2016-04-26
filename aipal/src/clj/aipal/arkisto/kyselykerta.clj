@@ -68,12 +68,12 @@
 (defn hae-nimella-ja-oppilaitoksella
   "Hae kyselykerta nimella ja oppilaitoksella"
   [kyselykertanimi oppilaitosid]
-    (-> (sql/select taulut/kyselykerta
-     (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
-     (sql/join :inner :oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
-     (sql/fields :kyselykerta.kyselykertaid)
-     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false
-     })) (sql/post-query unique)))
+  (first (sql/select taulut/kyselykerta
+                     (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+                     (sql/join :inner :oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
+                     (sql/fields :kyselykerta.kyselykertaid)
+                     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false
+                                 }))))
 ;end avop.fi
 
 (defn hae-yksi
