@@ -1,3 +1,5 @@
+set session aipal.kayttaja='JARJESTELMA';
+
 insert into koulutusala (koulutusalatunnus, nimi_fi, nimi_sv)
 values ('5', 'Tekniikan ja liikenteen ala', 'Teknik och kommunikation');
 
@@ -19,9 +21,10 @@ insert into tutkinto (tutkintotunnus, opintoala, nimi_fi, nimi_sv)
 insert into kysymysryhma (kysymysryhmaid, valtakunnallinen, taustakysymykset, nimi_fi, nimi_sv)
   values (3341884, true, true, 'Näyttötutkintojen taustakysymykset hakeutumisvaiheessa', 'Bakgrundsfrågor gällande fristående examina i ansökningsskedet');
 
-select 'insert into kysymys (kysymysid, pakollinen, vastaustyyppi, kysymys_fi, kysymys_sv, jarjestys, monivalinta_max)' ||
-  ' values (' || kysymysid || ' , false, ''monivalinta'', ''' || kysymys_fi || ''', ''' || kysymys_sv || ''', ' || jarjestys
-  from kysymys where kysymysryhmaid = 3341884;
+-- generoitu:
+-- select 'insert into kysymys (kysymysid, pakollinen, vastaustyyppi, kysymys_fi, kysymys_sv, jarjestys, monivalinta_max)' ||
+-- ' values (' || kysymysid || ' , false, ''monivalinta'', ''' || kysymys_fi || ''', ''' || kysymys_sv || ''', ' || jarjestys
+--  from kysymys where kysymysryhmaid = 3341884;
   
 insert into kysymys (kysymysid, pakollinen, vastaustyyppi, kysymys_fi, kysymys_sv, jarjestys, monivalinta_max) values (7312034 , false, 'monivalinta', 'Sukupuoli', 'Kön', 0, 1);
 insert into kysymys (kysymysid, pakollinen, vastaustyyppi, kysymys_fi, kysymys_sv, jarjestys, monivalinta_max) values (7312035 , false, 'monivalinta', 'Äidinkieli', 'Modersmål', 1, 1);
@@ -31,5 +34,11 @@ insert into kysymys (kysymysid, pakollinen, vastaustyyppi, kysymys_fi, kysymys_s
 insert into kysymys (kysymysid, pakollinen, vastaustyyppi, kysymys_fi, kysymys_sv, jarjestys, monivalinta_max) values (7312039 , false, 'monivalinta', 'Mikä oli tilanteesi ennen kuin hakeuduit suorittamaan näyttötutkintoa', 'Vilken var din situation innan du ansökte om att avlägga examen', 5, 1);
 insert into kysymys (kysymysid, pakollinen, vastaustyyppi, kysymys_fi, kysymys_sv, jarjestys, monivalinta_max) values (7312040 , false, 'monivalinta', 'Tavoitteeni on', 'Mitt mål är att', 6, 1);
 
+insert into koulutustoimija (ytunnus, nimi_fi, nimi_sv)
+  values ('2325448-4', 'Hikimäen urheiluopisto', 'Hikibacka iddrotsklubben');
+  
+insert into oppilaitos (oppilaitoskoodi, koulutustoimija, nimi_fi, nimi_sv)
+  values ('46572', '2325448-4', 'Hikipajan koulu', 'Hikiklubben skola');
 
-; 3341884;"";"";t;t;"Näyttötutkintojen taustakysymykset hakeutumisvaiheessa";"Bakgrundsfrågor gällande fristående examina i ansökningsskedet"
+
+
