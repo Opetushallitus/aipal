@@ -246,10 +246,11 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       tanaan.setUTCHours(0, 0, 0, 0);
       var alkupvm = new Date(kyselykerta.voimassa_alkupvm),
         loppupvm = kyselykerta.voimassa_loppupvm ? new Date(kyselykerta.voimassa_loppupvm) : alkupvm;
+
       $scope.menneisyydessa = !_.isNull(kyselykerta.voimassa_loppupvm) && loppupvm < tanaan;
       var oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
-      $scope.oletusalkupvm = oletusalkupvm.toISOString().slice(0, 10);
 
+      $scope.oletusalkupvm = oletusalkupvm;
       $scope.tutkinnot = tutkinnot;
 
       $scope.koulutustoimijat = koulutustoimijat;
