@@ -79,17 +79,23 @@ li.selected{
 
 .tutkintorakennetaso {
   &.btn-group .btn{
-    margin-bottom: -2px;
-    border-color: #E3E3E3;
+    margin-bottom: -1px;
+    margin-right: 1px;
+    background-color: white;
+    color: $darker-gray;
+    border: 0;
+
   }
   &.btn-group > .btn.active,
   &.btn-group-vertical > .btn.active {
+    border: 1px solid #E3E3E3;
     z-index: 2;
     background-color: #F5F5F5;
     color: $darker-gray;
     border-bottom: 0px;
     box-shadow: none;
     -webkit-box-shadow: none;
+    font-weight: bold !important;
   }
 }
 
