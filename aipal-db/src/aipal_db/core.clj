@@ -51,14 +51,17 @@
       (finally
         (jdbc-do "set aipal.kayttaja to default")))))
 
-(defn luo-kayttajat! []
-  (run-sql (sql-resurssista "sql/ophkayttajat.sql")))
-
 (defn luo-testikayttajat! []
   (run-sql (sql-resurssista "sql/testikayttajat.sql")))
 
 (defn luo-koodistodata! []
   (run-sql (sql-resurssista "sql/koodistot.sql")))
+
+(defn luo-valtakunnalliset-kysymykset! []
+  (run-sql (sql-resurssista "sql/valtakunnalliset_kysymykset.sql")))
+
+(defn luo-testikyselydata! []
+  (run-sql (sql-resurssista "sql/testidata.sql")))
 
 (defn prefix [s n]
   (.substring s 0 (min (.length s) n)))
@@ -178,9 +181,6 @@
           (aseta-oikeudet-sovelluskayttajalle (:username options))
           (println "Luodaan koodistodata")
           (luo-koodistodata!)
-          (when (:clear options)
-            (println "luodaan käyttäjät")
-            (luo-kayttajat!))
           (when (:testikayttajat options)
             (println "luodaan testikäyttäjät")
             (luo-testikayttajat!))
