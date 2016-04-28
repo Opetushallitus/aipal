@@ -19,8 +19,8 @@ footer.copyright-footer {
   }
 }
 
-footer.dev-footer { background-color: $darker-primary;
-  > div {min-height: 80px;}
+footer.dev-footer { background-color: $darkest-primary;
+  > div {min-height: 50px;}
   .app-wrapper {
     padding-top: 28px;
     color: $primary-action-text;
