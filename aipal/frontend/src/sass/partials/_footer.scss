@@ -11,12 +11,11 @@ footer.copyright-footer, footer.dev-footer {
 
 footer.copyright-footer {
   $footer-height: 120px;
-  height: $footer-height; background-color: $darkest-gray;
+  height: $footer-height; background-color: $lightest-primary;
   .app-wrapper {
     padding-top: 50px;
     height: $footer-height;
-    background: url("../img/okm-logo-fi-white.svg") right 10px center no-repeat;
-    .no-svg & {background-image: url("../img/okm-logo-fi-white.png")}
+    background: url("../img/csc-logo-teksti-fi.png") right 10px center no-repeat;
   }
 }
 
