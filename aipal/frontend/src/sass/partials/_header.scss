@@ -7,7 +7,7 @@ header {
   left: 0;
 
   .app-wrapper {
-    background: #e1e1e1 url('../img/AITU-background.png') no-repeat left top;
+    background: none;
     height: 100%;
   }
 
@@ -48,8 +48,7 @@ header {
     width: 271px;
     float: right;
     margin-right: $marginM;
-    background: transparent url('../img/okm-logo-fi.svg') 0 center no-repeat;
-    .no-svg & {background-image: url('../img/okm-logo-fi.png');}
+    background: none;}
   }
 }
 
