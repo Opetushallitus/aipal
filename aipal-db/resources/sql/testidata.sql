@@ -326,6 +326,77 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 	(7312026,-50,to_date('2016-02-04', 'YYYY-MM-DD'),2, null);
 	
 	
+-- suoritusvaiheen kysely 
+
+insert into kysely (voimassa_alkupvm, nimi_fi, nimi_sv, selite_fi, koulutustoimija, tila)
+  values (to_date('2016-01-04', 'YYYY-MM-DD'), 'testikysely, suoritusvaihe', 'test frågande, görande', '-', '2325448-4', 'julkaistu');
+
+insert into kysely_kysymys (kyselyid, kysymysid)
+  values (3, 7312027),
+         (3, 7312028),
+         (3, 7312029),
+         (3, 7312030),
+         (3, 7312031),
+         (3, 7312032),
+         (3, 7312033),
+         (3, 7312008),
+         (3, 7312009),
+         (3, 7312010),
+         (3, 7312011),
+         (3, 7312012),
+         (3, 7312013),
+         (3, 7312014),
+         (3, 7312015),
+         (3, 7312016);
+                  
+
+insert into kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys)
+  values (3, 3341885, 0),
+   	     (3, 3341887, 1);
+
+insert into kyselykerta (kyselyid, nimi, voimassa_alkupvm, lukittu)
+  values (3, 'testikerta', to_date('2016-01-04', 'YYYY-MM-DD'), false);
+
+-- kyselykertaid sekvenssi alkaa numerosta 1 kun kanta luodaan.
+insert into vastaajatunnus (kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, voimassa_alkupvm, suorituskieli)
+  values (3, 1, 'X00002', 'AXXHJF', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (3, 1, 'X00002', 'AXHYJE', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (3, 1, 'X00002', 'AXTA7A', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+	     (3, 1, null, 'AXEMTC', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (3, 1, 'X00002', 'AXMC7H', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'sv');
+   	     
+insert into vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut)
+  values (-100, 3, 11, true),
+   	     (-101, 3, 12, false),
+         (-102, 3, 13, false),
+         (-103, 3, 14, false),
+         (-104, 3, 15, false);
+  
+
+insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
+ values 
+	(7312027,-100,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312028, -100,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312029, -100,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
+	(7312030,-100,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312031,-100,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312032,-100,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312033,-100,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
+	(7312008,-100,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312009,-100,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
+	(7312010,-100,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
+	(7312011,-100,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),		
+	(7312012,-100,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
+	(7312013,-100,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312014,-100,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),
+	(7312015,-100,to_date('2016-02-04', 'YYYY-MM-DD'), 4, null),		
+	(7312016,-100,to_date('2016-02-04', 'YYYY-MM-DD'), 5, null);
+	
+
+
+
+--- päivitetään näkymät, jotta raportointi toimii.
+	
 REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;
 REFRESH MATERIALIZED VIEW vastaaja_taustakysymysryhma_view;
 REFRESH MATERIALIZED VIEW kysymysryhma_taustakysymysryhma_view;
