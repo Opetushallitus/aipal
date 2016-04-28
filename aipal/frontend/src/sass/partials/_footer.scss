@@ -11,11 +11,11 @@ footer.copyright-footer, footer.dev-footer {
 
 footer.copyright-footer {
   $footer-height: 120px;
-  height: $footer-height; background-color: $lightest-primary;
+  height: $footer-height; background-color: $darker-primary;
   .app-wrapper {
     padding-top: 50px;
     height: $footer-height;
-    background: url("../img/csc-logo-teksti-fi.png") right 10px center no-repeat;
+    background: url("../img/csc-logo-nega.png") right 10px center no-repeat;
   }
 }
 
