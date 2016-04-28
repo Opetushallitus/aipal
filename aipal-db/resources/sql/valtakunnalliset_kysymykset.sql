@@ -1,7 +1,4 @@
-  set session aipal.kayttaja='JARJESTELMA';
---
--- Data for Name: kysymysryhma; Type: TABLE DATA; Schema: public; Owner: aipal_adm
---
+set session aipal.kayttaja='JARJESTELMA';
 
 INSERT INTO kysymysryhma (kysymysryhmaid, voimassa_alkupvm, voimassa_loppupvm, taustakysymykset, valtakunnallinen, nimi_fi, nimi_sv, selite_fi, selite_sv, koulutustoimija, oppilaitos, toimipaikka, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, tila, kuvaus_fi, kuvaus_sv, ntm_kysymykset) VALUES (1, NULL, NULL, true, true, 'TAUSTAKYSYMYKSET', 'BAKGRUNDSINFORMATION', NULL, NULL, NULL, NULL, NULL, 'KONVERSIO', 'KONVERSIO', '2008-05-14 09:44:59.39669+00', '2008-05-14 09:45:37.523132+00', 'suljettu', NULL, NULL, false);
 INSERT INTO kysymysryhma (kysymysryhmaid, voimassa_alkupvm, voimassa_loppupvm, taustakysymykset, valtakunnallinen, nimi_fi, nimi_sv, selite_fi, selite_sv, koulutustoimija, oppilaitos, toimipaikka, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, tila, kuvaus_fi, kuvaus_sv, ntm_kysymykset) VALUES (2, NULL, NULL, false, true, 'HAKEUTUMINEN', 'ANSÖKAN', NULL, NULL, NULL, NULL, NULL, 'KONVERSIO', 'KONVERSIO', '2008-05-14 09:46:04.054194+00', '2008-05-14 09:46:04.054194+00', 'suljettu', NULL, NULL, false);
@@ -34,10 +31,7 @@ INSERT INTO  jatkokysymys (jatkokysymysid, kylla_teksti_fi, kylla_teksti_sv, ei_
 INSERT INTO  jatkokysymys (jatkokysymysid, kylla_teksti_fi, kylla_teksti_sv, ei_teksti_fi, ei_teksti_sv, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, kylla_vastaustyyppi) VALUES (418, 'Miten tyytyväinen olit arvioinnin perusteluihin?', 'Hur nöjd var du med motiveringarna för bedömningen?', NULL, NULL, NULL, 'KONVERSIO', 'KONVERSIO', '2008-06-24 05:58:11.130853+00', '2008-06-24 05:58:11.130853+00', 'asteikko');
 INSERT INTO  jatkokysymys (jatkokysymysid, kylla_teksti_fi, kylla_teksti_sv, ei_teksti_fi, ei_teksti_sv, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, kylla_vastaustyyppi) VALUES (406, 'Miten tyytyväinen olit osaamisesi huomioon ottamiseen?', 'Hur nöjd var du med beaktandet av din kompetens?', NULL, NULL, NULL, 'KONVERSIO', 'KONVERSIO', '2008-06-24 05:58:11.125952+00', '2008-06-24 05:58:11.125952+00', 'asteikko');
 
-
---
--- Data for Name: kysymys; Type: TABLE DATA; Schema: public; Owner: aipal_adm
---
+ 
 
 INSERT INTO kysymys (kysymysid, pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, jarjestys, jatkokysymysid, monivalinta_max, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, eos_vastaus_sallittu) VALUES (7314565, true, false, 'likert_asteikko', 3342148, 'Koulutus kehitti näyttötutkintoihin liittyvän lainsäädännön tuntemista', 'Utbildningen förbättrade min kännedom om lagstiftningen som gäller de fristående examina', 0, NULL, NULL, NULL, 'JARJESTELMA', 'JARJESTELMA', '2015-09-02 12:52:26.800959+00', '2015-09-02 12:52:26.800959+00', NULL);
 INSERT INTO kysymys (kysymysid, pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, jarjestys, jatkokysymysid, monivalinta_max, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, eos_vastaus_sallittu) VALUES (7314566, true, false, 'likert_asteikko', 3342148, 'Koulutus kehitti tietämystäni näyttötutkintojärjestelmän toimijoista ja näiden tehtävistä', 'Utbildningen förbättrade min kännedom om aktörerna inom systemet med fristående examina och om aktörernas uppgifter', 1, NULL, NULL, NULL, 'JARJESTELMA', 'JARJESTELMA', '2015-09-02 12:52:26.800959+00', '2015-09-02 12:52:26.800959+00', NULL);
@@ -171,10 +165,7 @@ INSERT INTO kysymys (kysymysid, pakollinen, poistettava, vastaustyyppi, kysymysr
 INSERT INTO kysymys (kysymysid, pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, jarjestys, jatkokysymysid, monivalinta_max, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, eos_vastaus_sallittu) VALUES (7312015, true, false, 'likert_asteikko', 3341887, 'Tutkinnon tai tutkinnon osan suorittamisesta oli hyötyä ammattitaidon kehittämisessä', 'Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten', 7, NULL, NULL, NULL, 'JARJESTELMA', 'JARJESTELMA', '2015-01-03 14:28:19.763717+00', '2015-01-03 14:28:19.763717+00', NULL);
 INSERT INTO kysymys (kysymysid, pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, jarjestys, jatkokysymysid, monivalinta_max, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, eos_vastaus_sallittu) VALUES (7312016, true, false, 'arvosana', 3341887, 'Miten arvioit tutkinnon suorittamisen onnistuneen kokonaisuutena?', 'Hur bedömer du att avläggandet av examen lyckades som helhet?', 8, NULL, NULL, NULL, 'JARJESTELMA', 'JARJESTELMA', '2015-01-03 14:28:19.763717+00', '2015-01-03 14:28:19.763717+00', NULL);
 
-
---
--- Data for Name: monivalintavaihtoehto; Type: TABLE DATA; Schema: public; Owner: aipal_adm
---
+ 
 
 INSERT INTO monivalintavaihtoehto (monivalintavaihtoehtoid, kysymysid, jarjestys, teksti_fi, teksti_sv, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) VALUES (3327459, 7312028, 0, 'suomi', 'finska', 'JARJESTELMA', 'JARJESTELMA', '2015-01-03 14:28:44.042138+00', '2015-01-03 14:28:44.042138+00');
 INSERT INTO monivalintavaihtoehto (monivalintavaihtoehtoid, kysymysid, jarjestys, teksti_fi, teksti_sv, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) VALUES (3327460, 7312028, 1, 'ruotsi', 'svenska', 'JARJESTELMA', 'JARJESTELMA', '2015-01-03 14:28:44.042138+00', '2015-01-03 14:28:44.042138+00');
@@ -306,8 +297,4 @@ INSERT INTO monivalintavaihtoehto (monivalintavaihtoehtoid, kysymysid, jarjestys
 INSERT INTO monivalintavaihtoehto (monivalintavaihtoehtoid, kysymysid, jarjestys, teksti_fi, teksti_sv, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) VALUES (3327484, 7312033, 0, 'koko tutkinnon suorittaminen', 'avlägga hela examen', 'JARJESTELMA', 'JARJESTELMA', '2015-01-03 14:28:44.042138+00', '2015-01-03 14:28:44.042138+00');
 INSERT INTO monivalintavaihtoehto (monivalintavaihtoehtoid, kysymysid, jarjestys, teksti_fi, teksti_sv, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) VALUES (3327485, 7312033, 1, 'tutkinnon osan tai osien suorittaminen', 'avlägga en del/delar av examen', 'JARJESTELMA', 'JARJESTELMA', '2015-01-03 14:28:44.042138+00', '2015-01-03 14:28:44.042138+00');
 
-
---
--- PostgreSQL database dump complete
---
-
+ 
