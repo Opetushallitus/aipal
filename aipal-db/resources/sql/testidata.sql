@@ -367,10 +367,10 @@ insert into vastaajatunnus (kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunn
    	     
 insert into vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut)
   values (-100, 3, 11, true),
-   	     (-101, 3, 12, false),
-         (-102, 3, 13, false),
-         (-103, 3, 14, false),
-         (-104, 3, 15, false);
+   	     (-101, 3, 12, true),
+         (-102, 3, 13, true),
+         (-103, 3, 14, true),
+         (-104, 3, 15, true);
   
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
@@ -392,8 +392,82 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 	(7312015,-100,to_date('2016-02-04', 'YYYY-MM-DD'), 4, null),		
 	(7312016,-100,to_date('2016-02-04', 'YYYY-MM-DD'), 5, null);
 	
+insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
+ values 
+	(7312027,-101,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312028, -101,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312029, -101,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
+	(7312030,-101,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312031,-101,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312032,-101,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312033,-101,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
+	(7312008,-101,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312009,-101,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
+	(7312010,-101,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
+	(7312011,-101,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),		
+	(7312012,-101,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
+	(7312013,-101,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312014,-101,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),
+	(7312015,-101,to_date('2016-02-04', 'YYYY-MM-DD'), 4, null),		
+	(7312016,-101,to_date('2016-02-04', 'YYYY-MM-DD'), 5, null);
+
+insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
+ values 
+	(7312027,-102,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312028, -102,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312029, -102,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
+	(7312030,-102,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312031,-102,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312032,-102,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312033,-102,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
+	(7312008,-102,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312009,-102,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
+	(7312010,-102,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
+	(7312011,-102,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),		
+	(7312012,-102,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
+	(7312013,-102,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
+	(7312014,-102,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),
+	(7312015,-102,to_date('2016-02-04', 'YYYY-MM-DD'), 4, null),		
+	(7312016,-102,to_date('2016-02-04', 'YYYY-MM-DD'), 1, null);
+
+insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
+ values 
+	(7312027,-103,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312028, -103,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312029, -103,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
+	(7312030,-103,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312031,-103,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312032,-103,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312033,-103,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
+	(7312008,-103,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312009,-103,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
+	(7312010,-103,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
+	(7312011,-103,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),		
+	(7312012,-103,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
+	(7312013,-103,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312014,-103,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),
+	(7312015,-103,to_date('2016-02-04', 'YYYY-MM-DD'), 4, null),		
+	(7312016,-103,to_date('2016-02-04', 'YYYY-MM-DD'), 3, null);
 
 
+insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
+ values 
+	(7312027,-104,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312028, -104,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312029, -104,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
+	(7312030,-104,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312031,-104,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
+	(7312032,-104,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
+	(7312033,-104,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
+	(7312008,-104,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
+	(7312009,-104,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
+	(7312010,-104,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
+	(7312011,-104,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),		
+	(7312012,-104,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
+	(7312013,-104,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312014,-104,to_date('2016-02-04', 'YYYY-MM-DD'),3, null),
+	(7312015,-104,to_date('2016-02-04', 'YYYY-MM-DD'), 4, null),		
+	(7312016,-104,to_date('2016-02-04', 'YYYY-MM-DD'), 2, null);
 
 --- päivitetään näkymät, jotta raportointi toimii.
 	
