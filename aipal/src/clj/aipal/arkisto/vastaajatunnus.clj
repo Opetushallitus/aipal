@@ -148,7 +148,7 @@
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
         valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
-        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:valmistavan_koulutuksen_toimipaikka :toimipaikkakoodi])
+        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
         kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
         vastaajatunnus (-> vastaajatunnus
                          (dissoc :henkilokohtainen :tutkinto :koulutuksen_jarjestaja :koulutuksen_jarjestaja_oppilaitos :koulutuksen_toimipaikka )
