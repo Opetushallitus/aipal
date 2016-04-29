@@ -469,6 +469,10 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 	(7312015,-104,to_date('2016-02-04', 'YYYY-MM-DD'), 4, null),		
 	(7312016,-104,to_date('2016-02-04', 'YYYY-MM-DD'), 2, null);
 
+
+-- vanhat taustakysmyykset ovat id-numeroilla 1..4 joten resetoidaan sekvenssi
+ALTER sequence kysymysryhma_kysymysryhmaid_seq RESTART with 10;
+
 --- päivitetään näkymät, jotta raportointi toimii.
 	
 REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;
