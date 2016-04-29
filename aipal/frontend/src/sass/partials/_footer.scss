@@ -11,7 +11,7 @@ footer.copyright-footer, footer.dev-footer {
 
 footer.copyright-footer {
   $footer-height: 120px;
-  height: $footer-height; background-color: $primary-color;
+  height: $footer-height; background-color: $darker-primary;
   .app-wrapper {
     padding-top: 50px;
     height: $footer-height;
