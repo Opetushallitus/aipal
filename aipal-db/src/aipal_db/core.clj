@@ -118,6 +118,7 @@
    [nil "--target-version VERSION" "Tehdään migrate annettuun versioon saakka"]
    ["-t" nil "Testikäyttäjien luonti"
     :id :testikayttajat]
+   ["-d" nil "Testidatan luonti" :id :testidata]
    ["-s" "--sql SQL" "Tiedosto, jonka sisältämät SQL-lauseet suoritetaan migraation päätteeksi"
     :assoc-fn #(update-in %1 [%2] (fnil conj []) %3)]
    ["-u" "--username USER" "Tietokantakäyttäjä"
@@ -184,6 +185,10 @@
           (when (:testikayttajat options)
             (println "luodaan testikäyttäjät")
             (luo-testikayttajat!))
+          (when (:testidata options)
+            (println "luodaan testidataa")
+            (luo-valtakunnalliset-kysymykset!)
+            (luo-testikyselydata!))
           (doseq [s (:sql options)]
             (run-sql (sql-tiedostosta s))))
         (finally
