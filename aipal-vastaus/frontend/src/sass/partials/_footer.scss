@@ -27,20 +27,19 @@ footer.disclaimer-footer{
 }
 
 footer.copyright-footer {
-  background-color: $darkest-gray;
+  background-color: $darker-primary;
   .app-wrapper {
     padding-top: 75px;
     padding-bottom: 5px;
     padding-left: 10px;
-    background: url("../img/okm-logo-fi-white.svg") 10px 10px no-repeat;
+    background: url("../img/csc-logo-nega.png") right 10px center no-repeat;
     text-align: left;
     font-size: .8em;
     color: $lighter-gray;
-    .no-svg & {background-image: url("../img/okm-logo-fi-white.png")}
   }
 }
 
-footer.dev-footer { background-color: $darker-primary;
+footer.dev-footer { background-color: #1A1A1A;
   > div {min-height: 40px;}
   .app-wrapper {
     padding-top: 10px;
