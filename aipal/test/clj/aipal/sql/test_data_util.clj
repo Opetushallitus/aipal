@@ -102,7 +102,7 @@
     (or (first k)
       (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
-(def kysely-num (atom 0))
+(def kysely-num (atom 12))
 
 (defn lisaa-kysely!
   ([]

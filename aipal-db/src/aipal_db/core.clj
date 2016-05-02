@@ -51,14 +51,17 @@
       (finally
         (jdbc-do "set aipal.kayttaja to default")))))
 
-(defn luo-kayttajat! []
-  (run-sql (sql-resurssista "sql/ophkayttajat.sql")))
-
 (defn luo-testikayttajat! []
   (run-sql (sql-resurssista "sql/testikayttajat.sql")))
 
 (defn luo-koodistodata! []
   (run-sql (sql-resurssista "sql/koodistot.sql")))
+
+(defn luo-valtakunnalliset-kysymykset! []
+  (run-sql (sql-resurssista "sql/valtakunnalliset_kysymykset.sql")))
+
+(defn luo-testikyselydata! []
+  (run-sql (sql-resurssista "sql/testidata.sql")))
 
 (defn prefix [s n]
   (.substring s 0 (min (.length s) n)))
@@ -115,6 +118,7 @@
    [nil "--target-version VERSION" "Tehdään migrate annettuun versioon saakka"]
    ["-t" nil "Testikäyttäjien luonti"
     :id :testikayttajat]
+   ["-d" nil "Testidatan luonti" :id :testidata]
    ["-s" "--sql SQL" "Tiedosto, jonka sisältämät SQL-lauseet suoritetaan migraation päätteeksi"
     :assoc-fn #(update-in %1 [%2] (fnil conj []) %3)]
    ["-u" "--username USER" "Tietokantakäyttäjä"
@@ -178,12 +182,13 @@
           (aseta-oikeudet-sovelluskayttajalle (:username options))
           (println "Luodaan koodistodata")
           (luo-koodistodata!)
-          (when (:clear options)
-            (println "luodaan käyttäjät")
-            (luo-kayttajat!))
           (when (:testikayttajat options)
             (println "luodaan testikäyttäjät")
             (luo-testikayttajat!))
+          (when (:testidata options)
+            (println "luodaan testidataa")
+            (luo-valtakunnalliset-kysymykset!)
+            (luo-testikyselydata!))
           (doseq [s (:sql options)]
             (run-sql (sql-tiedostosta s))))
         (finally
