@@ -51,6 +51,9 @@
              :monivalintavaihtoehdot
              (map :teksti_fi))))))
 
+(defn ei-valtakunnallisia [kysymysryhmaseq]
+  (filter #(= false (:valtakunnallinen %)) kysymysryhmaseq))
+
 ;; hae-kysymysryhmat palauttaa kaikki kysymysryhmät riippumatta voimassaolosta
 (deftest ^:integraatio hae-kysymysryhmat-voimassaolo
   (let [koulutustoimija (test-data/lisaa-koulutustoimija!)]
@@ -69,8 +72,9 @@
                                            :voimassa_alkupvm (time/local-date 2100 1 1)
                                            :voimassa_loppupvm (time/local-date 2200 1 1)
                                            :koulutustoimija (:ytunnus koulutustoimija)}]))
-    (is (= #{"a" "b" "c"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija))))))
-    (is (= #{"b"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija) true)))))))
+    
+    (is (= #{"a" "b" "c"} (set (map :nimi_fi (ei-valtakunnallisia (hae-kysymysryhmat (:ytunnus koulutustoimija)))))))
+    (is (= #{"b"} (set (map :nimi_fi (ei-valtakunnallisia (hae-kysymysryhmat (:ytunnus koulutustoimija) true))))))))
 
 (deftest ^:integraatio hae-kysymysryhmat-oma-organisaatio
   (let [oma-koulutustoimija (test-data/lisaa-koulutustoimija! {:ytunnus "1111111-1"})
@@ -81,34 +85,22 @@
                                            :koulutustoimija (:ytunnus muu-koulutustoimija)}
                                           {:nimi_fi "c"
                                            :koulutustoimija (:ytunnus oma-koulutustoimija)}]))
-    (is (= #{"a" "c"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus oma-koulutustoimija))))))))
+    (is (= #{"a" "c"} (set (map :nimi_fi (ei-valtakunnallisia (hae-kysymysryhmat (:ytunnus oma-koulutustoimija)))))))))
 
 (deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset
-  (let [koulutustoimija (test-data/lisaa-koulutustoimija!)]
-    (sql/insert kysymysryhma (sql/values [{:nimi_fi "a"
-                                           :tila "julkaistu"
-                                           :valtakunnallinen true}
-                                          {:nimi_fi "b"
-                                           :tila "julkaistu"
-                                           :valtakunnallinen true}]))
-    (is (= #{"a" "b"} (set (map :nimi_fi (hae-kysymysryhmat (:ytunnus koulutustoimija))))))))
+  (is (= #{3341886 1 3341887 4 3341885 3341884 3341888 3342148 3342146 3342149 3342147 3 2} (set (map :kysymysryhmaid (hae-kysymysryhmat nil))))))
 
 ;; tarkastetaan ettei haku duplikoi organisaatiolla olevia valtakunnallisia ryhmiä
-(deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset-oph
-  (let [oph (test-data/lisaa-koulutustoimija!  {:ytunnus "1111111-1"})]
-    (sql/insert kysymysryhma (sql/values [{:nimi_fi "a"
-                                           :tila "julkaistu"
-                                           :valtakunnallinen true
-                                           :koulutustoimija (:ytunnus oph)}]))
-    (is (= ["a"] (map :nimi_fi (hae-kysymysryhmat (:ytunnus oph)))))))
+;(deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset-oph
+;  (let [oph (test-data/lisaa-koulutustoimija!  {:ytunnus "1111111-1"})]
+;    (sql/insert kysymysryhma (sql/values [{:nimi_fi "a"
+;                                           :tila "julkaistu"
+;                                           :valtakunnallinen true
+;                                           :koulutustoimija (:ytunnus oph)}]))
+;    (is (= ["a"] (map :nimi_fi (hae-kysymysryhmat (:ytunnus oph)))))))
 
 (deftest ^:integraatio hae-taustakysymysryhmat-test
-  (let [koulutustoimija (test-data/lisaa-koulutustoimija!)
-        id1 (-> (test-data/lisaa-kysymysryhma! {:taustakysymykset true
-                                                :valtakunnallinen true} koulutustoimija) :kysymysryhmaid)
-        id2 (-> (test-data/lisaa-kysymysryhma! {:taustakysymykset true
-                                                :valtakunnallinen true} koulutustoimija) :kysymysryhmaid)]
-    (is (= #{id1 id2} (set (map :kysymysryhmaid (hae-taustakysymysryhmat)))))))
+  (is (= #{1 3341885 3342146}  (set (map :kysymysryhmaid (hae-taustakysymysryhmat))))))
 
 (deftest ^:integraatio hae-ntm-kysymysryhmat
   (let [opetushallitus (test-data/lisaa-koulutustoimija! {:ytunnus "1111111-1"})

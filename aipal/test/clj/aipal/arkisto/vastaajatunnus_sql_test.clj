@@ -28,12 +28,12 @@
   (testing "hae palauttaa vastaajatunnuksen, jolla on annettu id"
     (let [k (:kyselykertaid (lisaa-kyselykerta!))]
       (lisaa! {:kyselykertaid k
-               :vastaajatunnusid 1
+               :vastaajatunnusid -1
                :vastaajien_lkm 11})
       (lisaa! {:kyselykertaid k
-               :vastaajatunnusid 2
+               :vastaajatunnusid -2
                :vastaajien_lkm 22})
-      (is (= (:vastaajien_lkm (hae k 1))
+      (is (= (:vastaajien_lkm (hae k -1))
              11)))))
 
 (deftest ^:integraatio lisays
@@ -93,6 +93,7 @@
   (testing "lisaa-kyselykerta! palauttaa vastaajatunnukset samassa muodossa kuin hae-kyselykerralla"
     (let [k (:kyselykertaid (lisaa-kyselykerta!))]
       (prop/for-all [vastaajatunnus (vastaajatunnus-gen k)]
-        (sql/delete taulut/vastaajatunnus)
+        (sql/delete taulut/vastaajatunnus
+          (sql/where (> :vastaajatunnusid 15)))
         (= (set (lisaa! vastaajatunnus))
            (set (hae-kyselykerralla k)))))))
