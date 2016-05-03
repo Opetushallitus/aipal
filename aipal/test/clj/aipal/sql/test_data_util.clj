@@ -74,13 +74,6 @@
   ([]
     (lisaa-koulutusala! default-koulutusala)))
 
-(defn lisaa-oppilaitos!
-  ([oppilaitos]
-    (let [t (merge default-oppilaitos oppilaitos)]
-      (sql/insert :oppilaitos
-        (sql/values t))))
-  ([]
-    (lisaa-oppilaitos! default-oppilaitos)))
 
 (defn lisaa-opintoala!
   ([opintoala]
@@ -115,12 +108,23 @@
     (or (first k)
       (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
+;oppilaitos needs a valid koulutustoimija
+(defn lisaa-oppilaitos!
+  ([oppilaitos]
+    (let [t (merge default-oppilaitos oppilaitos)]
+      (sql/insert :oppilaitos
+        (sql/values t))))
+  ([]
+    (lisaa-koulutustoimija!)
+    (lisaa-oppilaitos! default-oppilaitos)))
+
 ;Returns default koulutustoimija as it is the only one matching requirements
 (defn anna-avop-koulutustoimija!
   "Palauttaa oletus koulutustoimijan kannasta"
   []
-  (aipal.arkisto.koulutustoimija/hae (:ytunnus default-koulutustoimija)))
- ;(aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
+   (let [k (aipal.arkisto.koulutustoimija/hae (:ytunnus default-koulutustoimija))]
+    (or k
+      (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
 (def kysely-num (atom 12))
 
@@ -165,10 +169,11 @@
                                                                 kyselykerta))))
 
 ;;AVOP.FI:sta tarvitaan kyselykerran nimi ja oppilaitos -> kyselykerran id
+;problem is that oppilaitos must exist prior to avop-kyselykerta and must refer to a valid koulutustoimija
+;order is koulutustoimija -> oppilaitos -> kyselykerta
 (defn lisaa-avop-kyselykerta!
   ([]
     (lisaa-tutkinto!)
-    (lisaa-koulutustoimija!)
     (lisaa-oppilaitos!)
     (lisaa-avop-kyselykerta! {} (lisaa-avop-kysely!)))
   ([kyselykerta kysely]

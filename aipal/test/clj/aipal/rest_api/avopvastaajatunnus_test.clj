@@ -10,7 +10,6 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-
 (deftest ^:integraatio avopvastaajatunnusten-lisays-ilman-salaisuus
   (testing "avopvastaajatunnusten lisays ilman jaettu salaisuus. palauttaa 403"
     (let [kyselykerta (lisaa-avop-kyselykerta!)
