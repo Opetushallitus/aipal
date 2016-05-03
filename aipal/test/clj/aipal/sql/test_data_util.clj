@@ -74,6 +74,14 @@
   ([]
     (lisaa-koulutusala! default-koulutusala)))
 
+(defn lisaa-oppilaitos!
+  ([oppilaitos]
+    (let [t (merge default-oppilaitos oppilaitos)]
+      (sql/insert :oppilaitos
+        (sql/values t))))
+  ([]
+    (lisaa-oppilaitos! default-oppilaitos)))
+
 (defn lisaa-opintoala!
   ([opintoala]
     (let [o (merge default-opintoala opintoala)]
