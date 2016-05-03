@@ -74,14 +74,6 @@
   ([]
     (lisaa-koulutusala! default-koulutusala)))
 
-(defn lisaa-oppilaitos!
-  ([oppilaitos]
-    (let [o (merge default-oppilaitos oppilaitos)]
-      (sql/insert :oppilaitos
-        (sql/values o))))
-  ([]
-    (lisaa-oppilaitos! default-oppilaitos)))
-
 (defn lisaa-opintoala!
   ([opintoala]
     (let [o (merge default-opintoala opintoala)]
@@ -122,7 +114,7 @@
   (aipal.arkisto.koulutustoimija/hae (:ytunnus default-koulutustoimija)))
  ;(aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
-(def kysely-num (atom 0))
+(def kysely-num (atom 12))
 
 (defn lisaa-kysely!
   ([]
@@ -135,6 +127,7 @@
                                         :koulutustoimija (:ytunnus koulutustoimija)
                                         :tila "julkaistu"}
                                        kysely))))
+
 ;kysely avop.fi needs to make sure that koulutustoimija from oppilaitos is the same as the one for the kysely
 (defn lisaa-avop-kysely!
   ([]
