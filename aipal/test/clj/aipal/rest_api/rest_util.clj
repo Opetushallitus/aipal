@@ -11,7 +11,8 @@
             [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]
 
             [aipal.sql.test-util :refer :all]
-            [aipal.sql.test-data-util :refer :all]))
+            [aipal.sql.test-data-util :refer :all]
+            [buddy.sign.jws :as jws]))
 
 (defn with-auth-user [f]
   (with-kayttaja default-test-user-uid nil nil
@@ -32,6 +33,15 @@
                     :body (cheshire/generate-string body)
                     :params params)))
 
+(defn mock-request-salaisuus
+  ([app url method auth-header params body]
+    (peridot/request app url 
+                    :request-method method
+                    :headers {:Authorization auth-header}
+                    :content-type "application/json"
+                    :body (cheshire/generate-string body)
+                    :params params)))
+
 (defn session []
   (let [asetukset (-> oletusasetukset
                     (assoc-in [:cas-auth-server :enabled] false)
@@ -43,8 +53,18 @@
       (peridot/header "x-xsrf-token" "token")
       (peridot/content-type "application/json"))))
 
+;;TODO : Remove xsrf-token from here
+(defn session-no-token []
+  (let [asetukset (-> oletusasetukset
+                    (assoc-in [:cas-auth-server :enabled] false)
+                    (assoc :development-mode true))]
+    (alusta-korma! asetukset)
+    (-> (peridot/session (palvelin/app asetukset) 
+                :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
+      (peridot/content-type "application/json"))))
+
 (defn rest-kutsu
-  "Tekee yksink ertaisen simuloidun rest-kutsun. Peridot-sessio suljetaan
+  "Tekee yksinkertaisen simuloidun rest-kutsun. Peridot-sessio suljetaan
 lopuksi. Soveltuuyksinkertaisiin testitapauksiin."
   ([url method params]
    (-> (session)
@@ -57,3 +77,14 @@ lopuksi. Soveltuuyksinkertaisiin testitapauksiin."
 
 (defn body-json [response]
   (cheshire/parse-string (slurp (:body response)) true))
+
+(defn rest-avop-kutsu
+  "Tekee simuloidun rest-kutsun. kaytetaan oletus jaettu salaisuus siis secret)."
+  ([url method params body]
+  (let [auth-header (str "Bearer " 
+                         (jws/sign {:caller "avopfi"} "secret"))]
+   (-> (session-no-token)
+       (mock-request-salaisuus url method  auth-header params body)
+       :response))))
+
+

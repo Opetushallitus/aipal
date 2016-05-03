@@ -13,6 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.avopvastaajatunnus
+  (:import [java.sql.BatchUpdateException])
   (:require [compojure.api.sweet :refer :all]
             [schema.core :as s]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
@@ -86,7 +87,8 @@
      :kunta kunta
      :koulutusmuoto koulutusmuoto
      :kyselykertaid (kyselykerta-id :kyselykertaid)
-     }))
+     }
+   ))
 
 
 (defn reitit [asetukset]
@@ -98,6 +100,7 @@
       (let [vastaajatunnus (avop->arvo-map avopdata)]
         (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
       (catch java.lang.AssertionError e1
+        ;(map str (.getStackTrace e1))
         (log/error e1 "Mandatory fields missing") 
         (on-validation-error (format "Mandatory fields are missing or not found"))
       )

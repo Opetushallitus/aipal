@@ -13,7 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.vastaajatunnus
+  (:import [java.sql SQLException])
   (:require [clojure.string :as st]
+            [clojure.java.jdbc :as jdbc]
             [oph.common.util.util :refer [select-and-rename-keys]]
             [oph.korma.common :refer [select-unique-or-nil]]
             [korma.core :as sql]
@@ -132,12 +134,12 @@
     (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
-  (log/info (format "Storing: %s" vastaajatunnus)) 
-  (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
-                             (sql/values vastaajatunnus)))
-        vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
-    (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
-    vastaajatunnus))
+    (log/info (format "Storing: %s" vastaajatunnus)) 
+    (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
+                               (sql/values vastaajatunnus)))
+          vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
+      (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
+       vastaajatunnus))
 
 
 (defn lisaa! [vastaajatunnus]
@@ -165,12 +167,13 @@
         (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
 
 
-;;AVOP.FI FIXME: binding manually to INTEGRAATIO user
+;;AVOP.FI FIXME: binding manually to INTEGRAATIO user (check if that is right)
 (defn lisaa-avopfi! [vastaajatunnus]
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)
                      (take 1))]
+
       (with-kayttaja integraatio-uid nil nil (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
 ;;END AVOP.FI
 

@@ -32,6 +32,11 @@
    :koulutusala "1"
    :nimi_fi "Opintoala"})
 
+(def default-oppilaitos
+   {:oppilaitoskoodi "11111"
+    :koulutustoimija "1234567-8"
+    :nimi_fi "TTY"})
+
 (def  default-tutkinto
   {:tutkintotunnus "123456"
    :nimi_fi "Autoalan perustutkinto"
@@ -69,6 +74,14 @@
   ([]
     (lisaa-koulutusala! default-koulutusala)))
 
+(defn lisaa-oppilaitos!
+  ([oppilaitos]
+    (let [o (merge default-oppilaitos oppilaitos)]
+      (sql/insert :oppilaitos
+        (sql/values o))))
+  ([]
+    (lisaa-oppilaitos! default-oppilaitos)))
+
 (defn lisaa-opintoala!
   ([opintoala]
     (let [o (merge default-opintoala opintoala)]
@@ -102,6 +115,13 @@
     (or (first k)
       (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
+;Returns default koulutustoimija as it is the only one matching requirements
+(defn anna-avop-koulutustoimija!
+  "Palauttaa oletus koulutustoimijan kannasta"
+  []
+  (aipal.arkisto.koulutustoimija/hae (:ytunnus default-koulutustoimija)))
+ ;(aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
+
 (def kysely-num (atom 0))
 
 (defn lisaa-kysely!
@@ -112,6 +132,18 @@
      (lisaa-kysely! kysely koulutustoimija)))
   ([kysely koulutustoimija]
    (aipal.arkisto.kysely/lisaa! (merge {:nimi_fi (str "oletuskysely, testi " (swap! kysely-num inc))
+                                        :koulutustoimija (:ytunnus koulutustoimija)
+                                        :tila "julkaistu"}
+                                       kysely))))
+;kysely avop.fi needs to make sure that koulutustoimija from oppilaitos is the same as the one for the kysely
+(defn lisaa-avop-kysely!
+  ([]
+   (lisaa-avop-kysely! {}))
+  ([kysely]
+   (let [koulutustoimija (anna-avop-koulutustoimija!)]
+     (lisaa-avop-kysely! kysely koulutustoimija)))
+  ([kysely koulutustoimija]
+   (aipal.arkisto.kysely/lisaa! (merge {:nimi_fi (str "avop oletuskysely, testi " (swap! kysely-num inc))
                                         :koulutustoimija (:ytunnus koulutustoimija)
                                         :tila "julkaistu"}
                                        kysely))))
@@ -127,6 +159,20 @@
     (lisaa-kyselykerta! kyselykerta (lisaa-kysely!)))
   ([kyselykerta kysely]
     (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:nimi "oletuskyselykerta, testi"
+                                                                 :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
+                                                                 :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
+                                                                kyselykerta))))
+
+;;AVOP.FI:sta tarvitaan kyselykerran nimi ja oppilaitos -> kyselykerran id
+(defn lisaa-avop-kyselykerta!
+  ([]
+    (lisaa-tutkinto!)
+    (lisaa-koulutustoimija!)
+    (lisaa-oppilaitos!)
+    (lisaa-avop-kyselykerta! {} (lisaa-avop-kysely!)))
+  ([kyselykerta kysely]
+    (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:lukittu false 
+                                                                 :nimi "avop oletuskyselykerta, testi"
                                                                  :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
                                                                  :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
                                                                 kyselykerta))))
