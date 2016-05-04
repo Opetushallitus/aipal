@@ -12,17 +12,7 @@
       <span ng-if="['vertailu', 'kehitys', 'koulutustoimijat', 'kysely', 'kyselykerta'].indexOf(tulos.parametrit[0].tyyppi) !== -1" ng-bind="'raportti.nimi.' + tulos.parametrit[0].tyyppi | i18n"></span>
       <span ng-if="['vertailu', 'kehitys', 'koulutustoimijat', 'kysely', 'kyselykerta'].indexOf(tulos.parametrit[0].tyyppi) === -1" ng-bind="'kysely.raportti_otsikko' | i18n"></span>
   </h1>
-  <div class="clearfix raportti-tiedot">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" ng-model="printgraphs">&nbsp;{{ 'kysely.raportti_tulosta_graafit' | i18n }}
-      </label><br />
-      <label>
-        <input type="checkbox" ng-model="printfreetext">&nbsp;{{ 'kysely.raportti_tulosta_vapaatekstivastaukset' | i18n }}
-      </label>
-    </div>
-    <button class="btn btn-primary" onclick="window.print()">{{ 'kysely.raportti_tulosta' | i18n }}&nbsp;<span class="fa fa-print"></span></button>
-  </div>
+  <tulosta-raportti></tulosta-raportti>
 </div>
 
 <div class="raportti-tiedot">
@@ -205,4 +195,8 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<div ng-show="tulos" class="hidden-print print-header">
+  <tulosta-raportti></tulosta-raportti>
 </div>
