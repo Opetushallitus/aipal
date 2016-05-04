@@ -36,9 +36,9 @@
                 :kyselykerta.lukittu :kyselykerta.luotuaika
                 :kyselykerta_kaytettavissa.kaytettavissa
                 [(sql/raw "count(vastaaja.vastaajaid) = 0") :poistettavissa]
-                [(sql/raw "sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :aktiivisia_vastaajatunnuksia]
+                [(sql/raw "coalesce(sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa), 0)") :aktiivisia_vastaajatunnuksia]
                 [(sql/raw "count(vastaaja.vastaajaid) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :aktiivisia_vastaajia]
-                [(sql/raw "sum(vastaajatunnus.vastaajien_lkm)") :vastaajatunnuksia]
+                [(sql/raw "coalesce(sum(vastaajatunnus.vastaajien_lkm), 0)") :vastaajatunnuksia]
                 [(sql/raw "count(vastaaja.vastaajaid)") :vastaajia]
                 [(sql/raw "max(vastaaja.luotuaika)") :viimeisin_vastaus])
     (sql/group :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi

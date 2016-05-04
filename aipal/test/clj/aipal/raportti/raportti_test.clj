@@ -25,8 +25,8 @@
 
 (deftest ^:integraatio muodosta-raportteja
   (testing "bla bla bla"
-    (let [kysely1 (kysely-raportti/muodosta-raportti 1 nil)
-          kysely2 (kysely-raportti/muodosta-raportti 2 nil)]
+    (let [kysely1 (kysely-raportti/muodosta-raportti -1 nil)
+          kysely2 (kysely-raportti/muodosta-raportti -2 nil)]
     (is (= 5 (:vastaajien_lukumaara kysely2)))
     (is (= 5 (:vastaajien_maksimimaara kysely2)))
     (is (= 5 (:vastaajien_lukumaara kysely1)))

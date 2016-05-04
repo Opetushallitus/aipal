@@ -26,54 +26,51 @@ insert into koulutustoimija (ytunnus, nimi_fi, nimi_sv)
 insert into oppilaitos (oppilaitoskoodi, koulutustoimija, nimi_fi, nimi_sv)
  values ('46572', '2325448-4', 'Hikipajan koulu', 'Hikiklubben skola');
 
--- TODO: kysely - kysymys -liitostaulua ei populoida
 
 
-insert into kysely (voimassa_alkupvm, nimi_fi, nimi_sv, selite_fi, koulutustoimija, tila)
-  values (to_date('2016-01-04', 'YYYY-MM-DD'), 'testikysely', 'test frågande', '-', '2345678-0', 'julkaistu');
+insert into kysely (kyselyid, voimassa_alkupvm, nimi_fi, nimi_sv, selite_fi, koulutustoimija, tila)
+  values (-1, to_date('2016-01-04', 'YYYY-MM-DD'), 'testikysely', 'test frågande', '-', '2345678-0', 'julkaistu');
 
--- kyselyid sekvenssi alkaa numerosta 1 kun kanta luodaan.  
-insert into kyselykerta (kyselyid, nimi, voimassa_alkupvm, lukittu)
-  values (1, 'testikerta', to_date('2016-01-04', 'YYYY-MM-DD'), false);
+insert into kyselykerta (kyselykertaid, kyselyid, nimi, voimassa_alkupvm, lukittu)
+  values (-1, -1, 'testikerta', to_date('2016-01-04', 'YYYY-MM-DD'), false);
 
 insert into kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys)
-  values (1, 3341884, 0),
-   	     (1, 3341886, 1);
+  values (-1, 3341884, 0),
+   	     (-1, 3341886, 1);
 
 insert into kysely_kysymys (kyselyid, kysymysid)
-  values (1, 7312034),
-         (1, 7312035),
-         (1, 7312036),
-         (1, 7312037),
-         (1, 7312038),
-         (1, 7312039),
-         (1, 7312040),
-         (1, 7312017),
-         (1, 7312018),
-         (1, 7312019),
-         (1, 7312020),
-         (1, 7312021),
-         (1, 7312022),
-         (1, 7312023),
-         (1, 7312024),
-         (1, 7312025),
-         (1, 7312026);
+  values (-1, 7312034),
+         (-1, 7312035),
+         (-1, 7312036),
+         (-1, 7312037),
+         (-1, 7312038),
+         (-1, 7312039),
+         (-1, 7312040),
+         (-1, 7312017),
+         (-1, 7312018),
+         (-1, 7312019),
+         (-1, 7312020),
+         (-1, 7312021),
+         (-1, 7312022),
+         (-1, 7312023),
+         (-1, 7312024),
+         (-1, 7312025),
+         (-1, 7312026);
                   
 
--- kyselykertaid sekvenssi alkaa numerosta 1 kun kanta luodaan.
-insert into vastaajatunnus (kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, voimassa_alkupvm, suorituskieli)
-  values (1, 1, 'X00001', '3CXHJF', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (1, 1, 'X00001', 'JMHYJE', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (1, 1, null, 'JYTA7A', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-	     (1, 1, null, 'CCEMTC', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (1, 1, null, 'RFMC7H', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'sv');
+insert into vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, voimassa_alkupvm, suorituskieli)
+  values (-1, -1, 1, 'X00001', '3CXHJF', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-2, -1, 1, 'X00001', 'JMHYJE', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-3, -1, 1, null, 'JYTA7A', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+	     (-4, -1, 1, null, 'CCEMTC', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-5, -1, 1, null, 'RFMC7H', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'sv');
    	     
 insert into vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut)
-  values (-1, 1, 1, true),
-   	     (-2, 1, 2, true),
-         (-3, 1, 3, true),
-         (-4, 1, 4, true),
-         (-5, 1, 5, true);
+  values (-1, -1, -1, true),
+   	     (-2, -1, -2, true),
+         (-3, -1, -3, true),
+         (-4, -1, -4, true),
+         (-5, -1, -5, true);
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
@@ -178,50 +175,50 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 
 -- toinen kysely valtakunnallista vertailutietoa varten
 
-insert into kysely (voimassa_alkupvm, nimi_fi, nimi_sv, selite_fi, koulutustoimija, tila)
-  values (to_date('2016-01-04', 'YYYY-MM-DD'), 'testikysely', 'test frågande', '-', '2325448-4', 'julkaistu');
+insert into kysely (kyselyid, voimassa_alkupvm, nimi_fi, nimi_sv, selite_fi, koulutustoimija, tila)
+  values (-2, to_date('2016-01-04', 'YYYY-MM-DD'), 'testikysely', 'test frågande', '-', '2325448-4', 'julkaistu');
 
 insert into kysely_kysymys (kyselyid, kysymysid)
-  values (2, 7312034),
-         (2, 7312035),
-         (2, 7312036),
-         (2, 7312037),
-         (2, 7312038),
-         (2, 7312039),
-         (2, 7312040),
-         (2, 7312017),
-         (2, 7312018),
-         (2, 7312019),
-         (2, 7312020),
-         (2, 7312021),
-         (2, 7312022),
-         (2, 7312023),
-         (2, 7312024),
-         (2, 7312025),
-         (2, 7312026);
+  values (-2, 7312034),
+         (-2, 7312035),
+         (-2, 7312036),
+         (-2, 7312037),
+         (-2, 7312038),
+         (-2, 7312039),
+         (-2, 7312040),
+         (-2, 7312017),
+         (-2, 7312018),
+         (-2, 7312019),
+         (-2, 7312020),
+         (-2, 7312021),
+         (-2, 7312022),
+         (-2, 7312023),
+         (-2, 7312024),
+         (-2, 7312025),
+         (-2, 7312026);
                   
 
 insert into kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys)
-  values (2, 3341884, 0),
-   	     (2, 3341886, 1);
+  values (-2, 3341884, 0),
+   	     (-2, 3341886, 1);
 
-insert into kyselykerta (kyselyid, nimi, voimassa_alkupvm, lukittu)
-  values (2, 'testikerta', to_date('2016-01-04', 'YYYY-MM-DD'), false);
+insert into kyselykerta (kyselykertaid, kyselyid, nimi, voimassa_alkupvm, lukittu)
+  values (-2, -2, 'testikerta', to_date('2016-01-04', 'YYYY-MM-DD'), false);
 
 -- kyselykertaid sekvenssi alkaa numerosta 1 kun kanta luodaan.
-insert into vastaajatunnus (kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, voimassa_alkupvm, suorituskieli)
-  values (2, 1, 'X00001', '3XXHJF', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (2, 1, 'X00001', 'JXHYJE', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (2, 1, 'X00001', 'JXTA7A', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-	     (2, 1, null, 'CXEMTC', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (2, 1, 'X00001', 'RXMC7H', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'sv');
+insert into vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, voimassa_alkupvm, suorituskieli)
+  values (-6, -2, 1, 'X00001', '3XXHJF', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-7, -2, 1, 'X00001', 'JXHYJE', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-8, -2, 1, 'X00001', 'JXTA7A', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+	     (-9, -2, 1, null, 'CXEMTC', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-10, -2, 1, 'X00001', 'RXMC7H', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'sv');
    	     
 insert into vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut)
-  values (-10, 2, 6, true),
-   	     (-20, 2, 7, true),
-         (-30, 2, 8, true),
-         (-40, 2, 9, true),
-         (-50, 2, 10, true);
+  values (-10, -2, -6, true),
+   	     (-20, -2, -7, true),
+         (-30, -2, -8, true),
+         (-40, -2, -9, true),
+         (-50, -2, -10, true);
 
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
@@ -328,49 +325,48 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 	
 -- suoritusvaiheen kysely 
 
-insert into kysely (voimassa_alkupvm, nimi_fi, nimi_sv, selite_fi, koulutustoimija, tila)
-  values (to_date('2016-01-04', 'YYYY-MM-DD'), 'testikysely, suoritusvaihe', 'test frågande, görande', '-', '2325448-4', 'julkaistu');
+insert into kysely (kyselyid, voimassa_alkupvm, nimi_fi, nimi_sv, selite_fi, koulutustoimija, tila)
+  values (-3, to_date('2016-01-04', 'YYYY-MM-DD'), 'testikysely, suoritusvaihe', 'test frågande, görande', '-', '2325448-4', 'julkaistu');
 
 insert into kysely_kysymys (kyselyid, kysymysid)
-  values (3, 7312027),
-         (3, 7312028),
-         (3, 7312029),
-         (3, 7312030),
-         (3, 7312031),
-         (3, 7312032),
-         (3, 7312033),
-         (3, 7312008),
-         (3, 7312009),
-         (3, 7312010),
-         (3, 7312011),
-         (3, 7312012),
-         (3, 7312013),
-         (3, 7312014),
-         (3, 7312015),
-         (3, 7312016);
+  values (-3, 7312027),
+         (-3, 7312028),
+         (-3, 7312029),
+         (-3, 7312030),
+         (-3, 7312031),
+         (-3, 7312032),
+         (-3, 7312033),
+         (-3, 7312008),
+         (-3, 7312009),
+         (-3, 7312010),
+         (-3, 7312011),
+         (-3, 7312012),
+         (-3, 7312013),
+         (-3, 7312014),
+         (-3, 7312015),
+         (-3, 7312016);
                   
 
 insert into kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys)
-  values (3, 3341885, 0),
-   	     (3, 3341887, 1);
+  values (-3, 3341885, 0),
+   	     (-3, 3341887, 1);
 
-insert into kyselykerta (kyselyid, nimi, voimassa_alkupvm, lukittu)
-  values (3, 'testikerta', to_date('2016-01-04', 'YYYY-MM-DD'), false);
+insert into kyselykerta (kyselykertaid, kyselyid, nimi, voimassa_alkupvm, lukittu)
+  values (-3, -3, 'testikerta', to_date('2016-01-04', 'YYYY-MM-DD'), false);
 
--- kyselykertaid sekvenssi alkaa numerosta 1 kun kanta luodaan.
-insert into vastaajatunnus (kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, voimassa_alkupvm, suorituskieli)
-  values (3, 1, 'X00002', 'AXXHJF', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (3, 1, 'X00002', 'AXHYJE', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (3, 1, 'X00002', 'AXTA7A', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-	     (3, 1, null, 'AXEMTC', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
-   	     (3, 1, 'X00002', 'AXMC7H', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'sv');
+insert into vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, voimassa_alkupvm, suorituskieli)
+  values (-11, -3, 1, 'X00002', 'AXXHJF', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-12, -3, 1, 'X00002', 'AXHYJE', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-13, -3, 1, 'X00002', 'AXTA7A', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+	     (-14, -3, 1, null, 'AXEMTC', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'fi'),
+   	     (-15, -3, 1, 'X00002', 'AXMC7H', 1, false, to_date('2016-01-04', 'YYYY-MM-DD'), 'sv');
    	     
 insert into vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut)
-  values (-100, 3, 11, true),
-   	     (-101, 3, 12, true),
-         (-102, 3, 13, true),
-         (-103, 3, 14, true),
-         (-104, 3, 15, true);
+  values (-100, -3, -11, true),
+   	     (-101, -3, -12, true),
+         (-102, -3, -13, true),
+         (-103, -3, -14, true),
+         (-104, -3, -15, true);
   
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
