@@ -26,10 +26,12 @@
 
   (POST "/" request
     :body-params [fi :- s/Str
-                  sv :- s/Str]
+                  sv :- s/Str
+                  en :- s/Str]
     :kayttooikeus :tiedote-muokkaus
     (response-or-404 (arkisto/poista-ja-lisaa! {:fi fi
-                                                :sv sv})))
+                                                :sv sv
+                                                :en en})))
 
   (DELETE "/" []
     :kayttooikeus :tiedote-muokkaus
