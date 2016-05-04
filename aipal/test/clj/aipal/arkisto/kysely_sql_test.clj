@@ -2,9 +2,19 @@
   (:require [clojure.test :refer :all]
             [aipal.arkisto.kysely :refer :all]
             [aipal.sql.test-data-util :as test-data]
-            [aipal.sql.test-util :refer [tietokanta-fixture]]))
+            [aipal.sql.test-util :refer [tietokanta-fixture]]
+            [aipal.arkisto.kyselykerta-sql-test :refer [lisaa-kyselykerta-ilman-vastaajia!]]))
 
 (use-fixtures :each tietokanta-fixture)
+
+(deftest ^:integraatio hae-kaikki-tyhja-kyselykerta
+  (let [kysely       (test-data/lisaa-kysely!)
+        kyselykerta2 (lisaa-kyselykerta-ilman-vastaajia! {} kysely)
+        kyselytulokset (hae-kaikki (:koulutustoimija kysely))]
+    (is (= 0 (:vastaajatunnuksia (first kyselytulokset))))
+    (is (= 0 (:vastaajia (first kyselytulokset))))
+    (is (= 1 (count kyselytulokset)))))
+
 
 (deftest ^:integraatio hae-ntm-kyselyt-test
   (let [kysymysryhma     (test-data/lisaa-kysymysryhma! {:ntm_kysymykset true
