@@ -51,12 +51,12 @@
        :nimi_fi "Dummy"}))
   (sql/insert taulut/kysely
     (sql/values
-      {:kyselyid -1
+      {:kyselyid -1000
        :nimi_fi "Dummy"
        :koulutustoimija "0000000-0"}))
   (sql/insert taulut/kyselykerta
-    (sql/values {:nimi "Dummy", :kyselyid -1, :voimassa_alkupvm (sql/raw "now()"),
-                 :kyselykertaid -1})))
+    (sql/values {:nimi "Dummy", :kyselyid -1000, :voimassa_alkupvm (sql/raw "now()"),
+                 :kyselykertaid -1000})))
 
 (defn ^:test-api tyhjenna-testidata!
   [oid]

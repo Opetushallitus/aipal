@@ -28,12 +28,12 @@
   (testing "hae palauttaa vastaajatunnuksen, jolla on annettu id"
     (let [k (:kyselykertaid (lisaa-kyselykerta!))]
       (lisaa! {:kyselykertaid k
-               :vastaajatunnusid -1
+               :vastaajatunnusid 1
                :vastaajien_lkm 11})
       (lisaa! {:kyselykertaid k
-               :vastaajatunnusid -2
+               :vastaajatunnusid 2
                :vastaajien_lkm 22})
-      (is (= (:vastaajien_lkm (hae k -1))
+      (is (= (:vastaajien_lkm (hae k 1))
              11)))))
 
 (deftest ^:integraatio lisays

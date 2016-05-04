@@ -50,19 +50,19 @@
 (defn ^:private muodosta-opintoalavertailun-parametrit [koulutusalat]
   (if (and (seq koulutusalat) (apply = koulutusalat))
     {:tutkintorakennetaso "koulutusala"
-     :koulutusalat [(first koulutusalat)]}
+     :koulutusalat [(first koulutusalat)]} ; TODO: First?
     (muodosta-koulutusalavertailun-parametrit)))
 
 (defn ^:private muodosta-tutkintovertailun-parametrit [opintoalat koulutusalat]
   (if (and (seq opintoalat) (apply = opintoalat))
     {:tutkintorakennetaso "opintoala"
-     :opintoalat [(first opintoalat)]}
+     :opintoalat [(first opintoalat)]} ; TODO: First?
     (muodosta-opintoalavertailun-parametrit koulutusalat)))
 
 (defn ^:private muodosta-koulutustoimijakohtaisen-vertailutiedon-parametrit [tutkinnot opintoalat koulutusalat]
   (if (and (seq tutkinnot) (apply = tutkinnot))
     {:tutkintorakennetaso "tutkinto"
-     :tutkinnot [(first tutkinnot)]}
+     :tutkinnot [(first tutkinnot)]} ; TODO: First? Entä ne muut tutkinnot? 
     (muodosta-tutkintovertailun-parametrit opintoalat koulutusalat)))
 
 (defn ^:private tutkintojen-vertailutiedon-parametrit [parametrit]
