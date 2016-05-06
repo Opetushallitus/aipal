@@ -95,46 +95,46 @@
                                  :nimi "Kyselykerta 1"
                                  :voimassa_alkupvm (paivamaara "2014-05-28")
                                  :voimassa_loppupvm (paivamaara "2014-05-29")}]
-                  :kysymysryhma [{:kysymysryhmaid 1
+                  :kysymysryhma [{:kysymysryhmaid 10
                                   :koulutustoimija "0000000-0"}]
                   :kysymys [{:kysymysid 1
-                             :kysymysryhmaid 1
+                             :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 1"
                              :jarjestys 0
                              :vastaustyyppi "kylla_ei_valinta"}
                             {:kysymysid 2
-                             :kysymysryhmaid 1
+                             :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 2"
                              :jarjestys 1
                              :vastaustyyppi "kylla_ei_valinta"}
                             {:kysymysid 3
-                             :kysymysryhmaid 1
+                             :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 3"
                              :jarjestys 2
                              :max_vastaus 500
                              :vastaustyyppi "vapaateksti"}
                             {:kysymysid 4
-                             :kysymysryhmaid 1
+                             :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 4"
                              :jarjestys 3
                              :vastaustyyppi "asteikko"}
                             {:kysymysid 5
-                             :kysymysryhmaid 1
+                             :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 5"
                              :jarjestys 4
                              :vastaustyyppi "monivalinta"}
                             {:kysymysid 6
-                             :kysymysryhmaid 1
+                             :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 6"
                              :jarjestys 5
                              :vastaustyyppi "likert_asteikko"}
                             {:kysymysid 99
-                             :kysymysryhmaid 1
+                             :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 99: ei mukana kyselyssä"
                              :jarjestys 99
                              :vastaustyyppi "kylla_ei_valinta"}]
                   :kysely-kysymysryhma [{:kyselyid 1
-                                         :kysymysryhmaid 1
+                                         :kysymysryhmaid 10
                                          :jarjestys 1}]
                   :kysely-kysymys [{:kyselyid 1 :kysymysid 1}
                                    {:kyselyid 1 :kysymysid 2}
