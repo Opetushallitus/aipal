@@ -75,7 +75,7 @@
 
 (def ^:private kysymysryhma-tiedot {:luo-fn kysymysryhma/lisaa!
                                     :poista-fn #(kysymysryhma/poista! (:kysymysryhmaid %))
-                                    :default (for [i (iterate inc 1)]
+                                    :default (for [i (iterate inc 10)] ; valtakunnalliset vanhat kysymysryhmät ovat id-numeroilla 1-4
                                                {:nimi_fi (str "Kysymysryhma " i)})})
 
 (def ^:private monivalintavaihtoehto-tiedot {:luo-fn monivalintavaihtoehto/lisaa!

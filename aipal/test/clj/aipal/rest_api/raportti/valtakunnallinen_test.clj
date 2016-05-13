@@ -19,22 +19,15 @@
 
 (deftest ^:integraatio muodosta-vertailuraportti
   (testing "bla bla bla"
-    (println jsonni)
     (let [response (-> (session)
                      (peridot/request "/api/raportti/valtakunnallinen"
                                       :request-method :post
                                       :body jsonni)
                      :response)]
-      (println response)
-      (is (= (:status response) 200))
-      (println response))))
-;      (is (= (map #(select-keys % [:kyselykertaid :vastaajien_lkm])
- ;                 (body-json response))
- ;            [{:kyselykertaid (:kyselykertaid kyselykerta)
- ;              :vastaajien_lkm 7}])))))
-
+;      (println response)
+      (is (= (:status response) 200))))) 
       
-(deftest muodosta-tutkintovertailun-parametrit-test
+(deftest ^:integraatio muodosta-tutkintovertailun-parametrit-test
   (are [opintoalat koulutusalat odotettu-tulos]
     (= (#'valtakunnallinen/muodosta-tutkintovertailun-parametrit opintoalat koulutusalat)
        odotettu-tulos)
