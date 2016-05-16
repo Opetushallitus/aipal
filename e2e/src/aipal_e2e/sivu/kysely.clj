@@ -27,6 +27,7 @@
 (defn valitse-kysymysryhma [nimi]
   (odota-kunnes (w/present? {:css ".e2e-valittavat-kysymysryhmat"}))
   (odota-angular-pyyntoa)
+  (w/implicit-wait 3000)
   (w/select-option {:css ".e2e-valittavat-kysymysryhmat"} {:text nimi}))
 
 (defn lisaa-valittu-kysymysryhma []
