@@ -15,6 +15,14 @@
        "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
        "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
        "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))
+
+(def kehitysraportti-json
+  (str "{\"kieli\":\"fi\",\"tyyppi\":\"kehitys\",\"tutkintorakennetaso\":\"tutkinto\",\"koulutusalat\":[],\"opintoalat\":[],"
+       "\"tutkinnot\":[\"X00001\"],"
+       "\"koulutuksen_jarjestajat\":[],\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
+       "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
+       "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
+       "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))
        
 (defn poista-luontipvm-kentat [raportti]
   (clojure.walk/postwalk #(if (map? %) (dissoc % :luontipvm) %) raportti))
@@ -31,11 +39,21 @@
       (let [oikea-raportti (clojure.edn/read-string (slurp "test/resources/vertailuraportin-perustapaus.edn"))]
         (is (= (poista-luontipvm-kentat oikea-raportti) (poista-luontipvm-kentat vastaus)))        
         ; (spit "filetto" (with-out-str (clojure.pprint/pprint vastaus)))
-        (clojure.pprint/pprint vastaus)
-        (clojure.pprint/pprint oikea-raportti)
-        )
-        )))
+        ))))
       
+(deftest ^:integraatio muodosta-kehitysraportti
+  (testing "Kehitysraportin perustapaus"
+    (let [response (-> (session)
+                     (peridot/request "/api/raportti/valtakunnallinen"
+                                      :request-method :post
+                                      :body kehitysraportti-json)
+                     :response)
+          vastaus (body-json response)]
+      (is (= (:status response) 200))
+      (let [oikea-raportti (clojure.edn/read-string (slurp "test/resources/kehitysraportin-perustapaus.edn"))]
+        (is (= (poista-luontipvm-kentat oikea-raportti) (poista-luontipvm-kentat vastaus)))        
+        ))))
+
 (deftest ^:integraatio muodosta-tutkintovertailun-parametrit-test
   (are [opintoalat koulutusalat odotettu-tulos]
     (= (#'valtakunnallinen/muodosta-tutkintovertailun-parametrit opintoalat koulutusalat)
