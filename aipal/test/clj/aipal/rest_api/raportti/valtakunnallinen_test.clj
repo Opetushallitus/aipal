@@ -15,17 +15,26 @@
        "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
        "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
        "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))
-
-
+       
+(defn poista-luontipvm-kentat [raportti]
+  (clojure.walk/postwalk #(if (map? %) (dissoc % :luontipvm) %) raportti))
+  
 (deftest ^:integraatio muodosta-vertailuraportti
   (testing "vertailuraportin perustapaus"
     (let [response (-> (session)
                      (peridot/request "/api/raportti/valtakunnallinen"
                                       :request-method :post
                                       :body perustapaus-json)
-                     :response)]
-;      (println response)
-      (is (= (:status response) 200))))) 
+                     :response)
+          vastaus (body-json response)]
+      (is (= (:status response) 200))
+      (let [oikea-raportti (clojure.edn/read-string (slurp "test/resources/vertailuraportin-perustapaus.edn"))]
+        (is (= (poista-luontipvm-kentat oikea-raportti) (poista-luontipvm-kentat vastaus)))        
+        ; (spit "filetto" (with-out-str (clojure.pprint/pprint vastaus)))
+        (clojure.pprint/pprint vastaus)
+        (clojure.pprint/pprint oikea-raportti)
+        )
+        )))
       
 (deftest ^:integraatio muodosta-tutkintovertailun-parametrit-test
   (are [opintoalat koulutusalat odotettu-tulos]
