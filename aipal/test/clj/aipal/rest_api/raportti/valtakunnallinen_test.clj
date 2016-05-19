@@ -8,7 +8,7 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-(def jsonni
+(def perustapaus-json
   (str "{\"kieli\":\"fi\",\"tyyppi\":\"vertailu\",\"tutkintorakennetaso\":\"tutkinto\",\"koulutusalat\":[],\"opintoalat\":[],"
        "\"tutkinnot\":[\"X00002\",\"X00001\"],"
        "\"koulutuksen_jarjestajat\":[],\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
@@ -18,11 +18,11 @@
 
 
 (deftest ^:integraatio muodosta-vertailuraportti
-  (testing "bla bla bla"
+  (testing "vertailuraportin perustapaus"
     (let [response (-> (session)
                      (peridot/request "/api/raportti/valtakunnallinen"
                                       :request-method :post
-                                      :body jsonni)
+                                      :body perustapaus-json)
                      :response)]
 ;      (println response)
       (is (= (:status response) 200))))) 
