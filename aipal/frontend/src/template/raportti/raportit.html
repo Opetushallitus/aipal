@@ -24,6 +24,7 @@
          disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']"
          uib-popover="{{ 'raportit.kehitysraportti_ohje' | i18n }}" popover-trigger="mouseenter" popover-placement="bottom">
       <h2 class="hidden-print">{{ 'raportit.tarkasteltava_tutkinto' | i18n }} <ohje tunniste="kehitysraportti"></ohje></h2>
+      <ng-include class="hidden-print" src="'template/raportti/osat/kehitysraportin-tyyppi.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkintotyyppi.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>

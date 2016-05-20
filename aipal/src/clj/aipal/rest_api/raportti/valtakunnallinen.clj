@@ -164,11 +164,12 @@
        :virheelliset virheelliset})))
 
 (defn muodosta-ketjutettu [parametrit asetukset]
-  (for [tutkinto (:tutkinnot parametrit)]
-    (-> parametrit
-      (assoc :tutkinnot [tutkinto])
-      (assoc :tyyppi "kehitys")
-      (muodosta-raportit asetukset))))
+  {:raportit 
+   (for [tutkinto (:tutkinnot parametrit)]
+     (-> parametrit
+       (assoc :tutkinnot [tutkinto])
+       (assoc :tyyppi "kehitys")
+       (muodosta-raportit asetukset)))})
 ;      (muodosta-raportit (assoc parametrit :tutkinnot (vector tutkinto)) asetukset)))
 
         
