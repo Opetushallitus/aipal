@@ -15,6 +15,7 @@
 (ns aipal.integraatio.koodistopalvelu
  (:require [clj-time.core :as time]
            [aipal.arkisto.tutkinto :as tutkinto-arkisto]
+           [aipal.arkisto.tutkintotyyppi :as tutkintotyyppi-arkisto]
            [aipal.arkisto.koulutusala :as koulutusala-arkisto]
            [aipal.arkisto.opintoala :as opintoala-arkisto]
            [clojure.set :refer [intersection difference rename-keys]]
@@ -40,6 +41,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
        :voimassa_loppupvm (some-> (:voimassaLoppuPvm koodi) parse-ymd)
        :koodiUri (:koodiUri koodi)
        arvokentta (:koodiArvo koodi)})))
+
+(defn koodi->tutkintotyyppi [koodi]
+  (koodi->kasite koodi :tutkintotyyppi))
 
 (defn koodi->tutkinto [koodi]
   (koodi->kasite koodi :tutkintotunnus))
@@ -123,6 +127,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   [asetukset koodisto versio]
   (koodi->kasite (get-json-from-url (str (:url asetukset) koodisto "?koodistoVersio=" versio)) :koodisto))
 
+
+(defn hae-tutkintotyypit
+  [asetukset]
+  (map koodi->tutkintotyyppi (hae-koodit asetukset "tutkintotyyppi")))
+
 (defn hae-tutkinnot
   [asetukset]
   (let [koodistoversio (koodiston-uusin-versio asetukset "koulutus")]
@@ -151,6 +160,16 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                    (nil? vanha-arvo) diff
                    (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
                    :else diff)])))
+
+(defn hae-tutkintotyyppi-muutokset
+  [asetukset]
+  (let [tutkintotyypi_kentat [:tutkintotyyppi :nimi_fi :nimi_sv :nimi_en]
+        vanhat (into {} (for [tutkintotyyppi (tutkintotyyppi-arkisto/hae-kaikki)]
+                          [(:tutkintotyyppi tutkintotyyppi) (select-keys tutkintotyyppi tutkintotyypi_kentat)]))
+        uudet (map-by :tutkintotyyppi
+                      (map #(select-keys % tutkintotyypi_kentat) (hae-tutkintotyypit asetukset)))]
+    (muutokset uudet vanhat)))
+
 
 (defn hae-tutkinto-muutokset
   [asetukset]
@@ -267,10 +286,33 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (tallenna-uudet-tutkinnot! (filter :opintoala uudet))
     (tallenna-muuttuneet-tutkinnot! muuttuneet)))
 
+(defn ^:integration-api tallenna-uudet-tutkintotyypit! [tutkintotyypit]
+  (doseq [tutkintotyyppi tutkintotyypit]
+    (log/info "Lisätään tutkintotyyppi" (:tutkintotyyppi tutkintotyyppi))
+    (tutkintotyyppi-arkisto/lisaa! tutkintotyyppi)))
+
+(defn ^:integration-api tallenna-muuttuneet-tutkintotyypit! [tutkintotyypit]
+  (doseq [tutkintotyyppi tutkintotyypit
+          :let [tunnus (:tutkintotyyppi tutkintotyyppi)
+                tutkintotyyppi (dissoc tutkintotyyppi :tutkintotyyppi)]]
+    (log/info "Päivitetään tutkintotyyppi" tunnus ", muutokset:" tutkintotyyppi)
+    (tutkintotyyppi-arkisto/paivita! tunnus tutkintotyyppi)))
+
+(defn ^:integration-api tallenna-tutkintotyypit! [tutkintotyypit]
+  (let [uudet (for [[tunnus tutkintotyyppi] tutkintotyypit
+                    :when (and (vector? tutkintotyyppi) (first tutkintotyyppi))]
+                (first tutkintotyyppi))
+        muuttuneet (for [[tunnus tutkintotyyppi] tutkintotyypit
+                         :when (map? tutkintotyyppi)]
+                     (assoc (uudet-arvot tutkintotyyppi) :tutkintotyyppi tunnus))]
+    (tallenna-uudet-tutkintotyypit! (filter :tutkintotyyppi uudet))
+    (tallenna-muuttuneet-tutkintotyypit! muuttuneet)))
+
 (defn ^:integration-api paivita-tutkinnot! [asetukset]
   (try
     (db/transaction
       (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")
+      (tallenna-tutkintotyypit! (hae-tutkintotyyppi-muutokset asetukset))
       (tallenna-koulutusalat! (hae-koulutusala-muutokset asetukset))
       (tallenna-opintoalat! (hae-opintoala-muutokset asetukset))
       (tallenna-tutkinnot! (hae-tutkinto-muutokset asetukset))
