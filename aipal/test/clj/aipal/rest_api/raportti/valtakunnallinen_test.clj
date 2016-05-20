@@ -51,10 +51,9 @@
                                     :body input-json)
                    :response)]
     (is (= (:status response) 200))
-    (let [_ (println "response " response)
-          vastaus (body-json response)]
+    (let [vastaus (body-json response)]
       (let [oikea-raportti (clojure.edn/read-string (slurp output-file))]
-       ; (spit "filetto" (with-out-str (clojure.pprint/pprint vastaus)))
+        (spit "filetto" (with-out-str (clojure.pprint/pprint vastaus)))
         (is (= (poista-luontipvm-kentat oikea-raportti) (poista-luontipvm-kentat vastaus)))))))
  
 
@@ -67,12 +66,12 @@
     (tarkista-valtakunnallinen-raportti kehitysraportti-json "test-resources/kehitysraportin-perustapaus.edn")))
 
 (deftest ^:integraatio muodosta-kehitysraportti-ei-vastaajia
-  (testing "Kehitysraportin perustapaus"
+  (testing "Kehitysraportti, tutkintorajauksella ei löydy tarpeeksi vastaajia"
     (tarkista-valtakunnallinen-raportti kehitysraportti-ei-vastaajia-json "test-resources/kehitysraportti-eivastaajia.edn")))
 
 (deftest ^:integraatio muodosta-ketjutettu-kehitysraportti
   (testing "Kehitysraportin ketjuttaminen"
-    (tarkista-valtakunnallinen-raportti kehitysraportti-ketjutettu-json "test-resources/kehitysraportin-perustapaus.edn")))
+    (tarkista-valtakunnallinen-raportti kehitysraportti-ketjutettu-json "test-resources/kehitysraportti-ketjutettu.edn")))
 
 (deftest ^:integraatio muodosta-tutkintovertailun-parametrit-test
   (are [opintoalat koulutusalat odotettu-tulos]
