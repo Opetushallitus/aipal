@@ -23,12 +23,12 @@
     (sql/order :tutkintotyyppi :ASC)
     sql/exec))
 
-(defn lisaa!
+(defn ^:integration-api lisaa!
   [tutkintotyyppi]
   (sql/insert taulut/tutkintotyyppi
     (sql/values tutkintotyyppi)))
 
-(defn paivita!
+(defn ^:integration-api paivita!
   [tutkintotyyppi tiedot]
   (sql/update taulut/tutkintotyyppi
     (sql/set-fields tiedot)

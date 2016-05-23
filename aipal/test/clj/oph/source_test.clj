@@ -21,9 +21,7 @@
   (is (empty? (vastaavat-muodot "src/clj" audit-log-kutsu-puuttuu?
                 :ohita ["src/clj/aipal/auditlog.clj"
                         "src/clj/aipal/rest_api/kysely.clj"
-                        "src/clj/aipal/rest_api/kysymysryhma.clj"
-                        "src/clj/aipal/rest_api/avopvastaajatunnus.clj"
-                        "src/clj/aipal/arkisto/vastaajatunnus.clj"]))))
+                        "src/clj/aipal/rest_api/kysymysryhma.clj"]))))
 
 (deftest js-debug-test
   (is (empty? (js-console-log-calls))))

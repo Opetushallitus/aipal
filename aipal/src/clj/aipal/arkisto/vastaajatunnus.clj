@@ -169,10 +169,11 @@
 
 ;;AVOP.FI FIXME: binding manually to INTEGRAATIO user (check if that is right)
 (defn lisaa-avopfi! [vastaajatunnus]
-    (doall
-      (for [tunnus (->> (luo-tunnuksia 6)
-                     (remove vastaajatunnus-olemassa?)
-                     (take 1))]
+  (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
+  (doall
+    (for [tunnus (->> (luo-tunnuksia 6)
+                   (remove vastaajatunnus-olemassa?)
+                   (take 1))]
 
       (with-kayttaja integraatio-uid nil nil (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))))))
 ;;END AVOP.FI
