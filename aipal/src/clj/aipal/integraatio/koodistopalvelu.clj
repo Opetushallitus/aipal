@@ -116,12 +116,10 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   [asetukset tutkinto]
   (let [alakoodit (hae-alakoodit asetukset tutkinto)
         opintoala (some-value opintoala-koodi? alakoodit)
-        tyyppi (some-value tyyppikoodi? alakoodit)
-        tutkintotyyppi (some-value tutkintotyyppikoodi? alakoodit)]
+        tyyppi (some-value tyyppikoodi? alakoodit)]
     (assoc tutkinto
            :opintoala (:koodiArvo opintoala)
-           :tyyppi (:koodiArvo tyyppi)
-           :tutkintotyyppi (tutkintotyyppikoodi->tutkintotyyppi tutkintotyyppi))))
+           :tutkintotyyppi (:koodiArvo tyyppi))))
 
 (defn hae-koodisto
   [asetukset koodisto versio]
@@ -173,12 +171,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-tutkinto-muutokset
   [asetukset]
-  (let [tutkinto-kentat [:nimi_fi :nimi_sv :nimi_en :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala]
+  (let [tutkinto-kentat [:nimi_fi :nimi_sv :nimi_en :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala :tutkintotyyppi]
         vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
                           [(:tutkintotunnus tutkinto) (select-keys tutkinto tutkinto-kentat)]))
         uudet (->> (hae-tutkinnot asetukset)
                 (map (partial lisaa-alakoodien-data asetukset))
-                (filter (comp #{"02" "03"} :tyyppi))
                 (map #(select-keys % tutkinto-kentat))
                 (map-by :tutkintotunnus))]
     (muutokset uudet vanhat)))
