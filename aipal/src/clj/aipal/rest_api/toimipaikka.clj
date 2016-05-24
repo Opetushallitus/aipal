@@ -17,7 +17,7 @@
             aipal.compojure-util
             [aipal.arkisto.toimipaikka :as toimipaikka]
             [oph.common.util.http-util :refer [response-or-404]]))
-git st
+
 (defroutes reitit
              (GET "/" [oppilaitos]
              	:kayttooikeus :toimipaikka
