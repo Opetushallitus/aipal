@@ -51,7 +51,7 @@
               (sql/where {:oppilaitos oppilaitos})))
 
 
-(defn hae-oppilaitoksen-voimassaolevat-toimipaikat [oppilaitosid]
+(defn hae-oppilaitoksen-voimassaolevat-toimipaikat [oppilaitos]
   (sql/select taulut/toimipaikka
-    (sql/where {:oppilaitos oppilaitosid
+    (sql/where {:oppilaitos oppilaitos
        :voimassa true})))
