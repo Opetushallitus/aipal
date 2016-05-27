@@ -6,4 +6,4 @@
 	url = https://github.com/opetushallitus/clojure-utils
 [submodule "e2e/clojure-utils"]
 	path = e2e/clojure-utils
-	url = git@github.com:Opetushallitus/clojure-utils.git
+	url = https://github.com/Opetushallitus/clojure-utils
