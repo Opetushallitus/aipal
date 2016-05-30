@@ -26,18 +26,30 @@
 (defn halutut-kentat [koodi]
   (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid :lakkautusPvm :kotipaikkaUri]))
 
+
+(defn oppilaitostyyppi [oppilaitostyyppi_uri]
+  (if oppilaitostyyppi_uri (let [matcher (re-matcher #"\d+" oppilaitostyyppi_uri)]
+    (re-find matcher))))
+
+(defn lisaa-oppilaitostyyppi [koodi]
+  (assoc koodi :oppilaitostyyppi (oppilaitostyyppi (:oppilaitosTyyppiUri koodi))))
+
 (defn hae-kaikki [url]
+  (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta")
   (let [oids (get-json-from-url url)]
     (for [oid oids]
-      (halutut-kentat (get-json-from-url (str url oid))))))
+      (lisaa-oppilaitostyyppi (halutut-kentat (get-json-from-url (str url oid)))))))
 
 (defn hae-muuttuneet [url viimeisin-paivitys]
-  (map halutut-kentat
+  (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta")
+  (map (comp lisaa-oppilaitostyyppi halutut-kentat)
        (get-json-from-url (str url "v2/muutetut") {:query-params {"lastModifiedSince" viimeisin-paivitys}})))
 
 ;; Koodistopalvelun oppilaitostyyppikoodistosta
 (def ^:private halutut-tyypit
   #{"oppilaitostyyppi_41" ;; Ammattikorkeakoulut
+    "oppilaitostyyppi_42"
+    "oppilaitostyyppi_43"
     })
 
 (defn ^:private haluttu-tyyppi? [koodi]
@@ -107,7 +119,8 @@
    :www_osoite (www-osoite koodi)
    :oppilaitoskoodi (:oppilaitosKoodi koodi)
    :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
-   :voimassa (voimassa? koodi)})
+   :voimassa (voimassa? koodi)
+   :oppilaitostyyppi (:oppilaitostyyppi koodi)})
 
 (defn ^:private koodi->toimipaikka [koodi]
   {:kunta (kunta koodi)
@@ -134,7 +147,7 @@
 
 (defn ^:private oppilaitoksen-kentat [oppilaitos]
   (when oppilaitos
-    (select-keys oppilaitos (conj yhteiset-kentat :oppilaitoskoodi :koulutustoimija))))
+    (select-keys oppilaitos (conj yhteiset-kentat :oppilaitoskoodi :koulutustoimija :oppilaitostyyppi))))
 
 (defn ^:private toimipaikan-kentat [toimipaikka]
   (when toimipaikka
