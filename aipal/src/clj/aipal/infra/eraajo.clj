@@ -27,7 +27,6 @@
             aipal.infra.eraajo.tutkinnot)
   (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
            aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
-           aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob
            aipal.infra.eraajo.raportointi.PaivitaNakymatJob
            aipal.infra.eraajo.tutkinnot.PaivitaTutkinnotJob))
 
@@ -61,13 +60,6 @@
                             (t/with-identity "daily3")
                             (t/start-now)
                             (t/with-schedule (ajastus asetukset :organisaatiopalvelu)))
-        koul-job (j/build
-                   (j/of-type PaivitaKoulutustoimijoidenTutkinnotJob)
-                   (j/with-identity "paivita-koulutustoimijoiden-tutkinnot"))
-        koul-trigger-daily (t/build
-                             (t/with-identity "daily5")
-                             (t/start-now)
-                             (t/with-schedule (ajastus asetukset :koulutustoimijoiden-tutkinnot)))
         raportointi-job (j/build
                           (j/of-type PaivitaNakymatJob)
                           (j/with-identity "paivita-raportoinnin-nakymat"))
@@ -85,6 +77,5 @@
                             (t/with-schedule (ajastus asetukset :tutkinnot)))]
     (qs/schedule @ajastin ldap-job ldap-trigger-daily)
     (qs/schedule @ajastin org-job org-trigger-daily)
-    (qs/schedule @ajastin koul-job koul-trigger-daily)
     (qs/schedule @ajastin raportointi-job raportointi-trigger)
     (qs/schedule @ajastin tutkinnot-job tutkinnot-trigger)))

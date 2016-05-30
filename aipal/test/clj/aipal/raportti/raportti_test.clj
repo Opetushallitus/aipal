@@ -17,6 +17,7 @@
                {:vaihtoehto-avain "4", :lukumaara 0, :osuus 0} 
                {:vaihtoehto-avain "5", :lukumaara 3, :osuus 60}), 
    :eos_vastaus_sallittu nil, :keskiarvo 4.0000000000000000M, 
+   :kysymys_en nil,
    :jarjestys 10, :vastaajien_lukumaara 5, 
    :kysymysid 7312026, :vastaustyyppi "arvosana", 
    :kysymys_sv "Hur bedömer du att ansökningsskedet lyckades som helhet?", 

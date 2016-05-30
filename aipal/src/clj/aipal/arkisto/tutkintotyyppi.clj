@@ -19,6 +19,17 @@
 (defn hae-kaikki []
   (->
     (sql/select* taulut/tutkintotyyppi)
-    (sql/fields :tutkintotyyppi)
+    (sql/fields :tutkintotyyppi :nimi_fi, :nimi_sv, :nimi_en)
     (sql/order :tutkintotyyppi :ASC)
     sql/exec))
+
+(defn ^:integration-api lisaa!
+  [tutkintotyyppi]
+  (sql/insert taulut/tutkintotyyppi
+    (sql/values tutkintotyyppi)))
+
+(defn ^:integration-api paivita!
+  [tutkintotyyppi tiedot]
+  (sql/update taulut/tutkintotyyppi
+    (sql/set-fields tiedot)
+    (sql/where {:tutkintotyyppi tutkintotyyppi})))

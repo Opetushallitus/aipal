@@ -313,7 +313,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     $scope.raporttiIndeksit = kaavioApurit.raporttiIndeksit;
   }])
 
-  .factory('kyselyValilehti', ['$filter', 'i18n', 'ilmoitus', 'Kysely', 'Raportti', 'raporttiApurit', 'seuranta', function($filter, i18n, ilmoitus, Kysely, Raportti, raporttiApurit, seuranta) {
+  .factory('kyselyValilehti', ['$filter', 'i18n', 'ilmoitus', 'Kysely', 'Raportti', 'raporttiApurit', 'seuranta', 'pvm', function($filter, i18n, ilmoitus, Kysely, Raportti, raporttiApurit, seuranta, pvm) {
     return {
       alusta: function alusta($scope) {
         var suodataKyselyt = function() {
@@ -347,6 +347,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         });
 
         $scope.valitseKysely = function(kysely) {
+          pvm.parsePvm(kysely);
           if(!kysely.valittu) {
             raporttiApurit.poistaKyselyValinnat($scope.kyselyt, $scope.raportti);
           }
@@ -381,7 +382,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     };
   }])
 
-  .factory('kyselykertaValilehti', ['$filter', 'i18n', 'ilmoitus', 'Kyselykerta', 'Raportti', 'raporttiApurit', 'seuranta', function($filter, i18n, ilmoitus, Kyselykerta, Raportti, raporttiApurit, seuranta){
+  .factory('kyselykertaValilehti', ['$filter', 'i18n', 'ilmoitus', 'Kyselykerta', 'Raportti', 'raporttiApurit', 'seuranta', 'pvm', function($filter, i18n, ilmoitus, Kyselykerta, Raportti, raporttiApurit, seuranta, pvm){
     return {
       alusta: function alusta($scope) {
         var suodataKyselykerrat = function() {
@@ -415,6 +416,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         });
 
         $scope.valitseKyselykerta = function(kyselykerta) {
+          pvm.parsePvm(kyselykerta);
           if (!kyselykerta.valittu) {
             raporttiApurit.poistaKyselykertaValinnat($scope.kyselykerrat, $scope.raportti);
           }
