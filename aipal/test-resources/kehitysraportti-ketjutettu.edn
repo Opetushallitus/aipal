@@ -4,17 +4,20 @@
    [{:kysymysryhmaid 3341885,
      :nimi_fi "Näyttötutkintojen taustakysymykset",
      :nimi_sv "Bakgrundsfrågor gällande fristående examina",
+     :nimi_en nil,
      :vastaajien_maksimimaara [6 10],
      :kysymykset
      [{:jakauma
        [{:vaihtoehto_fi "nainen",
          :vaihtoehto_sv "kvinna",
+         :vaihtoehto_en nil,
          :lukumaara [6 10],
          :osuus [100 100],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "mies",
          :vaihtoehto_sv "man",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 1,
@@ -26,23 +29,27 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312027,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Kön",
        :kysymys_fi "Sukupuoli"}
       {:jakauma
        [{:vaihtoehto_fi "suomi",
          :vaihtoehto_sv "finska",
+         :vaihtoehto_en nil,
          :lukumaara [6 8],
          :osuus [100 80],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "ruotsi",
          :vaihtoehto_sv "svenska",
+         :vaihtoehto_en nil,
          :lukumaara [0 2],
          :osuus [0 20],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "muu",
          :vaihtoehto_sv "annat",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 2,
@@ -54,41 +61,48 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312028,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Modersmål",
        :kysymys_fi "Äidinkieli"}
       {:jakauma
        [{:vaihtoehto_fi "19 tai alle",
          :vaihtoehto_sv "19 eller under",
+         :vaihtoehto_en nil,
          :lukumaara [0 2],
          :osuus [0 20],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "20 - 24",
          :vaihtoehto_sv "20 - 24",
+         :vaihtoehto_en nil,
          :lukumaara [6 8],
          :osuus [100 80],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "25 - 34",
          :vaihtoehto_sv "25 - 34",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "35 - 44",
          :vaihtoehto_sv "35 - 44",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 3,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "45 - 54",
          :vaihtoehto_sv "45 - 54",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 4,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "55 tai yli",
          :vaihtoehto_sv "55 eller över",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 5,
@@ -100,17 +114,20 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312029,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Ålder",
        :kysymys_fi "Ikä"}
       {:jakauma
        [{:vaihtoehto_fi "Peruskoulu, keskikoulu tai vastaava",
          :vaihtoehto_sv "Grundskola, mellanskola eller motsvarande",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Lukio/ylioppilastutkinto",
          :vaihtoehto_sv "Gymnasiet/studentexamen",
+         :vaihtoehto_en nil,
          :lukumaara [6 10],
          :osuus [100 100],
          :jarjestys 1,
@@ -119,30 +136,35 @@
          "Ammatillinen tutkinto tai opistoasteen tutkinto",
          :vaihtoehto_sv
          "Yrkesinriktad examen eller examen på institutsnivå",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ammattikorkeakoulututkinto",
          :vaihtoehto_sv "Yrkeshögskoleexamen",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 3,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Yliopistotutkinto",
          :vaihtoehto_sv "Universitetsexamen",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 4,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ulkomailla suoritettu tutkinto",
          :vaihtoehto_sv "Examen som avlagts utomlands",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 5,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ei tutkintoa",
          :vaihtoehto_sv "Ingen examen",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 6,
@@ -154,6 +176,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312030,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Högsta utbildning eller examen som du har avlagt före den examen som nu ska avläggas",
        :kysymys_fi
@@ -161,24 +184,28 @@
       {:jakauma
        [{:vaihtoehto_fi "Ammatin hankkiminen",
          :vaihtoehto_sv "Att skaffa mig ett yrke",
+         :vaihtoehto_en nil,
          :lukumaara [0 1],
          :osuus [0 10],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ammatin vaihtaminen",
          :vaihtoehto_sv "Att byta yrke",
+         :vaihtoehto_en nil,
          :lukumaara [6 9],
          :osuus [100 90],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ammattitaidon kehittäminen",
          :vaihtoehto_sv "Att utveckla min yrkesskicklighet",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Muu peruste",
          :vaihtoehto_sv "Annan grund",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 3,
@@ -190,6 +217,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312031,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Viktigaste orsak till att jag sökte till utbildningen",
        :kysymys_fi
@@ -197,24 +225,28 @@
       {:jakauma
        [{:vaihtoehto_fi "Työssä toisen palveluksessa",
          :vaihtoehto_sv "Arbete i annans tjänst",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Yrittäjä tai itsenäinen ammatinharjoittaja",
          :vaihtoehto_sv "Företagare eller självständig yrkesutövare",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Työtön",
          :vaihtoehto_sv "Arbetslös",
+         :vaihtoehto_en nil,
          :lukumaara [6 6],
          :osuus [100 100],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Opiskelija",
          :vaihtoehto_sv "Studerande",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 3,
@@ -223,6 +255,7 @@
          "Muu tilanne (esimerkiksi varusmies-/siviilipalveluksessa, vanhempainvapaalla, kuntoutuksessa tai muu syy)",
          :vaihtoehto_sv
          "Annan situation (t.ex. bevärings- eller civiltjänst, föräldraledighet, habilitering eller annan orsak)",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 4,
@@ -234,6 +267,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312039,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Vilken var din situation innan du ansökte om att avlägga examen",
        :kysymys_fi
@@ -241,24 +275,28 @@
       {:jakauma
        [{:vaihtoehto_fi "Työssä toisen palveluksessa",
          :vaihtoehto_sv "Arbete i annans tjänst",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Yrittäjä tai itsenäinen ammatinharjoittaja",
          :vaihtoehto_sv "Företagare eller självständig yrkesutövare",
+         :vaihtoehto_en nil,
          :lukumaara [0 4],
          :osuus [0 100],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Työtön",
          :vaihtoehto_sv "Arbetslös",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Opiskelija",
          :vaihtoehto_sv "Studerande",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 3,
@@ -267,6 +305,7 @@
          "Muu tilanne (esimerkiksi varusmies-/siviilipalveluksessa,vanhempainvapaalla, kuntoutuksessa tai muu syy)",
          :vaihtoehto_sv
          "Annan situation (t.ex. bevärings- eller civiltjänst, föräldraledighet, habilitering eller annan orsak)",
+         :vaihtoehto_en nil,
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys 4,
@@ -278,6 +317,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312032,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Hur uppskattar du din kommande situation efter avläggandet av examen?",
        :kysymys_fi
@@ -285,12 +325,14 @@
       {:jakauma
        [{:vaihtoehto_fi "koko tutkinnon suorittaminen",
          :vaihtoehto_sv "avlägga hela examen",
+         :vaihtoehto_en nil,
          :lukumaara [6 7],
          :osuus [100 70],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "tutkinnon osan tai osien suorittaminen",
          :vaihtoehto_sv "avlägga en del/delar av examen",
+         :vaihtoehto_en nil,
          :lukumaara [0 3],
          :osuus [0 30],
          :jarjestys 1,
@@ -302,12 +344,14 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312033,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Mitt mål är att",
        :kysymys_fi "Tavoitteeni on"}],
      :vastaajien_lukumaara [6 10]}
     {:kysymysryhmaid 3341887,
      :nimi_fi "Näyttötutkintojen suorittamisvaiheen kysymykset",
      :nimi_sv "Avläggandet av examen gällande fristående examina",
+     :nimi_en nil,
      :vastaajien_maksimimaara [nil 4],
      :kysymykset
      [{:jakauma
@@ -316,13 +360,15 @@
          :osuus [0 75],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "ei",
          :lukumaara [0 1],
          :osuus [0 25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 1,
        :jatkovastaukset nil,
@@ -330,6 +376,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312008,
        :vastaustyyppi "kylla_ei_valinta",
+       :kysymys_en nil,
        :kysymys_sv
        "En examensdel/examensdelar erkändes direkt på basis av mina tidigare betyg",
        :kysymys_fi
@@ -340,31 +387,36 @@
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0 4],
          :osuus [0 100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 2,
        :jatkovastaukset nil,
@@ -372,6 +424,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312009,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Jag fick tillräckligt med handledning för planeringen av examenstillfällena",
        :kysymys_fi
@@ -382,31 +435,36 @@
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0 4],
          :osuus [0 100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 3,
        :jatkovastaukset nil,
@@ -414,6 +472,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312010,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Mina examenstillfällen ordnades på en arbetsplats eller en plats för inlärning i arbetet",
        :kysymys_fi
@@ -424,31 +483,36 @@
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0 4],
          :osuus [0 100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 4,
        :jatkovastaukset nil,
@@ -456,6 +520,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312011,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Jag visade mitt kunnande till största delen i praktiska arbetsuppgifter",
        :kysymys_fi
@@ -466,13 +531,15 @@
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "ei",
          :lukumaara [0 4],
          :osuus [0 100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 5,
        :jatkovastaukset nil,
@@ -480,6 +547,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312012,
        :vastaustyyppi "kylla_ei_valinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Jag fick berätta min egen uppfattning om hur min examensprestation hade lyckats (självvärdering)",
        :kysymys_fi
@@ -490,13 +558,15 @@
          :osuus [0 75],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "ei",
          :lukumaara [0 1],
          :osuus [0 25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 6,
        :jatkovastaukset nil,
@@ -504,6 +574,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312013,
        :vastaustyyppi "kylla_ei_valinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Grunderna för bedömningen berättades för mig efter avläggandet av examen",
        :kysymys_fi
@@ -514,31 +585,36 @@
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0 4],
          :osuus [0 100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 7,
        :jatkovastaukset nil,
@@ -546,6 +622,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312014,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Avläggandet av examen framskred i enlighet med den personliga skriftliga planen",
        :kysymys_fi
@@ -556,31 +633,36 @@
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0 4],
          :osuus [0 100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 8,
        :jatkovastaukset nil,
@@ -588,6 +670,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312015,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten",
        :kysymys_fi
@@ -598,31 +681,36 @@
          :osuus [0 25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0 1],
          :osuus [0 25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0 0],
          :osuus [0 0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0 2],
          :osuus [0 50],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 9,
        :jatkovastaukset nil,
@@ -630,6 +718,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312016,
        :vastaustyyppi "arvosana",
+       :kysymys_en nil,
        :kysymys_sv
        "Hur bedömer du att avläggandet av examen lyckades som helhet?",
        :kysymys_fi
@@ -667,8 +756,9 @@
    :vastaajien_maksimimaara [6 10],
    :nimet
    [{:nimi_fi "Maanviljelyalan testitutkinto",
-     :nimi_sv "Maanviljelyalan testitutkinto (sv)"}
-    {:nimi_fi "Valtakunnallinen", :nimi_sv "Nationell"}],
+     :nimi_sv "Maanviljelyalan testitutkinto (sv)",
+     :nimi_en nil}
+    {:nimi_fi "Valtakunnallinen", :nimi_sv "Nationell", :nimi_en "National"}],
    :raportoitavia 2,
    :virheelliset []}
   {:luontipvm "2016-05-20T11:30:00.659Z",
@@ -676,17 +766,20 @@
    [{:kysymysryhmaid 3341885,
      :nimi_fi "Näyttötutkintojen taustakysymykset",
      :nimi_sv "Bakgrundsfrågor gällande fristående examina",
+     :nimi_en nil,
      :vastaajien_maksimimaara [10],
      :kysymykset
      [{:jakauma
        [{:vaihtoehto_fi "nainen",
          :vaihtoehto_sv "kvinna",
+         :vaihtoehto_en nil,
          :lukumaara [10],
          :osuus [100],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "mies",
          :vaihtoehto_sv "man",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 1,
@@ -698,23 +791,27 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312027,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Kön",
        :kysymys_fi "Sukupuoli"}
       {:jakauma
        [{:vaihtoehto_fi "suomi",
          :vaihtoehto_sv "finska",
+         :vaihtoehto_en nil,
          :lukumaara [8],
          :osuus [80],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "ruotsi",
          :vaihtoehto_sv "svenska",
+         :vaihtoehto_en nil,
          :lukumaara [2],
          :osuus [20],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "muu",
          :vaihtoehto_sv "annat",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 2,
@@ -726,41 +823,48 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312028,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Modersmål",
        :kysymys_fi "Äidinkieli"}
       {:jakauma
        [{:vaihtoehto_fi "19 tai alle",
          :vaihtoehto_sv "19 eller under",
+         :vaihtoehto_en nil,
          :lukumaara [2],
          :osuus [20],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "20 - 24",
          :vaihtoehto_sv "20 - 24",
+         :vaihtoehto_en nil,
          :lukumaara [8],
          :osuus [80],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "25 - 34",
          :vaihtoehto_sv "25 - 34",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "35 - 44",
          :vaihtoehto_sv "35 - 44",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 3,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "45 - 54",
          :vaihtoehto_sv "45 - 54",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 4,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "55 tai yli",
          :vaihtoehto_sv "55 eller över",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 5,
@@ -772,17 +876,20 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312029,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Ålder",
        :kysymys_fi "Ikä"}
       {:jakauma
        [{:vaihtoehto_fi "Peruskoulu, keskikoulu tai vastaava",
          :vaihtoehto_sv "Grundskola, mellanskola eller motsvarande",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Lukio/ylioppilastutkinto",
          :vaihtoehto_sv "Gymnasiet/studentexamen",
+         :vaihtoehto_en nil,
          :lukumaara [10],
          :osuus [100],
          :jarjestys 1,
@@ -791,30 +898,35 @@
          "Ammatillinen tutkinto tai opistoasteen tutkinto",
          :vaihtoehto_sv
          "Yrkesinriktad examen eller examen på institutsnivå",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ammattikorkeakoulututkinto",
          :vaihtoehto_sv "Yrkeshögskoleexamen",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 3,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Yliopistotutkinto",
          :vaihtoehto_sv "Universitetsexamen",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 4,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ulkomailla suoritettu tutkinto",
          :vaihtoehto_sv "Examen som avlagts utomlands",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 5,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ei tutkintoa",
          :vaihtoehto_sv "Ingen examen",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 6,
@@ -826,6 +938,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312030,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Högsta utbildning eller examen som du har avlagt före den examen som nu ska avläggas",
        :kysymys_fi
@@ -833,24 +946,28 @@
       {:jakauma
        [{:vaihtoehto_fi "Ammatin hankkiminen",
          :vaihtoehto_sv "Att skaffa mig ett yrke",
+         :vaihtoehto_en nil,
          :lukumaara [1],
          :osuus [10],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ammatin vaihtaminen",
          :vaihtoehto_sv "Att byta yrke",
+         :vaihtoehto_en nil,
          :lukumaara [9],
          :osuus [90],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Ammattitaidon kehittäminen",
          :vaihtoehto_sv "Att utveckla min yrkesskicklighet",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Muu peruste",
          :vaihtoehto_sv "Annan grund",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 3,
@@ -862,6 +979,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312031,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Viktigaste orsak till att jag sökte till utbildningen",
        :kysymys_fi
@@ -869,24 +987,28 @@
       {:jakauma
        [{:vaihtoehto_fi "Työssä toisen palveluksessa",
          :vaihtoehto_sv "Arbete i annans tjänst",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Yrittäjä tai itsenäinen ammatinharjoittaja",
          :vaihtoehto_sv "Företagare eller självständig yrkesutövare",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Työtön",
          :vaihtoehto_sv "Arbetslös",
+         :vaihtoehto_en nil,
          :lukumaara [6],
          :osuus [100],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Opiskelija",
          :vaihtoehto_sv "Studerande",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 3,
@@ -895,6 +1017,7 @@
          "Muu tilanne (esimerkiksi varusmies-/siviilipalveluksessa, vanhempainvapaalla, kuntoutuksessa tai muu syy)",
          :vaihtoehto_sv
          "Annan situation (t.ex. bevärings- eller civiltjänst, föräldraledighet, habilitering eller annan orsak)",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 4,
@@ -906,6 +1029,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312039,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Vilken var din situation innan du ansökte om att avlägga examen",
        :kysymys_fi
@@ -913,24 +1037,28 @@
       {:jakauma
        [{:vaihtoehto_fi "Työssä toisen palveluksessa",
          :vaihtoehto_sv "Arbete i annans tjänst",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Yrittäjä tai itsenäinen ammatinharjoittaja",
          :vaihtoehto_sv "Företagare eller självständig yrkesutövare",
+         :vaihtoehto_en nil,
          :lukumaara [4],
          :osuus [100],
          :jarjestys 1,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Työtön",
          :vaihtoehto_sv "Arbetslös",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 2,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "Opiskelija",
          :vaihtoehto_sv "Studerande",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 3,
@@ -939,6 +1067,7 @@
          "Muu tilanne (esimerkiksi varusmies-/siviilipalveluksessa,vanhempainvapaalla, kuntoutuksessa tai muu syy)",
          :vaihtoehto_sv
          "Annan situation (t.ex. bevärings- eller civiltjänst, föräldraledighet, habilitering eller annan orsak)",
+         :vaihtoehto_en nil,
          :lukumaara [0],
          :osuus [0],
          :jarjestys 4,
@@ -950,6 +1079,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312032,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Hur uppskattar du din kommande situation efter avläggandet av examen?",
        :kysymys_fi
@@ -957,12 +1087,14 @@
       {:jakauma
        [{:vaihtoehto_fi "koko tutkinnon suorittaminen",
          :vaihtoehto_sv "avlägga hela examen",
+         :vaihtoehto_en nil,
          :lukumaara [7],
          :osuus [70],
          :jarjestys 0,
          :vaihtoehto-avain nil}
         {:vaihtoehto_fi "tutkinnon osan tai osien suorittaminen",
          :vaihtoehto_sv "avlägga en del/delar av examen",
+         :vaihtoehto_en nil,
          :lukumaara [3],
          :osuus [30],
          :jarjestys 1,
@@ -974,12 +1106,14 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312033,
        :vastaustyyppi "monivalinta",
+       :kysymys_en nil,
        :kysymys_sv "Mitt mål är att",
        :kysymys_fi "Tavoitteeni on"}],
      :vastaajien_lukumaara [10]}
     {:kysymysryhmaid 3341887,
      :nimi_fi "Näyttötutkintojen suorittamisvaiheen kysymykset",
      :nimi_sv "Avläggandet av examen gällande fristående examina",
+     :nimi_en nil,
      :vastaajien_maksimimaara [4],
      :kysymykset
      [{:jakauma
@@ -988,13 +1122,15 @@
          :osuus [75],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "ei",
          :lukumaara [1],
          :osuus [25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 1,
        :jatkovastaukset nil,
@@ -1002,6 +1138,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312008,
        :vastaustyyppi "kylla_ei_valinta",
+       :kysymys_en nil,
        :kysymys_sv
        "En examensdel/examensdelar erkändes direkt på basis av mina tidigare betyg",
        :kysymys_fi
@@ -1012,31 +1149,36 @@
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [4],
          :osuus [100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :keskiarvo [2.0],
        :jarjestys 2,
@@ -1045,6 +1187,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312009,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Jag fick tillräckligt med handledning för planeringen av examenstillfällena",
        :kysymys_fi
@@ -1056,31 +1199,36 @@
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [4],
          :osuus [100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :keskiarvo [4.0],
        :jarjestys 3,
@@ -1089,6 +1237,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312010,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Mina examenstillfällen ordnades på en arbetsplats eller en plats för inlärning i arbetet",
        :kysymys_fi
@@ -1100,31 +1249,36 @@
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [4],
          :osuus [100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :keskiarvo [3.0],
        :jarjestys 4,
@@ -1133,6 +1287,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312011,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Jag visade mitt kunnande till största delen i praktiska arbetsuppgifter",
        :kysymys_fi
@@ -1144,13 +1299,15 @@
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "ei",
          :lukumaara [4],
          :osuus [100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 5,
        :jatkovastaukset nil,
@@ -1158,6 +1315,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312012,
        :vastaustyyppi "kylla_ei_valinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Jag fick berätta min egen uppfattning om hur min examensprestation hade lyckats (självvärdering)",
        :kysymys_fi
@@ -1168,13 +1326,15 @@
          :osuus [75],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "ei",
          :lukumaara [1],
          :osuus [25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :jarjestys 6,
        :jatkovastaukset nil,
@@ -1182,6 +1342,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312013,
        :vastaustyyppi "kylla_ei_valinta",
+       :kysymys_en nil,
        :kysymys_sv
        "Grunderna för bedömningen berättades för mig efter avläggandet av examen",
        :kysymys_fi
@@ -1192,31 +1353,36 @@
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [4],
          :osuus [100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :keskiarvo [3.0],
        :jarjestys 7,
@@ -1225,6 +1391,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312014,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Avläggandet av examen framskred i enlighet med den personliga skriftliga planen",
        :kysymys_fi
@@ -1236,31 +1403,36 @@
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [4],
          :osuus [100],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :keskiarvo [4.0],
        :jarjestys 8,
@@ -1269,6 +1441,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312015,
        :vastaustyyppi "likert_asteikko",
+       :kysymys_en nil,
        :kysymys_sv
        "Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten",
        :kysymys_fi
@@ -1280,31 +1453,36 @@
          :osuus [25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "2",
          :lukumaara [1],
          :osuus [25],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "3",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "4",
          :lukumaara [0],
          :osuus [0],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}
         {:vaihtoehto-avain "5",
          :lukumaara [2],
          :osuus [50],
          :jarjestys nil,
          :vaihtoehto_fi nil,
-         :vaihtoehto_sv nil}],
+         :vaihtoehto_sv nil,
+         :vaihtoehto_en nil}],
        :eos_vastaus_sallittu nil,
        :keskiarvo [3.25],
        :jarjestys 9,
@@ -1313,6 +1491,7 @@
        :vapaatekstivastaukset nil,
        :kysymysid 7312016,
        :vastaustyyppi "arvosana",
+       :kysymys_en nil,
        :kysymys_sv
        "Hur bedömer du att avläggandet av examen lyckades som helhet?",
        :kysymys_fi
@@ -1329,11 +1508,12 @@
      :opintoalat ["X00"]}],
    :vastaajien_lukumaara [10],
    :vastaajien_maksimimaara [10],
-   :nimet [{:nimi_fi "Valtakunnallinen", :nimi_sv "Nationell"}],
+   :nimet [{:nimi_fi "Valtakunnallinen", :nimi_sv "Nationell", :nimi_en "National"}],
    :raportoitavia 1,
    :virheelliset
    [{:nimi_fi "Metsätalousalan testitutkinto",
      :nimi_sv "Metsätalousalan testitutkinto (sv)",
+     :nimi_en nil,
      :luontipvm "2016-05-20T11:30:00.568Z",
      :parametrit
      {:tutkintorakennetaso "tutkinto",
