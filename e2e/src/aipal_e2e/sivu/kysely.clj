@@ -20,6 +20,12 @@
 (defn aseta-kyselyn-nimi-suomeksi [nimi]
   (syota-kenttaan "kysely.nimi_fi" nimi))
 
+; ARVO
+(defn aseta-kyselyn-voimassaolon-alku []
+  (w/click {:xpath "//*[@id='content']/div/form/fieldset[1]/div/button[1]"})
+  (odota-angular-pyyntoa)
+  (w/input-text {:xpath "//*[@id='content']/div/form/fieldset[1]/div/div/ul/li/div/table/tbody/tr[1]/td[2]/button"} " "))
+
 (defn lisaa-kysymysryhma []
   (w/click {:css ".e2e-lisaa-kysymysryhma"})
   (odota-angular-pyyntoa))

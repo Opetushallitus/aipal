@@ -64,6 +64,8 @@
       (kyselyt-sivu/luo-uusi-kysely)
 
       (kysely-sivu/aseta-kyselyn-nimi-suomeksi "Uusi kysely")
+      ; ARVO
+      (kysely-sivu/aseta-kyselyn-voimassaolon-alku)
 
       (kysely-sivu/lisaa-kysymysryhma)
       (kysely-sivu/valitse-kysymysryhma "Uusi kysymysryhmä")
@@ -81,10 +83,17 @@
       (kyselykerta-sivu/aseta-kyselykerran-nimi "Uusi kyselykerta")
       (kyselykerta-sivu/tallenna-kyselykerta)
 
+      ;väliaikainen testi toistoille
+      ;(kyselykerta-sivu/avaa-vastaajatunnukset)
+
       ;; luo vastaajatunnuksia
       (kyselykerta-sivu/luo-vastaajatunnuksia)
       (kyselykerta-sivu/valitse-vastaajatunnusten-maara "5")
-      (kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
+      ; ARVO \
+      ;;(kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
+      (kyselykerta-sivu/valitse-vastaajatunnusten-tutkinto "Sairaanhoitaja, lasten sairaanhoito")
+      (kyselykerta-sivu/valitse-vastaajatunnusten-koulutuksen_jarjestaja "Ruikonperän opistoaste")
+      ; ARVO /
       (kyselykerta-sivu/lisaa-vastaajatunnukset)
 
       ;; vastaa kyselyyn

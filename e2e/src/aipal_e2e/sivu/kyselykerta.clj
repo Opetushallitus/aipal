@@ -29,6 +29,10 @@
   (w/click {:css ".e2e-luo-vastaajatunnuksia"})
   (odota-kunnes (w/present? {:css ".modal-dialog"})))
 
+; ARVO - not active, temporarily used when repeating tests
+(defn avaa-vastaajatunnukset []
+  (w/click {:xpath "/html/body/div[4]/div/div/div[3]/uib-accordion/div/div/div[2]/div/div[2]/div[2]/span[1]/span/a"}))
+
 (defn valitse-vastaajatunnusten-maara [maara]
   (odota-kunnes (w/present? {:css "#vastaajien_maara"}))
   (w/clear "#vastaajien_maara")
@@ -39,10 +43,29 @@
   (odota-kunnes (w/present? {:css ".e2e-vastaajatunnuksen-rahoitusmuoto"}))
   (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" rahoitusmuoto))
 
-(defn valitse-vastaajatunnuksen-tutkinto [tutkinto]
-  (syota-kenttaan "vastaajatunnus.tutkinto" tutkinto)
-  (odota-angular-pyyntoa)
-  (w/click {:css "ul.dropdown-menu li.active"}))
+; ARVO
+(defn valitse-vastaajatunnusten-tutkinto [tutkinto]
+  ; valintalista auki
+  (odota-kunnes (w/present? {:xpath "/html/body/div[1]/div/div/form/div[1]/div[3]/label/div/div/button[2]"}))
+  (w/click {:xpath "/html/body/div[1]/div/div/form/div[1]/div[3]/label/div/div/button[2]"})
+  ; syötä haku
+  (odota-kunnes (w/present? {:xpath "/html/body/div[1]/div/div/form/div[1]/div[3]/label/div/input[1]"}))
+  (w/input-text {:xpath "/html/body/div[1]/div/div/form/div[1]/div[3]/label/div/input[1]"} tutkinto)
+  ;valitse listalta (joka on nyt 1:n mittainen)
+  (odota-kunnes (w/present? {:xpath "/html/body/div[1]/div/div/form/div[1]/div[3]/label/div/ul/li/div[3]/a/div"}))
+  (w/click {:xpath "/html/body/div[1]/div/div/form/div[1]/div[3]/label/div/ul/li/div[3]/a/div"}))
+
+; ARVO
+(defn valitse-vastaajatunnusten-koulutuksen_jarjestaja [jarjestaja]
+  ; valintalista auki
+  (w/click {:xpath "/html/body/div[1]/div/div/form/div[1]/div[5]/label/div/div/button[2]"})
+  ; syötä haku
+  (odota-kunnes (w/present? {:xpath "/html/body/div[1]/div/div/form/div[1]/div[5]/label/div/input"}))
+  (-> (w/find-element {:xpath "/html/body/div[1]/div/div/form/div[1]/div[5]/label/div/input"})
+    (w/input-text jarjestaja))
+  ; valitse listalta (joka on nyt 1:n mittainen)
+  (odota-kunnes (w/present? {:xpath "/html/body/div[1]/div/div/form/div[1]/div[5]/label/div/ul/li/div[3]/a/div"}))
+  (w/click {:xpath "/html/body/div[1]/div/div/form/div[1]/div[5]/label/div/ul/li/div[3]/a/div"}))
 
 (defn lisaa-vastaajatunnukset []
   (w/click (w/find-element-under {:css ".e2e-vastaustunnusten-luonti-dialogi"} {:css ".e2e-direktiivit-tallenna"}))
