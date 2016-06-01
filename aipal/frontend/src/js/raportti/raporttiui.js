@@ -195,8 +195,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     };
 
     var voikoValitaUseita = function() {
-      return $scope.raportti.tyyppi === 'vertailu' || $scope.raportti.tyyppi === 'kysely';
+      return $scope.raportti.tyyppi === 'vertailu' || $scope.raportti.tyyppi === 'kysely' || $scope.raportti.tyyppi === 'kehitys-ketjutettu';
     };
+    
     $scope.raportti.koulutusalat = [];
     $scope.valitseKoulutusala = function(koulutusala) {
       if ($scope.raportti.tutkintorakennetaso === 'koulutusala') {
@@ -207,6 +208,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         $scope.raportti.koulutusalat = _.xor($scope.raportti.koulutusalat, [koulutusala.koulutusalatunnus]);
       }
     };
+    
     $scope.raportti.opintoalat = [];
     $scope.valitseOpintoala = function(opintoala) {
       if ($scope.raportti.tutkintorakennetaso === 'opintoala') {
@@ -217,6 +219,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         $scope.raportti.opintoalat = _.xor($scope.raportti.opintoalat, [opintoala.opintoalatunnus]);
       }
     };
+    
     $scope.raportti.tutkinnot = [];
     $scope.valitseTutkintoja = function(tutkinto) {
       tutkinto.valittu = !tutkinto.valittu;
@@ -229,6 +232,15 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         }
         $scope.valitseTutkintoja(tutkinto);
       }
+    };
+    
+    // OPH-1745: toimii vain kehitysraporteille toistaiseksi
+    $scope.vaihdaKetjutus = function() {
+    	if ($scope.raportti.tyyppi === 'kehitys') {
+    		$scope.raportti.tyyppi = 'kehitys-ketjutettu';
+    	} else {
+    		$scope.raportti.tyyppi = 'kehitys';
+    	}
     };
 
     $scope.raportti.koulutustoimijat = [];

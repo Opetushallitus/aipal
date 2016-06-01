@@ -153,19 +153,34 @@
                                  (raportti/muodosta (assoc parametrit :koulutustoimijat [koulutustoimija])))
                                [(koulutustoimija-valtakunnallinen-raportti parametrit)]])))
 
+(defn muodosta-raportit [parametrit asetukset]
+  (let [kaikki-raportit (for [raportti (luo-raportit (yhteinen/korjaa-numero-avaimet parametrit))]
+                          (ei-riittavasti-vastaajia raportti asetukset))
+        naytettavat (filter (comp nil? :virhe) kaikki-raportit)
+        virheelliset (filter :virhe kaikki-raportit)]
+    (merge (when (seq naytettavat)
+             (yhdistaminen/yhdista-raportit naytettavat))
+      {:raportoitavia (count naytettavat)
+       :virheelliset virheelliset})))
+
+(defn muodosta-ketjutettu [parametrit asetukset]
+  {:raportit 
+   (for [tutkinto (:tutkinnot parametrit)]
+     (-> parametrit
+       (assoc :tutkinnot [tutkinto])
+       (assoc :tyyppi "kehitys")
+       (muodosta-raportit asetukset)))})
+;      (muodosta-raportit (assoc parametrit :tutkinnot (vector tutkinto)) asetukset)))
+
+        
 (defn reitit [asetukset]
   (POST "/" [& parametrit]
     :body [parametrit s/Any]
     :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
     (response-or-404
-      (let [kaikki-raportit (for [raportti (luo-raportit (yhteinen/korjaa-numero-avaimet parametrit))]
-                               (ei-riittavasti-vastaajia raportti asetukset))
-            naytettavat (filter (comp nil? :virhe) kaikki-raportit)
-            virheelliset (filter :virhe kaikki-raportit)]
-        (merge (when (seq naytettavat)
-                 (yhdistaminen/yhdista-raportit naytettavat))
-               {:raportoitavia (count naytettavat)
-                :virheelliset virheelliset})))))
+      (if (= "kehitys-ketjutettu" (:tyyppi parametrit))
+        (muodosta-ketjutettu parametrit asetukset)
+        (muodosta-raportit parametrit asetukset)))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param
