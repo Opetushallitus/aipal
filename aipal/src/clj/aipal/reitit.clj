@@ -29,6 +29,7 @@
             aipal.rest-api.tutkintotyyppi
             aipal.rest-api.koulutustoimija
             aipal.rest-api.tiedote
+            aipal.rest-api.vipunen
             [aipal.infra.kayttaja :refer [*kayttaja*]]
 
             [oph.common.infra.status :refer [status]]))
@@ -91,4 +92,5 @@
     (context "/api/tutkintotyyppi" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
+    (context "/api/vipunen" [] aipal.rest-api.vipunen/reitit)
     (r/not-found "Not found")))
