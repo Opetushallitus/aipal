@@ -11,18 +11,21 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       .when('/vastaus/:tunnus/fi', {
         redirectTo: function (pathParams, path) {
           localStorage.setItem('kieli', 'fi');
+          document.location.reload(true);
           return '/vastaus/' + pathParams.tunnus;
         }
       })
       .when('/vastaus/:tunnus/sv', {
         redirectTo: function (pathParams, path) {
           localStorage.setItem('kieli', 'sv');
+          document.location.reload(true);
           return '/vastaus/' + pathParams.tunnus;
         }
       })
       .when('/vastaus/:tunnus/en', {
         redirectTo: function (pathParams, path) {
           localStorage.setItem('kieli', 'en');
+          document.location.reload(true);
           return '/vastaus/' + pathParams.tunnus;
         }
       })
