@@ -8,6 +8,24 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         controller: 'VastausController',
         templateUrl: 'template/vastaus/vastaus.html'
       })
+      .when('/vastaus/:tunnus/fi', {
+        redirectTo: function (pathParams, path) {
+          localStorage.setItem('kieli', {tunnus: 'fi', teksti: 'suomeksi'});
+          return '/vastaus/' + pathParams.tunnus;
+        }
+      })
+      .when('/vastaus/:tunnus/sv', {
+        redirectTo: function (pathParams, path) {
+          localStorage.setItem('kieli', {tunnus: 'sv', teksti: 'ruotsiksi'});
+          return '/vastaus/' + pathParams.tunnus;
+        }
+      })
+      .when('/vastaus/:tunnus/en', {
+        redirectTo: function (pathParams, path) {
+          localStorage.setItem('kieli', {tunnus: 'en', teksti: 'englanniksi'});
+          return '/vastaus/' + pathParams.tunnus;
+        }
+      })
       .when('/vastausaika-loppunut', {
         templateUrl: 'template/vastaus/lukittu.html'
       })
