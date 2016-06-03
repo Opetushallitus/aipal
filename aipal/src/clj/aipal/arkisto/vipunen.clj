@@ -14,11 +14,21 @@
 
 (ns aipal.arkisto.vipunen
   (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :refer :all]))
+    [clj-time.core :as time]
+    [aipal.integraatio.sql.korma :refer :all]))
 
 (defn hae-kaikki []
   (sql/select vipunen_view))
 
-(defn hae-valtakunnalliset []
-  (sql/select vipunen_view
-    (sql/where {:valtakunnallinen true})))
+(defn hae-valtakunnalliset 
+  ([]
+    (hae-valtakunnalliset nil nil))
+  ([alkupvm loppupvm]
+    (sql/select vipunen_view
+      (sql/where 
+        (and 
+          {:valtakunnallinen true}
+          (>= :vastausaika (or alkupvm (time/local-date 1900 1 1))
+          (<= :vastausaika (or loppupvm ((time/plus (time/today-at-midnight) (time/days -1))))))))
+        )))
+    

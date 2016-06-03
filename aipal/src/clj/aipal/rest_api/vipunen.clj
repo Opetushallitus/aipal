@@ -13,13 +13,15 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.vipunen
-  (:require [compojure.api.core :refer [defroutes GET]]
+  (:require [compojure.api.core :refer [defroutes GET POST]]
             [cheshire.core :as json]
+            [schema.core :as s]
             [clojure.java.io :refer [make-writer]]
             [ring.util.io :refer [piped-input-stream]]
             [aipal.arkisto.vipunen :as vipunen]
             aipal.compojure-util
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [oph.common.util.http-util :refer [parse-iso-date]]))
 
 (defroutes reitit
   (GET "/" []
@@ -30,11 +32,16 @@
                 (json/generate-stream (vipunen/hae-kaikki))
                 (.flush)))
      :headers {"Content-Type" "application/json"}})
-  (GET "/valtakunnallinen" []
-    {:status 200
-     :body (piped-input-stream
-             #(->>
-                (make-writer % {})
-                (json/generate-stream (vipunen/hae-valtakunnalliset))
-                (.flush)))
-     :headers {"Content-Type" "application/json"}}))
+  (GET "/valtakunnallinen" [alkupvm loppupvm]
+;        :body-params [alkupvm 
+;                      loppupvm ]
+        (println "parametrit thx " alkupvm loppupvm)
+        (let [alkupv (parse-iso-date alkupvm)
+              loppupv (parse-iso-date loppupvm)]
+          {:status 200
+           :body (piped-input-stream
+                   #(->>
+                      (make-writer % {})
+                      (json/generate-stream (vipunen/hae-valtakunnalliset alkupv loppupv))
+                      (.flush)))
+           :headers {"Content-Type" "application/json"}})))
