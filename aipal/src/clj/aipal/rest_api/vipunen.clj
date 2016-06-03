@@ -35,11 +35,11 @@
   (GET "/valtakunnallinen" [alkupvm loppupvm]
 ;        :body-params [alkupvm 
 ;                      loppupvm ]
-;        (println "parametrit thx " alkupvm loppupvm)
+
         (let [alkupv (parse-iso-date alkupvm)
               loppupv (parse-iso-date loppupvm)
               rivimaara (:lkm (first (vipunen/laske-valtakunnalliset alkupv loppupv)))]
-;          (println "rivimäärä " rivimaara)
+
           (if (> rivimaara 0)
           {:status 200
            :body (piped-input-stream
