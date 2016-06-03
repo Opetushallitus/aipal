@@ -37,11 +37,19 @@
 ;                      loppupvm ]
         (println "parametrit thx " alkupvm loppupvm)
         (let [alkupv (parse-iso-date alkupvm)
-              loppupv (parse-iso-date loppupvm)]
+              loppupv (parse-iso-date loppupvm)
+              rivimaara (:lkm (first (vipunen/laske-valtakunnalliset alkupv loppupv)))]
+          (println "rivimäärä " rivimaara)
+          (if (> rivimaara 0)
           {:status 200
            :body (piped-input-stream
                    #(->>
                       (make-writer % {})
                       (json/generate-stream (vipunen/hae-valtakunnalliset alkupv loppupv))
                       (.flush)))
-           :headers {"Content-Type" "application/json"}})))
+           :headers {"Content-Type" "application/json"}}
+         ; nolla riviä
+         {:status 200 
+          :body []
+          :headers {"Content-Type" "application/json"}})           
+          )))

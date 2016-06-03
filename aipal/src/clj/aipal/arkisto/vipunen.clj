@@ -15,20 +15,34 @@
 (ns aipal.arkisto.vipunen
   (:require [korma.core :as sql]
     [clj-time.core :as time]
-    [aipal.integraatio.sql.korma :refer :all]))
+    [aipal.integraatio.sql.korma :refer :all]
+    [oph.korma.common :refer [joda-date->sql-date joda-datetime->sql-timestamp] ]))
 
 (defn hae-kaikki []
   (sql/select vipunen_view))
 
+(defn laske-valtakunnalliset 
+  [alkup loppup]
+  (let [alkupvm (clj-time.coerce/to-sql-date (or alkup (time/local-date 1900 1 1)))
+        loppupvm (clj-time.coerce/to-sql-date (or loppup (time/plus (time/today-at-midnight) (time/days -1))))]
+    (sql/select vipunen_view
+      (sql/aggregate (count :*) :lkm)
+        (sql/where 
+          (and 
+            {:valtakunnallinen true}
+            (>= :vastausaika alkupvm)
+            (<= :vastausaika loppupvm))))))
+  
+
 (defn hae-valtakunnalliset 
   ([]
     (hae-valtakunnalliset nil nil))
-  ([alkupvm loppupvm]
-    (sql/select vipunen_view
-      (sql/where 
-        (and 
-          {:valtakunnallinen true}
-          (>= :vastausaika (or alkupvm (time/local-date 1900 1 1))
-          (<= :vastausaika (or loppupvm ((time/plus (time/today-at-midnight) (time/days -1))))))))
-        )))
-    
+  ([alkup loppup]
+    (let [alkupvm (clj-time.coerce/to-sql-date (or alkup (time/local-date 1900 1 1)))
+          loppupvm (clj-time.coerce/to-sql-date (or loppup (time/plus (time/today-at-midnight) (time/days -1))))]
+      (sql/select vipunen_view
+          (sql/where 
+            (and 
+              {:valtakunnallinen true}
+              (>= :vastausaika alkupvm)
+              (<= :vastausaika loppupvm)))))))
