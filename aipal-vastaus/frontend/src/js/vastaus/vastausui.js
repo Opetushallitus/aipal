@@ -10,19 +10,19 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       })
       .when('/vastaus/:tunnus/fi', {
         redirectTo: function (pathParams, path) {
-          localStorage.setItem('kieli', {tunnus: 'fi', teksti: 'suomeksi'});
+          localStorage.setItem('kieli', 'fi');
           return '/vastaus/' + pathParams.tunnus;
         }
       })
       .when('/vastaus/:tunnus/sv', {
         redirectTo: function (pathParams, path) {
-          localStorage.setItem('kieli', {tunnus: 'sv', teksti: 'ruotsiksi'});
+          localStorage.setItem('kieli', 'sv');
           return '/vastaus/' + pathParams.tunnus;
         }
       })
       .when('/vastaus/:tunnus/en', {
         redirectTo: function (pathParams, path) {
-          localStorage.setItem('kieli', {tunnus: 'en', teksti: 'englanniksi'});
+          localStorage.setItem('kieli', 'en');
           return '/vastaus/' + pathParams.tunnus;
         }
       })
