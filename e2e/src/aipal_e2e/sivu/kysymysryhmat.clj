@@ -20,7 +20,8 @@
 (def kysymysryhmat-sivu "/#/kysymysryhmat")
 
 (defn avaa-sivu []
-  (avaa kysymysryhmat-sivu))
+  (avaa kysymysryhmat-sivu)
+  (odota-kunnes (w/present? {:xpath "//*[@id=\"content\"]"})))
 
 (defn luo-uusi []
   (odota-ja-klikkaa {:css ".e2e-luo-uusi-kysymysryhma"}))
@@ -31,3 +32,21 @@
 (defn vahvista-julkaisu []
   (odota-kunnes (w/present? {:css ".modal-dialog"}))
   (odota-ja-klikkaa {:css ".e2e-vahvista-kysymysryhman-julkaisu"}))
+
+(defn palauta []
+  (odota-ja-klikkaa {:xpath "//*[@id=\"content\"]/div/div[3]/table/tbody/tr[2]/td[3]/span[2]/span/button[1]"}))
+
+(defn vahvista-palautus []
+  (odota-kunnes (w/present? {:css ".modal-dialog"}))
+  (odota-ja-klikkaa {:css ".e2e-palvelut-varmistus-vahvista"}))
+
+(defn poista []
+  (odota-ja-klikkaa {:xpath "//*[@id=\"content\"]/div/div[5]/table/tbody/tr[2]/td[3]/span[3]/span/button[2]"}))
+
+(defn vahvista-poisto []
+  (odota-kunnes (w/present? {:css ".modal-dialog"}))
+  (odota-ja-klikkaa {:css ".e2e-palvelut-varmistus-vahvista"}))
+
+(defn nimella [nimi]
+  (w/find-elements {:text nimi
+                    :tag :td}))

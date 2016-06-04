@@ -15,55 +15,65 @@
 (ns aipal-e2e.kysymysryhma-kopiointi-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
+            [aitu-e2e.util :refer :all]
+            [aipal-e2e.util :refer :all]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
-            [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer :all]))
+            [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
+            [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]))
 
-(def kysymysryhmat-sivu "/#/kysymysryhmat")
-
-(defn kysymysryhman-nimi-fi []
-  (w/value (w/find-element {:css ".e2e-kysymysryhma-nimi-fi"})))
-
-(defn kysymys-fi []
-  (w/value (w/find-element {:css ".e2e-kysymys-suomeksi"})))
-
-(defn kysymysryhmat-nimella [nimi]
-  (w/find-elements {:text nimi
-                    :tag :td}))
-
-(deftest
-  kysymysryhman-kopiointi-test
+(deftest kysymysryhma-luonti-test
   (with-webdriver
-    (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
-                :rooli_organisaatio [{:organisaatio "0000000-0"
-                                      :rooli "OPL-VASTUUKAYTTAJA"
-                                      :kayttaja "OID.AIPAL-E2E"
-                                      :voimassa true}]
-                :kysymysryhma [{:kysymysryhmaid 1000
-                                :nimi_fi "Kysymysryhmä"
-                                :koulutustoimija "0000000-0"}]
-                :kysymys [{:kysymysryhmaid 1000
-                           :vastaustyyppi "likert_asteikko"
-                           :kysymys_fi "Kysymys suomeksi"}]}
+    (kysymysryhmat-sivu/avaa-sivu)
+    (kysymysryhmat-sivu/luo-uusi)
+    (kysymysryhma-sivu/aseta-kysymysryhman-nimi-suomeksi "Uusi kysymysryhmä")
+    (kysymysryhma-sivu/luo-uusi-kysymys)
+    (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
+    (kysymysryhma-sivu/lisaa-kysymys)
+    (kysymysryhma-sivu/tallenna-kysymysryhma)
+    ;; julkaise kysymysryhmä
+    (kysymysryhmat-sivu/julkaise)
+    (kysymysryhmat-sivu/vahvista-julkaisu)))
+
+(deftest kysymysryhma-kopiointi-test
+  (with-webdriver
+    (kysymysryhmat-sivu/avaa-sivu)
+    (testing
+      "Kysymysryhman kopiointi"
+      (w/click {:css ".e2e-kopioi-kysymysryhma"})
+      (odota-angular-pyyntoa)
       (testing
-        "kysymysryhman kopiointi:"
-        (avaa kysymysryhmat-sivu)
-        (w/click {:css ".e2e-kopioi-kysymysryhma"})
+        "Kysymysryhmän tiedot"
+        (is (= (kysymysryhma-sivu/kysymysryhman-nimi-fi) "Uusi kysymysryhmä")))
+      (testing
+        "Kysymyksen tiedot"
+        (w/click {:css ".e2e-muokkaa-kysymysta"})
+        (is (= (kysymysryhma-sivu/kysymys-fi) "Uusi kysymys"))
+        (kysymysryhma-sivu/tallenna-kysymys))
+      (odota-angular-pyyntoa)
+      (testing
+        "Kysymysryhmän tallentaminen"
+        (syota-kenttaan "kysymysryhma.nimi_fi" "Muokattu kysymysryhmä")
+        (kysymysryhma-sivu/tallenna-kysymysryhma)
         (odota-angular-pyyntoa)
-        (testing
-          "kysymysryhmän tiedot"
-          (is (= (kysymysryhman-nimi-fi) "Kysymysryhmä")))
-        (testing
-          "kysymyksen tiedot"
-          (w/click {:css ".e2e-muokkaa-kysymysta"})
-          (is (= (kysymys-fi) "Kysymys suomeksi"))
-          (w/click {:css ".e2e-tallenna-kysymys"}))
-        (odota-angular-pyyntoa)
-        (testing
-          "Kysymysryhmän tallentaminen"
-          (syota-kenttaan "kysymysryhma.nimi_fi" "Muokattu kysymysryhmä")
-          (w/click {:css ".e2e-tallenna-kysymysryhma"})
-          (odota-angular-pyyntoa)
-          (is (= (count (kysymysryhmat-nimella "Kysymysryhmä")) 1))
-          (is (= (count (kysymysryhmat-nimella "Muokattu kysymysryhmä")) 1)))))))
+        (is (= (count (kysymysryhmat-sivu/nimella "Uusi kysymysryhmä")) 1))
+        (is (= (count (kysymysryhmat-sivu/nimella "Muokattu kysymysryhmä")) 1))))))
+
+(deftest siivoa-kysymysryhma-kopiointi-test
+  (with-webdriver
+    (kysymysryhmat-sivu/avaa-sivu)
+    ;; siivoa
+    ;; poista ensimmäinen luonnos
+    (kysymysryhmat-sivu/poista)
+    (kysymysryhmat-sivu/vahvista-poisto)
+    ;; palauta ensimmäinen julkaistu
+    (kysymysryhmat-sivu/palauta)
+    (kysymysryhmat-sivu/vahvista-palautus)
+    ;; poista ensimmäinen luonnos
+    (kysymysryhmat-sivu/poista)
+    (kysymysryhmat-sivu/vahvista-poisto)))
+
+(deftest test-ns-hook
+  (kysymysryhma-luonti-test)
+  (kysymysryhma-kopiointi-test)
+  (siivoa-kysymysryhma-kopiointi-test))

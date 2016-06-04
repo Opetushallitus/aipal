@@ -16,25 +16,28 @@
   (:require [clojure.test :refer [deftest testing is use-fixtures]]
             [clj-webdriver.taxi :as w]
             [aitu-e2e.util :refer :all]
-            [aipalvastaus-e2e.util :refer :all]
             [aipal-e2e.data-util :refer :all]
-            [aipal-e2e.tietokanta.yhteys :as tietokanta]))
+            [aipal-e2e.tietokanta.yhteys :as tietokanta]
+            [aipalvastaus-e2e.util :refer :all]))
 
 (defn vastaus-sivu [tunnus] (str "/#/vastaus/" tunnus))
 (defn kyselyn-otsikko [] (w/text {:css "#content h1"}))
-(defn kyselyn-selite [] (w/text {:css "p.selite"}))
+(defn kyselyn-selite [] (w/text {:css "p.kyselykerta-selite"}))
 (defn kyselyn-tutkinto [] (w/text {:css "p.tutkinto"}))
 
 (deftest ^:vastaus vastaussivu-test
-  (testing "Vastaussivulla on kyselyn perustiedot"
+  (testing
+    "Vastaussivulla on kyselyn perustiedot"
     (with-webdriver
       (with-data {:kysely [{:kyselyid 1
                             :nimi_fi "Kysely 1"
-                            :selite_fi "Selite 1"}]
+                            :selite_fi "Selite 1"
+                            :koulutustoimija "2345678-0"}]
                   :kyselykerta [{:kyselykertaid 1
                                  :kyselyid 1}]
                   :tutkinto [{:tutkintotunnus "1"
-                              :nimi_fi "Tutkinto yksi"}]
+                              :nimi_fi "Tutkinto yksi"
+                              :opintoala "X00"}]
                   :vastaajatunnus [{:vastaajatunnusid 1
                                     :kyselykertaid 1
                                     :tunnus "tunnus1"

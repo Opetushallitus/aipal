@@ -15,12 +15,14 @@
 (ns aipal-e2e.kyselyt-sivu-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
-            [aipal-e2e.data-util :refer :all]
-            [aipal-e2e.util :refer :all]
             [aitu-e2e.util :refer :all]
+            [aipal-e2e.util :refer :all]
+            [aipal-e2e.data-util :refer :all]
+            [aipal-e2e.sivu.kysely :as kysely-sivu]
+            [aipal-e2e.sivu.kyselyt :as kyselyt-sivu]
+            [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
+            [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
             [clj-time.core :as time]))
-
-(def kyselyt-sivu "/#/kyselyt")
 
 (defn kyselyt []
   (w/find-elements (-> *ng*
@@ -59,90 +61,167 @@
 (defn uusi-kysely []
   (w/find-element {:css ".e2e-luo-uusi-kysely"}))
 
-(deftest kyselyt-sivu-test
-  (with-webdriver
-    (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
-                :rooli_organisaatio [{:organisaatio "0000000-0"
-                                      :rooli "OPL-VASTUUKAYTTAJA"
-                                      :kayttaja "OID.AIPAL-E2E"
-                                      :voimassa true}]
-                :kysely [{:kyselyid 1
-                          :nimi_fi "Kysely 1"
-                          :koulutustoimija "0000000-0"}
-                         {:kyselyid 2
-                          :nimi_fi "Kysely 2"
-                          :koulutustoimija "0000000-0"}]
-                :kyselykerta [{:kyselykertaid 1
-                               :kyselyid 1
-                               :nimi "Kyselykerta 1-1"}
-                              {:kyselykertaid 2
-                               :kyselyid 1
-                               :nimi "Kyselykerta 1-2"}
-                              {:kyselykertaid 3
-                               :kyselyid 2
-                               :nimi "Kyselykerta 2-3"}]}
-      (avaa kyselyt-sivu)
-      (testing
-        "ensimmäisellä kyselyllä on kaksi kyselykertaa"
-        (let [kysely (nth (kyselyt) 1)]
-          (avaa-kysely kysely)
-          (is (= (kyselyn-nimi kysely) "Kysely 1"))
-          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 1-1" "Kyselykerta: Kyselykerta 1-2"]))))
-      (testing
-        "toisella kyselyllä on yksi kyselykerta"
-        (let [kysely (nth (kyselyt) 0)]
-          (avaa-kysely kysely)
-          (is (= (kyselyn-nimi kysely) "Kysely 2"))
-          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"])))))))
-
 (deftest luo-kysely-test
   (with-webdriver
-    (with-data {:koulutustoimija [{:ytunnus "ABC"
-                                   :nimi_fi "Testi"}]
-                :rooli_organisaatio [{:organisaatio "ABC"
-                                      :rooli "OPL-VASTUUKAYTTAJA"
-                                      :kayttaja "OID.AIPAL-E2E"
-                                      :voimassa true}]}
-      (avaa kyselyt-sivu)
-      (testing
-        "Luo uusi kysely ohjaa kyselyn luontiin"
-        (w/click (uusi-kysely))
-        (w/wait-until #(re-matches #".*/#/kyselyt/kysely/uusi" (w/current-url)) 10000)))))
+    (kyselyt-sivu/avaa-sivu)
+    (testing
+      "Luo uusi kysely ohjaa kyselyn luontiin"
+      (w/click (uusi-kysely))
+      (w/wait-until #(re-matches #".*/#/kyselyt/kysely/uusi" (w/current-url)) 10000))))
 
-(deftest ^:no-ie kyselyt-sivu-kyselykerran-luonti-test
+(deftest kysymysryhman-luonti-test
   (with-webdriver
-    (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
-                :rooli_organisaatio [{:organisaatio "0000000-0"
-                                      :rooli "OPL-VASTUUKAYTTAJA"
-                                      :kayttaja "OID.AIPAL-E2E"
-                                      :voimassa true}]
-                :kysely [{:kyselyid 1
-                          :nimi_fi "Kysely 1"
-                          :koulutustoimija "0000000-0"
-                          :voimassa_alkupvm (time/local-date 2000 1 1)}
-                         {:kyselyid 2
-                          :nimi_fi "Kysely 2"
-                          :koulutustoimija "0000000-0"
-                          :voimassa_alkupvm (time/local-date 2000 1 1)}]}
-      (avaa kyselyt-sivu)
-      (testing
-        "Kyselykerran luonti onnistuu ensimmäiselle kyselylle"
-        (let [kysely (nth (kyselyt) 0)]
-          (avaa-kysely kysely)
-          (w/click (uusi-kyselykerta-kyselylle kysely))
-          (syota-kenttaan "kyselykerta.nimi" "Ensimmäinen kyselykerta")
-          (tallenna)
-          (avaa kyselyt-sivu))
-        (let [kysely (nth (kyselyt) 0)]
-          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Ensimmäinen kyselykerta"]))))
-      (testing
-        "Kyselykerran luonti onnistuu toiselle kyselylle"
-        (let [kysely (nth (kyselyt) 1)]
-          (avaa-kysely kysely)
-          (w/click (uusi-kyselykerta-kyselylle kysely))
-          (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi\"]"))) ; ajastusongelman kierto
-          (syota-kenttaan "kyselykerta.nimi" "Toinen kyselykerta")
-          (tallenna)
-          (avaa kyselyt-sivu))
-        (let [kysely (nth (kyselyt) 1)]
-          (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Toinen kyselykerta"])))))))
+    (kysymysryhmat-sivu/avaa-sivu)
+    (kysymysryhmat-sivu/luo-uusi)
+
+    (kysymysryhma-sivu/aseta-kysymysryhman-nimi-suomeksi "Uusi kysymysryhmä")
+    (kysymysryhma-sivu/luo-uusi-kysymys)
+    (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
+    (kysymysryhma-sivu/lisaa-kysymys)
+    (kysymysryhma-sivu/tallenna-kysymysryhma)
+
+    ;; julkaise kysymysryhmä
+    (kysymysryhmat-sivu/julkaise)
+    (kysymysryhmat-sivu/vahvista-julkaisu)))
+
+(deftest ^:no-ie kyselyn-luonti-test
+  (with-webdriver
+    (kyselyt-sivu/avaa-sivu)
+    (kyselyt-sivu/luo-uusi-kysely)
+    (kysely-sivu/aseta-kyselyn-nimi-suomeksi "Kysely 1")
+    (kysely-sivu/aseta-kyselyn-voimassaolon-alku)
+    (kysely-sivu/lisaa-kysymysryhma)
+    (kysely-sivu/valitse-kysymysryhma "Uusi kysymysryhmä")
+    (kysely-sivu/lisaa-valittu-kysymysryhma)
+    (kysely-sivu/tallenna-kysely)
+
+    (kyselyt-sivu/luo-uusi-kysely)
+    (kysely-sivu/aseta-kyselyn-nimi-suomeksi "Kysely 2")
+    (kysely-sivu/aseta-kyselyn-voimassaolon-alku)
+    (kysely-sivu/lisaa-kysymysryhma)
+    (kysely-sivu/valitse-kysymysryhma "Uusi kysymysryhmä")
+    (kysely-sivu/lisaa-valittu-kysymysryhma)
+    (kysely-sivu/tallenna-kysely)
+
+    ;; julkaise kyselyt
+    (testing
+      "Kyselyn julkaisu onnistuu toiselle kyselylle"
+      (let [kysely (nth (kyselyt) 0)]
+        (kyselyt-sivu/avaa-kysely "Kysely 2")
+        (kyselyt-sivu/julkaise-kysely)
+        (kyselyt-sivu/vahvista-kyselyn-julkaisu))
+      (let [kysely (nth (kyselyt) 0)]
+        (is (= (kyselyn-nimi kysely) "Kysely 2")))
+    )
+    (testing
+      "Kyselyn julkaisu onnistuu ensimmäiselle kyselylle"
+      (let [kysely (nth (kyselyt) 1)]
+        (kyselyt-sivu/avaa-kysely "Kysely 1")
+        (kyselyt-sivu/julkaise-kysely)
+        (kyselyt-sivu/vahvista-kyselyn-julkaisu))
+      (let [kysely (nth (kyselyt) 1)]
+        (is (= (kyselyn-nimi kysely) "Kysely 1"))))))
+
+(deftest ^:no-ie kyselykerran-luonti-test
+  (with-webdriver
+    (kyselyt-sivu/avaa-sivu)
+    (testing
+      "Kyselykerran luonti onnistuu ensimmäiselle kyselylle"
+      (let [kysely (nth (kyselyt) 1)]
+        (kyselyt-sivu/avaa-kysely "Kysely 1")
+        (w/click (uusi-kyselykerta-kyselylle kysely))
+        (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi\"]"))) ; ajastusongelman kierto
+        (syota-kenttaan "kyselykerta.nimi" "Kyselykerta 1-1")
+        (tallenna)
+        (kyselyt-sivu/avaa-sivu))
+      (let [kysely (nth (kyselyt) 1)]
+        (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 1-1"]))))
+    (testing
+      "Toisen kyselykerran luonti onnistuu ensimmäiselle kyselylle"
+      (let [kysely (nth (kyselyt) 1)]
+        (kyselyt-sivu/avaa-kysely "Kysely 1")
+        (w/click (uusi-kyselykerta-kyselylle kysely))
+        (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi\"]"))) ; ajastusongelman kierto
+        (syota-kenttaan "kyselykerta.nimi" "Kyselykerta 1-2")
+        (tallenna)
+        (kyselyt-sivu/avaa-sivu))
+      (let [kysely (nth (kyselyt) 1)]
+        (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 1-1" "Kyselykerta: Kyselykerta 1-2"]))))
+    (testing
+      "Kyselykerran luonti onnistuu toiselle kyselylle"
+      (let [kysely (nth (kyselyt) 0)]
+        (kyselyt-sivu/avaa-kysely "Kysely 2")
+        (w/click (uusi-kyselykerta-kyselylle kysely))
+        (odota-kunnes (w/displayed? (str "input[ng-model=\"kyselykerta.nimi\"]"))) ; ajastusongelman kierto
+        (syota-kenttaan "kyselykerta.nimi" "Kyselykerta 2-3")
+        (tallenna)
+        (kyselyt-sivu/avaa-sivu))
+      (let [kysely (nth (kyselyt) 0)]
+        (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"]))))))
+
+(deftest kyselyt-sivu-test
+  (with-webdriver
+    (kyselyt-sivu/avaa-sivu)
+    (testing
+      "Ensimmäisellä kyselyllä on kaksi kyselykertaa"
+      (let [kysely (nth (kyselyt) 1)]
+        (kyselyt-sivu/avaa-kysely "Kysely 1")
+        (is (= (kyselyn-nimi kysely) "Kysely 1"))
+        (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 1-1" "Kyselykerta: Kyselykerta 1-2"]))))
+    (testing
+      "Toisella kyselyllä on yksi kyselykerta"
+      (let [kysely (nth (kyselyt) 0)]
+        (kyselyt-sivu/avaa-kysely "Kysely 2")
+        (is (= (kyselyn-nimi kysely) "Kysely 2"))
+        (is (= (kyselykerrat-kyselylle kysely) ["Kyselykerta: Kyselykerta 2-3"]))))))
+
+(deftest kyselykerran-poisto-test
+  (with-webdriver
+    (kyselyt-sivu/avaa-sivu)
+    (kyselyt-sivu/avaa-kysely "Kysely 2")
+    (kyselyt-sivu/poista-kyselykerta)
+    (kyselyt-sivu/vahvista-kyselykerran-poisto)
+
+    (kyselyt-sivu/avaa-kysely "Kysely 1")
+    (kyselyt-sivu/poista-kyselykerta)
+    (kyselyt-sivu/vahvista-kyselykerran-poisto)
+    ; 2x poista kyselykerta
+    (kyselyt-sivu/poista-kyselykerta)
+    (kyselyt-sivu/vahvista-kyselykerran-poisto)
+    ; tässä välissä kyselyt-sivu on syytä ladata tavalla tai toisella uudestaan,
+    ; jotta painikkeet päivittyy!
+    ))
+
+(deftest kyselyn-poisto-test
+  (with-webdriver
+    (kyselyt-sivu/avaa-sivu)
+    (odota-kunnes (w/present? {:xpath "//*[@id=\"content\"]"}))
+
+    (kyselyt-sivu/avaa-kysely "Kysely 1")
+    (kyselyt-sivu/palauta-luonnokseksi "Kysely 1")
+    (kyselyt-sivu/poista-kysely)
+    (kyselyt-sivu/vahvista-kyselyn-poisto)
+
+    (kyselyt-sivu/avaa-kysely "Kysely 2")
+    (kyselyt-sivu/palauta-luonnokseksi "Kysely 2")
+    (kyselyt-sivu/poista-kysely)
+    (kyselyt-sivu/vahvista-kyselyn-poisto)))
+
+(deftest kysymysryhman-poisto-test
+  (with-webdriver
+    (kysymysryhmat-sivu/avaa-sivu)
+    (kysymysryhmat-sivu/palauta)
+    (kysymysryhmat-sivu/vahvista-palautus)
+    (kysymysryhmat-sivu/poista)
+    (kysymysryhmat-sivu/vahvista-poisto)))
+
+;composing tests
+(deftest test-ns-hook
+  (luo-kysely-test)
+  (kysymysryhman-luonti-test)
+  (kyselyn-luonti-test)
+  (kyselykerran-luonti-test)
+  (kyselyt-sivu-test)
+  (kyselykerran-poisto-test)
+  (kyselyn-poisto-test)
+  (kysymysryhman-poisto-test))

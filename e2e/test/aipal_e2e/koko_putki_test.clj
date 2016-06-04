@@ -15,6 +15,7 @@
 (ns aipal-e2e.koko-putki-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
+            [aitu-e2e.util :refer [with-webdriver odota-angular-pyyntoa odota-kunnes syota-kenttaan]]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.sivu.kysely :as kysely-sivu]
             [aipal-e2e.sivu.kyselykerta :as kyselykerta-sivu]
@@ -22,9 +23,8 @@
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
             [aipal-e2e.sivu.kyselykertaraportti :as kyselykertaraportti-sivu]
-            [aipalvastaus-e2e.sivu.vastaus :as vastaus-sivu]
             [aipalvastaus-e2e.util :as aipalvastaus]
-            [aitu-e2e.util :refer [with-webdriver]]))
+            [aipalvastaus-e2e.sivu.vastaus :as vastaus-sivu]))
 
 (defn vastaa-kyselyyn! [vastaajatunnus-url]
   (vastaus-sivu/avaa-sivu vastaajatunnus-url "UUSI KYSELY")
@@ -47,17 +47,20 @@
                             :opintoala "123"}]}
       ;; luo kysymysryhma
       (kysymysryhmat-sivu/avaa-sivu)
-      (kysymysryhmat-sivu/luo-uusi)
+      ;(let [kysymysryhma-on-jo (-> (w/find-elements {:xpath "//*[@id=\"content\"]/div/div[3]/table/tbody/tr[2]/td"}) (w/text) (.contains "Uusi kysymysryhmä"))]
+      ;  (when (not kysymysryhma-on-jo)
+          (kysymysryhmat-sivu/luo-uusi)
 
-      (kysymysryhma-sivu/aseta-kysymysryhman-nimi-suomeksi "Uusi kysymysryhmä")
-      (kysymysryhma-sivu/luo-uusi-kysymys)
-      (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
-      (kysymysryhma-sivu/lisaa-kysymys)
-      (kysymysryhma-sivu/tallenna-kysymysryhma)
+          (kysymysryhma-sivu/aseta-kysymysryhman-nimi-suomeksi "Uusi kysymysryhmä")
+          (kysymysryhma-sivu/luo-uusi-kysymys)
+          (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
+          (kysymysryhma-sivu/lisaa-kysymys)
+          (kysymysryhma-sivu/tallenna-kysymysryhma)
 
-      ;; julkaise kysymysryhmä
-      (kysymysryhmat-sivu/julkaise)
-      (kysymysryhmat-sivu/vahvista-julkaisu)
+          ;; julkaise kysymysryhmä
+          (kysymysryhmat-sivu/julkaise)
+          (kysymysryhmat-sivu/vahvista-julkaisu)
+      ;))
 
       ;; luo kysely
       (kyselyt-sivu/avaa-sivu)
@@ -106,4 +109,34 @@
           (is (= (kyselykertaraportti-sivu/ensimmaisen-kysymyksen-ensimmaisen-vaihtoehdon-vastausten-lukumaara)
                  "5"))
           (finally
-            (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))))))
+            (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))
+      ))))
+
+(deftest siivoa-putki-test
+  (with-webdriver
+    ;; siivoa
+    (kyselyt-sivu/avaa-sivu)
+    (kyselyt-sivu/avaa-kysely "Uusi kysely")
+    (kyselyt-sivu/poista-kyselykerta)
+    (kyselyt-sivu/vahvista-kyselykerran-poisto)
+    ; lataa uudestaan, niin päivittyy painikkeet...
+    (kysymysryhmat-sivu/avaa-sivu)
+    (kyselyt-sivu/avaa-sivu)
+    (odota-kunnes (w/present? {:xpath "//*[@id=\"content\"]"}))
+    (kyselyt-sivu/avaa-kysely "Uusi kysely")
+    (kyselyt-sivu/palauta-luonnokseksi "Uusi kysely")
+    (kyselyt-sivu/poista-kysely)
+    (kyselyt-sivu/vahvista-kyselyn-poisto)
+
+    (kysymysryhmat-sivu/avaa-sivu)
+    (kysymysryhmat-sivu/palauta)
+    (kysymysryhmat-sivu/vahvista-palautus)
+    (kysymysryhmat-sivu/poista)
+    (kysymysryhmat-sivu/vahvista-poisto)
+
+  ))
+
+;composing tests
+(deftest test-ns-hook
+  (koko-putki-test)
+  (siivoa-putki-test))

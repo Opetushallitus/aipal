@@ -15,10 +15,11 @@
 (ns aipal-e2e.etusivu-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
+            [aitu-e2e.util :refer [with-webdriver]]
+            [aipal-e2e.util :refer :all]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
-            [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer [with-webdriver]]))
+            [aipal-e2e.sivu.etusivu :as etusivu]))
 
 (def etusivu "/#/")
 
@@ -27,14 +28,45 @@
 
 (deftest etusivu-test
   (with-webdriver
-    (testing
-      "etusivu"
+    (testing "etusivu"
       (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
                   :rooli_organisaatio [{:organisaatio "0000000-0"
                                         :rooli "OPL-KAYTTAJA"
                                         :kayttaja "OID.AIPAL-E2E"
                                         :voimassa true}] }
-        (avaa etusivu)
-        (testing
-          "sisältää järjestelmän nimen"
-          (is (true? (.contains (sivun-sisalto) "AIPAL"))))))))
+        (etusivu/avaa-sivu)
+        (testing "sisältää järjestelmän nimen"
+          (is (true? (.contains (sivun-sisalto) "OPETUSHALLINNON VAIKUTTAVUUSTIETOPALVELU"))))))))
+
+(deftest lisaa-tiedote-test
+  (with-webdriver
+    (testing "lisää tiedote"
+      (etusivu/avaa-sivu)
+      (etusivu/klikkaa-muokkaa-tiedote)
+      (etusivu/lisaa-tiedote-teksti-fi "Uusi tiedote")
+      (etusivu/lisaa-tiedote-teksti-sv "Ny meddelande")
+      (etusivu/lisaa-tiedote-teksti-en "New announcement")
+      (etusivu/klikkaa-tallenna-tiedote)
+      (is (true? (.contains (sivun-sisalto) "Uusi tiedote")))
+      ; vaihda kieli
+      (etusivu/vaihda-kieli "SV")
+      (is (true? (.contains (sivun-sisalto) "Ny meddelande")))
+      (etusivu/vaihda-kieli "EN")
+      (is (true? (.contains (sivun-sisalto) "New announcement")))
+      (etusivu/vaihda-kieli "FI"))))
+
+(deftest siivoa-etusivu-test
+  (with-webdriver
+    (etusivu/avaa-sivu)
+    ;siivoa
+    (etusivu/klikkaa-muokkaa-tiedote)
+    (etusivu/tyhjenna-tiedote-teksti-fi)
+    (etusivu/tyhjenna-tiedote-teksti-sv)
+    (etusivu/tyhjenna-tiedote-teksti-en)
+    (etusivu/klikkaa-tallenna-tiedote)))
+
+(deftest test-ns-hook
+  (etusivu-test)
+  (lisaa-tiedote-test)
+  (siivoa-etusivu-test)
+)

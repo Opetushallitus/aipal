@@ -29,6 +29,15 @@
 (defn lisaa-kysymys []
   (w/click {:css ".e2e-lisaa-kysymys"}))
 
+(defn tallenna-kysymys []
+  (w/click {:css ".e2e-tallenna-kysymys"}))
+
 (defn tallenna-kysymysryhma []
   (w/click {:css ".e2e-tallenna-kysymysryhma"})
   (odota-angular-pyyntoa))
+
+(defn kysymysryhman-nimi-fi []
+  (w/value (w/find-element {:css ".e2e-kysymysryhma-nimi-fi"})))
+
+(defn kysymys-fi []
+  (w/value (w/find-element {:css ".e2e-kysymys-suomeksi"})))
