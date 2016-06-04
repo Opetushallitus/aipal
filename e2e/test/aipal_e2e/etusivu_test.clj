@@ -21,8 +21,6 @@
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipal-e2e.sivu.etusivu :as etusivu]))
 
-(def etusivu "/#/")
-
 (defn sivun-sisalto []
   (w/text (w/find-element {:css "body"})))
 

@@ -39,7 +39,8 @@
       (w/click kieli-en)))
   (when (= kieli "FI")
     (let [kieli-fi (w/find-element {:tag :a, :text "FI"})]
-      (w/click kieli-fi))))
+      (w/click kieli-fi)))
+  (odota-angular-pyyntoa))
 
 (defn klikkaa-muokkaa-tiedote []
   (let [tiedote-painike (w/find-element {:xpath "//*[@id=\"content\"]/div/div/div/div[1]/div/div[3]/button"})]
@@ -60,7 +61,8 @@
 
 (defn klikkaa-tallenna-tiedote []
   (let [tiedote-tallenna-painike (w/find-element {:xpath "//*[@id=\"content\"]/div/div/div/div[2]/div/div[5]/button"})]
-    (w/click tiedote-tallenna-painike)))
+    (w/click tiedote-tallenna-painike))
+  (odota-angular-pyyntoa))
 
 (defn tyhjenna-tiedote-teksti-fi []
   (let [tiedote-area-fi (w/find-element (w/find-element {:tag :h3, :text "FI"}) {:xpath "../textarea"})]
