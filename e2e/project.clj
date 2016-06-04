@@ -20,7 +20,7 @@
                  [clj-time "0.6.0"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]]
   :plugins [[test2junit "1.0.1"]]
-  :source-paths ["src/" "../../clojure-utils/src/clj"]
+  :source-paths ["src/" "../aipal/clojure-utils/src/clj"]
 
   :test-selectors {:ie (fn [m] (not (or (:no-ie m) (:vastaus m))))
                    :no-ie :no-ie
