@@ -34,15 +34,15 @@
 
 (deftest koko-putki-test
   (with-webdriver
-    (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
-                :rooli_organisaatio [{:organisaatio "0000000-0"
-                                      :rooli "OPL-VASTUUKAYTTAJA"
+    (with-data {:koulutustoimija [{:ytunnus "0000000-0"}] ; ei käytetä
+                :rooli_organisaatio [{:organisaatio "9876543-2" ; sama kuin CI-koneella
+                                      :rooli "YLLAPITAJA" ; ylläpitäjä, jotta koulutustoimijan valinta tunnusten luonnissa
                                       :kayttaja "OID.AIPAL-E2E"
                                       :voimassa true}]
-                :koulutusala [{:koulutusalatunnus "1"}]
-                :opintoala [{:opintoalatunnus "123"
+                :koulutusala [{:koulutusalatunnus "1"}] ; ei käytetä
+                :opintoala [{:opintoalatunnus "123" ; ei käytetä
                              :koulutusala "1"}]
-                :tutkinto [{:tutkintotunnus "123456"
+                :tutkinto [{:tutkintotunnus "123456" ; ei käytetä
                             :nimi_fi "Tutkinto"
                             :opintoala "123"}]}
       ;; luo kysymysryhma
@@ -94,8 +94,8 @@
       (kyselykerta-sivu/valitse-vastaajatunnusten-maara "5")
       ; ARVO \
       ;;(kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
-      (kyselykerta-sivu/valitse-vastaajatunnusten-tutkinto "Sairaanhoitaja, lasten sairaanhoito")
-      (kyselykerta-sivu/valitse-vastaajatunnusten-koulutuksen_jarjestaja "Ruikonperän opistoaste")
+      (kyselykerta-sivu/valitse-vastaajatunnusten-tutkinto "Maanviljely")
+      (kyselykerta-sivu/valitse-vastaajatunnusten-koulutuksen_jarjestaja "Ruikonperä")
       ; ARVO /
       (kyselykerta-sivu/lisaa-vastaajatunnukset)
 
@@ -110,10 +110,9 @@
                  "5"))
           (finally
             (aipalvastaus/poista-vastaajat-ja-vastaukset-vastaustunnukselta! vastaajatunnus-url)))
-      ))))
+      )
 
-(deftest siivoa-putki-test
-  (with-webdriver
+    ;; siivoa putki
     ;; siivoa
     (kyselyt-sivu/avaa-sivu)
     (kyselyt-sivu/avaa-kysely "Uusi kysely")
@@ -134,9 +133,4 @@
     (kysymysryhmat-sivu/poista)
     (kysymysryhmat-sivu/vahvista-poisto)
 
-  ))
-
-;composing tests
-(deftest test-ns-hook
-  (koko-putki-test)
-  (siivoa-putki-test))
+  )))

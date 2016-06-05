@@ -24,46 +24,42 @@
 
 (deftest kysymysryhma-luonti-test
   (with-webdriver
-    (testing
-      "Kysymysryhman luonti"
+    (with-data {:rooli_organisaatio [{:organisaatio "9876543-2"
+                                      :rooli "OPL-VASTUUKAYTTAJA"
+                                      :kayttaja "OID.AIPAL-E2E"
+                                      :voimassa true}]}
+      ;; kysymysryhma luonti
+      (testing
+        "Kysymysryhman luonti"
+        (kysymysryhmat-sivu/avaa-sivu)
+        (w/click {:css ".e2e-luo-uusi-kysymysryhma"})
+        (syota-kenttaan "kysymysryhma.nimi_fi" "Uusi kysymysryhmä")
+        (kysymysryhma-sivu/luo-uusi-kysymys)
+        (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
+        (kysymysryhma-sivu/lisaa-kysymys)
+        (kysymysryhma-sivu/tallenna-kysymysryhma)
+        (is (= (count (kysymysryhmat-sivu/nimella "Uusi kysymysryhmä")) 1)))
+
+      ;; kysymysryhma muokkaus
       (kysymysryhmat-sivu/avaa-sivu)
-      (w/click {:css ".e2e-luo-uusi-kysymysryhma"})
-      (syota-kenttaan "kysymysryhma.nimi_fi" "Uusi kysymysryhmä")
-      (kysymysryhma-sivu/luo-uusi-kysymys)
-      (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
-      (kysymysryhma-sivu/lisaa-kysymys)
+      (testing
+        "Kysymyksen muokkaus"
+        (w/click {:css ".e2e-muokkaa-kysymysryhmaa"})
+        (odota-angular-pyyntoa)
+        (testing
+          "Kysymysryhmän tiedot"
+          (is (= (kysymysryhma-sivu/kysymysryhman-nimi-fi) "Uusi kysymysryhmä")))
+        (testing
+          "Kysymyksen tiedot"
+          (w/click {:css ".e2e-muokkaa-kysymysta"})
+          (is (= (kysymysryhma-sivu/kysymys-fi) "Uusi kysymys"))))
+      (kysymysryhma-sivu/tallenna-kysymys)
       (kysymysryhma-sivu/tallenna-kysymysryhma)
-      (is (= (count (kysymysryhmat-sivu/nimella "Uusi kysymysryhmä")) 1)))))
 
-(deftest kysymysryhma-test
-  (with-webdriver
-    (kysymysryhmat-sivu/avaa-sivu)
-    (testing
-      "Kysymyksen muokkaus"
-      (w/click {:css ".e2e-muokkaa-kysymysryhmaa"})
-      (odota-angular-pyyntoa)
+      ;; siivoa kysymysryhma luonti
+      (kysymysryhmat-sivu/avaa-sivu)
       (testing
-        "Kysymysryhmän tiedot"
-        (is (= (kysymysryhma-sivu/kysymysryhman-nimi-fi) "Uusi kysymysryhmä")))
-      (testing
-        "Kysymyksen tiedot"
-        (w/click {:css ".e2e-muokkaa-kysymysta"})
-        (is (= (kysymysryhma-sivu/kysymys-fi) "Uusi kysymys"))))
-
-    ; poistu ikkunasta (ei olisi tarpeen...)
-    (kysymysryhma-sivu/tallenna-kysymys)
-    (kysymysryhma-sivu/tallenna-kysymysryhma)))
-
-(deftest siivoa-kysymysryhma-luonti-test
-  (with-webdriver
-    (kysymysryhmat-sivu/avaa-sivu)
-    (testing
-      "Siivoa"
-      (kysymysryhmat-sivu/poista)
-      (kysymysryhmat-sivu/vahvista-poisto)
-      (is (= (count (kysymysryhmat-sivu/nimella "Uusi kysymysryhmä")) 0)))))
-
-(deftest test-ns-hook
-  (kysymysryhma-luonti-test)
-  (kysymysryhma-test)
-  (siivoa-kysymysryhma-luonti-test))
+        "Siivoa"
+        (kysymysryhmat-sivu/poista)
+        (kysymysryhmat-sivu/vahvista-poisto)
+        (is (= (count (kysymysryhmat-sivu/nimella "Uusi kysymysryhmä")) 0))))))

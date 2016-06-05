@@ -22,58 +22,54 @@
             [aipal-e2e.sivu.kysymysryhma :as kysymysryhma-sivu]
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]))
 
-(deftest kysymysryhma-luonti-test
+(deftest kysymysryhma-kopiointo-test
   (with-webdriver
-    (kysymysryhmat-sivu/avaa-sivu)
-    (kysymysryhmat-sivu/luo-uusi)
-    (kysymysryhma-sivu/aseta-kysymysryhman-nimi-suomeksi "Uusi kysymysryhmä")
-    (kysymysryhma-sivu/luo-uusi-kysymys)
-    (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
-    (kysymysryhma-sivu/lisaa-kysymys)
-    (kysymysryhma-sivu/tallenna-kysymysryhma)
-    ;; julkaise kysymysryhmä
-    (kysymysryhmat-sivu/julkaise)
-    (kysymysryhmat-sivu/vahvista-julkaisu)))
+    (with-data {:rooli_organisaatio [{:organisaatio "9876543-2"
+                                      :rooli "OPL-VASTUUKAYTTAJA"
+                                      :kayttaja "OID.AIPAL-E2E"
+                                      :voimassa true}] }
+      ;; kysymysryhma luonti
+      (kysymysryhmat-sivu/avaa-sivu)
+      (kysymysryhmat-sivu/luo-uusi)
+      (kysymysryhma-sivu/aseta-kysymysryhman-nimi-suomeksi "Uusi kysymysryhmä")
+      (kysymysryhma-sivu/luo-uusi-kysymys)
+      (kysymysryhma-sivu/aseta-kysymys-suomeksi "Uusi kysymys")
+      (kysymysryhma-sivu/lisaa-kysymys)
+      (kysymysryhma-sivu/tallenna-kysymysryhma)
+      (kysymysryhmat-sivu/julkaise)
+      (kysymysryhmat-sivu/vahvista-julkaisu)
 
-(deftest kysymysryhma-kopiointi-test
-  (with-webdriver
-    (kysymysryhmat-sivu/avaa-sivu)
-    (testing
-      "Kysymysryhman kopiointi"
-      (w/click {:css ".e2e-kopioi-kysymysryhma"})
-      (odota-angular-pyyntoa)
+      ;;  kysymysryhma kopiointi
+      (kysymysryhmat-sivu/avaa-sivu)
       (testing
-        "Kysymysryhmän tiedot"
-        (is (= (kysymysryhma-sivu/kysymysryhman-nimi-fi) "Uusi kysymysryhmä")))
-      (testing
-        "Kysymyksen tiedot"
-        (w/click {:css ".e2e-muokkaa-kysymysta"})
-        (is (= (kysymysryhma-sivu/kysymys-fi) "Uusi kysymys"))
-        (kysymysryhma-sivu/tallenna-kysymys))
-      (odota-angular-pyyntoa)
-      (testing
-        "Kysymysryhmän tallentaminen"
-        (syota-kenttaan "kysymysryhma.nimi_fi" "Muokattu kysymysryhmä")
-        (kysymysryhma-sivu/tallenna-kysymysryhma)
+        "Kysymysryhman kopiointi"
+        (w/click {:css ".e2e-kopioi-kysymysryhma"})
         (odota-angular-pyyntoa)
-        (is (= (count (kysymysryhmat-sivu/nimella "Uusi kysymysryhmä")) 1))
-        (is (= (count (kysymysryhmat-sivu/nimella "Muokattu kysymysryhmä")) 1))))))
+        (testing
+          "Kysymysryhmän tiedot"
+          (is (= (kysymysryhma-sivu/kysymysryhman-nimi-fi) "Uusi kysymysryhmä")))
+        (testing
+          "Kysymyksen tiedot"
+          (w/click {:css ".e2e-muokkaa-kysymysta"})
+          (is (= (kysymysryhma-sivu/kysymys-fi) "Uusi kysymys"))
+          (kysymysryhma-sivu/tallenna-kysymys))
+        (odota-angular-pyyntoa)
+        (testing
+          "Kysymysryhmän tallentaminen"
+          (syota-kenttaan "kysymysryhma.nimi_fi" "Muokattu kysymysryhmä")
+          (kysymysryhma-sivu/tallenna-kysymysryhma)
+          (odota-angular-pyyntoa)
+          (is (= (count (kysymysryhmat-sivu/nimella "Uusi kysymysryhmä")) 1))
+          (is (= (count (kysymysryhmat-sivu/nimella "Muokattu kysymysryhmä")) 1))))
 
-(deftest siivoa-kysymysryhma-kopiointi-test
-  (with-webdriver
-    (kysymysryhmat-sivu/avaa-sivu)
-    ;; siivoa
-    ;; poista ensimmäinen luonnos
-    (kysymysryhmat-sivu/poista)
-    (kysymysryhmat-sivu/vahvista-poisto)
-    ;; palauta ensimmäinen julkaistu
-    (kysymysryhmat-sivu/palauta)
-    (kysymysryhmat-sivu/vahvista-palautus)
-    ;; poista ensimmäinen luonnos
-    (kysymysryhmat-sivu/poista)
-    (kysymysryhmat-sivu/vahvista-poisto)))
-
-(deftest test-ns-hook
-  (kysymysryhma-luonti-test)
-  (kysymysryhma-kopiointi-test)
-  (siivoa-kysymysryhma-kopiointi-test))
+      ;; siivoa kysymysryhma
+      (kysymysryhmat-sivu/avaa-sivu)
+      ; poista ensimmäinen luonnos
+      (kysymysryhmat-sivu/poista)
+      (kysymysryhmat-sivu/vahvista-poisto)
+      ; palauta ensimmäinen julkaistu
+      (kysymysryhmat-sivu/palauta)
+      (kysymysryhmat-sivu/vahvista-palautus)
+      ; poista ensimmäinen luonnos
+      (kysymysryhmat-sivu/poista)
+      (kysymysryhmat-sivu/vahvista-poisto))))
