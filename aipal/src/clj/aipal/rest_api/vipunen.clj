@@ -33,6 +33,7 @@
                 (json/generate-stream (vipunen/hae-kaikki))
                 (.flush)))
      :headers {"Content-Type" "application/json"}})
+  
   (GET "/valtakunnallinen" [alkupvm loppupvm]
     :summary "Valtakunnallisten kysymysten vastausten siirtorajapinta Vipuseen"
     :return [vipunen-skeema/VastauksenTiedot]
@@ -42,11 +43,7 @@
 
       (if (> rivimaara 0)
         {:status 200
-         :body (piped-input-stream
-                 #(->>
-                    (make-writer % {})
-                    (json/generate-stream (vipunen/hae-valtakunnalliset alkupv loppupv))
-                    (.flush)))
+         :body (vipunen/hae-valtakunnalliset alkupv loppupv)      
          :headers {"Content-Type" "application/json"}}
      ; nolla riviä
      {:status 200 

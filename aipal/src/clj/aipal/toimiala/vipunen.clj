@@ -48,16 +48,16 @@
                         "likert_asteikko"
                         "asteikko"
                         "monivalinta"
-                        "kylla_ei_valinta"))
-
+                        "kylla_ei_valinta"
+                        "arvosana"))
 
 (s/defschema VastauksenTiedot {:vastausid s/Int
-                               :monivalintavaihtoehto (s/maybe s/Int)
+                               :monivalintavaihtoehto (s/maybe s/Str)
                                :kysely_sv s/Str
-                               :taustakysymys_aiempi_tilanne TK_asema  
+                               :taustakysymys_aiempi_tilanne (s/maybe TK_asema)
                                :kysymysryhma_sv s/Str
                                :opintoala_sv (s/maybe s/Str)
-                               :vaihtoehto (s/maybe s/Str)
+                               :vaihtoehto (s/maybe s/Int)
                                :suorituskieli s/Str
                                :valmistavan_koulutuksen_oppilaitos_fi (s/maybe s/Str)
                                :valmistavan_koulutuksen_oppilaitos_sv (s/maybe s/Str)
@@ -68,7 +68,7 @@
                                :kysymysryhmaid s/Int
                                :koulutustoimija_sv (s/maybe s/Str)
                                :taustakysymys_sukupuoli TK_sukupuoli
-                               :taustakysymys_tavoite TK_tavoite
+                               :taustakysymys_tavoite (s/maybe TK_tavoite)
                                :valmistavan_koulutuksen_jarjestaja (s/maybe s/Str)
                                :vastaajaid s/Int
                                :opintoala_fi (s/maybe s/Str)
@@ -88,7 +88,7 @@
                                :kyselykerta s/Str
                                :opintoalatunnus (s/maybe s/Str)
                                :valmistavan_koulutuksen_jarjestaja_fi (s/maybe s/Str)
-                               :numerovalinta s/Int
+                               :numerovalinta (s/maybe s/Int)
                                :taustakysymys_aidinkieli TK_kieli
                                :kysymys_sv s/Str
                                :valtakunnallinen s/Bool
