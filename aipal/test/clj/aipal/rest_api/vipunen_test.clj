@@ -7,27 +7,20 @@
             [aipal.sql.test-data-util :refer :all]
             [aipal.rest-api.rest-util :refer [rest-kutsu body-json session]]))
 
-;     (s/validate aipal.toimiala.vipunen/VastauksenTiedot (first (body-json response)))
-
-
-; TODO tarkista status = 200
 (defn hae-vastaus [peridot-session alkupvm loppupvm]
   (let [response (-> peridot-session
                    (peridot/request "/api/vipunen/valtakunnallinen"
-                     :request-method :get
-                     :params {:alkupvm alkupvm
-                              :loppupvm loppupvm})
+                     :request-method :post
+                     :body (str "{\"alkupvm\": \"" alkupvm "\"," "\"loppupvm\": \"" loppupvm "\"}"))
                    :response)
         clj-json (body-json response)]
     (is (= (:status response) 200))
     clj-json))
-
   
 (defn tarkista-vastaus [oikea-vastaus-file & testitulokset]
   (let [correct (clojure.edn/read-string (slurp oikea-vastaus-file))]
     (doseq [tulos testitulokset] 
       (is (= correct tulos)))))
-
     
 (deftest ^:integraatio vastaajatunnusten-haku-kyselykerralla
   (let [peridot (session)

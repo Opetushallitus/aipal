@@ -34,7 +34,9 @@
                 (.flush)))
      :headers {"Content-Type" "application/json"}})
   
-  (GET "/valtakunnallinen" [alkupvm loppupvm]
+  (POST "/valtakunnallinen" []
+    :body-params [alkupvm :- s/Str
+                  loppupvm :- s/Str]
     :summary "Valtakunnallisten kysymysten vastausten siirtorajapinta Vipuseen"
     :return [vipunen-skeema/VastauksenTiedot]
     (let [alkupv (parse-iso-date alkupvm)
