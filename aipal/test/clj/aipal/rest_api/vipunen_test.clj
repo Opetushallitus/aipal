@@ -6,8 +6,8 @@
             [aipal.sql.test-data-util :refer :all]
             [aipal.rest-api.rest-util :refer [rest-kutsu body-json session]]))
 
-(defn hae-vastaus [alkupvm loppupvm]
-  (let [response (-> (session)
+(defn hae-vastaus [peridot-session alkupvm loppupvm]
+  (let [response (-> peridot-session
                    (peridot/request "/api/vipunen/valtakunnallinen"
                      :request-method :get
                      :params {:alkupvm alkupvm
@@ -15,28 +15,28 @@
                    :response)]
     (body-json response)))
   
+(defn tarkista-vastaus [oikea-vastaus-file & testitulokset]
+  (let [correct (clojure.edn/read-string (slurp oikea-vastaus-file))]
+    (for [result testitulokset]
+      (is (= correct result)))))
+    
 (deftest ^:integraatio vastaajatunnusten-haku-kyselykerralla
-  (let [response (hae-vastaus "2016-02-07"
+  (let [peridot (session)
+        response (hae-vastaus peridot "2016-02-07"
                               "2016-03-05")
-        response2 (hae-vastaus "2016-02-06" "2016-03-05")
-        ei-vastauksia (hae-vastaus "2011-02-07"
+        response2 (hae-vastaus peridot "2016-02-06" "2016-03-05")
+        ei-vastauksia (hae-vastaus peridot "2011-02-07"
                                     "2016-02-03")
-        vastauksia (hae-vastaus "2016-01-01" "2016-02-04")
-        vastauksia2 (hae-vastaus "2016-02-04" "2016-02-04")]
+        vastauksia (hae-vastaus peridot "2016-01-01" "2016-02-04")
+        vastauksia2 (hae-vastaus peridot "2016-02-04" "2016-02-04")]
     (testing "aikavälillä rajattuna ei tule vastauksia"
       (is (empty? ei-vastauksia)))
-    
-    (let [output-file "test-resources/vipunen-valtakunnalliset-perus.edn"
-          oikea-vastaus (clojure.edn/read-string (slurp output-file))]
-      (testing "päivämäärävälin rajaus alkupvm toimii oikein"
-        (is (= oikea-vastaus response))
-        (is (= oikea-vastaus response2))))
- 
-    (let [output-file "test-resources/vipunen-vastauksia.edn"
-          oikea-vastaus (clojure.edn/read-string (slurp output-file))]
-      (testing "päivämäärävälin rajaus loppupvm toimii oikein"
-        (is (= oikea-vastaus vastauksia))
-        (is (= oikea-vastaus vastauksia2))))
+
+    (testing "päivämäärävälin rajaus alkupvm toimii oikein"    
+      (tarkista-vastaus "test-resources/vipunen-valtakunnalliset-perus.edn" response response2))
+
+    (testing "päivämäärävälin rajaus loppupvm toimii oikein"
+      (tarkista-vastaus "test-resources/vipunen-vastauksia.edn" vastauksia vastauksia2))
     
     ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
 ;    (spit "filetto" (with-out-str (clojure.pprint/pprint vastauksia)))
