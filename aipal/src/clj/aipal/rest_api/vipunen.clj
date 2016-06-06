@@ -19,6 +19,7 @@
             [clojure.java.io :refer [make-writer]]
             [ring.util.io :refer [piped-input-stream]]
             [aipal.arkisto.vipunen :as vipunen]
+            [aipal.toimiala.vipunen :as vipunen-skeema]
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
@@ -33,23 +34,22 @@
                 (.flush)))
      :headers {"Content-Type" "application/json"}})
   (GET "/valtakunnallinen" [alkupvm loppupvm]
-;        :body-params [alkupvm 
-;                      loppupvm ]
+    :summary "Valtakunnallisten kysymysten vastausten siirtorajapinta Vipuseen"
+    :return [vipunen-skeema/VastauksenTiedot]
+    (let [alkupv (parse-iso-date alkupvm)
+          loppupv (parse-iso-date loppupvm)
+          rivimaara (:lkm (first (vipunen/laske-valtakunnalliset alkupv loppupv)))]
 
-        (let [alkupv (parse-iso-date alkupvm)
-              loppupv (parse-iso-date loppupvm)
-              rivimaara (:lkm (first (vipunen/laske-valtakunnalliset alkupv loppupv)))]
-
-          (if (> rivimaara 0)
-          {:status 200
-           :body (piped-input-stream
-                   #(->>
-                      (make-writer % {})
-                      (json/generate-stream (vipunen/hae-valtakunnalliset alkupv loppupv))
-                      (.flush)))
-           :headers {"Content-Type" "application/json"}}
-         ; nolla riviä
-         {:status 200 
-          :body []
-          :headers {"Content-Type" "application/json"}})           
-          )))
+      (if (> rivimaara 0)
+        {:status 200
+         :body (piped-input-stream
+                 #(->>
+                    (make-writer % {})
+                    (json/generate-stream (vipunen/hae-valtakunnalliset alkupv loppupv))
+                    (.flush)))
+         :headers {"Content-Type" "application/json"}}
+     ; nolla riviä
+     {:status 200 
+      :body []
+      :headers {"Content-Type" "application/json"}})           
+      )))
