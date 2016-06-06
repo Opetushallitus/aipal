@@ -94,43 +94,43 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-2,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-2,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-2,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-2,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-2,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-2,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-2,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-2,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312022,-2,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312023,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-2,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-2,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-2,to_date('2016-02-04', 'YYYY-MM-DD'),5, null);
+	(7312034,-2,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312035,-2,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312036,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),		
+	(7312037,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312038,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312039,-2,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312040,-2,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),		
+	(7312017,-2,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312018,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312019,-2,to_date('2016-02-05', 'YYYY-MM-DD'),5, null),
+	(7312020,-2,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),		
+	(7312021,-2,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312022,-2,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'ei'),
+	(7312023,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312024,-2,to_date('2016-02-05', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-2,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),
+	(7312026,-2,to_date('2016-02-05', 'YYYY-MM-DD'),5, null);
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-3,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-3,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-3,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-3,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-3,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-3,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-3,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-3,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312022,-3,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312023,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-3,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-3,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-3,to_date('2016-02-04', 'YYYY-MM-DD'),5, null);
+	(7312034,-3,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312035,-3,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312036,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),		
+	(7312037,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312038,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312039,-3,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312040,-3,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),		
+	(7312017,-3,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312018,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312019,-3,to_date('2016-02-07', 'YYYY-MM-DD'),5, null),
+	(7312020,-3,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),		
+	(7312021,-3,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'ei'),
+	(7312022,-3,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312023,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312024,-3,to_date('2016-02-07', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-3,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),
+	(7312026,-3,to_date('2016-02-07', 'YYYY-MM-DD'),5, null);
 	
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
@@ -243,43 +243,43 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-20,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-20,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-20,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-20,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-20,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-20,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-20,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-20,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312022,-20,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312023,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-20,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-20,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-20,to_date('2016-02-04', 'YYYY-MM-DD'),2, null);
+	(7312034,-20,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312035,-20,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312036,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),		
+	(7312037,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312038,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312039,-20,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312040,-20,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),		
+	(7312017,-20,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312018,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312019,-20,to_date('2016-02-05', 'YYYY-MM-DD'),5, null),
+	(7312020,-20,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),		
+	(7312021,-20,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312022,-20,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'ei'),
+	(7312023,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312024,-20,to_date('2016-02-05', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-20,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),
+	(7312026,-20,to_date('2016-02-05', 'YYYY-MM-DD'),2, null);
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-30,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-30,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-30,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-30,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-30,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-30,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-30,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-30,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312022,-30,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312023,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-30,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-30,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null);
+	(7312034,-30,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312035,-30,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312036,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),		
+	(7312037,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312038,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312039,-30,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312040,-30,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),		
+	(7312017,-30,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312018,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312019,-30,to_date('2016-02-07', 'YYYY-MM-DD'),5, null),
+	(7312020,-30,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),		
+	(7312021,-30,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'ei'),
+	(7312022,-30,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312023,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312024,-30,to_date('2016-02-07', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-30,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),
+	(7312026,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null);
 	
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
@@ -474,3 +474,5 @@ ALTER sequence kysymysryhma_kysymysryhmaid_seq RESTART with 10;
 REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;
 REFRESH MATERIALIZED VIEW vastaaja_taustakysymysryhma_view;
 REFRESH MATERIALIZED VIEW kysymysryhma_taustakysymysryhma_view;
+refresh materialized view vipunen_view;
+
