@@ -24,15 +24,28 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
 
+(def maxrows 50000)
+
+; TODO: testidata
 (defroutes reitit
-  (GET "/" []
-    {:status 200
-     :body (piped-input-stream
-             #(->>
-                (make-writer % {})
-                (json/generate-stream (vipunen/hae-kaikki))
-                (.flush)))
-     :headers {"Content-Type" "application/json"}})
+  (POST "/" []
+    :body-params [alkupvm :- s/Str
+                  loppupvm :- s/Str]
+    :summary "Vastausten siirtorajapinta Vipuseen"
+    :return [vipunen-skeema/VastauksenTiedot]
+    (let [alkupv (parse-iso-date alkupvm)
+          loppupv (parse-iso-date loppupvm)
+          rivimaara (:lkm (first (vipunen/laske-kaikki alkupv loppupv)))]
+
+      (if (< rivimaara maxrows)
+        {:status 200
+         :body (vipunen/hae-kaikki alkupv loppupv)      
+         :headers {"Content-Type" "application/json"}}
+      ; liian monta riviä
+      {:status 500 
+       :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
+       :headers {"Content-Type" "application/json"}})))
+
   
   (POST "/valtakunnallinen" []
     :body-params [alkupvm :- s/Str
@@ -43,12 +56,12 @@
           loppupv (parse-iso-date loppupvm)
           rivimaara (:lkm (first (vipunen/laske-valtakunnalliset alkupv loppupv)))]
 
-      (if (> rivimaara 0)
+      (if (< rivimaara maxrows)
         {:status 200
          :body (vipunen/hae-valtakunnalliset alkupv loppupv)      
          :headers {"Content-Type" "application/json"}}
-     ; nolla riviä
-     {:status 200 
-      :body []
-      :headers {"Content-Type" "application/json"}})           
-      )))
+        ; liian monta riviä
+        {:status 500 
+         :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
+         :headers {"Content-Type" "application/json"}}))))
+ ;     )))

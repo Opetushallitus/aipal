@@ -18,31 +18,47 @@
     [aipal.integraatio.sql.korma :refer :all]
     [oph.korma.common :refer [joda-date->sql-date joda-datetime->sql-timestamp] ]))
 
-(defn hae-kaikki []
-  (sql/select vipunen_view))
 
-(defn laske-valtakunnalliset 
-  [alkup loppup]
+(defn ^:private hae [alkup loppup vain-valtakunnalliset]
   (let [alkupvm (clj-time.coerce/to-sql-date (or alkup (time/local-date 1900 1 1)))
-        loppupvm (clj-time.coerce/to-sql-date (or loppup (time/plus (time/today-at-midnight) (time/days -1))))]
+        loppupvm (clj-time.coerce/to-sql-date (or loppup (time/plus (time/today-at-midnight) (time/days -1))))
+        valtakunnalliset-ehto (if vain-valtakunnalliset {:valtakunnallinen true} true)]
+    (sql/select vipunen_view
+        (sql/where 
+          (and 
+            valtakunnalliset-ehto
+            (>= :vastausaika alkupvm)
+            (<= :vastausaika loppupvm))))))
+
+
+(defn ^:private laske [alkup loppup vain-valtakunnalliset]
+  (let [alkupvm (clj-time.coerce/to-sql-date (or alkup (time/local-date 1900 1 1)))
+        loppupvm (clj-time.coerce/to-sql-date (or loppup (time/plus (time/today-at-midnight) (time/days -1))))
+        valtakunnalliset-ehto (if vain-valtakunnalliset {:valtakunnallinen true} true)]
     (sql/select vipunen_view
       (sql/aggregate (count :*) :lkm)
         (sql/where 
           (and 
-            {:valtakunnallinen true}
+            valtakunnalliset-ehto
             (>= :vastausaika alkupvm)
             (<= :vastausaika loppupvm))))))
-  
+
+(defn laske-valtakunnalliset 
+  [alkup loppup]
+  (laske alkup loppup true))
 
 (defn hae-valtakunnalliset 
   ([]
     (hae-valtakunnalliset nil nil))
   ([alkup loppup]
-    (let [alkupvm (clj-time.coerce/to-sql-date (or alkup (time/local-date 1900 1 1)))
-          loppupvm (clj-time.coerce/to-sql-date (or loppup (time/plus (time/today-at-midnight) (time/days -1))))]
-      (sql/select vipunen_view
-          (sql/where 
-            (and 
-              {:valtakunnallinen true}
-              (>= :vastausaika alkupvm)
-              (<= :vastausaika loppupvm)))))))
+    (hae alkup loppup true)))
+
+(defn laske-kaikki
+  [alkup loppup]
+  (laske alkup loppup false))
+
+(defn hae-kaikki 
+  ([]
+    (hae-kaikki nil nil))
+  ([alkup loppup]
+    (hae alkup loppup false)))

@@ -53,9 +53,9 @@
 
 (s/defschema VastauksenTiedot {:vastausid s/Int
                                :monivalintavaihtoehto (s/maybe s/Str)
-                               :kysely_sv s/Str
+                               :kysely_sv (s/maybe s/Str)
                                :taustakysymys_aiempi_tilanne (s/maybe TK_asema)
-                               :kysymysryhma_sv s/Str
+                               :kysymysryhma_sv (s/maybe s/Str)
                                :opintoala_sv (s/maybe s/Str)
                                :vaihtoehto (s/maybe s/Int)
                                :suorituskieli s/Str
