@@ -94,43 +94,43 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-2,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-2,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-2,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-2,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-2,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-2,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-2,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-2,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312022,-2,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312023,-2,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-2,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-2,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-2,to_date('2016-02-04', 'YYYY-MM-DD'),5, null);
+	(7312034,-2,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312035,-2,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312036,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),		
+	(7312037,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312038,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312039,-2,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312040,-2,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),		
+	(7312017,-2,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312018,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312019,-2,to_date('2016-02-05', 'YYYY-MM-DD'),5, null),
+	(7312020,-2,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),		
+	(7312021,-2,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312022,-2,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'ei'),
+	(7312023,-2,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312024,-2,to_date('2016-02-05', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-2,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),
+	(7312026,-2,to_date('2016-02-05', 'YYYY-MM-DD'),5, null);
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-3,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-3,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-3,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-3,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-3,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-3,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-3,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-3,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312022,-3,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312023,-3,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-3,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-3,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-3,to_date('2016-02-04', 'YYYY-MM-DD'),5, null);
+	(7312034,-3,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312035,-3,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312036,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),		
+	(7312037,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312038,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312039,-3,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312040,-3,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),		
+	(7312017,-3,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312018,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312019,-3,to_date('2016-02-07', 'YYYY-MM-DD'),5, null),
+	(7312020,-3,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),		
+	(7312021,-3,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'ei'),
+	(7312022,-3,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312023,-3,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312024,-3,to_date('2016-02-07', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-3,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),
+	(7312026,-3,to_date('2016-02-07', 'YYYY-MM-DD'),5, null);
 	
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
@@ -243,43 +243,43 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-20,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-20,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-20,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-20,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-20,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-20,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-20,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-20,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312022,-20,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312023,-20,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-20,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-20,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-20,to_date('2016-02-04', 'YYYY-MM-DD'),2, null);
+	(7312034,-20,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312035,-20,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),
+	(7312036,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),		
+	(7312037,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312038,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312039,-20,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312040,-20,to_date('2016-02-05', 'YYYY-MM-DD'),0, null),		
+	(7312017,-20,to_date('2016-02-05', 'YYYY-MM-DD'),2, null),
+	(7312018,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312019,-20,to_date('2016-02-05', 'YYYY-MM-DD'),5, null),
+	(7312020,-20,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),		
+	(7312021,-20,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312022,-20,to_date('2016-02-05', 'YYYY-MM-DD'),null, 'ei'),
+	(7312023,-20,to_date('2016-02-05', 'YYYY-MM-DD'),1, null),
+	(7312024,-20,to_date('2016-02-05', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-20,to_date('2016-02-05', 'YYYY-MM-DD'),4, null),
+	(7312026,-20,to_date('2016-02-05', 'YYYY-MM-DD'),2, null);
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
  values 
-	(7312034,-30,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312035,-30,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),
-	(7312036,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),		
-	(7312037,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312038,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312039,-30,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312040,-30,to_date('2016-02-04', 'YYYY-MM-DD'),0, null),		
-	(7312017,-30,to_date('2016-02-04', 'YYYY-MM-DD'),2, null),
-	(7312018,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312019,-30,to_date('2016-02-04', 'YYYY-MM-DD'),5, null),
-	(7312020,-30,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),		
-	(7312021,-30,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'ei'),
-	(7312022,-30,to_date('2016-02-04', 'YYYY-MM-DD'),null, 'kylla'),
-	(7312023,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null),
-	(7312024,-30,to_date('2016-02-04', 'YYYY-MM-DD'),null,'ei'),		
-	(7312025,-30,to_date('2016-02-04', 'YYYY-MM-DD'),4, null),
-	(7312026,-30,to_date('2016-02-04', 'YYYY-MM-DD'),1, null);
+	(7312034,-30,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312035,-30,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),
+	(7312036,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),		
+	(7312037,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312038,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312039,-30,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312040,-30,to_date('2016-02-07', 'YYYY-MM-DD'),0, null),		
+	(7312017,-30,to_date('2016-02-07', 'YYYY-MM-DD'),2, null),
+	(7312018,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312019,-30,to_date('2016-02-07', 'YYYY-MM-DD'),5, null),
+	(7312020,-30,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),		
+	(7312021,-30,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'ei'),
+	(7312022,-30,to_date('2016-02-07', 'YYYY-MM-DD'),null, 'kylla'),
+	(7312023,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null),
+	(7312024,-30,to_date('2016-02-07', 'YYYY-MM-DD'),null,'ei'),		
+	(7312025,-30,to_date('2016-02-07', 'YYYY-MM-DD'),4, null),
+	(7312026,-30,to_date('2016-02-07', 'YYYY-MM-DD'),1, null);
 	
 
 insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoehto)
@@ -469,8 +469,69 @@ insert into vastaus (kysymysid, vastaajaid, vastausaika, numerovalinta, vaihtoeh
 -- vanhat taustakysmyykset ovat id-numeroilla 1..4 joten resetoidaan sekvenssi
 ALTER sequence kysymysryhma_kysymysryhmaid_seq RESTART with 10;
 
+
+-- Testikysely, jossa on omia koulutuksen järjestäjän kysymyksiä mukana
+INSERT INTO kysymysryhma (kysymysryhmaid, voimassa_alkupvm, voimassa_loppupvm, taustakysymykset, valtakunnallinen, nimi_fi, nimi_sv, selite_fi, selite_sv, koulutustoimija, oppilaitos, toimipaikka, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, tila, kuvaus_fi, kuvaus_sv, ntm_kysymykset) 
+  VALUES (-1010, NULL, NULL, false, false, 'Omat kyssät', NULL, NULL, NULL, '2345678-0', NULL, NULL, 'OID.T-1001', 'OID.T-1001', '2016-06-07 08:54:17.726058+00', '2016-06-07 08:54:22.100875+00', 'julkaistu', NULL, NULL, false);
+
+INSERT INTO kysymys (kysymysid, pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, jarjestys, jatkokysymysid, monivalinta_max, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, eos_vastaus_sallittu) 
+  VALUES (-1001, true, false, 'kylla_ei_valinta', -1010, 'Onko koulussa käytävä?', '', 0, NULL, NULL, NULL, 'OID.T-1001', 'OID.T-1001', '2016-06-07 08:54:17.726058+00', '2016-06-07 08:54:17.726058+00', true);
+INSERT INTO kysymys (kysymysid, pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, jarjestys, jatkokysymysid, monivalinta_max, max_vastaus, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, eos_vastaus_sallittu)
+  VALUES (-1002, true, false, 'vapaateksti', -1010, 'Wo kan man einen angenehmende nacht werbringen?', '', 1, NULL, NULL, 1000, 'OID.T-1001', 'OID.T-1001', '2016-06-07 08:54:17.726058+00', '2016-06-07 08:54:17.726058+00', NULL);
+
+
+INSERT INTO kysely (kyselyid, voimassa_alkupvm, voimassa_loppupvm, nimi_fi, nimi_sv, selite_fi, selite_sv, koulutustoimija, oppilaitos, toimipaikka, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, tila) 
+  VALUES (-1001, '2016-06-01', NULL, 'Uteliaiden ryhmäkysely', NULL, NULL, NULL, '2345678-0', NULL, NULL, 'OID.T-1001', 'OID.T-1001', '2016-06-07 08:55:53.249328+00', '2016-06-07 08:55:58.271004+00', 'julkaistu');
+INSERT INTO kysely (kyselyid, voimassa_alkupvm, voimassa_loppupvm, nimi_fi, nimi_sv, selite_fi, selite_sv, koulutustoimija, oppilaitos, toimipaikka, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, tila) 
+  VALUES (-1002, '2016-06-07', NULL, 'Utelointi', NULL, NULL, NULL, '2345678-0', NULL, NULL, 'OID.T-1001', 'OID.T-1001', '2016-06-07 09:21:53.248571+00', '2016-06-07 09:21:57.150769+00', 'julkaistu');
+
+insert into kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys)
+  values (-1001, -1010, 0),
+         (-1002, 3341884, 0),
+         (-1002, -1010, 1);
+
+INSERT INTO kyselykerta (kyselykertaid, kyselyid, nimi, voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, lukittu) 
+  VALUES (-1001, -1001, 'Utelo', '2016-06-01', NULL, 'OID.T-1001', 'OID.T-1001', '2016-06-07 08:56:09.790164+00', '2016-06-07 08:56:09.790164+00', false);
+INSERT INTO kyselykerta (kyselykertaid, kyselyid, nimi, voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, lukittu) 
+  VALUES (-1002, -1002, 'Kiinnostaa.jpeg', '2016-06-07', NULL, 'OID.T-1001', 'OID.T-1001', '2016-06-07 09:22:13.206293+00', '2016-06-07 09:22:13.206293+00', false);
+ 
+INSERT INTO vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, valmistavan_koulutuksen_jarjestaja, voimassa_alkupvm, voimassa_loppupvm, valmistavan_koulutuksen_oppilaitos, suorituskieli) 
+  VALUES (-1001, -1001, 5, 'X00002', 'MWL7H7', 1, false, 'OID.T-1001', 'OID.T-1001', '2016-06-07 08:56:25.782641+00', '2016-06-07 08:56:25.782641+00', '2345678-0', '2016-06-07', NULL, NULL, 'fi');
+INSERT INTO vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, valmistavan_koulutuksen_jarjestaja, voimassa_alkupvm, voimassa_loppupvm, valmistavan_koulutuksen_oppilaitos, suorituskieli) 
+  VALUES (-1002, -1002, 4, 'X00002', '37CJMJ', 1, false, 'OID.T-1001', 'OID.T-1001', '2016-06-07 09:22:21.136518+00', '2016-06-07 09:22:21.136518+00', '2345678-0', '2016-06-07', NULL, NULL, 'fi');
+
+
+INSERT INTO vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) 
+  VALUES (-1001, -1001, -1001, true, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:02:34.804066+00', '2016-06-07 09:02:34.804066+00');
+INSERT INTO vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) 
+  VALUES (-1002, -1002, -1002, true, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00');
+
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100251, -1001, -1001, '2016-06-07', NULL, NULL, 'kylla', NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:02:34.804066+00', '2016-06-07 09:02:34.804066+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100252, -1002, -1001, '2016-06-07', 'Ich weiss nicht.', NULL, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:02:34.804066+00', '2016-06-07 09:02:34.804066+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100260, -1001, -1002, '2016-06-07', NULL, NULL, 'kylla', NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100261, -1002, -1002, '2016-06-07', 'Ich weiss nicht.', NULL, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100253, 7312034, -1002, '2016-06-07', NULL, 1, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100254, 7312035, -1002, '2016-06-07', NULL, 1, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100255, 7312036, -1002, '2016-06-07', NULL, 1, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100256, 7312037, -1002, '2016-06-07', NULL, 0, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100257, 7312038, -1002, '2016-06-07', NULL, 1, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100258, 7312039, -1002, '2016-06-07', NULL, 1, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+INSERT INTO vastaus (vastausid, kysymysid, vastaajaid, vastausaika, vapaateksti, numerovalinta, vaihtoehto, jatkovastausid, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, en_osaa_sanoa) 
+  VALUES (-100259, 7312040, -1002, '2016-06-07', NULL, 0, NULL, NULL, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:23:14.083583+00', '2016-06-07 09:23:14.083583+00', false);
+
 --- päivitetään näkymät, jotta raportointi toimii.
 	
 REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;
 REFRESH MATERIALIZED VIEW vastaaja_taustakysymysryhma_view;
 REFRESH MATERIALIZED VIEW kysymysryhma_taustakysymysryhma_view;
+refresh materialized view vipunen_view;
