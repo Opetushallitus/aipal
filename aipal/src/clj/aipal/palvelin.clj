@@ -95,7 +95,7 @@
             fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
             auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
       (cond
-        (.startsWith (path-info request) "/api/vipunen")
+        (and  (kehitysmoodi? asetukset) (.startsWith (path-info request) "/api/vipunen"))
           (do
             (log/info "Vipunen HUOM: PoC, oikeasti halutaan autentikointi")
             (handler request))
