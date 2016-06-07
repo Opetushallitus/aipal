@@ -56,15 +56,14 @@
   (let [peridot (session)
         response (hae-vastaus-kaikki peridot "2016-02-07" "2016-06-07")
         response2 (hae-vastaus-kaikki peridot "2016-02-06" "2016-06-07")
-        ei-vastauksia (hae-vastaus-kaikki peridot "2011-02-07"
-                                    "2016-02-03")
+        ei-vastauksia (hae-vastaus-kaikki peridot "2011-02-07" "2016-02-03")
         vastauksia (hae-vastaus-kaikki peridot "2016-01-01" "2016-02-04")
         vastauksia2 (hae-vastaus-kaikki peridot "2016-02-04" "2016-02-04")]
         
     (testing "aikavälillä rajattuna ei tule vastauksia"
       (is (empty? ei-vastauksia)))
     
-    (testing "päivämäärävälin rajaus alkupvm toimii oikein"    
+    (testing "Koulutuksen järjestäjän omat kysymykset näkyvät rajapinnassa (ei kuitenkaan vapaateksti-kysymyksen vastaus)"    
       (tarkista-vastaus "test-resources/vipunen-koulutuksenjarjestajan-kysymykset.edn" response response2))
 
     (testing "päivämäärävälin rajaus loppupvm toimii oikein"
