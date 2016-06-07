@@ -103,3 +103,5 @@
 
 (defentity tutkintotyyppi
   (sql/pk :tutkintotyyppi))
+
+(defentity oppilaitostyyppi_tutkintotyyppi)

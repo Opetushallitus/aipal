@@ -87,8 +87,8 @@
         </ui-select>
       </label>
     </div>
-    <div>
-      <h3>{{i18n.vastaajatunnus.koulutusmuoto}}</h3>
+    <div ng-if="naytaKoulutusmuoto">
+      <h1>{{i18n.vastaajatunnus.koulutusmuoto}}</h1>
       <div class="form-group">
         <div class="radio">
           <label>

@@ -26,10 +26,13 @@
   (sql/select taulut/rooli_organisaatio
     (sql/join taulut/koulutustoimija
               (= :rooli_organisaatio.organisaatio :koulutustoimija.ytunnus))
+    (sql/join taulut/oppilaitos
+              (= :koulutustoimija.ytunnus :oppilaitos.koulutustoimija))
     (sql/fields :rooli :organisaatio :rooli_organisaatio_id
                 [:koulutustoimija.nimi_fi :koulutustoimija_fi]
                 [:koulutustoimija.nimi_sv :koulutustoimija_sv]
-                [:koulutustoimija.nimi_en :koulutustoimija_en])
+                [:koulutustoimija.nimi_en :koulutustoimija_en]
+                [:oppilaitos.oppilaitostyyppi :oppilaitostyyppi])
     (sql/where {:kayttaja oid
                 :voimassa true})))
 

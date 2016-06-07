@@ -275,6 +275,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
             $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
           }
           $scope.oppilaitokset = oppilaitokset;
+          var oppilaitostyypit = oppilaitokset.map(function(o){return o.oppilaitostyyppi});
+
+          $scope.naytaKoulutusmuoto = oppilaitostyypit.indexOf("41") != -1;
+
         });
       }
 
