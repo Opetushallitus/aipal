@@ -48,7 +48,7 @@
       (tarkista-vastaus "test-resources/vipunen-vastauksia.edn" vastauksia vastauksia2))
     
     ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
-;    (spit "filetto" (with-out-str (clojure.pprint/pprint vastauksia)))
+  ;  (spit "filetto" (with-out-str (clojure.pprint/pprint vastauksia)))
      
     ))
 
@@ -62,13 +62,13 @@
         
     (testing "aikavälillä rajattuna ei tule vastauksia"
       (is (empty? ei-vastauksia)))
-    
+        
+    ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
+     ;(spit "filetto" (with-out-str (clojure.pprint/pprint response)))     
+     
     (testing "Koulutuksen järjestäjän omat kysymykset näkyvät rajapinnassa (ei kuitenkaan vapaateksti-kysymyksen vastaus)"    
       (tarkista-vastaus "test-resources/vipunen-koulutuksenjarjestajan-kysymykset.edn" response response2))
-
+     
     (testing "päivämäärävälin rajaus loppupvm toimii oikein"
       (tarkista-vastaus "test-resources/vipunen-vastauksia.edn" vastauksia vastauksia2))
-    
-    ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
-;     (spit "filetto" (with-out-str (clojure.pprint/pprint vastauksia)))     
     ))

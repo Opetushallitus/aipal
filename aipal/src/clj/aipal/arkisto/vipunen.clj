@@ -28,7 +28,9 @@
           (and 
             valtakunnalliset-ehto
             (>= :vastausaika alkupvm)
-            (<= :vastausaika loppupvm))))))
+            (<= :vastausaika loppupvm)))
+        (sql/order :vastausid
+        ))))
 
 
 (defn ^:private laske [alkup loppup vain-valtakunnalliset]
