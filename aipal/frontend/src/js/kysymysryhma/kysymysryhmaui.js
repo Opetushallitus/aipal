@@ -195,7 +195,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       'kylla_ei_valinta',
       'likert_asteikko',
       'monivalinta',
-      'vapaateksti'
+      'vapaateksti',
+      'arvosana4_ja_eos'
     ];
     $scope.vapaateksti_maksimit = [500,1000,1500,2000,2500,3000];
 
