@@ -28,6 +28,7 @@
           aktiivinen-rooli (or (when rooli (some-value #(= rooli (:rooli_organisaatio_id %)) aktiiviset-roolit))
                                (first (sort-by (comp roolijarjestys :rooli) aktiiviset-roolit)))
           aktiivinen-koulutustoimija (:organisaatio aktiivinen-rooli)
+          oppilaitostyypit  (distinct (remove nil? (map :oppilaitostyyppi aktiiviset-roolit)))
           ik (when impersonoitu-oid
                (kayttaja-arkisto/hae impersonoitu-oid))]
       (binding [*kayttaja*
@@ -36,6 +37,7 @@
                        :aktiiviset-roolit aktiiviset-roolit
                        :aktiivinen-rooli aktiivinen-rooli
                        :aktiivinen-koulutustoimija aktiivinen-koulutustoimija
+                       :oppilaitostyypit oppilaitostyypit
                        :nimi (kayttajan-nimi k)
                        :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
         (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
