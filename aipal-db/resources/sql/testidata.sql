@@ -12,11 +12,11 @@ insert into opintoala (opintoalatunnus, koulutusala, nimi_fi, nimi_sv)
 insert into opintoala (opintoalatunnus, koulutusala, nimi_fi, nimi_sv)
   values ('702', '7', 'Terveysala', 'Hälsoområdet');
 
-insert into tutkinto (tutkintotunnus, opintoala, nimi_fi, nimi_sv)
-  values ('064122', '509', 'Insinööri, kuljetustekniikka', 'Ingenjör, transportteknik');
+insert into tutkinto (tutkintotunnus, opintoala, nimi_fi, nimi_sv, tutkintotyyppi)
+  values ('064122', '509', 'Insinööri, kuljetustekniikka', 'Ingenjör, transportteknik', '12');
   
-insert into tutkinto (tutkintotunnus, opintoala, nimi_fi, nimi_sv)
-  values ('056115', '702', 'Sairaanhoitaja, lasten sairaanhoito', 'Sjukskötare, barnsjukvård');
+insert into tutkinto (tutkintotunnus, opintoala, nimi_fi, nimi_sv, tutkintotyyppi)
+  values ('056115', '702', 'Sairaanhoitaja, lasten sairaanhoito', 'Sjukskötare, barnsjukvård', '06');
  
  
 
@@ -25,6 +25,9 @@ insert into koulutustoimija (ytunnus, nimi_fi, nimi_sv)
   
 insert into oppilaitos (oppilaitoskoodi, koulutustoimija, nimi_fi, nimi_sv)
  values ('46572', '2325448-4', 'Hikipajan koulu', 'Hikiklubben skola');
+
+insert into oppilaitos (oppilaitoskoodi, koulutustoimija, nimi_fi, oppilaitostyyppi)
+ values ('99991', '9876543-2', 'Testi-Oppilaitos (AMK)', '41');
 
 
 
