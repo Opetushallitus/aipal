@@ -25,6 +25,22 @@ koneet nimet ovat aipal-db ja aipal-app
 
 Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Sama käytäntö.
 
+Arvoon kopioidaan ajoittain Aipal-projektiin tehdyt kommitit. Tietokantaongelmien välttämiseksi Aipal:a kehittävän tiimin kanssa on sovittu yhteisestä käytännöstä migraatioiden nimeämiseksi. Asiasta tarkemmin aipal-db:n [README:ssä](https://github.com/CSC-IT-Center-for-Science/arvo/blob/master/aipal-db/README.md)
+
+### Aipal - Arvo merge
+Esimerkki työnkulusta, jolla aipaliin tehdyt kommitit kopioidaan Arvoon:
+
+* git checkout master
+* git pull
+* git checkout aipal-merge
+* git merge master
+* git remote add upstream git@github.com:Opetushallitus/aipal.git
+* git pull upstream master
+* git push
+* git checkout master
+* git merge aipal-merge
+* git push
+
 ## Erityiset riippuvuudet
 
 Katso [Aipal-projekti](https://github.com/Opetushallitus/aipal). Samat riippuvuudet on käytössä tässä.
