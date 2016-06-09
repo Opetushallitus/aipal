@@ -1,9 +1,9 @@
-{:luontipvm "2016-06-07T13:17:20.597Z",
+{:luontipvm "2016-06-09T12:03:57.959Z",
  :raportti
  [{:kysymysryhmaid 3341885,
    :nimi_fi "Näyttötutkintojen taustakysymykset",
    :nimi_sv "Bakgrundsfrågor gällande fristående examina",
-   :vastaajien_maksimimaara [7 11],
+   :vastaajien_maksimimaara [8 12],
    :kysymykset
    [{:jakauma
      [{:vaihtoehto_fi "nainen",
@@ -663,7 +663,7 @@
    :tutkintorakennetaso "opintoala",
    :opintoalat ["X00"]}],
  :vastaajien_lukumaara [7 11],
- :vastaajien_maksimimaara [7 11],
+ :vastaajien_maksimimaara [8 12],
  :nimet
  [{:nimi_fi "Maanviljelyalan testitutkinto",
    :nimi_sv "Maanviljelyalan testitutkinto (sv)"}
