@@ -48,11 +48,11 @@
     (let [ei-rajauksia (valtakunnallinen-raportti/muodosta valtakunnallinen-raportti-params)
           tutkinto2 (valtakunnallinen-raportti/muodosta (assoc valtakunnallinen-raportti-params :tutkinnot ["X00002"]))
           tutkinto1 (valtakunnallinen-raportti/muodosta (assoc valtakunnallinen-raportti-params :tutkinnot ["X00001"]))]
-      (is (= 15 (:vastaajien_lukumaara ei-rajauksia)))
-      (is (= 15 (:vastaajien_maksimimaara ei-rajauksia)))
+      (is (= 16 (:vastaajien_lukumaara ei-rajauksia)))
+      (is (= 16 (:vastaajien_maksimimaara ei-rajauksia)))
       (is (= 4 (:vastaajien_lukumaara tutkinto2)))
       (is (= 4 (:vastaajien_maksimimaara tutkinto2)))
-      (is (= 6 (:vastaajien_lukumaara tutkinto1)))
-      (is (= 6 (:vastaajien_maksimimaara tutkinto1))))))
+      (is (= 7 (:vastaajien_lukumaara tutkinto1)))
+      (is (= 7 (:vastaajien_maksimimaara tutkinto1))))))
       
      

@@ -101,6 +101,8 @@
 (defentity organisaatiopalvelu_log
   (sql/pk :id))
 
+(defentity vipunen_view)
+
 (defentity tutkintotyyppi
   (sql/pk :tutkintotyyppi))
 

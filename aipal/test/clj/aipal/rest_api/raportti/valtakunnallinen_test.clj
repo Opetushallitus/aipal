@@ -53,7 +53,7 @@
     (is (= (:status response) 200))
     (let [vastaus (body-json response)]
       (let [oikea-raportti (clojure.edn/read-string (slurp output-file))]
-        ;(spit "filetto" (with-out-str (clojure.pprint/pprint vastaus)))
+      ;  (spit "filetto" (with-out-str (clojure.pprint/pprint vastaus)))
         (is (= (poista-luontipvm-kentat oikea-raportti) (poista-luontipvm-kentat vastaus)))))))
  
 
