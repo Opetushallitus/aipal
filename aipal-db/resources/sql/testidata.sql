@@ -500,7 +500,10 @@ INSERT INTO vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tu
 INSERT INTO vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, valmistavan_koulutuksen_jarjestaja, voimassa_alkupvm, voimassa_loppupvm, valmistavan_koulutuksen_oppilaitos, suorituskieli) 
   VALUES (-1002, -1002, 4, 'X00001', '37CJMJ', 1, false, 'OID.T-1001', 'OID.T-1001', '2016-06-07 09:22:21.136518+00', '2016-06-07 09:22:21.136518+00', '2345678-0', '2016-06-07', NULL, NULL, 'fi');
 
+INSERT INTO vastaajatunnus (vastaajatunnusid, kyselykertaid, rahoitusmuotoid, tutkintotunnus, tunnus, vastaajien_lkm, lukittu, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, valmistavan_koulutuksen_jarjestaja, voimassa_alkupvm, voimassa_loppupvm, valmistavan_koulutuksen_oppilaitos, suorituskieli) 
+  VALUES (-1003, -1002, 4, 'X00001', '3XCJMJ', 1, false, 'OID.T-1001', 'OID.T-1001', '2016-06-07 09:22:21.136518+00', '2016-06-07 09:22:21.136518+00', '2345678-0', '2016-06-07', NULL, NULL, 'fi');
 
+  
 INSERT INTO vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) 
   VALUES (-1001, -1001, -1001, true, 'VASTAAJA', 'VASTAAJA', '2016-06-07 09:02:34.804066+00', '2016-06-07 09:02:34.804066+00');
 INSERT INTO vastaaja (vastaajaid, kyselykertaid, vastaajatunnusid, vastannut, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika) 
