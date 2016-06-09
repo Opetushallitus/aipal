@@ -4,7 +4,7 @@
    :nimi_fi "Näyttötutkintojen taustakysymykset",
    :nimi_sv "Bakgrundsfrågor gällande fristående examina",
    :nimi_en nil,
-   :vastaajien_maksimimaara [6 10],
+   :vastaajien_maksimimaara [7 11],
    :kysymykset
    [{:jakauma
      [{:vaihtoehto_fi "nainen",
@@ -74,8 +74,8 @@
       {:vaihtoehto_fi "20 - 24",
        :vaihtoehto_sv "20 - 24",
        :vaihtoehto_en nil,
-       :lukumaara [6 8],
-       :osuus [100 80],
+       :lukumaara [7 9],
+       :osuus [100 82],
        :jarjestys 1,
        :vaihtoehto-avain nil}
       {:vaihtoehto_fi "25 - 34",
