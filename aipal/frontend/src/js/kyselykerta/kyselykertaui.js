@@ -128,9 +128,14 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           .success(function(kyselykerta) {
             $scope.kyselykerta = pvm.parsePvm(kyselykerta);
 
-            if($scope.kyselykerta.voimassa_alkupvm) { // bootstrap datepicker takes in a javascript date
+            if($scope.kyselykerta.voimassa_alkupvm) {
               $scope.kyselykerta.voimassa_alkupvm = new Date($scope.kyselykerta.voimassa_alkupvm);
             }
+
+            if($scope.kyselykerta.voimassa_loppupvm) {
+              $scope.kyselykerta.voimassa_loppupvm = new Date($scope.kyselykerta.voimassa_loppupvm);
+            }
+
             if (kyselykerta.lukittu) { $scope.muokkaustila = false; }
           })
           .error(function() {
