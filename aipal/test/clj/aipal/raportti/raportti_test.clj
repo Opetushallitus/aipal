@@ -52,6 +52,6 @@
       (is (= 4 (:vastaajien_lukumaara tutkinto2)))
       (is (= 4 (:vastaajien_maksimimaara tutkinto2)))
       (is (= 7 (:vastaajien_lukumaara tutkinto1)))
-      (is (= 7 (:vastaajien_maksimimaara tutkinto1))))))
+      (is (= 8 (:vastaajien_maksimimaara tutkinto1))))))
       
      
