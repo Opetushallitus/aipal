@@ -33,7 +33,7 @@
             [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
             schema.core
-            
+
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
 
@@ -121,7 +121,7 @@
           (do
             (log/info "development, fake CAS")
             (fake-auth-handler request))
-        :else 
+        :else
           (do
             (log/info "normal CAS authenticated request")
             (auth-handler request))))))
@@ -169,7 +169,7 @@
       wrap-content-type
       wrap-not-modified
       wrap-expires
-      
+
       (auth-middleware asetukset)
       log-request-wrapper
 
@@ -188,7 +188,7 @@
 
 (defn ^:integration-api kaynnista! [alkuasetukset]
   (try
-    (log/info "Käynnistetään Avop, versio " @build-id)
+    (log/info "Käynnistetään ARVO, versio " @build-id)
     (let [asetukset (hae-asetukset alkuasetukset)
           _ (deliver asetukset-promise asetukset)
           _ (konfiguroi-lokitus asetukset)
