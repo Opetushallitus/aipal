@@ -155,7 +155,11 @@
                               :kyselykertaid 1}
                              {:vastaajaid 2
                               :vastaajatunnusid 1
-                              :kyselykertaid 1}]
+                              :kyselykertaid 1}
+                             {:vastaajaid 3 :vastaajatunnusid 1 :kyselykertaid 1}
+                             {:vastaajaid 4 :vastaajatunnusid 1 :kyselykertaid 1}
+                             {:vastaajaid 5 :vastaajatunnusid 1 :kyselykertaid 1}
+                             {:vastaajaid 6 :vastaajatunnusid 1 :kyselykertaid 1}]
                   :vastaus [{:vastausid 1001
                              :kysymysid 1
                              :vastaajaid 1
@@ -164,6 +168,10 @@
                              :kysymysid 1
                              :vastaajaid 2
                              :vaihtoehto "ei"}
+                            {:vastausid 1103 :kysymysid 1 :vastaajaid 3 :vaihtoehto "kylla"}
+                            {:vastausid 1104 :kysymysid 1 :vastaajaid 4 :vaihtoehto "ei"}
+                            {:vastausid 1105 :kysymysid 1 :vastaajaid 5 :vaihtoehto "kylla"}
+                            {:vastausid 1106 :kysymysid 1 :vastaajaid 6 :vaihtoehto "ei"}
                             {:vastausid 1003
                              :kysymysid 2
                              :vastaajaid 1
@@ -172,6 +180,10 @@
                              :kysymysid 2
                              :vastaajaid 2
                              :vaihtoehto "ei"}
+                            {:vastausid 1203 :kysymysid 2 :vastaajaid 3 :vaihtoehto "ei"}
+                            {:vastausid 1204 :kysymysid 2 :vastaajaid 4 :vaihtoehto "ei"}
+                            {:vastausid 1205 :kysymysid 2 :vastaajaid 5 :vaihtoehto "ei"}
+                            {:vastausid 1206 :kysymysid 2 :vastaajaid 6 :vaihtoehto "ei"}
                             {:vastausid 1005
                              :kysymysid 3
                              :vastaajaid 1
@@ -180,6 +192,10 @@
                              :kysymysid 3
                              :vastaajaid 2
                              :vapaateksti "Vapaa teksti 2"}
+                            {:vastausid 1303 :kysymysid 3 :vastaajaid 3 :vapaateksti "Vapaa teksti 3"}
+                            {:vastausid 1304 :kysymysid 3 :vastaajaid 4 :vapaateksti "Vapaa teksti 4"}
+                            {:vastausid 1305 :kysymysid 3 :vastaajaid 5 :vapaateksti "Vapaa teksti 5"}
+                            {:vastausid 1306 :kysymysid 3 :vastaajaid 6 :vapaateksti "Vapaa teksti 6"}
                             {:vastausid 1007
                              :kysymysid 4
                              :vastaajaid 1
@@ -188,6 +204,10 @@
                              :kysymysid 4
                              :vastaajaid 2
                              :numerovalinta 2}
+                            {:vastausid 1403 :kysymysid 4 :vastaajaid 3 :numerovalinta 1}
+                            {:vastausid 1404 :kysymysid 4 :vastaajaid 4 :numerovalinta 2}
+                            {:vastausid 1405 :kysymysid 4 :vastaajaid 5 :numerovalinta 1}
+                            {:vastausid 1406 :kysymysid 4 :vastaajaid 6 :numerovalinta 2}
                             {:vastausid 1009
                              :kysymysid 5
                              :vastaajaid 1
@@ -196,6 +216,10 @@
                              :kysymysid 5
                              :vastaajaid 2
                              :numerovalinta 2}
+                            {:vastausid 1513 :kysymysid 5 :vastaajaid 3 :numerovalinta 1}
+                            {:vastausid 1514 :kysymysid 5 :vastaajaid 4 :numerovalinta 2}
+                            {:vastausid 1515 :kysymysid 5 :vastaajaid 5 :numerovalinta 1}
+                            {:vastausid 1516 :kysymysid 5 :vastaajaid 6 :numerovalinta 2}
                             {:vastausid 1011
                              :kysymysid 6
                              :vastaajaid 1
@@ -203,7 +227,11 @@
                             {:vastausid 1012
                              :kysymysid 6
                              :vastaajaid 2
-                             :numerovalinta 4}]}
+                             :numerovalinta 4}
+                            {:vastausid 1613 :kysymysid 6 :vastaajaid 3 :numerovalinta 3}
+                            {:vastausid 1614 :kysymysid 6 :vastaajaid 4 :numerovalinta 4}
+                            {:vastausid 1615 :kysymysid 6 :vastaajaid 5 :numerovalinta 3}
+                            {:vastausid 1616 :kysymysid 6 :vastaajaid 6 :numerovalinta 4}]}
         (avaa (kyselykertaraportti-sivu 1))
         (testing
           "kyselykerran tiedot"
@@ -219,8 +247,8 @@
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 1"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
             (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
-            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
+            (is (= (lukumaarat-kysymykselle kysymys) ["3" "3"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=6"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
           "toisen valintakysymyksen vastausten jakauma"
@@ -229,14 +257,16 @@
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 2"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Kyllä" "Ei"]))
             (is (= (osuudet-kysymykselle kysymys) ["0%" "100%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "2"]))
-            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "6"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=6"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
           "avoimen kysymyksen vastaukset"
           (let [kysymys (nth (kysymykset) 2)]
             (is (= (kysymyksen-teksti kysymys) "3. Kysymys 3"))
-            (is (= (set (vapaatekstit-kysymykselle kysymys)) #{"Vapaa teksti 1" "Vapaa teksti 2"}))))
+            (is (= (set (vapaatekstit-kysymykselle kysymys))
+                   #{"Vapaa teksti 1" "Vapaa teksti 2" "Vapaa teksti 3"
+                     "Vapaa teksti 4" "Vapaa teksti 5" "Vapaa teksti 6"}))))
         (testing
           "väittämän vastausten jakauma"
           (let [kysymys (nth (kysymykset) 3)]
@@ -244,8 +274,8 @@
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 4"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Ei / en lainkaan" "Hieman" "Jonkin verran" "Melko paljon" "Erittäin paljon"]))
             (is (= (osuudet-kysymykselle kysymys) ["50%" "50%" "0%" "0%" "0%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1" "0" "0" "0"]))
-            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
+            (is (= (lukumaarat-kysymykselle kysymys) ["3" "3" "0" "0" "0"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=6"))
             (is (= (count (hae-vaittamakaavio-kysymykselle kysymys)) 1))))
         (testing
           "monivalinnan vastausten jakauma"
@@ -254,8 +284,8 @@
             (is (= (taulukon-kysymysteksti-kysymykselle kysymys) "Kysymys 5"))
             (is (= (vaihtoehdot-kysymykselle kysymys) ["Jotain" "Muuta"]))
             (is (= (osuudet-kysymykselle kysymys) ["50%" "50%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["1" "1"]))
-            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
+            (is (= (lukumaarat-kysymykselle kysymys) ["3" "3"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=6"))
             (is (= (count (hae-jakaumakaavio-kysymykselle kysymys)) 1))))
         (testing
           "Likert-asteikon väittämän vastausten jakauma"
@@ -268,8 +298,8 @@
                                                        "Jokseenkin samaa mieltä"
                                                        "Täysin samaa mieltä"]))
             (is (= (osuudet-kysymykselle kysymys) ["0%" "0%" "50%" "50%" "0%"]))
-            (is (= (lukumaarat-kysymykselle kysymys) ["0" "0" "1" "1" "0"]))
-            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=2"))
+            (is (= (lukumaarat-kysymykselle kysymys) ["0" "0" "3" "3" "0"]))
+            (is (= (lukumaarat-yhteensa-kysymykselle kysymys) "n=6"))
             (is (= (count (hae-vaittamakaavio-kysymykselle kysymys)) 1))))
         (testing
           "sisältää vain kyselyyn valitut kysymykset"
