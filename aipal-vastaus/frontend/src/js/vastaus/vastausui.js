@@ -1,5 +1,13 @@
 'use strict';
 
+function asetaKieli(lang) {
+  var old = localStorage.getItem('kieli');
+  if(old !== lang){
+    localStorage.setItem('kieli', lang);
+    document.location.reload(true)
+  }
+}
+
 angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.palvelut.ilmoitus', 'yhteiset.palvelut.i18n', 'yhteiset.palvelut.lokalisointi', 'yhteiset.palvelut.tallennusMuistutus'])
 
   .config(['$routeProvider', function($routeProvider) {
@@ -8,24 +16,11 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         controller: 'VastausController',
         templateUrl: 'template/vastaus/vastaus.html'
       })
-      .when('/vastaus/:tunnus/fi', {
+      .when('/vastaus/:tunnus/:lang', {
         redirectTo: function (pathParams, path) {
-          localStorage.setItem('kieli', 'fi');
-          document.location.reload(true);
-          return '/vastaus/' + pathParams.tunnus;
-        }
-      })
-      .when('/vastaus/:tunnus/sv', {
-        redirectTo: function (pathParams, path) {
-          localStorage.setItem('kieli', 'sv');
-          document.location.reload(true);
-          return '/vastaus/' + pathParams.tunnus;
-        }
-      })
-      .when('/vastaus/:tunnus/en', {
-        redirectTo: function (pathParams, path) {
-          localStorage.setItem('kieli', 'en');
-          document.location.reload(true);
+          if(['fi', 'sv', 'en'].indexOf(pathParams.lang) !== -1){
+            asetaKieli(pathParams.lang);
+          }
           return '/vastaus/' + pathParams.tunnus;
         }
       })
