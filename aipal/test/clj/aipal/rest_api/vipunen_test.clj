@@ -16,7 +16,7 @@
         clj-json (body-json response)]
     (is (= (:status response) 200))
     clj-json))
-  
+
 
 (defn hae-vastaus-valtakunnallinen [peridot-session alkupvm loppupvm]
   (hae-vastaus peridot-session alkupvm loppupvm "/api/vipunen/valtakunnallinen"))
@@ -26,49 +26,50 @@
 
 (defn tarkista-vastaus [oikea-vastaus-file & testitulokset]
   (let [correct (clojure.edn/read-string (slurp oikea-vastaus-file))]
-    (doseq [tulos testitulokset] 
+    (doseq [tulos testitulokset]
       (is (= correct tulos)))))
-    
-(deftest ^:integraatio valtakunnalliset-kysymykset-rajapinta
-  (let [peridot (session)
-        response (hae-vastaus-valtakunnallinen peridot "2016-02-07" "2016-03-05")
-        response2 (hae-vastaus-valtakunnallinen peridot "2016-02-06" "2016-03-05")
-        ei-vastauksia (hae-vastaus-valtakunnallinen peridot "2011-02-07"
-                                    "2016-02-03")
-        vastauksia (hae-vastaus-valtakunnallinen peridot "2016-01-01" "2016-02-04")
-        vastauksia2 (hae-vastaus-valtakunnallinen peridot "2016-02-04" "2016-02-04")]
-        
-    (testing "aikavälillä rajattuna ei tule vastauksia"
-      (is (empty? ei-vastauksia)))
 
-    (testing "päivämäärävälin rajaus alkupvm toimii oikein"    
-      (tarkista-vastaus "test-resources/vipunen-valtakunnalliset-perus.edn" response response2))
-
-    (testing "päivämäärävälin rajaus loppupvm toimii oikein"
-      (tarkista-vastaus "test-resources/vipunen-vastauksia.edn" vastauksia vastauksia2))
-    
-    ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
-  ;  (spit "filetto" (with-out-str (clojure.pprint/pprint vastauksia)))
-     
-    ))
-
-(deftest ^:integraatio kaikki-vastaukset-rajapinta
-  (let [peridot (session)
-        response (hae-vastaus-kaikki peridot "2016-02-07" "2016-06-07")
-        response2 (hae-vastaus-kaikki peridot "2016-02-06" "2016-06-07")
-        ei-vastauksia (hae-vastaus-kaikki peridot "2011-02-07" "2016-02-03")
-        vastauksia (hae-vastaus-kaikki peridot "2016-01-01" "2016-02-04")
-        vastauksia2 (hae-vastaus-kaikki peridot "2016-02-04" "2016-02-04")]
-        
-    (testing "aikavälillä rajattuna ei tule vastauksia"
-      (is (empty? ei-vastauksia)))
-        
-    ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
-     ;(spit "filetto" (with-out-str (clojure.pprint/pprint response)))     
-     
-    (testing "Koulutuksen järjestäjän omat kysymykset näkyvät rajapinnassa (ei kuitenkaan vapaateksti-kysymyksen vastaus)"    
-      (tarkista-vastaus "test-resources/vipunen-koulutuksenjarjestajan-kysymykset.edn" response response2))
-     
-    (testing "päivämäärävälin rajaus loppupvm toimii oikein"
-      (tarkista-vastaus "test-resources/vipunen-vastauksia.edn" vastauksia vastauksia2))
-    ))
+; ARVO-118 disabloi rajapinta ja testit
+; (deftest ^:integraatio valtakunnalliset-kysymykset-rajapinta
+;   (let [peridot (session)
+;         response (hae-vastaus-valtakunnallinen peridot "2016-02-07" "2016-03-05")
+;         response2 (hae-vastaus-valtakunnallinen peridot "2016-02-06" "2016-03-05")
+;         ei-vastauksia (hae-vastaus-valtakunnallinen peridot "2011-02-07"
+;                                     "2016-02-03")
+;         vastauksia (hae-vastaus-valtakunnallinen peridot "2016-01-01" "2016-02-04")
+;         vastauksia2 (hae-vastaus-valtakunnallinen peridot "2016-02-04" "2016-02-04")]
+;
+;     (testing "aikavälillä rajattuna ei tule vastauksia"
+;       (is (empty? ei-vastauksia)))
+;
+;     (testing "päivämäärävälin rajaus alkupvm toimii oikein"
+;       (tarkista-vastaus "test-resources/vipunen-valtakunnalliset-perus.edn" response response2))
+;
+;     (testing "päivämäärävälin rajaus loppupvm toimii oikein"
+;       (tarkista-vastaus "test-resources/vipunen-vastauksia.edn" vastauksia vastauksia2))
+;
+;     ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
+;   ;  (spit "filetto" (with-out-str (clojure.pprint/pprint vastauksia)))
+;
+;     ))
+;
+; (deftest ^:integraatio kaikki-vastaukset-rajapinta
+;   (let [peridot (session)
+;         response (hae-vastaus-kaikki peridot "2016-02-07" "2016-06-07")
+;         response2 (hae-vastaus-kaikki peridot "2016-02-06" "2016-06-07")
+;         ei-vastauksia (hae-vastaus-kaikki peridot "2011-02-07" "2016-02-03")
+;         vastauksia (hae-vastaus-kaikki peridot "2016-01-01" "2016-02-04")
+;         vastauksia2 (hae-vastaus-kaikki peridot "2016-02-04" "2016-02-04")]
+;
+;     (testing "aikavälillä rajattuna ei tule vastauksia"
+;       (is (empty? ei-vastauksia)))
+;
+;     ; testin käyttämän vastaustiedoston tuottaminen, tähän tapaan.
+;      ;(spit "filetto" (with-out-str (clojure.pprint/pprint response)))
+;
+;     (testing "Koulutuksen järjestäjän omat kysymykset näkyvät rajapinnassa (ei kuitenkaan vapaateksti-kysymyksen vastaus)"
+;       (tarkista-vastaus "test-resources/vipunen-koulutuksenjarjestajan-kysymykset.edn" response response2))
+;
+;     (testing "päivämäärävälin rajaus loppupvm toimii oikein"
+;       (tarkista-vastaus "test-resources/vipunen-vastauksia.edn" vastauksia vastauksia2))
+;     ))
