@@ -128,10 +128,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           .success(function(kyselykerta) {
             $scope.kyselykerta = pvm.parsePvm(kyselykerta);
 
-            if($scope.kyselykerta.voimassa_loppupvm === null) {
-              $scope.kyselykerta.voimassa_loppupvm = new Date(new Date().getTime() + 1000*60*60*24);
-            }
-
             if (kyselykerta.lukittu) { $scope.muokkaustila = false; }
           })
           .error(function() {
