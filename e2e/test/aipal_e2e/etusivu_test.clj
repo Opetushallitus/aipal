@@ -33,7 +33,8 @@
                                         :voimassa true}] }
         (etusivu/avaa-sivu)
         (testing "sisältää järjestelmän nimen"
-          (is (true? (.contains (sivun-sisalto) "OPETUSHALLINNON VAIKUTTAVUUSTIETOPALVELU"))))))))
+          (is (true? (.contains (sivun-sisalto) "TIEDOTE"))))))))
+		    ;;{:tag :img, :id "logo"}
 
 (deftest lisaa-tiedote-test
   (with-webdriver
