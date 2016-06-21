@@ -14,7 +14,8 @@
 
 (ns aipal.arkisto.tutkintotyyppi
   (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :as taulut]))
+            [aipal.integraatio.sql.korma :as taulut]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn hae-kaikki []
   (->
@@ -22,6 +23,17 @@
     (sql/fields :tutkintotyyppi :nimi_fi, :nimi_sv, :nimi_en)
     (sql/order :tutkintotyyppi :ASC)
     sql/exec))
+
+(defn hae-kayttajalle []
+  (let [tutkintotyypit (mapcat vals (sql/select taulut/oppilaitostyyppi_tutkintotyyppi
+                                                (sql/where {:oppilaitostyyppi (:oppilaitostyypit *kayttaja*)})
+                                                (sql/fields :tutkintotyyppi)))]
+    (->
+      (sql/select* taulut/tutkintotyyppi)
+      (sql/fields :tutkintotyyppi :nimi_fi, :nimi_sv, :nimi_en)
+      (sql/where {:tutkintotyyppi [in tutkintotyypit]})
+      (sql/order :tutkintotyyppi :ASC)
+      sql/exec)))
 
 (defn ^:integration-api lisaa!
   [tutkintotyyppi]

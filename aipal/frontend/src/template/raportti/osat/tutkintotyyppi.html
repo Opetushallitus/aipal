@@ -1,7 +1,7 @@
 <div>
   <h3>{{ 'yleiset.tutkintotyyppi' | i18n }}</h3>
 
-  <select class="form-control" ng-options="tutkintotyyppi as tutkintotyyppi |enumArvo:'tutkintotyyppi' for tutkintotyyppi in tutkintotyypit" ng-model="raportti.tutkintotyyppi" ng-if="tutkintotyypit.length > 0">
+  <select class="form-control" ng-options="tutkintotyyppi.tutkintotyyppi as tutkintotyyppi |lokalisoiKentta:'nimi' for tutkintotyyppi in tutkintotyypit" ng-model="raportti.tutkintotyyppi" ng-if="tutkintotyypit.length > 0">
     <option value=""></option>
   </select>
 </div>

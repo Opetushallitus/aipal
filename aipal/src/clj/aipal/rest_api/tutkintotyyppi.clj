@@ -21,4 +21,4 @@
 (defroutes reitit
   (GET "/" []
     :kayttooikeus :tutkintotyyppi
-    (response-or-404 (tutkintotyyppi/hae-kaikki))))
+    (response-or-404 (tutkintotyyppi/hae-kayttajalle))))
