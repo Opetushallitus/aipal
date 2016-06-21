@@ -35,7 +35,7 @@
 
 (defn mock-request-salaisuus
   ([app url method auth-header params body]
-    (peridot/request app url 
+    (peridot/request app url
                     :request-method method
                     :headers {:Authorization auth-header}
                     :content-type "application/json"
@@ -59,7 +59,7 @@
                     (assoc-in [:cas-auth-server :enabled] false)
                     (assoc :development-mode true))]
     (alusta-korma! asetukset)
-    (-> (peridot/session (palvelin/app asetukset) 
+    (-> (peridot/session (palvelin/app asetukset)
                 :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
       (peridot/content-type "application/json"))))
 
@@ -83,7 +83,7 @@ lopuksi. Soveltuuyksinkertaisiin testitapauksiin."
 (defn rest-avop-kutsu
   "Tekee simuloidun rest-kutsun. kaytetaan oletus jaettu salaisuus siis secret)."
   ([url method params body]
-  (let [auth-header (str "Bearer " 
+  (let [auth-header (str "Bearer "
                          (jws/sign {:caller "avopfi"} "secret"))]
    (-> (session-no-token)
        (mock-request-salaisuus url method  auth-header params body)
