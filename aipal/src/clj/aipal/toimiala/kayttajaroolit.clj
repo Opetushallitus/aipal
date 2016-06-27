@@ -17,11 +17,11 @@
 
 (def ldap-ryhma->rooli {"YLLAPITAJA" "YLLAPITAJA"
                         "AMKVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
-                        "YOVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
+                        "ARVO-YO-VASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
                         "AMKKAYTTAJA" "OPL-KAYTTAJA"
-                        "YOKAYTTAJA" "OPL-KAYTTAJA"
+                        "ARVO-YO-KAYTTAJA" "OPL-KAYTTAJA"
                         "AMKKATSELIJA" "OPL-KATSELIJA"
-                        "YOKATSELIJA" "OPL-KATSELIJA"
+                        "ARVO-YO-KATSELIJA" "OPL-KATSELIJA"
                         "KATSELIJA" "KATSELIJA"
                         })
 
