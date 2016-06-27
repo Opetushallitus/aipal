@@ -23,15 +23,23 @@
                (sql/where (and {:kysely_kysymysryhma.kyselyid kyselyid}
                                {:kysymysryhma.ntm_kysymykset true})))))
 
+(defn kysely-on-tyhja [kyselyid]
+  (sql/sqlfn :not (sql/sqlfn :exists (sql/subselect :kysely_kysymysryhma
+                            (sql/join :inner :kysymysryhma {:kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid})
+                            (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))))
+
+
 (defn rajaa-kayttajalle-sallittuihin-kyselyihin [query kyselyid koulutustoimija]
   (let [koulutustoimijan-oma {:kysely_organisaatio_view.koulutustoimija koulutustoimija}
-        ntm-kysely           (kysely-sisaltaa-ntm-kysymysryhman kyselyid)]
+        ntm-kysely           (kysely-sisaltaa-ntm-kysymysryhman kyselyid)
+        tyhja-kysely         (kysely-on-tyhja kyselyid)]
     (cond
       (yllapitaja?)         (-> query
                               (sql/where koulutustoimijan-oma))
       (ntm-vastuukayttaja?) (-> query
                               (sql/where (and koulutustoimijan-oma
-                                              ntm-kysely)))
+                                              (or tyhja-kysely
+                                              ntm-kysely))))
       :else                 (-> query
                               (sql/where (and koulutustoimijan-oma
                                               (not ntm-kysely)))))))
