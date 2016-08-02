@@ -187,8 +187,8 @@
   ([kyselykerrat]
     (lisaa-kyselykerrat! kyselykerrat (lisaa-kysely!)))
   ([kyselykerrat kysely]
-   (for [kyselykerta kyselykerrat]
-     (lisaa-kyselykerta! kyselykerta kysely))))
+   (doall (for [kyselykerta kyselykerrat]
+            (lisaa-kyselykerta! kyselykerta kysely)))))
 
 (defn lisaa-vastaajatunnus!
   ([]
@@ -211,8 +211,8 @@
   ([vastaajat]
    (lisaa-vastaajat! vastaajat (lisaa-vastaajatunnus!)))
   ([vastaajat vastaajatunnus]
-   (for [vastaaja vastaajat]
-     (lisaa-vastaaja! vastaaja vastaajatunnus))))
+   (doall (for [vastaaja vastaajat]
+            (lisaa-vastaaja! vastaaja vastaajatunnus)))))
 
 (defn lisaa-kysymysryhma!
   ([uusi-kysymysryhma koulutustoimija]

@@ -43,3 +43,12 @@
       :else                 (-> query
                               (sql/where (and koulutustoimijan-oma
                                               (not ntm-kysely)))))))
+
+(defn rajaa-kayttajalle-sallittuihin-kyselyihin-sql []
+  (let [koulutustoimijan-oma "(kysely_organisaatio_view.koulutustoimija = ?)"
+        ntm-kysely           "(EXISTS (SELECT 1 FROM kysely_kysymysryhma JOIN kysymysryhma ON kysymysryhma.kysymysryhmaid = kysely_kysymysryhma.kysymysryhmaid WHERE kysely_kysymysryhma.kyselyid = kysely.kyselyid AND kysymysryhma.ntm_kysymykset))"
+        tyhja-kysely         "(NOT EXISTS (SELECT 1 FROM kysely_kysymysryhma JOIN kysymysryhma ON kysymysryhma.kysymysryhmaid = kysely_kysymysryhma.kysymysryhmaid WHERE kysely_kysymysryhma.kyselyid = kysely.kyselyid))"]
+    (cond
+      (yllapitaja?)         koulutustoimijan-oma
+      (ntm-vastuukayttaja?) (str "(" koulutustoimijan-oma " AND (" tyhja-kysely " OR " ntm-kysely "))")
+      :else                 (str "(" koulutustoimijan-oma " AND NOT " ntm-kysely ")"))))
