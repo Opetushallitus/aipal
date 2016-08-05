@@ -113,3 +113,14 @@
                     aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
         (is (not (sisaltaa-kyselykerran (hae-kaikki (:koulutustoimija kysely))
                                         (:kyselykertaid kyselykerta))))))))
+
+(deftest ^:integraatio hae-kaikki-vastaajien-lukumaara-test
+  (let [kysely (test-data/lisaa-kysely!)
+        kyselykerta (test-data/lisaa-kyselykerta! {} kysely)
+        [vastaajatunnus1] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 3} kyselykerta)
+        [vastaajatunnus2] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 4} kyselykerta)]
+    (test-data/lisaa-vastaajat! [{} {}] vastaajatunnus1)
+    (test-data/lisaa-vastaajat! [{}] vastaajatunnus2)
+    (let [tulos (first (filter #(= (:kyselykertaid %) (:kyselykertaid kyselykerta)) (hae-kaikki (:koulutustoimija kysely))))]
+      (is (= 7 (:vastaajatunnuksia tulos)))
+      (is (= 3 (:vastaajia tulos))))))

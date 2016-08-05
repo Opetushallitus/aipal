@@ -22,30 +22,38 @@
 (defn hae-kaikki
   "Hae kaikki koulutustoimijan kyselykerrat"
   [koulutustoimija]
-  (sql/select :kyselykerta
-    (sql/modifier "distinct")
-    (sql/join :inner :kyselykerta_kaytettavissa {:kyselykerta.kyselykertaid :kyselykerta_kaytettavissa.kyselykertaid})
-    (sql/join :inner :kysely {:kysely.kyselyid :kyselykerta.kyselyid})
-    (sql/join :inner :kysely_organisaatio_view {:kysely_organisaatio_view.kyselyid :kysely.kyselyid})
-    (sql/join :left :vastaajatunnus {:vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid})
-    (sql/join :left :vastaajatunnus_kaytettavissa {:vastaajatunnus.vastaajatunnusid :vastaajatunnus_kaytettavissa.vastaajatunnusid})
-    (sql/join :left :vastaaja {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})
-    (sql/fields :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
-                :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
-                :kyselykerta.lukittu :kyselykerta.luotuaika
-                :kyselykerta_kaytettavissa.kaytettavissa
-                [(sql/raw "count(vastaaja.vastaajaid) = 0") :poistettavissa]
-                [(sql/raw "coalesce(sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa), 0)") :aktiivisia_vastaajatunnuksia]
-                [(sql/raw "count(vastaaja.vastaajaid) filter (where vastaajatunnus_kaytettavissa.kaytettavissa)") :aktiivisia_vastaajia]
-                [(sql/raw "coalesce(sum(vastaajatunnus.vastaajien_lkm), 0)") :vastaajatunnuksia]
-                [(sql/raw "count(vastaaja.vastaajaid)") :vastaajia]
-                [(sql/raw "max(vastaaja.luotuaika)") :viimeisin_vastaus])
-    (sql/group :kyselykerta.kyselyid :kyselykerta.kyselykertaid :kyselykerta.nimi
-               :kyselykerta.voimassa_alkupvm :kyselykerta.voimassa_loppupvm
-               :kyselykerta.lukittu :kyselykerta.luotuaika
-               :kyselykerta_kaytettavissa.kaytettavissa)
-    (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin :kysely.kyselyid koulutustoimija)
-    (sql/order :kyselykerta.kyselykertaid :ASC)))
+  (sql/exec-raw [(str "WITH vastaajat AS (SELECT kyselykerta.kyselykertaid,
+                          count(vastaaja.vastaajaid) AS vastaajia,
+                          count(vastaaja.vastaajaid) filter (where vastaajatunnus_kaytettavissa.kaytettavissa) AS aktiivisia_vastaajia,
+                          max(vastaaja.luotuaika) AS viimeisin_vastaus
+                   FROM kyselykerta
+                   INNER JOIN kysely_organisaatio_view ON kyselykerta.kyselyid = kysely_organisaatio_view.kyselyid
+                   LEFT JOIN vastaajatunnus ON (vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid)
+                   LEFT JOIN vastaajatunnus_kaytettavissa ON (vastaajatunnus.vastaajatunnusid = vastaajatunnus_kaytettavissa.vastaajatunnusid)
+                   LEFT JOIN vastaaja ON (vastaaja.vastaajatunnusid = vastaajatunnus.vastaajatunnusid)
+                   WHERE (kysely_organisaatio_view.koulutustoimija = ?)
+                   GROUP BY kyselykerta.kyselykertaid)
+SELECT kyselykerta.kyselyid, kyselykerta.kyselykertaid, kyselykerta.nimi, kyselykerta.voimassa_alkupvm, kyselykerta.voimassa_loppupvm,
+       kyselykerta.lukittu, kyselykerta.luotuaika, kyselykerta_kaytettavissa.kaytettavissa,
+       vastaajat.vastaajia = 0 AS poistettavissa,
+       coalesce(sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
+       vastaajat.aktiivisia_vastaajia,
+       coalesce(sum(vastaajatunnus.vastaajien_lkm), 0) AS vastaajatunnuksia,
+       vastaajat.vastaajia,
+       vastaajat.viimeisin_vastaus
+FROM (((((kyselykerta
+     INNER JOIN kyselykerta_kaytettavissa ON (kyselykerta.kyselykertaid = kyselykerta_kaytettavissa.kyselykertaid))
+     INNER JOIN kysely ON (kysely.kyselyid = kyselykerta.kyselyid))
+     INNER JOIN kysely_organisaatio_view ON (kysely_organisaatio_view.kyselyid = kysely.kyselyid))
+     INNER JOIN vastaajat ON (vastaajat.kyselykertaid = kyselykerta.kyselykertaid)
+     LEFT JOIN vastaajatunnus ON (vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid))
+     LEFT JOIN vastaajatunnus_kaytettavissa ON (vastaajatunnus.vastaajatunnusid = vastaajatunnus_kaytettavissa.vastaajatunnusid))
+WHERE " (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin-sql) "
+GROUP BY kyselykerta.kyselyid, kyselykerta.kyselykertaid, kyselykerta.nimi, kyselykerta.voimassa_alkupvm, kyselykerta.voimassa_loppupvm, kyselykerta.lukittu, kyselykerta.luotuaika,
+         kyselykerta_kaytettavissa.kaytettavissa, vastaajat.vastaajia, vastaajat.aktiivisia_vastaajia, vastaajat.viimeisin_vastaus
+ORDER BY kyselykerta.kyselykertaid ASC")
+                 [koulutustoimija koulutustoimija]]
+                :results))
 
 (defn poistettavissa? [id]
   (empty?
