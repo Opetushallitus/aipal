@@ -82,7 +82,10 @@
                              :nimi_en
                              :selite_fi
                              :selite_sv
-                             :selite_en]))
+                             :selite_en
+                             :kuvaus_fi
+                             :kuvaus_sv
+                             :kuvaus_en]))
 
 (defn ^:private suodata-vain-yllapitajalle [kysymysryhma kentta]
   (if (yllapitaja?)

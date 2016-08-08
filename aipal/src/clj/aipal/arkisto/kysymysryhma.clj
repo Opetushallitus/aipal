@@ -18,6 +18,7 @@
             [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]
+            [clojure.tools.logging :as log]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]))
 
 (defn ^:private rajaa-kayttajalle-sallittuihin-kysymysryhmiin [query organisaatio]
@@ -43,25 +44,25 @@
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
-    (-> (sql/select* taulut/kysymysryhma)
-      (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
-      (rajaa-kayttajalle-sallittuihin-kysymysryhmiin organisaatio)
-      (cond->
-        vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
-      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.nimi_en
-                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.selite_en :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
-                  :kysymysryhma.lisattavissa :kysymysryhma.tila
-                  [(sql/subselect taulut/kysymys
-                     (sql/aggregate (count :*) :lkm)
-                     (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
-                  [(sql/sqlfn exists (sql/subselect taulut/kysymysryhma_kyselypohja
-                                       (sql/where {:kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselypohjaan]
-                  [(sql/sqlfn exists (sql/subselect taulut/kysely_kysymysryhma
-                                       (sql/where {:kysely_kysymysryhma.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselyyn])
-      (sql/order :muutettuaika :desc)
-      sql/exec))
+   (-> (sql/select* taulut/kysymysryhma)
+     (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
+     (rajaa-kayttajalle-sallittuihin-kysymysryhmiin organisaatio)
+     (cond->
+       vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
+     (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.nimi_en
+                 :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.selite_en :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
+                 :kysymysryhma.lisattavissa :kysymysryhma.tila :kysymysryhma.kuvaus_fi :kysymysryhma.kuvaus_sv :kysymysryhma.kuvaus_en
+                 [(sql/subselect taulut/kysymys
+                    (sql/aggregate (count :*) :lkm)
+                    (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
+                 [(sql/sqlfn exists (sql/subselect taulut/kysymysryhma_kyselypohja
+                                      (sql/where {:kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselypohjaan]
+                 [(sql/sqlfn exists (sql/subselect taulut/kysely_kysymysryhma
+                                      (sql/where {:kysely_kysymysryhma.kysymysryhmaid :kysymysryhma.kysymysryhmaid}))) :lisatty_kyselyyn])
+     (sql/order :muutettuaika :desc)
+     sql/exec))
   ([organisaatio]
-    (hae-kysymysryhmat organisaatio false)))
+   (hae-kysymysryhmat organisaatio false)))
 
 (defn ^:private rajaa-kayttajalle-sallittuihin-taustakysymysryhmiin [query]
   (let [ntm-kysymykset       {:kysymysryhma.ntm_kysymykset true}
@@ -121,6 +122,7 @@
     (sql/select* taulut/kysymysryhma)
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en
                 :selite_fi :selite_sv :selite_en
+                :kuvaus_fi :kuvaus_sv :kuvaus_en
                 :ntm_kysymykset :taustakysymykset :valtakunnallinen :tila)))
 
 (def kysymys-select
@@ -220,18 +222,18 @@
 
 (defn hae
   ([kysymysryhmaid]
-    (hae kysymysryhmaid true))
+   (hae kysymysryhmaid true))
   ([kysymysryhmaid hae-kysymykset]
-    (let [kysymysryhma (-> kysymysryhma-select
-                         (sql/where {:kysymysryhmaid kysymysryhmaid})
-                         sql/exec
-                         first)]
-      (when kysymysryhma
-        (if hae-kysymykset
-          (-> kysymysryhma
-              taydenna-kysymysryhma
-              taydenna-kysymysryhman-kysymykset)
-          kysymysryhma)))))
+   (let [kysymysryhma (-> kysymysryhma-select
+                        (sql/where {:kysymysryhmaid kysymysryhmaid})
+                        sql/exec
+                        first)]
+     (when kysymysryhma
+       (if hae-kysymykset
+         (-> kysymysryhma
+             taydenna-kysymysryhma
+             taydenna-kysymysryhman-kysymykset)
+         kysymysryhma)))))
 
 (defn hae-taustakysymysryhma
   [kysymysryhmaid]
@@ -258,21 +260,21 @@
 
 (defn kysymysryhma-esikatselulle-select
   ([kyselyid]
-    (->
-      (sql/select* taulut/kysymysryhma)
-      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :ntm_kysymykset) 
-      (sql/with taulut/kysymys
-        (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
-                    :jatkokysymys.jatkokysymysid
-                    :jatkokysymys.kylla_kysymys :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.kylla_teksti_en
-                    :jatkokysymys.ei_kysymys :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.ei_teksti_en :jatkokysymys.kylla_vastaustyyppi)
-        (cond->
-          kyselyid (->
-                     (sql/fields [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
-                     (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid)
-                                                          (= :kysely_kysymys.kyselyid kyselyid)))))
-        (sql/join :left :jatkokysymys (= :kysymys.jatkokysymysid :jatkokysymys.jatkokysymysid))
-        (sql/order :kysymys.jarjestys))))
+   (->
+     (sql/select* taulut/kysymysryhma)
+     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :ntm_kysymykset)
+     (sql/with taulut/kysymys
+       (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
+                   :jatkokysymys.jatkokysymysid
+                   :jatkokysymys.kylla_kysymys :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.kylla_teksti_en
+                   :jatkokysymys.ei_kysymys :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.ei_teksti_en :jatkokysymys.kylla_vastaustyyppi)
+       (cond->
+         kyselyid (->
+                    (sql/fields [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
+                    (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid)
+                                                         (= :kysely_kysymys.kyselyid kyselyid)))))
+       (sql/join :left :jatkokysymys (= :kysymys.jatkokysymysid :jatkokysymys.jatkokysymysid))
+       (sql/order :kysymys.jarjestys))))
   ([] (kysymysryhma-esikatselulle-select nil)))
 
 (defn vaihda-kysymysavain [kysymysryhma]
@@ -323,7 +325,8 @@
   (auditlog/kysymysryhma-muokkaus! (:kysymysryhmaid kysymysryhma))
   (->
     (sql/update* taulut/kysymysryhma)
-    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset]))
+    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en
+                                               :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset]))
     (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
     (sql/update)))
 
