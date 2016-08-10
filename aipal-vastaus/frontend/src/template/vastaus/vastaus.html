@@ -68,7 +68,7 @@
         </div>
 
         <div ng-if="kysymys.vastaustyyppi === 'arvosana4_ja_eos'" class="vastaus_valinnat">
-          <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: block">
+          <label ng-repeat="vaihtoehto in [1,2,3,4,5]" style="display: inline">
             <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
             <span ng-bind="kielet[vastausKieli].yleiset.arvosana4_ja_eos[vaihtoehto]"></span>
           </label>
