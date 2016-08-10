@@ -21,8 +21,7 @@ script:
 - lein doc
 - mkdir eastwood
 - lein eastwood "{:out \"eastwood/aipal-warnings.txt\"}" || true
-- cd ../db-docs
-- generate-schemadocs.sh
+- cd ../db-docs && ./generate-schemadocs.sh
 - cd ..
 
 deploy:
