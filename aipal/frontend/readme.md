@@ -15,6 +15,11 @@ Asenna bower:
 npm install -g bower
 ```
 
+Uusin NodeJS+ NPM + node-sass ei toimi yhteen. Tämä voi auttaa:
+```
+npm install node-sass@3.7.0
+```
+
 Hakemistossa /frontend tee seuraavat:
 
 ```
