@@ -91,7 +91,7 @@
     kysymys
     (update-in kysymys [:jakauma] butlast))) ;; EOS-vastaus on aina jakauman viimeinen
 
-(def asteikkotyyppi? #{"asteikko" "likert_asteikko" "arvosana" "arvosana7"})
+(def asteikkotyyppi? #{"asteikko" "likert_asteikko" "arvosana" "arvosana7" "arvosana4_ja_eos"})
 
 (defn muotoile-jakauma [jakauma]
   (when jakauma
@@ -176,7 +176,8 @@
                   "kylla_ei_valinta" (kasittele-kyllaei-kysymys kysymys vastaukset)
                   "likert_asteikko" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "monivalinta" (kasittele-monivalintakysymys kysymys vastaukset)
-                  "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset))]
+                  "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset)
+                  "arvosana4_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 5))]
     (-> kysymys
       (assoc :vastaajien_lukumaara vastaajia
              :vastaajat vastaajat)
