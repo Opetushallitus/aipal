@@ -75,11 +75,3 @@ CREATE MATERIALIZED VIEW vipunen_view AS
   )
   AND (monivalintasukupuoli.teksti_fi IS NOT NULL OR monivalintaika.teksti_fi IS NOT NULL OR monivalintapohjakoulutus.teksti_fi IS NOT NULL)
 WITH DATA;
-
-ALTER TABLE vipunen_view
-  OWNER TO arvo_snap_adm;
-GRANT ALL ON TABLE vipunen_view TO arvo_snap_adm;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE vipunen_view TO avop_snap_user;
-GRANT SELECT ON TABLE vipunen_view TO avopvastaus_snap_user;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE vipunen_view TO arvo_snap_user;
-GRANT SELECT ON TABLE vipunen_view TO arvovastaus_snap_user;
