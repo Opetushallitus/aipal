@@ -352,7 +352,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
           kysely.valittu = !kysely.valittu;
           if (kysely.valittu) {
             $scope.raportti.kyselyid = kysely.kyselyid;
-            $scope.raportti.vertailujakso_alkupvm = kysely.voimassa_alkupvm;
+            $scope.raportti.vertailujakso_alkupvm = new Date(kysely.voimassa_alkupvm);
           } else {
             delete $scope.raportti.kyselyid;
           }
@@ -420,7 +420,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
           kyselykerta.valittu = !kyselykerta.valittu;
           if (kyselykerta.valittu) {
             $scope.raportti.kyselykertaid = kyselykerta.kyselykertaid;
-            $scope.raportti.vertailujakso_alkupvm = kyselykerta.voimassa_alkupvm;
+            $scope.raportti.vertailujakso_alkupvm = new Date(kyselykerta.voimassa_alkupvm);
           } else {
             delete $scope.raportti.kyselykertaid;
           }
