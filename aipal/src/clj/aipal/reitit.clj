@@ -97,5 +97,8 @@
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/public/luovastaajatunnus" [] (aipal.rest-api.avopvastaajatunnus/reitit asetukset))
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
-    (context "/api/vipunen" [] aipal.rest-api.vipunen/reitit)
+
+    (when (:development-mode asetukset)
+    ; TODO: pois käytöstä kunnes OPH-1718 
+      (context "/api/vipunen" [] aipal.rest-api.vipunen/reitit))
     (r/not-found "Not found")))
