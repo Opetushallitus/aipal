@@ -235,11 +235,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     
     // OPH-1745: toimii vain kehitysraporteille toistaiseksi
     $scope.vaihdaKetjutus = function() {
-    	if ($scope.raportti.tyyppi === 'kehitys') {
-    		$scope.raportti.tyyppi = 'kehitys-ketjutettu';
-    	} else {
-    		$scope.raportti.tyyppi = 'kehitys';
-    	}
+      if ($scope.raportti.tyyppi === 'kehitys') {
+        $scope.raportti.tyyppi = 'kehitys-ketjutettu';
+      } else {
+        $scope.raportti.tyyppi = 'kehitys';
+      }
     };
 
     $scope.raportti.koulutustoimijat = [];
