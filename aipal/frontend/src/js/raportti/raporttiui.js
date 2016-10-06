@@ -287,7 +287,13 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
         .success(function(tulos) {
-          $scope.tulos = tulos;
+          if(tulos.raportit !== undefined) {
+            delete $scope.tulos;
+            $scope.raportit = tulos.raportit;
+          } else {
+            delete $scope.raportit;
+            $scope.tulos = tulos;
+          }
           $scope.$parent.timestamp = new Date(); 
         }).error(function(data, status) {
           if (status !== 500) {

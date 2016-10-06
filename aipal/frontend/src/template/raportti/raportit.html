@@ -4,7 +4,7 @@
     <uib-tab class="hidden-print" heading="{{ 'raportit.vertailuraportti' | i18n }}" select="vaihdaTyyppi('vertailu',i18n.raportit.vertailuraportti)"
          disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']"
          uib-popover="{{ 'raportit.vertailuraportti_ohje' | i18n }}" popover-trigger="mouseenter" popover-placement="bottom">
-          
+
       <h2 class="hidden-print">{{ 'raportit.vertailtavat_tutkinnot' | i18n }} *<ohje tunniste="vertailuraportti"></ohje></h2>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkintotyyppi.html'"></ng-include>
@@ -24,9 +24,7 @@
          disabled="!yllapitaja && !aipalOminaisuus['koulutustoimijan_valtakunnalliset_raportit']"
          uib-popover="{{ 'raportit.kehitysraportti_ohje' | i18n }}" popover-trigger="mouseenter" popover-placement="bottom">
       <h2 class="hidden-print">{{ 'raportit.tarkasteltava_tutkinto' | i18n }} <ohje tunniste="kehitysraportti"></ohje></h2>
-      <!--  OPH-1745 on keskeneräinen. Ei näytetä käyttöliittymässä valintaa, joka hämää käyttäjää.
       <ng-include class="hidden-print" src="'template/raportti/osat/kehitysraportin-tyyppi.html'"></ng-include>
-      -->
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkintotyyppi.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/taustakysymykset.html'"></ng-include>
@@ -94,6 +92,9 @@
   </uib-tabset>
 
   <div ng-if="tulos">
+    <ng-include src="'template/raportti/raportti.html'"></ng-include>
+  </div>
+  <div ng-if="raportit" ng-repeat="tulos in raportit">
     <ng-include src="'template/raportti/raportti.html'"></ng-include>
   </div>
 </div>
