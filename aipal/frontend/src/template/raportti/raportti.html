@@ -9,8 +9,8 @@
 
 <div ng-show="tulos" class="hidden-print print-header">
   <h1>
-      <span ng-if="['vertailu', 'kehitys', 'koulutustoimijat', 'kysely', 'kyselykerta'].indexOf(tulos.parametrit[0].tyyppi) !== -1" ng-bind="'raportti.nimi.' + tulos.parametrit[0].tyyppi | i18n"></span>
-      <span ng-if="['vertailu', 'kehitys', 'koulutustoimijat', 'kysely', 'kyselykerta'].indexOf(tulos.parametrit[0].tyyppi) === -1" ng-bind="'kysely.raportti_otsikko' | i18n"></span>
+      <span ng-if="['vertailu', 'kehitys', 'kehitys-ketjutettu', 'koulutustoimijat', 'kysely', 'kyselykerta'].indexOf(tulos.parametrit[0].tyyppi) !== -1" ng-bind="'raportti.nimi.' + tulos.parametrit[0].tyyppi | i18n"></span>
+      <span ng-if="['vertailu', 'kehitys', 'kehitys-ketjutettu', 'koulutustoimijat', 'kysely', 'kyselykerta'].indexOf(tulos.parametrit[0].tyyppi) === -1" ng-bind="'kysely.raportti_otsikko' | i18n"></span>
   </h1>
   <tulosta-raportti></tulosta-raportti>
 </div>

@@ -215,7 +215,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
     }]
   )
 
-
   .controller('LuoTunnuksiaModalController', ['$uibModalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet',
     'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
     'viimeksiValittuTutkinto', 'kayttooikeudet',
@@ -275,6 +274,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           $scope.naytaKoulutusmuoto = oppilaitostyypit.indexOf("41") != -1;
 
         });
+
       }
 
       function haeToimipaikat(oppilaitos) {

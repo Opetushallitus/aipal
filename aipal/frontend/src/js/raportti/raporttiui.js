@@ -236,11 +236,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
 
     // OPH-1745: toimii vain kehitysraporteille toistaiseksi
     $scope.vaihdaKetjutus = function() {
-    	if ($scope.raportti.tyyppi === 'kehitys') {
-    		$scope.raportti.tyyppi = 'kehitys-ketjutettu';
-    	} else {
-    		$scope.raportti.tyyppi = 'kehitys';
-    	}
+      if ($scope.raportti.tyyppi === 'kehitys') {
+        $scope.raportti.tyyppi = 'kehitys-ketjutettu';
+      } else {
+        $scope.raportti.tyyppi = 'kehitys';
+      }
     };
 
     $scope.raportti.koulutustoimijat = [];
@@ -288,7 +288,13 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
         .success(function(tulos) {
-          $scope.tulos = tulos;
+          if(tulos.raportit !== undefined) {
+            delete $scope.tulos;
+            $scope.raportit = tulos.raportit;
+          } else {
+            delete $scope.raportit;
+            $scope.tulos = tulos;
+          }
           $scope.$parent.timestamp = new Date();
         }).error(function(data, status) {
           if (status !== 500) {
