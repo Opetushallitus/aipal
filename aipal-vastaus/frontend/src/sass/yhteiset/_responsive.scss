@@ -79,4 +79,44 @@
       }
     }
   }
+
+  .vastaus_valinnat {
+    overflow: auto;
+    margin-top: 1em;
+    label {
+      font-size: 1em;
+      line-height: 100%;
+      background-image: url('../img/button.jpg');
+      background-repeat: no-repeat;
+      height: 40px;
+      width: 100%;
+      vertical-align :top;
+      text-align: left;
+      padding: .5em 0px 0px 40px !important;
+      margin-right: .3em;
+      position: relative;
+
+      &:hover {
+        background-image: url('../img/button_hover.jpg');
+        background-color: white;
+      }
+
+      &.checked{
+        background-image: url('../img/button_active.jpg');
+      }
+
+      &:active{
+        background-image: url('../img/button_active.jpg');
+      }
+
+      input {
+        visibility: hidden;
+        position: absolute;
+        z-index: -100;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+
 }
