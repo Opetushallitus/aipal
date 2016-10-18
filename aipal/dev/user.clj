@@ -49,7 +49,9 @@
            :raportointi-minimivastaajat -1
            :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
                              :unsafe-https true
-                             :enabled true})
+                             :enabled true}
+           :basic-auth {:tunnus "tunnus"
+                        :salasana "salasana"})
     (assoc-in [:server :base-url] "http://192.168.50.1:8082")))
 
 (defn ^:private kaynnista! []
