@@ -10,6 +10,7 @@
 
             [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
             [aipal.asetukset :refer [service-path]]
+            [aipal.basic-auth :refer [wrap-basic-authentication]]
             aipal.rest-api.i18n
             aipal.rest-api.kieli
             aipal.rest-api.kysely
@@ -92,8 +93,5 @@
     (context "/api/tutkintotyyppi" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
-
-    (when (:development-mode asetukset)
-    ; TODO: pois käytöstä kunnes OPH-1718 
-      (context "/api/vipunen" [] aipal.rest-api.vipunen/reitit))
+    (context "/api/vipunen" [] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
     (r/not-found "Not found")))

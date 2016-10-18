@@ -32,7 +32,7 @@
             [ring.middleware.x-headers :refer [wrap-frame-options]]
             [ring.util.response :as resp]
             schema.core
-            
+
             [clj-cas-client.core :refer [cas]]
             [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
 
@@ -95,9 +95,9 @@
             fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
             auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
       (cond
-        (and  (kehitysmoodi? asetukset) (.startsWith (path-info request) "/api/vipunen"))
+        (.startsWith (path-info request) "/api/vipunen")
           (do
-            (log/info "Vipunen HUOM: PoC, oikeasti halutaan autentikointi")
+            (log/info "Vipunen API, only Basic Auth")
             (handler request))
         (some #(.startsWith (path-info request) %) swagger-resources)
           (do
@@ -113,7 +113,7 @@
             (log/info "development, fake CAS")
             (fake-auth-handler request))
         :else (auth-handler request)))))
- 
+
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))
 
@@ -157,7 +157,7 @@
       wrap-content-type
       wrap-not-modified
       wrap-expires
-      
+
       (auth-middleware asetukset)
       log-request-wrapper
 
