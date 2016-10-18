@@ -27,7 +27,9 @@
 (defn session []
   (let [asetukset (-> oletusasetukset
                     (assoc-in [:cas-auth-server :enabled] false)
-                    (assoc :development-mode true))]
+                    (assoc :development-mode true
+                           :basic-auth {:tunnus "tunnus"
+                                        :salasana "salasana"}))]
     (alusta-korma! asetukset)
     (-> (peridot/session (palvelin/app asetukset)
                          :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
@@ -48,4 +50,4 @@ lopuksi. Soveltuu yksinkertaisiin testitapauksiin."
     (cheshire/parse-string (:body response) true)
     (cheshire/parse-string (slurp (:body response)) true)))
 
-  
+
