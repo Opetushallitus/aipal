@@ -1,5 +1,6 @@
 (ns aipal.basic-auth
-  (:require [clojure.string :as str])
+  (:require [clojure.tools.logging :as log]
+            [clojure.string :as str])
   (:import java.util.Base64))
 
 (defn hae-tunnus [request]
@@ -16,7 +17,10 @@
 
 (defn wrap-basic-authentication [handler asetukset]
   (fn [request]
-    (if (= (hae-tunnus request) [(get-in asetukset [:basic-auth :tunnus]) (get-in asetukset [:basic-auth :salasana])])
-      (handler request)
-      {:status 401
-       :headers {"www-authenticate" "Basic realm=\"restricted\""}})))
+    (let [{:keys [tunnus salasana]} (:basic-auth asetukset)]
+      (if-not (and tunnus salasana)
+        (throw (IllegalStateException. "Basic-autentikaation tunnusta ja salasanaa ei ole asetettu"))
+        (if (= (hae-tunnus request) [tunnus salasana])
+          (handler request)
+          {:status 401
+           :headers {"www-authenticate" "Basic realm=\"restricted\""}})))))

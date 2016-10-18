@@ -18,8 +18,13 @@
                                 :salasana "salasana"}}
         handler (->
                   (constantly ::success)
-                  (wrap-basic-authentication asetukset))]
+                  (wrap-basic-authentication asetukset))
+        handler-ei-tunnuksia (->
+                               (constantly ::success)
+                               (wrap-basic-authentication {:basic-auth {:tunnus "tunnus"}}))]
     (testing "wrap-basic-authentication"
+      (testing "heittää poikkeuksen jos tunnusta tai salasanaa ei ole asetettu"
+        (is (thrown? IllegalStateException (handler-ei-tunnuksia {}))))
       (testing "palauttaa 401-vastauksen jos autentikointi epäonnistuu"
         (let [response (handler {})]
           (is (= 401 (:status response)))
