@@ -25,6 +25,13 @@
         background-color: $lightest-gray;
         cursor: pointer;
       }
+      &.compact {
+        display: inline;
+      }
+
+      &.loose {
+        display: block;
+      }
     }
 
     &.eos {
