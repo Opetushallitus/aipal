@@ -36,7 +36,9 @@
                         "asteikko"
                         "monivalinta"
                         "kylla_ei_valinta"
-                        "arvosana"))
+                        "arvosana"
+                        "arvosana7"
+                        "arvosana4_ja_eos"))
 
 (s/defschema VastauksenTiedot {:vastausid s/Int
                                :monivalintavaihtoehto (s/maybe s/Str)
