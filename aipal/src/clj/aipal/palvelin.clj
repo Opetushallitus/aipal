@@ -101,9 +101,9 @@
             fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
             auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
       (cond
-        (and  (kehitysmoodi? asetukset) (.startsWith (path-info request) "/api/vipunen"))
+        (.startsWith (path-info request) "/api/vipunen")
           (do
-            (log/info "Vipunen HUOM: PoC, oikeasti halutaan autentikointi")
+            (log/info "Vipunen API, only Basic Auth")
             (handler request))
         (some #(.startsWith (path-info request) %) swagger-resources)
           (do
@@ -121,10 +121,7 @@
           (do
             (log/info "development, fake CAS")
             (fake-auth-handler request))
-        :else
-          (do
-            (log/info "normal CAS authenticated request")
-            (auth-handler request))))))
+        :else (auth-handler request)))))
 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))

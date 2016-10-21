@@ -55,7 +55,9 @@
              :kayttooikeuspalvelu s/Str
              :koulutustoimijoiden-tutkinnot s/Str
              :raportointi s/Str
-             :tutkinnot s/Str}})
+             :tutkinnot s/Str}
+   (s/optional-key :basic-auth) {:tunnus s/Str
+                                 :salasana s/Str}})
 
 (def oletusasetukset
   {:server {:port 8082
