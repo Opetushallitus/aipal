@@ -17,7 +17,7 @@
     [korma.core :as sql]
     [oph.korma.common :refer [defentity]]))
 
-(declare kysymys koulutustoimija oppilaitos toimipaikka koulutusala opintoala tutkinto tutkintotyyppi)
+(declare kysymys kysymysryhma jatkokysymys kysely_kysymysryhma vastaus koulutustoimija oppilaitos toimipaikka koulutusala opintoala tutkinto tutkintotyyppi)
 
 (defentity kyselykerta
   (sql/pk :kyselykertaid))
@@ -51,6 +51,9 @@
 (defentity vastaaja
   (sql/pk :vastaajaid)
   (sql/belongs-to vastaajatunnus {:fk :vastaajatunnusid}))
+
+(defentity vastaus
+  (sql/pk :vastausid))
 
 (defentity rahoitusmuoto
   (sql/pk :rahoitusmuotoid))
@@ -106,4 +109,10 @@
 (defentity tutkintotyyppi
   (sql/pk :tutkintotyyppi))
 
+(defentity monivalintavaihtoehto)
+
 (defentity oppilaitostyyppi_tutkintotyyppi)
+
+(defentity jatkokysymys)
+
+(defentity jatkovastaus)

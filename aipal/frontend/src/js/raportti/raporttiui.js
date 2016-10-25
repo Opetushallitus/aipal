@@ -282,6 +282,9 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
       else if ($scope.raportti.tyyppi === 'kyselykerta') {
         return _.isNumber($scope.raportti.kyselykertaid);
       }
+      else if ($scope.raportti.tyyppi === 'csv'){
+        return _.isNumber($scope.raportti.kyselyid);
+      }
       return true;
     };
 

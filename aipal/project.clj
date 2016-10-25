@@ -34,6 +34,7 @@
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/core.cache "0.6.4"]
                  [org.clojure/tools.logging "0.3.1"]
+                 [org.clojure/core.match "0.3.0-alpha4"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.slf4j/slf4j-api "1.7.16"]
                  [peridot "0.4.3"]

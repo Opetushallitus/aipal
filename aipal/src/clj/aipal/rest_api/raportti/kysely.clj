@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.raportti.kysely
-  (:require [compojure.api.core :refer [GET POST]]
+  (:require [compojure.api.core :refer [GET POST defroutes]]
             [schema.core :as s]
             aipal.compojure-util
             [aipal.rest-api.i18n :as i18n]
@@ -23,6 +23,7 @@
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.taustakysymykset :as taustakysymykset]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
+            [aipal.toimiala.raportti.csv :refer [kysely-csv]]
             [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (defn ^:private muodosta-kyselyn-raportti-parametreilla
@@ -95,6 +96,14 @@
     :body [parametrit s/Any]
     :kayttooikeus [:kysely-raportti kyselyid]
     (response-or-404 (muodosta-kyselyraportti kyselyid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
+
+(defn csv [asetukset]
+  (GET "/:kyselyid/csv" []
+       :path-params [kyselyid :- s/Int]
+       :body [parametrit s/Any]
+       :kayttooikeus [:kysely-raportti kyselyid]
+    (csv-download-response (apply str (kysely-csv kyselyid)) "kysely.csv")))
+
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param
