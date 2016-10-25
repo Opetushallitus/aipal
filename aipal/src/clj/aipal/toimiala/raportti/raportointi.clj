@@ -19,7 +19,8 @@
             [clj-time.core :as t]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.toimiala.raportti.taustakysymykset :refer [kysymysten-jarjestys-vertailu]]))
+            [aipal.toimiala.raportti.taustakysymykset :refer [kysymysten-jarjestys-vertailu]]
+            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
@@ -217,20 +218,6 @@
                 vastaajat (reduce clojure.set/union (map :vastaajat kysymykset))]]
       (assoc kysymysryhma :kysymykset (map valitse-kysymyksen-kentat kysymykset)
                           :vastaajat vastaajat))))
-
-(defn numeroiden-piste-pilkuksi
-  "Jos merkkijono on numero, niin muutetaan piste pilkuksi"
-  [merkkijono]
-  (if (re-matches #"[0-9.]+" merkkijono)
-    (clojure.string/replace merkkijono #"\." ",")
-    merkkijono))
-
-(defn muuta-kaikki-stringeiksi [rivit]
-  (clojure.walk/postwalk (fn [x]
-                           (if (coll? x)
-                             x
-                             (numeroiden-piste-pilkuksi (str x))))
-                         rivit))
 
 (defn lokalisoitu-kentta
   [m kentta kieli]

@@ -205,8 +205,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn uudet-arvot [muutos]
   (into {}
-        (for [[k v] muutos
-             :when v]
+        (for [[k v] muutos :when v]
          [k (first v)])))
 
 (defn muuttunut
