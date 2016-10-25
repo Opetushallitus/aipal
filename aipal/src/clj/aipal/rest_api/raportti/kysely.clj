@@ -98,7 +98,7 @@
     (response-or-404 (muodosta-kyselyraportti kyselyid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
 (defn csv [asetukset]
-  (GET "/:kyselyid/csv" []
+  (GET "/kysely/:kyselyid" []
        :path-params [kyselyid :- s/Int]
        :body [parametrit s/Any]
        :kayttooikeus [:kysely-raportti kyselyid]
