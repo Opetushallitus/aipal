@@ -89,7 +89,7 @@
         answers (group-by :vastaajaid all-answers)
         question-group-header-row (get-question-group-header questions template)
         header-row (create-header-row template questions)
-        answer-rows (map #(create-row template (:vastaajatunnus (second %)) choices (second %)) answers)]
+        answer-rows (map #(create-row template (:vastaajatunnus (first (second %))) choices (second %)) answers)]
     (println (clojure.pprint/pprint header-row))
     (write-csv
       (muuta-kaikki-stringeiksi (apply concat [[question-group-header-row header-row] answer-rows]))
