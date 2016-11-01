@@ -8,6 +8,7 @@
     (sql/join taulut/kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (sql/join taulut/kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
     (sql/join taulut/vastaaja (= :vastaus.vastaajaid :vastaaja.vastaajaid))
+    (sql/join taulut/kyselykerta (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid))
     (sql/join taulut/vastaajatunnus (= :vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid))
     (sql/join taulut/jatkovastaus (= :vastaus.jatkovastausid :jatkovastaus.jatkovastausid))
     (sql/fields :vastausid :kysymysid :vastaajaid :vapaateksti :numerovalinta :vaihtoehto :jatkovastausid :en_osaa_sanoa
@@ -17,7 +18,7 @@
                 [:kysely_kysymysryhma.kyselyid :kyselyid]
                 [:jatkovastaus.kylla_asteikko :jatkovastaus_kylla]
                 [:jatkovastaus.ei_vastausteksti :jatkovastaus_ei])
-    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))
+    (sql/where {:kyselykerta.kyselyid kyselyid})))
 
 (defn hae-kysymykset [kyselyid]
   (sql/select taulut/kysymys
