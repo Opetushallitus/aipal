@@ -73,7 +73,6 @@
 
 
 (defn create-row [template vastaajatunnus choices answers]
-  (println "VASTAAJATUNUNS: " vastaajatunnus)
   (cons vastaajatunnus (mapcat #(get-answer answers choices %) template)))
 
 (defn get-choices [questions]
@@ -90,7 +89,6 @@
         question-group-header-row (get-question-group-header questions template)
         header-row (create-header-row template questions)
         answer-rows (map #(create-row template (:vastaajatunnus (first (second %))) choices (second %)) answers)]
-    (println (clojure.pprint/pprint header-row))
     (write-csv
       (muuta-kaikki-stringeiksi (apply concat [[question-group-header-row header-row] answer-rows]))
       :delimiter \,)))
