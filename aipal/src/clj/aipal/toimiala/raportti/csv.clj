@@ -1,8 +1,5 @@
 (ns aipal.toimiala.raportti.csv
-  (:require [korma.core :as sql]
-            [clojure-csv.core :refer [write-csv]]
-            [aipal.rest-api.i18n :as i18n]
-            [clj-time.core :as t]
+  (:require [clojure-csv.core :refer [write-csv]]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
             [aipal.arkisto.csv :as csv]
@@ -48,14 +45,23 @@
                      choices)]
     (:teksti_fi choice)))
 
-(defn get-answer-text [choices type answer]
+(defn numero-tai-eos [answer]
+  (match [(empty? (:numerovalinta answer)) (empty? (:en_osaa_sanoa answer))]
+         [true _] (:numerovalinta answer)
+         [false true] "eos"
+         [false false] ""))
+
+(defn get-answer-text [choices type answers]
   (match [type]
-         ["arvosana"] (:numerovalinta answer)
-         ["arvosana7"] (:numerovalinta answer)
-         ["monivalinta"] (get-choice-text choices answer)
-         ["likert_asteikko"] (:numerovalinta answer)
-         ["vapaateksti"] (:vapaateksti answer)
-         ["kylla_ei_valinta"] (:vaihtoehto answer)
+         ["arvosana"] (:numerovalinta (first answers))
+         ["arvosana4_ja_eos"] (numero-tai-eos (first answers))
+         ["arvosana7"] (:numerovalinta (first answers))
+         ["monivalinta"] (->> answers
+                              (map #(get-choice-text choices %))
+                              (clojure.string/join ", "))
+         ["likert_asteikko"] (:numerovalinta (first answers))
+         ["vapaateksti"] (:vapaateksti (first answers))
+         ["kylla_ei_valinta"] (:vaihtoehto (first answers))
          :else ""))
 
 (defn find [pred coll]
@@ -66,10 +72,11 @@
 
 (defn get-answer [answers choices entry]
   (let [key (first entry)
-        answer (some #(if (= (get % key) (second entry)) %) answers)]
+        answers-for-question (filter #(if (= (get % key) (second entry)) %) answers)
+        first-answer (first answers-for-question)]
     (match [key]
-           [:kysymysid] [(get-answer-text choices (:vastaustyyppi answer) answer)]
-           [:jatkokysymysid] (get-jatkovastaus-text answer))))
+           [:kysymysid] [(get-answer-text choices (:vastaustyyppi first-answer) answers-for-question)]
+           [:jatkokysymysid] (get-jatkovastaus-text first-answer))))
 
 
 (defn create-row [template vastaajatunnus choices answers]
