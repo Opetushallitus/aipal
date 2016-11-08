@@ -46,7 +46,7 @@
     (:teksti_fi choice)))
 
 (defn numero-tai-eos [answer]
-  (match [(nil? (:numerovalinta answer)) (nil? (:en_osaa_sanoa answer))]
+  (match [(some? (:numerovalinta answer)) (some? (:en_osaa_sanoa answer))]
          [true _] (:numerovalinta answer)
          [false true] "eos"
          [false false] ""))
