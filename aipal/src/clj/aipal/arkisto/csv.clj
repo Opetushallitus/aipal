@@ -12,6 +12,7 @@
     (sql/join taulut/jatkovastaus (= :vastaus.jatkovastausid :jatkovastaus.jatkovastausid))
     (sql/fields :vastausid :kysymysid :vastaajaid :vapaateksti :numerovalinta :vaihtoehto :jatkovastausid :en_osaa_sanoa
                 [:vastaajatunnus.tunnus :vastaajatunnus]
+                [:vastaajatunnus.tutkintotunnus :tutkintotunnus]
                 [:kysymys.kysymysryhmaid :kysymysryhmaid]
                 [:kysymys.vastaustyyppi :vastaustyyppi]
                 [:kyselykerta.kyselyid :kyselyid]

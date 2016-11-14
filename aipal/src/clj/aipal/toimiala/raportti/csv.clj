@@ -22,7 +22,7 @@
            :else [""])))
 
 (defn get-question-group-header [questions template]
-  (cons "Vastaajatunnus" (mapcat #(get-question-group-text questions %) template)))
+  (concat ["Vastaajatunnus" "Tutkintotunnus"] (mapcat #(get-question-group-text questions %) template)))
 
 (defn get-header-fields [entry]
   (match [(first entry)]
@@ -35,7 +35,7 @@
     (map question header-fields)))
 
 (defn create-header-row [template questions]
-  (cons "" (mapcat #(get-header-text questions %) template)))
+  (concat ["" ""] (mapcat #(get-header-text questions %) template)))
 
 (defn get-choice-text [choices answer]
   (let [kysymysid (:kysymysid answer)
@@ -79,8 +79,8 @@
            [:jatkokysymysid] (get-jatkovastaus-text first-answer))))
 
 
-(defn create-row [template vastaajatunnus choices answers]
-  (cons vastaajatunnus (mapcat #(get-answer answers choices %) template)))
+(defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers]
+    (concat [vastaajatunnus tutkintotunnus] (mapcat #(get-answer answers choices %) template)))
 
 (defn get-choices [questions]
   (let [monivalinnat (filter #(= "monivalinta" (:vastaustyyppi %)) questions)
@@ -95,7 +95,7 @@
         answers (group-by :vastaajaid all-answers)
         question-group-header-row (get-question-group-header questions template)
         header-row (create-header-row template questions)
-        answer-rows (map #(create-row template (:vastaajatunnus (first (second %))) choices (second %)) answers)]
+        answer-rows (map #(create-row template (first (second %)) choices (second %)) answers)]
     (write-csv
       (muuta-kaikki-stringeiksi (apply concat [[question-group-header-row header-row] answer-rows]))
       :delimiter \,)))
