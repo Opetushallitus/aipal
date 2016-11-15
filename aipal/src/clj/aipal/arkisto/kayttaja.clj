@@ -52,8 +52,8 @@
         (do
           (log/debug "Käyttäjä on jo olemassa, päivitetään tiedot")
           (update-unique taulut/kayttaja
-          (sql/set-fields (assoc k :voimassa true))
-          (sql/where {:oid [= (:oid k)]})))
+            (sql/set-fields (assoc k :voimassa true))
+            (sql/where {:oid [= (:oid k)]})))
         ;; Lisätään uusi käyttäjä
         (do
           (log/debug "Luodaan uusi käyttäjä")
@@ -75,9 +75,6 @@
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
-
-(defn olemassa? [k]
-  (boolean (hae (:oid k))))
 
 (defn ^:integration-api paivita-kayttaja!
   "Päivittää tai lisää käyttäjän"

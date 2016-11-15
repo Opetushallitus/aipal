@@ -54,7 +54,7 @@
         json (generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))]
     (url->http-post-fn config url "valtakunnallinen, koulutustoimijavertailu" json)))
 
-(deftest ^:performance vertailuraportti-raportti []
+(deftest ^:performance vertailuraportti-raportti
   (let [config (get-configuration)
         raportti-lkm (:request-count config)
         concurrent-users 3

@@ -24,7 +24,7 @@
       (is (= (map :vastaajien_lkm (hae-kyselykerralla k1))
              [1])))))
 
-(deftest ^:integraatio haku-idlla []
+(deftest ^:integraatio haku-idlla
   (testing "hae palauttaa vastaajatunnuksen, jolla on annettu id"
     (let [k (:kyselykertaid (lisaa-kyselykerta!))]
       (lisaa! {:kyselykertaid k

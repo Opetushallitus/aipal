@@ -180,8 +180,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                       (map #(select-keys % opintoala-kentat) (hae-opintoalat asetukset)))]
     (muutokset uudet vanhat)))
 
-(defn uusi [[tutkintotunnus muutos]]
+(defn uusi
   "Jos muutos on uuden tiedon lisääminen, palauttaa uudet tiedot, muuten nil"
+  [[tutkintotunnus muutos]]
   (when (vector? muutos)
     (assoc (first muutos) :tutkintotunnus tutkintotunnus)))
 
