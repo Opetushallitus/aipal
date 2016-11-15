@@ -18,6 +18,8 @@
     [aipal.integraatio.sql.korma :refer :all]
     [oph.korma.common :refer [joda-date->sql-date joda-datetime->sql-timestamp] ]))
 
+(defn paivita-nakyma []
+  (sql/exec-raw "REFRESH MATERIALIZED VIEW vipunen_view;"))
 
 (defn ^:private hae [alkup loppup vain-valtakunnalliset]
   (let [alkupvm (clj-time.coerce/to-sql-date (or alkup (time/local-date 1900 1 1)))
