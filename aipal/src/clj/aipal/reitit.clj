@@ -66,8 +66,8 @@
                                                              (pprint
                                                                (clojure.walk/postwalk (fn [elem]
                                                                                         (if (and (coll? elem)
-                                                                                                 (= (first elem) :password))
-                                                                                          [:password "*****"]
+                                                                                                 (contains? #{:password :salasana} (first elem)))
+                                                                                          [(first elem) "*****"]
                                                                                           elem))
                                                                                       asetukset)))
                                                 :build-id @build-id)))
