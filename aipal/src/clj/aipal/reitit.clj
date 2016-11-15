@@ -69,7 +69,7 @@
                                                              (pprint
                                                                (clojure.walk/postwalk (fn [elem]
                                                                                         (if (and (coll? elem)
-                                                                                                 (contains? #{:password :salasana} (first elem)))
+                                                                                                 (contains? #{:password :salasana :avopfi-shared-secret} (first elem)))
                                                                                           [(first elem) "*****"]
                                                                                           elem))
                                                                                       asetukset)))
