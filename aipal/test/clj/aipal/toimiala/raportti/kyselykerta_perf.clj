@@ -8,11 +8,11 @@
 
 (use-fixtures :each tietokanta-fixture)
 
-(defn kyselykertaid->perf-fn [config id ]
+(defn kyselykertaid->perf-fn [config id]
   (let [url (str (:base-url config) "/api/raportti/kyselykerta/" id)]
     (url->http-get-fn config url "kyselykerta-raportti")))
 
-(deftest ^:performance kyselykerta-raportti []
+(deftest ^:performance kyselykerta-raportti
   (let [config (get-configuration)
         kyselykerta-lkm (* 3 (:request-count config))
         concurrent-users 4

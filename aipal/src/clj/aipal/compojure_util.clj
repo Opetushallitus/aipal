@@ -5,10 +5,10 @@
 
 (defmethod compojure.api.meta/restructure-param :kayttooikeus
   [_ kayttooikeus_spec {:keys [body] :as acc}]
-  "Käyttoikeuslaajennos compojure-apin rajapintoihin. Esim:
-
-  :kayttooikeus :jasenesitys-poisto
-  :kayttooikeus [:jasenesitys-poisto jasenyysid]"
+  ; Käyttöoikeuslaajennos compojure-apin rajapintoihin. Esim:
+  ;
+  ;  :kayttooikeus :jasenesitys-poisto
+  ;  :kayttooikeus [:jasenesitys-poisto jasenyysid]
 
   (let [[kayttooikeus konteksti] (if (vector? kayttooikeus_spec) kayttooikeus_spec [kayttooikeus_spec])]
     (-> acc

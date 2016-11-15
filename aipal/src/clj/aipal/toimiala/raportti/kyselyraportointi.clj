@@ -227,8 +227,8 @@
     sql/exec))
 
 (defn muodosta-raportti [parametrit]
-  {:pre [(or :kyselyid parametrit
-             :kyselykertaid parametrit)]}
+  {:pre [(or (:kyselyid parametrit)
+             (:kyselykertaid parametrit))]}
   (raportointi/muodosta-raportti (liita-vastaajien-maksimimaarat
                                    (hae-kysymysryhmat parametrit) parametrit)
                                  (hae-kysymykset parametrit)

@@ -166,8 +166,9 @@ ORDER BY kyselykerta.kyselykertaid ASC")
   [kyselyid]
   (hae-vastaustunnustiedot {:kyselykerta.kyselyid kyselyid}))
 
-(defn samanniminen-kyselykerta? [kyselykerta]
+(defn samanniminen-kyselykerta?
   "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kyselykerta."
+  [kyselykerta]
   (boolean
     (seq (sql/select taulut/kyselykerta
            (sql/join :inner taulut/kysely (= :kyselykerta.kyselyid :kysely.kyselyid))

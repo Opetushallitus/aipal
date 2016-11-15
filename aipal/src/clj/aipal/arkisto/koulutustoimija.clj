@@ -15,8 +15,7 @@
 (ns aipal.arkisto.koulutustoimija
   (:require [korma.core :as sql]
             [aipal.integraatio.kayttooikeuspalvelu :refer [oph-koulutustoimija]]
-            [aipal.integraatio.sql.korma :as taulut])
-  (:use [aipal.integraatio.sql.korma]))
+            [aipal.integraatio.sql.korma :as taulut]))
 
 (defn ^:integration-api lisaa!
   [tiedot]
