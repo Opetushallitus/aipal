@@ -79,7 +79,8 @@
                                :valtakunnallinen s/Bool
                                :kysymys_fi s/Str
                                :kyselyid s/Int
-                               :kysymys_en s/Str
+                               :kysely_en (s/maybe s/Str)
+                               :kysymys_en (s/maybe s/Str)
                                :kysymysryhma_en (s/maybe s/Str)
                                :opintoala_en (s/maybe s/Str)
                                :valmistavan_koulutuksen_oppilaitos_en (s/maybe s/Str)
