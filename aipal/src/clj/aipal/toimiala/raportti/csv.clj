@@ -6,6 +6,7 @@
             [clojure.core.match :refer [match]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
 
+(def delimiter \;)
 
 (defn get-template-parts [q]
   (filter second (select-keys q [:kysymysid :jatkokysymysid])))
@@ -60,7 +61,7 @@
                               (map #(get-choice-text choices %))
                               (clojure.string/join ", "))
          ["likert_asteikko"] (:numerovalinta (first answers))
-         ["vapaateksti"] (:vapaateksti (first answers))
+         ["vapaateksti"] (clojure.string/escape (:vapaateksti (first answers)) {\newline " " \tab " " delimiter \,})
          ["kylla_ei_valinta"] (:vaihtoehto (first answers))
          :else ""))
 
@@ -98,4 +99,4 @@
         answer-rows (map #(create-row template (first (second %)) choices (second %)) answers)]
     (write-csv
       (muuta-kaikki-stringeiksi (apply concat [[question-group-header-row header-row] answer-rows]))
-      :delimiter \,)))
+      :delimiter delimiter)))
