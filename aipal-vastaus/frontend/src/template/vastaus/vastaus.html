@@ -74,6 +74,13 @@
           </label>
         </div>
 
+        <div ng-if="kysymys.vastaustyyppi === 'arvosana6_ja_eos'" class="vastaus_valinnat">
+          <label ng-repeat="vaihtoehto in [0, 1, 2, 3, 4, 5, 6]" ng-class="{checked: kysymys.vastaus == vaihtoehto}" class="compact">
+            <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
+            <span ng-bind="kielet[vastausKieli].yleiset.arvosana6_ja_eos[vaihtoehto]"></span>
+          </label>
+        </div>
+
         <div ng-if="kysymys.vastaustyyppi == 'monivalinta' && kysymys.monivalinta_max === 1" class="vastaus_valinnat">
           <label ng-repeat="vaihtoehto in kysymys.monivalintavaihtoehdot" ng-class="{checked: kysymys.vastaus == vaihtoehto.jarjestys }" class="loose">
             <span ng-if="kysymys.monivalinta_max == 1">

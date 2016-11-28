@@ -120,7 +120,7 @@
                           :vastaajaid vastaajaid
                           :jatkovastausid (:jatkovastausid jatkovastaus)
                           :en_osaa_sanoa en-osaa-sanoa
-                          :numerovalinta (when (and (not en-osaa-sanoa) (#{"monivalinta" "arvosana" "arvosana7" "asteikko" "likert_asteikko" "arvosana4_ja_eos"} vastaustyyppi)) arvo)
+                          :numerovalinta (when (and (not en-osaa-sanoa) (#{"monivalinta" "arvosana" "arvosana7" "asteikko" "likert_asteikko" "arvosana4_ja_eos" "arvosana6_ja_eos"} vastaustyyppi)) arvo)
                           :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
                           :vaihtoehto (when (and (not en-osaa-sanoa) (= "kylla_ei_valinta" vastaustyyppi)) arvo)}))
     (log/info (str "Vastaukset (" vastaajaid  ") tallennettu onnistuneesti."))

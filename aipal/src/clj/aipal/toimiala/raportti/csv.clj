@@ -56,6 +56,7 @@
   (match [type]
          ["arvosana"] (:numerovalinta (first answers))
          ["arvosana4_ja_eos"] (numero-tai-eos (first answers))
+         ["arvosana6_ja_eos"] (numero-tai-eos (first answers))
          ["arvosana7"] (:numerovalinta (first answers))
          ["monivalinta"] (->> answers
                               (map #(get-choice-text choices %))
