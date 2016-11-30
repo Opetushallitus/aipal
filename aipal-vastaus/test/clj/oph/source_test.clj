@@ -57,5 +57,6 @@
 (deftest kielikaannokset-loytyvat
   (testing "Tarkistetaan että jokaista suomen kielistä lokalisointiavainta vastaa ruotsinkielinen lokalisointiavain"
     (let [suomi-avaimet  (set (keys (load-props "resources/i18n/tekstit.properties")))
-          ruotsi-avaimet (set (keys (load-props "resources/i18n/tekstit_sv.properties")))]
-      (is (empty? (clojure.set/difference suomi-avaimet ruotsi-avaimet))))))
+          ruotsi-avaimet (set (keys (load-props "resources/i18n/tekstit_sv.properties")))
+          enkku-avaimet  (set (keys (load-props "resources/i18n/tekstit_en.properties")))]
+      (is (empty? (clojure.set/difference suomi-avaimet ruotsi-avaimet enkku-avaimet))))))
