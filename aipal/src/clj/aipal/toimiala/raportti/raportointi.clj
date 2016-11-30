@@ -40,8 +40,8 @@
   (Math/round (double (* osuus 100))))
 
 (defn muodosta-asteikko-jakauman-esitys
-  [jakauma vaihtoehtoja]
-  (let [vaihtoehdot (range 1 (+ vaihtoehtoja 1))
+  [jakauma vaihtoehtoja & {:keys [alku] :or {alku 1}}]
+  (let [vaihtoehdot (range alku (+ vaihtoehtoja alku))
         jakauma (merge (into {:eos 0} (for [x vaihtoehdot] {x 0})) jakauma)
         yhteensa (reduce + (vals jakauma))
         tiedot-vaihtoehdolle (fn [avain lukumaara]
@@ -102,13 +102,14 @@
   (when vastaukset
     (frequencies (keep keyword (.getArray vastaukset)))))
 
-(defn kasittele-asteikkokysymys [kysymys vastaukset vaihtoehtoja]
+(defn kasittele-asteikkokysymys [kysymys vastaukset vaihtoehtoja & {:keys [alku] :or {alku 1}}]
   (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
     (assoc kysymys :jakauma (muodosta-asteikko-jakauman-esitys
                               (if (:eos_vastaus_sallittu kysymys)
                                 (assoc jakauma :eos (or (:en_osaa_sanoa vastaukset) 0))
                                 jakauma)
-                              vaihtoehtoja))))
+                              vaihtoehtoja
+                              :alku alku))))
 
 (defn kasittele-monivalintakysymys [kysymys vastaukset]
   (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
@@ -179,7 +180,7 @@
                   "monivalinta" (kasittele-monivalintakysymys kysymys vastaukset)
                   "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset)
                   "arvosana4_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 5)
-                  "arvosana6_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 7))]
+                  "arvosana6_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 7 :alku 0))]
     (-> kysymys
       (assoc :vastaajien_lukumaara vastaajia
              :vastaajat vastaajat)
