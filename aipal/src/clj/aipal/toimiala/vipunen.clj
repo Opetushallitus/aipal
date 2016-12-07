@@ -91,4 +91,6 @@
                                :tunnus (s/maybe s/Str)
                                :kunta (s/maybe s/Str)
                                :koulutusmuoto (s/maybe s/Str)
+                               :kysymysryhmajarjestys s/Int
+                               :kysymysjarjestys s/Int
                                })
