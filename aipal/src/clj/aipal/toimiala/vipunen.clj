@@ -93,8 +93,4 @@
                                :koulutusmuoto (s/maybe s/Str)
                                :kysymysryhmajarjestys s/Int
                                :kysymysjarjestys s/Int
-                               :kyselypohja_fi (s/maybe s/Str)
-                               :kyselypohja_sv (s/maybe s/Str)
-                               :kyselypohja_en (s/maybe s/Str)
-                               :kyselypohjajarjestys (s/maybe s/Int)
                                })
