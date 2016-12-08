@@ -105,7 +105,7 @@ FROM kysymys kysymys_1
 WHERE (kysymys_1.kysymysryhmaid IN ( SELECT kysymysryhma_1.kysymysryhmaid
 FROM kysymysryhma kysymysryhma_1
 WHERE kysymysryhma_1.valtakunnallinen = true AND kysymysryhma_1.taustakysymykset = true AND kysymysryhma_1.tila = 'julkaistu' AND kysymysryhma_1.selite_fi = 'AVOP Taustatiedot')))) AND (monivalintasukupuoli.teksti_fi IS NOT NULL OR monivalintaika.teksti_fi IS NOT NULL OR monivalintapohjakoulutus.teksti_fi IS NOT NULL)
-WITH DATA;
+WITH NO DATA;
 
 ALTER MATERIALIZED VIEW vipunen_view
 OWNER TO ${aipal_user};
