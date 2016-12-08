@@ -96,5 +96,5 @@
                                :kyselypohja_fi (s/maybe s/Str)
                                :kyselypohja_sv (s/maybe s/Str)
                                :kyselypohja_en (s/maybe s/Str)
-                               :kyselypohjajarjestys s/Int
+                               :kyselypohjajarjestys (s/maybe s/Int)
                                })
