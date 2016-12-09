@@ -93,4 +93,5 @@
                                :koulutusmuoto (s/maybe s/Str)
                                :kysymysryhmajarjestys s/Int
                                :kysymysjarjestys s/Int
+                               :kysymysryhma (s/maybe s/Str)
                                })
