@@ -45,4 +45,8 @@
 (defrecord PaivitaKoulutustoimijoidenTutkinnotJob []
    org.quartz.Job
    (execute [this ctx]
-     (paivita-koulutustoimijoiden-tutkinnot!)))
+     (try
+       (paivita-koulutustoimijoiden-tutkinnot!)
+       (catch Exception e
+         (log/error "Koulutustoimijoiden tutkintojen päivitys Aitusta epäonnistui"
+                    (map str (.getStackTrace e)))))))

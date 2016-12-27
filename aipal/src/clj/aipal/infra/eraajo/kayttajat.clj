@@ -38,5 +38,7 @@
 (defrecord PaivitaKayttajatLdapistaJob []
    org.quartz.Job
    (execute [this ctx]
-     (let [{kop "kayttooikeuspalvelu"} (qc/from-job-data ctx)]
-       (paivita-kayttajat-ldapista kop))))
+     (try
+       (let [{kop "kayttooikeuspalvelu"} (qc/from-job-data ctx)]
+         (paivita-kayttajat-ldapista kop))
+       (catch Exception e (log/error "Käyttäjien päivitys LDAPista epäonnistui" (map str (.getStackTrace e)))))))

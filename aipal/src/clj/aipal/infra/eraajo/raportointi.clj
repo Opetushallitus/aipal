@@ -31,4 +31,8 @@
 (defrecord PaivitaNakymatJob []
    org.quartz.Job
    (execute [this ctx]
-     (paivita-nakymat!)))
+     (try
+       (paivita-nakymat!)
+       (catch Exception e
+         (log/error "Raportoinnin ja Vipusen näkymien päivitys"
+                    (map str (.getStackTrace e)))))))

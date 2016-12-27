@@ -32,5 +32,9 @@
 (defrecord PaivitaOrganisaatiotJob []
    org.quartz.Job
    (execute [this ctx]
-     (let [{asetukset "asetukset"} (qc/from-job-data ctx)]
-       (paivita-organisaatiot! asetukset))))
+     (try
+       (let [{asetukset "asetukset"} (qc/from-job-data ctx)]
+         (paivita-organisaatiot! asetukset))
+       (catch Exception e
+         (log/error "Organisaatioiden päivitys organisaatiopalvelusta epäonnistui"
+                    (map str (.getStackTrace e)))))))
