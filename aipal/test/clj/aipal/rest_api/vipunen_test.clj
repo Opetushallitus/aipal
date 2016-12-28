@@ -7,6 +7,8 @@
             [aipal.sql.test-data-util :refer :all]
             [aipal.rest-api.rest-util :refer [rest-kutsu body-json session]]))
 
+; curl -i -H "authorization: Basic dHVubnVzOnNhbGFzYW5h" -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d '{"alkupvm":"2016-11-17", "loppupvm": "2016-11-18"}' http://localhost:8082/api/vipunen/valtakunnallinen
+
 (defn hae-vastaus [peridot-session alkupvm loppupvm uri-path]
   (let [response (-> peridot-session
                    (peridot/request uri-path

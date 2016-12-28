@@ -26,7 +26,6 @@
 
 (def maxrows 50000)
 
-; TODO: testidata
 (defroutes reitit
   (POST "/" []
     :body-params [alkupvm :- s/Str

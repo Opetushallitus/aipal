@@ -37,7 +37,7 @@
                 "Yrittäjä tai itsenäinen ammatinharjoittaja"
                 "Työtön"
                 "Opiskelija"
-                "Muu tilanne (esimerkiksi varusmies-/siviilipalveluksessa,vanhempainvapaalla, kuntoutuksessa tai muu syy)"))
+                "Muu tilanne (esimerkiksi varusmies-/siviilipalveluksessa, vanhempainvapaalla, kuntoutuksessa tai muu syy)"))
 
 (def TK_tavoite (s/enum "koko tutkinnon suorittaminen"
                   "tutkinnon osan tai osien suorittaminen"
