@@ -25,7 +25,7 @@
                                :valmistavan_koulutuksen_oppilaitos_fi (s/maybe s/Str)
                                :valmistavan_koulutuksen_oppilaitos_sv (s/maybe s/Str)
                                :kysely_fi s/Str
-                               :kysymysryhma_fi s/Str
+                               :kysymysryhma_fi (s/maybe s/Str)
                                :tutkinto_fi (s/maybe s/Str)
                                :kysymysryhmaid s/Int
                                :koulutustoimija_sv (s/maybe s/Str)
