@@ -15,32 +15,6 @@
 (ns aipal.toimiala.vipunen
   (:require [schema.core :as s]))
 
-(def TK_sukupuoli (s/enum "Nainen" "Mies" "En halua vastata"))
-(def TK_ika (s/enum "Alle 25 vuotta" "25-34 vuotta" "35-45 vuotta" "Yli 45 vuotta"))
-
-(def TK_tutkinto (s/enum "Ylioppilastutkinto"
-                   "Ammatillinen perustutkinto/ammattitutkinto"
-                   "Ylioppilastutkinto sekä ammatillinen perustutkinto/ammattitutkinto"
-                   "Opistoasteen tai ammatillisen korkea-asteen tutkinto"
-                   "Korkeakoulututkinto"
-                   "Ulkomailla suoritettu tutkinto"
-                   "Ei peruskoulun jälkeistä tutkintoa"
-                   "Ammattikorkeakoulututkinto"
-                   "Alempi korkeakoulututkinto"
-                   "Ylempi korkeakoulututkinto"
-                   "Ulkomailla suoritettu tutkinto"
-                   "Muu"))
-
-(def TK_vastaustyyppi (s/enum
-                        "likert_asteikko"
-                        "asteikko"
-                        "monivalinta"
-                        "kylla_ei_valinta"
-                        "arvosana"
-                        "arvosana7"
-                        "arvosana4_ja_eos"
-                        "arvosana6_ja_eos"))
-
 (s/defschema VastauksenTiedot {:vastausid s/Int
                                :monivalintavaihtoehto (s/maybe s/Str)
                                :kysely_sv (s/maybe s/Str)
@@ -51,12 +25,10 @@
                                :valmistavan_koulutuksen_oppilaitos_fi (s/maybe s/Str)
                                :valmistavan_koulutuksen_oppilaitos_sv (s/maybe s/Str)
                                :kysely_fi s/Str
-                               :taustakysymys_ika TK_ika
                                :kysymysryhma_fi s/Str
                                :tutkinto_fi (s/maybe s/Str)
                                :kysymysryhmaid s/Int
                                :koulutustoimija_sv (s/maybe s/Str)
-                               :taustakysymys_sukupuoli TK_sukupuoli
                                :valmistavan_koulutuksen_jarjestaja (s/maybe s/Str)
                                :vastaajaid s/Int
                                :opintoala_fi (s/maybe s/Str)
@@ -68,8 +40,7 @@
                                :kysymysid s/Int
                                :kyselykertaid s/Int
                                :koulutustoimija s/Str
-                               :taustakysymys_pohjakoulutus TK_tutkinto
-                               :vastaustyyppi TK_vastaustyyppi
+                               :vastaustyyppi s/Str
                                :tutkinto_sv (s/maybe s/Str)
                                :tutkintotunnus (s/maybe s/Str)
                                :kyselykerta s/Str
@@ -94,4 +65,5 @@
                                :kysymysryhmajarjestys s/Int
                                :kysymysjarjestys s/Int
                                :kysymysryhma (s/maybe s/Str)
+                               :taustakysymykset s/Bool
                                })

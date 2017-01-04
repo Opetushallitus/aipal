@@ -24,7 +24,7 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
 
-(def maxrows 50000)
+(def maxrows 100000)
 
 ; TODO: testidata
 (defroutes reitit
@@ -39,14 +39,14 @@
 
       (if (< rivimaara maxrows)
         {:status 200
-         :body (vipunen/hae-kaikki alkupv loppupv)      
+         :body (vipunen/hae-kaikki alkupv loppupv)
          :headers {"Content-Type" "application/json"}}
       ; liian monta riviä
-      {:status 500 
+      {:status 500
        :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
        :headers {"Content-Type" "application/json"}})))
 
-  
+
   (POST "/valtakunnallinen" []
     :body-params [alkupvm :- s/Str
                   loppupvm :- s/Str]
@@ -58,10 +58,10 @@
 
       (if (< rivimaara maxrows)
         {:status 200
-         :body (vipunen/hae-valtakunnalliset alkupv loppupv)      
+         :body (vipunen/hae-valtakunnalliset alkupv loppupv)
          :headers {"Content-Type" "application/json"}}
         ; liian monta riviä
-        {:status 500 
+        {:status 500
          :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
          :headers {"Content-Type" "application/json"}}))))
  ;     )))
