@@ -1,7 +1,7 @@
 ({:vastausid 8,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -15,11 +15,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -28,7 +28,7 @@
   :kysymysid 7312017,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -36,18 +36,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mina tidigare studier, min arbetserfarenhet och mitt övriga kunnande utreddes mångsidigt i ansökningsskedet",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisemmat opintoni, työkokemukseni ja muu osaamiseni selvitettiin monipuolisesti hakeutumisen aikana",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 9,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -61,11 +61,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -74,7 +74,7 @@
   :kysymysid 7312018,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -82,18 +82,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag vet vilket slags yrkesskicklighet som krävs i den examen jag valt",
   :valtakunnallinen true,
   :kysymys_fi
   "Tiedän, minkälaista ammattitaitoa valitsemassani tutkinnossa vaaditaan",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 10,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -107,11 +107,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -120,7 +120,7 @@
   :kysymysid 7312019,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -128,18 +128,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick tillräcklig information om de krav på hälsotillstånd som ansluter sig till min examen (Den här frågan besvaras endast av personer som siktar på arbete inom transportbranschen, social-, hälso- och idrottsområdet eller det humanistiska och pedagogiska området i uppgifter som involverar barn och ungdomar. De andra svarar: saknar erfarenhet.)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi tietoa tutkintooni liittyvistä terveydentilavaatimuksista (Tähän kysymykseen vastaavat vain kuljetusalalle, sosiaali-, terveys- ja liikunta-alalle tai humanistiselle ja kasvatusalalle lasten- ja nuorten parissa tehtäviin töihin aikovat. Muut vastaavat: ei kokemusta.)",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 11,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -153,11 +153,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -166,7 +166,7 @@
   :kysymysid 7312020,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -174,18 +174,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick påverka valet av de examensdelar som hör till min examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain vaikuttaa tutkintoon kuuluvien tutkinnon osien valintaan",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 12,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -199,11 +199,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -212,7 +212,7 @@
   :kysymysid 7312021,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -220,18 +220,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick information om de ekonomiska stödformer och studiesociala förmåner som ansluter sig till utbildningen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain tietoa koulutukseen liittyvistä taloudellisista tukimuodoista ja opintososiaalisista eduista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 13,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -245,11 +245,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -258,7 +258,7 @@
   :kysymysid 7312022,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -266,19 +266,19 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utredde med mig eventuella svårigheter i anslutning till studierna eller avläggandet av examen (till exempel i anslutning till språket, läsning, skrivning, gestaltning eller koncentration)?",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani selvitettiin opiskeluuni tai tutkinnon suorittamiseeni liittyviä mahdollisia vaikeuksia (esimerkiksi kieleen, lukemiseen, kirjoittamiseen, hahmottamiseen tai keskittymiseen liittyen)?",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 14,
   :monivalintavaihtoehto
   "Ei, vaikka minulla oli mielestäni riittävästi aikaisempaa osaamista",
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -292,11 +292,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -305,7 +305,7 @@
   :kysymysid 7312023,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "monivalinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -313,18 +313,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag hänvisades direkt till ett examenstillfälle (en eller flera examensdelar)",
   :valtakunnallinen true,
   :kysymys_fi
   "Minut ohjattiin suoraan tutkintotilaisuuteen (yksi tai useampi tutkinnon osa)",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 15,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -338,11 +338,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -351,7 +351,7 @@
   :kysymysid 7312024,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -359,18 +359,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mitt tidigare kunnande i anslutning till examen förkortar väsentligt den förberedande utbildningen eller avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisempi tutkintoon liittyvä osaamiseni lyhentää olennaisesti valmistavaa koulutusta tai tutkinnon suorittamista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 16,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -384,11 +384,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -397,7 +397,7 @@
   :kysymysid 7312025,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -405,18 +405,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utarbetade med mig en personlig, skriftlig plan, i vilken vi kom överens om vilket slags utbildning jag behöver, studieformerna, handledning, avläggandet av examen och tidtabeller",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani tehtiin henkilökohtainen kirjallinen suunnitelma, jossa sovimme tarvitsemastani koulutuksesta, opiskelumuodoista, ohjauksesta, tutkinnon suorittamisesta ja aikatauluista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 17,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -430,11 +430,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -1,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -443,7 +443,7 @@
   :kysymysid 7312026,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -451,17 +451,17 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Hur bedömer du att ansökningsskedet lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi "Miten arvioit hakeutumisen onnistuneen kokonaisuutena?",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 59,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -475,11 +475,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -488,7 +488,7 @@
   :kysymysid 7312017,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -496,18 +496,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Mina tidigare studier, min arbetserfarenhet och mitt övriga kunnande utreddes mångsidigt i ansökningsskedet",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisemmat opintoni, työkokemukseni ja muu osaamiseni selvitettiin monipuolisesti hakeutumisen aikana",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 60,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -521,11 +521,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -534,7 +534,7 @@
   :kysymysid 7312018,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -542,18 +542,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag vet vilket slags yrkesskicklighet som krävs i den examen jag valt",
   :valtakunnallinen true,
   :kysymys_fi
   "Tiedän, minkälaista ammattitaitoa valitsemassani tutkinnossa vaaditaan",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 61,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -567,11 +567,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -580,7 +580,7 @@
   :kysymysid 7312019,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -588,18 +588,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick tillräcklig information om de krav på hälsotillstånd som ansluter sig till min examen (Den här frågan besvaras endast av personer som siktar på arbete inom transportbranschen, social-, hälso- och idrottsområdet eller det humanistiska och pedagogiska området i uppgifter som involverar barn och ungdomar. De andra svarar: saknar erfarenhet.)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi tietoa tutkintooni liittyvistä terveydentilavaatimuksista (Tähän kysymykseen vastaavat vain kuljetusalalle, sosiaali-, terveys- ja liikunta-alalle tai humanistiselle ja kasvatusalalle lasten- ja nuorten parissa tehtäviin töihin aikovat. Muut vastaavat: ei kokemusta.)",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 62,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -613,11 +613,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -626,7 +626,7 @@
   :kysymysid 7312020,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -634,18 +634,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick påverka valet av de examensdelar som hör till min examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain vaikuttaa tutkintoon kuuluvien tutkinnon osien valintaan",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 63,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 0,
@@ -659,11 +659,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -672,7 +672,7 @@
   :kysymysid 7312021,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -680,18 +680,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick information om de ekonomiska stödformer och studiesociala förmåner som ansluter sig till utbildningen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain tietoa koulutukseen liittyvistä taloudellisista tukimuodoista ja opintososiaalisista eduista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 64,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 1,
@@ -705,11 +705,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -718,7 +718,7 @@
   :kysymysid 7312022,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -726,19 +726,19 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Man utredde med mig eventuella svårigheter i anslutning till studierna eller avläggandet av examen (till exempel i anslutning till språket, läsning, skrivning, gestaltning eller koncentration)?",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani selvitettiin opiskeluuni tai tutkinnon suorittamiseeni liittyviä mahdollisia vaikeuksia (esimerkiksi kieleen, lukemiseen, kirjoittamiseen, hahmottamiseen tai keskittymiseen liittyen)?",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 65,
   :monivalintavaihtoehto
   "Ei, vaikka minulla oli mielestäni riittävästi aikaisempaa osaamista",
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -752,11 +752,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -765,7 +765,7 @@
   :kysymysid 7312023,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "monivalinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -773,18 +773,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag hänvisades direkt till ett examenstillfälle (en eller flera examensdelar)",
   :valtakunnallinen true,
   :kysymys_fi
   "Minut ohjattiin suoraan tutkintotilaisuuteen (yksi tai useampi tutkinnon osa)",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 66,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 0,
@@ -798,11 +798,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -811,7 +811,7 @@
   :kysymysid 7312024,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -819,18 +819,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Mitt tidigare kunnande i anslutning till examen förkortar väsentligt den förberedande utbildningen eller avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisempi tutkintoon liittyvä osaamiseni lyhentää olennaisesti valmistavaa koulutusta tai tutkinnon suorittamista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 67,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -844,11 +844,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -857,7 +857,7 @@
   :kysymysid 7312025,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -865,18 +865,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Man utarbetade med mig en personlig, skriftlig plan, i vilken vi kom överens om vilket slags utbildning jag behöver, studieformerna, handledning, avläggandet av examen och tidtabeller",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani tehtiin henkilökohtainen kirjallinen suunnitelma, jossa sovimme tarvitsemastani koulutuksesta, opiskelumuodoista, ohjauksesta, tutkinnon suorittamisesta ja aikatauluista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 68,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -890,11 +890,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -4,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -903,7 +903,7 @@
   :kysymysid 7312026,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -911,17 +911,17 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Hur bedömer du att ansökningsskedet lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi "Miten arvioit hakeutumisen onnistuneen kokonaisuutena?",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 76,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -935,11 +935,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -948,7 +948,7 @@
   :kysymysid 7312017,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -956,18 +956,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Mina tidigare studier, min arbetserfarenhet och mitt övriga kunnande utreddes mångsidigt i ansökningsskedet",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisemmat opintoni, työkokemukseni ja muu osaamiseni selvitettiin monipuolisesti hakeutumisen aikana",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 77,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -981,11 +981,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -994,7 +994,7 @@
   :kysymysid 7312018,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1002,18 +1002,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag vet vilket slags yrkesskicklighet som krävs i den examen jag valt",
   :valtakunnallinen true,
   :kysymys_fi
   "Tiedän, minkälaista ammattitaitoa valitsemassani tutkinnossa vaaditaan",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 78,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1027,11 +1027,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1040,7 +1040,7 @@
   :kysymysid 7312019,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1048,18 +1048,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick tillräcklig information om de krav på hälsotillstånd som ansluter sig till min examen (Den här frågan besvaras endast av personer som siktar på arbete inom transportbranschen, social-, hälso- och idrottsområdet eller det humanistiska och pedagogiska området i uppgifter som involverar barn och ungdomar. De andra svarar: saknar erfarenhet.)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi tietoa tutkintooni liittyvistä terveydentilavaatimuksista (Tähän kysymykseen vastaavat vain kuljetusalalle, sosiaali-, terveys- ja liikunta-alalle tai humanistiselle ja kasvatusalalle lasten- ja nuorten parissa tehtäviin töihin aikovat. Muut vastaavat: ei kokemusta.)",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 79,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1073,11 +1073,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1086,7 +1086,7 @@
   :kysymysid 7312020,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1094,18 +1094,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick påverka valet av de examensdelar som hör till min examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain vaikuttaa tutkintoon kuuluvien tutkinnon osien valintaan",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 80,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 0,
@@ -1119,11 +1119,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1132,7 +1132,7 @@
   :kysymysid 7312021,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1140,18 +1140,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick information om de ekonomiska stödformer och studiesociala förmåner som ansluter sig till utbildningen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain tietoa koulutukseen liittyvistä taloudellisista tukimuodoista ja opintososiaalisista eduista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 81,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 1,
@@ -1165,11 +1165,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1178,7 +1178,7 @@
   :kysymysid 7312022,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1186,19 +1186,19 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Man utredde med mig eventuella svårigheter i anslutning till studierna eller avläggandet av examen (till exempel i anslutning till språket, läsning, skrivning, gestaltning eller koncentration)?",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani selvitettiin opiskeluuni tai tutkinnon suorittamiseeni liittyviä mahdollisia vaikeuksia (esimerkiksi kieleen, lukemiseen, kirjoittamiseen, hahmottamiseen tai keskittymiseen liittyen)?",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 82,
   :monivalintavaihtoehto
   "Ei, vaikka minulla oli mielestäni riittävästi aikaisempaa osaamista",
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1212,11 +1212,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1225,7 +1225,7 @@
   :kysymysid 7312023,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "monivalinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1233,18 +1233,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag hänvisades direkt till ett examenstillfälle (en eller flera examensdelar)",
   :valtakunnallinen true,
   :kysymys_fi
   "Minut ohjattiin suoraan tutkintotilaisuuteen (yksi tai useampi tutkinnon osa)",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 83,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 0,
@@ -1258,11 +1258,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1271,7 +1271,7 @@
   :kysymysid 7312024,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1279,18 +1279,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Mitt tidigare kunnande i anslutning till examen förkortar väsentligt den förberedande utbildningen eller avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisempi tutkintoon liittyvä osaamiseni lyhentää olennaisesti valmistavaa koulutusta tai tutkinnon suorittamista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 84,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1304,11 +1304,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1317,7 +1317,7 @@
   :kysymysid 7312025,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1325,18 +1325,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Man utarbetade med mig en personlig, skriftlig plan, i vilken vi kom överens om vilket slags utbildning jag behöver, studieformerna, handledning, avläggandet av examen och tidtabeller",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani tehtiin henkilökohtainen kirjallinen suunnitelma, jossa sovimme tarvitsemastani koulutuksesta, opiskelumuodoista, ohjauksesta, tutkinnon suorittamisesta ja aikatauluista",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 85,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1350,11 +1350,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv nil,
   :taustakysymys_sukupuoli "mies",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -5,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Ruikonperän opistoaste",
   :rahoitusmuoto "valtionosuus",
@@ -1363,7 +1363,7 @@
   :kysymysid 7312026,
   :kyselykertaid -1,
   :koulutustoimija "2345678-0",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1371,17 +1371,17 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Hur bedömer du att ansökningsskedet lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi "Miten arvioit hakeutumisen onnistuneen kokonaisuutena?",
-  :kyselyid -1,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -1,}
+  
  {:vastausid 93,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -1395,11 +1395,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1408,7 +1408,7 @@
   :kysymysid 7312017,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1416,18 +1416,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mina tidigare studier, min arbetserfarenhet och mitt övriga kunnande utreddes mångsidigt i ansökningsskedet",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisemmat opintoni, työkokemukseni ja muu osaamiseni selvitettiin monipuolisesti hakeutumisen aikana",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 94,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -1441,11 +1441,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1454,7 +1454,7 @@
   :kysymysid 7312018,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1462,18 +1462,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag vet vilket slags yrkesskicklighet som krävs i den examen jag valt",
   :valtakunnallinen true,
   :kysymys_fi
   "Tiedän, minkälaista ammattitaitoa valitsemassani tutkinnossa vaaditaan",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 95,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -1487,11 +1487,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1500,7 +1500,7 @@
   :kysymysid 7312019,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1508,18 +1508,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick tillräcklig information om de krav på hälsotillstånd som ansluter sig till min examen (Den här frågan besvaras endast av personer som siktar på arbete inom transportbranschen, social-, hälso- och idrottsområdet eller det humanistiska och pedagogiska området i uppgifter som involverar barn och ungdomar. De andra svarar: saknar erfarenhet.)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi tietoa tutkintooni liittyvistä terveydentilavaatimuksista (Tähän kysymykseen vastaavat vain kuljetusalalle, sosiaali-, terveys- ja liikunta-alalle tai humanistiselle ja kasvatusalalle lasten- ja nuorten parissa tehtäviin töihin aikovat. Muut vastaavat: ei kokemusta.)",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 96,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -1533,11 +1533,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1546,7 +1546,7 @@
   :kysymysid 7312020,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1554,18 +1554,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick påverka valet av de examensdelar som hör till min examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain vaikuttaa tutkintoon kuuluvien tutkinnon osien valintaan",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 97,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -1579,11 +1579,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1592,7 +1592,7 @@
   :kysymysid 7312021,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1600,18 +1600,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick information om de ekonomiska stödformer och studiesociala förmåner som ansluter sig till utbildningen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain tietoa koulutukseen liittyvistä taloudellisista tukimuodoista ja opintososiaalisista eduista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 98,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -1625,11 +1625,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1638,7 +1638,7 @@
   :kysymysid 7312022,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1646,19 +1646,19 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utredde med mig eventuella svårigheter i anslutning till studierna eller avläggandet av examen (till exempel i anslutning till språket, läsning, skrivning, gestaltning eller koncentration)?",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani selvitettiin opiskeluuni tai tutkinnon suorittamiseeni liittyviä mahdollisia vaikeuksia (esimerkiksi kieleen, lukemiseen, kirjoittamiseen, hahmottamiseen tai keskittymiseen liittyen)?",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 99,
   :monivalintavaihtoehto
   "Ei, vaikka minulla oli mielestäni riittävästi aikaisempaa osaamista",
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -1672,11 +1672,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1685,7 +1685,7 @@
   :kysymysid 7312023,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "monivalinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1693,18 +1693,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag hänvisades direkt till ett examenstillfälle (en eller flera examensdelar)",
   :valtakunnallinen true,
   :kysymys_fi
   "Minut ohjattiin suoraan tutkintotilaisuuteen (yksi tai useampi tutkinnon osa)",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 100,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -1718,11 +1718,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1731,7 +1731,7 @@
   :kysymysid 7312024,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1739,18 +1739,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mitt tidigare kunnande i anslutning till examen förkortar väsentligt den förberedande utbildningen eller avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisempi tutkintoon liittyvä osaamiseni lyhentää olennaisesti valmistavaa koulutusta tai tutkinnon suorittamista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 101,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -1764,11 +1764,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1777,7 +1777,7 @@
   :kysymysid 7312025,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1785,18 +1785,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utarbetade med mig en personlig, skriftlig plan, i vilken vi kom överens om vilket slags utbildning jag behöver, studieformerna, handledning, avläggandet av examen och tidtabeller",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani tehtiin henkilökohtainen kirjallinen suunnitelma, jossa sovimme tarvitsemastani koulutuksesta, opiskelumuodoista, ohjauksesta, tutkinnon suorittamisesta ja aikatauluista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 102,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -1810,11 +1810,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -10,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1823,7 +1823,7 @@
   :kysymysid 7312026,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -1831,17 +1831,17 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Hur bedömer du att ansökningsskedet lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi "Miten arvioit hakeutumisen onnistuneen kokonaisuutena?",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 144,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1855,11 +1855,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1868,7 +1868,7 @@
   :kysymysid 7312017,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1876,18 +1876,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mina tidigare studier, min arbetserfarenhet och mitt övriga kunnande utreddes mångsidigt i ansökningsskedet",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisemmat opintoni, työkokemukseni ja muu osaamiseni selvitettiin monipuolisesti hakeutumisen aikana",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 145,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1901,11 +1901,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1914,7 +1914,7 @@
   :kysymysid 7312018,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1922,18 +1922,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag vet vilket slags yrkesskicklighet som krävs i den examen jag valt",
   :valtakunnallinen true,
   :kysymys_fi
   "Tiedän, minkälaista ammattitaitoa valitsemassani tutkinnossa vaaditaan",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 146,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1947,11 +1947,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -1960,7 +1960,7 @@
   :kysymysid 7312019,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -1968,18 +1968,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick tillräcklig information om de krav på hälsotillstånd som ansluter sig till min examen (Den här frågan besvaras endast av personer som siktar på arbete inom transportbranschen, social-, hälso- och idrottsområdet eller det humanistiska och pedagogiska området i uppgifter som involverar barn och ungdomar. De andra svarar: saknar erfarenhet.)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi tietoa tutkintooni liittyvistä terveydentilavaatimuksista (Tähän kysymykseen vastaavat vain kuljetusalalle, sosiaali-, terveys- ja liikunta-alalle tai humanistiselle ja kasvatusalalle lasten- ja nuorten parissa tehtäviin töihin aikovat. Muut vastaavat: ei kokemusta.)",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 147,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -1993,11 +1993,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2006,7 +2006,7 @@
   :kysymysid 7312020,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -2014,18 +2014,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick påverka valet av de examensdelar som hör till min examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain vaikuttaa tutkintoon kuuluvien tutkinnon osien valintaan",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 148,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 0,
@@ -2039,11 +2039,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2052,7 +2052,7 @@
   :kysymysid 7312021,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -2060,18 +2060,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick information om de ekonomiska stödformer och studiesociala förmåner som ansluter sig till utbildningen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain tietoa koulutukseen liittyvistä taloudellisista tukimuodoista ja opintososiaalisista eduista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 149,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 1,
@@ -2085,11 +2085,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2098,7 +2098,7 @@
   :kysymysid 7312022,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -2106,19 +2106,19 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utredde med mig eventuella svårigheter i anslutning till studierna eller avläggandet av examen (till exempel i anslutning till språket, läsning, skrivning, gestaltning eller koncentration)?",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani selvitettiin opiskeluuni tai tutkinnon suorittamiseeni liittyviä mahdollisia vaikeuksia (esimerkiksi kieleen, lukemiseen, kirjoittamiseen, hahmottamiseen tai keskittymiseen liittyen)?",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 150,
   :monivalintavaihtoehto
   "Ei, vaikka minulla oli mielestäni riittävästi aikaisempaa osaamista",
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -2132,11 +2132,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2145,7 +2145,7 @@
   :kysymysid 7312023,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "monivalinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -2153,18 +2153,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag hänvisades direkt till ett examenstillfälle (en eller flera examensdelar)",
   :valtakunnallinen true,
   :kysymys_fi
   "Minut ohjattiin suoraan tutkintotilaisuuteen (yksi tai useampi tutkinnon osa)",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 151,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 0,
@@ -2178,11 +2178,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2191,7 +2191,7 @@
   :kysymysid 7312024,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -2199,18 +2199,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mitt tidigare kunnande i anslutning till examen förkortar väsentligt den förberedande utbildningen eller avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisempi tutkintoon liittyvä osaamiseni lyhentää olennaisesti valmistavaa koulutusta tai tutkinnon suorittamista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 152,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -2224,11 +2224,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2237,7 +2237,7 @@
   :kysymysid 7312025,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -2245,18 +2245,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utarbetade med mig en personlig, skriftlig plan, i vilken vi kom överens om vilket slags utbildning jag behöver, studieformerna, handledning, avläggandet av examen och tidtabeller",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani tehtiin henkilökohtainen kirjallinen suunnitelma, jossa sovimme tarvitsemastani koulutuksesta, opiskelumuodoista, ohjauksesta, tutkinnon suorittamisesta ja aikatauluista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 153,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -2270,11 +2270,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -40,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2283,7 +2283,7 @@
   :kysymysid 7312026,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -2291,17 +2291,17 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Hur bedömer du att ansökningsskedet lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi "Miten arvioit hakeutumisen onnistuneen kokonaisuutena?",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 161,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2315,11 +2315,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2328,7 +2328,7 @@
   :kysymysid 7312017,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2336,18 +2336,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mina tidigare studier, min arbetserfarenhet och mitt övriga kunnande utreddes mångsidigt i ansökningsskedet",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisemmat opintoni, työkokemukseni ja muu osaamiseni selvitettiin monipuolisesti hakeutumisen aikana",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 162,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2361,11 +2361,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2374,7 +2374,7 @@
   :kysymysid 7312018,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2382,18 +2382,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag vet vilket slags yrkesskicklighet som krävs i den examen jag valt",
   :valtakunnallinen true,
   :kysymys_fi
   "Tiedän, minkälaista ammattitaitoa valitsemassani tutkinnossa vaaditaan",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 163,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2407,11 +2407,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2420,7 +2420,7 @@
   :kysymysid 7312019,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2428,18 +2428,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick tillräcklig information om de krav på hälsotillstånd som ansluter sig till min examen (Den här frågan besvaras endast av personer som siktar på arbete inom transportbranschen, social-, hälso- och idrottsområdet eller det humanistiska och pedagogiska området i uppgifter som involverar barn och ungdomar. De andra svarar: saknar erfarenhet.)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi tietoa tutkintooni liittyvistä terveydentilavaatimuksista (Tähän kysymykseen vastaavat vain kuljetusalalle, sosiaali-, terveys- ja liikunta-alalle tai humanistiselle ja kasvatusalalle lasten- ja nuorten parissa tehtäviin töihin aikovat. Muut vastaavat: ei kokemusta.)",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 164,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2453,11 +2453,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2466,7 +2466,7 @@
   :kysymysid 7312020,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2474,18 +2474,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick påverka valet av de examensdelar som hör till min examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain vaikuttaa tutkintoon kuuluvien tutkinnon osien valintaan",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 165,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -2499,11 +2499,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2512,7 +2512,7 @@
   :kysymysid 7312021,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2520,18 +2520,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick information om de ekonomiska stödformer och studiesociala förmåner som ansluter sig till utbildningen",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain tietoa koulutukseen liittyvistä taloudellisista tukimuodoista ja opintososiaalisista eduista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 166,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -2545,11 +2545,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2558,7 +2558,7 @@
   :kysymysid 7312022,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2566,19 +2566,19 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utredde med mig eventuella svårigheter i anslutning till studierna eller avläggandet av examen (till exempel i anslutning till språket, läsning, skrivning, gestaltning eller koncentration)?",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani selvitettiin opiskeluuni tai tutkinnon suorittamiseeni liittyviä mahdollisia vaikeuksia (esimerkiksi kieleen, lukemiseen, kirjoittamiseen, hahmottamiseen tai keskittymiseen liittyen)?",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 167,
   :monivalintavaihtoehto
   "Ei, vaikka minulla oli mielestäni riittävästi aikaisempaa osaamista",
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2592,11 +2592,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2605,7 +2605,7 @@
   :kysymysid 7312023,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "monivalinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2613,18 +2613,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag hänvisades direkt till ett examenstillfälle (en eller flera examensdelar)",
   :valtakunnallinen true,
   :kysymys_fi
   "Minut ohjattiin suoraan tutkintotilaisuuteen (yksi tai useampi tutkinnon osa)",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 168,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -2638,11 +2638,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2651,7 +2651,7 @@
   :kysymysid 7312024,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2659,18 +2659,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mitt tidigare kunnande i anslutning till examen förkortar väsentligt den förberedande utbildningen eller avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Aikaisempi tutkintoon liittyvä osaamiseni lyhentää olennaisesti valmistavaa koulutusta tai tutkinnon suorittamista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 169,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2684,11 +2684,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2697,7 +2697,7 @@
   :kysymysid 7312025,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2705,18 +2705,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Man utarbetade med mig en personlig, skriftlig plan, i vilken vi kom överens om vilket slags utbildning jag behöver, studieformerna, handledning, avläggandet av examen och tidtabeller",
   :valtakunnallinen true,
   :kysymys_fi
   "Kanssani tehtiin henkilökohtainen kirjallinen suunnitelma, jossa sovimme tarvitsemastani koulutuksesta, opiskelumuodoista, ohjauksesta, tutkinnon suorittamisesta ja aikatauluista",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 170,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely",
-  :taustakysymys_aiempi_tilanne "Työtön",
+  
   :kysymysryhma_sv "Bakgrundsfrågor gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2730,11 +2730,11 @@
   :kysymysryhmaid 3341886,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -50,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne nil,
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2743,7 +2743,7 @@
   :kysymysid 7312026,
   :kyselykertaid -2,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv "Maanviljelyalan testitutkinto (sv)",
   :tutkintotunnus "X00001",
@@ -2751,17 +2751,17 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Hur bedömer du att ansökningsskedet lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi "Miten arvioit hakeutumisen onnistuneen kokonaisuutena?",
-  :kyselyid -2,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -2,}
+  
  {:vastausid 178,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -2775,12 +2775,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2789,7 +2789,7 @@
   :kysymysid 7312008,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -2797,18 +2797,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "En examensdel/examensdelar erkändes direkt på basis av mina tidigare betyg",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon osa tai osia tunnustettiin suoraan aikaisempien todistusteni perusteella",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 179,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2822,12 +2822,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2836,7 +2836,7 @@
   :kysymysid 7312009,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -2844,18 +2844,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick tillräckligt med handledning för planeringen av examenstillfällena",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi ohjausta tutkintotilaisuuksien suunnitteluun",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 180,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2869,12 +2869,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2883,7 +2883,7 @@
   :kysymysid 7312010,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -2891,18 +2891,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mina examenstillfällen ordnades på en arbetsplats eller en plats för inlärning i arbetet",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkintotilaisuuteni järjestettiin työpaikalla tai työssäoppimispaikalla",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 181,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -2916,12 +2916,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2930,7 +2930,7 @@
   :kysymysid 7312011,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -2938,18 +2938,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag visade mitt kunnande till största delen i praktiska arbetsuppgifter",
   :valtakunnallinen true,
   :kysymys_fi
   "Osoitin ammattitaitoni pääsääntöisesti käytännön työtehtävissä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 182,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -2963,12 +2963,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -2977,7 +2977,7 @@
   :kysymysid 7312012,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -2985,18 +2985,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick berätta min egen uppfattning om hur min examensprestation hade lyckats (självvärdering)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain kertoa oman arvioni tutkintosuoritukseni onnistumisesta (itsearviointi)",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 183,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -3010,12 +3010,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3024,7 +3024,7 @@
   :kysymysid 7312013,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3032,18 +3032,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Grunderna för bedömningen berättades för mig efter avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Arvioinnin perustelut kerrottiin minulle tutkinnon suorittamisen jälkeen",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 184,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3057,12 +3057,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3071,7 +3071,7 @@
   :kysymysid 7312014,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3079,18 +3079,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Avläggandet av examen framskred i enlighet med den personliga skriftliga planen",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon suorittaminen eteni henkilökohtaisen kirjallisen suunnitelman mukaisesti",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 185,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3104,12 +3104,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3118,7 +3118,7 @@
   :kysymysid 7312015,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3126,18 +3126,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon tai tutkinnon osan suorittamisesta oli hyötyä ammattitaidon kehittämisessä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 186,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3151,12 +3151,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -100,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3165,7 +3165,7 @@
   :kysymysid 7312016,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3173,18 +3173,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Hur bedömer du att avläggandet av examen lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi
   "Miten arvioit tutkinnon suorittamisen onnistuneen kokonaisuutena?",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 194,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -3198,12 +3198,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3212,7 +3212,7 @@
   :kysymysid 7312008,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3220,18 +3220,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "En examensdel/examensdelar erkändes direkt på basis av mina tidigare betyg",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon osa tai osia tunnustettiin suoraan aikaisempien todistusteni perusteella",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 195,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3245,12 +3245,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3259,7 +3259,7 @@
   :kysymysid 7312009,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3267,18 +3267,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick tillräckligt med handledning för planeringen av examenstillfällena",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi ohjausta tutkintotilaisuuksien suunnitteluun",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 196,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3292,12 +3292,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3306,7 +3306,7 @@
   :kysymysid 7312010,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3314,18 +3314,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mina examenstillfällen ordnades på en arbetsplats eller en plats för inlärning i arbetet",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkintotilaisuuteni järjestettiin työpaikalla tai työssäoppimispaikalla",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 197,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3339,12 +3339,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3353,7 +3353,7 @@
   :kysymysid 7312011,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3361,18 +3361,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag visade mitt kunnande till största delen i praktiska arbetsuppgifter",
   :valtakunnallinen true,
   :kysymys_fi
   "Osoitin ammattitaitoni pääsääntöisesti käytännön työtehtävissä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 198,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -3386,12 +3386,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3400,7 +3400,7 @@
   :kysymysid 7312012,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3408,18 +3408,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick berätta min egen uppfattning om hur min examensprestation hade lyckats (självvärdering)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain kertoa oman arvioni tutkintosuoritukseni onnistumisesta (itsearviointi)",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 199,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -3433,12 +3433,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3447,7 +3447,7 @@
   :kysymysid 7312013,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3455,18 +3455,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Grunderna för bedömningen berättades för mig efter avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Arvioinnin perustelut kerrottiin minulle tutkinnon suorittamisen jälkeen",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 200,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3480,12 +3480,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3494,7 +3494,7 @@
   :kysymysid 7312014,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3502,18 +3502,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Avläggandet av examen framskred i enlighet med den personliga skriftliga planen",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon suorittaminen eteni henkilökohtaisen kirjallisen suunnitelman mukaisesti",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 201,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3527,12 +3527,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3541,7 +3541,7 @@
   :kysymysid 7312015,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3549,18 +3549,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon tai tutkinnon osan suorittamisesta oli hyötyä ammattitaidon kehittämisessä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 202,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3574,12 +3574,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -101,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3588,7 +3588,7 @@
   :kysymysid 7312016,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3596,18 +3596,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 5,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Hur bedömer du att avläggandet av examen lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi
   "Miten arvioit tutkinnon suorittamisen onnistuneen kokonaisuutena?",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 210,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -3621,12 +3621,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3635,7 +3635,7 @@
   :kysymysid 7312008,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3643,18 +3643,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "En examensdel/examensdelar erkändes direkt på basis av mina tidigare betyg",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon osa tai osia tunnustettiin suoraan aikaisempien todistusteni perusteella",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 211,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3668,12 +3668,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3682,7 +3682,7 @@
   :kysymysid 7312009,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3690,18 +3690,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick tillräckligt med handledning för planeringen av examenstillfällena",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi ohjausta tutkintotilaisuuksien suunnitteluun",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 212,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3715,12 +3715,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3729,7 +3729,7 @@
   :kysymysid 7312010,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3737,18 +3737,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Mina examenstillfällen ordnades på en arbetsplats eller en plats för inlärning i arbetet",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkintotilaisuuteni järjestettiin työpaikalla tai työssäoppimispaikalla",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 213,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3762,12 +3762,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3776,7 +3776,7 @@
   :kysymysid 7312011,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3784,18 +3784,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag visade mitt kunnande till största delen i praktiska arbetsuppgifter",
   :valtakunnallinen true,
   :kysymys_fi
   "Osoitin ammattitaitoni pääsääntöisesti käytännön työtehtävissä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 214,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -3809,12 +3809,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3823,7 +3823,7 @@
   :kysymysid 7312012,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3831,18 +3831,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick berätta min egen uppfattning om hur min examensprestation hade lyckats (självvärdering)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain kertoa oman arvioni tutkintosuoritukseni onnistumisesta (itsearviointi)",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 215,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -3856,12 +3856,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3870,7 +3870,7 @@
   :kysymysid 7312013,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3878,18 +3878,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Grunderna för bedömningen berättades för mig efter avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Arvioinnin perustelut kerrottiin minulle tutkinnon suorittamisen jälkeen",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 216,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3903,12 +3903,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3917,7 +3917,7 @@
   :kysymysid 7312014,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3925,18 +3925,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Avläggandet av examen framskred i enlighet med den personliga skriftliga planen",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon suorittaminen eteni henkilökohtaisen kirjallisen suunnitelman mukaisesti",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 217,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3950,12 +3950,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -3964,7 +3964,7 @@
   :kysymysid 7312015,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -3972,18 +3972,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon tai tutkinnon osan suorittamisesta oli hyötyä ammattitaidon kehittämisessä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 218,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -3997,12 +3997,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -102,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4011,7 +4011,7 @@
   :kysymysid 7312016,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4019,18 +4019,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 1,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Hur bedömer du att avläggandet av examen lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi
   "Miten arvioit tutkinnon suorittamisen onnistuneen kokonaisuutena?",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 226,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 1,
@@ -4044,12 +4044,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4058,7 +4058,7 @@
   :kysymysid 7312008,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4066,18 +4066,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "En examensdel/examensdelar erkändes direkt på basis av mina tidigare betyg",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon osa tai osia tunnustettiin suoraan aikaisempien todistusteni perusteella",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 227,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -4091,12 +4091,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4105,7 +4105,7 @@
   :kysymysid 7312009,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4113,18 +4113,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick tillräckligt med handledning för planeringen av examenstillfällena",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi ohjausta tutkintotilaisuuksien suunnitteluun",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 228,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -4138,12 +4138,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4152,7 +4152,7 @@
   :kysymysid 7312010,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4160,18 +4160,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Mina examenstillfällen ordnades på en arbetsplats eller en plats för inlärning i arbetet",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkintotilaisuuteni järjestettiin työpaikalla tai työssäoppimispaikalla",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 229,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -4185,12 +4185,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4199,7 +4199,7 @@
   :kysymysid 7312011,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4207,18 +4207,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag visade mitt kunnande till största delen i praktiska arbetsuppgifter",
   :valtakunnallinen true,
   :kysymys_fi
   "Osoitin ammattitaitoni pääsääntöisesti käytännön työtehtävissä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 230,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 0,
@@ -4232,12 +4232,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4246,7 +4246,7 @@
   :kysymysid 7312012,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4254,18 +4254,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Jag fick berätta min egen uppfattning om hur min examensprestation hade lyckats (självvärdering)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain kertoa oman arvioni tutkintosuoritukseni onnistumisesta (itsearviointi)",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 231,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto 1,
@@ -4279,12 +4279,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4293,7 +4293,7 @@
   :kysymysid 7312013,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4301,18 +4301,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Grunderna för bedömningen berättades för mig efter avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Arvioinnin perustelut kerrottiin minulle tutkinnon suorittamisen jälkeen",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 232,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -4326,12 +4326,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4340,7 +4340,7 @@
   :kysymysid 7312014,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4348,18 +4348,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Avläggandet av examen framskred i enlighet med den personliga skriftliga planen",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon suorittaminen eteni henkilökohtaisen kirjallisen suunnitelman mukaisesti",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 233,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -4373,12 +4373,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4387,7 +4387,7 @@
   :kysymysid 7312015,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4395,18 +4395,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon tai tutkinnon osan suorittamisesta oli hyötyä ammattitaidon kehittämisessä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 234,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv nil,
   :vaihtoehto nil,
@@ -4420,12 +4420,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "tutkinnon osan tai osien suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -103,
   :opintoala_fi nil,
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4434,7 +4434,7 @@
   :kysymysid 7312016,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv nil,
   :tutkintotunnus nil,
@@ -4442,18 +4442,18 @@
   :opintoalatunnus nil,
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "suomi",
+  
   :kysymys_sv
   "Hur bedömer du att avläggandet av examen lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi
   "Miten arvioit tutkinnon suorittamisen onnistuneen kokonaisuutena?",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin vaihtaminen"}
+  :kyselyid -3,}
+  
  {:vastausid 242,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -4467,12 +4467,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4481,7 +4481,7 @@
   :kysymysid 7312008,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4489,18 +4489,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "En examensdel/examensdelar erkändes direkt på basis av mina tidigare betyg",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon osa tai osia tunnustettiin suoraan aikaisempien todistusteni perusteella",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 243,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -4514,12 +4514,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4528,7 +4528,7 @@
   :kysymysid 7312009,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4536,18 +4536,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick tillräckligt med handledning för planeringen av examenstillfällena",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain riittävästi ohjausta tutkintotilaisuuksien suunnitteluun",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 244,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -4561,12 +4561,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4575,7 +4575,7 @@
   :kysymysid 7312010,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4583,18 +4583,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Mina examenstillfällen ordnades på en arbetsplats eller en plats för inlärning i arbetet",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkintotilaisuuteni järjestettiin työpaikalla tai työssäoppimispaikalla",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 245,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -4608,12 +4608,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4622,7 +4622,7 @@
   :kysymysid 7312011,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4630,18 +4630,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag visade mitt kunnande till största delen i praktiska arbetsuppgifter",
   :valtakunnallinen true,
   :kysymys_fi
   "Osoitin ammattitaitoni pääsääntöisesti käytännön työtehtävissä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 246,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 0,
@@ -4655,12 +4655,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4669,7 +4669,7 @@
   :kysymysid 7312012,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4677,18 +4677,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Jag fick berätta min egen uppfattning om hur min examensprestation hade lyckats (självvärdering)",
   :valtakunnallinen true,
   :kysymys_fi
   "Sain kertoa oman arvioni tutkintosuoritukseni onnistumisesta (itsearviointi)",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 247,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto 1,
@@ -4702,12 +4702,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4716,7 +4716,7 @@
   :kysymysid 7312013,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "kylla_ei_valinta",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4724,18 +4724,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta nil,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Grunderna för bedömningen berättades för mig efter avläggandet av examen",
   :valtakunnallinen true,
   :kysymys_fi
   "Arvioinnin perustelut kerrottiin minulle tutkinnon suorittamisen jälkeen",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 248,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -4749,12 +4749,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4763,7 +4763,7 @@
   :kysymysid 7312014,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4771,18 +4771,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 3,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Avläggandet av examen framskred i enlighet med den personliga skriftliga planen",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon suorittaminen eteni henkilökohtaisen kirjallisen suunnitelman mukaisesti",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 249,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -4796,12 +4796,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4810,7 +4810,7 @@
   :kysymysid 7312015,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "likert_asteikko",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4818,18 +4818,18 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 4,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Avläggandet av examen eller examensdelen var till nytta vid utvecklandet av yrkesskickligheten",
   :valtakunnallinen true,
   :kysymys_fi
   "Tutkinnon tai tutkinnon osan suorittamisesta oli hyötyä ammattitaidon kehittämisessä",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"}
+  :kyselyid -3,}
+
  {:vastausid 250,
   :monivalintavaihtoehto nil,
   :kysely_sv "testikysely, suoritusvaihe",
-  :taustakysymys_aiempi_tilanne nil,
+  
   :kysymysryhma_sv "Avläggandet av examen gällande fristående examina",
   :opintoala_sv "Testiopintoala (sv)",
   :vaihtoehto nil,
@@ -4843,12 +4843,12 @@
   :kysymysryhmaid 3341887,
   :koulutustoimija_sv "Hikibacka iddrotsklubben",
   :taustakysymys_sukupuoli "nainen",
-  :taustakysymys_tavoite "koko tutkinnon suorittaminen",
+  
   :valmistavan_koulutuksen_jarjestaja nil,
   :vastaajaid -104,
   :opintoala_fi "Testiopintoala",
-  :taustakysymys_tuleva_tilanne
-  "Yrittäjä tai itsenäinen ammatinharjoittaja",
+  
+  
   :vastausaika "2016-02-04",
   :koulutustoimija_fi "Hikimäen urheiluopisto",
   :rahoitusmuoto "valtionosuus",
@@ -4857,7 +4857,7 @@
   :kysymysid 7312016,
   :kyselykertaid -3,
   :koulutustoimija "2325448-4",
-  :taustakysymys_tutkinto "Lukio/ylioppilastutkinto",
+  
   :vastaustyyppi "arvosana",
   :tutkinto_sv "Metsätalousalan testitutkinto (sv)",
   :tutkintotunnus "X00002",
@@ -4865,11 +4865,11 @@
   :opintoalatunnus "X00",
   :valmistavan_koulutuksen_jarjestaja_fi nil,
   :numerovalinta 2,
-  :taustakysymys_aidinkieli "ruotsi",
+  
   :kysymys_sv
   "Hur bedömer du att avläggandet av examen lyckades som helhet?",
   :valtakunnallinen true,
   :kysymys_fi
   "Miten arvioit tutkinnon suorittamisen onnistuneen kokonaisuutena?",
-  :kyselyid -3,
-  :taustakysymys_syy "Ammatin hankkiminen"})
+  :kyselyid -3,})
+
