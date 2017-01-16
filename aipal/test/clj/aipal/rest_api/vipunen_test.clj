@@ -28,7 +28,11 @@
 (defn tarkista-vastaus [oikea-vastaus-file & testitulokset]
   (let [correct (clojure.edn/read-string (slurp oikea-vastaus-file))]
     (doseq [tulos testitulokset]
-      (is (= correct (map #(select-keys % (keys (first correct))) tulos))))))
+      (let [trimmed-tulos (map #(select-keys % (keys (first correct))) tulos)]
+        (println "TULOS: " tulos)
+        (println "TRIMMED: " trimmed-tulos)
+        (println "CORRECT: " correct)
+        (is (= correct trimmed-tulos))))))
 
 (deftest ^:integraatio valtakunnalliset-kysymykset-rajapinta
   (let [peridot (session)
