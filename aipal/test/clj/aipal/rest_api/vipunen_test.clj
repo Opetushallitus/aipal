@@ -28,8 +28,7 @@
 (defn tarkista-vastaus [oikea-vastaus-file & testitulokset]
   (let [correct (clojure.edn/read-string (slurp oikea-vastaus-file))]
     (doseq [tulos testitulokset]
-      (println "TULOS: " tulos)
-      (is (= correct (select-keys tulos (keys correct)))))))
+      (is (= correct (map #(select-keys % (keys (first correct))) tulos))))))
 
 (deftest ^:integraatio valtakunnalliset-kysymykset-rajapinta
   (let [peridot (session)
