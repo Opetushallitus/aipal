@@ -15,8 +15,7 @@
 (ns aipal-e2e.sivu.etusivu
   (:require [clj-webdriver.taxi :as w]
             [clj-webdriver.core :as webdriver]
-            [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer [odota-angular-pyyntoa odota-kunnes]]))
+            [aipal-e2e.util :refer :all]))
 
 (defn avaa-sivu []
   (avaa "/#/"))

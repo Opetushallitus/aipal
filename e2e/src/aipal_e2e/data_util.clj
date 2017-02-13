@@ -14,6 +14,7 @@
 
 (ns aipal-e2e.data-util
   (:require [clj-time.core :as time]
+            [clj-time.format :as time-format]
             [korma.core :as sql]
             [korma.db :as db]
             [aipal-e2e.arkisto.kysely :as kysely]
@@ -204,3 +205,7 @@
 (defmacro with-data
   [data & body]
   `(with-data* ~data (fn [] ~@body)))
+
+(defn paivamaara-kayttoliittyman-muodossa [paivamaara]
+  (time-format/unparse-local-date (time-format/formatter "dd.MM.yyyy")
+                                  paivamaara))

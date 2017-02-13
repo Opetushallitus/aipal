@@ -14,7 +14,6 @@
 
 (ns aipal-e2e.sivu.kyselyt
   (:require [clj-webdriver.taxi :as w]
-            [aitu-e2e.util :refer [odota-angular-pyyntoa odota-ja-klikkaa odota-kunnes]]
             [aipal-e2e.util :refer :all]))
 
 (def kyselyt-sivu "/#/kyselyt")

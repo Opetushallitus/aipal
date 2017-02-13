@@ -14,8 +14,7 @@
 
 (ns aipal-e2e.sivu.kysely
   (:require [clj-webdriver.taxi :as w]
-            [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer [odota-angular-pyyntoa odota-kunnes syota-kenttaan]]))
+            [aipal-e2e.util :refer :all]))
 
 (defn aseta-kyselyn-nimi-suomeksi [nimi]
   (syota-kenttaan "kysely.nimi_fi" nimi))

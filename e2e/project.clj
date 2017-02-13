@@ -16,8 +16,14 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [korma "0.3.2"]
                  [org.postgresql/postgresql "9.3-1101-jdbc41"]
-                 [solita/opetushallitus-aitu-e2e "0.26.0"]
-                 [clj-time "0.6.0"]
+                 [clj-time "0.7.0"]
+                 [clj-webdriver "0.7.2" :exclusions [org.seleniumhq.selenium/selenium-java
+                                                     org.seleniumhq.selenium/selenium-server
+                                                     org.seleniumhq.selenium/selenium-remote-driver]]
+                 [org.seleniumhq.selenium/selenium-java "2.52.0"]
+                 [org.seleniumhq.selenium/selenium-server "2.52.0"]
+                 [org.seleniumhq.selenium/selenium-remote-driver "2.52.0"]
+                 [com.paulhammant/ngwebdriver "0.9.1" :exclusions [org.seleniumhq.selenium/selenium-java]]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]]
   :plugins [[test2junit "1.0.1"]]
   :source-paths ["src/" "../aipal/clojure-utils/src/clj"]

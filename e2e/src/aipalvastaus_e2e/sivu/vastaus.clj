@@ -17,7 +17,7 @@
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
             [aipalvastaus-e2e.util :refer :all]
-            [aitu-e2e.util :refer [odota-angular-pyyntoa odota-kunnes]]))
+            [aipal-e2e.util :refer [odota-angular-pyyntoa odota-kunnes]]))
 
 (declare sivun-sisalto)
 

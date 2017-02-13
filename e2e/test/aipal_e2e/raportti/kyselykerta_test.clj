@@ -19,9 +19,7 @@
             [clj-webdriver.taxi :as w]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.tietokanta.yhteys :as tietokanta]
-            [aipal-e2e.util :refer :all]
-            [aitu-e2e.data-util :refer [paivamaara-kayttoliittyman-muodossa]]
-            [aitu-e2e.util :refer :all]))
+            [aipal-e2e.util :refer :all]))
 
 (defn kyselykertaraportti-sivu [kyselykertaid] (str "/#/raportit/kyselykerrat/kyselykerta/" kyselykertaid))
 

@@ -15,7 +15,6 @@
 (ns aipal-e2e.kyselyt-sivu-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
-            [aitu-e2e.util :refer :all]
             [aipal-e2e.util :refer :all]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.sivu.kysely :as kysely-sivu]

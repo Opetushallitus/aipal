@@ -14,7 +14,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus-e2e.util
-  (:require [aitu-e2e.util :refer [avaa-url]]
+  (:require [aipal-e2e.util :refer [avaa-url]]
             [aipalvastaus-e2e.data-util :as data-util]))
 
 (defn vastaus-url [polku]

@@ -15,6 +15,7 @@
 (ns aipal-e2e.koko-putki-test
   (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [clj-webdriver.taxi :as w]
+            [aipal-e2e.util :refer :all]
             [aipal-e2e.data-util :refer :all]
             [aipal-e2e.sivu.kysely :as kysely-sivu]
             [aipal-e2e.sivu.kyselykerta :as kyselykerta-sivu]
@@ -23,8 +24,7 @@
             [aipal-e2e.sivu.kysymysryhmat :as kysymysryhmat-sivu]
             [aipal-e2e.sivu.kyselykertaraportti :as kyselykertaraportti-sivu]
             [aipalvastaus-e2e.sivu.vastaus :as vastaus-sivu]
-            [aipalvastaus-e2e.util :as aipalvastaus]
-            [aitu-e2e.util :refer [with-webdriver odota-angular-pyyntoa odota-kunnes syota-kenttaan]]))
+            [aipalvastaus-e2e.util :as aipalvastaus]))
 
 (defn vastaa-kyselyyn! [vastaajatunnus-url]
   (vastaus-sivu/avaa-sivu vastaajatunnus-url "UUSI KYSELY")

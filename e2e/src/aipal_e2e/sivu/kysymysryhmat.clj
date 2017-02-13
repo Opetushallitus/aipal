@@ -14,8 +14,7 @@
 
 (ns aipal-e2e.sivu.kysymysryhmat
   (:require [clj-webdriver.taxi :as w]
-            [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer [odota-kunnes odota-ja-klikkaa]]))
+            [aipal-e2e.util :refer :all]))
 
 (def kysymysryhmat-sivu "/#/kysymysryhmat")
 

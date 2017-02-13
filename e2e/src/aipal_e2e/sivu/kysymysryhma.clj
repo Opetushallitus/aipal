@@ -14,8 +14,7 @@
 
 (ns aipal-e2e.sivu.kysymysryhma
   (:require [clj-webdriver.taxi :as w]
-            [aipal-e2e.util :refer :all]
-            [aitu-e2e.util :refer :all]))
+            [aipal-e2e.util :refer :all]))
 
 (defn aseta-kysymysryhman-nimi-suomeksi [nimi]
   (syota-kenttaan "kysymysryhma.nimi_fi" nimi))
