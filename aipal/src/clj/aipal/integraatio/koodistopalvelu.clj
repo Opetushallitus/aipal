@@ -13,8 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.integraatio.koodistopalvelu
- (:require [clj-time.core :as time]
-           [aipal.arkisto.tutkinto :as tutkinto-arkisto]
+ (:require [aipal.arkisto.tutkinto :as tutkinto-arkisto]
            [aipal.arkisto.tutkintotyyppi :as tutkintotyyppi-arkisto]
            [aipal.arkisto.koulutusala :as koulutusala-arkisto]
            [aipal.arkisto.opintoala :as opintoala-arkisto]
@@ -78,22 +77,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   [koodi]
   ((kuuluu-koodistoon "tutkintotyyppi") koodi))
 
-(defn ^:private tutkintotyyppikoodi?
-  [koodi]
-  ((kuuluu-koodistoon "koulutustyyppi") koodi))
-
-(defn ^:private tutkintotyyppikoodi->tutkintotyyppi
-  [koodi]
-  (when koodi
-    (case (:koodiArvo koodi)
-      "12" "erikoisammattitutkinto"
-      "11" "ammattitutkinto"
-      "13" "perustutkinto"
-      "4" "perustutkinto"
-      "1" "perustutkinto"
-      nil)))
-
-(defn koodiston-uusin-versio
+(defn uusin-hyvaksytty-koodisto
   [asetukset koodisto]
   (loop [versio nil]
      (when-let [json (get-json-from-url (str (:url asetukset)
@@ -121,19 +105,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
            :opintoala (:koodiArvo opintoala)
            :tutkintotyyppi (:koodiArvo tyyppi))))
 
-(defn hae-koodisto
-  [asetukset koodisto versio]
-  (koodi->kasite (get-json-from-url (str (:url asetukset) koodisto "?koodistoVersio=" versio)) :koodisto))
-
-
-(defn hae-tutkintotyypit
-  [asetukset]
+(defn hae-tutkintotyypit [asetukset]
   (map koodi->tutkintotyyppi (hae-koodit asetukset "tutkintotyyppi")))
 
-(defn hae-tutkinnot
-  [asetukset]
-  (let [koodistoversio (koodiston-uusin-versio asetukset "koulutus")]
-    (map koodi->tutkinto (hae-koodit asetukset "koulutus" koodistoversio))))
+(defn hae-tutkinnot [asetukset]
+  (map koodi->tutkinto (hae-koodit asetukset "koulutus")))
 
 (defn hae-koulutusalat
   [asetukset]
@@ -159,8 +135,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                    (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
                    :else diff)])))
 
-(defn hae-tutkintotyyppi-muutokset
-  [asetukset]
+(defn hae-tutkintotyyppi-muutokset [asetukset]
   (let [tutkintotyypi_kentat [:tutkintotyyppi :nimi_fi :nimi_sv :nimi_en]
         vanhat (into {} (for [tutkintotyyppi (tutkintotyyppi-arkisto/hae-kaikki)]
                           [(:tutkintotyyppi tutkintotyyppi) (select-keys tutkintotyyppi tutkintotyypi_kentat)]))
@@ -169,8 +144,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (muutokset uudet vanhat)))
 
 
-(defn hae-tutkinto-muutokset
-  [asetukset]
+(defn hae-tutkinto-muutokset [asetukset]
   (let [tutkinto-kentat [:nimi_fi :nimi_sv :nimi_en :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala :tutkintotyyppi]
         vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
                           [(:tutkintotunnus tutkinto) (select-keys tutkinto tutkinto-kentat)]))
@@ -180,8 +154,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                 (map-by :tutkintotunnus))]
     (muutokset uudet vanhat)))
 
-(defn hae-koulutusala-muutokset
-  [asetukset]
+(defn hae-koulutusala-muutokset [asetukset]
   (let [koulutusala-kentat [:nimi_fi :nimi_sv :nimi_en :koulutusalatunnus]
         vanhat (into {} (for [koulutusala (koulutusala-arkisto/hae-kaikki)]
                           [(:koulutusalatunnus koulutusala) (select-keys koulutusala koulutusala-kentat)]))
@@ -189,8 +162,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
                       (map #(select-keys % koulutusala-kentat) (hae-koulutusalat asetukset)))]
     (muutokset uudet vanhat)))
 
-(defn hae-opintoala-muutokset
-  [asetukset]
+(defn hae-opintoala-muutokset [asetukset]
   (let [opintoala-kentat [:nimi_fi :nimi_sv :nimi_en :opintoalatunnus :koulutusala]
         vanhat (into {} (for [opintoala (opintoala-arkisto/hae-kaikki)]
                           [(:opintoalatunnus opintoala) (select-keys opintoala opintoala-kentat)]))
