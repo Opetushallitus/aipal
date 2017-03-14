@@ -29,7 +29,7 @@
     query
     (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.nimi_en
                 :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                :kysely.tila :kysely.kaytettavissa :uudelleenohjaus_url
+                :kysely.tila :kysely.kaytettavissa :uudelleenohjaus_url :kysely.sivutettu
                 [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
                 [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])))
 
@@ -102,7 +102,7 @@
   (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
   (->
     (sql/update* taulut/kysely)
-    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url]))
+    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu]))
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
 

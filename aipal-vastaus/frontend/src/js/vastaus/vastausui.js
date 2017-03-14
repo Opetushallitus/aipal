@@ -38,6 +38,18 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
     ;
   }])
 
+  .directive("formOnChange", function($parse){
+    return {
+      require: "form",
+      link: function(scope, element, attrs){
+        var cb = $parse(attrs.formOnChange);
+        element.on("change", function(){
+          cb(scope);
+        });
+      }
+    }
+  })
+
   .factory('VastausControllerFunktiot', ['Vastaus', '$location', 'ilmoitus', 'i18n', function(Vastaus, $location, ilmoitus, i18n) {
     function keraaVastausdata(data) {
       var vastaukset = [];
@@ -110,7 +122,21 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(vastausForm);
       });
 
+      $scope.findPage = function(kysymysId) {
+        for(var i = 0; i < $scope.data.kysymysryhmat.length; i++){
+          if(_.find($scope.data.kysymysryhmat[i].kysymykset, {'kysymysid': kysymysId}) != undefined){
+            return i;
+          }
+        }
+      };
+
       $scope.gotoQuestion = function(kysymysid) {
+
+        if($scope.data.sivutettu){
+          $scope.sivu = $scope.findPage(kysymysid);
+          $scope.vaihdaSivu()
+        }
+
         var old = $location.hash();
         $location.hash('k' + kysymysid);
         $anchorScroll();
@@ -134,9 +160,44 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
       $scope.tallennaNappiDisabloitu = false;
+      $scope.seuraavaNappiDisabloitu = false;
+      $scope.edellinenNappiDisabloitu = false;
+      $scope.sivu = 0;
+      $scope.lomakeValidi = false;
 
       $scope.tallenna = function() {
         f.tallenna($scope);
+      };
+
+      $scope.vastausTemplate = $scope.valittuTemplate = "template/vastaus/kysymysryhmat.html";
+      $scope.valittuKysymysryhma = null;
+
+      $scope.vaihdaSivu = function() {
+
+        $scope.valittuKysymysryhma = $scope.data.kysymysryhmat[$scope.sivu];
+        $scope.edellinenNappiDisabloitu = $scope.sivu === 0;
+
+        $scope.seuraavaNappiDisabloitu = $scope.sivu == ($scope.data.kysymysryhmat.length -1);
+      };
+
+      $scope.validoiLomake = function() {
+
+        var kysymysryhmaValidi = function (kr) {
+          return _.find(kr.kysymykset, function(k) {return (k.pakollinen && (k.vastaus === undefined || k.vastaus === false))}) === undefined
+        };
+
+        $scope.lomakeValidi = _.every($scope.data.kysymysryhmat, kysymysryhmaValidi);
+        $scope.$apply()
+      };
+
+      $scope.seuraavaSivu = function() {
+        $scope.sivu = Math.min($scope.sivu +1, $scope.data.kysymysryhmat.length -1);
+        $scope.vaihdaSivu()
+      };
+
+      $scope.edellinenSivu = function() {
+        $scope.sivu = Math.max($scope.sivu -1, 0);
+        $scope.vaihdaSivu()
       };
 
       $scope.vaihdaMonivalinta = function(vaihtoehto, kysymys) {
@@ -162,6 +223,11 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $http.get('api/kyselykerta/' + $routeParams.tunnus)
       .success(function(data) {
         $scope.data = data;
+        $scope.valittuKysymysryhma = data.kysymysryhmat[0];
+        $scope.vaihdaSivu();
+        if(data.sivutettu){
+          $scope.valittuTemplate = "template/vastaus/kysymysryhmat-sivutettu.html"
+        }
         $rootScope.title = $filter('lokalisoiKentta')(data, 'nimi');
       })
       .error(function() {
@@ -176,6 +242,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.messages = [];
       $scope.$on('$messageIncoming', function (event, data){
         $scope.data = angular.fromJson(data.message);
+        $scope.validoiLomake();
       });
     }
   ])

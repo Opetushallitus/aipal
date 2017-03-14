@@ -90,7 +90,8 @@
                   :tutkinto.tutkintotunnus
                   [:tutkinto.nimi_fi :tutkinto_nimi_fi]
                   [:tutkinto.nimi_sv :tutkinto_nimi_sv]
-                  [:tutkinto.nimi_en :tutkinto_nimi_en])
+                  [:tutkinto.nimi_en :tutkinto_nimi_en]
+                  :kysely.sivutettu)
       (vastaajatunnus-where tunnus))))
 
 (defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
