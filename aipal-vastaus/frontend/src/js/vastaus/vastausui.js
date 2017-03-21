@@ -38,18 +38,6 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
     ;
   }])
 
-  .directive("formOnChange", function($parse){
-    return {
-      require: "form",
-      link: function(scope, element, attrs){
-        var cb = $parse(attrs.formOnChange);
-        element.on("change", function(){
-          cb(scope);
-        });
-      }
-    }
-  })
-
   .factory('VastausControllerFunktiot', ['Vastaus', '$location', 'ilmoitus', 'i18n', function(Vastaus, $location, ilmoitus, i18n) {
     function keraaVastausdata(data) {
       var vastaukset = [];
@@ -163,9 +151,6 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.seuraavaNappiDisabloitu = false;
       $scope.edellinenNappiDisabloitu = false;
       $scope.sivu = 0;
-      $scope.lomakeValidi = false;
-
-
 
       $scope.tallenna = function() {
         f.tallenna($scope);
@@ -184,16 +169,6 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $window.scrollTo(0,0);
       };
 
-      $scope.validoiLomake = function() {
-
-        var kysymysryhmaValidi = function (kr) {
-          return _.find(kr.kysymykset, function(k) {
-            return (k.pakollinen && (k.vastaus === undefined || k.vastaus === false))}) === undefined
-        };
-
-        $scope.lomakeValidi = _.every($scope.data.kysymysryhmat, kysymysryhmaValidi);
-        $scope.$apply()
-      };
 
       $scope.seuraavaSivu = function() {
         $scope.sivu = Math.min($scope.sivu +1, $scope.data.kysymysryhmat.length -1);
@@ -247,7 +222,6 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.messages = [];
       $scope.$on('$messageIncoming', function (event, data){
         $scope.data = angular.fromJson(data.message);
-        $scope.validoiLomake();
       });
     }
   ])

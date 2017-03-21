@@ -5,13 +5,13 @@
 </div>
 
 <small class="pull-right" ng-bind="i18n.yleiset.pakolliset"></small>
-<form name="vastausForm" ng-show="data" form-on-change="validoiLomake()">
+<form name="vastausForm" ng-show="data">
     <ng-include src="valittuTemplate"></ng-include>
   <br />
 
   <small class="pull-right" ></small>
   <button ng-show="!preview && (!data.sivutettu || (data.sivutettu && sivu == data.kysymysryhmat.length -1))" id="submit" class="e2e-tallenna-vastaukset" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
-    <div class="required-notice" ng-show="lomakeValidi === false">
+    <div class="required-notice" ng-if="vastausForm.$error.required">
         <h4 ng-bind="i18n.yleiset.vastaa_viela"></h4>
         <div ng-repeat="kysymysryhma in data.kysymysryhmat">
             <div ng-repeat="kysymys in kysymysryhma.kysymykset" ng-if="kysymys.pakollinen && (kysymys.vastaus === undefined || kysymys.vastaus === false)">
