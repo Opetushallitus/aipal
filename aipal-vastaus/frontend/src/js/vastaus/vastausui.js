@@ -115,8 +115,8 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
   }])
 
   .controller('VastausController', [
-    '$filter', '$http', '$rootScope', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus', '$anchorScroll', '$timeout',
-    function($filter, $http, $rootScope, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus, $anchorScroll, $timeout) {
+    '$filter', '$http', '$rootScope', '$routeParams', '$scope', '$location', 'Vastaus', 'VastausControllerFunktiot', 'tallennusMuistutus', '$anchorScroll', '$timeout', '$window',
+    function($filter, $http, $rootScope, $routeParams, $scope, $location, Vastaus, f, tallennusMuistutus, $anchorScroll, $timeout, $window) {
       $scope.preview = false;
       $scope.$watch('vastausForm', function(vastausForm) {
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(vastausForm);
@@ -165,6 +165,8 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.sivu = 0;
       $scope.lomakeValidi = false;
 
+
+
       $scope.tallenna = function() {
         f.tallenna($scope);
       };
@@ -178,12 +180,15 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $scope.edellinenNappiDisabloitu = $scope.sivu === 0;
 
         $scope.seuraavaNappiDisabloitu = $scope.sivu == ($scope.data.kysymysryhmat.length -1);
+
+        $window.scrollTo(0,0);
       };
 
       $scope.validoiLomake = function() {
 
         var kysymysryhmaValidi = function (kr) {
-          return _.find(kr.kysymykset, function(k) {return (k.pakollinen && (k.vastaus === undefined || k.vastaus === false))}) === undefined
+          return _.find(kr.kysymykset, function(k) {
+            return (k.pakollinen && (k.vastaus === undefined || k.vastaus === false))}) === undefined
         };
 
         $scope.lomakeValidi = _.every($scope.data.kysymysryhmat, kysymysryhmaValidi);

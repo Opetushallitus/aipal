@@ -113,5 +113,6 @@
         </ng-form>
     </div>
     <button id="page" class="e2e-tallenna-vastaukset" ng-click="edellinenSivu()" ng-disabled="edellinenNappiDisabloitu">Edellinen</button>
+    <span>{{sivu + 1}} / {{data.kysymysryhmat.length}}</span>
     <button id="page" class="e2e-tallenna-vastaukset" ng-click="seuraavaSivu()" ng-disabled="seuraavaNappiDisabloitu">Seuraava</button>
 </div>

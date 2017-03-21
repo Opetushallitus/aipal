@@ -26,9 +26,9 @@
    :aipal-base-url "http://192.168.50.1:8082/"
    :db {:host "127.0.0.1"
         :port 3456
-        :name "aipal"
-        :user "aipalvastaus_user"
-        :password "aipalvastaus"
+        :name "arvo_db"
+        :user "aipal_user"
+        :password "aipal"
         :maximum-pool-size 15
         :minimum-pool-size 3}})
 

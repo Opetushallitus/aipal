@@ -64,14 +64,14 @@
             :base-url ""}
    :db {:host "127.0.0.1"
         :port 3456
-        :name "aipal"
+        :name "arvo_db"
         :user "aipal_user"
         :password "aipal"
         :maximum-pool-size 15
         :minimum-pool-size 3}
    :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
                      :unsafe-https false
-                     :enabled true}
+                     :enabled false}
    :aitu {:url "http://192.168.50.1:8080/"
           :user "readaituaipal"
           :password "readaituaipal"}
@@ -85,11 +85,11 @@
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
    :eraajo false
-   :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
+   :development-mode true ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
    :raportointi-minimivastaajat 5
    :logback {:properties-file "resources/logback.xml"}
-   :ajastus {:organisaatiopalvelu "0 0 3 * * ?"
+   :ajastus {:organisaatiopalvelu "5 0 0 * * ?"
              :kayttooikeuspalvelu "0 0 4 * * ?"
              :koulutustoimijoiden-tutkinnot "0 0 5 * * ?"
              :raportointi "0 30 5 * * ?"
