@@ -158,10 +158,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
       $scope.tallenna = function () {
         poistaKysymysryhmat();
-        var maxKysymyksia = 50;
-        if (!apu.valtakunnallisiaRyhmia($scope.kysely)) {
-          maxKysymyksia = 50;
-        }
+        var maxKysymyksia = 140;
+
         if (apu.laskeLisakysymykset($scope.kysely) > maxKysymyksia) {
           ilmoitus.virhe(i18n.hae('kysely.liian_monta_lisakysymysta'));
         }

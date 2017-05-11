@@ -50,7 +50,7 @@
   [kysymysryhmat]
   (some :valtakunnallinen kysymysryhmat))
 
-(def ^:const max-kysymyksia 50)
+(def ^:const max-kysymyksia 140)
 
 (defn paivita-kysely!
   [kysely]
