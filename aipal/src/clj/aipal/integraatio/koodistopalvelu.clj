@@ -145,8 +145,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
         (for [[avain [uusi-arvo vanha-arvo :as diff]] (diff-maps uusi vanha)
               :when diff]
           [avain (cond
-                   (nil? uusi-arvo) diff
-                   (nil? vanha-arvo) diff
+                   (or (nil? vanha-arvo) (nil? uusi-arvo)) diff
                    (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
                    :else diff)])))
 
