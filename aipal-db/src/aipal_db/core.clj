@@ -36,7 +36,7 @@
   "Palauttaa vektorin, jossa on SQL-statementteja.
    TODO: parseri ei ole mitenkään täydellinen.."
   [nimi]
-  (clojure.string/split (slurp nimi) #";"))
+  (clojure.string/split (slurp nimi :encoding "UTF-8") #";"))
 
 (defn sql-resurssista [nimi]
   (sql-tiedostosta (io/resource nimi)))

@@ -36,7 +36,7 @@
             [oph.common.infra.status :refer [status]]))
 
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
-                       (.trim (slurp resource))
+                       (.trim (slurp resource :encoding "UTF-8"))
                        "dev")))
 
 (defn reitit [asetukset]

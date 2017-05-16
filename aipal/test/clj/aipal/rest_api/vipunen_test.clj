@@ -28,7 +28,7 @@
   (hae-vastaus peridot-session alkupvm loppupvm "/api/vipunen"))
 
 (defn tarkista-vastaus [oikea-vastaus-file & testitulokset]
-  (let [correct (clojure.edn/read-string (slurp oikea-vastaus-file))]
+  (let [correct (clojure.edn/read-string (slurp oikea-vastaus-file :encoding "UTF-8"))]
     (doseq [tulos testitulokset]
       (is (= correct tulos)))))
 

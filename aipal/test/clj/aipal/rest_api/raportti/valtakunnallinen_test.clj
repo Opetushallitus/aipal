@@ -23,7 +23,7 @@
        "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
        "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
        "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))
-       
+
 (def kehitysraportti-ketjutettu-json
   (str "{\"kieli\":\"fi\",\"tyyppi\":\"kehitys-ketjutettu\",\"tutkintorakennetaso\":\"tutkinto\",\"koulutusalat\":[],\"opintoalat\":[],"
        "\"tutkinnot\":[\"X00001\",\"X00002\"],"
@@ -52,15 +52,15 @@
                    :response)]
     (is (= (:status response) 200))
     (let [vastaus (body-json response)]
-      (let [oikea-raportti (clojure.edn/read-string (slurp output-file))]
+      (let [oikea-raportti (clojure.edn/read-string (slurp output-file :encoding "UTF-8"))]
        ; (spit "filetto" (with-out-str (clojure.pprint/pprint vastaus)))
         (is (= (poista-luontipvm-kentat oikea-raportti) (poista-luontipvm-kentat vastaus)))))))
- 
+
 
 (deftest ^:integraatio muodosta-vertailuraportti
   (testing "vertailuraportin perustapaus"
     (tarkista-valtakunnallinen-raportti perustapaus-json "test-resources/vertailuraportin-perustapaus.edn")))
-      
+
 (deftest ^:integraatio muodosta-kehitysraportti
   (testing "Kehitysraportin perustapaus"
     (tarkista-valtakunnallinen-raportti kehitysraportti-json "test-resources/kehitysraportin-perustapaus.edn")))
