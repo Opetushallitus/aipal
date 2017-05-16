@@ -48,3 +48,5 @@ lopuksi. Soveltuu yksinkertaisiin testitapauksiin."
     (cheshire/parse-string (:body response) true)
     (cheshire/parse-string (slurp (:body response) :encoding "UTF-8") true)))
 
+(defn generate-escaped-json-string [form]
+  (cheshire/generate-string form {:escape-non-ascii true}))
