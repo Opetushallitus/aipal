@@ -33,7 +33,7 @@
                          :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
       (peridot/header "uid" testikayttaja-uid)
       (peridot/header "x-xsrf-token" "token")
-      (peridot/content-type "application/json"))))
+      (peridot/content-type "application/json; charset=utf-8"))))
 
 (defn rest-kutsu
   "Tekee yksinkertaisen simuloidun rest-kutsun. Peridot-sessio suljetaan

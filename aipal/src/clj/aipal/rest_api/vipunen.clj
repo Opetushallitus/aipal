@@ -38,14 +38,14 @@
 
       (if (< rivimaara maxrows)
         {:status 200
-         :body (vipunen/hae-kaikki alkupv loppupv)      
-         :headers {"Content-Type" "application/json"}}
+         :body (vipunen/hae-kaikki alkupv loppupv)
+         :headers {"Content-Type" "application/json; charset=utf-8"}}
       ; liian monta riviä
-      {:status 500 
+      {:status 500
        :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
-       :headers {"Content-Type" "application/json"}})))
+       :headers {"Content-Type" "application/json; charset=utf-8"}})))
 
-  
+
   (POST "/valtakunnallinen" []
     :body-params [alkupvm :- s/Str
                   loppupvm :- s/Str]
@@ -57,10 +57,10 @@
 
       (if (< rivimaara maxrows)
         {:status 200
-         :body (vipunen/hae-valtakunnalliset alkupv loppupv)      
-         :headers {"Content-Type" "application/json"}}
+         :body (vipunen/hae-valtakunnalliset alkupv loppupv)
+         :headers {"Content-Type" "application/json; charset=utf-8"}}
         ; liian monta riviä
-        {:status 500 
+        {:status 500
          :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
-         :headers {"Content-Type" "application/json"}}))))
+         :headers {"Content-Type" "application/json; charset=utf-8"}}))))
  ;     )))

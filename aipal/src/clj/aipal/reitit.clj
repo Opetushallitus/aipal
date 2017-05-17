@@ -58,7 +58,7 @@
                                  :current-user (:nimi *kayttaja*)
                                  :build-id @build-id
                                  :development-mode (pr-str (:development-mode asetukset))
-                                 :ominaisuus (cheshire/generate-string (:ominaisuus asetukset) {:escape-non-ascii true})}
+                                 :ominaisuus (cheshire/generate-string (:ominaisuus asetukset))}
                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                   {:logout-url (str cas-url "/logout")})))})
     (GET "/status" [] (s/render-file "status" (assoc (status)

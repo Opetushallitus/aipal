@@ -46,12 +46,12 @@
 
 (defn tutkintovertailu-perf-fn [config]
   (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
-        json (json/generate-string (muodosta-tutkintovertailuraportin-parametrit) {:escape-non-ascii true})]
+        json (json/generate-string (muodosta-tutkintovertailuraportin-parametrit))]
     (url->http-post-fn config url "valtakunnallinen, tutkintovertailu" json)))
 
 (defn toimijavertailu-perf-fn [config]
   (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
-        json (json/generate-string (muodosta-koulutustoimijavertailuraportin-parametrit) {:escape-non-ascii true})]
+        json (json/generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))]
     (url->http-post-fn config url "valtakunnallinen, koulutustoimijavertailu" json)))
 
 (deftest ^:performance vertailuraportti-raportti
