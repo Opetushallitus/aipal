@@ -177,13 +177,10 @@
   (POST "/" [& parametrit]
     :body [parametrit s/Any]
     :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
-    (->
+    (response-or-404
       (if (= "kehitys-ketjutettu" (:tyyppi parametrit))
         (muodosta-ketjutettu parametrit asetukset)
-        (muodosta-raportit parametrit asetukset))
-      response-or-404
-      (assoc :headers {"Content-Type" "application/json, charset=utf-8"})
-      )))
+        (muodosta-raportit parametrit asetukset)))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param
