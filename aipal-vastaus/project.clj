@@ -29,6 +29,7 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.slf4j/slf4j-api "1.7.16"]
+                 [org.flatland/useful "0.11.5"]
                  [prismatic/schema "1.0.5"]
                  [ring/ring-core "1.4.0"]
                  [ring/ring-headers "0.1.3"]
