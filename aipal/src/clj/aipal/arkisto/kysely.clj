@@ -77,7 +77,7 @@
   (->
     kysely-poistettavissa-query
     kysely-kentat
-    (sql/fields :kysely.selite_fi :kysely.selite_sv :kysely.selite_en)
+    (sql/fields :kysely.selite_fi :kysely.selite_sv :kysely.selite_en :kysely.tyyppi)
     (sql/where (= :kyselyid kyselyid))
     sql/exec
     unique-or-nil))

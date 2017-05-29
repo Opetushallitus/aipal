@@ -120,10 +120,15 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
 
+      $scope.kyselytyypit = [{id: 1, nimi: "Palautekysely"}, {id: 2, nimi: "Rekrykysely"}];
+
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)
           .success(function(kysely) {
             $scope.kysely = pvm.parsePvm(kysely);
+
+            $scope.kysely.tyyppi = _.find($scope.kyselytyypit, function(kt) {return kt.id === kysely.tyyppi});
+
             if(kopioi) {
               tallennusFn = Kysely.luoUusi;
               $scope.kysely.tila = 'luonnos';
@@ -149,6 +154,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         $scope.kysely = {
           kysymysryhmat: []
         };
+        $scope.kysely.tyyppi = $scope.kyselytyypit[0];
         tallennusFn = Kysely.luoUusi;
       }
 
@@ -159,6 +165,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.tallenna = function () {
         poistaKysymysryhmat();
         var maxKysymyksia = 140;
+
+        console.log("Tallennetaan kysely: " + JSON.stringify($scope.kysely))
 
         if (apu.laskeLisakysymykset($scope.kysely) > maxKysymyksia) {
           ilmoitus.virhe(i18n.hae('kysely.liian_monta_lisakysymysta'));

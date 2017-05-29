@@ -1,12 +1,25 @@
 <h1>{{i18n.yleiset.kysely}} <ohje tunniste="kysely"></ohje></h1>
 
 <form role="form" name="kyselyForm">
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" ng-model="kysely.sivutettu">
-            Sivutettu
-        </label>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="kysely.sivutettu">
+                Sivutettu
+            </label>
+        </div>
+    <div class = "row">
+        <div class="col-md-4">
+            <label>Kyselytyyppi *</label>
+            <ui-select id="kyselytyyppi" ng-model="kysely.tyyppi" ng-disabled="disabled" required="true">
+                <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+                <ui-select-choices repeat="kyselytyyppi in kyselytyypit">
+                    <div ng-bind-html="kyselytyyppi | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
     </div>
+
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">

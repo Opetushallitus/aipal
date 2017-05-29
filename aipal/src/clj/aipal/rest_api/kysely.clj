@@ -80,13 +80,14 @@
     (let [kysely (assoc (paivita-arvot kysely
                                       [:voimassa_alkupvm :voimassa_loppupvm]
                                       parse-iso-date)
-                        :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]  
+                        :tyyppi (->> kysely :tyyppi :id)
+                        :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
       (if (arkisto/samanniminen-kysely? kysely)
         {:status 400
          :body "kysely.samanniminen_kysely"}
         (response-or-404
           (format "%s" (let [{:keys [kyselyid]}
-                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija]))]
+                (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija :tyyppi]))]
             (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))))
 
   (POST "/:kyselyid" []

@@ -116,3 +116,7 @@
 (defentity jatkokysymys)
 
 (defentity jatkovastaus)
+
+(defentity kyselytyyppi_tiedot)
+
+(defentity vastaajatunnus_tiedot)

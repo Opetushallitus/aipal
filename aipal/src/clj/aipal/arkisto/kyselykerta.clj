@@ -122,10 +122,16 @@ ORDER BY kyselykerta.kyselykertaid ASC")
 (defn poista! [id]
   {:pre [(poistettavissa? id)]}
   (auditlog/kyselykerta-poisto! id)
-  (sql/delete taulut/vastaajatunnus
-    (sql/where {:kyselykertaid id}))
-  (sql/delete taulut/kyselykerta
-    (sql/where {:kyselykertaid id})))
+  (let [vastaajatunnukset (sql/select taulut/vastaajatunnus
+                            (sql/fields :vastaajatunnusid)
+                            (sql/where {:kyselykertaid id}))]
+    (println "VASTAAJATUNNUKSET:  " vastaajatunnukset)
+    (sql/delete taulut/vastaajatunnus_tiedot
+                (sql/where {:vastaajatunnus_id [in (map :vastaajatunnusid vastaajatunnukset)]}))
+    (sql/delete taulut/vastaajatunnus
+                (sql/where {:kyselykertaid id}))
+    (sql/delete taulut/kyselykerta
+                (sql/where {:kyselykertaid id}))))
 
 (defn hae-koulutustoimijatiedot
   "Hakee valmistavan koulutuksen järjestäjät"
