@@ -96,20 +96,6 @@
       ;(map erota-toimipaikka)
 
 
-(defn hae-kyselykerralla2
-  "Hae kyselykerran vastaajatunnukset"
-  [kyselykertaid]
-  (let [tunnukset (-> vastaajatunnus-select
-                    (sql/where (= :kyselykertaid kyselykertaid))
-                    sql/exec)]
-    (println "TUNNUKSET: " (count (map erota-oppilaitos tunnukset)) " - " (map erota-oppilaitos tunnukset))
-      (->>
-        tunnukset
-        ;(map erota-tutkinto)
-        (map erota-koulutustoimija)
-        (map erota-oppilaitos))))
-;(map erota-toimipaikka)
-
 (defn hae-viimeisin-tutkinto
   "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
   [kyselykertaid koulutustoimija]

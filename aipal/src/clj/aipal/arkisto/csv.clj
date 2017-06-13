@@ -25,13 +25,15 @@
     (sql/join taulut/kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
     (sql/join taulut/kysely_kysymysryhma (= :kysely_kysymysryhma.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
     (sql/join taulut/jatkokysymys (= :jatkokysymysid :jatkokysymys.jatkokysymysid))
+    (sql/join taulut/kysely (= :kysely_kysymysryhma.kyselyid :kysely.kyselyid))
     (sql/fields :kysymysid :jatkokysymysid :kysymys_fi :jarjestys :vastaustyyppi
                 [:kysely_kysymysryhma.jarjestys :kysymysryhma_jarjestys]
                 [:kysymysryhma.nimi_fi :kysymysryhma_nimi]
                 [:jatkokysymys.kylla_teksti_fi :jatkokysymys_kylla]
-                [:jatkokysymys.ei_teksti_fi :jatkokysymys_ei])
-    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))
+                [:jatkokysymys.ei_teksti_fi :jatkokysymys_ei :kysely.tyyppi])
+    (sql/where {:kysely.kyselyid kyselyid})))
 
 (defn hae-monivalinnat [kysymysidt]
   (sql/select taulut/monivalintavaihtoehto
     (sql/where {:kysymysid [in kysymysidt]})))
+

@@ -4,7 +4,9 @@
             [oph.common.util.util :refer [map-by]]
             [aipal.arkisto.csv :as csv]
             [clojure.core.match :refer [match]]
-            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
+            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
+            [aipal.db.core :refer [db]]
+            [aipal.db.vastaajatunnus :as vastaajatunnus]))
 
 (def delimiter \;)
 
@@ -22,8 +24,8 @@
            [:jatkokysymysid _] ["" ""]
            :else [""])))
 
-(defn get-question-group-header [questions template]
-  (concat ["Vastaajatunnus" "Tutkintotunnus"] (mapcat #(get-question-group-text questions %) template)))
+(defn get-question-group-header [questions template vastaajatunnus-header]
+  (concat ["Vastaajatunnus"] vastaajatunnus-header (mapcat #(get-question-group-text questions %) template)))
 
 (defn get-header-fields [entry]
   (match [(first entry)]
@@ -35,8 +37,8 @@
         header-fields (get-header-fields entry)]
     (map question header-fields)))
 
-(defn create-header-row [template questions]
-  (concat ["" ""] (mapcat #(get-header-text questions %) template)))
+(defn create-header-row [template questions vastaajatunnus-header]
+  (concat (repeat (inc (count vastaajatunnus-header)) "") (mapcat #(get-header-text questions %) template)))
 
 (defn get-choice-text [choices answer]
   (let [kysymysid (:kysymysid answer)
@@ -82,23 +84,48 @@
            [:jatkokysymysid] (get-jatkovastaus-text first-answer))))
 
 
-(defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers]
-    (concat [vastaajatunnus tutkintotunnus] (mapcat #(get-answer answers choices %) template)))
+(defn get-value [tutkintotunnus-old entry]
+  (println "tutkintotunnus-old: " tutkintotunnus-old " entry: " entry)
+  (let [entry-missing (nil? entry)
+        value-missing (and (= "tutkinto" (:kentta_id entry) (nil? (:arvo entry))))]
+    (if (or entry-missing value-missing)
+      tutkintotunnus-old
+      (:arvo entry))))
+
+
+(defn get-vastaajatunnus-value [tutkintotunnus-old vastaajatunnus-tiedot id]
+  (let [entry (find #(= id :id %) vastaajatunnus-tiedot)
+        arvo (get-value tutkintotunnus-old entry)]
+    (if (nil? arvo) "" arvo)))
+
+
+(defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers fields]
+  (let [vastaajatunnus-kentat (vastaajatunnus/vastaajatunnuksen_tiedot (db) {:vastaajatunnus vastaajatunnus :kentat fields})
+        vastaajatunnus-arvot (map #(get-vastaajatunnus-value tutkintotunnus vastaajatunnus-kentat %) fields)]
+    (concat [vastaajatunnus] vastaajatunnus-arvot (mapcat #(get-answer answers choices %) template))))
+
 
 (defn get-choices [questions]
   (let [monivalinnat (filter #(= "monivalinta" (:vastaustyyppi %)) questions)
         kysymysidt (map :kysymysid monivalinnat)]
     (csv/hae-monivalinnat kysymysidt)))
 
+(def sallitut-kentat ["tutkinto" "henkilonumero" "haun_numero"])
+
+(defn in? [coll elem]
+  (some #(= elem %) coll))
+
 (defn kysely-csv [kyselyid]
   (let [questions (csv/hae-kysymykset kyselyid)
+        kysely-fields (filter #(in? sallitut-kentat (:kentta_id % )) (vastaajatunnus/kyselyn_kentat (db) {:kyselyid kyselyid}))
         choices (get-choices questions)
         template (create-row-template questions)
         all-answers (csv/hae-vastaukset kyselyid)
         answers (group-by :vastaajaid all-answers)
-        question-group-header-row (get-question-group-header questions template)
-        header-row (create-header-row template questions)
-        answer-rows (map #(create-row template (first (second %)) choices (second %)) answers)]
+        vastaajatunnus-header (map :kentta_fi kysely-fields)
+        question-group-header-row (get-question-group-header questions template vastaajatunnus-header)
+        header-row (create-header-row template questions vastaajatunnus-header)
+        answer-rows (map #(create-row template (first (second %)) choices (second %) (map :id kysely-fields)) answers)]
     (write-csv
       (muuta-kaikki-stringeiksi (apply concat [[question-group-header-row header-row] answer-rows]))
       :delimiter delimiter)))
