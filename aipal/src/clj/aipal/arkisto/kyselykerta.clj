@@ -125,7 +125,6 @@ ORDER BY kyselykerta.kyselykertaid ASC")
   (let [vastaajatunnukset (sql/select taulut/vastaajatunnus
                             (sql/fields :vastaajatunnusid)
                             (sql/where {:kyselykertaid id}))]
-    (println "VASTAAJATUNNUKSET:  " vastaajatunnukset)
     (sql/delete taulut/vastaajatunnus_tiedot
                 (sql/where {:vastaajatunnus_id [in (map :vastaajatunnusid vastaajatunnukset)]}))
     (sql/delete taulut/vastaajatunnus

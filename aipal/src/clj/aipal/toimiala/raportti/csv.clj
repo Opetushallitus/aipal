@@ -70,7 +70,7 @@
          :else ""))
 
 (defn find [pred coll]
-  (some #(if pred %) coll))
+  (first (filter pred coll)))
 
 (defn get-jatkovastaus-text [answer]
   (select-keys answer [:jatkokysymys_kylla :jatkokysymys_ei]))
@@ -85,7 +85,6 @@
 
 
 (defn get-value [tutkintotunnus-old entry]
-  (println "tutkintotunnus-old: " tutkintotunnus-old " entry: " entry)
   (let [entry-missing (nil? entry)
         value-missing (and (= "tutkinto" (:kentta_id entry) (nil? (:arvo entry))))]
     (if (or entry-missing value-missing)
@@ -94,10 +93,9 @@
 
 
 (defn get-vastaajatunnus-value [tutkintotunnus-old vastaajatunnus-tiedot id]
-  (let [entry (find #(= id :id %) vastaajatunnus-tiedot)
+  (let [entry (find #(= id (:id %)) vastaajatunnus-tiedot)
         arvo (get-value tutkintotunnus-old entry)]
     (if (nil? arvo) "" arvo)))
-
 
 (defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers fields]
   (let [vastaajatunnus-kentat (vastaajatunnus/vastaajatunnuksen_tiedot (db) {:vastaajatunnus vastaajatunnus :kentat fields})
