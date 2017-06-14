@@ -17,14 +17,31 @@
             [cheshire.core :as json]
             [schema.core :as s]
             [clojure.java.io :refer [make-writer]]
+            [clojure.tools.logging :as log]
             [ring.util.io :refer [piped-input-stream]]
             [aipal.arkisto.vipunen :as vipunen]
             [aipal.toimiala.vipunen :as vipunen-skeema]
-            aipal.compojure-util
+            [aipal.compojure-util :refer :all]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
 
-(def maxrows 50000)
+(def max-rows 50000)
+
+(defn- logita-errorit [api-nimi alkupvm loppupvm response]
+  (let [schema-virheet (->> response
+                         (map #(s/check vipunen-skeema/VastauksenTiedot %))
+                         (remove nil?))]
+    (when (pos? (count schema-virheet))
+;      (do
+        (log/error
+          "Vipunen API: " api-nimi
+          ",  hakuväli:" alkupvm "-" loppupvm
+          ",  viallisten vastausten lukumäärä: " (count schema-virheet) "/" (count response)
+          ",  epävalidien kenttien taajuudet: " (frequencies (mapcat keys schema-virheet)))
+;        )
+      )
+      response
+    ))
 
 (defroutes reitit
   (POST "/" []
@@ -36,9 +53,11 @@
           loppupv (parse-iso-date loppupvm)
           rivimaara (:lkm (first (vipunen/laske-kaikki alkupv loppupv)))]
 
-      (if (< rivimaara maxrows)
+      (if (< rivimaara max-rows)
         {:status 200
-         :body (vipunen/hae-kaikki alkupv loppupv)
+         :body (let [resp (vipunen/hae-kaikki alkupv loppupv)]
+                 (logita-errorit "/" alkupvm loppupvm resp)
+                 resp)
          :headers {"Content-Type" "application/json; charset=utf-8"}}
       ; liian monta riviä
       {:status 500
@@ -55,12 +74,13 @@
           loppupv (parse-iso-date loppupvm)
           rivimaara (:lkm (first (vipunen/laske-valtakunnalliset alkupv loppupv)))]
 
-      (if (< rivimaara maxrows)
+      (if (< rivimaara max-rows)
         {:status 200
-         :body (vipunen/hae-valtakunnalliset alkupv loppupv)
+         :body (let [resp (vipunen/hae-valtakunnalliset alkupv loppupv)]
+                 (logita-errorit "/valtakunnallinen" alkupvm loppupvm resp)
+                 resp)
          :headers {"Content-Type" "application/json; charset=utf-8"}}
         ; liian monta riviä
         {:status 500
          :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
          :headers {"Content-Type" "application/json; charset=utf-8"}}))))
- ;     )))
