@@ -90,10 +90,10 @@
     (sql/where (= :kyselykertaid kyselykertaid))
     sql/exec
     (->>
-      ;(map erota-tutkinto)
+      (map erota-tutkinto)
       (map erota-koulutustoimija)
       (map erota-oppilaitos))))
-      ;(map erota-toimipaikka)
+      (map erota-toimipaikka)
 
 
 (defn hae-viimeisin-tutkinto
@@ -139,7 +139,7 @@
     (sql/fields :tunnus)
     (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
 
-(def ^:private common-props [:kyselykertaid
+(def ^:private common-and-legacy-props [:kyselykertaid
                              :tunnus
                              :voimassa-alkupvm
                              :voimassa_loppupvm
@@ -147,11 +147,17 @@
                              :valmistavan_koulutuksen_jarjestaja
                              :valmistavan_koulutuksen_oppilaitos
                              :rahoitusmuotoid
-                             :tutkintotunnus])
+                             :tutkintotunnus
+                              ;duplicate data to old table for vipunen and reports, at least for now
+                             :valmistavan_koulutuksen_toimipaikka
+                             :kunta
+                             :koulutusmuoto
+                             :suorituskieli
+                             :koulutusmuoto])
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
     (log/info (format "Storing: %s" vastaajatunnus)) 
-    (let [tallennettava-tunnus (select-keys vastaajatunnus common-props)
+    (let [tallennettava-tunnus (select-keys vastaajatunnus common-and-legacy-props)
           vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                                (sql/values tallennettava-tunnus)))
           vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
@@ -189,7 +195,6 @@
         entries (->> (tieto-entries vastaajatunnus-kentat kyselytyyppi-kentat tunnus)
                     (filter :kentta)
                     (filter :arvo))]
-    (println "VASTAAJATUNNUS ENTRIES: " entries)
     (run! #(tallenna-tiedot! %) entries)))
 
 
@@ -205,14 +210,20 @@
         tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
+        tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
         valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
+        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
+        kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
         vastaajatunnus (-> (if (:rahoitusmuotoid vastaajatunnus)
                              vastaajatunnus
                              (assoc vastaajatunnus :rahoitusmuotoid 5)))
         vastaajatunnus (-> vastaajatunnus
                          (assoc :vastaajien_lkm vastaajien-lkm
+                                :kunta kunta
+                                :tutkintotunnus tutkintotunnus
                                 :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
-                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos))]
+                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
+                                :valmistavan_koulutuksen_toimipaikka valmistavan-koulutuksen-toimipaikka))]
     (doall
       (for [tunnus (get-vastaajatunnukset tunnusten-lkm)]
         (let [tallennettu-tunnus (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))]
@@ -229,10 +240,10 @@
                    (take 1))]
 
       (with-kayttaja integraatio-uid nil nil
-                     (println "AVOPFI Vastaajatunnus: " vastaajatunnus)
                      (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi (db) {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
-                           tallennettu-tunnus (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))]
-                         (tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) vastaajatunnus kyselytyyppi)
+                           tallennettu-tunnus (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))
+                           kunta (:kunta vastaajatunnus)]
+                         (tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) (assoc vastaajatunnus :toimipaikka {:kunta kunta}) kyselytyyppi)
                          tallennettu-tunnus)))))
 ;;END AVOP.FI
 
