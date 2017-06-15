@@ -14,7 +14,7 @@
 
 (ns aipal.toimiala.vipunen
   (:require [schema.core :as s]))
- 
+
 (def TK_sukupuoli (s/enum "nainen" "mies"))
 (def TK_kieli (s/enum "suomi" "ruotsi" "muu"))
 (def TK_ika (s/enum "19 tai alle" "20 - 24" "25 - 34" "35 - 44" "45 - 54" "55 tai yli"))
@@ -61,9 +61,9 @@
                                :suorituskieli s/Str
                                :valmistavan_koulutuksen_oppilaitos_fi (s/maybe s/Str)
                                :valmistavan_koulutuksen_oppilaitos_sv (s/maybe s/Str)
-                               :kysely_fi s/Str
+                               :kysely_fi (s/maybe s/Str)
                                :taustakysymys_ika TK_ika
-                               :kysymysryhma_fi s/Str
+                               :kysymysryhma_fi (s/maybe s/Str)
                                :tutkinto_fi (s/maybe s/Str)
                                :kysymysryhmaid s/Int
                                :koulutustoimija_sv (s/maybe s/Str)
@@ -92,7 +92,7 @@
                                :taustakysymys_aidinkieli TK_kieli
                                :kysymys_sv s/Str
                                :valtakunnallinen s/Bool
-                               :kysymys_fi s/Str
+                               :kysymys_fi (s/maybe s/Str)
                                :kyselyid s/Int
                                :taustakysymys_syy TK_syy
                                })

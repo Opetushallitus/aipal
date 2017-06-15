@@ -25,44 +25,44 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
 
-(def max-rows 50000)
+(def ^:private max-rows 50000)
 
-(defn- logita-errorit [api-nimi alkupvm loppupvm response]
+(defn ^:private logita-errorit [api-nimi alkupvm loppupvm response]
   (let [schema-virheet (->> response
                          (map #(s/check vipunen-skeema/VastauksenTiedot %))
                          (remove nil?))]
     (when (pos? (count schema-virheet))
-;      (do
-        (log/error
-          "Vipunen API: " api-nimi
-          ",  hakuväli:" alkupvm "-" loppupvm
-          ",  viallisten vastausten lukumäärä: " (count schema-virheet) "/" (count response)
-          ",  epävalidien kenttien taajuudet: " (frequencies (mapcat keys schema-virheet)))
-;        )
-      )
-      response
-    ))
+      (log/error
+        "Vipunen API: " api-nimi
+        ",  hakuväli:" alkupvm "-" loppupvm
+        ",  viallisten vastausten lukumäärä: " (count schema-virheet) "/" (count response)
+        ",  epävalidien kenttien taajuudet: " (frequencies (mapcat keys schema-virheet))))
+      response))
+
+(defn ^:private hae-vipunen-vastaukset [api-nimi alkupvm loppupvm rivimaara-funktio hae-funktio]
+  (let [alkupv (parse-iso-date alkupvm)
+        loppupv (parse-iso-date loppupvm)
+        rivimaara (:lkm (first (rivimaara-funktio alkupv loppupv)))]
+
+    (if (< rivimaara max-rows)
+      {:status 200
+       :body (let [resp (hae-funktio alkupv loppupv)]
+               (logita-errorit api-nimi alkupvm loppupvm resp)
+               resp)
+       :headers {"Content-Type" "application/json; charset=utf-8"}}
+      ; liian monta riviä
+      {:status 500
+       :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
+       :headers {"Content-Type" "application/json; charset=utf-8"}})))
 
 (defroutes reitit
+
   (POST "/" []
     :body-params [alkupvm :- s/Str
                   loppupvm :- s/Str]
     :summary "Vastausten siirtorajapinta Vipuseen"
     :return [vipunen-skeema/VastauksenTiedot]
-    (let [alkupv (parse-iso-date alkupvm)
-          loppupv (parse-iso-date loppupvm)
-          rivimaara (:lkm (first (vipunen/laske-kaikki alkupv loppupv)))]
-
-      (if (< rivimaara max-rows)
-        {:status 200
-         :body (let [resp (vipunen/hae-kaikki alkupv loppupv)]
-                 (logita-errorit "/" alkupvm loppupvm resp)
-                 resp)
-         :headers {"Content-Type" "application/json; charset=utf-8"}}
-      ; liian monta riviä
-      {:status 500
-       :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
-       :headers {"Content-Type" "application/json; charset=utf-8"}})))
+    (hae-vipunen-vastaukset "/" alkupvm loppupvm vipunen/laske-kaikki vipunen/hae-kaikki))
 
 
   (POST "/valtakunnallinen" []
@@ -70,17 +70,4 @@
                   loppupvm :- s/Str]
     :summary "Valtakunnallisten kysymysten vastausten siirtorajapinta Vipuseen"
     :return [vipunen-skeema/VastauksenTiedot]
-    (let [alkupv (parse-iso-date alkupvm)
-          loppupv (parse-iso-date loppupvm)
-          rivimaara (:lkm (first (vipunen/laske-valtakunnalliset alkupv loppupv)))]
-
-      (if (< rivimaara max-rows)
-        {:status 200
-         :body (let [resp (vipunen/hae-valtakunnalliset alkupv loppupv)]
-                 (logita-errorit "/valtakunnallinen" alkupvm loppupvm resp)
-                 resp)
-         :headers {"Content-Type" "application/json; charset=utf-8"}}
-        ; liian monta riviä
-        {:status 500
-         :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
-         :headers {"Content-Type" "application/json; charset=utf-8"}}))))
+    (hae-vipunen-vastaukset "/valtakunnallinen" alkupvm loppupvm vipunen/laske-valtakunnalliset vipunen/hae-valtakunnalliset)))
