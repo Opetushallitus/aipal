@@ -242,8 +242,12 @@
       (with-kayttaja integraatio-uid nil nil
                      (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi (db) {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
                            tallennettu-tunnus (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))
-                           kunta (:kunta vastaajatunnus)]
-                         (tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) (assoc vastaajatunnus :toimipaikka {:kunta kunta}) kyselytyyppi)
+                           kunta (:kunta vastaajatunnus)
+                           tutkintotunnus (:tutkintotunnus vastaajatunnus)]
+                         (tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus)
+                                                          (assoc vastaajatunnus
+                                                            :toimipaikka {:kunta kunta}
+                                                            :tutkinto {:tutkintotunnus tutkintotunnus}) kyselytyyppi)
                          tallennettu-tunnus)))))
 ;;END AVOP.FI
 
