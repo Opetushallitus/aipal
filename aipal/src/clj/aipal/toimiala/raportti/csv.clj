@@ -6,7 +6,8 @@
             [clojure.core.match :refer [match]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
             [aipal.db.core :refer [db]]
-            [aipal.db.vastaajatunnus :as vastaajatunnus]))
+            [aipal.db.vastaajatunnus :as vastaajatunnus]
+            [clojure.tools.logging :as log]))
 
 (def delimiter \;)
 
@@ -91,15 +92,19 @@
       tutkintotunnus-old
       (:arvo entry))))
 
-
-(defn get-vastaajatunnus-value [tutkintotunnus-old vastaajatunnus-tiedot id]
-  (let [entry (find #(= id (:id %)) vastaajatunnus-tiedot)
-        arvo (get-value tutkintotunnus-old entry)]
+(defn get-vastaajatunnus-value [tutkintotunnus-old entry]
+  (let [arvo (get-value tutkintotunnus-old entry)]
+    (println "VALUE:" arvo)
     (if (nil? arvo) "" arvo)))
 
-(defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers fields]
-  (let [vastaajatunnus-kentat (vastaajatunnus/vastaajatunnuksen_tiedot (db) {:vastaajatunnus vastaajatunnus :kentat fields})
-        vastaajatunnus-arvot (map #(get-vastaajatunnus-value tutkintotunnus vastaajatunnus-kentat %) fields)]
+(defn in? [coll elem]
+  (some #(= elem %) coll))
+
+(def sallitut-kentat ["tutkinto" "henkilonumero" "haun_numero"])
+
+(defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers]
+  (let [vastaajatunnus-kentat (filter #(in? sallitut-kentat (:kentta_id %)) (vastaajatunnus/vastaajatunnuksen_tiedot (db) {:vastaajatunnus vastaajatunnus}))
+        vastaajatunnus-arvot (map #(get-vastaajatunnus-value tutkintotunnus %) vastaajatunnus-kentat)]
     (concat [vastaajatunnus] vastaajatunnus-arvot (mapcat #(get-answer answers choices %) template))))
 
 
@@ -107,11 +112,6 @@
   (let [monivalinnat (filter #(= "monivalinta" (:vastaustyyppi %)) questions)
         kysymysidt (map :kysymysid monivalinnat)]
     (csv/hae-monivalinnat kysymysidt)))
-
-(def sallitut-kentat ["tutkinto" "henkilonumero" "haun_numero"])
-
-(defn in? [coll elem]
-  (some #(= elem %) coll))
 
 (defn kysely-csv [kyselyid]
   (let [questions (csv/hae-kysymykset kyselyid)
@@ -123,7 +123,7 @@
         vastaajatunnus-header (map :kentta_fi kysely-fields)
         question-group-header-row (get-question-group-header questions template vastaajatunnus-header)
         header-row (create-header-row template questions vastaajatunnus-header)
-        answer-rows (map #(create-row template (first (second %)) choices (second %) (map :id kysely-fields)) answers)]
+        answer-rows (map #(create-row template (first (second %)) choices (second %)) answers)]
     (write-csv
       (muuta-kaikki-stringeiksi (apply concat [[question-group-header-row header-row] answer-rows]))
       :delimiter delimiter)))
