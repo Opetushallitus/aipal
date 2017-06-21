@@ -94,7 +94,7 @@
 
 (defn get-vastaajatunnus-value [tutkintotunnus-old entry]
   (let [arvo (get-value tutkintotunnus-old entry)]
-    (println "VALUE:" arvo)
+    (println "TUTKINTOTUNNUS-OLD: " tutkintotunnus-old "ENTRY:" entry "VALUE:" arvo)
     (if (nil? arvo) "" arvo)))
 
 (defn in? [coll elem]
