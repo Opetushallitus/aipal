@@ -87,14 +87,13 @@
 
 (defn get-value [tutkintotunnus-old entry]
   (let [entry-missing (nil? entry)
-        value-missing (and (= "tutkinto" (:kentta_id entry) (nil? (:arvo entry))))]
+        value-missing (and (= "tutkinto" (:kentta_id entry)) (nil? (:arvo entry)))]
     (if (or entry-missing value-missing)
       tutkintotunnus-old
       (:arvo entry))))
 
 (defn get-vastaajatunnus-value [tutkintotunnus-old entry]
   (let [arvo (get-value tutkintotunnus-old entry)]
-    (println "TUTKINTOTUNNUS-OLD: " tutkintotunnus-old "ENTRY:" entry "VALUE:" arvo)
     (if (nil? arvo) "" arvo)))
 
 (defn in? [coll elem]
