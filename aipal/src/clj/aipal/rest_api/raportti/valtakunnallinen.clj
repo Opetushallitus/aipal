@@ -62,7 +62,7 @@
 (defn ^:private muodosta-koulutustoimijakohtaisen-vertailutiedon-parametrit [tutkinnot opintoalat koulutusalat]
   (if (and (seq tutkinnot) (apply = tutkinnot))
     {:tutkintorakennetaso "tutkinto"
-     :tutkinnot [(first tutkinnot)]} ; TODO: First? Entä ne muut tutkinnot? 
+     :tutkinnot [(first tutkinnot)]} ; TODO: First? Entä ne muut tutkinnot?
     (muodosta-tutkintovertailun-parametrit opintoalat koulutusalat)))
 
 (defn ^:private tutkintojen-vertailutiedon-parametrit [parametrit]
@@ -164,7 +164,7 @@
        :virheelliset virheelliset})))
 
 (defn muodosta-ketjutettu [parametrit asetukset]
-  {:raportit 
+  {:raportit
    (for [tutkinto (:tutkinnot parametrit)]
      (-> parametrit
        (assoc :tutkinnot [tutkinto])
@@ -172,7 +172,7 @@
        (muodosta-raportit asetukset)))})
 ;      (muodosta-raportit (assoc parametrit :tutkinnot (vector tutkinto)) asetukset)))
 
-        
+
 (defn reitit [asetukset]
   (POST "/" [& parametrit]
     :body [parametrit s/Any]

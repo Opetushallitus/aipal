@@ -19,7 +19,7 @@
             [aipal.arkisto.organisaatiopalvelu :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
             [clj-time.coerce :as time-coerce]
-            [oph.common.util.util :refer [get-json-from-url map-by diff-maps some-value muutos]]
+            [oph.common.util.util :refer [get-json-from-url map-by some-value muutos]]
             [clojure.tools.logging :as log]
             [korma.db :as db]))
 

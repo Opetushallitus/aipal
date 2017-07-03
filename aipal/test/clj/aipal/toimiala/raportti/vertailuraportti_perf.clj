@@ -1,9 +1,9 @@
 (ns aipal.toimiala.raportti.vertailuraportti-perf
-    (:require [aipal.toimiala.raportti.perftest-util :refer :all]
+    (:require [clojure.test :refer :all]
               [clj-gatling.core :refer [run-simulation]]
-              [cheshire.core :refer :all]
-              [aipal.sql.test-util :refer :all])
-    (:use clojure.test))
+              [cheshire.core :as json]
+              [aipal.sql.test-util :refer :all]
+              [aipal.toimiala.raportti.perftest-util :refer :all]))
 
 (use-fixtures :each tietokanta-fixture)
 
@@ -46,12 +46,12 @@
 
 (defn tutkintovertailu-perf-fn [config]
   (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
-        json (generate-string (muodosta-tutkintovertailuraportin-parametrit))]
+        json (json/generate-string (muodosta-tutkintovertailuraportin-parametrit))]
     (url->http-post-fn config url "valtakunnallinen, tutkintovertailu" json)))
 
 (defn toimijavertailu-perf-fn [config]
   (let [url (str (:base-url config) "/api/raportti/valtakunnallinen")
-        json (generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))]
+        json (json/generate-string (muodosta-koulutustoimijavertailuraportin-parametrit))]
     (url->http-post-fn config url "valtakunnallinen, koulutustoimijavertailu" json)))
 
 (deftest ^:performance vertailuraportti-raportti

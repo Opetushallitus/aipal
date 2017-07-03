@@ -2,14 +2,12 @@
   (:require [peridot.core :as peridot]
             [clj-time.core :as time]
             [cheshire.core :as cheshire]
-
             [oph.common.infra.i18n :as i18n]
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]
-
             [aipal.sql.test-util :refer :all]
             [aipal.sql.test-data-util :refer :all]
             [buddy.sign.jws :as jws]))
@@ -53,7 +51,7 @@
                          :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
       (peridot/header "uid" testikayttaja-uid)
       (peridot/header "x-xsrf-token" "token")
-      (peridot/content-type "application/json"))))
+      (peridot/content-type "application/json; charset=utf-8"))))
 
 ;;TODO : Remove xsrf-token from here
 (defn session-no-token []
@@ -80,6 +78,7 @@ lopuksi. Soveltuuyksinkertaisiin testitapauksiin."
 (defn body-json [response]
   (if (string? (:body response))
     (cheshire/parse-string (:body response) true)
-    (cheshire/parse-string (slurp (:body response)) true)))
+    (cheshire/parse-string (slurp (:body response) :encoding "UTF-8") true)))
 
-
+(defn generate-escaped-json-string [form]
+  (cheshire/generate-string form {:escape-non-ascii true}))

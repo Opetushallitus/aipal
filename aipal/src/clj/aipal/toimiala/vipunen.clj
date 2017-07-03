@@ -49,7 +49,7 @@
                                :numerovalinta (s/maybe s/Int)
                                :kysymys_sv s/Str
                                :valtakunnallinen s/Bool
-                               :kysymys_fi s/Str
+                               :kysymys_fi (s/maybe s/Str)
                                :kyselyid s/Int
                                :kysely_en (s/maybe s/Str)
                                :kysymys_en (s/maybe s/Str)
