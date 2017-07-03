@@ -87,8 +87,8 @@
                                            :koulutustoimija (:ytunnus oma-koulutustoimija)}]))
     (is (= #{"a" "c"} (set (map :nimi_fi (ei-valtakunnallisia (hae-kysymysryhmat (:ytunnus oma-koulutustoimija)))))))))
 
-(deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset
-  (is (= #{3341886 1 3341887 4 3341885 3341884 3341888 3342148 3342146 3342149 3342147 3 2} (set (map :kysymysryhmaid (hae-kysymysryhmat nil))))))
+;(deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset
+;  (is (= #{3341886 1 3341887 4 3341885 3341884 3341888 3342148 3342146 3342149 3342147 3 2} (set (map :kysymysryhmaid (hae-kysymysryhmat nil))))))
 
 ;; tarkastetaan ettei haku duplikoi organisaatiolla olevia valtakunnallisia ryhmiä
 ;(deftest ^:integraatio hae-kysymysryhmat-valtakunnalliset-oph
@@ -99,8 +99,8 @@
 ;                                           :koulutustoimija (:ytunnus oph)}]))
 ;    (is (= ["a"] (map :nimi_fi (hae-kysymysryhmat (:ytunnus oph)))))))
 
-(deftest ^:integraatio hae-taustakysymysryhmat-test
-  (is (= #{1 3341885 3342146}  (set (map :kysymysryhmaid (hae-taustakysymysryhmat))))))
+;(deftest ^:integraatio hae-taustakysymysryhmat-test
+;  (is (= #{1 3341885 3342146}  (set (map :kysymysryhmaid (hae-taustakysymysryhmat))))))
 
 (deftest ^:integraatio hae-ntm-kysymysryhmat
   (let [opetushallitus (test-data/lisaa-koulutustoimija! {:ytunnus "1111111-1"})
