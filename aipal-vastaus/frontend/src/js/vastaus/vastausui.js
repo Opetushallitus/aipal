@@ -164,7 +164,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $scope.valittuKysymysryhma = $scope.data.kysymysryhmat[$scope.sivu];
         $scope.edellinenNappiDisabloitu = $scope.sivu === 0;
 
-        $scope.seuraavaNappiDisabloitu = $scope.sivu == ($scope.data.kysymysryhmat.length -1);
+        $scope.seuraavaNappiDisabloitu = $scope.sivu === ($scope.data.kysymysryhmat.length -1);
 
         $window.scrollTo(0,0);
       };
@@ -218,10 +218,41 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
   .controller('PreviewController', [
     '$http', '$routeParams', '$scope', '$location',
     function($http, $routeParams, $scope) {
+
+      $scope.vastausTemplate = $scope.valittuTemplate = "template/vastaus/kysymysryhmat.html";
+
+      $scope.vaihdaSivu = function() {
+        $scope.valittuKysymysryhma = $scope.data.kysymysryhmat[$scope.sivu];
+        $scope.edellinenNappiDisabloitu = $scope.sivu === 0;
+        $scope.seuraavaNappiDisabloitu = $scope.sivu === ($scope.data.kysymysryhmat.length -1);
+      };
+
+      $scope.sivu = 0;
+
+      $scope.seuraavaSivu = function() {
+        $scope.sivu = Math.min($scope.sivu +1, $scope.data.kysymysryhmat.length -1);
+        $scope.vaihdaSivu()
+      };
+
+      $scope.edellinenSivu = function() {
+        $scope.sivu = Math.max($scope.sivu -1, 0);
+        $scope.vaihdaSivu()
+      };
+
       $scope.preview = true;
       $scope.messages = [];
+
       $scope.$on('$messageIncoming', function (event, data){
         $scope.data = angular.fromJson(data.message);
+
+        if($scope.data){
+          $scope.valittuKysymysryhma = $scope.data.kysymysryhmat[0];
+          $scope.vaihdaSivu();
+        }
+
+        if($scope.data && $scope.data.sivutettu){
+          $scope.valittuTemplate = "template/vastaus/kysymysryhmat-sivutettu.html"
+        }
       });
     }
   ])
