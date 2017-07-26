@@ -12,10 +12,10 @@
 
 (def ^:private kysely1-arvosanatulos
   {:jakauma '({:vaihtoehto-avain "1", :lukumaara 0, :osuus 0} 
-               {:vaihtoehto-avain "2", :lukumaara 1, :osuus 20} 
-               {:vaihtoehto-avain "3", :lukumaara 1, :osuus 20} 
-               {:vaihtoehto-avain "4", :lukumaara 0, :osuus 0} 
-               {:vaihtoehto-avain "5", :lukumaara 3, :osuus 60}), 
+              {:vaihtoehto-avain "2", :lukumaara 1, :osuus 20}
+              {:vaihtoehto-avain "3", :lukumaara 1, :osuus 20}
+              {:vaihtoehto-avain "4", :lukumaara 0, :osuus 0} 
+              {:vaihtoehto-avain "5", :lukumaara 3, :osuus 60}),
    :eos_vastaus_sallittu nil, :keskiarvo 4.0000000000000000M, 
    :kysymys_en nil,
    :jarjestys 10, :vastaajien_lukumaara 5, 

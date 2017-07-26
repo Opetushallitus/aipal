@@ -6,7 +6,7 @@
             [clojure.core.match :refer [match]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
             [aipal.db.core :refer [db]]
-            [aipal.db.vastaajatunnus :as vastaajatunnus]
+            [aipal.db.core :as vastaajatunnus]
             [clojure.tools.logging :as log]))
 
 (def delimiter \;)
@@ -102,7 +102,7 @@
 (def sallitut-kentat ["tutkinto" "henkilonumero" "haun_numero"])
 
 (defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers]
-  (let [vastaajatunnus-kentat (filter #(in? sallitut-kentat (:kentta_id %)) (vastaajatunnus/vastaajatunnuksen_tiedot (db) {:vastaajatunnus vastaajatunnus}))
+  (let [vastaajatunnus-kentat (filter #(in? sallitut-kentat (:kentta_id %)) (vastaajatunnus/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus}))
         vastaajatunnus-arvot (map #(get-vastaajatunnus-value tutkintotunnus %) vastaajatunnus-kentat)]
     (concat [vastaajatunnus] vastaajatunnus-arvot (mapcat #(get-answer answers choices %) template))))
 
@@ -114,7 +114,7 @@
 
 (defn kysely-csv [kyselyid]
   (let [questions (csv/hae-kysymykset kyselyid)
-        kysely-fields (filter #(in? sallitut-kentat (:kentta_id % )) (vastaajatunnus/kyselyn_kentat (db) {:kyselyid kyselyid}))
+        kysely-fields (filter #(in? sallitut-kentat (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
         choices (get-choices questions)
         template (create-row-template questions)
         all-answers (csv/hae-vastaukset kyselyid)

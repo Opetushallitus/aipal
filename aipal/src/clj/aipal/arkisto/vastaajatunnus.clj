@@ -25,8 +25,7 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [aipal.auditlog :as auditlog]
-            [aipal.db.core :refer [db]]
-            [aipal.db.vastaajatunnus :as vastaajatunnus]))
+            [aipal.db.core :as vastaajatunnus]))
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 
@@ -92,8 +91,8 @@
     (->>
       (map erota-tutkinto)
       (map erota-koulutustoimija)
-      (map erota-oppilaitos))))
-      (map erota-toimipaikka)
+      (map erota-oppilaitos)
+      (map erota-toimipaikka))))
 
 
 (defn hae-viimeisin-tutkinto
@@ -140,20 +139,20 @@
     (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
 
 (def ^:private common-and-legacy-props [:kyselykertaid
-                             :tunnus
-                             :voimassa_alkupvm
-                             :voimassa_loppupvm
-                             :vastaajien_lkm
-                             :valmistavan_koulutuksen_jarjestaja
-                             :valmistavan_koulutuksen_oppilaitos
-                             :rahoitusmuotoid
-                             :tutkintotunnus
-                              ;duplicate data to old table for vipunen and reports, at least for now
-                             :valmistavan_koulutuksen_toimipaikka
-                             :kunta
-                             :koulutusmuoto
-                             :suorituskieli
-                             :koulutusmuoto])
+                                        :tunnus
+                                        :voimassa_alkupvm
+                                        :voimassa_loppupvm
+                                        :vastaajien_lkm
+                                        :valmistavan_koulutuksen_jarjestaja
+                                        :valmistavan_koulutuksen_oppilaitos
+                                        :rahoitusmuotoid
+                                        :tutkintotunnus
+                                        ;duplicate data to old table for vipunen and reports, at least for now
+                                        :valmistavan_koulutuksen_toimipaikka
+                                        :kunta
+                                        :koulutusmuoto
+                                        :suorituskieli
+                                        :koulutusmuoto])
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
     (log/info (format "Storing: %s" vastaajatunnus)) 
@@ -162,7 +161,7 @@
                                (sql/values tallennettava-tunnus)))
           vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
       (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
-       vastaajatunnus))
+      vastaajatunnus))
 
 (defn ^:private tallenna-tiedot! [entry]
   (-> (sql/insert taulut/vastaajatunnus_tiedot
@@ -190,7 +189,7 @@
                   [:arvo (second %)]]) (seq vastaajatunnus-kentat)))
 
 (defn tallenna-vastaajatunnus-tiedot! [tunnus vastaajatunnus kyselytyyppi]
-  (let [kyselytyyppi-kentat (vastaajatunnus/kyselytyypin_kentat (db) {:kyselytyyppi kyselytyyppi})
+  (let [kyselytyyppi-kentat (vastaajatunnus/kyselytyypin_kentat {:kyselytyyppi kyselytyyppi})
         vastaajatunnus-kentat (vastaajatunnus-fields vastaajatunnus kyselytyyppi)
         entries (->> (tieto-entries vastaajatunnus-kentat kyselytyyppi-kentat tunnus)
                     (filter :kentta)
@@ -206,7 +205,7 @@
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
-  (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi (db) {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
+  (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
         tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
         valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
@@ -240,7 +239,7 @@
                    (take 1))]
 
       (with-kayttaja integraatio-uid nil nil
-                     (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi (db) {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
+                     (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
                            tallennettu-tunnus (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))
                            kunta (:kunta vastaajatunnus)
                            tutkintotunnus (:tutkintotunnus vastaajatunnus)]

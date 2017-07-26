@@ -45,6 +45,8 @@
                  [robert/hooke "1.3.0"]
                  [stencil "0.5.0"]
                  [com.layerware/hugsql "0.4.7"]
+                 [mount "0.1.11"]
+                 [conman "0.6.6"]
                  [org.flatland/useful "0.11.5"]]
 
   :plugins [[test2junit "1.0.1"]

@@ -72,9 +72,6 @@
    :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
                      :unsafe-https false
                      :enabled false}
-   :aitu {:url "http://192.168.50.1:8080/"
-          :user "readaituaipal"
-          :password "readaituaipal"}
    :ldap-auth-server {:host "localhost"
                       :port 10389
                       :user "uid=amkpal,ou=People,dc=opintopolku,dc=fi"

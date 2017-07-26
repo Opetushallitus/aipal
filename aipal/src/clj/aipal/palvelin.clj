@@ -49,7 +49,8 @@
             [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.infra.eraajo :as eraajo]
-            [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]))
+            [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]
+            [mount.core :as mount]))
 
 (schema.core/set-fn-validation! true)
 
@@ -190,6 +191,7 @@
           _ (deliver asetukset-promise asetukset)
           _ (konfiguroi-lokitus asetukset)
           _ (luo-db (:db asetukset))
+          _ (mount/start)
           sammuta (hs/run-server (app asetukset)
                                  {:port (get-in asetukset [:server :port])})]
       (when (or (not (:development-mode asetukset))

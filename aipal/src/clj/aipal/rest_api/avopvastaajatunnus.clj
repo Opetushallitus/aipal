@@ -35,15 +35,14 @@
 (defn on-response [message]
     {:status 200
       :headers {"Content-Type" "application/json"}
-      :body {:tunnus message}
-    })
+      :body {:tunnus message}})
+
 
 (defn on-validation-error [message]
     {:status 400
       :headers {"Content-Type" "application/json"}
       :body {:status 400
-              :detail message}
-    })
+              :detail message}})
 
 (defn on-403 [request]
   {:status  403
@@ -52,7 +51,7 @@
             :detail  (str "Access to " (:uri request) " is forbidden")}})
 
 (defn get-shared-secret [asetukset] 
-  (get-in asetukset [:avopfi-shared-secret] ))
+  (get-in asetukset [:avopfi-shared-secret]))
    
 (defn auth-backend [asetukset] (jws-backend {:secret (get-shared-secret asetukset) :token-name "Bearer"}))
 
@@ -66,16 +65,12 @@
       (on-403 request))))
 
 (defn avop->arvo-map
-  [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto opiskeluoikeustyyppi laajuus kyselykerran_nimi]}]
-  (let [
-        ;;opiskeluoikeustyyppi <- no need
-        ;;laajuus <- no need
-        ent_oppilaitos (oppilaitos/hae oppilaitos)
+  [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto kyselykerran_nimi]}]
+  (let [ent_oppilaitos (oppilaitos/hae oppilaitos)
         ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
         ent_tutkinto (tutkinto/hae-kentat koulutus)
         kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
-    {
-     :vastaajien_lkm 1
+    {:vastaajien_lkm 1
      :voimassa_alkupvm (alkupvm)
      :voimassa_loppupvm (loppupvm)
      :suorituskieli kieli
@@ -86,26 +81,21 @@
      :tutkintotunnus (ent_tutkinto :tutkintotunnus)
      :kunta kunta
      :koulutusmuoto koulutusmuoto
-     :kyselykertaid (kyselykerta-id :kyselykertaid)
-     }
-   ))
-
+     :kyselykertaid (kyselykerta-id :kyselykertaid)}))
 
 (defn reitit [asetukset]
   (wrap-authentication (POST "/" []
-    :body [avopdata s/Any]
-    :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
-    :header-params [authorization :- String]
-   (try
-      (let [vastaajatunnus (avop->arvo-map avopdata)]
-        (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
-      (catch java.lang.AssertionError e1
-        ;(map str (.getStackTrace e1))
-        (log/error e1 "Mandatory fields missing") 
-        (on-validation-error (format "Mandatory fields are missing or not found"))
-      )
-      (catch Exception e2
-         (log/error e2 "Unexpected error")
-         (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))
-      )
-    )) (auth-backend asetukset)))
+                        :body [avopdata s/Any]
+                        :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
+                        :header-params [authorization :- String]
+                        (try
+                           (let [vastaajatunnus (avop->arvo-map avopdata)]
+                             (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
+                           (catch java.lang.AssertionError e1
+                             (log/error e1 "Mandatory fields missing")
+                             (on-validation-error (format "Mandatory fields are missing or not found")))
+                           (catch Exception e2
+                              (log/error e2 "Unexpected error")
+                              (on-validation-error (format "Unexpected error: %s" (.getMessage e2))))))
+
+     (auth-backend asetukset)))
