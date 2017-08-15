@@ -101,28 +101,28 @@
             anon-auth-handler (anon-auth/auth-cas-user cas-handler default-test-user-uid)
             fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
             auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
-      (cond
-        (.startsWith (path-info request) "/api/vipunen")
-          (do
-            (log/info "Vipunen API, only Basic Auth")
-            (handler request))
-        (some #(.startsWith (path-info request) %) swagger-resources)
-          (do
-            (log/info "swagger API docs are public, no auth")
-            (handler request))
-        (some #(.startsWith (path-info request) %) public-api)
-          (do
-            (log/info "public API method, no CAS auth")
-            (handler request))
-        (and (kehitysmoodi? asetukset) (not (:enabled (:cas-auth-server asetukset))))
-          (do
-           (log/info "development, no CAS")
-           (anon-auth-handler request))
-        (and (kehitysmoodi? asetukset) ((:headers request) "uid"))
-          (do
-            (log/info "development, fake CAS")
-            (fake-auth-handler request))
-        :else (auth-handler request)))))
+       (cond
+         (.startsWith (path-info request) "/api/vipunen")
+         (do
+           (log/info "Vipunen API, only Basic Auth")
+           (handler request))
+         (some #(.startsWith (path-info request) %) swagger-resources)
+         (do
+           (log/info "swagger API docs are public, no auth")
+           (handler request))
+         (some #(.startsWith (path-info request) %) public-api)
+         (do
+           (log/info "public API method, no CAS auth")
+           (handler request))
+         (and (kehitysmoodi? asetukset) (not (:enabled (:cas-auth-server asetukset))))
+         (do
+          (log/info "development, no CAS")
+          (anon-auth-handler request))
+         (and (kehitysmoodi? asetukset) ((:headers request) "uid"))
+         (do
+           (log/info "development, fake CAS")
+           (fake-auth-handler request))
+         :else (auth-handler request)))))
 
 (defn sammuta [palvelin]
   ((:sammuta palvelin)))

@@ -25,7 +25,7 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [aipal.auditlog :as auditlog]
-            [aipal.db.core :as vastaajatunnus]))
+            [arvo.db.core :as vastaajatunnus]))
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 

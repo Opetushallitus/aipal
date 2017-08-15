@@ -266,7 +266,7 @@
 
 (defn valitse-select2-optio
   "Valitsee ensimmäisen option hakuvalitsimen listalta"
-  [malli tunnistekentta hakuehto ]
+  [malli tunnistekentta hakuehto]
   (let [select2-container-selector (str "fieldset"
                                         "[model=\"" malli "\"]"
                                         "[model-id-property=\"" tunnistekentta "\"]"

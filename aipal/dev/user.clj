@@ -57,7 +57,7 @@
 (defn eraaja-organisaatiot! []
   (require 'aipal.infra.eraajo.organisaatiot)
   ((ns-resolve 'aipal.infra.eraajo.organisaatiot 'paivita-organisaatiot!)
-    {"url" (((repl-asetukset) :organisaatiopalvelu) :url)}))
+   {"url" (((repl-asetukset) :organisaatiopalvelu) :url)}))
 
 (defn ^:private kaynnista! []
   {:pre [(not @palvelin)]

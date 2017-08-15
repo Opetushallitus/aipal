@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.rest-api.avopvastaajatunnus
+(ns arvo.rest-api.avopvastaajatunnus
   (:import [java.sql.BatchUpdateException])
   (:require [compojure.api.sweet :refer :all]
             [schema.core :as s]
@@ -29,7 +29,6 @@
             [cheshire.core :as cheshire]
             [clj-time.core :as time]
             aipal.compojure-util))
-
 
 
 (defn on-response [message]
@@ -86,7 +85,7 @@
 (defn reitit [asetukset]
   (wrap-authentication (POST "/" []
                         :body [avopdata s/Any]
-                        :middleware [aipal.rest-api.avopvastaajatunnus/auth-mw]
+                        :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
                         :header-params [authorization :- String]
                         (try
                            (let [vastaajatunnus (avop->arvo-map avopdata)]

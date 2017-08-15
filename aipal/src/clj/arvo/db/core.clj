@@ -1,4 +1,4 @@
-(ns aipal.db.core
+(ns arvo.db.core
   (:require [hugsql.core :as hugsql]
             [mount.core :as mount]
             [conman.core :as conman]

@@ -1,4 +1,4 @@
-(ns aipal.arkisto.csv
+(ns arvo.arkisto.csv
   (:require [korma.core :as sql]
             [aipal.integraatio.sql.korma :as taulut]))
 

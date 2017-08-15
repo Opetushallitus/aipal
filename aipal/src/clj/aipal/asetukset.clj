@@ -36,7 +36,6 @@
    :cas-auth-server {:url s/Str
                      :unsafe-https Boolean
                      :enabled Boolean}
-   :aitu Palvelu
    :ldap-auth-server {:host s/Str
                       :port s/Int
                       :user (s/maybe s/Str)

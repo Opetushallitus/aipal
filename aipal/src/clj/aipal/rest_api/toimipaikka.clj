@@ -19,6 +19,6 @@
             [oph.common.util.http-util :refer [response-or-404]]))
 
 (defroutes reitit
-             (GET "/" [oppilaitos]
-             	:kayttooikeus :toimipaikka
-                        (response-or-404 (toimipaikka/hae-oppilaitoksen-voimassaolevat-toimipaikat oppilaitos))))
+  (GET "/" [oppilaitos]
+    :kayttooikeus :toimipaikka
+    (response-or-404 (toimipaikka/hae-oppilaitoksen-voimassaolevat-toimipaikat oppilaitos))))

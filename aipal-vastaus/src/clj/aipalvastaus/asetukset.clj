@@ -23,7 +23,7 @@
    :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :logback {:properties-file "resources/logback.xml"}
    :response-cache-max-age 0
-   :aipal-base-url "http://192.168.50.1:8082/"
+   :aipal-base-url "http://127.0.0.1:8082/"
    :db {:host "127.0.0.1"
         :port 3456
         :name "arvo_db"

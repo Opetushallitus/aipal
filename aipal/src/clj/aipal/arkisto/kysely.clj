@@ -130,17 +130,23 @@
   (hae kyselyid))
 
 (defn poista-kysely! [kyselyid]
-  (auditlog/kysely-poisto! kyselyid)
-  (sql/delete taulut/vastaajatunnus
-    (sql/where {:kyselykertaid [in (sql/subselect taulut/kyselykerta (sql/fields :kyselykertaid) (sql/where {:kyselyid kyselyid}))]}))
-  (sql/delete taulut/kyselykerta
-    (sql/where {:kyselyid kyselyid}))
-  (sql/delete taulut/kysely_kysymysryhma
-    (sql/where {:kyselyid kyselyid}))
-  (sql/delete taulut/kysely_kysymys
-    (sql/where {:kyselyid kyselyid}))
-  (sql/delete taulut/kysely
-    (sql/where {:kyselyid kyselyid})))
+  (let [vastaajatunnusids (sql/select taulut/vastaajatunnus
+                                      (sql/fields :vastaajatunnusid)
+                                      (sql/where {:kyselykertaid [in (sql/subselect taulut/kyselykerta (sql/fields :kyselykertaid) (sql/where {:kyselyid kyselyid}))]}))]
+    (println "Vastaajatunnusids " vastaajatunnusids)
+    (auditlog/kysely-poisto! kyselyid)
+    (sql/delete taulut/vastaajatunnus_tiedot
+      (sql/where {:vastaajatunnus_id [in vastaajatunnusids]}))
+    (sql/delete taulut/vastaajatunnus
+      (sql/where {:kyselykertaid [in vastaajatunnusids]}))
+    (sql/delete taulut/kyselykerta
+      (sql/where {:kyselyid kyselyid}))
+    (sql/delete taulut/kysely_kysymysryhma
+      (sql/where {:kyselyid kyselyid}))
+    (sql/delete taulut/kysely_kysymys
+      (sql/where {:kyselyid kyselyid}))
+    (sql/delete taulut/kysely
+      (sql/where {:kyselyid kyselyid}))))
 
 (defn laske-kysymysryhmat [kyselyid]
   (->

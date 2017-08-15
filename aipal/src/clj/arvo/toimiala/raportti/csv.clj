@@ -1,12 +1,11 @@
-(ns aipal.toimiala.raportti.csv
+(ns arvo.toimiala.raportti.csv
   (:require [clojure-csv.core :refer [write-csv]]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.arkisto.csv :as csv]
+            [arvo.arkisto.csv :as csv]
             [clojure.core.match :refer [match]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
-            [aipal.db.core :refer [db]]
-            [aipal.db.core :as vastaajatunnus]
+            [arvo.db.core :as vastaajatunnus]
             [clojure.tools.logging :as log]))
 
 (def delimiter \;)

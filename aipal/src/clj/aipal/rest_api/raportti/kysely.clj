@@ -23,7 +23,7 @@
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.taustakysymykset :as taustakysymykset]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
-            [aipal.toimiala.raportti.csv :refer [kysely-csv]]
+            [arvo.toimiala.raportti.csv :refer [kysely-csv]]
             [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (defn ^:private muodosta-kyselyn-raportti-parametreilla

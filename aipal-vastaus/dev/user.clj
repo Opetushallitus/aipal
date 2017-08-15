@@ -28,8 +28,8 @@
 (stencil.loader/set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 
 (def frontend-kaannoskomennot ["npm install"
-                              "bower install"
-                              "grunt build"])
+                               "bower install"
+                               "grunt build"])
 
 (defn kaanna-frontend []
   (with-sh-dir "frontend"
@@ -46,8 +46,8 @@
   (kaanna-frontend)
   (require 'aipalvastaus.palvelin)
   (reset! palvelin ((ns-resolve 'aipalvastaus.palvelin 'kaynnista!)
-                     (assoc @(ns-resolve 'aipalvastaus.asetukset 'oletusasetukset)
-                            :development-mode true))))
+                    (assoc @(ns-resolve 'aipalvastaus.asetukset 'oletusasetukset)
+                           :development-mode true))))
 
 (defn ^:private sammuta! []
   {:pre [@palvelin]

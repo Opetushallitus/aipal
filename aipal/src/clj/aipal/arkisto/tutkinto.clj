@@ -93,7 +93,7 @@
                 :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv] [:koulutusala.nimi_en :koulutusala_nimi_en]))))
 
 (defn hae-voimassaolevat-tutkinnot-listana []
-  (->> 
+  (->>
     (hae-tutkinnot)
     (filter tutkinto-voimassa?)
     (map #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv :nimi_en]))))
