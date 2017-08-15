@@ -133,7 +133,6 @@
   (let [vastaajatunnusids (sql/select taulut/vastaajatunnus
                                       (sql/fields :vastaajatunnusid)
                                       (sql/where {:kyselykertaid [in (sql/subselect taulut/kyselykerta (sql/fields :kyselykertaid) (sql/where {:kyselyid kyselyid}))]}))]
-    (println "Vastaajatunnusids " vastaajatunnusids)
     (auditlog/kysely-poisto! kyselyid)
     (sql/delete taulut/vastaajatunnus_tiedot
       (sql/where {:vastaajatunnus_id [in vastaajatunnusids]}))
