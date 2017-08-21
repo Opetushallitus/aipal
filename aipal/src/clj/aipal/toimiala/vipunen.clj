@@ -21,7 +21,7 @@
                                :kysymysryhma_sv (s/maybe s/Str)
                                :opintoala_sv (s/maybe s/Str)
                                :vaihtoehto (s/maybe s/Int)
-                               :suorituskieli s/Str
+                               :suorituskieli (s/maybe s/Str)
                                :valmistavan_koulutuksen_oppilaitos_fi (s/maybe s/Str)
                                :valmistavan_koulutuksen_oppilaitos_sv (s/maybe s/Str)
                                :kysely_fi s/Str
@@ -65,5 +65,5 @@
                                :kysymysryhmajarjestys s/Int
                                :kysymysjarjestys s/Int
                                :kysymysryhma (s/maybe s/Str)
-                               :taustakysymykset s/Bool
-                               })
+                               :taustakysymykset s/Bool})
+
