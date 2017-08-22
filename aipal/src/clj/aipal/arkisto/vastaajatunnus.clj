@@ -126,12 +126,11 @@
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                              (sql/values vastaajatunnus)))
         vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
-    (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
+    (auditlog/vastaajatunnus-luonti! (:vastaajatunnusid vastaajatunnus) (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
     vastaajatunnus))
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
-  (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])

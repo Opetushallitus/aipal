@@ -18,142 +18,158 @@
   (:require
     [aipal.infra.kayttaja :as ka]
     [clojure.tools.logging :as log]
-    [oph.log :as aipallog]))
+    [oph.log :as aipallog]
+    [oph.common.infra.common-audit-log :as common-audit-log]))
 
 (def operaatiot {:poisto "poisto"
                  :lisays "lisäys"
                  :paivitys "päivitys"})
 
+;; OPH-1966
+(defn ^:private ->common-audit-log-json-entry
+  "Logittaa OPH:n projektien yhteiseen audit-logiin"
+  [tieto oid tieto-id operaatio tiedot-map]
+  {:pre [(bound? #'ka/*kayttaja*)]}
+  (let [data  {:operation   operaatio
+               :user        {:oid (:oid ka/*kayttaja*)}
+               :resource    (name tieto)
+               :resourceOid oid
+               :id          (str tieto-id)
+               :delta       (reduce-kv
+                              (fn [result k v] (conj result {:op (operaatio operaatiot) :path (name k) :value v}))
+                              []
+                              tiedot-map)}]
+    (common-audit-log/->audit-log-entry data)
+    ))
+
 (defn ^:private kirjoita!
-  ([tieto operaatio tiedot-map]
-  {:pre [(bound? #'ka/*kayttaja*),
-         (contains? operaatiot operaatio)
-         (keyword? tieto)
-         (map? tiedot-map)]}
-  (let [uid (:uid ka/*kayttaja*)
-        msg (str "uid: " uid " oper: " (operaatio operaatiot) " kohde: " (name tieto) " meta: (" tiedot-map ")")]
-    (binding [aipallog/*lisaa-uid-ja-request-id?* false]
-      (log/info msg))))
-  ([tieto operaatio]
-    (kirjoita! tieto operaatio {})))
+  ([tieto oid tieto-id operaatio]
+    (kirjoita! tieto oid tieto-id operaatio {}))
+  ([tieto oid tieto-id operaatio tiedot-map]
+    {:pre [(bound? #'ka/*kayttaja*),
+           (contains? operaatiot operaatio)
+           (keyword? tieto)
+           (map? tiedot-map)]}
+    (let [log-entry (->common-audit-log-json-entry tieto oid tieto-id operaatio tiedot-map)]
+      (binding [aipallog/*lisaa-uid-ja-request-id?* false]
+        (log/info log-entry)
+        ))))
 
 (defn ohje-paivitys!
   [ohjetunniste]
-  (kirjoita! :ohje :paivitys
+  (kirjoita! :ohje nil ohjetunniste :paivitys
     {:ohjetunniste ohjetunniste}))
 
 (defn kysely-muokkaus!
   ([kyselyid]
-    (kirjoita! :kysely :paivitys {:kyselyid kyselyid}))
+    (kirjoita! :kysely nil kyselyid :paivitys {:kyselyid kyselyid}))
   ([kyselyid tilamuutos]
-    (kirjoita! :kysely :paivitys {:kyselyid kyselyid
-                                  :tila tilamuutos})))
+    (kirjoita! :kysely nil kyselyid :paivitys {:kyselyid kyselyid
+                                               :tila tilamuutos})))
 
 (defn kysely-poisto!
   [kyselyid]
-  (kirjoita! :kysely :poisto {:kyselyid kyselyid}))
+  (kirjoita! :kysely nil kyselyid :poisto {:kyselyid kyselyid}))
 
 (defn kysely-luonti!
   [kyselyid nimi_fi]
-  (kirjoita! :kysely :lisays {:kyselyid kyselyid
-                              :nimi_fi nimi_fi}))
+  (kirjoita! :kysely nil kyselyid :lisays {:kyselyid kyselyid
+                                           :nimi_fi nimi_fi}))
 
 (defn kyselypohja-muokkaus!
   ([kyselypohjaid]
-    (kirjoita! :kyselypohja :paivitys {:kyselypohjaid kyselypohjaid}))
+    (kirjoita! :kyselypohja nil kyselypohjaid :paivitys {:kyselypohjaid kyselypohjaid}))
   ([kyselypohjaid tilamuutos]
-    (kirjoita! :kyselypohja :paivitys {:kyselypohjaid kyselypohjaid
-                                       :tila tilamuutos})))
+    (kirjoita! :kyselypohja nil kyselypohjaid :paivitys {:kyselypohjaid kyselypohjaid
+                                                         :tila tilamuutos})))
 
 (defn kyselypohja-luonti!
-  [nimi]
-  (kirjoita! :kyselypohja :lisays {:nimi nimi}))
+  [kyselypohjaid nimi]
+  (kirjoita! :kyselypohja nil kyselypohjaid :lisays {:nimi nimi}))
 
 (defn kyselypohja-poisto!
   [kyselypohjaid]
-  (kirjoita! :kyselypohja :poisto {:kyselypohjaid kyselypohjaid}))
+  (kirjoita! :kyselypohja nil kyselypohjaid :poisto {:kyselypohjaid kyselypohjaid}))
 
 (defn kysymysryhma-muokkaus!
   ([kysymysryhmaid]
-    (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid}))
+    (kirjoita! :kysymysryhma nil kysymysryhmaid :paivitys {:kysymysryhmaid kysymysryhmaid}))
   ([kysymysryhmaid tilamuutos]
-    (kirjoita! :kysymysryhma :paivitys {:kysymysryhmaid kysymysryhmaid
-                                        :tila tilamuutos})))
+    (kirjoita! :kysymysryhma nil kysymysryhmaid :paivitys {:kysymysryhmaid kysymysryhmaid
+                                                           :tila tilamuutos})))
 
 (defn kysymysryhma-luonti!
   [kysymysryhmaid nimi]
-  (kirjoita! :kysymysryhma :lisays {:kysymysryhmaid kysymysryhmaid
-                                    :nimi nimi}))
+  (kirjoita! :kysymysryhma nil kysymysryhmaid :lisays {:kysymysryhmaid kysymysryhmaid
+                                                       :nimi nimi}))
 
 (defn kysymysryhma-poisto!
   [kysymysryhmaid]
-  (kirjoita! :kysymysryhma :poisto {:kysymysryhmaid kysymysryhmaid}))
+  (kirjoita! :kysymysryhma nil kysymysryhmaid :poisto {:kysymysryhmaid kysymysryhmaid}))
 
 (defn kysymys-poisto!
   [kysymysid]
-  (kirjoita! :kysymys :poisto {:kysymysid kysymysid}))
+  (kirjoita! :kysymys nil kysymysid :poisto {:kysymysid kysymysid}))
 
 (defn kysymys-monivalinnat-poisto!
   [kysymysid]
-  (kirjoita! :kysymys :poisto {:kysymysid kysymysid
-                               :monivalinnat true}))
+  (kirjoita! :kysymys nil kysymysid :poisto {:kysymysid kysymysid
+                                             :monivalinnat true}))
 
 (defn kysymys-monivalinnat-luonti!
   [kysymysid]
-  (kirjoita! :kysymys :lisays {:kysymysid kysymysid
-                               :monivalinnat true}))
+  (kirjoita! :kysymys nil kysymysid :lisays {:kysymysid kysymysid
+                                             :monivalinnat true}))
 
 (defn jatkokysymys-poisto!
   [jatkokysymysid]
-  (kirjoita! :jatkokysymys :poisto {:jatkokysymysid jatkokysymysid}))
+  (kirjoita! :jatkokysymys nil jatkokysymysid  :poisto {:jatkokysymysid jatkokysymysid}))
 
 (defn jatkokysymys-luonti!
   [jatkokysymysid]
-  (kirjoita! :jatkokysymys :lisays {:jatkokysymysid jatkokysymysid}))
+  (kirjoita! :jatkokysymys nil jatkokysymysid :lisays {:jatkokysymysid jatkokysymysid}))
 
 (defn kysymys-muokkaus!
   [kysymysid]
-  (kirjoita! :kysymys :paivitys {:kysymysid kysymysid}))
+  (kirjoita! :kysymys nil kysymysid :paivitys {:kysymysid kysymysid}))
 
 (defn kysymys-luonti!
   [kysymysryhmaid kysymysid]
-  (kirjoita! :kysymys :lisays {:kysymysid kysymysid
-                               :kysymysryhmaid kysymysryhmaid}))
+  (kirjoita! :kysymys nil kysymysid :lisays {:kysymysid kysymysid
+                                             :kysymysryhmaid kysymysryhmaid}))
 
 (defn kyselykerta-muokkaus!
   ([kyselykertaid]
-    (kirjoita! :kyselykerta :paivitys {:kyselykertaid kyselykertaid}))
+    (kirjoita! :kyselykerta nil kyselykertaid :paivitys {:kyselykertaid kyselykertaid}))
   ([kyselykertaid tilamuutos]
-    (kirjoita! :kyselykerta :paivitys {:kyselykertaid kyselykertaid
-                                       :tila tilamuutos})))
+    (kirjoita! :kyselykerta nil kyselykertaid :paivitys {:kyselykertaid kyselykertaid
+                                                         :tila tilamuutos})))
 
 (defn kyselykerta-luonti!
-  [kyselyid nimi]
-  (kirjoita! :kyselykerta :lisays {:kyselyid kyselyid
-                                   :nimi nimi}))
+  [kyselykertaid kyselyid nimi]
+  (kirjoita! :kyselykerta nil kyselykertaid :lisays {:kyselyid kyselyid
+                                                     :nimi nimi}))
 
-(defn kyselykerta-poisto! [id]
-  (kirjoita! :kyselykerta :poisto {:kyselykertaid id}))
+(defn kyselykerta-poisto! [kyselykertaid]
+  (kirjoita! :kyselykerta nil kyselykertaid :poisto {:kyselykertaid kyselykertaid}))
 
 (defn vastaajatunnus-luonti!
-  ([kyselykertaid]
-    (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid}))
-  ([vastaajatunnus kyselykertaid]
-    (kirjoita! :vastaajatunnus :lisays {:kyselykertaid kyselykertaid
-                                        :tunnus vastaajatunnus})))
+  ([vastaajatunnusid vastaajatunnus kyselykertaid]
+    (kirjoita! :vastaajatunnus nil vastaajatunnusid :lisays {:kyselykertaid kyselykertaid
+                                                             :tunnus vastaajatunnus})))
 
 (defn vastaajatunnus-muokkaus!
   [vastaajatunnusid kyselykertaid lukittu-tila]
-  (kirjoita! :vastaajatunnus :paivitys {:kyselykertaid kyselykertaid
-                                        :vastaajatunnusid vastaajatunnusid
-                                        :lukittu lukittu-tila}))
+  (kirjoita! :vastaajatunnus nil vastaajatunnusid :paivitys {:kyselykertaid kyselykertaid
+                                                             :vastaajatunnusid vastaajatunnusid
+                                                             :lukittu lukittu-tila}))
 
 (defn vastaajatunnus-poisto!
   [vastaajatunnusid kyselykertaid]
-  (kirjoita! :vastaajatunnus :poisto {:kyselykertaid kyselykertaid
-                                      :vastaajatunnusid vastaajatunnusid}))
+  (kirjoita! :vastaajatunnus nil vastaajatunnusid :poisto {:kyselykertaid kyselykertaid
+                                                           :vastaajatunnusid vastaajatunnusid}))
 
 (defn tiedote-operaatio!
-  [operaatio]
+  [tiedoteid operaatio]
   {:pre [(contains? operaatiot operaatio)]}
-  (kirjoita! :tiedote operaatio))
+  (kirjoita! :tiedote nil tiedoteid operaatio))
