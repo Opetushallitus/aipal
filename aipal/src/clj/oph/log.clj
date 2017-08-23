@@ -13,9 +13,9 @@
 ;; European Union Public Licence for more details.
 
 (ns oph.log
-  (:require oph.common.infra.print-wrapper
-            [clojure.tools.logging]
+  (:require [clojure.tools.logging :as log]
             [robert.hooke :refer [add-hook]]
+            [oph.common.infra.print-wrapper :as print-wrapper]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (def ^:dynamic *lisaa-uid-ja-request-id?* true)
@@ -25,8 +25,8 @@
   (let [uid (if (bound? #'*kayttaja*)
               (:uid *kayttaja*)
               "-")
-        requestid (if (bound? #'oph.common.infra.print-wrapper/*requestid*)
-                    oph.common.infra.print-wrapper/*requestid*
+        requestid (if (bound? #'print-wrapper/*requestid*)
+                    print-wrapper/*requestid*
                     "-")
         message-with-id (str "[User: " uid ", request: " requestid "] " message)]
     (if *lisaa-uid-ja-request-id?*
@@ -34,4 +34,4 @@
       (f logger level throwable message))))
 
 (defn lisaa-uid-ja-requestid-hook []
-  (add-hook #'clojure.tools.logging/log* #'lisaa-uid-ja-requestid))
+  (add-hook #'log/log* #'lisaa-uid-ja-requestid))
