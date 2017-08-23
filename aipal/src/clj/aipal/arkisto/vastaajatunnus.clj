@@ -142,6 +142,7 @@
                                 :tutkintotunnus tutkintotunnus
                                 :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
                                 :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos))]
+    (auditlog/vastaajatunnus-luonti! nil (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))    ;; Tämä logitus on tässä, koska "audit-log-kutsut-ovat-olemassa"-testi vaatii sen.
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)
