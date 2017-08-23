@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.vastaajatunnus
-  (:require [clojure.string :as st]
+  (:require [clojure.string :as str]
             [clojure.set :refer [rename-keys]]
             [oph.korma.common :refer [select-unique-or-nil]]
             [korma.core :as sql]
@@ -120,7 +120,7 @@
   [vastaajatunnus]
   (select-unique-or-nil taulut/vastaajatunnus
     (sql/fields :tunnus)
-    (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
+    (sql/where {(sql/sqlfn :upper :tunnus) (str/upper-case vastaajatunnus)})))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
