@@ -46,8 +46,7 @@
   ([tieto oid tieto-id operaatio]
     (kirjoita! tieto oid tieto-id operaatio {}))
   ([tieto oid tieto-id operaatio tiedot-map]
-    {:pre [(bound? #'ka/*kayttaja*),
-           (contains? operaatiot operaatio)
+    {:pre [(contains? operaatiot operaatio)
            (keyword? tieto)
            (map? tiedot-map)]}
     (let [log-entry (->common-audit-log-json-entry tieto oid tieto-id operaatio tiedot-map)]
