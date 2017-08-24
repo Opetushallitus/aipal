@@ -17,6 +17,8 @@
   (:require [korma.core :as sql]
             [korma.db :as db]
             [oph.common.infra.i18n :as i18n]
+            [oph.common.infra.common-audit-log :as common-audit-log]
+            [oph.common.infra.common-audit-log-test :as common-audit-log-test]
             [infra.test.data :as testdata]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :refer [kayttaja]]
@@ -56,9 +58,11 @@
   [f oid uid]
   (let [pool (alusta-korma!)]
     (luo-testikayttaja!) ; eri transaktio kuin loppuosassa!
+    (common-audit-log/konfiguroi-common-audit-lokitus (common-audit-log-test/test-environment-meta "aipal"))
     ;; testin aikana eri käyttäjä
     (with-kayttaja uid nil nil
-      (binding [i18n/*locale* testi-locale]
+      (binding [i18n/*locale* testi-locale
+                common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
         ;; avataan transaktio joka on voimassa koko kutsun (f) ajan
         (db/transaction
           (try
