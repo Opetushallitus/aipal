@@ -25,6 +25,7 @@
 (defn session []
   (let [asetukset (-> oletusasetukset
                     (assoc-in [:cas-auth-server :enabled] false)
+                    (assoc-in [:server :base-url] "http://localhost:8080")
                     (assoc :development-mode true
                            :basic-auth {:tunnus "tunnus"
                                         :salasana "salasana"}))]
