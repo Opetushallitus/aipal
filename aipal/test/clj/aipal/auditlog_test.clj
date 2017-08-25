@@ -26,9 +26,8 @@
 
 (defn ^:private log-through-with-mock-user
   [f]
-  (binding [kayttaja/*kayttaja* (promise)
+  (binding [kayttaja/*kayttaja* {:oid "T-X-oid"}
             common-audit-log/*request-meta* common-audit-log-test/test-request-meta]
-    (deliver kayttaja/*kayttaja* {:oid "T-X-oid"})
     (konfiguroi-lokitus oletusasetukset)  ;; Tarpeen, jotta käytetty loglevel (info) enabloituu
     (common-audit-log/konfiguroi-common-audit-lokitus
       (common-audit-log-test/test-environment-meta "aipal"))

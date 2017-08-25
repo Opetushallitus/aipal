@@ -31,7 +31,7 @@
   [tieto oid tieto-id operaatio tiedot-map]
   {:pre [(bound? #'ka/*kayttaja*)]}
   (let [data  {:operation   operaatio
-               :user        {:oid (:oid @ka/*kayttaja*)}
+               :user        {:oid (:oid ka/*kayttaja*)}
                :resource    (name tieto)
                :resourceOid oid
                :id          (str tieto-id)
