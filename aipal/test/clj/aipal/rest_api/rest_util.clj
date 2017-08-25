@@ -32,7 +32,9 @@
                                         :salasana "salasana"}))]
     (alusta-korma! asetukset)
     (-> (palvelin/app asetukset)
-      (peridot/session :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
+      (peridot/session :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}
+                                                 "ring-session" {:raw (str "ring-session=" (:session common-audit-log-test/test-request-meta)), :domain "localhost", :path "/", :value (:session common-audit-log-test/test-request-meta)}
+                                                 }})
       (peridot/header "uid" testikayttaja-uid)
       (peridot/header "x-xsrf-token" "token")
       (peridot/header "user-agent" (:user-agent common-audit-log-test/test-request-meta))
