@@ -150,7 +150,7 @@
                           (.writeString json-generator (.toString c))))
   (json-gen/add-encoder org.joda.time.LocalDate
                         (fn [c json-generator]
-                          (.writeString json-generator (.toString c "dd.MM.yyyy"))))
+                          (.writeString json-generator (.toString c "yyyy-MM-dd"))))
 
   (let [session-store (memory-store)]
     (-> (aipal.reitit/reitit asetukset)
