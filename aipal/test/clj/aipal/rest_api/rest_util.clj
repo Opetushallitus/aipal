@@ -3,6 +3,7 @@
             [clj-time.core :as time]
             [cheshire.core :as cheshire]
             [oph.common.infra.i18n :as i18n]
+            [oph.common.infra.common-audit-log-test :as common-audit-log-test]
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
@@ -30,10 +31,12 @@
                            :basic-auth {:tunnus "tunnus"
                                         :salasana "salasana"}))]
     (alusta-korma! asetukset)
-    (-> (peridot/session (palvelin/app asetukset)
-                         :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
+    (-> (palvelin/app asetukset)
+      (peridot/session :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
       (peridot/header "uid" testikayttaja-uid)
       (peridot/header "x-xsrf-token" "token")
+      (peridot/header "user-agent" (:user-agent common-audit-log-test/test-request-meta))
+      (peridot/header "X-Forwarded-For" "192.168.50.1")
       (peridot/content-type "application/json; charset=utf-8"))))
 
 (defn rest-kutsu
