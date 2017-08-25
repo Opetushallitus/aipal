@@ -93,7 +93,7 @@
   [kyselypohja]
   (let [luotu-kyselypohja (sql/insert taulut/kyselypohja
                       (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))))]
-    (auditlog/kyselypohja-luonti! (:nimi_fi kyselypohja))
+    (auditlog/kyselypohja-luonti! (:kyselypohjaid luotu-kyselypohja) (:nimi_fi kyselypohja))
     (tallenna-kyselypohjan-kysymysryhmat! (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
 

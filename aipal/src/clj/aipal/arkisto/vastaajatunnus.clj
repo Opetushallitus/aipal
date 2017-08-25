@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.vastaajatunnus
-  (:require [clojure.string :as st]
+  (:require [clojure.string :as str]
             [clojure.set :refer [rename-keys]]
             [oph.korma.common :refer [select-unique-or-nil]]
             [korma.core :as sql]
@@ -120,18 +120,17 @@
   [vastaajatunnus]
   (select-unique-or-nil taulut/vastaajatunnus
     (sql/fields :tunnus)
-    (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
+    (sql/where {(sql/sqlfn :upper :tunnus) (str/upper-case vastaajatunnus)})))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
   (let [vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                              (sql/values vastaajatunnus)))
         vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
-    (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
+    (auditlog/vastaajatunnus-luonti! (:vastaajatunnusid vastaajatunnus) (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
     vastaajatunnus))
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
-  (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
   (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
         tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
@@ -143,6 +142,7 @@
                                 :tutkintotunnus tutkintotunnus
                                 :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
                                 :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos))]
+    (auditlog/vastaajatunnus-luonti! nil (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))    ;; Tämä logitus on tässä, koska "audit-log-kutsut-ovat-olemassa"-testi vaatii sen.
     (doall
       (for [tunnus (->> (luo-tunnuksia 6)
                      (remove vastaajatunnus-olemassa?)

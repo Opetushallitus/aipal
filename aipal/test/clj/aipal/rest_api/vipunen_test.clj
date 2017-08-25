@@ -36,8 +36,7 @@
   (let [peridot (session)
         response (hae-vastaus-valtakunnallinen peridot "2016-02-07" "2016-03-05")
         response2 (hae-vastaus-valtakunnallinen peridot "2016-02-06" "2016-03-05")
-        ei-vastauksia (hae-vastaus-valtakunnallinen peridot "2011-02-07"
-                                    "2016-02-03")
+        ei-vastauksia (hae-vastaus-valtakunnallinen peridot "2011-02-07" "2016-02-03")
         vastauksia (hae-vastaus-valtakunnallinen peridot "2016-01-01" "2016-02-04")
         vastauksia2 (hae-vastaus-valtakunnallinen peridot "2016-02-04" "2016-02-04")]
 

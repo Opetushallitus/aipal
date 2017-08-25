@@ -33,6 +33,7 @@
                  [org.clojure/core.cache "0.6.4"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
+                 [org.flatland/useful "0.11.5"]
                  [org.slf4j/slf4j-api "1.7.16"]
                  [peridot "0.4.3"]
                  [prismatic/schema "1.0.5"]
@@ -56,7 +57,7 @@
   :source-paths ["src/clj" "clojure-utils/src/clj"]
   :java-source-paths ["src/java"]
   :javac-options ["-target" "1.7" "-source" "1.7"]
-  :test-paths ["test/clj"]
+  :test-paths ["test/clj" "clojure-utils/test/clj"]
   :test-selectors {:default  (complement (some-fn :integraatio :performance))
                    :integraatio (complement (some-fn :performance))
                    :performance :performance}

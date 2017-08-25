@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
             [clojure-csv.core :refer [write-csv]]
             [aipal.rest-api.i18n :as i18n]
-            [clj-time.core :as t]
+            [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
             [aipal.toimiala.raportti.taustakysymykset :refer [kysymysten-jarjestys-vertailu]]))
@@ -286,14 +286,12 @@
       (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))))
 
 (defn valtakunnallinen-raportti-vertailujakso [vertailujakso_alkupvm vertailujakso_loppupvm]
-  (let [alkupvm (parse-iso-date vertailujakso_alkupvm)
-        loppupvm (or (parse-iso-date vertailujakso_loppupvm) (t/today))
-        vertailupvm (->
-                      loppupvm
-                      (t/minus (t/years 1))
-                      (t/plus (t/days 1)))]
-    (if (and alkupvm (<= (.compareTo alkupvm vertailupvm) 0))
-      {:vertailujakso_alkupvm vertailujakso_alkupvm
-       :vertailujakso_loppupvm vertailujakso_loppupvm}
-      {:vertailujakso_alkupvm (and alkupvm (.toString vertailupvm))
-       :vertailujakso_loppupvm vertailujakso_loppupvm})))
+  (let [vertailupvm (->
+                      (or (parse-iso-date vertailujakso_loppupvm) (time/today))
+                      (time/minus (time/years 1))
+                      (time/plus (time/days 1)))]
+    {:vertailujakso_alkupvm (when-let [alkupvm (parse-iso-date vertailujakso_alkupvm)]
+                              (if (<= (.compareTo alkupvm vertailupvm) 0)
+                                vertailujakso_alkupvm
+                                (.toString vertailupvm)))
+     :vertailujakso_loppupvm vertailujakso_loppupvm}))

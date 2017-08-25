@@ -68,7 +68,7 @@ ORDER BY kyselykerta.kyselykertaid ASC")
                         (assoc
                           (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
                           :kyselyid kyselyid)))]
-    (auditlog/kyselykerta-luonti! kyselyid (:nimi kyselykerta-data))
+    (auditlog/kyselykerta-luonti! (:kyselykertaid kyselykerta) kyselyid (:nimi kyselykerta-data))
     kyselykerta))
 
 (defn hae-yksi
