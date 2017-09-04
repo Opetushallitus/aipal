@@ -14,7 +14,9 @@
 
 (ns aipal.asetukset
   (:require
+    [clojure.java.io :as io]
     [schema.core :as s]
+    [clj-time.local :as time-local]
     [oph.common.infra.asetukset :refer [lue-asetukset]]))
 
 (def asetukset (promise))
@@ -60,9 +62,9 @@
 
 (def oletusasetukset
   {:server {:port 8082
-            :base-url ""}
+            :base-url "http://localhost"}
    :db {:host "127.0.0.1"
-        :port 3456
+        :port 5432
         :name "arvo_db"
         :user "aipal_user"
         :password "aipal"
@@ -90,6 +92,15 @@
              :koulutustoimijoiden-tutkinnot "0 0 5 * * ?"
              :raportointi "0 30 5 * * ?"
              :tutkinnot "0 0 2 * * ?"}})
+
+(def common-audit-log-asetukset {:boot-time        (time-local/local-now)
+                                 :hostname         "localhost"
+                                 :service-name     "aipal"
+                                 :application-type "virkailija"})
+
+(def build-id (delay (if-let [resource (io/resource "build-id.txt")]
+                       (.trim (slurp resource :encoding "UTF-8"))
+                       "dev")))
 
 (defn kehitysmoodi?
   [asetukset]

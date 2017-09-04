@@ -38,12 +38,12 @@
 
 (defn hae-oikeudet
   ([oid]
-    (db/transaction
-      (let [kayttaja (kayttaja-arkisto/hae oid)
-            roolit (hae-roolit oid)]
-        (assoc kayttaja :roolit roolit))))
+   (db/transaction
+     (let [kayttaja (kayttaja-arkisto/hae oid)
+           roolit (hae-roolit oid)]
+       (assoc kayttaja :roolit roolit))))
   ([]
-    (hae-oikeudet (:oid *kayttaja*))))
+   (hae-oikeudet (:oid *kayttaja*))))
 
 (defn hae-rooli [rooli kayttaja organisaatio]
   (select-unique-or-nil taulut/rooli_organisaatio

@@ -39,5 +39,14 @@
 (defn poista!
   "Poistaa tiedotteen."
   []
-  (auditlog/tiedote-operaatio! :poisto)
+  (auditlog/tiedote-operaatio! nil :poisto)
   (sql/delete taulut/tiedote))
+
+(defn poista-ja-lisaa!
+  "Poistaa vanhan tiedotteen ja lisää uuden."
+  [tiedote-data]
+  (poista!)
+  (let [tiedote (sql/insert taulut/tiedote
+                  (sql/values {:teksti_fi (:fi tiedote-data)
+                               :teksti_sv (:sv tiedote-data)}))]
+    (auditlog/tiedote-operaatio! (:tiedoteid tiedote) :lisays)))

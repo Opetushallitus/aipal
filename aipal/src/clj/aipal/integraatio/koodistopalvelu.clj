@@ -22,6 +22,13 @@
            [clojure.tools.logging :as log]
            [korma.db :as db]))
 
+
+;  "koulutusalaoph2002"
+(def ^:private koulutusala-koodisto "isced2011koulutusalataso1")
+
+; "opintoalaoph2002"
+(def ^:private opintoala-koodisto "isced2011koulutusalataso2")
+
 ;; Tässä nimiavaruudessa viitataan "koodi"-sanalla koodistopalvelun palauttamaan tietorakenteeseen.
 ;; Jos koodi on muutettu Aipalin käyttämään muotoon, siihen viitataan ko. käsitteen nimellä, esim. "osatutkinto".
 
@@ -67,11 +74,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn ^:private opintoala-koodi?
   [koodi]
-  ((kuuluu-koodistoon "opintoalaoph2002") koodi))
+  ((kuuluu-koodistoon opintoala-koodisto) koodi))
 
 (defn ^:private koulutusala-koodi?
   [koodi]
-  ((kuuluu-koodistoon "koulutusalaoph2002") koodi))
+  ((kuuluu-koodistoon koulutusala-koodisto) koodi))
 
 (defn ^:private tyyppikoodi?
   [koodi]
@@ -113,13 +120,13 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn hae-koulutusalat
   [asetukset]
-  (->> (hae-koodit asetukset "koulutusalaoph2002")
+  (->> (hae-koodit asetukset koulutusala-koodisto)
     (map koodi->koulutusala)
     (map #(dissoc % :kuvaus_fi :kuvaus_sv :kuvaus_en))))
 
 (defn hae-opintoalat
   [asetukset]
-  (->> (hae-koodit asetukset "opintoalaoph2002")
+  (->> (hae-koodit asetukset opintoala-koodisto)
     (map koodi->opintoala)
     (map (partial lisaa-opintoalaan-koulutusala asetukset))
     (map #(dissoc % :kuvaus_fi :kuvaus_sv :kuvaus_en))))
@@ -241,8 +248,11 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   (doseq [tutkinto tutkinnot
           :let [tunnus (:tutkintotunnus tutkinto)
                 tutkinto (dissoc tutkinto :tutkintotunnus)]]
-    (log/info "Päivitetään tutkinto " tunnus ", muutokset: " tutkinto)
-    (tutkinto-arkisto/paivita! tunnus tutkinto)))
+    (if (nil? (:opintoala tutkinto))
+      (log/info "Tutkinto " tunnus ", ei opintoalaa. Päivitystä ei tehty.")
+      (do 
+        (log/info "Päivitetään tutkinto " tunnus ", muutokset: " tutkinto)
+        (tutkinto-arkisto/paivita! tunnus tutkinto)))))
 
 (defn ^:integration-api tallenna-tutkinnot! [tutkinnot]
   (let [uudet (for [[tunnus tutkinto] tutkinnot

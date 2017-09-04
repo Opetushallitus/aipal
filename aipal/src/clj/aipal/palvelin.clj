@@ -18,6 +18,7 @@
             [clojure.pprint :refer [pprint]]
             [clojure.tools.logging :as log]
             [clojure.java.io :as io]
+            [clojure.string :as str]
             [compojure.core :as c]
             [org.httpkit.server :as hs]
             [ring.util.request :refer [path-info]]
@@ -40,12 +41,13 @@
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.anon-auth :as anon-auth]
 
+            [oph.common.infra.common-audit-log :refer [req-metadata-saver-wrapper konfiguroi-common-audit-lokitus]]
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
             [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.common :refer [luo-db]]
 
-            [aipal.asetukset :refer [asetukset oletusasetukset hae-asetukset kehitysmoodi?] :rename {asetukset asetukset-promise}]
-            [aipal.reitit :refer [build-id]]
+            [aipal.asetukset :refer [asetukset oletusasetukset common-audit-log-asetukset hae-asetukset build-id kehitysmoodi? service-path] :rename {asetukset asetukset-promise}]
+            aipal.reitit
             [aipal.infra.kayttaja.middleware :refer [wrap-kayttaja]]
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.infra.eraajo :as eraajo]
@@ -65,13 +67,8 @@
       (.endsWith base-url "/") base-url
       :else (str base-url "/"))))
 
-(defn service-path [base-url]
-  (let [path (drop 3 (clojure.string/split base-url #"/"))]
-    (str "/" (clojure.string/join "/" path))))
-
 (defn ajax-request? [request]
   (get-in request [:headers "angular-ajax-request"]))
-
 
 (defn auth-removeticket
   [handler asetukset]
@@ -153,12 +150,18 @@
 (defn app
   "Ring-wrapperit ja compojure-reitit ilman HTTP-palvelinta"
   [asetukset]
-  (json-gen/add-encoder org.joda.time.LocalDate
-              (fn [c json-generator]
-                (.writeString json-generator (.toString c "yyyy-MM-dd"))))
+
+  (let [hostname (-> asetukset :server :base-url java.net.URL. .getHost)
+        audit-asetukset (assoc common-audit-log-asetukset :hostname hostname)]
+    (konfiguroi-common-audit-lokitus audit-asetukset))
+
   (json-gen/add-encoder org.joda.time.DateTime
-      (fn [c json-generator]
-        (.writeString json-generator (.toString c))))
+                        (fn [c json-generator]
+                          (.writeString json-generator (.toString c))))
+  (json-gen/add-encoder org.joda.time.LocalDate
+                        (fn [c json-generator]
+                          (.writeString json-generator (.toString c "yyyy-MM-dd"))))
+
   (let [session-store (memory-store)]
     (-> (aipal.reitit/reitit asetukset)
       wrap-internal-forbidden
@@ -170,11 +173,12 @@
 
       (auth-middleware asetukset)
       log-request-wrapper
+      req-metadata-saver-wrapper   ;; Huom: Tämän oltava "auth-middleware":n jälkeen
 
       (wrap-frame-options :deny)
       (wrap-session {:store session-store
                      :cookie-attrs {:http-only true
-                                    :path (service-path(get-in asetukset [:server :base-url]))
+                                    :path (service-path (get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
       (wrap-cas-single-sign-out session-store)
       wrap-kayttooikeudet-forbidden

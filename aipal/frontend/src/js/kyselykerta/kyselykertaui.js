@@ -149,8 +149,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         $scope.kyselykerta = {};
       }
 
-
-
       $scope.getVastaustenLkm = function(rahoitusmuotoid){
         if(!rahoitusmuotoid) {
           return _($scope.tunnukset).map('vastausten_lkm').reduce(function (sum, num) {return sum + num;});

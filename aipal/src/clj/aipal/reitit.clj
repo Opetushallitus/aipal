@@ -1,6 +1,5 @@
 (ns aipal.reitit
   (:require [clojure.pprint :refer [pprint]]
-            [clojure.java.io :as io]
 
             [cheshire.core :as cheshire]
             [compojure.api.exception :as ex]
@@ -9,7 +8,7 @@
             [stencil.core :as s]
 
             [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
-            [aipal.asetukset :refer [service-path]]
+            [aipal.asetukset :refer [service-path build-id]]
             [aipal.basic-auth :refer [wrap-basic-authentication]]
             aipal.rest-api.i18n
             aipal.rest-api.kieli
@@ -37,9 +36,6 @@
 
             [oph.common.infra.status :refer [status]]))
 
-(def build-id (delay (if-let [resource (io/resource "build-id.txt")]
-                       (.trim (slurp resource :encoding "UTF-8"))
-                       "dev")))
 
 (defn reitit [asetukset]
   (api

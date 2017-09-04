@@ -69,7 +69,7 @@ ORDER BY kyselykerta.kyselykertaid ASC")
                         (assoc
                           (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
                           :kyselyid kyselyid)))]
-    (auditlog/kyselykerta-luonti! kyselyid (:nimi kyselykerta-data))
+    (auditlog/kyselykerta-luonti! (:kyselykertaid kyselykerta) kyselyid (:nimi kyselykerta-data))
     kyselykerta))
 
 ;avop.fi
@@ -80,8 +80,8 @@ ORDER BY kyselykerta.kyselykertaid ASC")
                      (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
                      (sql/join :inner :oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
                      (sql/fields :kyselykerta.kyselykertaid)
-                     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false
-                                 }))))
+                     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false}))))
+
 ;end avop.fi
 
 (defn hae-yksi

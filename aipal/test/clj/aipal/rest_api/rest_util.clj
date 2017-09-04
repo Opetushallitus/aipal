@@ -3,6 +3,7 @@
             [clj-time.core :as time]
             [cheshire.core :as cheshire]
             [oph.common.infra.i18n :as i18n]
+            [oph.common.infra.common-audit-log-test :as common-audit-log-test]
             [aipal.palvelin :as palvelin]
             [aipal.asetukset :refer [hae-asetukset oletusasetukset]]
             [aipal.integraatio.sql.korma :as korma]
@@ -32,25 +33,30 @@
                     :params params)))
 
 (defn mock-request-salaisuus
-  ([app url method auth-header params body]
+  ([app url method auth-header params body
     (peridot/request app url
                     :request-method method
                     :headers {:Authorization auth-header}
                     :content-type "application/json"
                     :body (cheshire/generate-string body)
-                    :params params)))
+                    :params params)]))
 
 (defn session []
   (let [asetukset (-> oletusasetukset
                     (assoc-in [:cas-auth-server :enabled] false)
+                    (assoc-in [:server :base-url] "http://localhost:8080")
                     (assoc :development-mode true
                            :basic-auth {:tunnus "tunnus"
                                         :salasana "salasana"}))]
     (alusta-korma! asetukset)
-    (-> (peridot/session (palvelin/app asetukset)
-                         :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}}})
+    (-> (palvelin/app asetukset)
+      (peridot/session :cookie-jar {"localhost" {"XSRF-TOKEN" {:raw "XSRF-TOKEN=token", :domain "localhost", :path "/", :value "token"}
+                                                 "ring-session" {:raw (str "ring-session=" (:session common-audit-log-test/test-request-meta)), :domain "localhost", :path "/", :value (:session common-audit-log-test/test-request-meta)}}})
+
       (peridot/header "uid" testikayttaja-uid)
       (peridot/header "x-xsrf-token" "token")
+      (peridot/header "user-agent" (:user-agent common-audit-log-test/test-request-meta))
+      (peridot/header "X-Forwarded-For" "192.168.50.1")
       (peridot/content-type "application/json; charset=utf-8"))))
 
 ;;TODO : Remove xsrf-token from here
@@ -79,6 +85,3 @@ lopuksi. Soveltuuyksinkertaisiin testitapauksiin."
   (if (string? (:body response))
     (cheshire/parse-string (:body response) true)
     (cheshire/parse-string (slurp (:body response) :encoding "UTF-8") true)))
-
-(defn generate-escaped-json-string [form]
-  (cheshire/generate-string form {:escape-non-ascii true}))

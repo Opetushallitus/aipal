@@ -13,9 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.vastaajatunnus
-  (:import [java.sql SQLException])
-  (:require [clojure.string :as st]
-            [clojure.java.jdbc :as jdbc]
+  (:require [clojure.string :as str]
             [clojure.core.match :refer [match]]
             [oph.common.util.util :refer [select-and-rename-keys]]
             [oph.korma.common :refer [select-unique-or-nil]]
@@ -136,7 +134,7 @@
   [vastaajatunnus]
   (select-unique-or-nil taulut/vastaajatunnus
     (sql/fields :tunnus)
-    (sql/where {(sql/sqlfn :upper :tunnus) (clojure.string/upper-case vastaajatunnus)})))
+    (sql/where {(sql/sqlfn :upper :tunnus) (str/upper-case vastaajatunnus)})))
 
 (def ^:private common-and-legacy-props [:kyselykertaid
                                         :tunnus
@@ -155,12 +153,12 @@
                                         :koulutusmuoto])
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
-    (log/info (format "Storing: %s" vastaajatunnus)) 
+    (log/info (format "Storing: %s" vastaajatunnus))
     (let [tallennettava-tunnus (select-keys vastaajatunnus common-and-legacy-props)
           vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
                                (sql/values tallennettava-tunnus)))
           vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
-      (auditlog/vastaajatunnus-luonti! (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
+      (auditlog/vastaajatunnus-luonti! (:vastaajatunnusid vastaajatunnus) (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
       vastaajatunnus))
 
 (defn ^:private tallenna-tiedot! [entry]

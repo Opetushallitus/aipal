@@ -246,6 +246,7 @@
                        (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
                        alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi rahoitusmuoto suorituskieli)
        kysymykset (hae-valtakunnalliset-kysymykset)
+       ;; Suurin osa ajasta kuluu raportti-queryssa
        data (raportti-query rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat oppilaitokset koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi rahoitusmuoto suorituskieli)
        raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
    (merge

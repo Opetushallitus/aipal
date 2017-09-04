@@ -79,9 +79,9 @@
   (try
     (sql/delete taulut/koulutustoimija
       (sql/where (and (sql/sqlfn "not exists" (sql/subselect taulut/oppilaitos
-                                              (sql/where {:oppilaitos.koulutustoimija :koulutustoimija.ytunnus})))
+                                               (sql/where {:oppilaitos.koulutustoimija :koulutustoimija.ytunnus})))
                       (sql/sqlfn "not exists" (sql/subselect taulut/rooli_organisaatio
-                                              (sql/where {:rooli_organisaatio.organisaatio :koulutustoimija.ytunnus})))
+                                               (sql/where {:rooli_organisaatio.organisaatio :koulutustoimija.ytunnus})))
                       {:koulutustoimija.ytunnus [not= (:ytunnus oph-koulutustoimija)]})))
     (catch Exception e
       (log/error "Koulutustoimijoiden poisto epäonnistui:" (.getMessage e))))) ;; Ei poisteta ylläpitäjä-käyttäjän koulutustoimijaa

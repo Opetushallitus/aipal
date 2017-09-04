@@ -50,17 +50,17 @@
 
 (defn hae-kyselypohjat
   ([organisaatio vain-voimassaolevat]
-    (-> (sql/select* :kyselypohja)
-      (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
-      (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.nimi_en :kyselypohja.valtakunnallinen :kyselypohja.tila
-                  [:kyselypohja.kaytettavissa :voimassa])
-      (rajaa-kayttajalle-sallittuihin-kyselypohjiin :kyselypohja.kyselypohjaid organisaatio)
-      (cond->
-        vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
-      (sql/order :muutettuaika :desc)
-      sql/exec))
+   (-> (sql/select* :kyselypohja)
+     (sql/join :inner :kyselypohja_organisaatio_view {:kyselypohja_organisaatio_view.kyselypohjaid :kyselypohja.kyselypohjaid})
+     (sql/fields :kyselypohja.kyselypohjaid :kyselypohja.nimi_fi :kyselypohja.nimi_sv :kyselypohja.nimi_en :kyselypohja.valtakunnallinen :kyselypohja.tila
+                 [:kyselypohja.kaytettavissa :voimassa])
+     (rajaa-kayttajalle-sallittuihin-kyselypohjiin :kyselypohja.kyselypohjaid organisaatio)
+     (cond->
+       vain-voimassaolevat (sql/where {:kyselypohja.kaytettavissa true}))
+     (sql/order :muutettuaika :desc)
+     sql/exec))
   ([organisaatio]
-    (hae-kyselypohjat organisaatio false)))
+   (hae-kyselypohjat organisaatio false)))
 
 (defn hae-kyselypohja
   [kyselypohjaid]
@@ -92,8 +92,8 @@
 (defn luo-kyselypohja!
   [kyselypohja]
   (let [luotu-kyselypohja (sql/insert taulut/kyselypohja
-                      (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))))]
-    (auditlog/kyselypohja-luonti! (:nimi_fi kyselypohja))
+                           (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))))]
+    (auditlog/kyselypohja-luonti! (:kyselypohjaid luotu-kyselypohja) (:nimi_fi kyselypohja))
     (tallenna-kyselypohjan-kysymysryhmat! (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
 

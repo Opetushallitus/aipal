@@ -69,8 +69,8 @@
 (defn aseta-oikeudet-sovelluskayttajalle
   [username]
   (jdbc-do
-    (str "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO " username )
-    (str "GRANT SELECT, USAGE ON ALL SEQUENCES IN SCHEMA public TO " username )))
+    (str "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO " username)
+    (str "GRANT SELECT, USAGE ON ALL SEQUENCES IN SCHEMA public TO " username)))
 
 (defn parse-uri
   "Parsitaan mappiin Postgren JDBC-URL.
@@ -84,8 +84,8 @@
      {:user user
       :passwd passwd
       :uri uri
-      :postgre-uri (str "jdbc:" prefix "//" postfix)
-      }))
+      :postgre-uri (str "jdbc:" prefix "//" postfix)}))
+
 
 (defn create-datasource!
   "Palauttaa Flyway DataSourcen, jota voidaan käyttää myös JDBC:n kanssa"

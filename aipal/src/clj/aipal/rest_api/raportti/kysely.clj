@@ -68,7 +68,7 @@
 (defn ^:private muodosta-raportit-parametreilla [kyselyid parametrit]
   (if (empty? (:tutkinnot parametrit))
     (let [raportti (muodosta-kyselyn-raportti-parametreilla kyselyid parametrit)
-          valtakunnallinen-raportti (some-> (muodosta-valtakunnallinen-vertailuraportti kyselyid parametrit)
+          valtakunnallinen-raportti (some-> (muodosta-valtakunnallinen-vertailuraportti kyselyid parametrit)    ;; Suurin osa ajasta kuluu täällä
                                       (lisaa-raporttiin-nimi)
                                       (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti)
                                       (taustakysymykset/valitse-kyselyn-taustakysymykset raportti))]
