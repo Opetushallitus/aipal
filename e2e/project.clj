@@ -24,7 +24,8 @@
                  [org.seleniumhq.selenium/selenium-server "2.52.0"]
                  [org.seleniumhq.selenium/selenium-remote-driver "2.52.0"]
                  [com.paulhammant/ngwebdriver "0.9.1" :exclusions [org.seleniumhq.selenium/selenium-java]]
-                 [com.jolbox/bonecp "0.8.0.RELEASE"]]
+                 [com.jolbox/bonecp "0.8.0.RELEASE"]
+                 [org.flatland/useful "0.11.5"]]
   :plugins [[test2junit "1.0.1"]]
   :source-paths ["src/" "../aipal/clojure-utils/src/clj"]
 
