@@ -202,7 +202,6 @@
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
-  (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
   (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
         tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
         vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
