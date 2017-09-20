@@ -39,7 +39,8 @@
                               (fn [result k v] (conj result {:op (operaatio operaatiot) :path (name k) :value v}))
                               []
                               tiedot-map)}]
-    (common-audit-log/->audit-log-entry data)
+    (when (:session common-audit-log/*request-meta*)
+      (common-audit-log/->audit-log-entry data))
     ))
 
 (defn ^:private kirjoita!
