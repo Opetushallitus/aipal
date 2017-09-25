@@ -42,7 +42,7 @@
   [tunnus]
   ;; Vastaajatunnuksen voimassaolo tarkistetaan vastaajan luonnissa jotta tunnusten lukitseminen estää
   ;; uusien vastausten tallentamisen vaikka sivun olisi aiemmin jättänyt auki selaimeen
-  (when (vastaajatunnus-voimassa? tunnus)
+  (when (validoi-vastaajatunnus tunnus)
     (let [vastaajatunnus (first (sql/select :vastaajatunnus
                                   (vastaajatunnus-where tunnus)))]
       (sql/insert :vastaaja
