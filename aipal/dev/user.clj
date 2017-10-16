@@ -66,6 +66,12 @@
   (require 'aipal.palvelin)
   (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) (repl-asetukset))))
 
+(defn ^:private start! []
+  {:pre [(not @palvelin)]
+   :post [@palvelin]}
+  (require 'aipal.palvelin)
+  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) (repl-asetukset))))
+
 (defn ^:private sammuta! []
   {:pre [@palvelin]
    :post [(not @palvelin)]}

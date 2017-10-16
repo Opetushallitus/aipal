@@ -181,8 +181,8 @@
                                     :path (service-path (get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
       (wrap-cas-single-sign-out session-store)
-      wrap-kayttooikeudet-forbidden
-      wrap-poikkeusten-logitus)))
+      wrap-kayttooikeudet-forbidden)))
+
 
 (defn ^:integration-api kaynnista-eraajon-ajastimet! [asetukset]
   (let [kop (kop/tee-kayttooikeuspalvelu (:ldap-auth-server asetukset))]

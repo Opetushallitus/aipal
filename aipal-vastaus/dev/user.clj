@@ -49,6 +49,16 @@
                     (assoc @(ns-resolve 'aipalvastaus.asetukset 'oletusasetukset)
                            :development-mode true))))
 
+(defn start! []
+  (require 'aipalvastaus.palvelin)
+  (reset! palvelin ((ns-resolve 'aipalvastaus.palvelin 'kaynnista!)
+                    (assoc @(ns-resolve 'aipalvastaus.asetukset 'oletusasetukset)
+                           :development-mode true))))
+
+(defn stop! []
+  ((ns-resolve 'aipalvastaus.palvelin 'sammuta) @palvelin)
+  (reset! palvelin nil))
+
 (defn ^:private sammuta! []
   {:pre [@palvelin]
    :post [(not @palvelin)]}

@@ -25,16 +25,8 @@
                         :kysymys_en
                         :max_vastaus
                         :monivalinta_max
+                        :rajoite
                         :jarjestys]))
-
-(defn valitse-jatkokysymyksen-kentat [jatkokysymys]
-  (select-keys jatkokysymys [:kylla_teksti_fi
-                             :kylla_teksti_sv
-                             :kylla_teksti_en
-                             :ei_teksti_fi
-                             :ei_teksti_sv
-                             :ei_teksti_en
-                             :max_vastaus]))
 
 (defn valitse-vaihtoehdon-kentat [vaihtoehto]
   (select-keys vaihtoehto [:jarjestys
@@ -42,10 +34,25 @@
                            :teksti_sv
                            :teksti_en]))
 
-(defn muodosta-jatkokysymys [kysymys]
+(def kysymys-fields [:kysymysryhmaid :kysymys_fi :kysymys_sv :kysymys_en :jarjestys :monivalinta_max :max_vastaus, :eos_vastaus_sallittu :vastaustyyppi :jatkokysymys :pakollinen :poistettava :rajoite])
+(def kysymys-defaults (zipmap kysymys-fields (repeat nil)))
+
+(def jatkokysymys-defaults {:vastaustyyppi "vapaateksti"
+                            :pakollinen false
+                            :jatkokysymys true
+                            :poistettava false
+                            :rajoite nil})
+
+(defn muodosta-jatkokysymykset [kysymys kysymysryhmaid]
   (when (and (= "kylla_ei_valinta" (:vastaustyyppi kysymys))
-             (:jatkokysymys kysymys))
-    (valitse-jatkokysymyksen-kentat (:jatkokysymys kysymys))))
+             (:jatkokysymykset kysymys))
+    (let [merge-kys (fn [jk] (assoc (second jk)
+                               :vastaus (name (first jk))
+                               :kysymysryhmaid kysymysryhmaid))]
+         (->> (:jatkokysymykset kysymys)
+              (map merge-kys)
+              (map #(merge jatkokysymys-defaults %))
+              (map #(merge kysymys-defaults %))))))
 
 (defn lisaa-monivalintavaihtoehdot! [vaihtoehdot kysymysid]
   (when (nil? vaihtoehdot)
@@ -58,17 +65,17 @@
 
 (defn lisaa-kysymys! [kysymys kysymysryhmaid]
   (assert (not= (:vastaustyyppi kysymys) "asteikko"))
-  (let [jatkokysymysid (some-> kysymys
-                         muodosta-jatkokysymys
-                         arkisto/lisaa-jatkokysymys!
-                         :jatkokysymysid)
-        kysymysid (-> kysymys
+  (let [kysymysid (-> kysymys
                     valitse-kysymyksen-kentat
                     korjaa-eos-vastaus-sallittu
-                    (assoc :kysymysryhmaid kysymysryhmaid
-                           :jatkokysymysid jatkokysymysid)
+                    (assoc :kysymysryhmaid kysymysryhmaid)
                     arkisto/lisaa-kysymys!
-                    :kysymysid)]
+                    :kysymysid)
+        jatkokysymykset (muodosta-jatkokysymykset kysymys kysymysryhmaid)]
+    (doseq [jatkokysymys jatkokysymykset]
+      (let [jatkokysymysid (:kysymysid (arkisto/lisaa-kysymys! (select-keys jatkokysymys kysymys-fields)))]
+        (arkisto/liita-jatkokysymys! kysymysid, jatkokysymysid, (:vastaus jatkokysymys))))
+
     (when (= "monivalinta" (:vastaustyyppi kysymys))
       (lisaa-monivalintavaihtoehdot! (:monivalintavaihtoehdot kysymys) kysymysid))))
 
@@ -105,13 +112,12 @@
                                                           :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
                                                           :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)}))]
     (lisaa-kysymykset-kysymysryhmaan! kysymykset (:kysymysryhmaid kysymysryhma))
-    kysymysryhma))
+    (doall kysymysryhma)))
 
 (defn poista-kysymys! [kysymys]
   (when (= "monivalinta" (:vastaustyyppi kysymys))
     (arkisto/poista-kysymyksen-monivalintavaihtoehdot! (:kysymysid kysymys)))
-  (when (:jatkokysymysid kysymys)
-    (arkisto/poista-jatkokysymys! (:jatkokysymysid kysymys)))
+  (arkisto/poista-jatkokysymys! (:kysymysid kysymys))
   (arkisto/poista-kysymys! (:kysymysid kysymys)))
 
 (defn poista-kysymysryhman-kysymykset! [kysymysryhmaid]
@@ -188,7 +194,7 @@
   (GET "/:kysymysryhmaid" []
     :path-params [kysymysryhmaid :- s/Int]
     :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
-    (response-or-404 (arkisto/hae kysymysryhmaid)))
+    (response-or-404 (arkisto/hae2 kysymysryhmaid)))
 
   ;; Muuten sama kuin ylläoleva, mutta haettaessa vuoden 2015 taustakysymysryhmiä yhdistää hakeutumis- ja suoritusvaiheen kysymysryhmät
   (GET "/taustakysymysryhma/:kysymysryhmaid" []

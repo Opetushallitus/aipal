@@ -3,31 +3,41 @@
 
     <div class="checkbox">
         <label>
-            <input type="checkbox" ng-model="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys"> {{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}
+            <input type="checkbox" ng-model="aktiivinenKysymys.jatkokysymykset.kylla.jatkokysymys"> {{i18n.kysymys.jatkokysymys_kylla_vastaukselle}}
         </label>
     </div>
-    <div ng-if="aktiivinenKysymys.jatkokysymys.kylla_jatkokysymys">
-      <div class="panel well">
-          <kysymys-tekstit kysymys="aktiivinenKysymys.jatkokysymys" kentta="kylla_teksti"></kysymys-tekstit>
 
-            <strong>{{i18n.kysymys.naytettava_asteikko}}</strong><br />
-            {{i18n.kysymys.likert_asteikko_valinnat}}
+    <div ng-if="aktiivinenKysymys.jatkokysymykset.kylla.jatkokysymys">
+        <div class="panel well">
+            <kysymys-tekstit kysymys="aktiivinenKysymys.jatkokysymykset.kylla" kentta="kysymys"></kysymys-tekstit>
+
+            <label>{{i18n.kysymys.vastauksen_maksimipituus}}
+                <select ng-model="aktiivinenKysymys.jatkokysymykset.kylla.max_vastaus"
+                        ng-options="max for max in vapaateksti_maksimit" class="form-control" ng-show="vapaateksti_maksimit.length > 0">
+                </select>
+            </label>
+            <label>{{i18n.kysymys.vapaateksti.rajoite.otsikko}}
+                <select ng-model="aktiivinenKysymys.jatkokysymykset.kylla.rajoite" class="form-control" ng-options="'kysymys.vapaateksti.rajoite.' + rajoite | i18n for rajoite in vapaateksti_rajoitteet">
+            </label>
         </div>
     </div>
 
     <div class="checkbox">
         <label>
-            <input type="checkbox" ng-model="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys"> {{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
+            <input type="checkbox" ng-model="aktiivinenKysymys.jatkokysymykset.ei.jatkokysymys"> {{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
         </label>
     </div>
-    <div ng-if="aktiivinenKysymys.jatkokysymys.ei_jatkokysymys">
+    <div ng-if="aktiivinenKysymys.jatkokysymykset.ei.jatkokysymys">
         <div class="panel well">
-            <kysymys-tekstit kysymys="aktiivinenKysymys.jatkokysymys" kentta="ei_teksti"></kysymys-tekstit>
+            <kysymys-tekstit kysymys="aktiivinenKysymys.jatkokysymykset.ei" kentta="kysymys"></kysymys-tekstit>
 
             <label>{{i18n.kysymys.vastauksen_maksimipituus}}
-                <select ng-model="aktiivinenKysymys.jatkokysymys.max_vastaus"
+                <select ng-model="aktiivinenKysymys.jatkokysymykset.ei.max_vastaus"
                         ng-options="max for max in vapaateksti_maksimit" class="form-control" ng-show="vapaateksti_maksimit.length > 0">
                 </select>
+            </label>
+            <label>{{i18n.kysymys.vapaateksti.rajoite.otsikko}}
+                <select ng-model="aktiivinenKysymys.jatkokysymykset.ei.rajoite" class="form-control" ng-options="'kysymys.vapaateksti.rajoite.' + rajoite | i18n for rajoite in vapaateksti_rajoitteet">
             </label>
         </div>
     </div>

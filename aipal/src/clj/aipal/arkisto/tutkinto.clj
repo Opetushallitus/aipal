@@ -78,19 +78,18 @@
                        (assoc koulutusala :opintoalat (sort-by :opintoalatunnus (map #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :opintoala_nimi_en :tutkinnot]) opintoalat))))]
     (sort-by :koulutusalatunnus koulutusalat)))
 
-(defn hae-tutkinnot
-  []
+(defn hae-tutkinnot []
   (let [tutkintotyypit (mapcat vals (sql/select taulut/oppilaitostyyppi_tutkintotyyppi
-                                   (sql/where {:oppilaitostyyppi (:oppilaitostyypit *kayttaja*)})
-                                   (sql/fields :tutkintotyyppi)))]
+                                      (sql/where {:oppilaitostyyppi (:oppilaitostyypit *kayttaja*)})
+                                      (sql/fields :tutkintotyyppi)))]
     (sql/select taulut/tutkinto
-    (sql/where {:tutkinto.tutkintotyyppi [in tutkintotyypit]})
-    (sql/join :inner taulut/opintoala (= :opintoala.opintoalatunnus :tutkinto.opintoala))
-    (sql/join :inner taulut/koulutusala (= :koulutusala.koulutusalatunnus :opintoala.koulutusala))
-    (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
-                :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm :tutkinto.siirtymaajan_loppupvm
-                :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv] [:opintoala.nimi_en :opintoala_nimi_en]
-                :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv] [:koulutusala.nimi_en :koulutusala_nimi_en]))))
+      (sql/where {:tutkinto.tutkintotyyppi [in tutkintotyypit]})
+      (sql/join :inner taulut/opintoala (= :opintoala.opintoalatunnus :tutkinto.opintoala))
+      (sql/join :inner taulut/koulutusala (= :koulutusala.koulutusalatunnus :opintoala.koulutusala))
+      (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
+                  :tutkinto.voimassa_alkupvm :tutkinto.voimassa_loppupvm :tutkinto.siirtymaajan_loppupvm
+                  :opintoala.opintoalatunnus [:opintoala.nimi_fi :opintoala_nimi_fi] [:opintoala.nimi_sv :opintoala_nimi_sv] [:opintoala.nimi_en :opintoala_nimi_en]
+                                             :koulutusala.koulutusalatunnus [:koulutusala.nimi_fi :koulutusala_nimi_fi] [:koulutusala.nimi_sv :koulutusala_nimi_sv] [:koulutusala.nimi_en :koulutusala_nimi_en]))))
 
 (defn hae-voimassaolevat-tutkinnot-listana []
   (->>

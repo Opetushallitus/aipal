@@ -14,7 +14,8 @@
 
 (ns aipalvastaus.sql.kyselykerta
   (:require [korma.core :as sql]
-            [aipalvastaus.sql.korma :refer [vastaajatunnus-where]]))
+            [aipalvastaus.sql.korma :refer [vastaajatunnus-where]]
+            [clojure.tools.logging :as log]))
 
 (defn hae-kysymysryhmat [tunnus]
   (sql/select :kysymysryhma
@@ -36,7 +37,7 @@
     (sql/join :inner :kysely_kysymys (= :kysely_kysymys.kysymysid :kysymys.kysymysid))
     (sql/join :inner :kyselykerta (= :kyselykerta.kyselyid :kysely_kysymys.kyselyid))
     (sql/join :inner :vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
-    (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
+    (sql/join :left :kysymys_jatkokysymys (= :kysymys_jatkokysymys.jatkokysymysid :kysymys.kysymysid))
     (sql/fields :kysymys.kysymysryhmaid
                 :kysymys.kysymysid
                 :kysymys.vastaustyyppi
@@ -47,16 +48,11 @@
                 :kysymys.kysymys_en
                 :kysymys.pakollinen
                 :kysymys.eos_vastaus_sallittu
-                :jatkokysymys.jatkokysymysid
-                :jatkokysymys.kylla_kysymys
-                :jatkokysymys.kylla_teksti_fi
-                :jatkokysymys.kylla_teksti_sv
-                :jatkokysymys.kylla_vastaustyyppi
-                :jatkokysymys.ei_kysymys
-                :jatkokysymys.ei_teksti_fi
-                :jatkokysymys.ei_teksti_sv
-                :jatkokysymys.ei_teksti_en
-                [:jatkokysymys.max_vastaus :ei_max_vastaus])
+                :kysymys.jatkokysymys
+                :kysymys.jarjestys
+                :kysymys.rajoite
+                [:kysymys_jatkokysymys.kysymysid :jatkokysymys_kysymysid]
+                [:kysymys_jatkokysymys.vastaus :jatkokysymys_vastaus])
     (vastaajatunnus-where tunnus)
     (sql/order :kysymys.jarjestys)))
 
@@ -104,11 +100,18 @@
     (for [kysymysryhma kysymysryhmat]
       (assoc kysymysryhma :kysymykset (kysymysryhmaid->kysymykset (kysymysryhma :kysymysryhmaid))))))
 
+(defn jarjestysnumero-jatkokysymykselle [kysymykset kysymys]
+  (if (:jatkokysymys kysymys)
+    (let [jatkokysymys_kysymys (first (filter #(= (:kysymysid %) (:jatkokysymys_kysymysid kysymys)) kysymykset))]
+      (assoc kysymys :jarjestys (+ (:jarjestys jatkokysymys_kysymys) 0.1)))
+    kysymys))
+
 (defn hae-kysymysryhmat-ja-kysymykset [tunnus]
   (let [kysymysryhmat (hae-kysymysryhmat tunnus)
         kysymykset (hae-kysymysryhmien-kysymykset tunnus)
+        jarjestetty (map #(jarjestysnumero-jatkokysymykselle kysymykset %) kysymykset)
         monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot tunnus)]
-    (yhdista-tietorakenteet kysymysryhmat kysymykset monivalintavaihtoehdot)))
+    (yhdista-tietorakenteet kysymysryhmat (sort-by :jarjestys jarjestetty) monivalintavaihtoehdot)))
 
 (defn hae-kysymykset [tunnus]
   (let [kysymykset (hae-kysymysryhmien-kysymykset tunnus)

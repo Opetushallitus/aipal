@@ -78,7 +78,7 @@
                       :user "uid=amkpal,ou=People,dc=opintopolku,dc=fi"
                       :password "salasana"
                       :ssl false}
-   :vastaus-base-url "http://192.168.50.1:8083"
+   :vastaus-base-url "http://127.0.0.1:8083"
    :avopfi-shared-secret "secret"
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}

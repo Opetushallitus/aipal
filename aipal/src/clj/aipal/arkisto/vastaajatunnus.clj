@@ -14,6 +14,8 @@
 
 (ns aipal.arkisto.vastaajatunnus
   (:require [clojure.string :as str]
+            [conman.core :as conman]
+            [clojure.set :refer [rename-keys]]
             [clojure.core.match :refer [match]]
             [oph.common.util.util :refer [select-and-rename-keys]]
             [oph.korma.common :refer [select-unique-or-nil]]
@@ -23,7 +25,8 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [aipal.auditlog :as auditlog]
-            [arvo.db.core :as vastaajatunnus]))
+            [arvo.db.core :refer [*db*] :as db]
+            [clojure.java.jdbc :as jdbc]))
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 
@@ -136,21 +139,29 @@
     (sql/fields :tunnus)
     (sql/where {(sql/sqlfn :upper :tunnus) (str/upper-case vastaajatunnus)})))
 
-(def ^:private common-and-legacy-props [:kyselykertaid
-                                        :tunnus
-                                        :voimassa_alkupvm
-                                        :voimassa_loppupvm
-                                        :vastaajien_lkm
-                                        :valmistavan_koulutuksen_jarjestaja
-                                        :valmistavan_koulutuksen_oppilaitos
-                                        :rahoitusmuotoid
-                                        :tutkintotunnus
-                                        ;duplicate data to old table for vipunen and reports, at least for now
-                                        :valmistavan_koulutuksen_toimipaikka
-                                        :kunta
-                                        :koulutusmuoto
-                                        :suorituskieli
-                                        :koulutusmuoto])
+(def common-props [:kyselykertaid
+                   :tunnus
+                   :voimassa_alkupvm
+                   :voimassa_loppupvm
+                   :vastaajien_lkm
+                   :valmistavan_koulutuksen_jarjestaja
+                   :valmistavan_koulutuksen_oppilaitos])
+
+
+(def legacy-props [:valmistavan_koulutuksen_toimipaikka :kunta :koulutusmuoto :suorituskieli :rahoitusmuotoid :tutkintotunnus])
+
+(def legacy-prop-map {:toimipaikka :valmistavan_koulutuksen_toimipaikka
+                      :tutkinto :tutkintotunnus
+                      :kieli :suorituskieli})
+
+(defn vastaajatunnus-base-data [vastaajatunnus tunnus]
+  (-> vastaajatunnus
+      (rename-keys legacy-prop-map)
+      (assoc :tunnus tunnus)
+      (select-keys (concat common-props legacy-props))))
+
+
+(def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
     (log/info (format "Storing: %s" vastaajatunnus))
@@ -165,33 +176,25 @@
   (-> (sql/insert taulut/vastaajatunnus_tiedot
                   (sql/values entry))))
 
-(defn palaute-fields [vastaajatunnus]
-  {:kieli (:suorituskieli vastaajatunnus)
-   :tutkinto (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
-   :koulutusmuoto (:koulutusmuoto vastaajatunnus)
-   :toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
-   :kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])})
-
-; These should be read through kyselytyyppi eventually
-(defn vastaajatunnus-fields [vastaajatunnus kyselytyyppi]
-  (match [kyselytyyppi]
-         [1] (palaute-fields vastaajatunnus)
-         [2] (select-keys vastaajatunnus [:haun_numero :henkilonumero])))
-
 (defn find-id [kentta kyselytyyppi-kentat]
+  (log/info "Find id: " kentta "FROM" kyselytyyppi-kentat)
   (:id (first (filter #(= kentta (:kentta_id %))kyselytyyppi-kentat))))
 
 (defn tieto-entries [vastaajatunnus-kentat kyselytyyppi-kentat vastaajatunnus-id]
+  (log/info "Vastaajatunnus-kentat: " vastaajatunnus-kentat)
+  (log/info "Kyselytyyppi-kentat: " kyselytyyppi-kentat)
+  (log/info "vastaajatunnus-id: " vastaajatunnus-id)
   (map #(into {} [[:vastaajatunnus_id vastaajatunnus-id]
                   [:kentta (find-id (name (first %)) kyselytyyppi-kentat)]
                   [:arvo (second %)]]) (seq vastaajatunnus-kentat)))
 
 (defn tallenna-vastaajatunnus-tiedot! [tunnus vastaajatunnus kyselytyyppi]
-  (let [kyselytyyppi-kentat (vastaajatunnus/kyselytyypin_kentat {:kyselytyyppi kyselytyyppi})
-        vastaajatunnus-kentat (vastaajatunnus-fields vastaajatunnus kyselytyyppi)
+  (let [kyselytyyppi-kentat (db/kyselytyypin_kentat {:kyselytyyppi kyselytyyppi})
+        vastaajatunnus-kentat (select-keys vastaajatunnus (map #(keyword (:kentta_id %)) kyselytyyppi-kentat))
         entries (->> (tieto-entries vastaajatunnus-kentat kyselytyyppi-kentat tunnus)
                     (filter :kentta)
-                    (filter :arvo))]
+                    (filter :arvo))
+        _ (log/info "Entries: " entries)]
     (run! #(tallenna-tiedot! %) entries)))
 
 
@@ -202,50 +205,25 @@
 
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
-  (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
-        tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
-        vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
-        valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
-        tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
-        valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
-        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
-        kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
-        vastaajatunnus (-> (if (:rahoitusmuotoid vastaajatunnus)
-                             vastaajatunnus
-                             (assoc vastaajatunnus :rahoitusmuotoid 5)))
-        vastaajatunnus (-> vastaajatunnus
-                         (assoc :vastaajien_lkm vastaajien-lkm
-                                :kunta kunta
-                                :tutkintotunnus tutkintotunnus
-                                :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
-                                :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
-                                :valmistavan_koulutuksen_toimipaikka valmistavan-koulutuksen-toimipaikka))]
+  (let [kyselytyyppi (:tyyppi (db/kyselykerran-tyyppi vastaajatunnus))]
     (doall
-      (for [tunnus (get-vastaajatunnukset tunnusten-lkm)]
-        (let [tallennettu-tunnus (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))]
+      (for [tunnus (get-vastaajatunnukset (:tunnusten-lkm vastaajatunnus))]
+        (let [tallennettu-tunnus (tallenna-vastaajatunnus! (vastaajatunnus-base-data vastaajatunnus tunnus))]
           (tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) vastaajatunnus kyselytyyppi)
           tallennettu-tunnus)))))
 
 
 ;;AVOP.FI FIXME: binding manually to INTEGRAATIO user (check if that is right)
 (defn lisaa-avopfi! [vastaajatunnus]
-  ;;FIXME korjaa integraatio-testin, mutta rikkoo muuten: (auditlog/vastaajatunnus-luonti! (:kyselykertaid vastaajatunnus))
-  (doall
-    (for [tunnus (->> (luo-tunnuksia 6)
-                   (remove vastaajatunnus-olemassa?)
-                   (take 1))]
-
-      (with-kayttaja integraatio-uid nil nil
-                     (let [kyselytyyppi (:tyyppi (vastaajatunnus/kyselykerran-tyyppi {:kyselykertaid (:kyselykertaid vastaajatunnus)}))
-                           tallennettu-tunnus (tallenna-vastaajatunnus! (assoc vastaajatunnus :tunnus tunnus))
-                           kunta (:kunta vastaajatunnus)
-                           tutkintotunnus (:tutkintotunnus vastaajatunnus)]
-                         (tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus)
-                                                          (assoc vastaajatunnus
-                                                            :toimipaikka {:kunta kunta}
-                                                            :tutkinto {:tutkintotunnus tutkintotunnus}) kyselytyyppi)
-                         tallennettu-tunnus)))))
+  (with-kayttaja integraatio-uid nil nil
+     (lisaa! vastaajatunnus)))
 ;;END AVOP.FI
+
+(defn lisaa-massana! [vastaajatunnukset]
+  (jdbc/with-db-transaction [tx *db*]
+    (jdbc/execute! tx ["SET LOCAL aipal.kayttaja = 'JARJESTELMA'"])
+    (doseq [tunnus vastaajatunnukset]
+      (db/lisaa-vastaajatunnus! tx tunnus))))
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)

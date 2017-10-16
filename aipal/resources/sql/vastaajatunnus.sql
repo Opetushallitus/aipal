@@ -26,3 +26,7 @@ SELECT ktk.id, ktk.kentta_id, ktk.kentta_fi FROM kyselytyyppi kt
   JOIN kysely k ON k.tyyppi = kt.id
   WHERE k.kyselyid = :kyselyid
   ORDER BY ktk.id;
+
+-- :name luo_vastaajatunnus! :! :*
+INSERT INTO vastaajatunnus (kyselykertaid, tunnus, vastaajien_lkm, suorituskieli)
+    VALUES (:kyselykertaid, :tunnus, :vastaajia, :kieli);

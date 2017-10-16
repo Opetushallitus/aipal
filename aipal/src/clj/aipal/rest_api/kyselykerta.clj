@@ -41,10 +41,10 @@
                   kyselykerta]
     :kayttooikeus [:kyselykerta-luonti kyselyid]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-                    (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselyid kyselyid))
-                      {:status 400
-                       :body "kyselykerta.samanniminen_kyselykerta"}
-                      (response-or-404 (arkisto/lisaa! kyselyid kyselykerta-parsittu)))))
+         (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselyid kyselyid))
+           {:status 400
+            :body "kyselykerta.samanniminen_kyselykerta"}
+           (response-or-404 (arkisto/lisaa! kyselyid kyselykerta-parsittu)))))
 
   (POST "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]

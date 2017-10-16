@@ -80,18 +80,18 @@
                                                {:nimi_fi (str "Kysymysryhma " i)})})
 
 (def ^:private monivalintavaihtoehto-tiedot {:luo-fn monivalintavaihtoehto/lisaa!
-                                    :poista-fn #(monivalintavaihtoehto/poista! (:monivalintavaihtoehtoid %))
-                                    :default (for [i (iterate inc 1)]
-                                               {:monivalintavaihtoehtoid i
-                                                :teksti_fi (str "monivalintavaihtoehto " i)
-                                                :teksti_sv (str "monivalintavaihtoehto (sv) " i)})})
+                                             :poista-fn #(monivalintavaihtoehto/poista! (:monivalintavaihtoehtoid %))
+                                             :default (for [i (iterate inc 1)]
+                                                        {:monivalintavaihtoehtoid i
+                                                         :teksti_fi (str "monivalintavaihtoehto " i)
+                                                         :teksti_sv (str "monivalintavaihtoehto (sv) " i)})})
 
 (def ^:private koulutusala-tiedot {:luo-fn #(sql/insert :koulutusala (sql/values %))
-                                 :poista-fn #(sql/delete :koulutusala (sql/where {:koulutusalatunnus (:koulutusalatunnus %)}))
-                                 :default (for [i (iterate inc 1)]
-                                            {:koulutusalatunnus (str i)
-                                             :nimi_fi (str "koulutusala " i)
-                                             :nimi_sv (str "koulutusala (sv) " i)})})
+                                   :poista-fn #(sql/delete :koulutusala (sql/where {:koulutusalatunnus (:koulutusalatunnus %)}))
+                                   :default (for [i (iterate inc 1)]
+                                              {:koulutusalatunnus (str i)
+                                               :nimi_fi (str "koulutusala " i)
+                                               :nimi_sv (str "koulutusala (sv) " i)})})
 
 (def ^:private opintoala-tiedot {:luo-fn #(sql/insert :opintoala (sql/values %))
                                  :poista-fn #(sql/delete :opintoala (sql/where {:opintoalatunnus (:opintoalatunnus %)}))

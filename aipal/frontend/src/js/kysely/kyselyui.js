@@ -120,7 +120,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
 
-      $scope.kyselytyypit = [{id: 1, nimi: "Palautekysely"}, {id: 2, nimi: "Rekrykysely"}];
+      //TODO: Fetch these from DB
+      $scope.kyselytyypit = [{id: 1, nimi: "Palautekysely"}, {id: 2, nimi: "Rekrykysely"}, {id: 3, nimi: "Uraseuranta"}];
 
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)
@@ -247,6 +248,15 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
             kysely.kysymysryhmat = _.reject(kysely.kysymysryhmat, 'poistetaan_kyselysta');
             _.forEach(kysely.kysymysryhmat, function(kysymysryhma) {
               kysymysryhma.kysymykset = _.reject(kysymysryhma.kysymykset, 'poistettu');
+              _.forEach(kysymysryhma.kysymykset, function(kysymys){
+                if(kysymys.jatkokysymys){
+                  var kys = _.find(kysymysryhma.kysymykset, {'kysymysid': kysymys.jatkokysymys_kysymysid})
+                  if(kys && kys.jarjestys) {
+                    kysymys.jarjestys = kys.jarjestys + 0.1;
+                  }
+                }
+              })
+              kysymysryhma.kysymykset.sort(function(a, b){ return a.jarjestys > b.jarjestys})
             });
 
             var message = JSON.stringify({message: kysely});

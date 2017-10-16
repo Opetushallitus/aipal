@@ -112,11 +112,27 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
 
       $scope.findPage = function(kysymysId) {
         for(var i = 0; i < $scope.data.kysymysryhmat.length; i++){
-          if(_.find($scope.data.kysymysryhmat[i].kysymykset, {'kysymysid': kysymysId}) != undefined){
+          if(_.find($scope.data.kysymysryhmat[i].kysymykset, {'kysymysid': kysymysId}) !== undefined){
             return i;
           }
         }
       };
+
+      $scope.naytaJatkokysymys = function(kysymysryhma, jatkokysymys) {
+        var kysymys = _.find(kysymysryhma.kysymykset, {'kysymysid': jatkokysymys.jatkokysymys_kysymysid})
+        if ((kysymys !== undefined) && (kysymys.vastaus === jatkokysymys.jatkokysymys_vastaus)){
+          return true;
+        } else{
+          delete jatkokysymys.vastaus;
+          return false;
+        }
+      }
+
+      $scope.onTextChange = function(kysymys){
+        if(kysymys.jatkokysymys && kysymys.rajoite === 'numero'){
+          kysymys.vastaus=kysymys.vastaus.replace(/[^0-9.]/g, '');
+        }
+      }
 
       $scope.gotoQuestion = function(kysymysid) {
 
@@ -238,6 +254,22 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $scope.sivu = Math.max($scope.sivu -1, 0);
         $scope.vaihdaSivu()
       };
+
+      $scope.naytaJatkokysymys = function(kysymysryhma, jatkokysymys) {
+        var kysymys = _.find(kysymysryhma.kysymykset, {'kysymysid': jatkokysymys.jatkokysymys_kysymysid})
+        if ((kysymys !== undefined) && (kysymys.vastaus === jatkokysymys.jatkokysymys_vastaus)){
+          return true;
+        } else{
+          delete jatkokysymys.vastaus;
+          return false;
+        }
+      }
+
+      $scope.onTextChange = function(kysymys){
+        if(kysymys.jatkokysymys && kysymys.rajoite === 'numero'){
+          kysymys.vastaus=kysymys.vastaus.replace(/[^0-9.]/g, '');
+        }
+      }
 
       $scope.preview = true;
       $scope.messages = [];

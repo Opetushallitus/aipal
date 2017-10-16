@@ -26,6 +26,7 @@
             aipal.rest_api.js-log
             aipal.rest-api.vastaajatunnus
             arvo.rest-api.avopvastaajatunnus
+            arvo.rest-api.uraseuranta
             aipal.rest-api.kayttaja
             aipal.rest-api.tutkinto
             aipal.rest-api.tutkintotyyppi
@@ -92,6 +93,7 @@
     (context "/api/tutkintotyyppi" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/public/luovastaajatunnus" [] (arvo.rest-api.avopvastaajatunnus/reitit asetukset))
+    (context "/api/public/uraseuranta" [] (arvo.rest-api.uraseuranta/uraseuranta-reitit asetukset))
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (context "/api/csv" [] (aipal.rest-api.raportti.kysely/csv))
     (context "/api/vipunen" [] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)

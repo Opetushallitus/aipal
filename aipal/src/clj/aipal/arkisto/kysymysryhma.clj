@@ -19,7 +19,11 @@
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]
             [clojure.tools.logging :as log]
-            [aipal.toimiala.raportti.taustakysymykset :refer :all]))
+
+            [aipal.toimiala.raportti.taustakysymykset :refer :all]
+            [arvo.db.core :refer [*db*] :as db]
+            [clojure.java.jdbc :as jdbc])
+  (:import (com.unboundid.util.ssl KeyStoreKeyManager)))
 
 (defn ^:private rajaa-kayttajalle-sallittuihin-kysymysryhmiin [query organisaatio]
   (let [koulutustoimijan-oma {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
@@ -97,11 +101,10 @@
     (auditlog/kysymys-luonti! (:kysymysryhmaid kysymys) (:kysymysid kysymys))
     kysymys))
 
-(defn lisaa-jatkokysymys! [k]
-  (let [jatkokysymys (sql/insert :jatkokysymys
-                       (sql/values k))]
-    (auditlog/jatkokysymys-luonti! (:jatkokysymysid jatkokysymys))
-    jatkokysymys))
+(defn liita-jatkokysymys! [kysymysid jatkokysymysid vastaus]
+  (sql/insert taulut/kysymys_jatkokysymys
+      (sql/values {:kysymysid kysymysid :jatkokysymysid jatkokysymysid :vastaus vastaus})))
+
 
 (defn lisaa-monivalintavaihtoehto! [v]
   (auditlog/kysymys-monivalinnat-luonti! (:kysymysid v))
@@ -235,6 +238,26 @@
              taydenna-kysymysryhman-kysymykset)
          kysymysryhma)))))
 
+(def kysymysryhma-fields [:kysymysryhmaid :tila :ntm_kysymykset :nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en :taustakysymykset :valtakunnallinen])
+
+(defn liita-jatkokysymykset [jatkokysymykset-map kysymys]
+  (if-let [jatkokysymykset (get jatkokysymykset-map (:kysymysid kysymys))]
+      (reduce #(assoc-in %1 [:jatkokysymykset (:jatkokysymys_vastaus %2)] %2) kysymys jatkokysymykset)
+    kysymys))
+
+(defn taydenna-kysymysryhma2 [kysymysryhma]
+  (let [kysymykset (db/hae-kysymykset {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
+        jatkokysymykset (group-by :jatkokysymys_kysymysid (filter :jatkokysymys kysymykset))
+        kys (map #(liita-jatkokysymykset jatkokysymykset %) (remove :jatkokysymys kysymykset))]
+    (assoc kysymysryhma :kysymykset kys)))
+
+(defn hae2 [kysymysryhmaid]
+  (let [kysymysryhma (first (db/hae-kysymysryhma {:kysymysryhmaid kysymysryhmaid}))]
+    (-> kysymysryhma
+        (select-keys kysymysryhma-fields)
+        taydenna-kysymysryhma2
+        taydenna-kysymysryhman-kysymykset)))
+
 (defn hae-taustakysymysryhma
   [kysymysryhmaid]
   (if (= kysymysryhmaid suorittamisvaihe-id)
@@ -264,16 +287,15 @@
      (sql/select* taulut/kysymysryhma)
      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :ntm_kysymykset)
      (sql/with taulut/kysymys
-       (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu
-                   :jatkokysymys.jatkokysymysid
-                   :jatkokysymys.kylla_kysymys :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.kylla_teksti_en
-                   :jatkokysymys.ei_kysymys :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.ei_teksti_en :jatkokysymys.kylla_vastaustyyppi)
+       (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu :jatkokysymys :jarjestys :kysymysryhmaid
+                   [:kysymys_jatkokysymys.kysymysid :jatkokysymys_kysymysid]
+                   [:kysymys_jatkokysymys.vastaus :jatkokysymys_vastaus])
        (cond->
          kyselyid (->
                     (sql/fields [(sql/raw "kysely_kysymys.kysymysid is null") :poistettu])
                     (sql/join :left :kysely_kysymys (and (= :kysely_kysymys.kysymysid :kysymysid)
                                                          (= :kysely_kysymys.kyselyid kyselyid)))))
-       (sql/join :left :jatkokysymys (= :kysymys.jatkokysymysid :jatkokysymys.jatkokysymysid))
+       (sql/join :left :kysymys_jatkokysymys (= :kysymys.kysymysid :kysymys_jatkokysymys.jatkokysymysid))
        (sql/order :kysymys.jarjestys))))
   ([] (kysymysryhma-esikatselulle-select nil)))
 
@@ -351,11 +373,11 @@
     (sql/where {:kysymysid kysymysid})))
 
 (defn poista-jatkokysymys!
-  [jatkokysymysid]
-  (auditlog/jatkokysymys-poisto! jatkokysymysid)
+  [kysymysid]
+  (auditlog/jatkokysymys-poisto! kysymysid)
   (sql/delete
-    taulut/jatkokysymys
-    (sql/where {:jatkokysymysid jatkokysymysid})))
+    taulut/kysymys_jatkokysymys
+    (sql/where {:kysymysid kysymysid})))
 
 (defn ^:private aseta-tila!
   [kysymysryhmaid tila]

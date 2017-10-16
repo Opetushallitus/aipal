@@ -69,12 +69,13 @@
         ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
         ent_tutkinto (tutkinto/hae-kentat koulutus)
         kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
-    {:vastaajien_lkm 1
+    {:tunnusten-lkm 1
+     :vastaajien_lkm 1
      :voimassa_alkupvm (alkupvm)
      :voimassa_loppupvm (loppupvm)
      :suorituskieli kieli
      :rahoitusmuotoid 5
-     :valmistavan_koulutuksen_toimipaikka nil
+     :toimipaikka nil
      :valmistavan_koulutuksen_jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus])) 
      :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
      :tutkintotunnus (ent_tutkinto :tutkintotunnus)

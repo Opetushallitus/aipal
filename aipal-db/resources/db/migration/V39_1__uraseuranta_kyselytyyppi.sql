@@ -1,0 +1,1 @@
+INSERT INTO kyselytyyppi(nimi_fi) VALUES ('Uraseuranta');

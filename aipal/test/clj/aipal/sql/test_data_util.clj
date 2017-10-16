@@ -68,38 +68,38 @@
 
 (defn lisaa-koulutusala!
   ([koulutusala]
-    (let [k (merge default-koulutusala koulutusala)]
-      (sql/insert :koulutusala
-        (sql/values k))))
+   (let [k (merge default-koulutusala koulutusala)]
+     (sql/insert :koulutusala
+       (sql/values k))))
   ([]
-    (lisaa-koulutusala! default-koulutusala)))
+   (lisaa-koulutusala! default-koulutusala)))
 
 
 (defn lisaa-opintoala!
   ([opintoala]
-    (let [o (merge default-opintoala opintoala)]
-      (sql/insert :opintoala
-        (sql/values o))))
+   (let [o (merge default-opintoala opintoala)]
+     (sql/insert :opintoala
+       (sql/values o))))
   ([]
-    (lisaa-koulutusala!)
-    (lisaa-opintoala! default-opintoala)))
+   (lisaa-koulutusala!)
+   (lisaa-opintoala! default-opintoala)))
 
 (defn lisaa-tutkinto!
   ([tutkinto]
-    (let [t (merge default-tutkinto tutkinto)]
-      (sql/insert :tutkinto
-        (sql/values t))))
+   (let [t (merge default-tutkinto tutkinto)]
+     (sql/insert :tutkinto
+       (sql/values t))))
   ([]
-    (lisaa-opintoala!)
-    (lisaa-tutkinto! default-tutkinto)))
+   (lisaa-opintoala!)
+   (lisaa-tutkinto! default-tutkinto)))
 
 (defn lisaa-koulutustoimija!
   ([koulutustoimija]
-    (let [t (merge default-koulutustoimija koulutustoimija)]
-      (sql/insert :koulutustoimija
-        (sql/values t))))
+   (let [t (merge default-koulutustoimija koulutustoimija)]
+     (sql/insert :koulutustoimija
+       (sql/values t))))
   ([]
-    (lisaa-koulutustoimija! default-koulutustoimija)))
+   (lisaa-koulutustoimija! default-koulutustoimija)))
 
 (defn anna-koulutustoimija!
   "Palauttaa koulutustoimijan kannasta tai lisää uuden"
@@ -111,20 +111,20 @@
 ;oppilaitos needs a valid koulutustoimija
 (defn lisaa-oppilaitos!
   ([oppilaitos]
-    (let [t (merge default-oppilaitos oppilaitos)]
-      (sql/insert :oppilaitos
-        (sql/values t))))
+   (let [t (merge default-oppilaitos oppilaitos)]
+     (sql/insert :oppilaitos
+       (sql/values t))))
   ([]
-    (lisaa-koulutustoimija!)
-    (lisaa-oppilaitos! default-oppilaitos)))
+   (lisaa-koulutustoimija!)
+   (lisaa-oppilaitos! default-oppilaitos)))
 
 ;Returns default koulutustoimija as it is the only one matching requirements
 (defn anna-avop-koulutustoimija!
   "Palauttaa oletus koulutustoimijan kannasta"
   []
-   (let [k (aipal.arkisto.koulutustoimija/hae (:ytunnus default-koulutustoimija))]
-    (or k
-      (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
+  (let [k (aipal.arkisto.koulutustoimija/hae (:ytunnus default-koulutustoimija))]
+   (or k
+     (aipal.arkisto.koulutustoimija/lisaa! default-koulutustoimija))))
 
 (def kysely-num (atom 12))
 
@@ -159,46 +159,46 @@
 
 (defn lisaa-kyselykerta!
   ([]
-    (lisaa-kyselykerta! {} (lisaa-kysely!)))
+   (lisaa-kyselykerta! {} (lisaa-kysely!)))
   ([kyselykerta]
-    (lisaa-kyselykerta! kyselykerta (lisaa-kysely!)))
+   (lisaa-kyselykerta! kyselykerta (lisaa-kysely!)))
   ([kyselykerta kysely]
-    (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:nimi "oletuskyselykerta, testi"
-                                                                 :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
-                                                                 :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
-                                                                kyselykerta))))
+   (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:nimi "oletuskyselykerta, testi"
+                                                                :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
+                                                                :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
+                                                               kyselykerta))))
 
 ;;AVOP.FI:sta tarvitaan kyselykerran nimi ja oppilaitos -> kyselykerran id
 ;problem is that oppilaitos must exist prior to avop-kyselykerta and must refer to a valid koulutustoimija
 ;order is koulutustoimija -> oppilaitos -> kyselykerta
 (defn lisaa-avop-kyselykerta!
   ([]
-    (lisaa-tutkinto!)
-    (lisaa-oppilaitos!)
-    (lisaa-avop-kyselykerta! {} (lisaa-avop-kysely!)))
+   (lisaa-tutkinto!)
+   (lisaa-oppilaitos!)
+   (lisaa-avop-kyselykerta! {} (lisaa-avop-kysely!)))
   ([kyselykerta kysely]
-    (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:lukittu false 
-                                                                 :nimi "avop oletuskyselykerta, testi"
-                                                                 :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
-                                                                 :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
-                                                                kyselykerta))))
+   (aipal.arkisto.kyselykerta/lisaa! (:kyselyid kysely) (merge {:lukittu false
+                                                                :nimi "avop oletuskyselykerta, testi"
+                                                                :voimassa_alkupvm (joda-datetime->sql-timestamp (ctime/now))
+                                                                :voimassa_loppupvm (joda-datetime->sql-timestamp (ctime/now))}
+                                                               kyselykerta))))
 
 (defn lisaa-kyselykerrat!
   ([kyselykerrat]
-    (lisaa-kyselykerrat! kyselykerrat (lisaa-kysely!)))
+   (lisaa-kyselykerrat! kyselykerrat (lisaa-kysely!)))
   ([kyselykerrat kysely]
    (doall (for [kyselykerta kyselykerrat]
             (lisaa-kyselykerta! kyselykerta kysely)))))
 
 (defn lisaa-vastaajatunnus!
   ([]
-    (lisaa-vastaajatunnus! {} (lisaa-kyselykerta!)))
+   (lisaa-vastaajatunnus! {} (lisaa-kyselykerta!)))
   ([vastaajatunnus]
-    (lisaa-vastaajatunnus! vastaajatunnus (lisaa-kyselykerta!)))
+   (lisaa-vastaajatunnus! vastaajatunnus (lisaa-kyselykerta!)))
   ([vastaajatunnus kyselykerta]
-    (aipal.arkisto.vastaajatunnus/lisaa! (merge {:kyselykertaid (:kyselykertaid kyselykerta)
-                                                 :vastaajien_lkm 1}
-                                                vastaajatunnus))))
+   (aipal.arkisto.vastaajatunnus/lisaa! (merge {:kyselykertaid (:kyselykertaid kyselykerta)
+                                                :vastaajien_lkm 1}
+                                               vastaajatunnus))))
 
 (defn lisaa-vastaaja!
   [vastaaja vastaajatunnus]
@@ -216,23 +216,23 @@
 
 (defn lisaa-kysymysryhma!
   ([uusi-kysymysryhma koulutustoimija]
-    (let [default-kysymysryhma (assoc default-kysymysryhma :koulutustoimija (:ytunnus koulutustoimija))
-          kysymysryhma (merge default-kysymysryhma uusi-kysymysryhma)]
-      (sql/insert taulut/kysymysryhma (sql/values [kysymysryhma]))))
+   (let [default-kysymysryhma (assoc default-kysymysryhma :koulutustoimija (:ytunnus koulutustoimija))
+         kysymysryhma (merge default-kysymysryhma uusi-kysymysryhma)]
+     (sql/insert taulut/kysymysryhma (sql/values [kysymysryhma]))))
   ([uusi-kysymysryhma]
-    (lisaa-kysymysryhma! uusi-kysymysryhma (lisaa-koulutustoimija!)))
+   (lisaa-kysymysryhma! uusi-kysymysryhma (lisaa-koulutustoimija!)))
   ([]
-    (lisaa-kysymysryhma! default-kysymysryhma)))
+   (lisaa-kysymysryhma! default-kysymysryhma)))
 
 (defn lisaa-kyselypohja!
   ([uusi-kyselypohja koulutustoimija]
-    (let [default-kyselypohja (assoc default-kyselypohja :koulutustoimija (:ytunnus koulutustoimija))
-          kyselypohja (merge default-kyselypohja uusi-kyselypohja)]
-      (sql/insert taulut/kyselypohja (sql/values [kyselypohja]))))
+   (let [default-kyselypohja (assoc default-kyselypohja :koulutustoimija (:ytunnus koulutustoimija))
+         kyselypohja (merge default-kyselypohja uusi-kyselypohja)]
+     (sql/insert taulut/kyselypohja (sql/values [kyselypohja]))))
   ([uusi-kyselypohja]
-    (lisaa-kyselypohja! uusi-kyselypohja (lisaa-koulutustoimija!)))
+   (lisaa-kyselypohja! uusi-kyselypohja (lisaa-koulutustoimija!)))
   ([]
-    (lisaa-kyselypohja! default-kyselypohja)))
+   (lisaa-kyselypohja! default-kyselypohja)))
 
 (defn lisaa-kysymys!
   [uusi-kysymys]

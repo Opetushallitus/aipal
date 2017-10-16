@@ -24,35 +24,6 @@
             [aipalvastaus.toimiala.skeema :refer [KayttajanVastaus]]
             [oph.common.util.util :refer [map-by]]))
 
-(defn kylla-jatkovastaus-validi?
-  [vastaus kysymys]
-  (boolean
-    (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
-         (:jatkovastaus_kylla vastaus)
-         (not (:jatkovastaus_ei vastaus))
-         (:kylla_kysymys kysymys))))
-
-(defn ei-jatkovastaus-validi?
-  [vastaus kysymys]
-  (boolean
-    (and (= (:jatkokysymysid kysymys) (:jatkokysymysid vastaus))
-         (:jatkovastaus_ei vastaus)
-         (not (:jatkovastaus_kylla vastaus))
-         (:ei_kysymys kysymys))))
-
-(defn ei-jatkovastausta?
-  [vastaus]
-  (and (not (:jatkokysymysid vastaus))
-       (not (:jatkovastaus_kylla vastaus))
-       (not (:jatkovastaus_ei vastaus))))
-
-(defn jatkovastaus-validi?
-  [vastaus kysymys]
-  (or (ei-jatkovastausta? vastaus)
-      (and (contains? kysymys :jatkokysymysid)
-           (or (kylla-jatkovastaus-validi? vastaus kysymys)
-               (ei-jatkovastaus-validi? vastaus kysymys)))))
-
 (defn monivalintavastaus-validi?
   [vastaus kysymys]
   (let [kysymyksen-monivalintavaihtoehtoidt (set (map :jarjestys (:monivalintavaihtoehdot kysymys)))]
@@ -81,8 +52,7 @@
         (and kysymys
              (or (not= "kylla_ei_valinta" (:vastaustyyppi kysymys)) (kylla-ei-vastaus-validi? vastaus kysymys))
              (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
-             (or (nil? (#{"arvosana" "asteikko" "likert_asteikko" "arvosana4_ja_eos"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys))
-             (jatkovastaus-validi? vastaus kysymys))))))
+             (or (nil? (#{"arvosana" "asteikko" "likert_asteikko" "arvosana4_ja_eos"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys)))))))
 
 (defn ^:private pakollisille-kysymyksille-loytyy-vastaukset?
   [vastaukset kysymykset]

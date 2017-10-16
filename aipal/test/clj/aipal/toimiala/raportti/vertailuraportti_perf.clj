@@ -65,7 +65,7 @@
       [{:name "Satunnaistettu vertailuraportin suorituskykytesti"
         :requests test-reqv}]
       concurrent-users {:root "target/perf-report/valtakunnallinen-vertailu"
-         :timeout-in-ms 60000})))
+                        :timeout-in-ms 60000})))
 
 ; yksittäisen tutkinnon vertailu
 ; http://localhost:8082/api/raportti/valtakunnallinen
