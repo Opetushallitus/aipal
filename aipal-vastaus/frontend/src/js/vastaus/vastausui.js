@@ -257,9 +257,10 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
     }
   ])
   .controller('KiitosController', [
-    '$location', '$timeout', '$window',
-    function($location, $timeout, $window) {
+    '$location', '$timeout', '$window', '$scope',
+    function($location, $timeout, $window, $scope) {
       var redirectUrl = $location.search().redirect;
+      $scope.redirectUrl = redirectUrl;
       if (redirectUrl) {
         $timeout(function() {
           $window.location.href = redirectUrl;
