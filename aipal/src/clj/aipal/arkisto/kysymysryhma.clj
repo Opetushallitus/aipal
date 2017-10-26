@@ -215,29 +215,6 @@
   [kysymysryhma]
   (update-in kysymysryhma [:kysymykset] #(doall (map taydenna-kysymys %))))
 
-(defn taydenna-kysymysryhma
-  [kysymysryhma]
-  (let [kysymysryhmaid (:kysymysryhmaid kysymysryhma)]
-    (assoc kysymysryhma :kysymykset
-           (-> kysymys-select
-             (sql/where {:kysymysryhmaid kysymysryhmaid})
-             (sql/exec)))))
-
-(defn hae
-  ([kysymysryhmaid]
-   (hae kysymysryhmaid true))
-  ([kysymysryhmaid hae-kysymykset]
-   (let [kysymysryhma (-> kysymysryhma-select
-                        (sql/where {:kysymysryhmaid kysymysryhmaid})
-                        sql/exec
-                        first)]
-     (when kysymysryhma
-       (if hae-kysymykset
-         (-> kysymysryhma
-             taydenna-kysymysryhma
-             taydenna-kysymysryhman-kysymykset)
-         kysymysryhma)))))
-
 (def kysymysryhma-fields [:kysymysryhmaid :tila :ntm_kysymykset :nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en :taustakysymykset :valtakunnallinen])
 
 (defn liita-jatkokysymykset [jatkokysymykset-map kysymys]
@@ -245,17 +222,17 @@
       (reduce #(assoc-in %1 [:jatkokysymykset (:jatkokysymys_vastaus %2)] %2) kysymys jatkokysymykset)
     kysymys))
 
-(defn taydenna-kysymysryhma2 [kysymysryhma]
+(defn taydenna-kysymysryhma [kysymysryhma]
   (let [kysymykset (db/hae-kysymykset {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
         jatkokysymykset (group-by :jatkokysymys_kysymysid (filter :jatkokysymys kysymykset))
         kys (map #(liita-jatkokysymykset jatkokysymykset %) (remove :jatkokysymys kysymykset))]
     (assoc kysymysryhma :kysymykset kys)))
 
-(defn hae2 [kysymysryhmaid]
+(defn hae [kysymysryhmaid]
   (let [kysymysryhma (first (db/hae-kysymysryhma {:kysymysryhmaid kysymysryhmaid}))]
     (-> kysymysryhma
         (select-keys kysymysryhma-fields)
-        taydenna-kysymysryhma2
+        taydenna-kysymysryhma
         taydenna-kysymysryhman-kysymykset)))
 
 (defn hae-taustakysymysryhma

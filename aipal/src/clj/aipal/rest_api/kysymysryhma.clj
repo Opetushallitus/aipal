@@ -194,7 +194,7 @@
   (GET "/:kysymysryhmaid" []
     :path-params [kysymysryhmaid :- s/Int]
     :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
-    (response-or-404 (arkisto/hae2 kysymysryhmaid)))
+    (response-or-404 (arkisto/hae kysymysryhmaid)))
 
   ;; Muuten sama kuin ylläoleva, mutta haettaessa vuoden 2015 taustakysymysryhmiä yhdistää hakeutumis- ja suoritusvaiheen kysymysryhmät
   (GET "/taustakysymysryhma/:kysymysryhmaid" []
