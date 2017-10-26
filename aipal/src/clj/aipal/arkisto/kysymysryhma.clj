@@ -228,12 +228,17 @@
         kys (map #(liita-jatkokysymykset jatkokysymykset %) (remove :jatkokysymys kysymykset))]
     (assoc kysymysryhma :kysymykset (sort-by :jarjestys kys))))
 
-(defn hae [kysymysryhmaid]
-  (let [kysymysryhma (first (db/hae-kysymysryhma {:kysymysryhmaid kysymysryhmaid}))]
-    (-> kysymysryhma
-        (select-keys kysymysryhma-fields)
-        taydenna-kysymysryhma
-        taydenna-kysymysryhman-kysymykset)))
+(defn hae
+  ([kysymysryhmaid]
+   (hae kysymysryhmaid true))
+  ([kysymysryhmaid hae-kysymykset]
+   (let [kysymysryhma (first (db/hae-kysymysryhma {:kysymysryhmaid kysymysryhmaid}))]
+     (if hae-kysymykset
+       (-> kysymysryhma
+         (select-keys kysymysryhma-fields)
+         taydenna-kysymysryhma
+         taydenna-kysymysryhman-kysymykset)
+       kysymysryhma))))
 
 (defn hae-taustakysymysryhma
   [kysymysryhmaid]
