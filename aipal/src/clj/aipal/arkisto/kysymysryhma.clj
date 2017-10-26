@@ -226,7 +226,7 @@
   (let [kysymykset (db/hae-kysymykset {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
         jatkokysymykset (group-by :jatkokysymys_kysymysid (filter :jatkokysymys kysymykset))
         kys (map #(liita-jatkokysymykset jatkokysymykset %) (remove :jatkokysymys kysymykset))]
-    (assoc kysymysryhma :kysymykset kys)))
+    (assoc kysymysryhma :kysymykset (sort-by :jarjestys kys))))
 
 (defn hae [kysymysryhmaid]
   (let [kysymysryhma (first (db/hae-kysymysryhma {:kysymysryhmaid kysymysryhmaid}))]
