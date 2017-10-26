@@ -58,7 +58,7 @@
 (deftest monivalinta-vastaus
   (testing "Yksi valinta tuottaa yhden vastauksen"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
-          vastaukset [{:kysymysid 1 :vastaus [1]} ]]
+          vastaukset [{:kysymysid 1 :vastaus [1]}]]
       (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
       (is (= (@vastaaja->vastaus vastaajaid)
              #{{:kysymysid 1
@@ -70,7 +70,7 @@
                 :en_osaa_sanoa false}}))))
   (testing "kaksi valintaa tuottaa kaksi vastausta samalle kysymykselle"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "monivalinta"}]
-          vastaukset [{:kysymysid 1 :vastaus [1 2]} ]]
+          vastaukset [{:kysymysid 1 :vastaus [1 2]}]]
       (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
       (is (= (@vastaaja->vastaus vastaajaid)
              #{{:kysymysid 1
@@ -91,7 +91,7 @@
 (deftest kylla-ei-vastaus
   (testing "Valinta tuottaa saman vastauksen"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta"}]
-          vastaukset [{:kysymysid 1 :vastaus ["kylla"]} ]]
+          vastaukset [{:kysymysid 1 :vastaus ["kylla"]}]]
       (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
       (is (= (@vastaaja->vastaus vastaajaid)
              #{{:kysymysid 1
@@ -104,7 +104,7 @@
 
 (deftest kylla-jatkovastaus-tallentuu
   (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta" :jatkokysymysid 2 :kylla_teksti_fi "kysymys?"}]
-        vastaukset [{:kysymysid 1 :vastaus ["kylla"] :jatkokysymysid 2 :jatkovastaus_kylla 3} ]]
+        vastaukset [{:kysymysid 1 :vastaus ["kylla"] :jatkokysymysid 2 :jatkovastaus_kylla 3}]]
     (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
     (is (= (@jatkokysymysid->jatkovastaus 2)
            #{{:jatkokysymysid 2
@@ -113,7 +113,7 @@
 
 (deftest ei-jatkovastaus-tallentuu
   (let [kysymykset [{:kysymysid 1 :vastaustyyppi "kylla_ei_valinta" :jatkokysymysid 2 :ei_teksti_fi "kysymys?"}]
-        vastaukset [{:kysymysid 1 :vastaus ["kylla"] :jatkokysymysid 2 :jatkovastaus_ei "vastaus"} ]]
+        vastaukset [{:kysymysid 1 :vastaus ["kylla"] :jatkokysymysid 2 :jatkovastaus_ei "vastaus"}]]
     (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
     (is (= (@jatkokysymysid->jatkovastaus 2)
            #{{:jatkokysymysid 2
@@ -123,7 +123,7 @@
 (deftest vapaateksti-vastaus
   (testing "Vastaus tallentuu vapaateksti kentään"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "vapaateksti"}]
-          vastaukset [{:kysymysid 1 :vastaus ["vapaateksti"]} ]]
+          vastaukset [{:kysymysid 1 :vastaus ["vapaateksti"]}]]
       (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
       (is (= (@vastaaja->vastaus vastaajaid)
              #{{:kysymysid 1
@@ -137,7 +137,7 @@
 (deftest asteikko-vastaus
   (testing "vastaus tallentuu numerovalinta kenttään"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "asteikko"}]
-          vastaukset [{:kysymysid 1 :vastaus [2]} ]]
+          vastaukset [{:kysymysid 1 :vastaus [2]}]]
       (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
       (is (= (@vastaaja->vastaus vastaajaid)
              #{{:kysymysid 1
@@ -151,7 +151,7 @@
 (deftest likert-asteikko-vastaus
   (testing "vastaus tallentuu numerovalinta kenttään"
     (let [kysymykset [{:kysymysid 1 :vastaustyyppi "likert_asteikko"}]
-          vastaukset [{:kysymysid 1 :vastaus [2]} ]]
+          vastaukset [{:kysymysid 1 :vastaus [2]}]]
       (v/tallenna-vastaukset! vastaukset vastaajaid kysymykset)
       (is (= (@vastaaja->vastaus vastaajaid)
              #{{:kysymysid 1
@@ -161,49 +161,6 @@
                 :vapaateksti nil
                 :vaihtoehto nil
                 :en_osaa_sanoa false}})))))
-
-(deftest jatkokysymyksen-kylla-vastauksen-validointi
-  (are [tulos vastaus kysymys] (= tulos (v/kylla-jatkovastaus-validi? vastaus kysymys))
-       true {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus"} {:jatkokysymysid 1 :kylla_kysymys true :kylla_teksti_fi "kysymys"} ; validi kyllä vastaus
-       false {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus" :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :kylla_kysymys true :kylla_teksti_fi "kysymys"} ; molemmat vastaukset
-       false {:jatkokysymysid 2 :jatkovastaus_kylla "vastaus"} {:jatkokysymysid 1 :kylla_kysymys true :kylla_teksti_fi "kysymys"} ; vastauksessa väärä jatkokysymys
-       false {:jatkokysymysid 1} {:jatkokysymysid 1 :kylla_kysymys true :kylla_teksti_fi "kysymys"} ; ei vastausta mutta jatkokysymysid
-       false {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus"} {} ; vastaus olemattomaan jatkokysymykseen
-       ))
-
-(deftest jatkokysymyksen-ei-vastauksen-validointi
-  (are [tulos vastaus kysymys] (= tulos (v/ei-jatkovastaus-validi? vastaus kysymys))
-       true {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys"} ; validi ei vastaus
-       false {:jatkokysymysid 1 :jatkovastaus_ei "vastaus" :jatkovastaus_kylla "vastaus"} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys"} ; molemmat vastaukset
-       false {:jatkokysymysid 2 :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys"} ; vastauksessa väärä jatkokysymys
-       false {:jatkokysymysid 1} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys"} ; ei vastausta mutta jatkokysymysid
-       false {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"} {} ; vastaus olemattomaan jatkokysymykseen
-       ))
-
-(deftest jatkokysymyksen-validointi
-  (are [tulos vastaus kysymys] (= tulos (v/jatkovastaus-validi? vastaus kysymys))
-       true {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys" :pakollinen true} ; jatkokysymys validi kun siihen vastattu ja kysymys on pakollinen
-       true {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys" :pakollinen false} ; jatkokysymys validi kun siihen vastattu ja kysymys ei ole pakollinen
-       true {} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys" :pakollinen true} ; jatkokysymys on validi kun ei ole vastattu ja kysymys on pakollinen
-       true {} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys" :pakollinen false} ; jatkokysymys on validi kun ei ole vastattu ja kysymys ei ole pakollinen
-       true {} {} ; jatkokysymys on validi kun ei jatkokysymykseen ei ole vastattu ja ei ole jatkokysymystä
-       false {:jatkokysymysid 1} {} ; jatkokysymykseen ei saa olla vastausta jos ei ole jatkokysymystä
-       false {:jatkokysymysid 1 :jatkovastaus_kylla "vastaus" :jatkovastaus_ei "vastaus"} {:jatkokysymysid 1 :ei_kysymys true :ei_teksti_fi "kysymys" :kylla_kysymys true :kylla_teksti_fi "kysymys"} ; jatkokysymykseen ei saa olla vastattu molempiin
-       ))
-
-(deftest jatkovastaus-tallennetaan
-  (testing "jatkovastaus tallennetaan jos jatkokysymysid löytyy"
-    (v/tallenna-jatkovastaus! {:jatkokysymysid 1 :jatkovastaus_ei "vastaus"})
-    (is (= (@jatkokysymysid->jatkovastaus 1)
-           #{{:jatkokysymysid 1
-              :kylla_asteikko nil
-              :ei_vastausteksti "vastaus"}}))))
-
-(deftest jatkovastausta-ei-tallenneta
-  (testing "jatkovastausta ei tallenneta jos jatkokysymysid:tä ei löydy"
-    (v/tallenna-jatkovastaus! {:jatkovastaus_kylla "vastaus"})
-    (is (= @jatkokysymysid->jatkovastaus {}))))
-
 (deftest pakollisiin-kysymyksiin-on-vastaukset
   (let [kysymykset [{:kysymysid 1
                      :pakollinen true
