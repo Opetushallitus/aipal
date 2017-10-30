@@ -1,7 +1,9 @@
 <section>
   <fieldset>
     <label>{{i18n.kysymys.vastauksen_maksimipituus}}</label>
-    <select class="form-control" ng-model="aktiivinenKysymys.max_vastaus" ng-options="max for max in vapaateksti_maksimit" ng-show="vapaateksti_maksimit.length > 0">
-    </select>
+    <select class="form-control" ng-model="aktiivinenKysymys.max_vastaus" ng-options="max for max in vapaateksti_maksimit" ng-show="vapaateksti_maksimit.length > 0"></select>
+    <label>{{i18n.kysymys.vapaateksti.rajoite.otsikko}}</label>
+      <select ng-model="aktiivinenKysymys.rajoite" class="form-control" ng-options="'kysymys.vapaateksti.rajoite.' + rajoite | i18n for rajoite in vapaateksti_rajoitteet">
+      </select>
   </fieldset>
 </section>
