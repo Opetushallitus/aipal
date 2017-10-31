@@ -25,6 +25,7 @@
                     <input type="radio" ng-model="kysymys.vastaus" value="ei" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
                     <span ng-bind="kielet[vastausKieli].yleiset.ei"></span>
                 </label>
+            </div>
 
             <div ng-if="kysymys.vastaustyyppi == 'asteikko'" class="vastaus_valinnat" >
                 <label ng-repeat="vaihtoehto in [1,2,3,4,5]" ng-class="{checked: kysymys.vastaus == vaihtoehto}" class="compact">
