@@ -49,10 +49,11 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       var kyselyTemplate = function(kyselytyyppi){
         if(kyselytyyppi === 1)
-          return {templateUrl: 'template/kysely/palautekysely-tunnukset.html',
-            controller: 'LuoTunnuksiaModalController'}
-        else return {templateUrl: 'template/kysely/rekrykysely-tunnukset.html',
-          controller: 'RekrykyselyModalController'}
+          return {templateUrl: 'template/kysely/palautekysely-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
+        else if (kyselytyyppi === 2 )
+          return {templateUrl: 'template/kysely/rekrykysely-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
+        else if (kyselytyyppi === 3)
+          return {templateUrl: 'template/kysely/uraseuranta-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
       }
 
       $scope.luoTunnuksiaDialogi = function () {
@@ -323,76 +324,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined ||
           $scope.rahoitusmuodotmap[rahoitusmuotoid].rahoitusmuoto !== 'ei_rahoitusmuotoa');
       };
-    }])
-
-
-  .controller('RekrykyselyModalController', ['$uibModalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet',
-    'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
-    'viimeksiValittuTutkinto', 'kayttooikeudet',
-    function ($uibModalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat,
-              kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto, kayttooikeudet) {
-      $scope.vastaajatunnus = {
-        henkilokohtainen: true,
-        koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
-        vastaajien_lkm: 1,
-        haun_numero: "",
-        henkilonumero: ""
-      };
-
-      $scope.isYllapitaja = kayttooikeudet.isYllapitaja();
-
-      $scope.kyselykerta = kyselykerta;
-      var tanaan = new Date();
-      tanaan.setUTCHours(0, 0, 0, 0);
-      var alkupvm = new Date(kyselykerta.voimassa_alkupvm),
-        loppupvm = kyselykerta.voimassa_loppupvm ? new Date(kyselykerta.voimassa_loppupvm) : alkupvm;
-
-      $scope.menneisyydessa = !_.isNull(kyselykerta.voimassa_loppupvm) && loppupvm < tanaan;
-      var oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
-
-      $scope.oletusalkupvm = oletusalkupvm;
-
-      $scope.koulutustoimijat = koulutustoimijat;
-
-      $scope.naytaLisaa = function () {
-        $scope.rullausrajoite += 5;
-      };
-      $scope.nollaaRajoite = function () {
-        $scope.rullausrajoite = 20;
-      };
-      $scope.nollaaRajoite();
-
-      function haeOppilaitokset(koulutustoimija) {
-        Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).success(function (oppilaitokset) {
-          console.log(oppilaitokset);
-
-          if (oppilaitokset.length === 1) {
-            $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = oppilaitokset[0];
-          } else {
-            $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
-          }
-          $scope.oppilaitokset = oppilaitokset;
-        });
-      }
-
-      haeOppilaitokset(aktiivinenKoulutustoimija.ytunnus);
-      $scope.$watch('vastaajatunnus.koulutuksen_jarjestaja', function (koulutustoimija) {
-        haeOppilaitokset(koulutustoimija.ytunnus);
-      });
-
-      $scope.luoTunnuksia = function (vastaajatunnus) {
-        $uibModalInstance.close(vastaajatunnus);
-      };
-      $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-      };
-
-      //AVOP-45: deprecated, always required
-      // $scope.tutkintoPakollinen = function () {
-      //   var rahoitusmuotoid = $scope.vastaajatunnus.rahoitusmuotoid;
-      //   return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined ||
-      //     $scope.rahoitusmuodotmap[rahoitusmuotoid].rahoitusmuoto !== 'ei_rahoitusmuotoa');
-      // };
     }])
 
   .controller('MuokkaaVastaajiaModalController', ['$uibModalInstance', '$scope', 'i18n', 'tunnus',
