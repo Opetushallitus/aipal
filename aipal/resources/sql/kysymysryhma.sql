@@ -12,3 +12,6 @@ SELECT k.*, jk.kysymysid AS jatkokysymys_kysymysid, jk.vastaus AS jatkokysymys_v
 
 -- :name hae-kysymysryhma :? :*
 SELECT * FROM kysymysryhma WHERE kysymysryhmaid = :kysymysryhmaid;
+
+-- :name hae-kyselypohjan-kysymysryhmat :? :*
+SELECT * FROM kysymysryhma_kyselypohja WHERE kyselypohjaid = :kyselypohjaid

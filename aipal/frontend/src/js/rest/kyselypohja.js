@@ -47,6 +47,9 @@ angular.module('rest.kyselypohja', [])
       },
       poista: function(kyselypohjaid) {
         return $http.delete('api/kyselypohja/' + kyselypohjaid);
+      },
+      lisaaTiedostosta: function(data) {
+        return $http.post('/api/kyselypohja/lisaa-tiedostosta', data);
       }
     };
   }]);

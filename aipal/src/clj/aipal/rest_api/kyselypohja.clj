@@ -19,8 +19,9 @@
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
-            [oph.common.util.http-util :refer [parse-iso-date response-or-404]]
-            [oph.common.util.util :refer [paivita-arvot]]))
+            [oph.common.util.http-util :refer [parse-iso-date response-or-404 file-download-response]]
+            [oph.common.util.util :refer [paivita-arvot]]
+            [cheshire.core :as cheshire]))
 
 (defroutes reitit
   (GET "/" []
@@ -80,3 +81,29 @@
     :kayttooikeus [:kyselypohja-poisto kyselypohjaid]
     (arkisto/poista-kyselypohja! kyselypohjaid)
     {:status 204}))
+
+(defn lisaa-kysymysryhma! [kysymysryhma]
+   (aipal.rest-api.kysymysryhma/lisaa-kysymysryhma! kysymysryhma (:kysymykset kysymysryhma)))
+
+(defroutes tiedosto-reitit
+  (GET "/:kyselypohjaid/lataa" []
+       :path-params [kyselypohjaid :- s/Int]
+       :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+       (let [id kyselypohjaid
+             kyselypohja (arkisto/hae-kyselypohja id)
+             kysymysryhmat (kysymysryhma-arkisto/hae-kyselypohjaan-kuuluvat id)
+             filename (str "Kyselypohja_"(:kyselypohjaid kyselypohja)".json")
+             data (-> kyselypohja
+                      (assoc :kysymysryhmat kysymysryhmat)
+                      (dissoc :luotuaika :muutettuaika :luotu_kayttaja :muutettu_kayttaja :voimassa_alkupvm :voimassa_loppupvm)
+                      (cheshire/generate-string))]
+         (file-download-response data filename "application/json" {:charset "UTF-8"})))
+
+  (POST "/lisaa-tiedostosta" []
+        :body [kyselypohja s/Any]
+        :kayttooikeus :kyselypohja-luonti
+    (let [tallennettu-pohja (arkisto/lisaa-kyselypohja! kyselypohja)
+          kyselypohjaid (:kyselypohjaid tallennettu-pohja)
+          kysymysryhmat (doall (map lisaa-kysymysryhma! (:kysymysryhmat kyselypohja)))]
+      (arkisto/tallenna-kyselypohjan-kysymysryhmat! kyselypohjaid kysymysryhmat)
+      (response-or-404 (assoc tallennettu-pohja :kysymysryhmat kysymysryhmat)))))

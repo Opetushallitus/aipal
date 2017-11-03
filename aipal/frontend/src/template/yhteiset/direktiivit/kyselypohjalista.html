@@ -11,7 +11,7 @@
       <td>
         {{kyselypohja |lokalisoiKentta:'nimi'}}
       </td>
-      <td class="actions" style="width: 40%;">
+      <td class="actions" style="width: 50%;">
           <a ng-href="#/kyselypohjat/kyselypohja/{{kyselypohja.kyselypohjaid}}" ng-if="kyselypohja.tila !== 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               <span class="fa fa-pencil"></span>
           </a>&nbsp;
@@ -23,6 +23,12 @@
           <button class="btn btn-primary btn-sm" ng-click="palautaKyselypohjaJulkaistuksi(kyselypohja)" ng-if="kyselypohja.tila == 'suljettu' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.palauta_julkaistuksi' | i18n }}&nbsp;
               <span class="fa fa-reply"></span>
+          </button>
+          <a class="btn btn-primary" ng-href="api/kyselypohja/{{kyselypohja.kyselypohjaid}}/lataa" ng-if="yllapitaja()">
+              Lataa tiedostona &nbsp;</a>
+          <button class="btn btn-primary btn-sm" ng-click="julkaiseKyselypohja(kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja())">
+              {{ 'yleiset.julkaise' | i18n }}&nbsp;
+              <span class="fa fa-share"></span>
           </button>
           <button class="btn btn-primary btn-sm" ng-click="julkaiseKyselypohja(kyselypohja)" ng-if="kyselypohja.tila == 'luonnos' && (!kyselypohja.valtakunnallinen || yllapitaja())">
               {{ 'yleiset.julkaise' | i18n }}&nbsp;
@@ -40,6 +46,7 @@
             {{'i18n.kysymysryhma.nayta_rakenne'| i18n}}&nbsp;
             <span class="fa fa-search"></span>
           </button>
+
       </td>
     </tr>
     </tbody>

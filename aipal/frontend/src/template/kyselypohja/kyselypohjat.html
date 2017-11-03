@@ -1,17 +1,30 @@
 <h1>{{i18n.kyselypohja.breadcrumb_kyselypohja}} <ohje tunniste="kyselypohjat"></ohje></h1>
 
 <div class="row">
-  <div class="col-sm-6 col-sm-push-6" style="text-align: right">
+
+  <div class="col-sm-6">
+    <input type="text" class="icon search-icon-input form-control" ng-model="hakuehto.teksti" placeholder="{{i18n.kyselypohja.etsi}}">
+  </div>
+
+  <div class="col-sm-3 col-sm-push-1"  style="text-align: right">
     <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
-      <a class="btn btn-primary" ng-click="luoUusiKyselypohja()" style="margin: 0;">
+      <input id="upload-file" type="file" onchange="angular.element(this).scope().fileChanged(this)" class="inputfile" >
+      <label for="upload-file" class=" btn btn-primary" style="margin: 5px; width:75%;">
+        Lataa tiedostosta
+        <span class="fa fa-plus"></span>
+      </label>
+    </auth>
+  </div>
+
+  <div class="col-sm-3" style="text-align: right">
+    <auth roolit="['YLLAPITAJA']">
+      <a class="btn btn-primary" ng-click="luoUusiKyselypohja()" style="margin: 5px;">
         {{ 'kyselypohja.luo_uusi' | i18n }}&nbsp;
         <span class="fa fa-plus"></span>
       </a>
     </auth>
   </div>
-  <div class="col-sm-6 col-sm-pull-6">
-    <input type="text" class="icon search-icon-input form-control" ng-model="hakuehto.teksti" placeholder="{{i18n.kyselypohja.etsi}}">
-  </div>
+
 </div>
 
 <h2>{{i18n.yleiset.julkaistut}}</h2>

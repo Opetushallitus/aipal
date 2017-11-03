@@ -269,7 +269,7 @@
      (sql/select* taulut/kysymysryhma)
      (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :ntm_kysymykset)
      (sql/with taulut/kysymys
-       (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu :jatkokysymys :jarjestys :kysymysryhmaid
+       (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu :jatkokysymys :jarjestys :kysymysryhmaid :max_vastaus
                    [:kysymys_jatkokysymys.kysymysid :jatkokysymys_kysymysid]
                    [:kysymys_jatkokysymys.vastaus :jatkokysymys_vastaus])
        (cond->
@@ -307,6 +307,11 @@
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
     sql/exec
     (->> (map (comp taydenna-kysymysryhman-monivalintakysymykset vaihda-kysymysavain)))))
+
+(defn hae-kyselypohjaan-kuuluvat [kyselypohjaid]
+  (let [kysymysryhmat (db/hae-kyselypohjan-kysymysryhmat {:kyselypohjaid kyselypohjaid})
+        kysymysryhmaidt (map :kysymysryhmaid kysymysryhmat)]
+    (map hae kysymysryhmaidt)))
 
 (defn hae-kyselysta
   "Hakee kyselyn kysymysryhmät"

@@ -36,10 +36,29 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     ;
   }])
 
-  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', function($filter, $location, $scope, Kyselypohja) {
+  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', '$http', function($filter, $location, $scope, Kyselypohja, http) {
     $scope.luoUusiKyselypohja = function() {
       $location.url('/kyselypohjat/kyselypohja/uusi');
     };
+
+    $scope.uploadFile = function(file){
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        var data = e.target.result
+        console.log(data);
+        Kyselypohja.lisaaTiedostosta(data)
+
+      }
+      reader.readAsText(file, 'UTF-8')
+    }
+
+    $scope.fileChanged = function(ele){
+      var files = ele.files;
+      if(files.length > 0 ){
+        $scope.uploadFile(files[0]);
+      }
+    }
 
     Kyselypohja.haeKaikki().success(function(kyselypohjat) {
       // angular-tablesort haluaa lajitella rivioliosta löytyvän (filtteröidyn)
@@ -53,7 +72,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     });
   }])
 
-  .controller('KyselypohjaController', ['$location', '$uibModal', '$routeParams', '$scope', 'Kyselypohja', 'Kysymysryhma', 'i18n', 'ilmoitus', 'tallennusMuistutus', 'pvm', 
+  .controller('KyselypohjaController', ['$location', '$uibModal', '$routeParams', '$scope', 'Kyselypohja', 'Kysymysryhma', 'i18n', 'ilmoitus', 'tallennusMuistutus', 'pvm',
     function($location, $uibModal, $routeParams, $scope, Kyselypohja, Kysymysryhma, i18n, ilmoitus, tallennusMuistutus, pvm) {
     $scope.lisaaKysymysryhmaModal = function() {
       var modalInstance = $uibModal.open({

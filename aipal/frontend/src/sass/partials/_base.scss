@@ -128,3 +128,12 @@ body.disable-all-animations *{
   color: orangered;
   font-weight: bold;
 }
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}

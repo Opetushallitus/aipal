@@ -13,7 +13,6 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kyselypohja
-  (:import java.sql.Date)
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique select-unique-or-nil]]
             [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
@@ -69,8 +68,7 @@
 
 (def muokattavat-kentat [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :valtakunnallinen])
 
-(defn tallenna-kyselypohjan-kysymysryhmat!
-  [kyselypohjaid kysymysryhmat]
+(defn tallenna-kyselypohjan-kysymysryhmat! [kyselypohjaid kysymysryhmat]
   (auditlog/kyselypohja-muokkaus! kyselypohjaid)
   (sql/delete :kysymysryhma_kyselypohja
               (sql/where {:kyselypohjaid kyselypohjaid}))
@@ -96,6 +94,10 @@
     (auditlog/kyselypohja-luonti! (:kyselypohjaid luotu-kyselypohja) (:nimi_fi kyselypohja))
     (tallenna-kyselypohjan-kysymysryhmat! (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
+
+(defn lisaa-kyselypohja! [kyselypohja]
+  (sql/insert taulut/kyselypohja
+    (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija)))))
 
 (defn ^:private aseta-kyselypohjan-tila!
   [kyselypohjaid tila]

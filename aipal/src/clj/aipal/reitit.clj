@@ -34,9 +34,7 @@
             aipal.rest-api.tiedote
             aipal.rest-api.vipunen
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-
             [oph.common.infra.status :refer [status]]))
-
 
 (defn reitit [asetukset]
   (api
@@ -74,6 +72,7 @@
     (context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (context "/api/kieli" [] aipal.rest-api.kieli/reitit)
     (context "/api/kyselykerta" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kyselykerta/reitit)
+    (context "/api/kyselypohja" [] aipal.rest-api.kyselypohja/tiedosto-reitit)
     (context "/api/kyselypohja" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kyselypohja/reitit)
     (context "/api/ohje" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.ohje/reitit)
     (context "/api/oppilaitos" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.oppilaitos/reitit)
