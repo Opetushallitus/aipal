@@ -361,10 +361,27 @@
 
 (defn poista-jatkokysymys!
   [kysymysid]
-  (auditlog/jatkokysymys-poisto! kysymysid)
+  (auditlog/kysymys-poisto! kysymysid)
   (sql/delete
     taulut/kysymys_jatkokysymys
-    (sql/where {:kysymysid kysymysid})))
+    (sql/where (or (= :jatkokysymysid kysymysid)
+                   (= :kysymysid kysymysid)))))
+
+(defn poista-kysymys! [kysymys]
+  (when (= "monivalinta" (:vastaustyyppi kysymys))
+    (poista-kysymyksen-monivalintavaihtoehdot! (:kysymysid kysymys)))
+  (poista-jatkokysymys! (:kysymysid kysymys))
+  (auditlog/kysymys-poisto! (:kysymysid kysymys))
+  (sql/delete
+    taulut/kysymys
+    (sql/where {:kysymysid (:kysymysid kysymys)}))
+  (:kysymysid kysymys))
+
+
+(defn poista-kysymysryhman-kysymykset! [kysymysryhmaid]
+  (let [kysymykset (db/hae-kysymykset {:kysymysryhmaid kysymysryhmaid})]
+    (doseq [kysymys kysymykset]
+      (poista-kysymys! kysymys))))
 
 (defn ^:private aseta-tila!
   [kysymysryhmaid tila]

@@ -10,14 +10,14 @@
     <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
       <input id="upload-file" type="file" onchange="angular.element(this).scope().fileChanged(this)" class="inputfile" >
       <label for="upload-file" class=" btn btn-primary" style="margin: 5px; width:75%;">
-        Lataa tiedostosta
+        Lisää tiedostosta
         <span class="fa fa-plus"></span>
       </label>
     </auth>
   </div>
 
   <div class="col-sm-3" style="text-align: right">
-    <auth roolit="['YLLAPITAJA']">
+    <auth roolit="['YLLAPITAJA f']">
       <a class="btn btn-primary" ng-click="luoUusiKyselypohja()" style="margin: 5px;">
         {{ 'kyselypohja.luo_uusi' | i18n }}&nbsp;
         <span class="fa fa-plus"></span>

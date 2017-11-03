@@ -114,17 +114,6 @@
     (lisaa-kysymykset-kysymysryhmaan! kysymykset (:kysymysryhmaid kysymysryhma))
     (doall kysymysryhma)))
 
-(defn poista-kysymys! [kysymys]
-  (when (= "monivalinta" (:vastaustyyppi kysymys))
-    (arkisto/poista-kysymyksen-monivalintavaihtoehdot! (:kysymysid kysymys)))
-  (arkisto/poista-jatkokysymys! (:kysymysid kysymys))
-  (arkisto/poista-kysymys! (:kysymysid kysymys)))
-
-(defn poista-kysymysryhman-kysymykset! [kysymysryhmaid]
-  (let [kysymysryhma (arkisto/hae kysymysryhmaid)
-        kysymykset (:kysymykset kysymysryhma)]
-    (doseq [kysymys kysymykset]
-      (poista-kysymys! kysymys))))
 
 (defn paivita-kysymysryhma! [kysymysryhma]
   (let [kysymysryhma (-> kysymysryhma
@@ -134,13 +123,13 @@
                               :ntm_kysymykset (suodata-vain-ntm-vastuukayttajille kysymysryhma :ntm_kysymykset)))
         kysymysryhmaid (:kysymysryhmaid kysymysryhma)
         kysymykset (:kysymykset kysymysryhma)]
-    (poista-kysymysryhman-kysymykset! kysymysryhmaid)
+    (arkisto/poista-kysymysryhman-kysymykset! kysymysryhmaid)
     (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
     (arkisto/paivita! kysymysryhma)
     kysymysryhma))
 
 (defn poista-kysymysryhma! [kysymysryhmaid]
-  (poista-kysymysryhman-kysymykset! kysymysryhmaid)
+  (arkisto/poista-kysymysryhman-kysymykset! kysymysryhmaid)
   (arkisto/poista! kysymysryhmaid))
 
 (defroutes reitit

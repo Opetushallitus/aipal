@@ -105,6 +105,9 @@
         :kayttooikeus :kyselypohja-luonti
     (let [tallennettu-pohja (arkisto/lisaa-kyselypohja! kyselypohja)
           kyselypohjaid (:kyselypohjaid tallennettu-pohja)
-          kysymysryhmat (doall (map lisaa-kysymysryhma! (:kysymysryhmat kyselypohja)))]
+          kysymysryhmat (doall (map lisaa-kysymysryhma! (:kysymysryhmat kyselypohja)))
+          kysymysryhmaidt (map :kysymysryhmaid kysymysryhmat)]
       (arkisto/tallenna-kyselypohjan-kysymysryhmat! kyselypohjaid kysymysryhmat)
+      (doseq [kysymysryhmaid kysymysryhmaidt]
+        (kysymysryhma-arkisto/julkaise! kysymysryhmaid))
       (response-or-404 (assoc tallennettu-pohja :kysymysryhmat kysymysryhmat)))))

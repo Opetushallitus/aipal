@@ -36,7 +36,7 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     ;
   }])
 
-  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', '$http', function($filter, $location, $scope, Kyselypohja, http) {
+  .controller('KyselypohjatController', ['$filter', '$location', '$scope', 'Kyselypohja', '$window', function($filter, $location, $scope, Kyselypohja, $window) {
     $scope.luoUusiKyselypohja = function() {
       $location.url('/kyselypohjat/kyselypohja/uusi');
     };
@@ -46,9 +46,9 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
 
       reader.onload = function(e) {
         var data = e.target.result
-        console.log(data);
-        Kyselypohja.lisaaTiedostosta(data)
-
+        Kyselypohja.lisaaTiedostosta(data).success(function(kyselypohja){
+          $window.location.reload();
+        })
       }
       reader.readAsText(file, 'UTF-8')
     }
