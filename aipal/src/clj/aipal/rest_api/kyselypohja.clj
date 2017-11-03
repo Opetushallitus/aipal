@@ -21,7 +21,8 @@
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
             [oph.common.util.http-util :refer [parse-iso-date response-or-404 file-download-response]]
             [oph.common.util.util :refer [paivita-arvot]]
-            [cheshire.core :as cheshire]))
+            [cheshire.core :as cheshire]
+            [aipal.rest-api.kysymysryhma :as kysymysryhma]))
 
 (defroutes reitit
   (GET "/" []
@@ -83,7 +84,7 @@
     {:status 204}))
 
 (defn lisaa-kysymysryhma! [kysymysryhma]
-   (aipal.rest-api.kysymysryhma/lisaa-kysymysryhma! kysymysryhma (:kysymykset kysymysryhma)))
+   (kysymysryhma/lisaa-kysymysryhma! kysymysryhma (:kysymykset kysymysryhma)))
 
 (defroutes tiedosto-reitit
   (GET "/:kyselypohjaid/lataa" []
