@@ -5,6 +5,7 @@
   background-color: $primary-color;
   min-height: $nav-height;
   font-size: 1em;
+  overflow: hidden;
   a {
     display: inline-block;
     text-decoration: none;
@@ -59,6 +60,8 @@ h1.title{
   padding-left: 1em;
   float: left;
   width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 header {
