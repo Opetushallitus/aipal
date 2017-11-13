@@ -1,0 +1,1 @@
+ALTER TABLE kyselykerta RENAME COLUMN metadata TO kategoria;
