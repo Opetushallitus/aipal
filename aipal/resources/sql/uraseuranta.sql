@@ -4,11 +4,12 @@ SELECT k.kyselyid, kk.kyselykertaid, k.koulutustoimija, k.nimi_fi AS kysely, kk.
   JOIN oppilaitos o ON o.koulutustoimija = k.koulutustoimija WHERE o.lakkautuspaiva IS NULL AND k.tyyppi = 3;
 
 -- :name lisaa-vastaajatunnus! :!
-INSERT INTO vastaajatunnus (kyselykertaid, suorituskieli, tunnus, vastaajien_lkm)
-    VALUES (:kyselykertaid, :kieli, :tunnus, 1);
+INSERT INTO vastaajatunnus (tunnus, kyselykertaid, suorituskieli, vastaajien_lkm)
+    VALUES (:tunnus, :kyselykertaid, :kieli, 1);
 
 -- :name hae-uraseurannat :? :*
-SELECT k.kyselyid, k.nimi_fi AS kysely_nimi, k.koulutustoimija, o.oppilaitoskoodi, o.nimi_fi AS oppilaitos_nimi, kk.kyselykertaid, kk.nimi AS kyselykerta_nimi  FROM kysely k
+SELECT k.kyselyid, k.nimi_fi AS kysely_nimi, k.koulutustoimija, o.oppilaitoskoodi, o.nimi_fi AS oppilaitos_nimi, kk.kyselykertaid,
+      kk.nimi AS kyselykerta_nimi, kk.kategoria->>'uraseuranta_tyyppi' AS uraseuranta_tyyppi  FROM kysely k
   JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
   JOIN oppilaitos o ON o.koulutustoimija = k.koulutustoimija
   WHERE k.tyyppi = 3 AND k.tila = 'julkaistu'

@@ -24,6 +24,8 @@
     :header-params [authorization :- String]
     (response/ok (vastaajatunnus/lisaa-massana! vastaajatunnukset)))
   (GET "/kyselyt" []
+    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :header-params [authorization :- String]
     (response/ok (db/hae-uraseurannat))))
 
 (defn uraseuranta-reitit [asetukset]
