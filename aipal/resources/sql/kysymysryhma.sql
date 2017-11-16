@@ -15,3 +15,9 @@ SELECT * FROM kysymysryhma WHERE kysymysryhmaid = :kysymysryhmaid;
 
 -- :name hae-kyselypohjan-kysymysryhmat :? :*
 SELECT * FROM kysymysryhma_kyselypohja WHERE kyselypohjaid = :kyselypohjaid
+
+-- :name hae-asteikot :? :*
+SELECT * FROM asteikko WHERE koulutustoimija = :koulutustoimija;
+
+-- :name tallenna-asteikko :! :n
+INSERT INTO asteikko (koulutustoimija, nimi, asteikko) VALUES (:koulutustoimija, :nimi, :asteikko)

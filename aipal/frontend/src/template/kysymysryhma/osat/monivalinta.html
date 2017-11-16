@@ -30,6 +30,19 @@
         </div>
     </li>
   </ol>
+    <button class="btn btn-primary" ng-if="asteikot.length > 0 && !latausNakyvissa" ng-click="naytaLataus(true)">Lataa asteikko</button>
+    <div ng-if="latausNakyvissa">
+        <select class="form-control" ng-model="valittuAsteikko" ng-options="asteikko.nimi for asteikko in asteikot" ></select>
+        <button class="btn btn-primary" ng-click="lataaAsteikko(valittuAsteikko)">Lisää vaihtoehdot</button>
+        <button class="btn btn-primary" ng-click="naytaLataus(false)">Sulje</button>
+    </div>
+    <div ng-if="tallennusNakyvissa">
+        <label for="asteikonTallennus">Nimi</label>
+        <input id="asteikonTallennus" type="text" ng-model="asteikonNimi">
+        <button class="btn btn-primary" ng-click="tallennaAsteikko(asteikonNimi)">Tallenna</button>
+        <button class="btn btn-primary" ng-click="naytaTallennus(false)">Sulje</button>
+    </div>
+    <button class="btn btn-primary" ng-if="!tallennusNakyvissa" ng-disabled="!asteikkoValidi()" ng-click="naytaTallennus(true)">Tallenna asteikko</button>
   <button class="btn btn-primary pull-right" ng-click="lisaaVaihtoehto(aktiivinenKysymys)">
     {{i18n.kysymys.lisaa_vaihtoehto}}
     <span class="fa fa-plus"></span>

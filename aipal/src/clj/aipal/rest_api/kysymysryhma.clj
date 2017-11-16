@@ -5,7 +5,8 @@
             [aipal.arkisto.kysymysryhma :as arkisto]
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja* ntm-vastuukayttaja? yllapitaja?]]
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [oph.common.util.http-util :refer [response-or-404]]
+            [ring.util.http-response :as response]))
 
 (defn lisaa-jarjestys [alkiot]
   (map #(assoc %1 :jarjestys %2) alkiot (range)))
@@ -141,6 +142,17 @@
       (if taustakysymysryhmat
         (arkisto/hae-taustakysymysryhmat)
         (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) voimassa))))
+
+  (GET "/asteikot" []
+    :kayttooikeus :kysymysryhma-listaaminen
+    (response-or-404 (arkisto/hae-asteikot (:aktiivinen-koulutustoimija *kayttaja*))))
+
+  (POST "/asteikot" []
+    :body [asteikko s/Any]
+    :kayttooikeus :kysymysryhma-luonti
+    (let [tallennettava-asteikko (assoc asteikko :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
+      (println "Tallennetaan asteikko: " tallennettava-asteikko)
+      (response-or-404 (arkisto/tallenna-asteikko tallennettava-asteikko))))
 
   (POST "/" []
     :body [kysymysryhma s/Any]

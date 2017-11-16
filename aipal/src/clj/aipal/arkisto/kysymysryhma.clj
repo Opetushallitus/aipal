@@ -431,3 +431,10 @@
       (sql/where {:kysymysryhmaid kysymysryhmaid}))
     first
     :lkm))
+
+(defn hae-asteikot [koulutustoimija]
+  (db/hae-asteikot {:koulutustoimija koulutustoimija}))
+
+(defn tallenna-asteikko [asteikko]
+  (do (db/tallenna-asteikko asteikko)
+      asteikko))

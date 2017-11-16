@@ -225,6 +225,50 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       );
     };
 
+    $scope.asteikot = []
+    $scope.tallenusNakyvissa = false;
+    $scope.latausNakyvissa = false;
+
+
+    $scope.asteikkoValidi = function(){
+      return _.every($scope.aktiivinenKysymys.monivalintavaihtoehdot, 'teksti_fi')
+    }
+
+    Kysymysryhma.haeAsteikot()
+      .success(function(data){
+        $scope.asteikot = data;
+        if(data.length > 0){
+          $scope.valittuAsteikko = data[0];
+        }
+      });
+
+    $scope.lataaAsteikko = function(asteikko){
+      if(asteikko === null) return;
+      $scope.aktiivinenKysymys.monivalintavaihtoehdot = [];
+      var vaihtoehdot = asteikko.asteikko.vaihtoehdot;
+      _.forEach(vaihtoehdot, function(vaihtoehto){
+        $scope.aktiivinenKysymys.monivalintavaihtoehdot.push(vaihtoehto)
+      })
+      $scope.latausNakyvissa = false;
+    }
+
+    $scope.tallennaAsteikko = function(nimi){
+      var asteikko = $scope.aktiivinenKysymys.monivalintavaihtoehdot;
+      Kysymysryhma.tallennaAsteikko(nimi, asteikko)
+        .success(function(tallennettu){
+          $scope.asteikot.push(tallennettu)
+        })
+      $scope.tallennusNakyvissa = false;
+    }
+
+    $scope.naytaTallennus = function (nakyvissa) {
+      $scope.tallennusNakyvissa = nakyvissa;
+    }
+
+    $scope.naytaLataus = function (nakyvissa) {
+      $scope.latausNakyvissa = nakyvissa;
+    }
+
     $scope.peruuta = function(){
       $location.path('/kysymysryhmat');
     };

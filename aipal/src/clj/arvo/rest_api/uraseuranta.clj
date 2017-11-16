@@ -5,7 +5,8 @@
             [buddy.auth.backends.token :refer (jws-backend)]
             [schema.core :as s]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
-            [arvo.db.core :refer [*db*] :as db]))
+            [arvo.db.core :refer [*db*] :as db]
+            [oph.common.util.http-util :refer [response-or-404]]))
 
 (defn get-shared-secret [asetukset]
   (get-in asetukset [:avopfi-shared-secret]))
@@ -17,16 +18,26 @@
    :headers {"Content-Type" "application/json"}
    :body {:tunnus message}})
 
+
+(defn format-vastaajatunnus-response [vastaajatunnukset]
+  (let [grouped (group-by :kyselykertaid vastaajatunnukset)]
+    (map (fn [[k v]] {:kyselykertaid k
+                      :vastaajia (count v)
+                      :oppilaitoskoodi (:oppilaitoskoodi (first v))
+                      :uraseuranta_tyyppi (:uraseuranta_tyyppi (first v))}) grouped)))
+
 (defroutes reitit
   (POST "/luotunnuksia" []
     :body [vastaajatunnukset s/Any]
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-    (response/ok (vastaajatunnus/lisaa-massana! vastaajatunnukset)))
+    (do
+      ;(vastaajatunnus/lisaa-massana! vastaajatunnukset)
+      (response-or-404 (format-vastaajatunnus-response vastaajatunnukset))))
   (GET "/kyselyt" []
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-    (response/ok (db/hae-uraseurannat))))
+    (response-or-404 (db/hae-uraseurannat))))
 
 (defn uraseuranta-reitit [asetukset]
   (wrap-authentication reitit (auth-backend asetukset)))

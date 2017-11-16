@@ -57,6 +57,12 @@ angular.module('rest.kysymysryhma', ['ngResource'])
       },
       poista: function(kysymysryhmaid) {
         return $http.delete('api/kysymysryhma/' + kysymysryhmaid);
+      },
+      haeAsteikot: function(){
+        return $http.get('api/kysymysryhma/asteikot', {params: {nocache: Date.now()}});
+      },
+      tallennaAsteikko: function(nimi, asteikko){
+        return $http.post('api/kysymysryhma/asteikot', {nimi: nimi, asteikko: {vaihtoehdot: asteikko}});
       }
     };
   }]);
