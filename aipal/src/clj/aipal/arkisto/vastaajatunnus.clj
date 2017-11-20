@@ -181,9 +181,6 @@
   (:id (first (filter #(= kentta (:kentta_id %))kyselytyyppi-kentat))))
 
 (defn tieto-entries [vastaajatunnus-kentat kyselytyyppi-kentat vastaajatunnus-id]
-  (log/info "Vastaajatunnus-kentat: " vastaajatunnus-kentat)
-  (log/info "Kyselytyyppi-kentat: " kyselytyyppi-kentat)
-  (log/info "vastaajatunnus-id: " vastaajatunnus-id)
   (map #(into {} [[:vastaajatunnus_id vastaajatunnus-id]
                   [:kentta (find-id (name (first %)) kyselytyyppi-kentat)]
                   [:arvo (second %)]]) (seq vastaajatunnus-kentat)))

@@ -21,15 +21,15 @@
 
 (conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql")
 
-(defn to-date [sql-date]
-  (-> sql-date (.getTime) (java.util.Date.)))
+;(defn to-date [sql-date]
+;  (-> sql-date (.getTime) (java.util.Date.)))
 
 (extend-protocol jdbc/IResultSetReadColumn
-  Date
-  (result-set-read-column [v _ _] (to-date v))
+  ;Date
+  ;(result-set-read-column [v _ _] (to-date v))
 
-  Timestamp
-  (result-set-read-column [v _ _] (to-date v))
+  ;Timestamp
+  ;(result-set-read-column [v _ _] (to-date v))
 
   Jdbc4Array
   (result-set-read-column [v _ _] (vec (.getArray v)))
