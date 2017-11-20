@@ -31,9 +31,11 @@
     :body [vastaajatunnukset s/Any]
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-    (do
-      ;(vastaajatunnus/lisaa-massana! vastaajatunnukset)
-      (response-or-404 (format-vastaajatunnus-response vastaajatunnukset))))
+    (-> vastaajatunnukset
+        vastaajatunnus/lisaa-massana!
+        format-vastaajatunnus-response
+        response-or-404))
+
   (GET "/kyselyt" []
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]

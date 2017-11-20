@@ -223,7 +223,8 @@
   (jdbc/with-db-transaction [tx *db*]
     (jdbc/execute! tx ["SET LOCAL aipal.kayttaja = 'JARJESTELMA'"])
     (doseq [tunnus vastaajatunnukset]
-      (db/lisaa-vastaajatunnus! tx tunnus))))
+      (db/lisaa-vastaajatunnus! tx tunnus))
+    vastaajatunnukset))
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
