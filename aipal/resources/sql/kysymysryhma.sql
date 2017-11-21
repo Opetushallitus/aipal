@@ -20,4 +20,4 @@ SELECT * FROM kysymysryhma_kyselypohja WHERE kyselypohjaid = :kyselypohjaid
 SELECT * FROM asteikko WHERE koulutustoimija = :koulutustoimija;
 
 -- :name tallenna-asteikko :! :n
-INSERT INTO asteikko (koulutustoimija, nimi, asteikko) VALUES (:koulutustoimija, :nimi, :asteikko);
+INSERT INTO asteikko (koulutustoimija, nimi, asteikko) VALUES (:koulutustoimija, :nimi, :asteikko::json);
