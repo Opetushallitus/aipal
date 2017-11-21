@@ -9,6 +9,11 @@
         <ng-form name="kysymysForm" class="kysymysForm">
             <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
+            <div class="kysymys-selite">
+            {{kysymys | lokalisoiKentta:'selite'}}
+            </div>
+
+
             <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">
                 <textarea ng-class="kysymys.max_vastaus < 500 ? 'single-row' : ''" name="vapaateksti" ng-model="kysymys.vastaus"
                           ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}"

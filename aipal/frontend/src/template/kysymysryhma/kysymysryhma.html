@@ -126,7 +126,9 @@
                             </label>
                         </div>
 
-                        <kysymys-tekstit kysymys="aktiivinenKysymys" kentta="kysymys"></kysymys-tekstit>
+                        <kysymys-tekstit kysymys="aktiivinenKysymys" kentta="kysymys" tyyppi={{kysymystekstinTyyppi()}}> </kysymys-tekstit>
+
+                        <kysymys-tekstit ng-if="aktiivinenKysymys.vastaustyyppi === 'monivalinta'" kysymys="aktiivinenKysymys" kentta="selite" tyyppi="selite" pakollinen=false> </kysymys-tekstit>
 
                         <div class="form-group">
                             <label>{{i18n.kysymys.vastaustapa}}

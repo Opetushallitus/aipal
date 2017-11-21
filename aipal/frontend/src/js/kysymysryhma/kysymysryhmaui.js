@@ -187,8 +187,13 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       'monivalinta',
       'vapaateksti',
       'arvosana4_ja_eos',
-      'arvosana6_ja_eos'
+      'arvosana6_ja_eos',
+      'valiotsikko'
     ];
+
+    $scope.kysymystekstinTyyppi = function() {
+      return $scope.aktiivinenKysymys.vastaustyyppi === 'valiotsikko' ? 'valiotsikko' : 'kysymys'
+    }
 
     $scope.vapaateksti_maksimit = [10, 100, 500,1000,1500,2000,2500,3000];
 
@@ -201,6 +206,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
 
     $scope.lisaaVaihtoehto = function() {
+      console.log("Aktiivinen " + JSON.stringify($scope.aktiivinenKysymys))
       if($scope.aktiivinenKysymys.monivalintavaihtoehdot === undefined){
         $scope.aktiivinenKysymys.monivalintavaihtoehdot = [];
       }

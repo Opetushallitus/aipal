@@ -24,6 +24,9 @@
                         :kysymys_fi
                         :kysymys_sv
                         :kysymys_en
+                        :selite_fi
+                        :selite_sv
+                        :selite_en
                         :max_vastaus
                         :monivalinta_max
                         :rajoite

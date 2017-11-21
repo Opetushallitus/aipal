@@ -46,6 +46,9 @@
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.kysymys_en
+                :kysymys.selite_fi
+                :kysymys.selite_sv
+                :kysymys.selite_en
                 :kysymys.pakollinen
                 :kysymys.eos_vastaus_sallittu
                 :kysymys.jatkokysymys

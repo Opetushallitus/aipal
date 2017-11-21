@@ -6,6 +6,11 @@
   padding-left: 30px;
 }
 
+.kysymys-selite {
+  white-space: pre-line;
+  padding-bottom: 1em;
+}
+
 .kysymys {
   border-bottom: 1px solid $lightest-gray;
   -webkit-transition: all 600ms cubic-bezier(0.445, 0.050, 0.550, 0.950);;

@@ -21,10 +21,15 @@ angular.module('yhteiset.direktiivit.kysymys-tekstit', [])
       restrict: 'E',
       scope: {
         kentta: '@',
-        kysymys: '='
+        kysymys: '=',
+        tyyppi: '@',
+        pakollinen: '=?',
       },
       templateUrl: 'template/yhteiset/direktiivit/kysymys-tekstit.html',
       link: function(scope) {
+        if(scope.pakollinen === undefined){
+          scope.pakollinen = true;
+        }
         scope.i18n = i18n;
       }
     };

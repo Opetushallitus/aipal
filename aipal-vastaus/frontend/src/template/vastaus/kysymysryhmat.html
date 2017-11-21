@@ -5,8 +5,16 @@
     <div ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys" id="k{{kysymys.kysymysid}}" ng-init="vastausKieli = vastauksienKieli(kysymys)"
          ng-if="!kysymys.jatkokysymys || (kysymys.jatkokysymys && naytaJatkokysymys(kysymysryhma, kysymys))">
 
-        <ng-form name="kysymysForm" class="kysymysForm">
+        <div ng-if="kysymys.vastaustyyppi === 'valiotsikko'">
             <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
+        </div>
+
+        <ng-form name="kysymysForm" class="kysymysForm" ng-if="kysymys.vastaustyyppi !== 'valiotsikko'">
+            <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
+
+            <div class="kysymys-selite">
+            {{kysymys | lokalisoiKentta:'selite'}}
+            </div>
 
             <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">
                 <textarea ng-class="kysymys.max_vastaus < 500 ? 'single-row' : ''" name="vapaateksti" ng-model="kysymys.vastaus"
