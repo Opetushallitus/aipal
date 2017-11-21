@@ -201,8 +201,12 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
 
     $scope.lisaaVaihtoehto = function() {
+      if($scope.aktiivinenKysymys.monivalintavaihtoehdot === undefined){
+        $scope.aktiivinenKysymys.monivalintavaihtoehdot = [];
+      }
       $scope.aktiivinenKysymys.monivalintavaihtoehdot.push(apu.uusiVaihtoehto());
     };
+
     $scope.poistaVaihtoehto = apu.poistaVaihtoehto;
     $scope.tallenna = function() {
       apu.poistaYlimaaraisetKentat($scope.aktiivinenKysymys);
