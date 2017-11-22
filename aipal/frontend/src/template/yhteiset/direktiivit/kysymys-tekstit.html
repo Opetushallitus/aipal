@@ -1,17 +1,17 @@
 <div class="form-group">
-  <label ng-class="{pakollinen: !(kysymys[kentta + '_en'] || kysymys[kentta + '_sv'])}"><span>{{i18n.yleiset[tyyppi]}} ({{i18n.yleiset.suomeksi}})</span>
-    <textarea class="form-control e2e-kysymys-suomeksi" ng-model="kysymys[kentta + '_fi']" rows="5" maxlength="500" ng-required="! (pakollinen && (kysymys[kentta + '_en'] || kysymys[kentta + '_sv']))"></textarea>
+  <label ng-class="{pakollinen: pakollinen && !(kysymys[kentta + '_en'] || kysymys[kentta + '_sv'])}"><span>{{i18n.yleiset[tyyppi]}} ({{i18n.yleiset.suomeksi}})</span>
+    <textarea class="form-control e2e-kysymys-suomeksi" ng-model="kysymys[kentta + '_fi']" rows="5" ng-required="(pakollinen && !(kysymys[kentta + '_en'] || kysymys[kentta + '_sv']))"></textarea>
   </label>
 </div>
 
 <div class="form-group">
-  <label ng-class="{pakollinen: !(kysymys[kentta + '_en'] || kysymys[kentta + '_fi'])}"><span>{{i18n.yleiset[tyyppi]}} ({{i18n.yleiset.ruotsiksi}})</span>
-    <textarea class="form-control" ng-model="kysymys[kentta + '_sv']" rows="5" maxlength="500" ng-required="! (pakollinen && (kysymys[kentta + '_en'] || kysymys[kentta + '_fi']))"></textarea>
+  <label ng-class="{pakollinen: pakollinen &&!(kysymys[kentta + '_en'] || kysymys[kentta + '_fi'])}"><span>{{i18n.yleiset[tyyppi]}} ({{i18n.yleiset.ruotsiksi}})</span>
+    <textarea class="form-control" ng-model="kysymys[kentta + '_sv']" rows="5"ng-required="(pakollinen && !(kysymys[kentta + '_en'] || kysymys[kentta + '_fi']))"></textarea>
   </label>
 </div>
 
 <div class="form-group">
-  <label ng-class="{pakollinen: !(kysymys[kentta + '_fi'] || kysymys[kentta + '_sv'])}"><span>{{i18n.yleiset[tyyppi]}} ({{i18n.yleiset.englanniksi}})</span>
-    <textarea class="form-control" ng-model="kysymys[kentta + '_en']" rows="5" maxlength="500" ng-required="! (pakollinen && (kysymys[kentta + '_fi'] || kysymys[kentta + '_sv']))"></textarea>
+  <label ng-class="{pakollinen: pakollinen && !(kysymys[kentta + '_fi'] || kysymys[kentta + '_sv'])}"><span>{{i18n.yleiset[tyyppi]}} ({{i18n.yleiset.englanniksi}})</span>
+    <textarea class="form-control" ng-model="kysymys[kentta + '_en']" rows="5" ng-required="(pakollinen && !(kysymys[kentta + '_fi'] || kysymys[kentta + '_sv']))"></textarea>
   </label>
 </div>
