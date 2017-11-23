@@ -96,11 +96,11 @@
 
 (defn muotoile-jakauma [jakauma]
   (when jakauma
-    (zipmap (range) (.getArray jakauma))))
+    (zipmap (range) jakauma)))
 
 (defn muotoile-kyllaei-jakauma [vastaukset]
   (when vastaukset
-    (frequencies (keep keyword (.getArray vastaukset)))))
+    (frequencies (keep keyword vastaukset))))
 
 (defn kasittele-asteikkokysymys [kysymys vastaukset vaihtoehtoja & {:keys [alku] :or {alku 1}}]
   (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
@@ -139,7 +139,7 @@
        :kysymys_sv (:ei_teksti_sv kysymys)
        :kysymys_en (:ei_teksti_en kysymys)
        :vapaatekstivastaukset (when ei-vastaukset
-                                (for [v (.getArray ei-vastaukset)
+                                (for [v ei-vastaukset
                                       :when v]
                                   {:teksti v}))
        :vastaustyyppi "vapaateksti"})))
@@ -161,13 +161,13 @@
   (let [vapaatekstit (:vapaatekstit vastaukset)]
     (assoc kysymys :vapaatekstivastaukset
            (when vapaatekstit
-             (for [v (.getArray vapaatekstit)
+             (for [v vapaatekstit
                    :when v]
                {:teksti v})))))
 
 (defn kasittele-kysymys [kysymys vastaukset]
   (let [vastaajat (set (when-let [vastaajat (:vastaajat vastaukset)]
-                         (.getArray vastaajat)))
+                         vastaajat))
         vastaajia (count vastaajat)
         keskiarvo-ja-hajonta (when (asteikkotyyppi? (:vastaustyyppi kysymys))
                                (select-keys vastaukset [:keskiarvo :keskihajonta]))
