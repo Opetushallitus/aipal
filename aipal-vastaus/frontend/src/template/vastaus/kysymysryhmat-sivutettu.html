@@ -9,7 +9,7 @@
         <ng-form name="kysymysForm" class="kysymysForm">
             <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
 
-            <div class="kysymys-selite">
+            <div class="kysymys-selite" ng-if="kysymyksellaSelite(kysymys)">
             {{kysymys | lokalisoiKentta:'selite'}}
             </div>
 

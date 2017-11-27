@@ -195,6 +195,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $scope.sivu = Math.max($scope.sivu -1, 0);
         $scope.vaihdaSivu()
       };
+        var selite = $filter('lokalisoiKentta')(kysymys, 'selite');
 
       $scope.vaihdaMonivalinta = function(vaihtoehto, kysymys) {
         var kysymysid = kysymys.kysymysid;
