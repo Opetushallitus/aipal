@@ -14,6 +14,7 @@
 
 (ns aipalvastaus.sql.vastaaja
   (:require [korma.core :as sql]
+            [aipalvastaus.sql.kyselykerta :refer [hae-kyselyn-tiedot]]
             [aipalvastaus.sql.korma :refer [vastaajatunnus-where]]))
 
 (defn vastaajatunnus-voimassa?
@@ -27,12 +28,13 @@
 
 (defn vastaajatunnuksella-vastauskertoja?
   [vastaajatunnus]
-  (let [tulos (first (sql/select :vastaajatunnus
+  (let [kyselytyyppi (:tyyppi (hae-kyselyn-tiedot vastaajatunnus))
+        tulos (first (sql/select :vastaajatunnus
                        (sql/fields :vastaajien_lkm [(sql/subselect :vastaaja
                                                       (sql/aggregate (count :*) :vastaajia)
                                                       (sql/where {:vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajia])
                        (vastaajatunnus-where vastaajatunnus)))]
-    (> (:vastaajien_lkm tulos) (:vastaajia tulos))))
+    (or (= kyselytyyppi 4) (> (:vastaajien_lkm tulos) (:vastaajia tulos)))))
 
 (defn validoi-vastaajatunnus
   [vastaajatunnus]
@@ -48,6 +50,20 @@
       (sql/insert :vastaaja
         (sql/values {:kyselykertaid (:kyselykertaid vastaajatunnus)
                      :vastaajatunnusid (:vastaajatunnusid vastaajatunnus)})))))
+
+(defn hae-vastaaja [vastaajatunnus]
+  (first (sql/select :vastaaja
+           (sql/join :inner :vastaajatunnus (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
+           (sql/fields :vastaaja.vastaajaid :vastaaja.kyselykertaid :vastaaja.vastaajatunnusid)
+           (vastaajatunnus-where vastaajatunnus))))
+
+(defn luo-tai-hae-vastaaja! [vastaajatunnus]
+  (let [kyselytyyppi (:tyyppi (hae-kyselyn-tiedot vastaajatunnus))
+        vastaaja (hae-vastaaja vastaajatunnus)]
+    (println "Tunnus:" vastaajatunnus  "Kyselytyyppi: " kyselytyyppi "Vastaaja:" vastaaja "Käytetään vanhaa vastaajaa:" (and (= kyselytyyppi 4) (some? vastaaja)))
+    (if (and (= kyselytyyppi 4) (some? vastaaja))
+      vastaaja
+      (luo-vastaaja! vastaajatunnus))))
 
 (defn paivata-vastaaja! [vastaajaid]
   (->

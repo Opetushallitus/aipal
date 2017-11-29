@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
     [clj-time.core :as time]
     [aipal.integraatio.sql.korma :refer :all]
-    [oph.korma.common :refer [joda-date->sql-date joda-datetime->sql-timestamp] ]))
+    [oph.korma.common :refer [joda-date->sql-date joda-datetime->sql-timestamp]]))
 
 (defn paivita-nakyma []
   (sql/exec-raw "REFRESH MATERIALIZED VIEW vipunen_view;"))
@@ -31,8 +31,8 @@
             valtakunnalliset-ehto
             (>= :vastausaika alkupvm)
             (<= :vastausaika loppupvm)))
-        (sql/order :vastausid
-        ))))
+        (sql/order :vastausid))))
+
 
 
 (defn ^:private laske [alkup loppup vain-valtakunnalliset]
@@ -41,11 +41,11 @@
         valtakunnalliset-ehto (if vain-valtakunnalliset {:valtakunnallinen true} true)]
     (sql/select vipunen_view
       (sql/aggregate (count :*) :lkm)
-        (sql/where 
-          (and 
-            valtakunnalliset-ehto
-            (>= :vastausaika alkupvm)
-            (<= :vastausaika loppupvm))))))
+      (sql/where
+        (and
+          valtakunnalliset-ehto
+          (>= :vastausaika alkupvm)
+          (<= :vastausaika loppupvm))))))
 
 (defn laske-valtakunnalliset 
   [alkup loppup]
@@ -53,9 +53,9 @@
 
 (defn hae-valtakunnalliset 
   ([]
-    (hae-valtakunnalliset nil nil))
+   (hae-valtakunnalliset nil nil))
   ([alkup loppup]
-    (hae alkup loppup true)))
+   (hae alkup loppup true)))
 
 (defn laske-kaikki
   [alkup loppup]
@@ -63,6 +63,6 @@
 
 (defn hae-kaikki 
   ([]
-    (hae-kaikki nil nil))
+   (hae-kaikki nil nil))
   ([alkup loppup]
-    (hae alkup loppup false)))
+   (hae alkup loppup false)))

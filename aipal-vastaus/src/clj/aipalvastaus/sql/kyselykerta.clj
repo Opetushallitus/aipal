@@ -85,6 +85,7 @@
                   :kysely.selite_fi
                   :kysely.selite_sv
                   :kysely.selite_en
+                  :kysely.tyyppi
                   :uudelleenohjaus_url
                   :tutkinto.tutkintotunnus
                   [:tutkinto.nimi_fi :tutkinto_nimi_fi]
@@ -92,6 +93,21 @@
                   [:tutkinto.nimi_en :tutkinto_nimi_en]
                   :kysely.sivutettu)
       (vastaajatunnus-where tunnus))))
+
+(defn hae-vastaukset [tunnus]
+  (sql/select :vastaus
+    (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
+    (sql/join :inner :vastaajatunnus (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
+    (sql/join :inner :kysymys (= :kysymys.kysymysid :vastaus.kysymysid))
+    (sql/fields :vastaus.vastausid
+                :vastaus.kysymysid
+                :kysymys.kysymysryhmaid
+                :vastaus.vastaajaid
+                :vastaus.numerovalinta
+                :vastaus.vaihtoehto
+                :vastaus.vapaateksti
+                :vastaus.en_osaa_sanoa)
+    (vastaajatunnus-where tunnus)))
 
 (defn ^:private yhdista-monivalintavaihtoehdot-kysymyksiin [kysymykset monivalintavaihtoehdot]
   (let [kysymysid->monivalinnat (group-by :kysymysid monivalintavaihtoehdot)]

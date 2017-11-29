@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipalvastaus.rest-api.vastaus
-  (:require [compojure.api.core :refer [defroutes POST]]
+  (:require [compojure.api.core :refer [defroutes POST GET]]
             [korma.db :as db]
             [schema.core :as schema]
             [clojure.tools.logging :as log]
@@ -63,11 +63,12 @@
       (filter #(= (:kysymysid %) (:kysymysid kysymys)) vastaukset))))
 
 (defn validoi-vastaukset
-  [vastaukset kysymykset]
-  (if (and (vastausvalinnat-valideja? vastaukset kysymykset)
-           (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset))
-    vastaukset
-    (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia.")))
+  [vastaukset kysymykset tunnus]
+  (let [kyselytyyppi (:tyyppi (kysely-arkisto/hae-kyselyn-tiedot tunnus))]
+    (if (and (vastausvalinnat-valideja? vastaukset kysymykset)
+             (or (= kyselytyyppi 4) (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset)))
+      vastaukset
+      (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia."))))
 
 (defn tallenna-jatkovastaus!
   [vastaus]
@@ -79,6 +80,7 @@
 (defn tallenna-vastaukset!
   [vastaukset vastaajaid kysymykset]
   (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
+    (arkisto/poista! vastaajaid)
     (doseq [vastaus vastaukset
             :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
                   vastaustyyppi (:vastaustyyppi vastauksen-kysymys)
@@ -97,23 +99,34 @@
     true))
 
 (defn validoi-ja-tallenna-vastaukset
-  [vastaajaid vastaukset kysymykset]
+  [vastaajaid vastaukset kysymykset tunnus]
   (when (some-> vastaukset
-          (validoi-vastaukset kysymykset)
+          (validoi-vastaukset kysymykset tunnus)
           (tallenna-vastaukset! vastaajaid kysymykset))
     (vastaaja/paivata-vastaaja! vastaajaid)
     true))
+
+(defn hae-vastaus [vastaus]
+  (let [vals (-> vastaus
+               (select-keys [:numerovalinta :vaihtoehto :vapaateksti :en_osaa_sanoa])
+               vals)
+        value (first (filter some? vals))]
+    {:kysymysid (:kysymysid vastaus) :vastaus value :kysymysryhmaid (:kysymysryhmaid vastaus) :en_osaa_sanoa (:en_osaa_sanoa vastaus)}))
+
 
 (defroutes reitit
   (POST "/:vastaajatunnus" []
     :path-params [vastaajatunnus :- schema/Str]
     :body-params [vastaukset :- [KayttajanVastaus]]
     (db/transaction
-      (let [vastaajaid (:vastaajaid (vastaaja/luo-vastaaja! vastaajatunnus))]
+      (let [vastaajaid (:vastaajaid (vastaaja/luo-tai-hae-vastaaja! vastaajatunnus))]
         (if (and vastaajaid
-                 (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus)))
+                 (validoi-ja-tallenna-vastaukset vastaajaid vastaukset (kysely-arkisto/hae-kysymykset vastaajatunnus) vastaajatunnus))
           (response-nocache "OK")
           (do
             (log/error (str "Vastausten (" vastaajatunnus ") tallentaminen epäonnistui."))
             (db/rollback)
-            {:status 403}))))))
+            {:status 403})))))
+  (GET "/:vastaajatunnus" []
+    :path-params [vastaajatunnus :- schema/Str]
+    (map hae-vastaus (kysely-arkisto/hae-vastaukset vastaajatunnus))))
