@@ -257,7 +257,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $scope.data = data;
         $scope.valittuKysymysryhma = data.kysymysryhmat[0];
         $scope.vaihdaSivu(false);
-        if(data.tyyppi = 4){
+        if(data.tyyppi === 4){
           haeVastaukset($routeParams.tunnus);
         }
         if(data.sivutettu){
