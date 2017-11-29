@@ -63,12 +63,11 @@
       (filter #(= (:kysymysid %) (:kysymysid kysymys)) vastaukset))))
 
 (defn validoi-vastaukset
-  [vastaukset kysymykset tunnus]
-  (let [kyselytyyppi (:tyyppi (kysely-arkisto/hae-kyselyn-tiedot tunnus))]
-    (if (and (vastausvalinnat-valideja? vastaukset kysymykset)
-             (or (= kyselytyyppi 4) (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset)))
-      vastaukset
-      (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia."))))
+  [vastaukset kysymykset kyselytyyppi]
+  (if (and (vastausvalinnat-valideja? vastaukset kysymykset)
+           (or (= kyselytyyppi 4) (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset)))
+    vastaukset
+    (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia.")))
 
 (defn tallenna-jatkovastaus!
   [vastaus]
@@ -78,9 +77,8 @@
                                      :ei_vastausteksti (:jatkovastaus_ei vastaus)})))
 
 (defn tallenna-vastaukset!
-  [vastaukset vastaajaid kysymykset]
-  (let [kyselytyyppi (:tyyppi (kysely-arkisto/hae-kyselyn-tiedot tunnus))
-        kysymysid->kysymys (map-by :kysymysid kysymykset)]
+  [vastaukset vastaajaid kysymykset kyselytyyppi]
+  (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
     (when (= 4 kyselytyyppi) (arkisto/poista! vastaajaid))
     (doseq [vastaus vastaukset
             :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
@@ -101,11 +99,12 @@
 
 (defn validoi-ja-tallenna-vastaukset
   [vastaajaid vastaukset kysymykset tunnus]
-  (when (some-> vastaukset
-          (validoi-vastaukset kysymykset tunnus)
-          (tallenna-vastaukset! vastaajaid kysymykset))
-    (vastaaja/paivata-vastaaja! vastaajaid)
-    true))
+  (let [kyselytyyppi (:tyyppi (kysely-arkisto/hae-kyselyn-tiedot tunnus))]
+    (when (some-> vastaukset
+            (validoi-vastaukset kysymykset kyselytyyppi)
+            (tallenna-vastaukset! vastaajaid kysymykset kyselytyyppi))
+      (vastaaja/paivata-vastaaja! vastaajaid)
+      true)))
 
 (defn hae-vastaus [vastaus]
   (let [vals (-> vastaus
