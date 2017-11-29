@@ -79,8 +79,9 @@
 
 (defn tallenna-vastaukset!
   [vastaukset vastaajaid kysymykset]
-  (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
-    (arkisto/poista! vastaajaid)
+  (let [kyselytyyppi (:tyyppi (kysely-arkisto/hae-kyselyn-tiedot tunnus))
+        kysymysid->kysymys (map-by :kysymysid kysymykset)]
+    (when (= 4 kyselytyyppi) (arkisto/poista! vastaajaid))
     (doseq [vastaus vastaukset
             :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
                   vastaustyyppi (:vastaustyyppi vastauksen-kysymys)

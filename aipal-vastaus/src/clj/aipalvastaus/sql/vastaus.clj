@@ -24,7 +24,6 @@
                        {:vastausaika (time-coerce/to-sql-date (time/today))}))))
 
 (defn poista! [vastaajaid]
-  (println "Poistetaan vastaukset vastaajaid:ltä " vastaajaid)
   (sql/delete :vastaus
     (sql/where {:vastaajaid vastaajaid})))
 
