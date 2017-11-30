@@ -10,13 +10,24 @@
   <br />
 
   <small class="pull-right" ></small>
-  <button ng-show="!preview && (!data.sivutettu || (data.sivutettu && sivu == data.kysymysryhmat.length -1))" id="submit" class="e2e-tallenna-vastaukset" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
-    <div class="required-notice" ng-if="vastausForm.$error.required">
-        <h4 ng-bind="i18n.yleiset.vastaa_viela"></h4>
-        <div ng-repeat="kysymysryhma in data.kysymysryhmat">
-            <div ng-repeat="kysymys in kysymysryhma.kysymykset" ng-if="kysymys.pakollinen && (kysymys.vastaus === undefined || kysymys.vastaus === false)">
+
+  <div ng-if="data.sivutettu">
+      <button id="prev-page" class="e2e-tallenna-vastaukset" ng-click="edellinenSivu()" ng-disabled="edellinenNappiDisabloitu">{{i18n.yleiset.edellinen}}</button>
+      <span>{{sivu + 1}} / {{data.kysymysryhmat.length}}</span>
+      <button ng-show="!viimeinenSivu" id="next-page" class="e2e-tallenna-vastaukset" ng-click="seuraavaSivu()">{{i18n.yleiset.seuraava}}</button>
+      <button ng-show="!preview && viimeinenSivu" id="submit" class="e2e-tallenna-vastaukset" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
+  </div>
+
+  <div ng-if="!data.sivutettu">
+      <button ng-show="!preview" id="submit" class="e2e-tallenna-vastaukset" ng-click="tallenna()" ng-bind="i18n.yleiset.tallenna_vastaukset" ng-disabled="tallennaNappiDisabloitu || !vastausForm.$valid"></button>
+  </div>
+
+  <div class="required-notice" ng-if="vastausForm.$error.required">
+    <h4 ng-bind="i18n.yleiset.vastaa_viela"></h4>
+    <div ng-repeat="kysymysryhma in data.kysymysryhmat">
+        <div ng-repeat="kysymys in kysymysryhma.kysymykset" ng-if="kysymys.pakollinen && (kysymys.vastaus === undefined || kysymys.vastaus === false)">
                 <a href="" ng-click="gotoQuestion(kysymys.kysymysid)">{{kysymys | lokalisoiKentta:'kysymys'}}</a>
-            </div>
         </div>
     </div>
+  </div>
 </form>

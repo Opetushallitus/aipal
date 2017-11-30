@@ -39,7 +39,12 @@
   (GET "/kyselyt" []
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-    (response-or-404 (db/hae-uraseurannat))))
+    (response-or-404 (db/hae-uraseurannat)))
+  (GET "/vastanneet/:kyselykertaid" []
+    :path-params [kyselykertaid :- s/Int]
+    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :header-params [authorization :- String]
+    (map :tunnus (db/hae-vastaajat {:kyselykertaid kyselykertaid}))))
 
 (defn uraseuranta-reitit [asetukset]
   (wrap-authentication reitit (auth-backend asetukset)))

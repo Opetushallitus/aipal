@@ -20,7 +20,7 @@
                 <textarea ng-class="kysymys.max_vastaus < 500 ? 'single-row' : ''" name="vapaateksti" ng-model="kysymys.vastaus"
                           ng-required="kysymys.pakollinen" ng-maxlength="{{kysymys.max_vastaus}}"
                           ng-change="onTextChange(kysymys)"></textarea>
-                <span ng-show="kysymysForm.vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
+                <span class="error" ng-show="kysymysForm.vapaateksti.$error.maxlength">{{i18n.yleiset.vastaus_liian_pitka}}</span>
             </div>
 
             <div ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'" class="vastaus_valinnat">

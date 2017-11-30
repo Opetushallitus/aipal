@@ -17,3 +17,6 @@ SELECT k.kyselyid, k.nimi_fi AS kysely_nimi, k.koulutustoimija, o.oppilaitoskood
         AND (kk.voimassa_loppupvm > now() OR kk.voimassa_loppupvm IS NULL )
         AND (o.lakkautuspaiva IS NULL)
         ORDER BY kyselyid;
+
+-- :name hae-vastaajat :? :*
+SELECT DISTINCT vt.tunnus FROM vastaajatunnus vt JOIN vastaaja v ON vt.vastaajatunnusid = v.vastaajatunnusid WHERE vt.kyselykertaid = :kyselykertaid;

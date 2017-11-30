@@ -18,6 +18,7 @@
             </label>
             <label>{{i18n.kysymys.vapaateksti.rajoite.otsikko}}
                 <select ng-model="aktiivinenKysymys.jatkokysymykset.kylla.rajoite" class="form-control" ng-options="'kysymys.vapaateksti.rajoite.' + rajoite | i18n for rajoite in vapaateksti_rajoitteet">
+                </select>
             </label>
         </div>
     </div>
@@ -27,6 +28,7 @@
             <input type="checkbox" ng-model="aktiivinenKysymys.jatkokysymykset.ei.jatkokysymys"> {{i18n.kysymys.jatkokysymys_ei_vastaukselle}}
         </label>
     </div>
+
     <div ng-if="aktiivinenKysymys.jatkokysymykset.ei.jatkokysymys">
         <div class="panel well">
             <kysymys-tekstit kysymys="aktiivinenKysymys.jatkokysymykset.ei" kentta="kysymys"></kysymys-tekstit>

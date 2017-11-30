@@ -184,7 +184,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       $scope.tunnus = $routeParams.tunnus;
       $scope.monivalinta = {};
       $scope.tallennaNappiDisabloitu = false;
-      $scope.seuraavaNappiDisabloitu = false;
+      $scope.viimeinenSivu = false;
       $scope.edellinenNappiDisabloitu = false;
       $scope.sivu = 0;
 
@@ -200,7 +200,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
         $scope.valittuKysymysryhma = $scope.data.kysymysryhmat[$scope.sivu];
         $scope.edellinenNappiDisabloitu = $scope.sivu === 0;
 
-        $scope.seuraavaNappiDisabloitu = $scope.sivu === ($scope.data.kysymysryhmat.length -1);
+        $scope.viimeinenSivu = $scope.sivu === ($scope.data.kysymysryhmat.length -1);
 
         if($scope.data.tyyppi === 4 && tallenna){
           Vastaus.tallenna($scope.tunnus, f.keraaVastausdata($scope.data));
