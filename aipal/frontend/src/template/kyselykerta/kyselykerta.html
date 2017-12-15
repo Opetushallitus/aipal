@@ -78,7 +78,8 @@
             <thead>
             <tr>
                 <th ts-criteria="tunnus">{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
-                <th ts-criteria="voimassa_alkupvm" ts-default>{{'kyselykerta.vastausaika' | i18n}}</th>
+                <th ts-criteria="luotuaika" ts-default="descending">{{'i18n.vastaajatunnus.luotuaika' | i18n}}</th>
+                <th ts-criteria="voimassa_alkupvm">{{'kyselykerta.vastausaika' | i18n}}</th>
                 <th ts-criteria="(valmistavan_koulutuksen_jarjestaja|lokalisoiKentta:'nimi')+(valmistavan_koulutuksen_oppilaitos|lokalisoiKentta:'nimi')">{{'i18n.vastaajatunnus.jarjestaja'|i18n}}</th>
                 <th ts-criteria="tutkinto|lokalisoiKentta:'nimi'">{{'i18n.vastaajatunnus.tutkinto'|i18n}}</th>
                 <th ts-criteria="vastausten_lkm">{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
@@ -87,7 +88,7 @@
             </thead>
             <tfoot>
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         {{'vastaajatunnus.vastauksia'|i18n}}
                     </td>
                     <td>
@@ -96,7 +97,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         {{'i18n.vastaajatunnus.vastausprosentti'|i18n}}
                     </td>
                     <td>
@@ -110,6 +111,7 @@
                     ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}"
                     ts-repeat>
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
+                    <td>{{tunnus.luotuaika | date:'dd.MM.yyyy hh:mm:ss'}}</td>
                     <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
                     <td>
                         <div>{{tunnus.valmistavan_koulutuksen_oppilaitos | lokalisoiKentta: 'nimi'}}</div>
