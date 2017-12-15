@@ -53,9 +53,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           return {templateUrl: 'template/kysely/palautekysely-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
         else if (kyselytyyppi === 2 )
           return {templateUrl: 'template/kysely/rekrykysely-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
-        else if (kyselytyyppi === 3 || kyselytyyppi === 4)
+        else if (kyselytyyppi === 3)
           return {templateUrl: 'template/kysely/uraseuranta-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
-
+        else if (kyselytyyppi === 4)
+          return {templateUrl: 'template/kysely/digikyvykkyys-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
       }
 
       $scope.luoTunnuksiaDialogi = function () {
