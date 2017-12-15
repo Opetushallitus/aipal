@@ -11,7 +11,7 @@
 (def delimiter \;)
 
 (defn get-template-parts [q]
-  (filter second (select-keys q [:kysymysid :jatkokysymysid])))
+  (filter second (select-keys q [:kysymysid])))
 
 (defn create-row-template [questions]
   (let [sorted (sort-by (juxt :kysymysryhma_jarjestys :jarjestys) questions)]
@@ -21,7 +21,6 @@
   (let [question (some #(if (= (get % (first entry)) (second entry))%) questions)]
     (match [(first entry) (:jarjestys question)]
            [:kysymysid 0] [(:kysymysryhma_nimi question)]
-           [:jatkokysymysid _] ["" ""]
            :else [""])))
 
 (defn get-question-group-header [questions template vastaajatunnus-header]
@@ -29,8 +28,7 @@
 
 (defn get-header-fields [entry]
   (match [(first entry)]
-         [:kysymysid] [:kysymys_fi]
-         [:jatkokysymysid] [:jatkokysymys_kylla :jatkokysymys_ei]))
+         [:kysymysid] [:kysymys_fi]))
 
 (defn get-header-text [questions entry]
   (let [question (some #(if (= (get % (first entry)) (second entry))%) questions)
@@ -69,20 +67,10 @@
          ["kylla_ei_valinta"] (:vaihtoehto (first answers))
          :else ""))
 
-(defn find [pred coll]
-  (first (filter pred coll)))
-
-(defn get-jatkovastaus-text [answer]
-  (select-keys answer [:jatkokysymys_kylla :jatkokysymys_ei]))
-
-(defn get-answer [answers choices entry]
-  (let [key (first entry)
-        answers-for-question (filter #(if (= (get % key) (second entry)) %) answers)
+(defn get-answer [answers choices [key value]]
+  (let [answers-for-question (filter #(if (= (get % key) value) %) answers)
         first-answer (first answers-for-question)]
-    (match [key]
-           [:kysymysid] [(get-answer-text choices (:vastaustyyppi first-answer) answers-for-question)]
-           [:jatkokysymysid] (get-jatkovastaus-text first-answer))))
-
+    [(get-answer-text choices (:vastaustyyppi first-answer) answers-for-question)]))
 
 (defn get-value [tutkintotunnus-old entry]
   (let [entry-missing (nil? entry)
@@ -98,10 +86,10 @@
 (defn in? [coll elem]
   (some #(= elem %) coll))
 
-(def sallitut-kentat ["tutkinto" "henkilonumero" "haun_numero"])
+(def sallitut-taustatiedot ["tutkinto" "henkilonumero" "haun_numero" "ika" "sukupuoli"])
 
 (defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers]
-  (let [vastaajatunnus-kentat (filter #(in? sallitut-kentat (:kentta_id %)) (vastaajatunnus/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus}))
+  (let [vastaajatunnus-kentat (filter #(in? sallitut-taustatiedot (:kentta_id %)) (vastaajatunnus/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus}))
         vastaajatunnus-arvot (map #(get-vastaajatunnus-value tutkintotunnus %) vastaajatunnus-kentat)]
     (concat [vastaajatunnus] vastaajatunnus-arvot (mapcat #(get-answer answers choices %) template))))
 
@@ -112,16 +100,49 @@
     (csv/hae-monivalinnat kysymysidt)))
 
 (defn kysely-csv [kyselyid]
-  (let [questions (csv/hae-kysymykset kyselyid)
-        kysely-fields (filter #(in? sallitut-kentat (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
-        choices (get-choices questions)
-        template (create-row-template questions)
-        all-answers (csv/hae-vastaukset kyselyid)
-        answers (group-by :vastaajaid all-answers)
-        vastaajatunnus-header (map :kentta_fi kysely-fields)
-        question-group-header-row (get-question-group-header questions template vastaajatunnus-header)
-        header-row (create-header-row template questions vastaajatunnus-header)
-        answer-rows (map #(create-row template (first (second %)) choices (second %)) answers)]
+  (let [kysymykset (csv/hae-kysymykset kyselyid)
+        taustatieot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
+        monivalintavaihtoehdot (get-choices kysymykset)
+        template (create-row-template kysymykset)
+        vastaukset (group-by :vastaajaid (csv/hae-vastaukset kyselyid))
+        vastaajatunnus-header (map :kentta_fi taustatieot)
+        kysymysryhma-header (get-question-group-header kysymykset template vastaajatunnus-header)
+        kysymys-header (create-header-row template kysymykset vastaajatunnus-header)
+        vastausrivit (map #(create-row template (first (second %)) monivalintavaihtoehdot (second %)) vastaukset)]
     (write-csv
-      (muuta-kaikki-stringeiksi (apply concat [[question-group-header-row header-row] answer-rows]))
+      (muuta-kaikki-stringeiksi (apply concat [[kysymysryhma-header kysymys-header] vastausrivit]))
       :delimiter delimiter)))
+
+
+(defn hae-vastaus [kysymys vastaukset monivalintavaihtoehdot]
+  (let [kysymyksen-vastaukset (filter  #(= (:kysymysid kysymys) (:kysymysid %)) vastaukset)]
+    (get-answer-text monivalintavaihtoehdot (:vastaustyyppi kysymys) kysymyksen-vastaukset)))
+
+
+(defn luo-vastausrivi [[vastaajatunnus vastaukset] kysymykset monivalintavaihtoehdot]
+  (let [vanha-tutkintotunnus (:tutkintotunnus (first vastaukset))
+        taustatiedot (->> (vastaajatunnus/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus})
+                          (filter #(in? sallitut-taustatiedot (:kentta_id %)))
+                          (map #(get-vastaajatunnus-value vanha-tutkintotunnus %)))
+        taustakysymysten-vastaukset (->> kysymykset
+                                         (filter :taustakysymys)
+                                         (map #(hae-vastaus % vastaukset monivalintavaihtoehdot)))]
+    (->> kysymykset
+         (sort-by (juxt :kysymysryhma_jarjestys :jarjestys))
+         (filter (complement :taustakysymys))
+         (map #(concat [vastaajatunnus] taustatiedot taustakysymysten-vastaukset [(:kysymysryhma_nimi %) (:kysymys_fi %) (hae-vastaus % vastaukset monivalintavaihtoehdot)])))))
+
+
+(defn kysely-csv-vastauksittain [kyselyid]
+  (let [kysymykset (filter #(not= (:vastaustyyppi %) "valiotsikko") (csv/hae-kysymykset kyselyid))
+        vastaukset (group-by :vastaajatunnus (csv/hae-vastaukset kyselyid))
+        taustatiedot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
+        monivalintavaihtoehdot (get-choices kysymykset)
+        taustakysymykset (->> kysymykset
+                              (filter :taustakysymys)
+                              (sort-by :jarjestys)
+                              (map :kysymys_fi))
+        header (concat ["Vastaajatunnus"] (map :kentta_fi taustatiedot) taustakysymykset ["Kysymysryhmä" "Kysymys" "Vastaus"])
+        vastausrivit (mapcat #(luo-vastausrivi % kysymykset monivalintavaihtoehdot) vastaukset)]
+    (write-csv (muuta-kaikki-stringeiksi (cons header vastausrivit))
+               :delimiter delimiter)))

@@ -29,6 +29,7 @@
     (sql/fields :kysymysid :jatkokysymysid :kysymys_fi :jarjestys :vastaustyyppi
                 [:kysely_kysymysryhma.jarjestys :kysymysryhma_jarjestys]
                 [:kysymysryhma.nimi_fi :kysymysryhma_nimi]
+                [:kysymysryhma.taustakysymykset :taustakysymys]
                 [:jatkokysymys.kylla_teksti_fi :jatkokysymys_kylla]
                 [:jatkokysymys.ei_teksti_fi :jatkokysymys_ei :kysely.tyyppi])
     (sql/where {:kysely.kyselyid kyselyid})))

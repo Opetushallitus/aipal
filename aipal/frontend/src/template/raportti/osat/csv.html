@@ -5,5 +5,9 @@
             Muodosta CSV
             <span class="fa fa-file-excel-o"></span>
         </a>
+        <a class="btn btn-primary" ng-href="api/csv/kysely/vastauksittain/{{raportti.kyselyid}}" ng-disabled="!raporttiValidi(raportti)">
+            Muodosta CSV vastauksittain
+            <span class="fa fa-file-excel-o"></span>
+        </a>
     </auth>
 </div>

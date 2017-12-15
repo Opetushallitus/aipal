@@ -28,29 +28,40 @@
 
 
 (defn oppilaitostyyppi [oppilaitostyyppi_uri]
-  (if oppilaitostyyppi_uri (let [matcher (re-matcher #"\d+" oppilaitostyyppi_uri)]
-    (re-find matcher))))
+  (if oppilaitostyyppi_uri
+    (let [matcher (re-matcher #"\d+" oppilaitostyyppi_uri)]
+      (re-find matcher))))
 
 (defn lisaa-oppilaitostyyppi [koodi]
   (assoc koodi :oppilaitostyyppi (oppilaitostyyppi (:oppilaitosTyyppiUri koodi))))
 
 (defn hae-kaikki [url]
-  (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta")
+  (log/info "Haetaan kaikki organisaatiot organisaatiopalvelusta " url)
   (let [oids (get-json-from-url url)]
     (for [oid oids]
       (lisaa-oppilaitostyyppi (halutut-kentat (get-json-from-url (str url oid)))))))
 
 (defn hae-muuttuneet [url viimeisin-paivitys]
-  (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta")
+  (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta" url)
   (map (comp lisaa-oppilaitostyyppi halutut-kentat)
        (get-json-from-url (str url "v2/muutetut") {:query-params {"lastModifiedSince" viimeisin-paivitys}})))
 
 ;; Koodistopalvelun oppilaitostyyppikoodistosta
 (def ^:private halutut-tyypit
-  #{"oppilaitostyyppi_41" ;; Ammattikorkeakoulut
-    "oppilaitostyyppi_42"
-    "oppilaitostyyppi_43"
-    })
+  #{"oppilaitostyyppi_21" ;; Ammatilliset oppilaitokset
+    "oppilaitostyyppi_22" ;; Ammatilliset erityisoppilaitokset
+    "oppilaitostyyppi_23" ;; Ammatilliset erikoisoppilaitokset
+    "oppilaitostyyppi_24" ;; Ammatilliset aikuiskoulutuskeskukset
+    "oppilaitostyyppi_41" ;; Ammattikorkeakoulut
+    "oppilaitostyyppi_42" ;; Yliopistot
+    "oppilaitostyyppi_43" ;; Sotilaskorkeakoulut
+    "oppilaitostyyppi_61" ;; Musiikkioppilaitokset
+    "oppilaitostyyppi_62" ;; Liikunnan koulutuskeskukset
+    "oppilaitostyyppi_63" ;; Kansanopistot
+    "oppilaitostyyppi_65" ;; Opintokeskukset
+    "oppilaitostyyppi_93" ;; Muut koulutuksen järjestäjät
+    "oppilaitostyyppi_99" ;; Muut oppilaitokset
+    "oppilaitostyyppi_xx"}) ;; Tyyppi ei tiedossa
 
 (defn ^:private haluttu-tyyppi? [koodi]
   (when-let [tyyppi (:oppilaitosTyyppiUri koodi)]

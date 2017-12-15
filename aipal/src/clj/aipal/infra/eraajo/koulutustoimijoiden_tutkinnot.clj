@@ -13,32 +13,25 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.infra.eraajo.koulutustoimijoiden-tutkinnot
-  (:require [clojurewerkz.quartzite.conversion :as qc]
-            [clojure.tools.logging :as log]
-            [aipal.integraatio.aitu :as aitu]
-            [korma.db :as db]
-            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
-            [aipal.arkisto.tutkinto :as tutkinto-arkisto]
-            [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+  (:require [clojure.tools.logging :as log]
+            [aipal.integraatio.oiva :as oiva]
+            [arvo.db.core :refer [*db*] :as db]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
-            [oph.common.util.http-util :refer [parse-iso-date]]
-            [oph.korma.common :refer [joda-date->sql-date]]))
+            [clojure.java.jdbc :as jdbc]))
 
-(defn ^:integration-api paivita-koulutustoimijoiden-tutkinnot! []
-  (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Aitusta")
-  (db/transaction
-    (with-kayttaja integraatio-uid nil nil
-      (let [koulutustoimijoiden-tutkinnot (aitu/hae-koulutustoimijoiden-tutkinnot-ja-jarjestamissopimukset)]
-        (koulutustoimija-arkisto/poista-kaikki-koulutustoimijoiden-tutkinnot!)
-        (doseq [[y-tunnus tutkinnot] koulutustoimijoiden-tutkinnot
-                :when (koulutustoimija-arkisto/hae y-tunnus)
-                tutkinto tutkinnot
-                :let [tutkintotunnus (get tutkinto "tutkintotunnus")
-                      alkupvm (joda-date->sql-date (parse-iso-date (get tutkinto "alkupvm")))
-                      loppupvm (joda-date->sql-date (parse-iso-date (get tutkinto "loppupvm")))]
-                :when (tutkinto-arkisto/hae tutkintotunnus)]
-          (koulutustoimija-arkisto/lisaa-koulutustoimijalle-tutkinto! y-tunnus tutkintotunnus alkupvm loppupvm)))))
-  (log/info "Koulutustoimijoiden tutkintojen päivitys Aitusta valmis"))
+(defn paivita-koulutustoimijoiden-tutkinnot! []
+  (let [koulutustoimijoiden-tutkinnot (oiva/hae-koulutustoimijoiden-tutkinnot)]
+    (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Oivasta")
+    (jdbc/with-db-transaction [tx *db*]
+      (jdbc/execute! tx ["SET LOCAL aipal.kayttaja = 'INTEGRAATIO'"])
+      (db/poista-koulutustoimijoiden-tutkinnot!)
+      (doseq [koulutustoimija koulutustoimijoiden-tutkinnot
+              tutkinto (:koulutukset koulutustoimija)]
+        (db/lisaa-koulutustoimijan-tutkinto! tx {:ytunnus (:jarjestajaYtunnus koulutustoimija)
+                                                 :tutkintotunnus tutkinto
+                                                 :alkupvm (:alkupvm koulutustoimija)
+                                                 :loppupvm (:loppupvm koulutustoimija)})))
+    (log/info "Koulutustoimijoiden tutkintojen päivitys Oivasta valmis")))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
@@ -49,4 +42,4 @@
        (paivita-koulutustoimijoiden-tutkinnot!)
        (catch Exception e
          (log/error "Koulutustoimijoiden tutkintojen päivitys Aitusta epäonnistui"
-                    (map str (.getStackTrace e)))))))
+           (map str (.getStackTrace e)))))))

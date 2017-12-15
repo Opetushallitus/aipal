@@ -23,7 +23,7 @@
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.taustakysymykset :as taustakysymykset]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
-            [arvo.toimiala.raportti.csv :refer [kysely-csv]]
+            [arvo.toimiala.raportti.csv :refer [kysely-csv kysely-csv-vastauksittain]]
             [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (defn ^:private muodosta-kyselyn-raportti-parametreilla
@@ -100,9 +100,12 @@
 (defn csv []
   (GET "/kysely/:kyselyid" []
        :path-params [kyselyid :- s/Int]
-       :body [parametrit s/Any]
        :kayttooikeus [:kysely-raportti kyselyid]
-    (csv-download-response (apply str (kysely-csv kyselyid)) "kysely.csv")))
+    (csv-download-response (apply str (kysely-csv kyselyid)) "kysely.csv"))
+  (GET "/kysely/vastauksittain/:kyselyid" []
+       :path-params [kyselyid :- s/Int]
+       :kayttooikeus [:kysely-raportti kyselyid]
+       (csv-download-response (apply str (kysely-csv-vastauksittain kyselyid)) "kysely.csv")))
 
 
 (defn csv-reitit [asetukset]

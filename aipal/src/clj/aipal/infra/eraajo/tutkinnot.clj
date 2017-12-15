@@ -31,8 +31,8 @@
    org.quartz.Job
    (execute [this ctx]
      (try
-     (let [{asetukset "asetukset"} (qc/from-job-data ctx)]
-       (paivita-tutkinnot! (clojure.walk/keywordize-keys asetukset)))
-     (catch Exception e
-       (log/error "Tutkintojen päivitys koodistopalvelusta epäonnistui"
-                  (map str (.getStackTrace e)))))))
+      (let [{asetukset "asetukset"} (qc/from-job-data ctx)]
+        (paivita-tutkinnot! (clojure.walk/keywordize-keys asetukset)))
+      (catch Exception e
+        (log/error "Tutkintojen päivitys koodistopalvelusta epäonnistui"
+                   (map str (.getStackTrace e)))))))
