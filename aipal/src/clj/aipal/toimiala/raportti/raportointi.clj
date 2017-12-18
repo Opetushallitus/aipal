@@ -212,7 +212,7 @@
 
 (defn muodosta-raportti [kysymysryhmat kysymykset vastaukset]
   (let [id->vastaukset (map-by :kysymysid vastaukset)
-        kysymykset (for [kysymys kysymykset
+        kysymykset (for [kysymys (filter #(not= (:vastaustyyppi %) "valiotsikko") kysymykset)
                          :let [kysymyksen-vastaukset (id->vastaukset (:kysymysid kysymys))]]
                      (kasittele-kysymys kysymys kysymyksen-vastaukset))
         kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
