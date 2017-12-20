@@ -21,7 +21,7 @@
     "grunt-contrib-jshint": "0.10.0",
     "grunt-contrib-watch": "0.6.1",
     "grunt-karma": "0.12.1",
-    "grunt-sass": "1.2.0",
+    "grunt-sass": "2.0.0",
     "grunt-usemin": "2.0.2",
     "jasmine-core": "^2.5.2",
     "jshint-stylish": "0.1.5",
