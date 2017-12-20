@@ -11,8 +11,8 @@
   },
   "author": "",
   "devDependencies": {
-    "grunt": "0.4.5",
-    "grunt-bowercopy": "0.9.0",
+    "grunt": "1.0.1",
+    "grunt-bowercopy": "1.2.4",
     "grunt-connect-proxy": "0.2.0",
     "grunt-contrib-clean": "0.6.0",
     "grunt-contrib-concat": "0.5.1",
