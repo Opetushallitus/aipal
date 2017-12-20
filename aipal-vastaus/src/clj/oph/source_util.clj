@@ -18,7 +18,8 @@
   (:require [clojure.test :refer [deftest testing is]]
             [clojure.java.io :refer [file reader]]
             [clojure.walk :as cw]
-            [clojure.string :refer [trim]]))
+            [clojure.string :refer [trim]]
+            [clojure.set :as set]))
 
 (defn tiedostot [hakemisto polku-re ohita]
   (let [ohita (set (map file ohita))]
@@ -91,7 +92,7 @@
   [muoto kwset]
   (and
     (= 'defn (nth muoto 0))
-    (empty? (clojure.set/intersection (set (keys (meta (nth muoto 1)))) kwset))))
+    (empty? (set/intersection (set (keys (meta (nth muoto 1)))) kwset))))
 
 (defn ei-audit-logitettava-funktio?
   "test-api ja integraatioiden käyttämät arkistofunktiot eivät ole auditlokituksen piirissä"
@@ -128,7 +129,7 @@
                                #".*\.js"
                                [#"console\.log"
                                 #"debugger"
-                                (re-pattern (str \u00a0)) ; non-breaking space
-                                ]
+                                (re-pattern (str \u00a0))] ; non-breaking space
+
                                :ohita ["resources/public/js/vendor/angular.js"
                                        "resources/public/js/vendor/stacktrace.js"]))
