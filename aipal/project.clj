@@ -62,10 +62,10 @@
              :uberjar {:main aipal.palvelin
                        :aot :all}
              :test {:resource-paths ["test-resources"]}}
-  :source-paths ["src/clj" "clojure-utils/src/clj"]
+  :source-paths ["src/clj"]
   :java-source-paths ["src/java"]
   :javac-options ["-target" "1.7" "-source" "1.7"]
-  :test-paths ["test/clj" "clojure-utils/test/clj"]
+  :test-paths ["test/clj"]
   :test-selectors {:default  (complement (some-fn :integraatio :performance))
                    :integraatio (complement (some-fn :performance))
                    :performance :performance}

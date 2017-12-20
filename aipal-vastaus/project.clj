@@ -43,8 +43,8 @@
                                   [ring/ring-mock "0.3.0"]]}
              :uberjar {:main aipalvastaus.palvelin
                        :aot :all}}
-  :source-paths ["src/clj" "clojure-utils/src/clj"]
-  :java-source-paths ["src/java" "clojure-utils/src/java"]
+  :source-paths ["src/clj"]
+  :java-source-paths ["src/java"]
   :test-paths ["test/clj"]
   :main aipalvastaus.palvelin
   :repl-options {:init-ns user}
