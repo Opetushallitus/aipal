@@ -1,7 +1,0 @@
-[submodule "aipal/clojure-utils"]
-	path = aipal/clojure-utils
-	url = https://github.com/opetushallitus/clojure-utils
-[submodule "aipal-vastaus/clojure-utils"]
-	path = aipal-vastaus/clojure-utils
-	url = https://github.com/opetushallitus/clojure-utils
-
