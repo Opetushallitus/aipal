@@ -97,11 +97,12 @@
     :kayttooikeus [:kysely-raportti kyselyid]
     (response-or-404 (muodosta-kyselyraportti kyselyid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
-(defn csv []
+(defroutes csv
   (GET "/kysely/:kyselyid" []
        :path-params [kyselyid :- s/Int]
        :kayttooikeus [:kysely-raportti kyselyid]
-    (csv-download-response (apply str (kysely-csv kyselyid)) "kysely.csv"))
+       (csv-download-response (apply str (kysely-csv kyselyid)) "kysely.csv"))
+
   (GET "/kysely/vastauksittain/:kyselyid" []
        :path-params [kyselyid :- s/Int]
        :kayttooikeus [:kysely-raportti kyselyid]

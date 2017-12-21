@@ -94,6 +94,6 @@
     (context "/api/public/luovastaajatunnus" [] (arvo.rest-api.avopvastaajatunnus/reitit asetukset))
     (context "/api/public/uraseuranta" [] (arvo.rest-api.uraseuranta/uraseuranta-reitit asetukset))
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
-    (context "/api/csv" [] (aipal.rest-api.raportti.kysely/csv))
+    (context "/api/csv" [] aipal.rest-api.raportti.kysely/csv)
     (context "/api/vipunen" [] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
     (r/not-found "Not found")))

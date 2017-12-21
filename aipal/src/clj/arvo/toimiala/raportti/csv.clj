@@ -63,7 +63,8 @@
                               (map #(get-choice-text choices %))
                               (clojure.string/join ", "))
          ["likert_asteikko"] (:numerovalinta (first answers))
-         ["vapaateksti"] (clojure.string/escape (:vapaateksti (first answers)) {\newline " " \tab " " delimiter \,})
+         ["vapaateksti"] (when (:vapaateksti answers)
+                           (clojure.string/escape (:vapaateksti (first answers)) {\newline " " \tab " " delimiter \,}))
          ["kylla_ei_valinta"] (:vaihtoehto (first answers))
          :else ""))
 
@@ -99,8 +100,11 @@
         kysymysidt (map :kysymysid monivalinnat)]
     (csv/hae-monivalinnat kysymysidt)))
 
+(defn hae-kysymykset [kyselyid]
+  (filter #(not= (:vastaustyyppi %) "valiotsikko") (csv/hae-kysymykset kyselyid)))
+
 (defn kysely-csv [kyselyid]
-  (let [kysymykset (csv/hae-kysymykset kyselyid)
+  (let [kysymykset (hae-kysymykset kyselyid)
         taustatieot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
         monivalintavaihtoehdot (get-choices kysymykset)
         template (create-row-template kysymykset)
@@ -134,7 +138,7 @@
 
 
 (defn kysely-csv-vastauksittain [kyselyid]
-  (let [kysymykset (filter #(not= (:vastaustyyppi %) "valiotsikko") (csv/hae-kysymykset kyselyid))
+  (let [kysymykset (hae-kysymykset kyselyid)
         vastaukset (group-by :vastaajatunnus (csv/hae-vastaukset kyselyid))
         taustatiedot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
         monivalintavaihtoehdot (get-choices kysymykset)
