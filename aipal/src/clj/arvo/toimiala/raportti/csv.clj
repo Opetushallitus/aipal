@@ -102,7 +102,7 @@
 
 (defn muuta-taustakysymykset [kysymykset]
   (if (every? :taustakysymys kysymykset)
-    (map #(update % :taustakysymys false) kysymykset)
+    (map #(assoc % :taustakysymys false) kysymykset)
     kysymykset))
 
 (defn poista-valiotsikot [kysymykset]
