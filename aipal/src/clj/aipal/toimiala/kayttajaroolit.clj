@@ -22,8 +22,8 @@
                         "ARVO-YO-KAYTTAJA" "OPL-KAYTTAJA"
                         "AMKKATSELIJA" "OPL-KATSELIJA"
                         "ARVO-YO-KATSELIJA" "OPL-KATSELIJA"
-                        "KATSELIJA" "KATSELIJA"
-                        })
+                        "KATSELIJA" "KATSELIJA"})
+
 
 ;; roolit jotka liittyvät koulutustoimijaan
 (def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})

@@ -18,7 +18,8 @@
             [oph.korma.common :refer [unique]]
             [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]
-            [aipal.auditlog :as auditlog]))
+            [aipal.auditlog :as auditlog]
+            [arvo.db.core :refer [*db*] :as db]))
 
 (defn hae-kaikki
   "Hae kaikki koulutustoimijan kyselykerrat"
@@ -81,6 +82,9 @@ ORDER BY kyselykerta.kyselykertaid ASC")
                      (sql/join :inner :oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
                      (sql/fields :kyselykerta.kyselykertaid)
                      (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false}))))
+
+(defn hae-rekrykysely [oppilaitos vuosi]
+  (first (db/hae-rekry-kyselykerta {:oppilaitoskoodi oppilaitos :vuosi vuosi})))
 
 ;end avop.fi
 

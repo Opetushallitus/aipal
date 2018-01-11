@@ -63,6 +63,16 @@
       (handler request)
       (on-403 request))))
 
+
+(defn automaatti-vastaajatunnus []
+  {:tunnusten-lkm 1
+   :vastaajien_lkm 1
+   :voimassa_alkupvm (alkupvm)
+   :voimassa_loppupvm (loppupvm)
+   :rahoitusmuotoid 5
+   :toimipaikka nil})
+
+
 (defn avop->arvo-map
   [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto kyselykerran_nimi]}]
   (let [ent_oppilaitos (oppilaitos/hae oppilaitos)
@@ -83,19 +93,51 @@
      :koulutusmuoto koulutusmuoto
      :kyselykertaid (kyselykerta-id :kyselykertaid)}))
 
-(defn reitit [asetukset]
-  (wrap-authentication (POST "/" []
-                        :body [avopdata s/Any]
-                        :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
-                        :header-params [authorization :- String]
-                        (try
-                           (let [vastaajatunnus (avop->arvo-map avopdata)]
-                             (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
-                           (catch java.lang.AssertionError e1
-                             (log/error e1 "Mandatory fields missing")
-                             (on-validation-error (format "Mandatory fields are missing or not found")))
-                           (catch Exception e2
-                              (log/error e2 "Unexpected error")
-                              (on-validation-error (format "Unexpected error: %s" (.getMessage e2))))))
 
-     (auth-backend asetukset)))
+(defn rekry-vastaajatunnus
+  [{:keys [henkilonumero oppilaitos vuosi]}]
+  (let [ent_oppilaitos (oppilaitos/hae oppilaitos)
+        ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
+        kyselykerta-id (kyselykerta/hae-rekrykysely oppilaitos vuosi)]
+    (merge (automaatti-vastaajatunnus)
+           {:kyselykertaid (kyselykerta-id :kyselykertaid)
+            :henkilonumero henkilonumero
+            :valmistavan_koulutuksen_jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus]))
+            :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])})))
+
+(defroutes vastaajatunnus-routes
+  (POST "/" []
+    :body [avopdata s/Any]
+    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :header-params [authorization :- String]
+    (try
+      (let [vastaajatunnus (avop->arvo-map avopdata)]
+        (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
+      (catch java.lang.AssertionError e1
+        (log/error e1 "Mandatory fields missing")
+        (on-validation-error (format "Mandatory fields are missing or not found")))
+      (catch Exception e2
+        (log/error e2 "Unexpected error")
+        (on-validation-error (format "Unexpected error: %s" (.getMessage e2))))))
+  (POST "/rekry" []
+    :body [rekrydata s/Any]
+    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :header-params [authorization :- String]
+    (try
+      (let [vastaajatunnus (rekry-vastaajatunnus rekrydata)]
+        (on-response (get-in (first (vastaajatunnus/lisaa-avopfi! vastaajatunnus)) [:tunnus])))
+      (catch java.lang.AssertionError e1
+        (log/error e1 "Mandatory fields missing")
+        (on-validation-error (format "Mandatory fields are missing or not found")))
+      (catch Exception e2
+        (log/error e2 "Unexpected error")
+        (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))))))
+
+;Hae kyselykerta metatietojen perusteella (vanhoissa vielä nimellä mutta tuki valmiiksi?)
+;requestiin mukaan erillisinä avaimina taustatiedot ja kyselykerta-ohajaustiedot?
+;REKRY = organisaatio + kyselytyyppi + kyselykerran vuositieto? (nimeä uudelleen uraseurannan käyttämä?
+;MUUT = organisaatio + kyselytyyppi + vuosi + meta (avop-amk, avop-yamk jne vai pitäisikö päättely olla täällä päässä?)
+  ; Automaatti-merkintä + UI?
+
+(defn reitit [asetukset]
+  (wrap-authentication vastaajatunnus-routes (auth-backend asetukset)))
