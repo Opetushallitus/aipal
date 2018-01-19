@@ -25,7 +25,7 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
 
-(def maxrows 100000)
+;(def maxrows 100000)
 
 (defn ^:private logita-errorit [api-nimi alkupvm loppupvm response]
   (let [schema-virheet (->> response
@@ -37,23 +37,17 @@
         ",  hakuväli:" alkupvm "-" loppupvm
         ",  viallisten vastausten lukumäärä: " (count schema-virheet) "/" (count response)
         ",  epävalidien kenttien taajuudet: " (frequencies (mapcat keys schema-virheet))))
-      response))
+    response))
 
 (defn ^:private hae-vipunen-vastaukset [api-nimi alkupvm loppupvm rivimaara-funktio hae-funktio]
   (let [alkupv (parse-iso-date alkupvm)
-        loppupv (parse-iso-date loppupvm)
-        rivimaara (:lkm (first (rivimaara-funktio alkupv loppupv)))]
-
-    (if (< rivimaara maxrows)
-      {:status 200
-       :body (let [resp (hae-funktio alkupv loppupv)]
-               (logita-errorit api-nimi alkupvm loppupvm resp)
-               resp)
-       :headers {"Content-Type" "application/json; charset=utf-8"}}
-      ; liian monta riviä
-      {:status 500
-       :body (str "Rivimäärä " rivimaara " liian iso. Rajaa aikaväliä.")
-       :headers {"Content-Type" "application/json; charset=utf-8"}})))
+        loppupv (parse-iso-date loppupvm)]
+    (log/info "Vipunen-API: Haetaan aikaväli" alkupvm "-" loppupvm)
+    {:status 200
+     :body (let [resp (hae-funktio alkupv loppupv)]
+             ;(logita-errorit api-nimi alkupvm loppupvm resp)
+             resp)
+     :headers {"Content-Type" "application/json; charset=utf-8"}}))
 
 (defroutes reitit
 
