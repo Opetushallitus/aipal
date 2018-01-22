@@ -67,5 +67,5 @@
                                :kysymysryhma (s/maybe s/Str)
                                :taustakysymykset s/Bool
                                :kysely_alkupvm org.joda.time.LocalDate
-                               :kysely_loppupvm org.joda.time.LocalDate})
+                               :kysely_loppupvm (s/maybe org.joda.time.LocalDate)})
 
