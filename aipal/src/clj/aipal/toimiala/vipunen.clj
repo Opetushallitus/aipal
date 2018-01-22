@@ -65,5 +65,7 @@
                                :kysymysryhmajarjestys s/Int
                                :kysymysjarjestys s/Int
                                :kysymysryhma (s/maybe s/Str)
-                               :taustakysymykset s/Bool})
+                               :taustakysymykset s/Bool
+                               :kysely_alkupvm org.joda.time.LocalDate
+                               :kysely_loppupvm org.joda.time.LocalDate})
 
