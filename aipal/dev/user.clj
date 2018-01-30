@@ -47,7 +47,7 @@
     @(ns-resolve 'aipal.asetukset 'oletusasetukset)
     (assoc :development-mode true
            :raportointi-minimivastaajat -1
-           :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
+           :cas-auth-server {:url "https://testi.virkailija.opintopolku.fi/cas"
                              :unsafe-https true
                              :enabled true}
            :basic-auth {:tunnus "tunnus"
@@ -59,20 +59,13 @@
   ((ns-resolve 'aipal.infra.eraajo.organisaatiot 'paivita-organisaatiot!)
    {"url" (((repl-asetukset) :organisaatiopalvelu) :url)}))
 
-(defn ^:private kaynnista! []
-  {:pre [(not @palvelin)]
-   :post [@palvelin]}
-  (kaanna-frontend)
-  (require 'aipal.palvelin)
-  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) (repl-asetukset))))
-
-(defn ^:private start! []
+(defn start []
   {:pre [(not @palvelin)]
    :post [@palvelin]}
   (require 'aipal.palvelin)
   (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) (repl-asetukset))))
 
-(defn ^:private sammuta! []
+(defn stop []
   {:pre [@palvelin]
    :post [(not @palvelin)]}
   ((ns-resolve 'aipal.palvelin 'sammuta) @palvelin)
@@ -80,7 +73,7 @@
 
 (defn uudelleenkaynnista! []
   (when @palvelin
-    (sammuta!))
+    (stop))
   (nsr/refresh :after 'user/kaynnista!))
 
 (defmacro with-testikayttaja [& body]

@@ -44,6 +44,7 @@
                       :password (s/maybe s/Str)
                       :ssl Boolean}
    :vastaus-base-url s/Str
+   :oiva Palvelu
    :avopfi-shared-secret s/Str
    :organisaatiopalvelu {:url s/Str}
    :koodistopalvelu {:url s/Str}

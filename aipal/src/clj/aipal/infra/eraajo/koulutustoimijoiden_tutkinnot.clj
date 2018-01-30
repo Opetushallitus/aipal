@@ -41,5 +41,5 @@
      (try
        (paivita-koulutustoimijoiden-tutkinnot!)
        (catch Exception e
-         (log/error "Koulutustoimijoiden tutkintojen päivitys Aitusta epäonnistui"
+         (log/error "Koulutustoimijoiden tutkintojen päivitys Oivasta epäonnistui"
            (map str (.getStackTrace e)))))))
