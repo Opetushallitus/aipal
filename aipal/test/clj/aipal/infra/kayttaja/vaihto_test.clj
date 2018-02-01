@@ -19,7 +19,7 @@
 ;; voimassaolevaa käyttäjää.
 (deftest with-kayttaja-ei-voimassaolevaa-kayttajaa
   (with-redefs [kayttaja-arkisto/hae-voimassaoleva (constantly nil)
-                hae-kayttaja-ldapista (constantly nil)]
+                hae-kayttaja-kayttoikeuspalvelusta (constantly nil)]
     (is (thrown? IllegalStateException (with-kayttaja "uid" nil nil)))))
 
 ;; Jos UIDilla löytyy voimassaoleva käyttäjä, with-kayttaja ajaa annetun koodin

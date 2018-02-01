@@ -1,6 +1,7 @@
 (ns oph.common.util.cas
   (:require [clj-http.client :as http]
-            [aipal.asetukset :refer [asetukset]]))
+            [aipal.asetukset :refer [asetukset]]
+            [cheshire.core :as cheshire]))
 
 (defn ^:private hae-ticket-granting-url [url user password unsafe-https]
   (let [{:keys [status headers]} (http/post (str url "/v1/tickets")
@@ -28,13 +29,13 @@
          password :password} (get @asetukset palvelu)]
     (if cas-enabled
       (let [ticket-granting-url (hae-ticket-granting-url cas-url user password unsafe-https)
-            service-ticket (hae-service-ticket ticket-granting-url palvelu-url unsafe-https)]
+            service-ticket (hae-service-ticket ticket-granting-url (str palvelu-url "/j_spring_cas_security_check") unsafe-https)]
         (http/request (assoc-in options [:query-params :ticket] service-ticket)))
       (http/request options))))
 
 (defn get-with-cas-auth
   ([palvelu url]
-    (get-with-cas-auth palvelu url {}))
+   (get-with-cas-auth palvelu url {}))
   ([palvelu url options]
-    (request-with-cas-auth palvelu (merge options {:method :get
-                                                   :url url}))))
+   (request-with-cas-auth palvelu (merge options {:method :get
+                                                  :url url}))))

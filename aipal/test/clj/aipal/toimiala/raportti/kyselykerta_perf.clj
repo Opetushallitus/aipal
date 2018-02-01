@@ -25,5 +25,5 @@
     (run-simulation
       [{:name "Satunnaistettu kyselykerta raportin suorituskykytesti"
         :requests test-reqv}]
-      concurrent-users {:root "target/perf-report/kyselykerta"
-         :timeout-in-ms 10000})))
+      concurrent-users {:root "target/perf-report/kyselykerta"}
+         :timeout-in-ms 10000)))

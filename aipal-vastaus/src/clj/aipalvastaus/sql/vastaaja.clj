@@ -15,7 +15,8 @@
 (ns aipalvastaus.sql.vastaaja
   (:require [korma.core :as sql]
             [aipalvastaus.sql.kyselykerta :refer [hae-kyselyn-tiedot]]
-            [aipalvastaus.sql.korma :refer [vastaajatunnus-where]]))
+            [aipalvastaus.sql.korma :refer [vastaajatunnus-where]]
+            [clojure.tools.logging :as log]))
 
 (defn vastaajatunnus-voimassa?
   [vastaajatunnus]
@@ -60,7 +61,7 @@
 (defn luo-tai-hae-vastaaja! [vastaajatunnus]
   (let [kyselytyyppi (:tyyppi (hae-kyselyn-tiedot vastaajatunnus))
         vastaaja (hae-vastaaja vastaajatunnus)]
-    (println "Tunnus:" vastaajatunnus  "Kyselytyyppi: " kyselytyyppi "Vastaaja:" vastaaja "Käytetään vanhaa vastaajaa:" (and (= kyselytyyppi 4) (some? vastaaja)))
+    (log/info "Tunnus:" vastaajatunnus "Kyselytyyppi: " kyselytyyppi "Vastaaja:" vastaaja "Käytetään vanhaa vastaajaa:" (and (= kyselytyyppi 4) (some? vastaaja)))
     (if (and (= kyselytyyppi 4) (some? vastaaja))
       vastaaja
       (luo-vastaaja! vastaajatunnus))))

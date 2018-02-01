@@ -14,9 +14,10 @@
 
 (ns aipal.arkisto.koulutustoimija
   (:require [korma.core :as sql]
-            [aipal.integraatio.kayttooikeuspalvelu :refer [oph-koulutustoimija]]
             [aipal.integraatio.sql.korma :as taulut]
             [clojure.tools.logging :as log]))
+
+(def oph-koulutustoimija {:ytunnus "0920632-0"})
 
 (defn ^:integration-api lisaa!
   [tiedot]

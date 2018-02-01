@@ -8,7 +8,7 @@
             aipal.infra.kayttaja.vaihto))
 
 (defn ldap-fixture [f]
-  (with-redefs [aipal.infra.kayttaja.vaihto/hae-kayttaja-ldapista (constantly nil)]
+  (with-redefs [aipal.infra.kayttaja.vaihto/hae-kayttaja-kayttoikeuspalvelusta (constantly nil)]
     (f)))
 
 (use-fixtures :each (compose-fixtures tietokanta-fixture ldap-fixture))
@@ -43,7 +43,7 @@
                  :oid "k123"
                  :voimassa true}))
   (is (= ((wrap-kayttaja (fn [_] (:impersonoidun-kayttajan-nimi *kayttaja*)))
-           {:username "kayttaja"})
+          {:username "kayttaja"})
          "")))
 
 ;; Jos istuntoon on tallennettu impersonoitu OID, impersonoidaan ko. käyttäjää.
@@ -58,6 +58,6 @@
                   :oid "k123"
                   :voimassa true}]))
   (is (= ((wrap-kayttaja (fn [_] (:impersonoidun-kayttajan-nimi *kayttaja*)))
-           {:username "kayttaja"
-            :session {:impersonoitu-oid "t456"}})
+          {:username "kayttaja"
+           :session {:impersonoitu-oid "t456"}})
          "Matti Meikäläinen")))

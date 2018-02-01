@@ -38,17 +38,14 @@
    :cas-auth-server {:url s/Str
                      :unsafe-https Boolean
                      :enabled Boolean}
-   :ldap-auth-server {:host s/Str
-                      :port s/Int
-                      :user (s/maybe s/Str)
-                      :password (s/maybe s/Str)
-                      :ssl Boolean}
    :vastaus-base-url s/Str
    :oiva Palvelu
    :avopfi-shared-secret s/Str
    :organisaatiopalvelu {:url s/Str}
    :koodistopalvelu {:url s/Str}
    :eraajo Boolean
+   :kayttooikeuspalvelu Palvelu
+   :oppijanumerorekisteri Palvelu
    :development-mode Boolean
    :ominaisuus {s/Keyword Boolean}
    :raportointi-minimivastaajat s/Int
@@ -58,12 +55,13 @@
              :koulutustoimijoiden-tutkinnot s/Str
              :raportointi s/Str
              :tutkinnot s/Str}
+   :kayttooikeus-tarkistusvali s/Str
    (s/optional-key :basic-auth) {:tunnus s/Str
                                  :salasana s/Str}})
 
 (def oletusasetukset
   {:server {:port 8082
-            :base-url "http://localhost"}
+            :base-url "http://localhost:8082"}
    :db {:host "127.0.0.1"
         :port 5432
         :name "arvo_db"
@@ -71,26 +69,32 @@
         :password "aipal"
         :maximum-pool-size 15
         :minimum-pool-size 3}
-   :cas-auth-server {:url "https://192.168.50.53:8443/cas-server-webapp-3.5.2"
-                     :unsafe-https false
+   :cas-auth-server {:url "https://testi.virkailija.opintopolku.fi/cas"
+                     :unsafe-https true
                      :enabled false}
-   :ldap-auth-server {:host "localhost"
-                      :port 10389
-                      :user "uid=amkpal,ou=People,dc=opintopolku,dc=fi"
-                      :password "salasana"
-                      :ssl false}
    :vastaus-base-url "http://127.0.0.1:8083"
    :avopfi-shared-secret "secret"
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
-   :eraajo false
+   :eraajo true
+   :oiva {:url "http://oiva.minedu.fi/api/export/koulutusluvat"
+          :user "tunnus"
+          :password "salasana"}
    :development-mode true ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
-   :raportointi-minimivastaajat 5
+   :kayttooikeuspalvelu {:url "https://testi.virkailija.opintopolku.fi/kayttooikeus-service"
+                         :user "tunnus"
+                         :password "salasana"}
+   :oppijanumerorekisteri {:url "https://testi.virkailija.opintopolku.fi/oppijanumerorekisteri-service"
+                           :user "tunnus"
+                           :password "salasana"}
+   :basic-auth {:tunnus "testi" :salasana "kissa13"}
+   :raportointi-minimivastaajat 0
+   :kayttooikeus-tarkistusvali "6h"
    :logback {:properties-file "resources/logback.xml"}
-   :ajastus {:organisaatiopalvelu "5 0 0 * * ?"
+   :ajastus {:organisaatiopalvelu "0 25 15 ? * * *"
              :kayttooikeuspalvelu "0 0 4 * * ?"
-             :koulutustoimijoiden-tutkinnot "0 0 5 * * ?"
+             :koulutustoimijoiden-tutkinnot "0 40 17 ? * * *"
              :raportointi "0 30 5 * * ?"
              :tutkinnot "0 0 2 * * ?"}})
 

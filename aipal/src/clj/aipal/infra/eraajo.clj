@@ -25,8 +25,7 @@
             aipal.infra.eraajo.koulutustoimijoiden-tutkinnot
             aipal.infra.eraajo.raportointi
             aipal.infra.eraajo.tutkinnot)
-  (:import aipal.infra.eraajo.kayttajat.PaivitaKayttajatLdapistaJob
-           aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
+  (:import aipal.infra.eraajo.organisaatiot.PaivitaOrganisaatiotJob
            aipal.infra.eraajo.koulutustoimijoiden_tutkinnot.PaivitaKoulutustoimijoidenTutkinnotJob
            aipal.infra.eraajo.raportointi.PaivitaNakymatJob
            aipal.infra.eraajo.tutkinnot.PaivitaTutkinnotJob))
@@ -37,7 +36,7 @@
 
 (def ajastin (promise))
 
-(defn ^:integration-api kaynnista-ajastimet! [kayttooikeuspalvelu asetukset]
+(defn ^:integration-api kaynnista-ajastimet! [asetukset]
   (log/info "Käynnistetään ajastetut eräajot")
   (when-not (realized? ajastin)
     (deliver ajastin (qs/initialize)))
@@ -45,15 +44,7 @@
   (qs/clear! @ajastin)
   (qs/start @ajastin)
   (log/info "Eräajomoottori käynnistetty")
-  (let [ldap-job (j/build
-                   (j/of-type PaivitaKayttajatLdapistaJob)
-                   (j/with-identity "paivita-kayttajat-ldapista")
-                   (j/using-job-data {"kayttooikeuspalvelu" kayttooikeuspalvelu}))
-        ldap-trigger-daily (t/build
-                             (t/with-identity "daily4")
-                             (t/start-now)
-                             (t/with-schedule (ajastus asetukset :kayttooikeuspalvelu)))
-        org-job (j/build
+  (let [org-job (j/build
                   (j/of-type PaivitaOrganisaatiotJob)
                   (j/with-identity "paivita-organisaatiot")
                   (j/using-job-data {"asetukset" (:organisaatiopalvelu asetukset)}))
@@ -83,7 +74,6 @@
                             (t/with-identity "tutkinnot")
                             (t/start-now)
                             (t/with-schedule (ajastus asetukset :tutkinnot)))]
-    (qs/schedule @ajastin ldap-job ldap-trigger-daily)
     (qs/schedule @ajastin org-job org-trigger-daily)
     (qs/schedule @ajastin koul-job koul-trigger-daily)
     (qs/schedule @ajastin raportointi-job raportointi-trigger)

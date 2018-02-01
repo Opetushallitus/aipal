@@ -20,7 +20,7 @@
            :stop (conman/disconnect! *db*))
 
 (conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql"
-                             "sql/tutkinto.sql" "sql/kyselykerta.sql" "sql/koodisto.sql")
+                             "sql/tutkinto.sql" "sql/kyselykerta.sql" "sql/koodisto.sql" "sql/kayttaja.sql")
 
 ;(defn to-date [sql-date]
 ;  (-> sql-date (.getTime) (java.util.Date.)))

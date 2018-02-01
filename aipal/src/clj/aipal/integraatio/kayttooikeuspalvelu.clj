@@ -16,92 +16,47 @@
   (:require [clojure.string :as s]
             [clojure.tools.logging :as log]
             [clj-ldap.client :as ldap]
+            [oph.common.util.cas :as cas]
+            [cheshire.core :as cheshire]
+            [clojure.walk :refer [keywordize-keys]]
+            [aipal.asetukset :refer [asetukset]]
+            [oph.common.util.util :refer [get-json-from-url]]
             [aipal.toimiala.kayttajaroolit :refer [koulutustoimija-roolit
                                                    oph-roolit]]))
+(defn organisaation-ytunnus [oid]
+  (let [url (-> @asetukset :organisaatiopalvelu :url)
+        resp (get-json-from-url (str url "v2/hae") {:query-params {"oid" oid "aktiiviset" true "suunnitteilla" true}})]
+    (-> resp :organisaatiot first :ytunnus)))
 
-(def oph-koulutustoimija {:ytunnus "0920632-0"})
+(defn palvelukutsu [palvelu url options]
+  (-> (cas/get-with-cas-auth palvelu url options)
+      :body
+      cheshire/parse-string
+      keywordize-keys))
 
-(defn ryhma-cn-filter [ldap-ryhma]
-  {:filter (str "cn=APP_AMKPAL_" ldap-ryhma "_*")})
+(defn kayttoikeudet [kayttaja ldap-ryhma->rooli]
+  (for [organisaatio (:organisaatiot kayttaja)]
+    (->> (:kayttooikeudet organisaatio)
+         (filter #(= (:palvelu %) "AMKPAL"))
+         (map :oikeus)
+         (map ldap-ryhma->rooli)
+         (map #(into {} {:rooli %
+                         :organisaatio (organisaation-ytunnus (:organisaatioOid organisaatio))
+                         :voimassa true})))))
 
-(defn jasen-filter [jasen-dn]
-  {:filter (str "uniqueMember=" jasen-dn)})
+(defn hae-kayttajan-tiedot [uid ldap-ryhma->rooli]
+  (log/info "Haetaan käyttäjän" uid "tiedot Opintopolusta")
+  (let [kayttooikeus-url (str (-> @asetukset :kayttooikeuspalvelu :url) "/kayttooikeus/kayttaja")
+        oppijanumerorekisteri-url (str (-> @asetukset :oppijanumerorekisteri :url) "/henkilo/")
+        kayttaja (first (palvelukutsu :kayttooikeuspalvelu kayttooikeus-url {:query-params {"username" uid}}))
+        roolit (flatten (kayttoikeudet kayttaja ldap-ryhma->rooli))
+        tiedot (when kayttaja (palvelukutsu :oppijanumerorekisteri (str oppijanumerorekisteri-url (:oidHenkilo kayttaja)) {}))]
+    {:oid (:oidHenkilo kayttaja)
+     :etunimi (:etunimet tiedot)
+     :sukunimi (:sukunimi tiedot)
+     :uid uid
+     :voimassa ((complement empty?) roolit)
+     :roolit roolit}))
 
-(defn kayttaja-dn [uid]
-  (str "uid=" uid ",ou=People,dc=opintopolku,dc=fi"))
-
-(def ryhma-base "ou=Groups,dc=opintopolku,dc=fi")
-
-(def kayttaja-base "ou=People,dc=opintopolku,dc=fi")
-
-(defn kayttajat [kayttooikeuspalvelu ldap-ryhma rooli oid->ytunnus]
-  (with-open [yhteys (kayttooikeuspalvelu)]
-    (let [cn-filter (ryhma-cn-filter ldap-ryhma)]
-      (if-let [ryhmat (ldap/search yhteys ryhma-base cn-filter)]
-        (doall
-          (for [ryhma ryhmat
-                :let [koulutustoimija-oid (last (s/split (:cn ryhma) #"_"))
-                      ;; OPH:n oid ei ole välttämättä sama joka ympäristössä, joten koulutustoimija kytketään roolin perusteella
-                      koulutustoimija (or (oid->ytunnus koulutustoimija-oid)
-                                          (when (contains? oph-roolit rooli)
-                                            oph-koulutustoimija))
-                      kayttaja-dnt (:uniqueMember ryhma)
-                      ;; Jos ryhmällä on vain yksi uniqueMember-attribuutti, clj-ldap
-                      ;; palauttaa arvon (stringin) eikä vektoria arvoista.
-                      kayttaja-dnt (if (string? kayttaja-dnt)
-                                     [kayttaja-dnt]
-                                     kayttaja-dnt)]
-                ;; ei haeta koulutustoimijakäyttäjiä, joiden koulutustoimija ei ole tiedossa
-                :when (or koulutustoimija
-                          (not (contains? koulutustoimija-roolit rooli)))
-                kayttaja-dn kayttaja-dnt
-                :let [kayttaja (ldap/get yhteys kayttaja-dn)]
-                :when kayttaja
-                :let [etunimi (first (s/split (:cn kayttaja) #" "))
-                      sukunimi (:sn kayttaja)]]
-            {:oid (:employeeNumber kayttaja)
-             :uid (:uid kayttaja)
-             :etunimi etunimi
-             :sukunimi (or sukunimi "")
-             :voimassa true
-             :rooli rooli
-             :organisaatio (:ytunnus koulutustoimija)}))
-        (log/warn "Roolin" rooli "ldap-ryhmää" ldap-ryhma "ei löytynyt, ei lueta roolin käyttäjiä")))))
-
-(defn kayttaja [kayttooikeuspalvelu uid oid->ytunnus ryhma->rooli]
-  (with-open [yhteys (kayttooikeuspalvelu)]
-    (when-let [kayttaja (ldap/get yhteys (kayttaja-dn uid))]
-      (let [etunimi (first (s/split (:cn kayttaja) #" "))
-            sukunimi (:sn kayttaja)
-            ryhmat (ldap/search yhteys ryhma-base (jasen-filter (kayttaja-dn uid)))
-            roolit (for [ldap-ryhma ryhmat
-                         :let [koulutustoimija-oid (last (s/split (:cn ldap-ryhma) #"_"))
-                               ryhma (second (re-matches #"APP_AMKPAL_(.*)_[\d.]+" (:cn ldap-ryhma)))
-                               rooli (ryhma->rooli ryhma)
-                               koulutustoimija (or (oid->ytunnus koulutustoimija-oid)
-                                                   (when (contains? oph-roolit rooli)
-                                                     oph-koulutustoimija))]
-                         :when rooli]
-                     (do
-                       (when-not koulutustoimija
-                         (log/warn "Organisaatiota" koulutustoimija-oid "ei löydy koulutustoimijoista"))
-                       {:rooli rooli
-                        :organisaatio (:ytunnus koulutustoimija)
-                        :voimassa true}))
-            validit-roolit (filter :organisaatio roolit)]
-        (when (seq validit-roolit)
-          {:oid (:employeeNumber kayttaja)
-           :uid (:uid kayttaja)
-           :etunimi etunimi
-           :sukunimi (or sukunimi "")
-           :voimassa true
-           :roolit validit-roolit})))))
-
-(defn tee-kayttooikeuspalvelu [ldap-auth-server-asetukset]
-  (fn []
-    (let [{:keys [host port user password ssl]} ldap-auth-server-asetukset
-          asetukset (merge {:host (str host ":" port)
-                            :ssl? ssl}
-                           (when user {:bind-dn user})
-                           (when password {:password password}))]
-      (ldap/connect asetukset))))
+(defn kayttaja [uid ryhma->rooli]
+  (hae-kayttajan-tiedot uid ryhma->rooli))

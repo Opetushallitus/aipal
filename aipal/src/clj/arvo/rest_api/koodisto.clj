@@ -25,8 +25,7 @@
     :path-params [koulutuskoodi :- String]
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-    (let [tutkinto (db/tutkinto {:tutkintotunnus koulutuskoodi})
-          _ (println "HAETAAN TUTKINTO" tutkinto)]
+    (let [tutkinto (db/tutkinto {:tutkintotunnus koulutuskoodi})]
       (response-or-404 (into {}
                              (filter second {"fi" (:nimi_fi tutkinto)
                                              "sv" (:nimi_sv tutkinto)

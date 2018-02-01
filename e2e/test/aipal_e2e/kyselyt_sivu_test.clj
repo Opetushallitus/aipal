@@ -112,8 +112,8 @@
           (kyselyt-sivu/julkaise-kysely)
           (kyselyt-sivu/vahvista-kyselyn-julkaisu))
         (let [kysely (nth (kyselyt) 0)]
-          (is (= (kyselyn-nimi kysely) "Kysely 2")))
-      )
+          (is (= (kyselyn-nimi kysely) "Kysely 2"))))
+
       (testing
         "Kyselyn julkaisu onnistuu ensimmäiselle kyselylle"
         (let [kysely (nth (kyselyt) 1)]

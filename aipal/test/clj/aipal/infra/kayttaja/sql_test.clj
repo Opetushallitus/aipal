@@ -46,8 +46,8 @@
                      :voimassa true
                      :roolit {}}
         testi-asetukset (-> oletusasetukset
-             (assoc-in [:cas-auth-server :enabled] false)
-             (assoc :development-mode true))]
+                         (assoc-in [:cas-auth-server :enabled] false)
+                         (assoc :development-mode true))]
     (deliver asetukset testi-asetukset)
     (try
       (with-redefs [kayttooikeuspalvelu/kayttaja (constantly foobar-ldap)]

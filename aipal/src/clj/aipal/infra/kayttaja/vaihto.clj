@@ -13,16 +13,17 @@
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.infra.kayttaja.sql :refer [with-sql-kayttaja]]
+            [arvo.db.core :refer [*db*] :as db]
             [aipal.integraatio.kayttooikeuspalvelu :as kayttooikeuspalvelu]))
 
 (defn kayttajan-nimi [k]
   (str (:etunimi k) " " (:sukunimi k)))
 
-(declare hae-kayttaja-ldapista)
+(declare hae-kayttaja-kayttoikeuspalvelusta)
 
 (defn with-kayttaja* [uid impersonoitu-oid rooli f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
-  (if-let [k (kayttaja-arkisto/hae-voimassaoleva uid)]
+  (if-let [k (db/hae-voimassaoleva-kayttaja {:uid uid :voimassaolo (:kayttooikeus-tarkistusvali @asetukset)})]
     (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
           aktiiviset-roolit (kayttajaoikeus-arkisto/hae-roolit aktiivinen-oid)
           aktiivinen-rooli (or (when rooli (some-value #(= rooli (:rooli_organisaatio_id %)) aktiiviset-roolit))
@@ -43,19 +44,18 @@
         (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
         (with-sql-kayttaja (:oid k)
           (f))))
-    (if (hae-kayttaja-ldapista uid)
+    (if (hae-kayttaja-kayttoikeuspalvelusta uid)
       (recur uid impersonoitu-oid rooli f)
       (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid))))))
 
 (defmacro with-kayttaja [uid impersonoitu-oid rooli & body]
   `(with-kayttaja* ~uid ~impersonoitu-oid ~rooli (fn [] ~@body)))
 
-(defn hae-kayttaja-ldapista [uid]
-  (log/info "Yritetään hakea LDAPista käyttäjä" uid)
+(defn hae-kayttaja-kayttoikeuspalvelusta [uid]
+  (log/info "Yritetään hakea Käyttöoikeuspalvelusta käyttäjä" uid)
   (with-kayttaja integraatio-uid nil nil
-    (let [kop (kayttooikeuspalvelu/tee-kayttooikeuspalvelu (:ldap-auth-server @asetukset))
-          oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))
-          kayttaja (kayttooikeuspalvelu/kayttaja kop uid oid->ytunnus ldap-ryhma->rooli)]
-      (when kayttaja
+    (let [oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))
+          kayttaja (kayttooikeuspalvelu/kayttaja uid ldap-ryhma->rooli)]
+      (when (:voimassa kayttaja)
         (kayttajaoikeus-arkisto/paivita-kayttaja! kayttaja)
-        (kayttaja-arkisto/hae-voimassaoleva uid)))))
+        kayttaja))))
