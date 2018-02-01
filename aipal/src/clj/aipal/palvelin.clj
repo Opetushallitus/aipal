@@ -43,7 +43,6 @@
 
             [oph.common.infra.common-audit-log :refer [req-metadata-saver-wrapper konfiguroi-common-audit-lokitus]]
             [oph.common.infra.print-wrapper :refer [log-request-wrapper]]
-            [oph.common.util.poikkeus :refer [wrap-poikkeusten-logitus]]
             [oph.korma.common :refer [luo-db]]
 
             [aipal.asetukset :refer [asetukset oletusasetukset common-audit-log-asetukset hae-asetukset build-id kehitysmoodi? service-path] :rename {asetukset asetukset-promise}]

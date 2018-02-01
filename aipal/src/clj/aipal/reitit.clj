@@ -27,6 +27,7 @@
             aipal.rest-api.vastaajatunnus
             arvo.rest-api.avopvastaajatunnus
             arvo.rest-api.uraseuranta
+            arvo.rest-api.koodisto
             aipal.rest-api.kayttaja
             aipal.rest-api.tutkinto
             aipal.rest-api.tutkintotyyppi
@@ -48,8 +49,7 @@
     (GET "/" [] {:status 200
                  :headers {"Content-type" "text/html; charset=utf-8"
                            "Set-cookie" (aseta-csrf-token (-> asetukset :server :base-url service-path))}
-                 :body (s/render-file
-                         "public/app/index.html"
+                 :body (s/render-file "public/app/index.html"
                          (merge {:base-url (-> asetukset :server :base-url)
                                  :vastaus-base-url (-> asetukset :vastaus-base-url)
                                  :current-user (:nimi *kayttaja*)
@@ -58,16 +58,17 @@
                                  :ominaisuus (cheshire/generate-string (:ominaisuus asetukset))}
                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                   {:logout-url (str cas-url "/logout")})))})
-    (GET "/status" [] (s/render-file "status" (assoc (status)
-                                                :asetukset (with-out-str
-                                                             (pprint
-                                                               (clojure.walk/postwalk (fn [elem]
-                                                                                        (if (and (coll? elem)
-                                                                                                 (contains? #{:password :salasana :avopfi-shared-secret} (first elem)))
-                                                                                          [(first elem) "*****"]
-                                                                                          elem))
-                                                                                      asetukset)))
-                                                :build-id @build-id)))
+    (GET "/status" [] (s/render-file "status"
+                        (assoc (status)
+                               :asetukset (with-out-str
+                                            (pprint
+                                              (clojure.walk/postwalk (fn [elem]
+                                                                       (if (and (coll? elem)
+                                                                                (contains? #{:password :salasana :avopfi-shared-secret} (first elem)))
+                                                                         [(first elem) "*****"]
+                                                                         elem))
+                                                                     asetukset)))
+                               :build-id @build-id)))
     (context "/api/jslog" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest_api.js-log/reitit)
     (context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (context "/api/kieli" [] aipal.rest-api.kieli/reitit)
@@ -93,6 +94,7 @@
     (context "/api/koulutustoimija" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/public/luovastaajatunnus" [] (arvo.rest-api.avopvastaajatunnus/reitit asetukset))
     (context "/api/public/uraseuranta" [] (arvo.rest-api.uraseuranta/uraseuranta-reitit asetukset))
+    (context "/api/public/koodisto" [] (arvo.rest-api.koodisto/koodisto-reitit asetukset))
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (context "/api/csv" [] aipal.rest-api.raportti.kysely/csv)
     (context "/api/vipunen" [] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)

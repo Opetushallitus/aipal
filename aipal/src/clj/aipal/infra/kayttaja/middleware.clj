@@ -10,17 +10,17 @@
 
 (defn wrap-kayttaja
   ([handler paasykielletty-virheilmoitus]
-    (fn [request]
+   (fn [request]
       ;; CAS-middleware lisää käyttäjätunnuksen :username-avaimen alle
-      (let [uid (:username request)
-            impersonoitu-oid (get-in request [:session :impersonoitu-oid])
-            rooli (get-in request [:session :rooli])]
-        (try
-          (with-kayttaja uid impersonoitu-oid rooli
-            (handler request))
-          (catch IllegalStateException _
-            {:headers {"Content-Type" "text/plain;charset=utf-8"}
-             :status 403
-             :body paasykielletty-virheilmoitus})))))
+     (let [uid (:username request)
+           impersonoitu-oid (get-in request [:session :impersonoitu-oid])
+           rooli (get-in request [:session :rooli])]
+       (try
+         (with-kayttaja uid impersonoitu-oid rooli
+           (handler request))
+         (catch IllegalStateException _
+           {:headers {"Content-Type" "text/plain;charset=utf-8"}
+            :status 403
+            :body paasykielletty-virheilmoitus})))))
   ([handler]
-    (wrap-kayttaja handler unauthorized-virheilmoitus)))
+   (wrap-kayttaja handler unauthorized-virheilmoitus)))

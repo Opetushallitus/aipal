@@ -19,7 +19,8 @@
            :start (conman/connect! (pool-spec))
            :stop (conman/disconnect! *db*))
 
-(conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql" "sql/tutkinto.sql" "sql/kyselykerta.sql")
+(conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql"
+                             "sql/tutkinto.sql" "sql/kyselykerta.sql" "sql/koodisto.sql")
 
 ;(defn to-date [sql-date]
 ;  (-> sql-date (.getTime) (java.util.Date.)))
