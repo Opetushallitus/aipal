@@ -20,7 +20,6 @@
             [clojurewerkz.quartzite.schedule.daily-interval :as s]
             [clojurewerkz.quartzite.schedule.cron :as cron]
             [clojure.tools.logging :as log]
-            aipal.infra.eraajo.kayttajat
             aipal.infra.eraajo.organisaatiot
             aipal.infra.eraajo.koulutustoimijoiden-tutkinnot
             aipal.infra.eraajo.raportointi
