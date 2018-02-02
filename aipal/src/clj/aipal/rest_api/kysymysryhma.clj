@@ -154,7 +154,6 @@
     :body [asteikko s/Any]
     :kayttooikeus :kysymysryhma-luonti
     (let [tallennettava-asteikko (assoc asteikko :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
-      (println "Tallennetaan asteikko: " tallennettava-asteikko)
       (response-or-404 (arkisto/tallenna-asteikko tallennettava-asteikko))))
 
   (POST "/" []

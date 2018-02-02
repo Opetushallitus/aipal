@@ -13,7 +13,7 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.rest-api.vipunen
-  (:require [compojure.api.core :refer [defroutes GET POST]]
+  (:require [compojure.api.sweet :refer :all]
             [cheshire.core :as json]
             [schema.core :as s]
             [clojure.java.io :refer [make-writer]]
@@ -23,9 +23,11 @@
             [aipal.toimiala.vipunen :as vipunen-skeema]
             [aipal.compojure-util :refer :all]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [arvo.db.core :refer [*db*] :as db]
+            [aipal.asetukset :refer [asetukset]]
             [oph.common.util.http-util :refer [parse-iso-date]]))
 
-;(def maxrows 100000)
+(def maxrows 100000)
 
 (defn ^:private logita-errorit [api-nimi alkupvm loppupvm response]
   (let [schema-virheet (->> response
@@ -49,14 +51,28 @@
              resp)
      :headers {"Content-Type" "application/json; charset=utf-8"}}))
 
-(defroutes reitit
+(defn hae-vastaukset [alkupvm loppupvm since]
+  (let [page-length (:vipunen-page-length @asetukset)
+        result (db/hae-vipunen-vastaukset (merge{:alkupvm alkupvm
+                                                 :sivunpituus page-length
+                                                 :loppupvm loppupvm}
+                                              (when since {:since since})))
+        next-id (when (= page-length (count result)) (-> result last :vastausid))
+        next-url (str (-> @asetukset :server :base-url) "/api/vipunen?alkupvm="alkupvm"&loppupvm="loppupvm"&since="next-id)]
+    {:status 200
+     :body (merge {:data result}
+                  (when next-id {:next_url next-url}))
+     :headers {"Content-Type" "application/json; charset=utf-8"}}))
 
-  (POST "/" []
-    :body-params [alkupvm :- s/Str
-                  loppupvm :- s/Str]
+
+(defroutes reitit
+  (GET "/" []
+    :query-params [alkupvm :- s/Str
+                   loppupvm :- s/Str
+                   {since :- s/Int nil}]
     :summary "Vastausten siirtorajapinta Vipuseen"
-    :return [vipunen-skeema/VastauksenTiedot]
-    (hae-vipunen-vastaukset "/" alkupvm loppupvm vipunen/laske-kaikki vipunen/hae-kaikki))
+    :return s/Any
+    (hae-vastaukset alkupvm loppupvm since))
 
 
   (POST "/valtakunnallinen" []

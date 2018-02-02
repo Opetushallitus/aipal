@@ -49,10 +49,7 @@
            :raportointi-minimivastaajat -1
            :cas-auth-server {:url "https://testi.virkailija.opintopolku.fi/cas"
                              :unsafe-https true
-                             :enabled true}
-           :basic-auth {:tunnus "tunnus"
-                        :salasana "salasana"})
-    (assoc-in [:server :base-url] "http://192.168.50.1:8082")))
+                             :enabled true})))
 
 (defn eraaja-organisaatiot! []
   (require 'aipal.infra.eraajo.organisaatiot)
