@@ -60,7 +60,7 @@
     (doseq [r (:roolit k)]
       (if (contains? vanhat-roolit (select-keys r [:rooli :organisaatio]))
         (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa true}))
-        (db/lisaa-rooli! r)))))
+        (db/lisaa-rooli! (assoc r :kayttaja (:oid k)))))))
 
 
 (defn paivita-kayttaja! [k]
