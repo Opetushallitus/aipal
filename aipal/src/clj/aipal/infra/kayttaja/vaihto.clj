@@ -44,7 +44,7 @@
         (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
         (with-sql-kayttaja (:oid k)
           (f))))
-    (if (hae-kayttaja-kayttoikeuspalvelusta uid)
+    (if (:voimassa (hae-kayttaja-kayttoikeuspalvelusta uid))
       (recur uid impersonoitu-oid rooli f)
       (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid))))))
 
@@ -54,8 +54,9 @@
 (defn hae-kayttaja-kayttoikeuspalvelusta [uid]
   (log/info "Yritetään hakea Käyttöoikeuspalvelusta käyttäjä" uid)
   (with-kayttaja integraatio-uid nil nil
-    (let [oid->ytunnus (map-by :oid (koulutustoimija-arkisto/hae-kaikki-joissa-oid))
-          kayttaja (kayttooikeuspalvelu/kayttaja uid ldap-ryhma->rooli)]
-      (when (:voimassa kayttaja)
+    (let [oid->ytunnus (into {} (map (juxt :oid :ytunnus) (db/hae-oid->ytunnus)))
+          kayttaja (kayttooikeuspalvelu/kayttaja uid ldap-ryhma->rooli oid->ytunnus)]
+      (if (:voimassa kayttaja)
         (kayttajaoikeus-arkisto/paivita-kayttaja! kayttaja)
-        kayttaja))))
+        (db/passivoi-kayttaja! {:uid uid}))
+      kayttaja)))

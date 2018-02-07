@@ -47,7 +47,7 @@
     @(ns-resolve 'aipal.asetukset 'oletusasetukset)
     (assoc :development-mode true
            :raportointi-minimivastaajat -1
-           :cas-auth-server {:url "https://testi.virkailija.opintopolku.fi/cas"
+           :cas-auth-server {:url "https://virkailija.testiopintopolku.fi/cas"
                              :unsafe-https true
                              :enabled true})))
 

@@ -80,7 +80,7 @@
 
 (defn hae-tutkinnot []
   (let [tutkintotyypit (mapcat vals (sql/select taulut/oppilaitostyyppi_tutkintotyyppi
-                                      (sql/where {:oppilaitostyyppi (:oppilaitostyypit *kayttaja*)})
+                                      (sql/where {:oppilaitostyyppi [in (:oppilaitostyypit *kayttaja*)]})
                                       (sql/fields :tutkintotyyppi)))]
     (sql/select taulut/tutkinto
       (sql/where {:tutkinto.tutkintotyyppi [in tutkintotyypit]})

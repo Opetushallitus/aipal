@@ -70,7 +70,7 @@
         :password "aipal"
         :maximum-pool-size 15
         :minimum-pool-size 3}
-   :cas-auth-server {:url "https://testi.virkailija.opintopolku.fi/cas"
+   :cas-auth-server {:url "https://virkailija.testiopintopolku.fi/cas"
                      :unsafe-https true
                      :enabled false}
    :vastaus-base-url "http://127.0.0.1:8083"

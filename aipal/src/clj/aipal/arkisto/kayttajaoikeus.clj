@@ -14,13 +14,16 @@
 
 (ns aipal.arkisto.kayttajaoikeus
   (:require [korma.core :as sql]
-            [korma.db :as db]
+            [korma.db :as kdb]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [clojure.tools.logging :as log]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [aipal.integraatio.sql.korma :as taulut]
-            [oph.korma.common :refer [select-unique-or-nil update-unique]]))
+            [arvo.db.core :refer [*db*] :as db]
+            [clojure.java.jdbc :as jdbc]
+            [oph.korma.common :refer [select-unique-or-nil update-unique]]
+            [clojure.set :as set]))
 
 (defn hae-roolit [oid]
   (sql/select taulut/rooli_organisaatio
@@ -38,72 +41,33 @@
 
 (defn hae-oikeudet
   ([oid]
-   (db/transaction
+   (kdb/transaction
      (let [kayttaja (kayttaja-arkisto/hae oid)
            roolit (hae-roolit oid)]
        (assoc kayttaja :roolit roolit))))
   ([]
    (hae-oikeudet (:oid *kayttaja*))))
 
-(defn hae-rooli [rooli kayttaja organisaatio]
-  (select-unique-or-nil taulut/rooli_organisaatio
-    (sql/where {:rooli rooli
-                :kayttaja kayttaja
-                :organisaatio organisaatio})))
+(defn paivita-roolit! [tx k]
+  (let [vanhat-roolit (->> (db/hae-roolit tx {:kayttaja (:oid k)})
+                          (map #(select-keys % [:rooli :organisaatio]))
+                          (into #{}))
+        poistuneet-roolit (set/difference
+                              vanhat-roolit
+                              (into #{} (map #(select-keys % [:rooli :organisaatio]) (:roolit k))))]
+    (doseq [r poistuneet-roolit]
+      (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa false})))
+    (doseq [r (:roolit k)]
+      (if (contains? vanhat-roolit (select-keys r [:rooli :organisaatio]))
+        (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa true}))
+        (db/lisaa-rooli! r)))))
 
-(defn olemassa? [k]
-  (hae-rooli (:rooli k) (:kayttaja k) (:organisaatio k)))
 
-(defn ^:integration-api tyhjaa-kayttooikeudet!
-  "Merkitään olemassaolevat käyttäjät ja roolit ei-voimassaoleviksi"
-  []
-  (log/debug "Merkitään olemassaolevat käyttäjät ei-voimassaoleviksi")
-  (sql/update taulut/kayttaja
-    (sql/set-fields {:voimassa false})
-    (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]}))
-  (log/debug "Merkitään olemassaolevien käyttäjien roolit ei-voimassaoleviksi")
-  (sql/update taulut/rooli_organisaatio
-    (sql/set-fields {:voimassa false})
-    (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]})))
-
-(defn ^:integration-api paivita-rooli!
-  "Päivittää tai lisää käyttäjän roolin"
-  [r]
-  (log/debug "Päivitetään rooli" (pr-str r))
-  (if (olemassa? r)
-    (do
-      (log/debug "Rooli on jo olemassa, päivitetään tiedot")
-      (update-unique
-        taulut/rooli_organisaatio
-        (sql/set-fields r)
-        (sql/where {:kayttaja (:kayttaja r)
-                    :rooli (:rooli r)
-                    :organisaatio (:organisaatio r)})))
-    (do
-      (log/debug "Luodaan uusi rooli")
-      (sql/insert taulut/rooli_organisaatio (sql/values r)))))
-
-(defn ^:integration-api paivita-kaikki!
-  "Päivittää käyttäjätaulun uusilla käyttäjillä kt."
-  [kt]
-  {:pre [(= (:uid *kayttaja*) integraatio-uid)]}
-  (db/transaction
-    ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
-    (tyhjaa-kayttooikeudet!)
-    (doseq [k kt]
-      (let [rooli (clojure.set/rename-keys (select-keys k [:rooli :oid :organisaatio :voimassa])
-                                           {:oid :kayttaja})
-            kayttaja (dissoc k :rooli :organisaatio)]
-        (kayttaja-arkisto/paivita-kayttaja! kayttaja)
-        (paivita-rooli! rooli)))))
-
-(defn ^:integration-api paivita-kayttaja!
-  "Päivittää yhden käyttäjän käyttäjätauluun"
-  [k]
-  {:pre [(= (:uid *kayttaja*) integraatio-uid)]}
-  (db/transaction
-    (let [kayttaja (dissoc k :roolit)]
-      (kayttaja-arkisto/paivita-kayttaja! kayttaja)
-      (doseq [r (:roolit k)
-              :let [rooli (assoc r :kayttaja (:oid kayttaja))]]
-        (paivita-rooli! rooli)))))
+(defn paivita-kayttaja! [k]
+  (jdbc/with-db-transaction [tx *db*]
+    (jdbc/execute! tx ["SET LOCAL aipal.kayttaja = 'INTEGRAATIO'"])
+    (let [olemassa? (db/hae-kayttaja {:kayttajaOid (:oid k)})]
+      (if olemassa?
+        (db/paivita-kayttaja! tx {:kayttajaOid (:oid k) :etunimi (:etunimi k) :sukunimi (:sukunimi k)})
+        (db/lisaa-kayttaja! tx (assoc k :kayttajaOid (:oid k)))))
+    (paivita-roolit! tx k)))
