@@ -60,10 +60,9 @@
         next-id (when (= page-length (count result)) (-> result last :vastausid))
         next-url (str (-> @asetukset :server :base-url) "/api/vipunen?alkupvm="alkupvm"&loppupvm="loppupvm"&since="next-id)]
     {:status 200
-     :body (merge {:data result}
-                  (when next-id {:next_url next-url}))
+     :body {:data result
+            :pagination {:next_url (if next-id next-url "null")}}
      :headers {"Content-Type" "application/json; charset=utf-8"}}))
-
 
 (defroutes reitit
   (GET "/" []
