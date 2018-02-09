@@ -89,8 +89,8 @@
   [url]
   (let [jdbc-creds (parse-uri url)
         datasource (DriverDataSource.
-                     nil (:postgre-uri jdbc-creds) (:user jdbc-creds) (:passwd jdbc-creds))]
-
+                     nil (:postgre-uri jdbc-creds) (:user jdbc-creds) (:passwd jdbc-creds)
+                     nil)]
     datasource))
 
 (defn alusta-flywaylla!
