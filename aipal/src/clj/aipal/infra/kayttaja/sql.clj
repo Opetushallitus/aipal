@@ -6,13 +6,13 @@
 (defn with-sql-kayttaja* [oid f]
   (db/transaction
     (try
-      (sql/exec-raw (str "set aipal.kayttaja = '" oid "';"))
       (f)
+      (catch java.sql.SQLException e
+        (log/error "Virhe tietokantafunktiossa" (.getNextException e))
+        (throw e))
       (catch Throwable t
         (log/error "Virhe tietokantafunktiossa" t)
-        (throw t))
-      (finally
-        (sql/exec-raw (str "reset aipal.kayttaja;"))))))
+        (throw t)))))
 
 (defmacro with-sql-kayttaja [oid & body]
   `(with-sql-kayttaja* ~oid (fn [] ~@body)))

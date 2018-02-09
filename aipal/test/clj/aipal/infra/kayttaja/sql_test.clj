@@ -10,13 +10,6 @@
 
 (use-fixtures :each exec-raw-fixture)
 
-;; with-sql-kayttaja asettaa käyttäjän PostgreSQL-parametriin.
-(deftest ^:integraatio with-sql-kayttaja-test
-  (with-sql-kayttaja "foobar"
-    (is (= (:current_setting (first (sql/exec-raw "select current_setting('aipal.kayttaja');"
-                                                  :results)))
-           "foobar"))))
-
 (defn runtime-throws []
   (let [fo (kayttaja-arkisto/hae-voimassaoleva "uid")]
     (throw (RuntimeException. "forced"))))

@@ -29,9 +29,6 @@
   (korma.db/default-connection
     (korma.db/create-db (datasource db-asetukset))))
 
-(defn aseta-kayttaja [oid]
-  (sql/exec-raw (str "set session aipal.kayttaja = '" oid "';")))
-
 (defentity kayttaja)
 (defentity kysely)
 (defentity kyselykerta)

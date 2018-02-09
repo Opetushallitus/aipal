@@ -17,7 +17,6 @@
   (:require [clojure.tools.logging :as log]))
 
 (def vastaajakayttaja "VASTAAJA")
-(def ^:private psql-varname "aipal.kayttaja")
 
 (defn exec-sql
   "execute sql and close statement."
@@ -29,7 +28,6 @@
   [c]
   (log/debug "auth user " vastaajakayttaja)
   (try
-    (exec-sql c (str "set session " psql-varname " = '" vastaajakayttaja "'"))
     (catch IllegalArgumentException e
       (.printStackTrace e))
     (catch Exception e
@@ -40,14 +38,9 @@
   [c]
   (log/debug "connection release ")
   (try
-    (exec-sql c (str "SET " psql-varname " TO DEFAULT"))
     (catch Exception e
       (log/error e "Odottamaton poikkeus")))
   (log/debug "con release ok" (.hashCode c)))
 
 (defonce customizer-impl-bonecp
-  (proxy [com.jolbox.bonecp.hooks.AbstractConnectionHook] []
-    (onCheckIn [c]
-      (auth-onCheckIn c))
-    (onCheckOut [c]
-      (auth-onCheckOut c))))
+  (proxy [com.jolbox.bonecp.hooks.AbstractConnectionHook] []))

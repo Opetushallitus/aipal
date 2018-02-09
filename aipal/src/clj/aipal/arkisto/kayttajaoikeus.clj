@@ -65,7 +65,6 @@
 
 (defn paivita-kayttaja! [k]
   (jdbc/with-db-transaction [tx *db*]
-    (jdbc/execute! tx ["SET LOCAL aipal.kayttaja = 'INTEGRAATIO'"])
     (let [olemassa? (db/hae-kayttaja {:kayttajaOid (:oid k)})]
       (if olemassa?
         (db/paivita-kayttaja! tx {:kayttajaOid (:oid k) :etunimi (:etunimi k) :sukunimi (:sukunimi k)})

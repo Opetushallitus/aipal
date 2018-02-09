@@ -15,7 +15,7 @@
 (ns aipal.arkisto.kyselypohja
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique select-unique-or-nil]]
-            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
+            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja? *kayttaja*]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]))
 
@@ -76,6 +76,8 @@
     (sql/insert :kysymysryhma_kyselypohja
       (sql/values {:kyselypohjaid kyselypohjaid
                    :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
+                   :luotu_kayttaja (:oid *kayttaja*)
+                   :muutettu_kayttaja (:oid *kayttaja*)
                    :jarjestys index}))))
 
 (defn tallenna-kyselypohja!
@@ -84,26 +86,28 @@
   (tallenna-kyselypohjan-kysymysryhmat! kyselypohjaid (:kysymysryhmat kyselypohja))
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
-    (sql/set-fields (select-keys kyselypohja muokattavat-kentat)))
+    (sql/set-fields (assoc (select-keys kyselypohja muokattavat-kentat) :muutettu_kayttaja (:oid *kayttaja*))))
   kyselypohja)
 
 (defn luo-kyselypohja!
   [kyselypohja]
   (let [luotu-kyselypohja (sql/insert taulut/kyselypohja
-                           (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))))]
+                           (sql/values (merge (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))
+                                              {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)})))]
     (auditlog/kyselypohja-luonti! (:kyselypohjaid luotu-kyselypohja) (:nimi_fi kyselypohja))
     (tallenna-kyselypohjan-kysymysryhmat! (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
     luotu-kyselypohja))
 
 (defn lisaa-kyselypohja! [kyselypohja]
   (sql/insert taulut/kyselypohja
-    (sql/values (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija)))))
+    (sql/values (merge (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))
+                       {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)}))))
 
 (defn ^:private aseta-kyselypohjan-tila!
   [kyselypohjaid tila]
   (sql/update taulut/kyselypohja
     (sql/where {:kyselypohjaid kyselypohjaid})
-    (sql/set-fields {:tila tila}))
+    (sql/set-fields {:tila tila :muutettu_kayttaja (:oid *kayttaja*)}))
   (hae-kyselypohja kyselypohjaid))
 
 (defn julkaise-kyselypohja! [kyselypohjaid]

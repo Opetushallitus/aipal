@@ -23,6 +23,7 @@
             [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [aipal.auditlog :as auditlog]
             [arvo.db.core :refer [*db*] :as db]
@@ -164,10 +165,11 @@
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
 
 (defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
-    (log/info (format "Storing: %s" vastaajatunnus))
     (let [tallennettava-tunnus (select-keys vastaajatunnus common-and-legacy-props)
           vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
-                               (sql/values tallennettava-tunnus)))
+                               (sql/values (merge tallennettava-tunnus
+                                                  {:luotu_kayttaja (:oid *kayttaja*)
+                                                   :muutettu_kayttaja (:oid *kayttaja*)}))))
           vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
       (auditlog/vastaajatunnus-luonti! (:vastaajatunnusid vastaajatunnus) (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
       vastaajatunnus))
@@ -178,7 +180,7 @@
 
 (defn find-id [kentta kyselytyyppi-kentat]
   (log/info "Find id: " kentta "FROM" kyselytyyppi-kentat)
-  (:id (first (filter #(= kentta (:kentta_id %))kyselytyyppi-kentat))))
+  (:id (first (filter #(= kentta (:kentta_id %)) kyselytyyppi-kentat))))
 
 (defn tieto-entries [vastaajatunnus-kentat kyselytyyppi-kentat vastaajatunnus-id]
   (map #(into {} [[:vastaajatunnus_id vastaajatunnus-id]
@@ -218,15 +220,14 @@
 
 (defn lisaa-massana! [vastaajatunnukset]
   (jdbc/with-db-transaction [tx *db*]
-    (jdbc/execute! tx ["SET LOCAL aipal.kayttaja = 'JARJESTELMA'"])
     (doseq [tunnus vastaajatunnukset]
-      (db/lisaa-vastaajatunnus! tx tunnus))
+      (db/lisaa-vastaajatunnus! tx (assoc tunnus :kayttaja (:oid *kayttaja*))))
     vastaajatunnukset))
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
   (sql/update taulut/vastaajatunnus
-    (sql/set-fields {:lukittu lukitse})
+    (sql/set-fields {:lukittu lukitse :muutettu_kayttaja (:oid *kayttaja*)})
     (sql/where {:kyselykertaid kyselykertaid
                 :vastaajatunnusid vastaajatunnusid}))
   ;; haetaan vastaajatunnus, jotta saadaan kaytettavissa arvo
@@ -251,7 +252,7 @@
 (defn muokkaa-lukumaaraa
   [kyselykertaid vastaajatunnusid lukumaara]
   (sql/update :vastaajatunnus
-    (sql/set-fields {:vastaajien_lkm lukumaara})
+    (sql/set-fields {:vastaajien_lkm lukumaara :muutettu_kayttaja (:oid *kayttaja*)})
     (sql/where {:kyselykertaid kyselykertaid
                 :vastaajatunnusid vastaajatunnusid}))
   ;; haetaan vastaajatunnus, jotta saadaan palautettua muokattu tunnus

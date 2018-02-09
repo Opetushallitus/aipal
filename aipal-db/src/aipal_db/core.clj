@@ -44,12 +44,9 @@
 (defn run-sql [sql]
   (doseq [stmt sql]
     (try
-      (jdbc-do "set session aipal.kayttaja='JARJESTELMA'")
       (jdbc-do stmt)
       (catch java.sql.SQLException e
-        (throw (.getNextException e)))
-      (finally
-        (jdbc-do "set aipal.kayttaja to default")))))
+        (throw (.getNextException e))))))
 
 (defn luo-testikayttajat! []
   (run-sql (sql-resurssista "sql/testikayttajat.sql")))
@@ -92,8 +89,8 @@
   [url]
   (let [jdbc-creds (parse-uri url)
         datasource (DriverDataSource.
-                     nil (:postgre-uri jdbc-creds) (:user jdbc-creds) (:passwd jdbc-creds)
-                     (into-array ["set session aipal.kayttaja='JARJESTELMA';"]))]
+                     nil (:postgre-uri jdbc-creds) (:user jdbc-creds) (:passwd jdbc-creds))]
+
     datasource))
 
 (defn alusta-flywaylla!

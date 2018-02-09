@@ -19,7 +19,7 @@
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]
             [clojure.tools.logging :as log]
-
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]
             [arvo.db.core :refer [*db*] :as db]
             [clojure.java.jdbc :as jdbc])
@@ -91,13 +91,15 @@
 
 (defn lisaa-kysymysryhma! [k]
   (let [kysymysryhma (sql/insert taulut/kysymysryhma
-                       (sql/values k))]
+                       (sql/values (merge k {:luotu_kayttaja (:oid *kayttaja*)
+                                             :muutettu_kayttaja (:oid *kayttaja*)})))]
     (auditlog/kysymysryhma-luonti! (:kysymysryhmaid kysymysryhma) (:nimi_fi kysymysryhma))
     kysymysryhma))
 
 (defn lisaa-kysymys! [k]
   (let [kysymys  (sql/insert taulut/kysymys
-                   (sql/values k))]
+                   (sql/values (merge k {:luotu_kayttaja (:oid *kayttaja*)
+                                         :muutettu_kayttaja (:oid *kayttaja*)})))]
     (auditlog/kysymys-luonti! (:kysymysryhmaid kysymys) (:kysymysid kysymys))
     kysymys))
 
@@ -334,8 +336,9 @@
   (auditlog/kysymysryhma-muokkaus! (:kysymysryhmaid kysymysryhma))
   (->
     (sql/update* taulut/kysymysryhma)
-    (sql/set-fields (select-keys kysymysryhma [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en
-                                               :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset]))
+    (sql/set-fields (assoc (select-keys kysymysryhma [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en
+                                                      :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset])
+                      :muutettu_kayttaja (:oid *kayttaja*)))
     (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
     (sql/update)))
 
@@ -386,7 +389,7 @@
 (defn ^:private aseta-tila!
   [kysymysryhmaid tila]
   (sql/update taulut/kysymysryhma
-    (sql/set-fields {:tila tila})
+    (sql/set-fields {:tila tila :muutettu_kayttaja (:oid *kayttaja*)})
     (sql/where {:kysymysryhmaid kysymysryhmaid}))
   (hae kysymysryhmaid))
 

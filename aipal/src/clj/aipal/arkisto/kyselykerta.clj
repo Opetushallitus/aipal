@@ -19,6 +19,7 @@
             [clojure.tools.logging :as log]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
             [arvo.db.core :refer [*db*] :as db]))
 
 (defn hae-kaikki
@@ -68,7 +69,8 @@ ORDER BY kyselykerta.kyselykertaid ASC")
   (let [kyselykerta (sql/insert taulut/kyselykerta
                       (sql/values
                         (assoc
-                          (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
+                          (merge (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
+                                 {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)})
                           :kyselyid kyselyid)))]
     (auditlog/kyselykerta-luonti! (:kyselykertaid kyselykerta) kyselyid (:nimi kyselykerta-data))
     kyselykerta))
@@ -102,7 +104,8 @@ ORDER BY kyselykerta.kyselykertaid ASC")
   [kyselykertaid kyselykertadata]
   (auditlog/kyselykerta-muokkaus! kyselykertaid)
   (sql/update taulut/kyselykerta
-    (sql/set-fields (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu]))
+    (sql/set-fields (assoc (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
+                           :muutettu_kayttaja (:oid *kayttaja*)))
     (sql/where {:kyselykertaid kyselykertaid}))
   (assoc kyselykertadata :kyselykertaid kyselykertaid))
 
@@ -119,7 +122,7 @@ ORDER BY kyselykerta.kyselykertaid ASC")
   [kyselykertaid lukitse]
   (auditlog/kyselykerta-muokkaus! kyselykertaid (if lukitse :lukittu :avattu))
   (sql/update :kyselykerta
-    (sql/set-fields {:lukittu lukitse})
+    (sql/set-fields {:lukittu lukitse :muutettu_kayttaja (:oid *kayttaja*)})
     (sql/where {:kyselykertaid kyselykertaid}))
   (hae-yksi kyselykertaid))
 

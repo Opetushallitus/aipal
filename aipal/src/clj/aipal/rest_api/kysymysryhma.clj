@@ -65,6 +65,8 @@
     (-> v
       valitse-vaihtoehdon-kentat
       (assoc :kysymysid kysymysid)
+      (assoc :luotu_kayttaja (:oid *kayttaja*))
+      (assoc :muutettu_kayttaja (:oid *kayttaja*))
       arkisto/lisaa-monivalintavaihtoehto!)))
 
 (defn lisaa-kysymys! [kysymys kysymysryhmaid]
@@ -73,6 +75,8 @@
                     valitse-kysymyksen-kentat
                     korjaa-eos-vastaus-sallittu
                     (assoc :kysymysryhmaid kysymysryhmaid)
+                    (assoc :luotu_kayttaja (:oid *kayttaja*))
+                    (assoc :muutettu_kayttaja (:oid *kayttaja*))
                     arkisto/lisaa-kysymys!
                     :kysymysid)
         jatkokysymykset (muodosta-jatkokysymykset kysymys kysymysryhmaid)]

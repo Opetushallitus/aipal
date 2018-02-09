@@ -23,7 +23,6 @@
   (let [koulutustoimijoiden-tutkinnot (oiva/hae-koulutustoimijoiden-tutkinnot)]
     (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Oivasta")
     (jdbc/with-db-transaction [tx *db*]
-      (jdbc/execute! tx ["SET LOCAL aipal.kayttaja = 'INTEGRAATIO'"])
       (db/poista-koulutustoimijoiden-tutkinnot!)
       (doseq [koulutustoimija koulutustoimijoiden-tutkinnot
               tutkinto (:koulutukset koulutustoimija)]

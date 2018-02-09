@@ -33,10 +33,6 @@
   []
   (aipal-e2e.arkisto.sql.korma/luo-db tietokantaasetukset))
 
-(defn  aseta-kayttaja!
-  [oid]
-  (aipal-e2e.arkisto.sql.korma/aseta-kayttaja oid))
-
 (defn aseta-testikayttaja!
   []
   (aseta-kayttaja! testikayttaja-oid))

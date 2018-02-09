@@ -16,7 +16,7 @@
   (:require [korma.core :as sql]
             [aipal.arkisto.kysely-util :as kysely-util]
             [aipal.arkisto.kyselykerta :as kyselykerta]
-            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja?]]
+            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja? *kayttaja*]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [max-date]]
             [clojure.tools.logging :as log]
@@ -94,7 +94,8 @@
   "Lisää uuden kyselyn"
   [tiedot]
   (let [kysely (sql/insert taulut/kysely
-                 (sql/values tiedot))]
+                 (sql/values (merge tiedot {:luotu_kayttaja (:oid *kayttaja*)
+                                            :muutettu_kayttaja (:oid *kayttaja*)})))]
     (auditlog/kysely-luonti! (:nimi_fi kysely) (:kyselyid kysely))
     kysely))
 
@@ -102,14 +103,15 @@
   (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
   (->
     (sql/update* taulut/kysely)
-    (sql/set-fields (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu]))
+    (sql/set-fields (assoc (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu])
+                      :muutettu_kayttaja (:oid *kayttaja*)))
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))
 
 (defn julkaise-kysely! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :julkaistu)
   (sql/update taulut/kysely
-    (sql/set-fields {:tila "julkaistu"})
+    (sql/set-fields {:tila "julkaistu" :muutettu_kayttaja (:oid *kayttaja*)})
     (sql/where {:kyselyid kyselyid}))
   ;; haetaan kysely, jotta saadaan myös kaytettavissa tieto mukaan paluuarvona
   (hae kyselyid))
@@ -117,7 +119,7 @@
 (defn palauta-luonnokseksi! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :luonnos)
   (sql/update taulut/kysely
-    (sql/set-fields {:tila "luonnos"})
+    (sql/set-fields {:tila "luonnos" :muutettu_kayttaja (:oid *kayttaja*)})
     (sql/where {:kyselyid kyselyid
                 :tila "julkaistu"}))
   (hae kyselyid))
@@ -125,7 +127,7 @@
 (defn sulje-kysely! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :suljettu)
   (sql/update taulut/kysely
-    (sql/set-fields {:tila "suljettu"})
+    (sql/set-fields {:tila "suljettu" :muutettu_kayttaja (:oid *kayttaja*)})
     (sql/where {:kyselyid kyselyid}))
   (hae kyselyid))
 
@@ -196,14 +198,18 @@
   (sql/insert taulut/kysely_kysymysryhma
     (sql/values {:kyselyid kyselyid
                  :kysymysryhmaid (:kysymysryhmaid ryhma)
-                 :jarjestys (:jarjestys ryhma)})))
+                 :jarjestys (:jarjestys ryhma)
+                 :luotu_kayttaja (:oid *kayttaja*)
+                 :muutettu_kayttaja (:oid *kayttaja*)})))
 
 (defn lisaa-kysymys!
   [kyselyid kysymysid]
   (auditlog/kysely-muokkaus! kyselyid)
   (sql/insert taulut/kysely_kysymys
     (sql/values {:kyselyid kyselyid
-                 :kysymysid kysymysid})))
+                 :kysymysid kysymysid
+                 :luotu_kayttaja (:oid *kayttaja*)
+                 :muutettu_kayttaja (:oid *kayttaja*)})))
 
 (defn hae-kyselyn-taustakysymysryhmaid
   [kyselyid]

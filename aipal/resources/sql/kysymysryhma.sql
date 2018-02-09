@@ -1,6 +1,8 @@
 -- :name lisaa-kysymys! :<!
-INSERT INTO kysymys (pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, kysymys_en, jarjestys, monivalinta_max, max_vastaus, eos_vastaus_sallittu, jatkokysymys)
-    VALUES (:pakollinen, :poistettava, :vastaustyyppi, :kysymysryhmaid, :kysymys_fi, :kysymys_sv, :kysymys_en, :jarjestys, :monivalinta_max, :max_vastaus, :eos_vastaus_sallittu, :jatkokysymys)
+INSERT INTO kysymys (pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, kysymys_en,
+                     jarjestys, monivalinta_max, max_vastaus, eos_vastaus_sallittu, jatkokysymys, luotu_kayttaja, muutettu_kayttaja)
+    VALUES (:pakollinen, :poistettava, :vastaustyyppi, :kysymysryhmaid, :kysymys_fi, :kysymys_sv, :kysymys_en, :jarjestys,
+                         :monivalinta_max, :max_vastaus, :eos_vastaus_sallittu, :jatkokysymys, :kayttaja, :kayttaja)
     RETURNING kysymysid;
 
 -- :name liita-jatkokysymys! :! :n
