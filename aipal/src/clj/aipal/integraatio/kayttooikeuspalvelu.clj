@@ -43,7 +43,9 @@
   (let [kayttooikeus-url (str (-> @asetukset :kayttooikeuspalvelu :url) "/kayttooikeus/kayttaja")
         oppijanumerorekisteri-url (str (-> @asetukset :oppijanumerorekisteri :url) "/henkilo/")
         kayttaja (first (palvelukutsu :kayttooikeuspalvelu kayttooikeus-url {:query-params {"username" uid}}))
-        roolit (flatten (kayttoikeudet kayttaja ldap-ryhma->rooli oid->ytunnus))
+        roolit (->> (kayttoikeudet kayttaja ldap-ryhma->rooli oid->ytunnus)
+                    flatten
+                    (filter :organisaatio))
         tiedot (when kayttaja (palvelukutsu :oppijanumerorekisteri (str oppijanumerorekisteri-url (:oidHenkilo kayttaja)) {}))]
     {:oid (:oidHenkilo kayttaja)
      :etunimi (or (:kutsumanimi tiedot) (:etunimet tiedot))
