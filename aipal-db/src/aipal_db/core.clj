@@ -90,7 +90,7 @@
   (let [jdbc-creds (parse-uri url)
         datasource (DriverDataSource.
                      nil (:postgre-uri jdbc-creds) (:user jdbc-creds) (:passwd jdbc-creds)
-                     nil)]
+                     (into-array ["set session aipal.kayttaja='JARJESTELMA';"]))]
     datasource))
 
 (defn alusta-flywaylla!
