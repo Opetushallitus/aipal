@@ -27,9 +27,16 @@
       cheshire/parse-string
       keywordize-keys))
 
+(defn hae-ytunnus [oid oid->ytunnus]
+  (let [ytunnus (get oid->ytunnus oid)]
+    (if ytunnus
+      ytunnus
+      (do (log/error "Ei löydetty y-tunnusta oid:lle " oid)
+          nil))))
+
 (defn kayttoikeudet [kayttaja ldap-ryhma->rooli oid->ytunnus]
   (for [organisaatio (:organisaatiot kayttaja)]
-    (do (println "Organisaatio" organisaatio "ytunnus:" (get oid->ytunnus (:organisaatioOid organisaatio)))
+    (do (println "Organisaatio" organisaatio "ytunnus:" (hae-ytunnus (:organisaatioOid organisaatio) oid->ytunnus))
       (->> (:kayttooikeudet organisaatio)
            (filter #(= (:palvelu %) "AMKPAL"))
            (map :oikeus)
