@@ -177,15 +177,15 @@
         (jdbc/with-connection db-spec
           (println "Annetaan käyttöoikeudet sovelluskäyttäjälle, vaikka osa migraatioista epäonnistuisi.")
           (aseta-oikeudet-sovelluskayttajalle (:username options))
-          (println "Luodaan koodistodata")
-          (luo-koodistodata!)
+          ;(println "Luodaan koodistodata")
+          ;(luo-koodistodata!)
           (when (:testikayttajat options)
             (println "luodaan testikäyttäjät")
             (luo-testikayttajat!))
-          (when (:testidata options)
-            (println "luodaan testidataa")
-            (luo-valtakunnalliset-kysymykset!)
-            (luo-testikyselydata!))
+          ;(when (:testidata options)
+          ;  (println "luodaan testidataa")
+          ;  (luo-valtakunnalliset-kysymykset!)
+          ;  (luo-testikyselydata!))
           (doseq [s (:sql options)]
             (run-sql (sql-tiedostosta s))))
         (finally
