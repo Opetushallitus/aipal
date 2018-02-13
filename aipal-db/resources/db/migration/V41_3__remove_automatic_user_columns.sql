@@ -114,7 +114,7 @@ ALTER TABLE tiedote DROP COLUMN muutettu_kayttaja;
 
 DROP TRIGGER tila_enum_cu_insert ON tila_enum;
 DROP TRIGGER tila_enum_mu_insert ON tila_enum;
-DROP TRIGGER tila_enum_mu_insert ON tila_enum;
+DROP TRIGGER tila_enum_mu_update ON tila_enum;
 ALTER TABLE tila_enum DROP COLUMN luotu_kayttaja;
 ALTER TABLE tila_enum DROP COLUMN muutettu_kayttaja;
 
