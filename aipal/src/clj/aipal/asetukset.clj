@@ -98,7 +98,6 @@
              :koulutustoimijoiden-tutkinnot "0 40 17 ? * * *"
              :raportointi "0 30 5 * * ?"
              :tutkinnot "0 0 2 * * ?"}
-   :vipunen-page-length 100000})
    :vipunen-page-length 50000})
 
 (def common-audit-log-asetukset {:boot-time        (time-local/local-now)
