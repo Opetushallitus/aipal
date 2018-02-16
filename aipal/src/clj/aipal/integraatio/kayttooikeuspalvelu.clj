@@ -34,16 +34,22 @@
       (do (log/error "Ei löydetty y-tunnusta oid:lle " oid)
           nil))))
 
+(defn hae-rooli [oikeus ldap-ryhma->rooli]
+  (let [oikeus (get ldap-ryhma->rooli oikeus)]
+    (if oikeus
+      oikeus
+      (do (log/error "Tuntematon käyttöoikeus: " oikeus)
+          nil))))
+
 (defn kayttoikeudet [kayttaja ldap-ryhma->rooli oid->ytunnus]
   (for [organisaatio (:organisaatiot kayttaja)]
-    (do (println "Organisaatio" organisaatio "ytunnus:" (hae-ytunnus (:organisaatioOid organisaatio) oid->ytunnus))
-      (->> (:kayttooikeudet organisaatio)
-           (filter #(= (:palvelu %) "AMKPAL"))
-           (map :oikeus)
-           (map ldap-ryhma->rooli)
-           (map #(into {} {:rooli %
-                           :organisaatio (get oid->ytunnus (:organisaatioOid organisaatio))
-                           :voimassa true}))))))
+    (->> (:kayttooikeudet organisaatio)
+         (filter #(= (:palvelu %) "AMKPAL"))
+         (map #(hae-rooli (:oikeus %) ldap-ryhma->rooli))
+         (map ldap-ryhma->rooli)
+         (map #(into {} {:rooli %
+                         :organisaatio (hae-ytunnus (:organisaatioOid organisaatio) oid->ytunnus)
+                         :voimassa true})))))
 
 (defn kayttaja [uid ldap-ryhma->rooli oid->ytunnus]
   (log/info "Haetaan käyttäjän" uid "tiedot Opintopolusta")
@@ -52,7 +58,7 @@
         kayttaja (first (palvelukutsu :kayttooikeuspalvelu kayttooikeus-url {:query-params {"username" uid}}))
         roolit (->> (kayttoikeudet kayttaja ldap-ryhma->rooli oid->ytunnus)
                     flatten
-                    (filter :organisaatio))
+                    (filter #(every? some? (vals %))))
         tiedot (when kayttaja (palvelukutsu :oppijanumerorekisteri (str oppijanumerorekisteri-url (:oidHenkilo kayttaja)) {}))]
     {:oid (:oidHenkilo kayttaja)
      :etunimi (or (:kutsumanimi tiedot) (:etunimet tiedot))

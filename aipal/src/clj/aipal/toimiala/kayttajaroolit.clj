@@ -22,7 +22,8 @@
                         "ARVO-YO-KAYTTAJA" "OPL-KAYTTAJA"
                         "AMKKATSELIJA" "OPL-KATSELIJA"
                         "ARVO-YO-KATSELIJA" "OPL-KATSELIJA"
-                        "KATSELIJA" "KATSELIJA"})
+                        "KATSELIJA" "KATSELIJA"
+                        "ARVO-KT-VASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"})
 
 
 ;; roolit jotka liittyvät koulutustoimijaan
