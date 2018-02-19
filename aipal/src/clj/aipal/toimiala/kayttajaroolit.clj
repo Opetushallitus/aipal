@@ -16,14 +16,16 @@
   "https://confluence.csc.fi/pages/viewpage.action?pageId=53514648")
 
 (def ldap-ryhma->rooli {"YLLAPITAJA" "YLLAPITAJA"
-                        "AMKVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
-                        "ARVO-YO-VASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
-                        "AMKKAYTTAJA" "OPL-KAYTTAJA"
-                        "ARVO-YO-KAYTTAJA" "OPL-KAYTTAJA"
-                        "AMKKATSELIJA" "OPL-KATSELIJA"
-                        "ARVO-YO-KATSELIJA" "OPL-KATSELIJA"
                         "KATSELIJA" "KATSELIJA"
-                        "ARVO-KT-VASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"})
+                        "AMKVASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
+                        "AMKKAYTTAJA" "OPL-KAYTTAJA"
+                        "AMKKATSELIJA" "OPL-KATSELIJA"
+                        "ARVO-YO-VASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
+                        "ARVO-YO-KAYTTAJA" "OPL-KAYTTAJA"
+                        "ARVO-YO-KATSELIJA" "OPL-KATSELIJA"
+                        "ARVO-KT-VASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
+                        "ARVO-KT-KAYTTAJA" "OPL-KAYTTAJA"
+                        "ARVO-KT-KATSELIJA" "OPL-KATSELIJA"})
 
 
 ;; roolit jotka liittyvät koulutustoimijaan

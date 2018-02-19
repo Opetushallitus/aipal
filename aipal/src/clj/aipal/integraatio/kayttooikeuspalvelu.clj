@@ -58,7 +58,7 @@
         kayttaja (first (palvelukutsu :kayttooikeuspalvelu kayttooikeus-url {:query-params {"username" uid}}))
         roolit (->> (kayttoikeudet kayttaja ldap-ryhma->rooli oid->ytunnus)
                     flatten
-                    (filter #(every? some? (vals %))))
+                    (filter #(and (:organisaatio %) (:rooli %))))
         tiedot (when kayttaja (palvelukutsu :oppijanumerorekisteri (str oppijanumerorekisteri-url (:oidHenkilo kayttaja)) {}))]
     {:oid (:oidHenkilo kayttaja)
      :etunimi (or (:kutsumanimi tiedot) (:etunimet tiedot))
