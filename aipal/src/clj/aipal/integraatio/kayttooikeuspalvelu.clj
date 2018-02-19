@@ -31,32 +31,34 @@
   (let [ytunnus (get oid->ytunnus oid)]
     (if ytunnus
       ytunnus
-      (do (log/error "Ei löydetty y-tunnusta oid:lle " oid)
+      (do (log/info "Ei löydetty y-tunnusta oid:lle " oid)
           nil))))
 
 (defn hae-rooli [oikeus ldap-ryhma->rooli]
   (let [oikeus (get ldap-ryhma->rooli oikeus)]
     (if oikeus
       oikeus
-      (do (log/error "Tuntematon käyttöoikeus: " oikeus)
+      (do (log/info "Tuntematon käyttöoikeus: " oikeus)
           nil))))
 
-(defn kayttoikeudet [kayttaja ldap-ryhma->rooli oid->ytunnus]
+(defn kayttoikeudet [kayttaja uid ldap-ryhma->rooli oid->ytunnus]
   (for [organisaatio (:organisaatiot kayttaja)]
-    (->> (:kayttooikeudet organisaatio)
-         (filter #(= (:palvelu %) "AMKPAL"))
-         (map #(hae-rooli (:oikeus %) ldap-ryhma->rooli))
-         (map ldap-ryhma->rooli)
-         (map #(into {} {:rooli %
-                         :organisaatio (hae-ytunnus (:organisaatioOid organisaatio) oid->ytunnus)
-                         :voimassa true})))))
+   (let [oikeudet (->> (:kayttooikeudet organisaatio)
+                      (filter #(= (:palvelu %) "AMKPAL"))
+                      (map #(hae-rooli (:oikeus %) ldap-ryhma->rooli))
+                      (map ldap-ryhma->rooli)
+                      (map #(into {} {:rooli %
+                                      :organisaatio (hae-ytunnus (:organisaatioOid organisaatio) oid->ytunnus)
+                                      :voimassa true})))]
+     (log/info "Saatiin käyttäjälle" uid "oikeudet" oikeudet)
+     oikeudet)))
 
 (defn kayttaja [uid ldap-ryhma->rooli oid->ytunnus]
   (log/info "Haetaan käyttäjän" uid "tiedot Opintopolusta")
   (let [kayttooikeus-url (str (-> @asetukset :kayttooikeuspalvelu :url) "/kayttooikeus/kayttaja")
         oppijanumerorekisteri-url (str (-> @asetukset :oppijanumerorekisteri :url) "/henkilo/")
         kayttaja (first (palvelukutsu :kayttooikeuspalvelu kayttooikeus-url {:query-params {"username" uid}}))
-        roolit (->> (kayttoikeudet kayttaja ldap-ryhma->rooli oid->ytunnus)
+        roolit (->> (kayttoikeudet kayttaja uid ldap-ryhma->rooli oid->ytunnus)
                     flatten
                     (filter #(and (:organisaatio %) (:rooli %))))
         tiedot (when kayttaja (palvelukutsu :oppijanumerorekisteri (str oppijanumerorekisteri-url (:oidHenkilo kayttaja)) {}))]
