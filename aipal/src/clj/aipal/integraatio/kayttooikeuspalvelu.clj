@@ -46,7 +46,6 @@
    (let [oikeudet (->> (:kayttooikeudet organisaatio)
                       (filter #(= (:palvelu %) "AMKPAL"))
                       (map #(hae-rooli (:oikeus %) ldap-ryhma->rooli))
-                      (map ldap-ryhma->rooli)
                       (map #(into {} {:rooli %
                                       :organisaatio (hae-ytunnus (:organisaatioOid organisaatio) oid->ytunnus)
                                       :voimassa true})))]
