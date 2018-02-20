@@ -24,7 +24,7 @@ CREATE MATERIALIZED VIEW vipunen_view AS
     regexp_replace(kysymys.kysymys_en, '\n', ' ', 'g') AS kysymys_en,
 
     tutkinto.tutkintotunnus,
-    opintoala.opintoalatunnus,
+    tutkinto.opintoala,
 
     vastaajatunnus.suorituskieli,
 
@@ -61,6 +61,7 @@ CREATE MATERIALIZED VIEW vipunen_view AS
                                        AND vastaus.numerovalinta = monivalintavaihtoehto.jarjestys
     JOIN vastaaja ON vastaus.vastaajaid = vastaaja.vastaajaid
     JOIN vastaajatunnus ON vastaaja.vastaajatunnusid = vastaajatunnus.vastaajatunnusid
+    LEFT JOIN tutkinto ON vastaajatunnus.tutkintotunnus = tutkinto.tutkintotunnus
     JOIN kyselykerta ON vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid
     JOIN kysely ON kyselykerta.kyselyid = kysely.kyselyid
   WHERE kysymys.vastaustyyppi <> 'vapaateksti'
