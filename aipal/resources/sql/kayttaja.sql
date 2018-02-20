@@ -15,7 +15,7 @@ UPDATE kayttaja SET voimassa = FALSE WHERE uid = :uid;
 SELECT * FROM kayttaja WHERE oid = :kayttajaOid;
 
 --:name paivita-kayttaja! :! :n
-UPDATE kayttaja SET etunimi = :etunimi, sukunimi = :sukunimi
+UPDATE kayttaja SET etunimi = :etunimi, sukunimi = :sukunimi, voimassa = TRUE
 WHERE oid = :kayttajaOid;
 
 --:name lisaa-kayttaja! :! :n
