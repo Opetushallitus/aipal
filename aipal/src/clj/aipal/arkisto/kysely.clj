@@ -20,6 +20,7 @@
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [max-date]]
             [clojure.tools.logging :as log]
+            [arvo.db.core :as db]
             [oph.korma.common :refer [select-unique-or-nil select-unique unique-or-nil]]
             [aipal.auditlog :as auditlog]))
 
@@ -222,6 +223,22 @@
       (sql/fields :kysymysryhmaid))
     first
     :kysymysryhmaid))
+
+(defn aseta-jatkokysymyksen-jarjestys [kysymys kysymykset]
+  (if (:jatkokysymys kysymys)
+    (let [parent-q (first(filter #(= (:kysymysid %) (:jatkokysymys_kysymysid kysymys)) kysymykset))]
+      (assoc kysymys :jarjestys (+ (:jarjestys parent-q) 0.5)))
+    kysymys))
+
+(defn aseta-jatkokysymysten-jarjestys [kysymykset]
+  (map #(aseta-jatkokysymyksen-jarjestys % kysymykset) kysymykset))
+
+
+(defn hae-kysymykset [kyselyid]
+  (->> (db/hae-kyselyn-kysymysryhmat {:kyselyid kyselyid})
+       (map db/hae-kysymysryhman-kysymykset)
+       (map aseta-jatkokysymysten-jarjestys)
+       (map #(sort-by :jarjestys %))))
 
 (defn samanniminen-kysely?
   "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kysely."

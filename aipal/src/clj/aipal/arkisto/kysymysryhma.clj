@@ -225,7 +225,7 @@
     kysymys))
 
 (defn taydenna-kysymysryhma [kysymysryhma]
-  (let [kysymykset (db/hae-kysymykset {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
+  (let [kysymykset (db/hae-kysymysryhman-kysymykset {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
         jatkokysymykset (group-by :jatkokysymys_kysymysid (filter :jatkokysymys kysymykset))
         kys (map #(liita-jatkokysymykset jatkokysymykset %) (remove :jatkokysymys kysymykset))]
     (assoc kysymysryhma :kysymykset (sort-by :jarjestys kys))))
@@ -382,7 +382,7 @@
 
 
 (defn poista-kysymysryhman-kysymykset! [kysymysryhmaid]
-  (let [kysymykset (db/hae-kysymykset {:kysymysryhmaid kysymysryhmaid})]
+  (let [kysymykset (db/hae-kysymysryhman-kysymykset {:kysymysryhmaid kysymysryhmaid})]
     (doseq [kysymys kysymykset]
       (poista-kysymys! kysymys))))
 

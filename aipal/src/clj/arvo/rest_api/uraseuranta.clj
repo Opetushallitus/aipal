@@ -35,6 +35,13 @@
         vastaajatunnus/lisaa-massana!
         format-vastaajatunnus-response
         response-or-404))
+  (POST "/taustatiedot" []
+    :body [taustatiedot s/Any]
+    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :header-params [authorization :- String]
+    (-> taustatiedot
+        vastaajatunnus/liita-taustatiedot!
+        response-or-404))
 
   (GET "/kyselyt" []
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]

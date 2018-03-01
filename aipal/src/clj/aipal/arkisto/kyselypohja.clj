@@ -100,8 +100,10 @@
 
 (defn lisaa-kyselypohja! [kyselypohja]
   (sql/insert taulut/kyselypohja
-    (sql/values (merge (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))
-                       {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)}))))
+    (sql/values (merge (select-keys kyselypohja muokattavat-kentat)
+                       {:luotu_kayttaja (:oid *kayttaja*)
+                        :muutettu_kayttaja (:oid *kayttaja*)
+                        :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}))))
 
 (defn ^:private aseta-kyselypohjan-tila!
   [kyselypohjaid tila]

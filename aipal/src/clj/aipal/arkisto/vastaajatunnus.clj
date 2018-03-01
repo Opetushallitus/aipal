@@ -27,7 +27,8 @@
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [aipal.auditlog :as auditlog]
             [arvo.db.core :refer [*db*] :as db]
-            [clojure.java.jdbc :as jdbc]))
+            [clojure.java.jdbc :as jdbc]
+            [clj-time.coerce :refer [to-sql-date]]))
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 
@@ -149,18 +150,12 @@
                    :valmistavan_koulutuksen_oppilaitos])
 
 
-(def legacy-props [:valmistavan_koulutuksen_toimipaikka :kunta :koulutusmuoto :suorituskieli :rahoitusmuotoid :tutkintotunnus])
-
-(def legacy-prop-map {:toimipaikka :valmistavan_koulutuksen_toimipaikka
-                      :tutkinto :tutkintotunnus
-                      :kieli :suorituskieli})
+(def legacy-props [:toimipaikka :kunta :koulutusmuoto :kieli :tutkinto])
 
 (defn vastaajatunnus-base-data [vastaajatunnus tunnus]
   (-> vastaajatunnus
-      (rename-keys legacy-prop-map)
       (assoc :tunnus tunnus)
       (select-keys (concat common-props legacy-props))))
-
 
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
 
@@ -174,27 +169,9 @@
       (auditlog/vastaajatunnus-luonti! (:vastaajatunnusid vastaajatunnus) (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
       vastaajatunnus))
 
-(defn ^:private tallenna-tiedot! [entry]
-  (-> (sql/insert taulut/vastaajatunnus_tiedot
-                  (sql/values entry))))
-
 (defn find-id [kentta kyselytyyppi-kentat]
   (log/info "Find id: " kentta "FROM" kyselytyyppi-kentat)
   (:id (first (filter #(= kentta (:kentta_id %)) kyselytyyppi-kentat))))
-
-(defn tieto-entries [vastaajatunnus-kentat kyselytyyppi-kentat vastaajatunnus-id]
-  (map #(into {} [[:vastaajatunnus_id vastaajatunnus-id]
-                  [:kentta (find-id (name (first %)) kyselytyyppi-kentat)]
-                  [:arvo (second %)]]) (seq vastaajatunnus-kentat)))
-
-(defn tallenna-vastaajatunnus-tiedot! [tunnus vastaajatunnus kyselytyyppi]
-  (let [kyselytyyppi-kentat (db/kyselytyypin_kentat {:kyselytyyppi kyselytyyppi})
-        vastaajatunnus-kentat (select-keys vastaajatunnus (map #(keyword (:kentta_id %)) kyselytyyppi-kentat))
-        entries (->> (tieto-entries vastaajatunnus-kentat kyselytyyppi-kentat tunnus)
-                    (filter :kentta)
-                    (filter :arvo))
-        _ (log/info "Entries: " entries)]
-    (run! #(tallenna-tiedot! %) entries)))
 
 
 (defn get-vastaajatunnukset [tunnusten-lkm]
@@ -202,14 +179,28 @@
        (remove vastaajatunnus-olemassa?)
        (take tunnusten-lkm)))
 
+(defn format-taustatiedot [taustatieto-kentat vastaajatunnus]
+  (-> vastaajatunnus
+    (select-keys taustatieto-kentat)))
+
+
+
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
-  (let [kyselytyyppi (:tyyppi (db/kyselykerran-tyyppi vastaajatunnus))]
+  (let [kyselytyyppi (:tyyppi (db/kyselykerran-tyyppi vastaajatunnus))
+        kyselytyypin_kentat (map (comp keyword :kentta_id) (db/kyselytyypin_kentat {:kyselytyyppi kyselytyyppi}))]
     (doall
       (for [tunnus (get-vastaajatunnukset (:tunnusten-lkm vastaajatunnus))]
-        (let [tallennettu-tunnus (tallenna-vastaajatunnus! (vastaajatunnus-base-data vastaajatunnus tunnus))]
-          (tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) vastaajatunnus kyselytyyppi)
-          tallennettu-tunnus)))))
+        (let [base-data (vastaajatunnus-base-data vastaajatunnus tunnus)
+              taustatiedot (format-taustatiedot kyselytyypin_kentat vastaajatunnus)
+              tallennettava-tunnus (-> base-data
+                                       (assoc :taustatiedot taustatiedot)
+                                       (update :voimassa_alkupvm to-sql-date))
+              _ (log/info "LISÄTÄÄN TUNNUS " tallennettava-tunnus)]
+          ;(tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) vastaajatunnus kyselytyyppi)
+          (db/lisaa-vastaajatunnus! (assoc tallennettava-tunnus :kayttaja (:oid *kayttaja*)))
+          tallennettava-tunnus)))))
+
 
 
 ;;AVOP.FI FIXME: binding manually to INTEGRAATIO user (check if that is right)
@@ -223,6 +214,21 @@
     (doseq [tunnus vastaajatunnukset]
       (db/lisaa-vastaajatunnus! tx (assoc tunnus :kayttaja (:oid *kayttaja*))))
     vastaajatunnukset))
+
+(defn liita-taustatiedot! [taustatieto-seq]
+  (jdbc/with-db-transaction [tx *db*]
+    (doseq [taustatiedot taustatieto-seq]
+      (let [vastaajatunnus (:vastaajatunnus taustatiedot)
+            tutkintotunnus (:tutkinto_koulutuskoodi taustatiedot)
+            oppilaitos (:oppilaitoskoodi taustatiedot)]
+        (db/paivita-taustatiedot! {:vastaajatunnus vastaajatunnus
+                                   :tutkintotunnus tutkintotunnus
+                                   :oppilaitos oppilaitos
+                                   :taustatiedot (dissoc taustatiedot
+                                                         :vastaajatunnus
+                                                         :tutkinto_koulutuskoodi
+                                                         :oppilaitoskoodi)}))))
+  (count taustatieto-seq))
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)

@@ -2,10 +2,9 @@
   (:require [clojure-csv.core :refer [write-csv]]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [arvo.arkisto.csv :as csv]
             [clojure.core.match :refer [match]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
-            [arvo.db.core :as vastaajatunnus]
+            [arvo.db.core :as db]
             [clojure.tools.logging :as log]))
 
 (def delimiter \;)
@@ -90,7 +89,7 @@
 (def sallitut-taustatiedot ["tutkinto" "henkilonumero" "haun_numero" "ika" "sukupuoli" "koulutusmuoto"])
 
 (defn create-row [template {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus} choices answers]
-  (let [vastaajatunnus-kentat (filter #(in? sallitut-taustatiedot (:kentta_id %)) (vastaajatunnus/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus}))
+  (let [vastaajatunnus-kentat (filter #(in? sallitut-taustatiedot (:kentta_id %)) (db/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus}))
         vastaajatunnus-arvot (map #(get-vastaajatunnus-value tutkintotunnus %) vastaajatunnus-kentat)]
     (concat [vastaajatunnus] vastaajatunnus-arvot (mapcat #(get-answer answers choices %) template))))
 
@@ -98,7 +97,7 @@
 (defn get-choices [questions]
   (let [monivalinnat (filter #(= "monivalinta" (:vastaustyyppi %)) questions)
         kysymysidt (map :kysymysid monivalinnat)]
-    (csv/hae-monivalinnat kysymysidt)))
+    (db/hae-monivalinnat {:kysymysidt kysymysidt})))
 
 (defn muuta-taustakysymykset [kysymykset]
   (if (every? :taustakysymys kysymykset)
@@ -109,16 +108,16 @@
   (filter #(not= (:vastaustyyppi %) "valiotsikko") kysymykset))
 
 (defn hae-kysymykset [kyselyid]
-  (-> (csv/hae-kysymykset kyselyid)
+  (-> (db/hae-kyselyn-kysymykset {:kyselyid kyselyid})
       poista-valiotsikot
       muuta-taustakysymykset))
 
 (defn kysely-csv [kyselyid]
   (let [kysymykset (hae-kysymykset kyselyid)
-        taustatieot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
+        taustatieot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (db/kyselyn-kentat {:kyselyid kyselyid}))
         monivalintavaihtoehdot (get-choices kysymykset)
         template (create-row-template kysymykset)
-        vastaukset (group-by :vastaajaid (csv/hae-vastaukset kyselyid))
+        vastaukset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid}))
         vastaajatunnus-header (map :kentta_fi taustatieot)
         kysymysryhma-header (get-question-group-header kysymykset template vastaajatunnus-header)
         kysymys-header (create-header-row template kysymykset vastaajatunnus-header)
@@ -135,7 +134,7 @@
 
 (defn luo-vastausrivi [[vastaajatunnus vastaukset] kysymykset monivalintavaihtoehdot]
   (let [vanha-tutkintotunnus (:tutkintotunnus (first vastaukset))
-        taustatiedot (->> (vastaajatunnus/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus})
+        taustatiedot (->> (db/vastaajatunnuksen_tiedot {:vastaajatunnus vastaajatunnus})
                           (filter #(in? sallitut-taustatiedot (:kentta_id %)))
                           (map #(get-vastaajatunnus-value vanha-tutkintotunnus %)))
         taustakysymysten-vastaukset (->> kysymykset
@@ -149,8 +148,8 @@
 
 (defn kysely-csv-vastauksittain [kyselyid]
   (let [kysymykset (hae-kysymykset kyselyid)
-        vastaukset (group-by :vastaajatunnus (csv/hae-vastaukset kyselyid))
-        taustatiedot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (vastaajatunnus/kyselyn_kentat {:kyselyid kyselyid}))
+        vastaukset (group-by :vastaajatunnus (db/hae-vastaukset {:kyselyid kyselyid}))
+        taustatiedot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (db/kyselyn-kentat {:kyselyid kyselyid}))
         monivalintavaihtoehdot (get-choices kysymykset)
         taustakysymykset (->> kysymykset
                               (filter :taustakysymys)
