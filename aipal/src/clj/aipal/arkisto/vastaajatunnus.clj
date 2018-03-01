@@ -213,7 +213,7 @@
                                                          :vastaajatunnus
                                                          :tutkinto_koulutuskoodi
                                                          :oppilaitoskoodi)}))))
-  (count taustatieto-seq))
+  (str (count taustatieto-seq)))
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
