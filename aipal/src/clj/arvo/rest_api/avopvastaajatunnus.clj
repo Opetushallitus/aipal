@@ -83,12 +83,12 @@
      :vastaajien_lkm 1
      :voimassa_alkupvm (alkupvm)
      :voimassa_loppupvm (loppupvm)
-     :suorituskieli kieli
+     :kieli kieli
      :rahoitusmuotoid 5
      :toimipaikka nil
      :valmistavan_koulutuksen_jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus])) 
      :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
-     :tutkintotunnus (ent_tutkinto :tutkintotunnus)
+     :tutkinto (ent_tutkinto :tutkintotunnus)
      :kunta kunta
      :koulutusmuoto koulutusmuoto
      :kyselykertaid (kyselykerta-id :kyselykertaid)}))

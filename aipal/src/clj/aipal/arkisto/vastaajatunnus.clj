@@ -195,13 +195,10 @@
               taustatiedot (format-taustatiedot kyselytyypin_kentat vastaajatunnus)
               tallennettava-tunnus (-> base-data
                                        (assoc :taustatiedot taustatiedot)
-                                       (update :voimassa_alkupvm to-sql-date))
-              _ (log/info "LISÄTÄÄN TUNNUS " tallennettava-tunnus)]
+                                       (update :voimassa_alkupvm to-sql-date))]
           ;(tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) vastaajatunnus kyselytyyppi)
           (db/lisaa-vastaajatunnus! (assoc tallennettava-tunnus :kayttaja (:oid *kayttaja*)))
           tallennettava-tunnus)))))
-
-
 
 ;;AVOP.FI FIXME: binding manually to INTEGRAATIO user (check if that is right)
 (defn lisaa-avopfi! [vastaajatunnus]
