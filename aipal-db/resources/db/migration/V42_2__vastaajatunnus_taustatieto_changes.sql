@@ -3,11 +3,10 @@ ALTER TABLE vastaajatunnus ADD COLUMN taustatiedot JSONB;
 CREATE OR REPLACE FUNCTION get_taustatiedot(id INT) RETURNS JSONB AS
 $$
 WITH tabular AS (
-    SELECT t.kentta_fi, t.arvo FROM (
-                                      SELECT vtt.vastaajatunnus_id, ktk.kentta_fi, vtt.arvo FROM vastaajatunnus_tiedot vtt
+    SELECT t.kentta_id, t.arvo FROM (SELECT vtt.vastaajatunnus_id, ktk.kentta_id, vtt.arvo FROM vastaajatunnus_tiedot vtt
                                         JOIN kyselytyyppi_kentat ktk ON vtt.kentta = ktk.id) t
     WHERE t.vastaajatunnus_id = id)
-SELECT json_object(array_agg(tabular.kentta_fi), array_agg(tabular.arvo)::text[])::jsonb
+SELECT json_object(array_agg(tabular.kentta_id), array_agg(tabular.arvo)::text[])::jsonb
 FROM tabular;
 $$ LANGUAGE SQL STABLE;
 
