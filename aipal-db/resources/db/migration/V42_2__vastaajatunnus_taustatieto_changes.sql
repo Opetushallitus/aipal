@@ -7,14 +7,13 @@ WITH tabular AS (
                                       SELECT vtt.vastaajatunnus_id, ktk.kentta_fi, vtt.arvo FROM vastaajatunnus_tiedot vtt
                                         JOIN kyselytyyppi_kentat ktk ON vtt.kentta = ktk.id) t
     WHERE t.vastaajatunnus_id = id)
-SELECT jsonb_object(array_agg(tabular.kentta_fi), array_agg(tabular.arvo)::text[])
+SELECT json_object(array_agg(tabular.kentta_fi), array_agg(tabular.arvo)::text[])::jsonb
 FROM tabular;
 $$ LANGUAGE SQL STABLE;
 
 UPDATE vastaajatunnus SET taustatiedot = get_taustatiedot(vastaajatunnusid);
 
 DROP FUNCTION get_taustatiedot(INTEGER);
-
 
 INSERT INTO kyselytyyppi_kentat (kyselytyyppi_id, kentta_id, kentta_fi) VALUES (3, 'oppilaitoskoodi',  'oppilaitoskoodi');
 INSERT INTO kyselytyyppi_kentat (kyselytyyppi_id, kentta_id, kentta_fi) VALUES (3, 'valmistumisvuosi', 'valmistumisvuosi');
