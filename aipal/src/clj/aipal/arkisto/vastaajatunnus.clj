@@ -159,16 +159,6 @@
 
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
 
-(defn ^:private tallenna-vastaajatunnus! [vastaajatunnus]
-    (let [tallennettava-tunnus (select-keys vastaajatunnus common-and-legacy-props)
-          vastaajatunnus (-> (sql/insert taulut/vastaajatunnus
-                               (sql/values (merge tallennettava-tunnus
-                                                  {:luotu_kayttaja (:oid *kayttaja*)
-                                                   :muutettu_kayttaja (:oid *kayttaja*)}))))
-          vastaajatunnus (hae (:kyselykertaid vastaajatunnus) (:vastaajatunnusid vastaajatunnus))]
-      (auditlog/vastaajatunnus-luonti! (:vastaajatunnusid vastaajatunnus) (:tunnus vastaajatunnus) (:kyselykertaid vastaajatunnus))
-      vastaajatunnus))
-
 (defn find-id [kentta kyselytyyppi-kentat]
   (log/info "Find id: " kentta "FROM" kyselytyyppi-kentat)
   (:id (first (filter #(= kentta (:kentta_id %)) kyselytyyppi-kentat))))
@@ -183,8 +173,6 @@
   (-> vastaajatunnus
     (select-keys taustatieto-kentat)))
 
-
-
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (let [kyselytyyppi (:tyyppi (db/kyselykerran-tyyppi vastaajatunnus))
@@ -195,8 +183,8 @@
               taustatiedot (format-taustatiedot kyselytyypin_kentat vastaajatunnus)
               tallennettava-tunnus (-> base-data
                                        (assoc :taustatiedot taustatiedot)
-                                       (update :voimassa_alkupvm to-sql-date))]
-          ;(tallenna-vastaajatunnus-tiedot! (:vastaajatunnusid tallennettu-tunnus) vastaajatunnus kyselytyyppi)
+                                       (update :voimassa_alkupvm to-sql-date)
+                                       (update :voimassa_loppupvm to-sql-date))]
           (db/lisaa-vastaajatunnus! (assoc tallennettava-tunnus :kayttaja (:oid *kayttaja*)))
           tallennettava-tunnus)))))
 

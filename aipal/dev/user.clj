@@ -60,7 +60,7 @@
   {:pre [(not @palvelin)]
    :post [@palvelin]}
   (require 'aipal.palvelin)
-  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) (repl-asetukset))))
+  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) @(ns-resolve 'aipal.asetukset 'oletusasetukset))))
 
 (defn stop []
   {:pre [@palvelin]

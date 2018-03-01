@@ -82,8 +82,8 @@
         kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
     {:tunnusten-lkm 1
      :vastaajien_lkm 1
-     :voimassa_alkupvm (parse-iso-date (alkupvm))
-     :voimassa_loppupvm (parse-iso-date (loppupvm))
+     :voimassa_alkupvm (alkupvm)
+     :voimassa_loppupvm (loppupvm)
      :kieli kieli
      :rahoitusmuotoid 5
      :toimipaikka nil
