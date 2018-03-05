@@ -28,5 +28,6 @@ JOIN tutkinto t ON vt.tutkintotunnus = t.tutkintotunnus
 LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
   AND monivalintavaihtoehto.kysymysid = kys.kysymysid
   AND v.numerovalinta = monivalintavaihtoehto.jarjestys
---~(if (:since params) "WHERE vastausid > :since")
+WHERE k.tyyppi = 3
+--~(if (:since params) "AND vastausid > :since")
 ORDER BY vastausid LIMIT :pagelength;
