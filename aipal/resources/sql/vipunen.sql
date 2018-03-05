@@ -7,12 +7,12 @@ ORDER BY vastausid ASC LIMIT :pagelength;
 
 -- :name hae-uraseuranta-vastaukset :? :*
 SELECT k.kyselyid, k.koulutustoimija,
-  k.kyselyid, k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
+  k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
   kk.kyselykertaid, kk.nimi AS kyselykerta,
   kr.selite_fi, kr.nimi_fi, kr.nimi_sv, kr.nimi_en, kr.valtakunnallinen,
   (select jarjestys from kysely_kysymysryhma where kyselyid=k.kyselyid and kysymysryhmaid=kr.kysymysryhmaid) kysymysryhmajarjestys,
   kys.vastaustyyppi, kys.kysymys_fi, kys.kysymys_sv, kys.kysymys_en, kys.jarjestys,
-  v.vastausid, v.numerovalinta, v.vaihtoehto,
+  v.vastausid, v.numerovalinta, CASE v.vaihtoehto WHEN 'kylla' THEN 1 WHEN 'ei' THEN 0 ELSE NULL END AS vaihtoehto,
   vt.tunnus, vt.valmistavan_koulutuksen_jarjestaja, vt.valmistavan_koulutuksen_oppilaitos,vt.taustatiedot,
   vs.vastaajaid,
   t.tutkintotunnus, t.opintoala,
