@@ -37,9 +37,16 @@
              resp)
      :headers {"Content-Type" "application/json; charset=utf-8"}}))
 
-(defn paginated-respnse [result page-length base-url]
+
+(defn format-url [base params]
+  (str base "?"(->> params
+                 (map #(str (name (first %))"=" (second %)))
+                 (interpose "&")
+                 (apply str))))
+
+(defn paginated-response [result page-length api-url params]
   (let [next-id (when (= page-length (count result)) (-> result last :vastausid))
-        next-url (str (str base-url "&since="next-id))]
+        next-url format-url (str (-> @asetukset :server :base-url) api-url params)]
     {:status 200
      :body {:data result
             :pagination {:next-url (if next-id next-url "null")}}
@@ -51,13 +58,13 @@
                                                  :pagelength page-length
                                                  :loppupvm loppupvm}
                                               (when since {:since since})))]
-    (paginated-respnse result page-length (str (-> @asetukset :server :base-url) "/api/vipunen?alkupvm="alkupvm))))
+    (paginated-response result page-length "/api/vipunen" {:alkupvm alkupvm :loppupvm loppupvm})))
 
 (defn hae-uraseuranta-vastaukset [since]
   (let [page-length (:vipunen-page-length @asetukset)
         result (db/hae-uraseuranta-vastaukset (merge {:pagelength page-length}
                                                      (when since {:since since})))]
-    (paginated-respnse result page-length ())))
+    (paginated-response result page-length "/api/vipunen/uraseuranta" {})))
 
 (defroutes reitit
   (GET "/" []
