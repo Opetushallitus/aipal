@@ -46,7 +46,7 @@
 
 (defn paginated-response [result page-length api-url params]
   (let [next-id (when (= page-length (count result)) (-> result last :vastausid))
-        next-url format-url (str (-> @asetukset :server :base-url) api-url params)]
+        next-url (format-url (str (-> @asetukset :server :base-url) api-url) params)]
     {:status 200
      :body {:data result
             :pagination {:next-url (if next-id next-url "null")}}
