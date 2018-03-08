@@ -34,7 +34,7 @@ CREATE MATERIALIZED VIEW vipunen_view AS
 
     kysymysryhma.taustakysymykset,
 
-    vastaajatunnus.kunta,
+    COALESCE(vastaajatunnus.kunta, vastaajatunnus.taustatiedot->>'kunta') AS kunta,
     COALESCE(vastaajatunnus.koulutusmuoto, vastaajatunnus.taustatiedot->>'koulutusmuoto') AS koulutusmuoto,
     vastaajatunnus.tunnus,
 
