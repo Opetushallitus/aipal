@@ -49,7 +49,7 @@
         next-url (format-url (str (-> @asetukset :server :base-url) api-url) (merge params {:since next-id}))]
     {:status 200
      :body {:data result
-            :pagination {:next-url (if next-id next-url "null")}}
+            :pagination {:next_url (if next-id next-url "null")}}
      :headers {"Content-Type" "application/json; charset=utf-8"}}))
 
 (defn hae-vastaukset [alkupvm loppupvm since]
