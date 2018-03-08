@@ -15,7 +15,7 @@ SELECT k.kyselyid, k.koulutustoimija,
   v.vastausid, v.numerovalinta, CASE v.vaihtoehto WHEN 'kylla' THEN 1 WHEN 'ei' THEN 0 ELSE NULL END AS vaihtoehto,
   vt.tunnus, vt.valmistavan_koulutuksen_jarjestaja, vt.valmistavan_koulutuksen_oppilaitos,vt.taustatiedot,
   vs.vastaajaid,
-  t.tutkintotunnus, t.opintoala,
+  t.tutkintotunnus,
   COALESCE(monivalintavaihtoehto.teksti_fi,COALESCE(monivalintavaihtoehto.teksti_sv, monivalintavaihtoehto.teksti_en)) AS monivalintavaihtoehto
 FROM kysely k
 JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
