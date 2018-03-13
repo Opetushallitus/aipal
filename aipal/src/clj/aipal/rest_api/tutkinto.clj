@@ -17,7 +17,9 @@
             [aipal.arkisto.tutkinto :as tutkinto]
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [oph.common.util.http-util :refer [response-or-404]]
+            [schema.core :as s]
+            [clojure.tools.logging :as log]))
 
 (defroutes reitit
    (GET "/voimassaolevat-listana" []
@@ -32,4 +34,8 @@
   (GET "/koulutustoimija" []
     :kayttooikeus :tutkinto
     (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
-      (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus)))))
+      (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus))))
+  (GET "/jarjestajat/:tutkintotunnus" []
+    :path-params [tutkintotunnus :- String]
+    :kayttooikeus :tutkinto
+    (response-or-404 (tutkinto/hae-tutkinnon-jarjestajat tutkintotunnus))))

@@ -23,29 +23,23 @@
             [oph.common.util.util :refer [paivita-arvot]]))
 
 (defn ui->vastaajatunnus [vastaajatunnus kyselykertaid]
-  (let [tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
-        vastaajien-lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
-        valmistavan-koulutuksen-jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
-        tutkintotunnus (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
-        valmistavan-koulutuksen-oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
-        valmistavan-koulutuksen-toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
-        kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
-        rahoitusmuotoid (or(:rahoitusmuotoid vastaajatunnus) 5)]
-    {:tunnusten-lkm tunnusten-lkm
-     :kyselykertaid kyselykertaid
-     :vastaajien_lkm vastaajien-lkm
-     :tutkinto tutkintotunnus
-     :kieli (:suorituskieli vastaajatunnus)
-     :kunta kunta
-     :rahoitusmuotoid rahoitusmuotoid
-     :koulutusmuoto (:koulutusmuoto vastaajatunnus)
-     :valmistavan_koulutuksen_jarjestaja valmistavan-koulutuksen-jarjestaja
-     :valmistavan_koulutuksen_oppilaitos valmistavan-koulutuksen-oppilaitos
-     :toimipaikka valmistavan-koulutuksen-toimipaikka
-     :voimassa_alkupvm (:voimassa_alkupvm vastaajatunnus)
-     :voimassa_loppupvm (:voimassa_loppupvm vastaajatunnus)
-     :haun_numero (:haun_numero vastaajatunnus)
-     :henkilonumero (:henkilonumero vastaajatunnus)}))
+  {:kyselykertaid kyselykertaid
+   :tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
+   :vastaajien_lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
+   :tutkinto (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
+   :kieli (:suorituskieli vastaajatunnus)
+   :kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
+   :rahoitusmuotoid (or (:rahoitusmuotoid vastaajatunnus) 5)
+   :koulutusmuoto (:koulutusmuoto vastaajatunnus)
+   :valmistavan_koulutuksen_jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
+   :valmistavan_koulutuksen_oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
+   :toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
+   :voimassa_alkupvm (:voimassa_alkupvm vastaajatunnus)
+   :voimassa_loppupvm (:voimassa_loppupvm vastaajatunnus)
+   :haun_numero (:haun_numero vastaajatunnus)
+   :henkilonumero (:henkilonumero vastaajatunnus)
+   :hankintakoulutuksen_toteuttaja (get-in vastaajatunnus [:hankintakoulutuksen_toteuttaja :ytunnus])
+   :tutkintomuoto (:tutkintomuoto vastaajatunnus)})
 
 (defroutes reitit
   (POST "/:kyselykertaid" []

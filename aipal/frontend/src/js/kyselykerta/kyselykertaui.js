@@ -47,22 +47,18 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
 
-      var kyselyTemplate = function(kyselytyyppi){
-        console.log("Kyselytyyppi: " +  kyselytyyppi);
-        if(kyselytyyppi === 1)
-          return {templateUrl: 'template/kysely/palautekysely-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
-        else if (kyselytyyppi === 2 )
-          return {templateUrl: 'template/kysely/rekrykysely-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
-        else if (kyselytyyppi === 3)
-          return {templateUrl: 'template/kysely/uraseuranta-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
-        else if (kyselytyyppi === 4)
-          return {templateUrl: 'template/kysely/digikyvykkyys-tunnukset.html', controller: 'LuoTunnuksiaModalController'}
+      var templateMap = {
+        1: 'template/kysely/palautekysely-tunnukset.html',
+        2: 'template/kysely/rekrykysely-tunnukset.html',
+        3: 'template/kysely/uraseuranta-tunnukset.html',
+        4: 'template/kysely/digikyvykkyys-tunnukset.html',
+        5: 'template/kysely/amis-tunnukset.html'
       }
 
       $scope.luoTunnuksiaDialogi = function () {
         var kyselykertaId = $routeParams.kyselykertaid;
 
-        var template = kyselyTemplate($scope.kysely.tyyppi)
+        var template = {templateUrl: templateMap[$scope.kysely.tyyppi], controller: 'LuoTunnuksiaModalController'}
 
         var modalInstance = $uibModal.open({
           templateUrl: template.templateUrl,
@@ -230,9 +226,12 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
   .controller('LuoTunnuksiaModalController', ['$uibModalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet',
     'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
-    'viimeksiValittuTutkinto', 'kayttooikeudet',
+    'viimeksiValittuTutkinto', 'kayttooikeudet', 'Tutkinto',
     function ($uibModalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat,
-              kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto, kayttooikeudet) {
+              kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto, kayttooikeudet, Tutkinto) {
+
+      $scope.tutkinnonJarjestajat = [];
+
       $scope.vastaajatunnus = {
         henkilokohtainen: true,
         koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
@@ -274,7 +273,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       function haeOppilaitokset(koulutustoimija) {
         Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).success(function (oppilaitokset) {
-          console.log(oppilaitokset);
 
           if (oppilaitokset.length === 1) {
             $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = oppilaitokset[0];
@@ -284,7 +282,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           $scope.oppilaitokset = oppilaitokset;
           var oppilaitostyypit = oppilaitokset.map(function(o){return o.oppilaitostyyppi});
 
-          $scope.naytaKoulutusmuoto = oppilaitostyypit.indexOf("41") != -1;
+          $scope.naytaKoulutusmuoto = oppilaitostyypit.indexOf("41") !== -1;
 
         });
 
@@ -293,7 +291,17 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       function haeToimipaikat(oppilaitos) {
         Oppilaitos.haeOppilaitoksenToimipaikat(oppilaitos).success(function (toimipaikat) {
           $scope.toimipaikat = toimipaikat;
-        });
+        })
+      }
+
+      function haeTutkinnonJarjestajat(tutkinto) {
+        Tutkinto.haeTutkinnonJarjestajat(tutkinto.tutkintotunnus).success(function (jarjestajat) {
+          $scope.tutkinnonJarjestajat = jarjestajat;
+        })
+      }
+
+      if(viimeksiValittuTutkinto){
+        haeTutkinnonJarjestajat(viimeksiValittuTutkinto);
       }
 
       haeOppilaitokset(aktiivinenKoulutustoimija.ytunnus);
@@ -304,6 +312,12 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.$watch('vastaajatunnus.koulutuksen_jarjestaja_oppilaitos', function (oppilaitos) {
         if (oppilaitos && oppilaitos.oppilaitoskoodi) {
           haeToimipaikat(oppilaitos.oppilaitoskoodi);
+        }
+      });
+
+      $scope.$watch('vastaajatunnus.tutkinto', function (tutkinto) {
+        if(tutkinto){
+          haeTutkinnonJarjestajat(tutkinto)
         }
       });
 

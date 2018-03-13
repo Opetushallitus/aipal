@@ -28,6 +28,9 @@ angular.module('rest.tutkinto', [])
       },
       koulutustoimijanTutkinnot: function() {
         return $http.get('api/tutkinto/koulutustoimija', {params: {nocache: Date.now()}});
+      },
+      haeTutkinnonJarjestajat: function(tutkintotunnus) {
+        return $http.get('api/tutkinto/jarjestajat/'+tutkintotunnus, {params: {nocache: Date.now()}})
       }
     };
   }]);

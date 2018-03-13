@@ -78,7 +78,7 @@
   [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto kyselykerran_nimi]}]
   (let [ent_oppilaitos (oppilaitos/hae oppilaitos)
         ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
-        ent_tutkinto (tutkinto/hae-kentat koulutus)
+        ent_tutkinto (tutkinto/hae koulutus)
         kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi oppilaitos)]
     {:tunnusten-lkm 1
      :vastaajien_lkm 1

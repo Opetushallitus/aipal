@@ -246,13 +246,12 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn ^:integration-api tallenna-muuttuneet-tutkinnot! [tutkinnot]
   (doseq [tutkinto tutkinnot
-          :let [tunnus (:tutkintotunnus tutkinto)
-                tutkinto (dissoc tutkinto :tutkintotunnus)]]
+          :let [tunnus (:tutkintotunnus tutkinto)]]
     (if (nil? (:opintoala tutkinto))
       (log/info "Tutkinto " tunnus ", ei opintoalaa. Päivitystä ei tehty.")
       (do 
         (log/info "Päivitetään tutkinto " tunnus ", muutokset: " tutkinto)
-        (tutkinto-arkisto/paivita! tunnus tutkinto)))))
+        (tutkinto-arkisto/paivita! tutkinto)))))
 
 (defn ^:integration-api tallenna-tutkinnot! [tutkinnot]
   (let [uudet (for [[tunnus tutkinto] tutkinnot

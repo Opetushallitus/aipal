@@ -182,6 +182,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       'arvosana',
       'arvosana6',
       'arvosana7',
+      'nps',
       'kylla_ei_valinta',
       'likert_asteikko',
       'monivalinta',
@@ -206,7 +207,6 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
 
     $scope.lisaaVaihtoehto = function() {
-      console.log("Aktiivinen " + JSON.stringify($scope.aktiivinenKysymys))
       if($scope.aktiivinenKysymys.monivalintavaihtoehdot === undefined){
         $scope.aktiivinenKysymys.monivalintavaihtoehdot = [];
       }

@@ -140,7 +140,7 @@
     </jakauma-kaavio>
 
     <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
-      ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'likert_asteikko' || kysymys.vastaustyyppi === 'arvosana' || kysymys.vastaustyyppi === 'arvosana7'"
+      ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'likert_asteikko' || kysymys.vastaustyyppi === 'arvosana' || kysymys.vastaustyyppi === 'arvosana7' || kysymys.vastaustyyppi === 'nps-indeksi'"
       jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi" nimet="tulos.nimet"
       eos="kysymys.eos_vastaus_sallittu">
     </vaittama-kaavio>
