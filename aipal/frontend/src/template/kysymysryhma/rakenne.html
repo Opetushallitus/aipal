@@ -5,9 +5,9 @@
 </div>
 <div class="modal-body">
   <h3>{{ kysymysryhma | lokalisoiKentta:'nimi' }}</h3>
-
   <div ng-repeat="kysymys in kysymysryhma.kysymykset">
     <h3>{{ kysymys | lokalisoiKentta:'kysymys' }}<span ng-if="kysymys.pakollinen">*</span></h3>
+    <small ng-if="yllapitaja()">{{kysymys.kysymysid}}</small>
 
     <div ng-if="kysymys.vastaustyyppi == 'vapaateksti'" class="vastaus_valinnat">
       <div>({{ 'kysymys.vapaa_tekstikentta' | i18n }})</div>

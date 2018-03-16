@@ -154,13 +154,17 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       };
     }
   }])
-  .controller('KyselypohjaModalController', ['$uibModalInstance', '$scope', 'kyselypohja', 'Kyselypohja', function($uibModalInstance, $scope, kyselypohja, Kyselypohja) {
+  .controller('KyselypohjaModalController', ['$uibModalInstance', '$scope', 'kyselypohja', 'kayttooikeudet', 'Kyselypohja', function($uibModalInstance, $scope, kyselypohja, kayttooikeudet, Kyselypohja) {
 
     /* Luo Kyselypohjista kysymykset -arrayn jota rakenne.html -template ymmärtää */
     var kysymykset = [];
 
     // Otsikon kielimuuttujaa varten
     $scope.view = 'kyselypohjat';
+
+    $scope.yllapitaja = function() {
+      return kayttooikeudet.isYllapitaja();
+    };
 
     var setKysymykset = function(kyselypohja) {
       _.each(kyselypohja.kysymysryhmat, function(x){
