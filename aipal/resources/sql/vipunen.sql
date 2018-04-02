@@ -16,7 +16,9 @@ SELECT k.kyselyid, k.koulutustoimija,
   vt.tunnus, vt.valmistavan_koulutuksen_jarjestaja, vt.valmistavan_koulutuksen_oppilaitos,vt.taustatiedot,
   vs.vastaajaid,
   t.tutkintotunnus,
-  COALESCE(monivalintavaihtoehto.teksti_fi,COALESCE(monivalintavaihtoehto.teksti_sv, monivalintavaihtoehto.teksti_en)) AS monivalintavaihtoehto
+  monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
+  monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
+  monivalintavaihtoehto.teksti_en AS monivalintavaihtoehto_en
 FROM kysely k
 JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
 JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
@@ -29,5 +31,6 @@ LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
   AND monivalintavaihtoehto.kysymysid = kys.kysymysid
   AND v.numerovalinta = monivalintavaihtoehto.jarjestys
 WHERE k.tyyppi = 3
+AND kys.raportoitava = TRUE
 --~(if (:since params) "AND vastausid > :since")
 ORDER BY vastausid LIMIT :pagelength;
