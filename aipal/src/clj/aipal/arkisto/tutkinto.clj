@@ -64,8 +64,9 @@
     (sort-by :koulutusalatunnus koulutusalat)))
 
 (defn hae-tutkinnot []
-  (db/hae-koulutustoimijan-tutkinnot {:koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)
-                                      :oppilaitostyypit (:oppilaitostyypit *kayttaja*)}))
+  (let [oppilaitostyypit (:oppilaitostyypit *kayttaja*)]
+    (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
+                                              (when (not-empty oppilaitostyypit) {:oppilaitostyypit (:oppilaitostyypit *kayttaja*)})))))
 
 (defn hae-voimassaolevat-tutkinnot-listana []
   (->>
