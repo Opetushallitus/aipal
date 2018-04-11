@@ -44,4 +44,4 @@ WHERE k.tyyppi = 3
 AND kys.raportoitava = TRUE
 AND taustatiedot IS NOT NULL
 --~(if (:since params) "AND vastausid > :since")
-ORDER BY vastausid LIMIT 5;
+ORDER BY vastausid LIMIT :pagelength;
