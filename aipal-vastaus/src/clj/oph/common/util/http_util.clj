@@ -6,7 +6,7 @@
     [clj-time.coerce :as time-coerce]
     [clj-time.core :as time]
     [oph.common.util.util :refer [uusin-muokkausaika-tai-nykyhetki]]
-    [schema.core :as s] )
+    [schema.core :as s])
   (:import java.io.ByteArrayInputStream))
 
 (def ^:private http-date-format
@@ -72,10 +72,10 @@
 
 (defn response-or-404
   ([data]
-    (if (nil? data)
-      {:status 404}
-      {:status 200
-       :body data})))
+   (if (nil? data)
+     {:status 404}
+     {:status 200
+      :body data})))
 
 (defn korvaa-virheteksti [virhetekstit virhe]
   (let [[virhe & parametrit ] (if (keyword? virhe)
@@ -89,14 +89,14 @@
 
 (defn file-download-response
   ([data filename content-type]
-    (file-download-response data filename content-type {}))
+   (file-download-response data filename content-type {}))
   ([data filename content-type options]
-    {:status 200
-     :body (if-let [charset (:charset options)]
-             (ByteArrayInputStream. (.getBytes (str data) charset))
-             (ByteArrayInputStream. data))
-     :headers {"Content-type" content-type
-               "Content-Disposition" (str "attachment; filename=\"" filename "\"")}}))
+   {:status 200
+    :body (if-let [charset (:charset options)]
+            (ByteArrayInputStream. (.getBytes (str data) charset))
+            (ByteArrayInputStream. data))
+    :headers {"Content-type" content-type
+              "Content-Disposition" (str "attachment; filename=\"" filename "\"")}}))
 
 (defn csv-download-response
   [data filename]

@@ -4,11 +4,14 @@
             [conman.core :as conman]
             [aipal.asetukset :refer [asetukset]]
             [clojure.java.jdbc :as jdbc]
-            [cheshire.core :refer [parse-string generate-string]])
+            [cheshire.core :refer [parse-string generate-string]]
+            [clj-time.coerce :as c])
   (:import (org.postgresql.jdbc4 Jdbc4Array)
            (org.postgresql.util PGobject)
            (java.sql Timestamp Date PreparedStatement)
            (clojure.lang IPersistentVector IPersistentMap)))
+
+;(require 'clj-time.jdbc)
 
 (defn pool-spec []
   (let [db-conf (:db @asetukset)]
@@ -19,18 +22,18 @@
            :start (conman/connect! (pool-spec))
            :stop (conman/disconnect! *db*))
 
-(conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql" "sql/tutkinto.sql"
+(conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/vastaus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql" "sql/tutkinto.sql"
                              "sql/kyselykerta.sql" "sql/koodisto.sql" "sql/kayttaja.sql" "sql/vipunen.sql" "sql/kysely.sql")
 
 ;(defn to-date [sql-date]
 ;  (-> sql-date (.getTime) (java.util.Date.)))
 
 (extend-protocol jdbc/IResultSetReadColumn
-  ;Date
-  ;(result-set-read-column [v _ _] (to-date v))
-
-  ;Timestamp
-  ;(result-set-read-column [v _ _] (to-date v))
+  ;java.sql.Date
+  ;(result-set-read-column [v _ _] (c/from-sql-date v))
+  ;
+  ;java.sql.Timestamp
+  ;(result-set-read-column [v _ _] (c/from-sql-time v))
 
   Jdbc4Array
   (result-set-read-column [v _ _] (vec (.getArray v)))
@@ -49,6 +52,16 @@
   jdbc/ISQLParameter
   (set-parameter [v ^PreparedStatement stmt ^long idx]
     (.setTimestamp stmt idx (Timestamp. (.getTime v)))))
+
+(extend-type org.joda.time.DateTime
+  jdbc/ISQLParameter
+  (set-parameter [v ^PreparedStatement stmt idx]
+    (.setTimestamp stmt idx (c/to-sql-time v))))
+
+(extend-type org.joda.time.LocalDate
+  jdbc/ISQLParameter
+  (set-parameter [v ^PreparedStatement stmt idx]
+    (.setTimestamp stmt idx (c/to-sql-time v))))
 
 (extend-type clojure.lang.IPersistentVector
   jdbc/ISQLParameter

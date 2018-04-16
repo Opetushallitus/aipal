@@ -13,15 +13,21 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.integraatio.koodistopalvelu
- (:require [aipal.arkisto.tutkinto :as tutkinto-arkisto]
-           [aipal.arkisto.tutkintotyyppi :as tutkintotyyppi-arkisto]
-           [aipal.arkisto.koulutusala :as koulutusala-arkisto]
-           [aipal.arkisto.opintoala :as opintoala-arkisto]
-           [clojure.set :refer [intersection difference rename-keys]]
-           [oph.common.util.util :refer :all]
-           [clojure.tools.logging :as log]
-           [korma.db :as db]))
+  (:require [aipal.arkisto.tutkinto :as tutkinto-arkisto]
+            [aipal.arkisto.tutkintotyyppi :as tutkintotyyppi-arkisto]
+            [aipal.arkisto.koulutusala :as koulutusala-arkisto]
+            [aipal.arkisto.opintoala :as opintoala-arkisto]
+            [clojure.set :refer [intersection difference rename-keys]]
+            [oph.common.util.util :refer :all]
+            [clojure.tools.logging :as log]
+            [korma.db :as db]
+            [clojure.set :as set]
+            [clj-time.coerce :as c]))
 
+
+(defn temp-filter [tutkinto]
+  (or (= "781501" (:tutkintotunnus tutkinto))
+      (= "681503" (:tutkintotunnus tutkinto))))
 
 ;  "koulutusalaoph2002"
 (def ^:private koulutusala-koodisto "isced2011koulutusalataso1")
@@ -131,69 +137,52 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (map (partial lisaa-opintoalaan-koulutusala asetukset))
     (map #(dissoc % :kuvaus_fi :kuvaus_sv :kuvaus_en))))
 
-(defn muutokset
-  [uusi vanha]
-  (into {}
-        (for [[avain [uusi-arvo vanha-arvo :as diff]] (diff-maps uusi vanha)
-              :when diff]
-          [avain (cond
-                   (or (nil? vanha-arvo) (nil? uusi-arvo)) diff
-                   (map? uusi-arvo) (diff-maps uusi-arvo vanha-arvo)
-                   :else diff)])))
+(defn in? [coll elem]
+  (some #(= elem %) coll))
+
+(defn hae-muuttuneet [uudet vanhat tunniste]
+  (log/info "UUDET" uudet)
+  (log/info "VANHAT" vanhat)
+  (let [muuttuneet (set/difference (into #{} uudet) (into #{} vanhat))
+        vanhat-idt (map tunniste vanhat)
+        lisattavat (remove #(in? vanhat-idt (tunniste %)) muuttuneet)]
+    (log/info "LISÄTÄÄN: " (count lisattavat))
+    (log/info "PÄIVITETÄÄN: " (count (set/difference muuttuneet lisattavat)))
+    {:lisattavat    lisattavat
+     :paivitettavat (set/difference muuttuneet lisattavat)}))
 
 (defn hae-tutkintotyyppi-muutokset [asetukset]
   (let [tutkintotyypi_kentat [:tutkintotyyppi :nimi_fi :nimi_sv :nimi_en]
-        vanhat (into {} (for [tutkintotyyppi (tutkintotyyppi-arkisto/hae-kaikki)]
-                          [(:tutkintotyyppi tutkintotyyppi) (select-keys tutkintotyyppi tutkintotyypi_kentat)]))
-        uudet (map-by :tutkintotyyppi
-                      (map #(select-keys % tutkintotyypi_kentat) (hae-tutkintotyypit asetukset)))]
-    (muutokset uudet vanhat)))
-
+        vanhat (->> (tutkintotyyppi-arkisto/hae-kaikki)
+                    (map #(select-keys % tutkintotyypi_kentat)))
+        uudet (map #(select-keys % tutkintotyypi_kentat) (hae-tutkintotyypit asetukset))]
+    (hae-muuttuneet uudet vanhat :tutkintotyyppi)))
 
 (defn hae-tutkinto-muutokset [asetukset]
   (let [tutkinto-kentat [:nimi_fi :nimi_sv :nimi_en :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala :tutkintotyyppi]
-        vanhat (into {} (for [tutkinto (tutkinto-arkisto/hae-kaikki)]
-                          [(:tutkintotunnus tutkinto) (select-keys tutkinto tutkinto-kentat)]))
+        vanhat (->> (tutkinto-arkisto/hae-kaikki)
+                    (map #(select-keys % tutkinto-kentat))
+                    (filter temp-filter))
         uudet (->> (hae-tutkinnot asetukset)
-                (map (partial lisaa-alakoodien-data asetukset))
-                (map #(select-keys % tutkinto-kentat))
-                (map-by :tutkintotunnus))]
-    (muutokset uudet vanhat)))
+                   (filter temp-filter)
+                   (map (partial lisaa-alakoodien-data asetukset))
+                   (map #(select-keys % tutkinto-kentat))
+                   (map #(update % :voimassa_alkupvm c/to-date)))] ;TODO: update multiple keys (loppupvm)
+    (hae-muuttuneet uudet vanhat :tutkintotunnus)))
 
 (defn hae-koulutusala-muutokset [asetukset]
   (let [koulutusala-kentat [:nimi_fi :nimi_sv :nimi_en :koulutusalatunnus]
-        vanhat (into {} (for [koulutusala (koulutusala-arkisto/hae-kaikki)]
-                          [(:koulutusalatunnus koulutusala) (select-keys koulutusala koulutusala-kentat)]))
-        uudet (map-by :koulutusalatunnus
-                      (map #(select-keys % koulutusala-kentat) (hae-koulutusalat asetukset)))]
-    (muutokset uudet vanhat)))
+        vanhat (->> (koulutusala-arkisto/hae-kaikki)
+                    (map #(select-keys % koulutusala-kentat)))
+        uudet (map #(select-keys % koulutusala-kentat) (hae-koulutusalat asetukset))]
+    (hae-muuttuneet uudet vanhat :koulutusalatunnus)))
 
 (defn hae-opintoala-muutokset [asetukset]
   (let [opintoala-kentat [:nimi_fi :nimi_sv :nimi_en :opintoalatunnus :koulutusala]
-        vanhat (into {} (for [opintoala (opintoala-arkisto/hae-kaikki)]
-                          [(:opintoalatunnus opintoala) (select-keys opintoala opintoala-kentat)]))
-        uudet (map-by :opintoalatunnus
-                      (map #(select-keys % opintoala-kentat) (hae-opintoalat asetukset)))]
-    (muutokset uudet vanhat)))
-
-(defn uusi
-  "Jos muutos on uuden tiedon lisääminen, palauttaa uudet tiedot, muuten nil"
-  [[tutkintotunnus muutos]]
-  (when (vector? muutos)
-    (assoc (first muutos) :tutkintotunnus tutkintotunnus)))
-
-(defn uudet-arvot [muutos]
-  (into {}
-        (for [[k v] muutos :when v]
-         [k (first v)])))
-
-(defn muuttunut
-  "Jos muutos on tietojen muuttuminen, palauttaa muuttuneet tiedot, muuten nil"
-  [[tutkintotunnus muutos]]
-  (when (and (map? muutos)
-             (not-every? nil? (vals muutos)))
-    (merge {:tutkintotunnus tutkintotunnus}
-          (uudet-arvot muutos))))
+        vanhat (->> (opintoala-arkisto/hae-kaikki)
+                    (map #(select-keys % opintoala-kentat)))
+        uudet (map #(select-keys % opintoala-kentat) (hae-opintoalat asetukset))]
+    (hae-muuttuneet uudet vanhat :opintoalatunnus)))
 
 (defn ^:integration-api tallenna-uudet-koulutusalat! [koulutusalat]
   (doseq [ala koulutusalat]
@@ -201,21 +190,13 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (koulutusala-arkisto/lisaa! ala)))
 
 (defn ^:integration-api tallenna-muuttuneet-koulutusalat! [koulutusalat]
-  (doseq [ala koulutusalat
-          :let [tunnus (:koulutusalatunnus ala)
-                ala (dissoc ala :koulutusalatunnus)]]
-    (log/info "Päivitetään koulutusala " tunnus ", muutokset: " ala)
-    (koulutusala-arkisto/paivita! tunnus ala)))
+  (doseq [ala koulutusalat]
+    (log/info "Päivitetään koulutusala " (:koulutusalatunnus ala))
+    (koulutusala-arkisto/paivita! ala)))
 
 (defn ^:integration-api tallenna-koulutusalat! [koulutusalat]
-  (let [uudet (for [[alakoodi ala] koulutusalat
-                    :when (and (vector? ala) (first ala))]
-                (first ala))
-        muuttuneet (for [[alakoodi ala] koulutusalat
-                         :when (map? ala)]
-                     (assoc (uudet-arvot ala) :koulutusalatunnus alakoodi))]
-    (tallenna-uudet-koulutusalat! uudet)
-    (tallenna-muuttuneet-koulutusalat! muuttuneet)))
+    (tallenna-uudet-koulutusalat! (:lisattavat koulutusalat))
+    (tallenna-muuttuneet-koulutusalat! (:paivitettavat koulutusalat)))
 
 (defn ^:integration-api tallenna-uudet-opintoalat! [opintoalat]
   (doseq [ala opintoalat]
@@ -223,21 +204,13 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (opintoala-arkisto/lisaa! ala)))
 
 (defn ^:integration-api tallenna-muuttuneet-opintoalat! [opintoalat]
-  (doseq [ala opintoalat
-          :let [tunnus (:opintoalatunnus ala)
-                ala (dissoc ala :opintoalatunnus)]]
-    (log/info "Päivitetään opintoala " tunnus ", muutokset: " ala)
-    (opintoala-arkisto/paivita! tunnus ala)))
+  (doseq [ala opintoalat]
+    (log/info "Päivitetään opintoala " (:opintoalatunnus ala))
+    (opintoala-arkisto/paivita! (:opintoalatunnus ala) ala)))
 
 (defn ^:integration-api tallenna-opintoalat! [opintoalat]
-  (let [uudet (for [[alakoodi ala] opintoalat
-                    :when (and (vector? ala) (first ala))]
-                (first ala))
-        muuttuneet (for [[alakoodi ala] opintoalat
-                         :when (map? ala)]
-                     (assoc (uudet-arvot ala) :opintoalatunnus alakoodi))]
-    (tallenna-uudet-opintoalat! (filter :koulutusala uudet))
-    (tallenna-muuttuneet-opintoalat! muuttuneet)))
+  (tallenna-uudet-opintoalat! (filter :koulutusala (:lisattavat opintoalat)))
+  (tallenna-muuttuneet-opintoalat! (filter :koulutusala (:paivitettavat opintoalat))))
 
 (defn ^:integration-api tallenna-uudet-tutkinnot! [tutkinnot]
   (doseq [tutkinto tutkinnot]
@@ -245,23 +218,18 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (tutkinto-arkisto/lisaa! tutkinto)))
 
 (defn ^:integration-api tallenna-muuttuneet-tutkinnot! [tutkinnot]
-  (doseq [tutkinto tutkinnot
-          :let [tunnus (:tutkintotunnus tutkinto)]]
-    (if (nil? (:opintoala tutkinto))
-      (log/info "Tutkinto " tunnus ", ei opintoalaa. Päivitystä ei tehty.")
-      (do 
-        (log/info "Päivitetään tutkinto " tunnus ", muutokset: " tutkinto)
-        (tutkinto-arkisto/paivita! tutkinto)))))
+  (doseq [tutkinto tutkinnot]
+    (log/info "Päivitetään tutkinto " (:tutkintotunnus tutkinto))
+    (tutkinto-arkisto/paivita! tutkinto)))
+
+(defn logita-puutteelliset-tutkinnot [tutkinnot]
+  (log/info "Uudet tutkinnot ilman opintoalaa " (map :tutkintotunnus (filter #(nil? (:opintoala %))(:lisattavat tutkinnot))))
+  (log/info "Muuttuneet tutkinnot ilman opintoalaa " (map :tutkintotunnus (filter #(nil? (:opintoala %))(:paivitettavat tutkinnot)))))
 
 (defn ^:integration-api tallenna-tutkinnot! [tutkinnot]
-  (let [uudet (for [[tunnus tutkinto] tutkinnot
-                    :when (and (vector? tutkinto) (first tutkinto))]
-                (first tutkinto))
-        muuttuneet (for [[tunnus tutkinto] tutkinnot
-                         :when (map? tutkinto)]
-                     (assoc (uudet-arvot tutkinto) :tutkintotunnus tunnus))]
-    (tallenna-uudet-tutkinnot! (filter :opintoala uudet))
-    (tallenna-muuttuneet-tutkinnot! muuttuneet)))
+  (logita-puutteelliset-tutkinnot tutkinnot)
+  (tallenna-uudet-tutkinnot! (filter :opintoala (:lisattavat tutkinnot)))
+  (tallenna-muuttuneet-tutkinnot! (filter :opintoala (:paivitettavat tutkinnot))))
 
 (defn ^:integration-api tallenna-uudet-tutkintotyypit! [tutkintotyypit]
   (doseq [tutkintotyyppi tutkintotyypit]
@@ -269,21 +237,13 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (tutkintotyyppi-arkisto/lisaa! tutkintotyyppi)))
 
 (defn ^:integration-api tallenna-muuttuneet-tutkintotyypit! [tutkintotyypit]
-  (doseq [tutkintotyyppi tutkintotyypit
-          :let [tunnus (:tutkintotyyppi tutkintotyyppi)
-                tutkintotyyppi (dissoc tutkintotyyppi :tutkintotyyppi)]]
-    (log/info "Päivitetään tutkintotyyppi" tunnus ", muutokset:" tutkintotyyppi)
-    (tutkintotyyppi-arkisto/paivita! tunnus tutkintotyyppi)))
+  (doseq [tutkintotyyppi tutkintotyypit]
+    (log/info "Päivitetään tutkintotyyppi" (:tutkintotyyppi tutkintotyyppi))
+    (tutkintotyyppi-arkisto/paivita! tutkintotyyppi)))
 
 (defn ^:integration-api tallenna-tutkintotyypit! [tutkintotyypit]
-  (let [uudet (for [[tunnus tutkintotyyppi] tutkintotyypit
-                    :when (and (vector? tutkintotyyppi) (first tutkintotyyppi))]
-                (first tutkintotyyppi))
-        muuttuneet (for [[tunnus tutkintotyyppi] tutkintotyypit
-                         :when (map? tutkintotyyppi)]
-                     (assoc (uudet-arvot tutkintotyyppi) :tutkintotyyppi tunnus))]
-    (tallenna-uudet-tutkintotyypit! (filter :tutkintotyyppi uudet))
-    (tallenna-muuttuneet-tutkintotyypit! muuttuneet)))
+    (tallenna-uudet-tutkintotyypit! (filter :tutkintotyyppi (:lisattavat tutkintotyypit)))
+    (tallenna-muuttuneet-tutkintotyypit! (filter :tutkintotyyppi (:paivitettavat tutkintotyypit))))
 
 (defn ^:integration-api paivita-tutkinnot! [asetukset]
   (try

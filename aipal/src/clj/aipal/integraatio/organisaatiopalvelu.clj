@@ -261,8 +261,7 @@
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
   (db/transaction
     (let [viimeisin-paivitys (organisaatiopalvelu-arkisto/hae-viimeisin-paivitys)
-          _ (when viimeisin-paivitys
-              (log/info "Edellinen päivitys:" (str viimeisin-paivitys)))
+          _ (when viimeisin-paivitys (log/info "Edellinen päivitys:" (str viimeisin-paivitys)))
           url (get asetukset "url")
           vanhat-koulutustoimijat (set (map :ytunnus (koulutustoimija-arkisto/hae-kaikki)))
           nyt (time/now)

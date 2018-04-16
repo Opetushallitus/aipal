@@ -38,8 +38,8 @@
 
 (defn properties-duplicat-keys? [r]
   (let [dup (doto (oph.util.DuplicateAwareProperties.)
-                  (.load r)
-                  )
+                  (.load r))
+
         duplicates (.getDuplicates dup)]
     duplicates))
 

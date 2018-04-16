@@ -13,27 +13,17 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.koulutusala
-  (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :as taulut]))
+  (:require [arvo.db.core :refer [*db*] :as db]))
 
-(defn ^:integration-api lisaa!
-  [tiedot]
-  (sql/insert taulut/koulutusala
-    (sql/values tiedot)))
+(defn ^:integration-api lisaa! [tiedot]
+  (db/lisaa-koulutusala! tiedot))
 
-(defn ^:integration-api paivita!
-  [koulutusalatunnus tiedot]
-  (sql/update taulut/koulutusala
-    (sql/set-fields tiedot)
-    (sql/where {:koulutusalatunnus koulutusalatunnus})))
+(defn ^:integration-api paivita! [tiedot]
+  (db/paivita-koulutusala! tiedot))
 
-(defn hae-kaikki
-  []
-  (sql/select taulut/koulutusala
-    (sql/order :koulutusalatunnus)))
+(defn hae-kaikki []
+  (db/hae-koulutusalat))
 
-(defn hae
-  [koulutusalatunnus]
+(defn hae [koulutusalatunnus]
   (first
-    (sql/select taulut/koulutusala
-      (sql/where {:koulutusalatunnus koulutusalatunnus}))))
+    (db/hae-koulutusala {:koulutusalatunnus koulutusalatunnus})))

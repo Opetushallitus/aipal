@@ -40,20 +40,20 @@
                               []
                               tiedot-map)}]
     (when (:session common-audit-log/*request-meta*)
-      (common-audit-log/->audit-log-entry data))
-    ))
+      (common-audit-log/->audit-log-entry data))))
+
 
 (defn ^:private kirjoita!
   ([tieto oid tieto-id operaatio]
-    (kirjoita! tieto oid tieto-id operaatio {}))
+   (kirjoita! tieto oid tieto-id operaatio {}))
   ([tieto oid tieto-id operaatio tiedot-map]
-    {:pre [(contains? operaatiot operaatio)
-           (keyword? tieto)
-           (map? tiedot-map)]}
-    (let [log-entry (->common-audit-log-json-entry tieto oid tieto-id operaatio tiedot-map)]
-      (binding [aipallog/*lisaa-uid-ja-request-id?* false]
-        (log/info log-entry)
-        ))))
+   {:pre [(contains? operaatiot operaatio)
+          (keyword? tieto)
+          (map? tiedot-map)]}
+   (let [log-entry (->common-audit-log-json-entry tieto oid tieto-id operaatio tiedot-map)]
+     (binding [aipallog/*lisaa-uid-ja-request-id?* false]
+       (log/info log-entry)))))
+
 
 (defn ohje-paivitys!
   [ohjetunniste]
@@ -62,10 +62,10 @@
 
 (defn kysely-muokkaus!
   ([kyselyid]
-    (kirjoita! :kysely nil kyselyid :paivitys {:kyselyid kyselyid}))
+   (kirjoita! :kysely nil kyselyid :paivitys {:kyselyid kyselyid}))
   ([kyselyid tilamuutos]
-    (kirjoita! :kysely nil kyselyid :paivitys {:kyselyid kyselyid
-                                               :tila tilamuutos})))
+   (kirjoita! :kysely nil kyselyid :paivitys {:kyselyid kyselyid
+                                              :tila tilamuutos})))
 
 (defn kysely-poisto!
   [kyselyid]
@@ -78,10 +78,10 @@
 
 (defn kyselypohja-muokkaus!
   ([kyselypohjaid]
-    (kirjoita! :kyselypohja nil kyselypohjaid :paivitys {:kyselypohjaid kyselypohjaid}))
+   (kirjoita! :kyselypohja nil kyselypohjaid :paivitys {:kyselypohjaid kyselypohjaid}))
   ([kyselypohjaid tilamuutos]
-    (kirjoita! :kyselypohja nil kyselypohjaid :paivitys {:kyselypohjaid kyselypohjaid
-                                                         :tila tilamuutos})))
+   (kirjoita! :kyselypohja nil kyselypohjaid :paivitys {:kyselypohjaid kyselypohjaid
+                                                        :tila tilamuutos})))
 
 (defn kyselypohja-luonti!
   [kyselypohjaid nimi]
@@ -93,10 +93,10 @@
 
 (defn kysymysryhma-muokkaus!
   ([kysymysryhmaid]
-    (kirjoita! :kysymysryhma nil kysymysryhmaid :paivitys {:kysymysryhmaid kysymysryhmaid}))
+   (kirjoita! :kysymysryhma nil kysymysryhmaid :paivitys {:kysymysryhmaid kysymysryhmaid}))
   ([kysymysryhmaid tilamuutos]
-    (kirjoita! :kysymysryhma nil kysymysryhmaid :paivitys {:kysymysryhmaid kysymysryhmaid
-                                                           :tila tilamuutos})))
+   (kirjoita! :kysymysryhma nil kysymysryhmaid :paivitys {:kysymysryhmaid kysymysryhmaid
+                                                          :tila tilamuutos})))
 
 (defn kysymysryhma-luonti!
   [kysymysryhmaid nimi]
@@ -140,10 +140,10 @@
 
 (defn kyselykerta-muokkaus!
   ([kyselykertaid]
-    (kirjoita! :kyselykerta nil kyselykertaid :paivitys {:kyselykertaid kyselykertaid}))
+   (kirjoita! :kyselykerta nil kyselykertaid :paivitys {:kyselykertaid kyselykertaid}))
   ([kyselykertaid tilamuutos]
-    (kirjoita! :kyselykerta nil kyselykertaid :paivitys {:kyselykertaid kyselykertaid
-                                                         :tila tilamuutos})))
+   (kirjoita! :kyselykerta nil kyselykertaid :paivitys {:kyselykertaid kyselykertaid
+                                                        :tila tilamuutos})))
 
 (defn kyselykerta-luonti!
   [kyselykertaid kyselyid nimi]
@@ -155,8 +155,8 @@
 
 (defn vastaajatunnus-luonti!
   ([vastaajatunnusid vastaajatunnus kyselykertaid]
-    (kirjoita! :vastaajatunnus nil vastaajatunnusid :lisays {:kyselykertaid kyselykertaid
-                                                             :tunnus vastaajatunnus})))
+   (kirjoita! :vastaajatunnus nil vastaajatunnusid :lisays {:kyselykertaid kyselykertaid
+                                                            :tunnus vastaajatunnus})))
 
 (defn vastaajatunnus-muokkaus!
   [vastaajatunnusid kyselykertaid lukittu-tila]

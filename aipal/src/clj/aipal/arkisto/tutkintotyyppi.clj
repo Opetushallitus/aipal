@@ -13,35 +13,17 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.tutkintotyyppi
-  (:require [korma.core :as sql]
-            [aipal.integraatio.sql.korma :as taulut]
+  (:require [arvo.db.core :refer [*db*] :as db]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn hae-kaikki []
-  (->
-    (sql/select* taulut/tutkintotyyppi)
-    (sql/fields :tutkintotyyppi :nimi_fi, :nimi_sv, :nimi_en)
-    (sql/order :tutkintotyyppi :ASC)
-    sql/exec))
+  (db/hae-tutkintotyypit))
 
 (defn hae-kayttajalle []
-  (let [tutkintotyypit (mapcat vals (sql/select taulut/oppilaitostyyppi_tutkintotyyppi
-                                                (sql/where {:oppilaitostyyppi (:oppilaitostyypit *kayttaja*)})
-                                                (sql/fields :tutkintotyyppi)))]
-    (->
-      (sql/select* taulut/tutkintotyyppi)
-      (sql/fields :tutkintotyyppi :nimi_fi, :nimi_sv, :nimi_en)
-      (sql/where {:tutkintotyyppi [in tutkintotyypit]})
-      (sql/order :tutkintotyyppi :ASC)
-      sql/exec)))
+  (db/hae-kayttajan-tutkintotyypit {:oppilaitostyypit (:oppilaitostyypit *kayttaja*)}))
 
-(defn ^:integration-api lisaa!
-  [tutkintotyyppi]
-  (sql/insert taulut/tutkintotyyppi
-    (sql/values tutkintotyyppi)))
+(defn ^:integration-api lisaa! [tutkintotyyppi]
+  (db/lisaa-tutkintotyyppi! tutkintotyyppi))
 
-(defn ^:integration-api paivita!
-  [tutkintotyyppi tiedot]
-  (sql/update taulut/tutkintotyyppi
-    (sql/set-fields tiedot)
-    (sql/where {:tutkintotyyppi tutkintotyyppi})))
+(defn ^:integration-api paivita! [tutkintotyyppi]
+  (db/paivita-tutkintotyyppi! tutkintotyyppi))
