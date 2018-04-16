@@ -21,7 +21,6 @@
             [arvo.db.core :refer [*db*] :as db]
             [clj-time.coerce :as c]))
 
-
 (defn ^:integration-api lisaa! [tutkinto]
   (db/lisaa-tutkinto! tutkinto))
 
@@ -34,10 +33,10 @@
 (defn hae [tutkintotunnus]
   (db/hae-tutkinto {:tutkintotunnus tutkintotunnus}))
 
-(defn hae-koulutustoimijan-tutkinnot
-  [y-tunnus]
-  (db/hae-koulutustoimijan-tutkinnot {:koulutustoimija y-tunnus
-                                      :oppilaitostyypit (:oppilaitostyypit *kayttaja*)}))
+(defn hae-koulutustoimijan-tutkinnot [y-tunnus]
+  (let [oppilaitostyypit (:oppilaitostyypit *kayttaja*)]
+    (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
+                                         (when (not-empty oppilaitostyypit) {:oppilaitostyypit oppilaitostyypit})))))
 
 (defn hae-tutkinnon-jarjestajat [tutkintotunnus]
   (db/hae-tutkinnon-jarjestajat {:tutkintotunnus tutkintotunnus}))
@@ -51,7 +50,7 @@
          (or (nil? loppupvm)
              (pvm-tuleva-tai-tanaan? loppupvm)
              (and siirtymaajan-loppupvm
-                  (pvm-tuleva-tai-tanaan? siirtymaajan-loppupvm))))))
+               (pvm-tuleva-tai-tanaan? siirtymaajan-loppupvm))))))
 
 (defn tutkinnot-hierarkiaksi
   [tutkinnot]
@@ -64,9 +63,7 @@
     (sort-by :koulutusalatunnus koulutusalat)))
 
 (defn hae-tutkinnot []
-  (let [oppilaitostyypit (:oppilaitostyypit *kayttaja*)]
-    (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}
-                                              (when (not-empty oppilaitostyypit) {:oppilaitostyypit (:oppilaitostyypit *kayttaja*)})))))
+  (hae-koulutustoimijan-tutkinnot (:aktiivinen-koulutustoimija *kayttaja*)))
 
 (defn hae-voimassaolevat-tutkinnot-listana []
   (->>

@@ -10,7 +10,7 @@ SELECT k.kyselyid, k.koulutustoimija,
   k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
   kk.kyselykertaid, kk.nimi AS kyselykerta,
   kr.kysymysryhmaid, kr.nimi_fi AS kysymysryhma_fi, kr.nimi_sv AS kysymysryhma_sv, kr.nimi_en AS kysymysryhma_en, kr.valtakunnallinen,
-  (select jarjestys from kysely_kysymysryhma where kyselyid=k.kyselyid and kysymysryhmaid=kr.kysymysryhmaid) kysymysryhma_jarjestys,
+  (select jarjestys from kysely_kysymysryhma where kyselyid=k.kyselyid and kysymysryhmaid=kr.kysymysryhmaid) AS kysymysryhma_jarjestys,
   kys.kysymysid,
 
   COALESCE(kys.jarjestys, (SELECT jkk.jarjestys + 0.1 FROM kysymys jkk
