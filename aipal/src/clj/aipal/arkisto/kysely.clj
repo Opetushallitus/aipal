@@ -237,11 +237,15 @@
   (map #(aseta-jatkokysymyksen-jarjestys % kysymykset) kysymykset))
 
 
-(defn hae-kysymykset [kyselyid]
+(defn hae-kysymysryhman-kysymykset [kysymysryhma]
+  (->> kysymysryhma
+       db/hae-kysymysryhman-kysymykset
+       aseta-jatkokysymysten-jarjestys
+       (sort-by :jarjestys)))
+
+(defn hae-kyselyn-kysymykset [kyselyid]
   (->> (db/hae-kyselyn-kysymysryhmat {:kyselyid kyselyid})
-       (map db/hae-kysymysryhman-kysymykset)
-       (map aseta-jatkokysymysten-jarjestys)
-       (map #(sort-by :jarjestys %))))
+       (map hae-kysymysryhman-kysymykset)))
 
 (defn samanniminen-kysely?
   "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kysely."

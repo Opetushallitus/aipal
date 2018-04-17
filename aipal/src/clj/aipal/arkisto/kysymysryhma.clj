@@ -22,8 +22,7 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]
             [arvo.db.core :refer [*db*] :as db]
-            [clojure.java.jdbc :as jdbc])
-  (:import (com.unboundid.util.ssl KeyStoreKeyManager)))
+            [aipal.arkisto.kysely :refer [hae-kysymysryhman-kysymykset]]))
 
 (defn ^:private rajaa-kayttajalle-sallittuihin-kysymysryhmiin [query organisaatio]
   (let [koulutustoimijan-oma {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}

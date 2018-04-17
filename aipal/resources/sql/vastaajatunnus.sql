@@ -22,7 +22,7 @@ SELECT ktk.id, vt.tunnus, ktk.kentta_id, vtt.arvo FROM vastaajatunnus vt
   ORDER BY ktk.id;
 
 -- :name kyselyn-kentat :? :*
-SELECT ktk.id, ktk.kentta_id, ktk.kentta_fi FROM kyselytyyppi kt
+SELECT ktk.id, ktk.kentta_id, ktk.kentta_fi, ktk.kentta_sv, ktk.kentta_en FROM kyselytyyppi kt
   JOIN kyselytyyppi_kentat ktk ON ktk.kyselytyyppi_id = kt.id
   JOIN kysely k ON k.tyyppi = kt.id
   WHERE k.kyselyid = :kyselyid
