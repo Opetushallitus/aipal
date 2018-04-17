@@ -8,7 +8,7 @@
             [stencil.core :as s]
 
             [oph.common.infra.csrf-token :refer [aseta-csrf-token wrap-tarkasta-csrf-token]]
-            [aipal.asetukset :refer [service-path build-id]]
+            [aipal.asetukset :refer [service-path build-id project-version]]
             [aipal.basic-auth :refer [wrap-basic-authentication]]
             aipal.rest-api.i18n
             aipal.rest-api.kieli
@@ -54,6 +54,7 @@
                                  :vastaus-base-url (-> asetukset :vastaus-base-url)
                                  :current-user (:nimi *kayttaja*)
                                  :build-id @build-id
+                                 :project-version @project-version
                                  :development-mode (pr-str (:development-mode asetukset))
                                  :ominaisuus (cheshire/generate-string (:ominaisuus asetukset))}
                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]

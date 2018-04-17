@@ -17,7 +17,8 @@
     [clojure.java.io :as io]
     [schema.core :as s]
     [clj-time.local :as time-local]
-    [oph.common.infra.asetukset :refer [lue-asetukset]]))
+    [oph.common.infra.asetukset :refer [lue-asetukset]])
+  (:import (java.util Properties)))
 
 (def asetukset (promise))
 
@@ -108,6 +109,16 @@
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
                        (.trim (slurp resource :encoding "UTF-8"))
                        "dev")))
+
+
+(def project-version
+  (delay
+    (-> (doto (Properties.)
+          (.load (-> "META-INF/maven/aipal/aipal/pom.properties"
+                     (io/resource)
+                     (io/reader))))
+        (.get "version"))))
+
 
 (defn kehitysmoodi?
   [asetukset]
