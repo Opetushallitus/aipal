@@ -104,7 +104,8 @@
            {:kyselykertaid (kyselykerta-id :kyselykertaid)
             :henkilonumero henkilonumero
             :valmistavan_koulutuksen_jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus]))
-            :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])})))
+            :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
+            :kieli "fi"})))
 
 (defroutes vastaajatunnus-routes
   (POST "/" []
