@@ -71,8 +71,8 @@
    :voimassa_alkupvm (alkupvm)
    :voimassa_loppupvm (loppupvm)
    :rahoitusmuotoid 5
-   :toimipaikka nil})
-
+   :toimipaikka nil
+   :tutkinto nil})
 
 (defn avop->arvo-map
   [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto kyselykerran_nimi]}]
