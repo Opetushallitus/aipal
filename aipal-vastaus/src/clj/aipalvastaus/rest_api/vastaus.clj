@@ -52,7 +52,7 @@
         (and kysymys
              (or (not= "kylla_ei_valinta" (:vastaustyyppi kysymys)) (kylla-ei-vastaus-validi? vastaus kysymys))
              (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
-             (or (nil? (#{"arvosana" "asteikko" "likert_asteikko" "arvosana4_ja_eos"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys)))))))
+             (or (nil? (#{"arvosana" "asteikko" "likert_asteikko" "arvosana4_ja_eos" "asteikko5_1"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys)))))))
 
 (defn ^:private pakollisille-kysymyksille-loytyy-vastaukset?
   [vastaukset kysymykset]
@@ -91,7 +91,7 @@
                           :vastaajaid vastaajaid
                           :jatkovastausid (:jatkovastausid jatkovastaus)
                           :en_osaa_sanoa en-osaa-sanoa
-                          :numerovalinta (when (and (not en-osaa-sanoa) (#{"monivalinta" "arvosana" "arvosana6" "arvosana7" "nps" "asteikko" "likert_asteikko" "arvosana4_ja_eos" "arvosana6_ja_eos"} vastaustyyppi)) arvo)
+                          :numerovalinta (when (and (not en-osaa-sanoa) (#{"monivalinta" "arvosana" "arvosana6" "arvosana7" "nps" "asteikko" "likert_asteikko" "asteikko5_1" "arvosana4_ja_eos" "arvosana6_ja_eos"} vastaustyyppi)) arvo)
                           :vapaateksti (when (= "vapaateksti" vastaustyyppi) arvo)
                           :vaihtoehto (when (and (not en-osaa-sanoa) (= "kylla_ei_valinta" vastaustyyppi)) arvo)}))
     (log/info (str "Vastaukset (" vastaajaid  ") tallennettu onnistuneesti."))

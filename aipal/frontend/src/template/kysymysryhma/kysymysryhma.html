@@ -108,6 +108,14 @@
                 </div>
                 <div class="panel-body">
                     <ng-form name="kysymysForm">
+
+                        <div class="form-group">
+                            <label>{{i18n.kysymys.vastaustapa}}
+                                <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control" ng-options="'kysymys.tyyppi.' + tyyppi | i18n for tyyppi in vastaustyypit">
+                                </select>
+                            </label>
+                        </div>
+
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" ng-model="aktiivinenKysymys.pakollinen"> {{i18n.kysymys.vastaus_pakollinen}}
@@ -128,13 +136,14 @@
 
                         <kysymys-tekstit kysymys="aktiivinenKysymys" kentta="kysymys" tyyppi={{kysymystekstinTyyppi()}}> </kysymys-tekstit>
 
-                        <kysymys-tekstit ng-if="aktiivinenKysymys.vastaustyyppi === 'monivalinta'" kysymys="aktiivinenKysymys" kentta="selite" tyyppi="selite" pakollinen=false> </kysymys-tekstit>
-
-                        <div class="form-group">
-                            <label>{{i18n.kysymys.vastaustapa}}
-                            <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control" ng-options="'kysymys.tyyppi.' + tyyppi | i18n for tyyppi in vastaustyypit">
-                            </select>
-                            </label>
+                        <div class="selite-container">
+                            <a class="ng-binding" ng-click="toggleSelitteet()">
+                                <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': selitteet, 'glyphicon-chevron-right': !selitteet}"></i>
+                                Näytä selitteet
+                            </a>
+                            <div class="selitteet" ng-class="{'closed': !selitteet}">
+                                <kysymys-tekstit kysymys="aktiivinenKysymys" kentta="selite" tyyppi="selite" pakollinen=false> </kysymys-tekstit>
+                            </div>
                         </div>
 
                         <div ng-include="'template/kysymysryhma/osat/' + aktiivinenKysymys.vastaustyyppi + '.html'"></div>

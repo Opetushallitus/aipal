@@ -134,6 +134,12 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     $scope.uusi = uusi;
 
+    $scope.selitteet = false;
+
+    $scope.toggleSelitteet = function () {
+      $scope.selitteet = !$scope.selitteet;
+    }
+
     $scope.kysymysryhma = {
       kysymykset: [],
       ntm_kysymykset: kayttooikeudet.isNtmVastuuKayttaja()
@@ -188,6 +194,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       'monivalinta',
       'vapaateksti',
       'arvosana4_ja_eos',
+      'asteikko5_1',
       'arvosana6_ja_eos',
       'valiotsikko'
     ];
@@ -204,6 +211,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       $scope.kysymysryhma.kysymykset.push(apu.uusiKysymys());
       $scope.aktiivinenKysymys = $scope.kysymysryhma.kysymykset[$scope.kysymysryhma.kysymykset.length-1];
       $scope.muokkaustila = true;
+      $scope.selitteet = false;
     };
 
     $scope.lisaaVaihtoehto = function() {
@@ -261,6 +269,15 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       })
       $scope.latausNakyvissa = false;
     }
+
+    $scope.$watch('aktiivinenKysymys.vastaustyyppi', function (newValue, oldValue) {
+      if($scope.aktiivinenKysymys) {
+        var temp = apu.uusiKysymys()
+        temp.uusi = $scope.aktiivinenKysymys.uusi;
+        temp.vastaustyyppi = newValue
+        $scope.aktiivinenKysymys = temp;
+      }
+    })
 
     $scope.tallennaAsteikko = function(nimi){
       var asteikko = $scope.aktiivinenKysymys.monivalintavaihtoehdot;

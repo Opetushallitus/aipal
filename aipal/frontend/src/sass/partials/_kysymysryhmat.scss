@@ -1,3 +1,22 @@
 .kysymysryhmat-taulukko th:not(:first-child) {
   width: 12em;
 }
+.selitteet.closed {
+  height:0;
+  //opacity: 0;
+  -webkit-transition:height, 0.3s linear;
+  -moz-transition: height, 0.3s linear;
+  -ms-transition: height, 0.3s linear;
+  -o-transition: height, 0.3s linear;
+  transition: height, 0.3s linear;
+  overflow: hidden;
+}
+.selitteet {
+  height:450px;
+  overflow: hidden;
+  -webkit-transition:height, 0.3s linear;
+  -moz-transition: height, 0.3s linear;
+  -ms-transition: height, 0.3s linear;
+  -o-transition: height, 0.3s linear;
+  transition: height, 0.3s linear;
+}
