@@ -77,30 +77,13 @@
     </div>
     <div class="form-group">
       <label>{{i18n.vastaajatunnus.hankintakoulutuksen_toteuttaja}}
-        <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.hankintakoulutuksen_toteuttaja" ng-disabled="disabled" required="false">
+        <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.hankintakoulutuksen_toteuttaja" ng-disabled="disabled">
           <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
           <ui-select-choices rullaus="naytaLisaa()" repeat="koulutustoimija in tutkinnonJarjestajat | filter: $select.search | orderByLokalisoitu:'nimi' | limitTo: rullausrajoite">
             <div ng-bind-html="koulutustoimija | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
           </ui-select-choices>
         </ui-select>
       </label>
-    </div>
-    <div>
-      <h1>{{i18n.vastaajatunnus.tutkintomuoto}}</h1>
-      <div class="form-group">
-        <div class="radio">
-          <label>
-            <input type="radio" ng-model="vastaajatunnus.tutkintomuoto" value="koko tutkinto">
-            {{i18n.vastaajatunnus.tutkintomuoto_koko_tutkinto}}
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <input type="radio" ng-model="vastaajatunnus.tutkintomuoto" value="tutkinnon osa">
-            {{i18n.vastaajatunnus.tutkintomuoto_tutkinnon_osa}}
-          </label>
-        </div>
-      </div>
     </div>
 
     <div>
