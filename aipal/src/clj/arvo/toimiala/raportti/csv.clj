@@ -58,7 +58,7 @@
          ["arvosana6_ja_eos"] (numero-tai-eos (first answers))
          ["arvosana6"] (:numerovalinta (first answers))
          ["arvosana7"] (:numerovalinta (first answers))
-         ["asteikko5_1" (:numerovalinta (first answers))]
+         ["asteikko5_1"] (:numerovalinta (first answers))
          ["nps"] (:numerovalinta (first answers))
          ["monivalinta"] (->> answers
                               (map #(get-choice-text choices %))
