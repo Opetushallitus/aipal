@@ -222,7 +222,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     };
 
     $scope.poistaVaihtoehto = apu.poistaVaihtoehto;
+
     $scope.tallenna = function() {
+      console.log("Tallennetaan kysymys:" + JSON.stringify($scope.aktiivinenKysymys))
       apu.poistaYlimaaraisetKentat($scope.aktiivinenKysymys);
       $scope.aktiivinenKysymys.muokattava = false;
       $scope.aktiivinenKysymys.uusi = false;
@@ -270,14 +272,26 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       $scope.latausNakyvissa = false;
     }
 
-    $scope.$watch('aktiivinenKysymys.vastaustyyppi', function (newValue, oldValue) {
+    $scope.nollaa = function () {
+      console.log('Vastaustyyppi vaihtunut')
       if($scope.aktiivinenKysymys) {
-        var temp = apu.uusiKysymys()
-        temp.uusi = $scope.aktiivinenKysymys.uusi;
-        temp.vastaustyyppi = newValue
-        $scope.aktiivinenKysymys = temp;
+        console.log('Nollataan kysymys')
+        $scope.aktiivinenKysymys.kysymys_fi = ''
+        $scope.aktiivinenKysymys.kysymys_sv = ''
+        $scope.aktiivinenKysymys.kysymys_en = ''
+        $scope.aktiivinenKysymys.pakollinen = true
+        $scope.aktiivinenKysymys.poistettava = false
+        $scope.aktiivinenKysymys.poistetaan_kysymysryhmasta = false
+        $scope.aktiivinenKysymys.muokattava = true
+        $scope.aktiivinenKysymys.jatkokysymykset = {}
+        $scope.aktiivinenKysymys.max_vastaus = 500
+        $scope.aktiivinenKysymys.monivalinta_max = 1
+        $scope.aktiivinenKysymys.monivalintavaihtoehdot = [apu.uusiVaihtoehto(), apu.uusiVaihtoehto()]
+        $scope.aktiivinenKysymys.selite_fi = ''
+        $scope.aktiivinenKysymys.selite_sv = ''
+        $scope.aktiivinenKysymys.selite_en = ''
       }
-    })
+    }
 
     $scope.tallennaAsteikko = function(nimi){
       var asteikko = $scope.aktiivinenKysymys.monivalintavaihtoehdot;

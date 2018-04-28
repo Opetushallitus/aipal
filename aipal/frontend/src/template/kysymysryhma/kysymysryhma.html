@@ -111,7 +111,7 @@
 
                         <div class="form-group">
                             <label>{{i18n.kysymys.vastaustapa}}
-                                <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control" ng-options="'kysymys.tyyppi.' + tyyppi | i18n for tyyppi in vastaustyypit">
+                                <select ng-model="aktiivinenKysymys.vastaustyyppi" class="form-control" ng-change="nollaa()" ng-options="'kysymys.tyyppi.' + tyyppi | i18n for tyyppi in vastaustyypit">
                                 </select>
                             </label>
                         </div>
