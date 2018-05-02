@@ -15,7 +15,6 @@
 (ns aipal.arkisto.tiedote
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique-or-nil]]
-            [aipal.auditlog :as auditlog]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn hae
@@ -29,24 +28,8 @@
 (defn poista-ja-lisaa!
   "Poistaa vanhan tiedotteen ja lisää uuden."
   [tiedote]
-  (auditlog/tiedote-operaatio! :lisays)
   (sql/delete taulut/tiedote)
   (sql/insert taulut/tiedote
     (sql/values {:teksti_fi (:fi tiedote)
                  :teksti_sv (:sv tiedote)
                  :teksti_en (:en tiedote)})))
-
-(defn poista!
-  "Poistaa tiedotteen."
-  []
-  (auditlog/tiedote-operaatio! nil :poisto)
-  (sql/delete taulut/tiedote))
-
-(defn poista-ja-lisaa!
-  "Poistaa vanhan tiedotteen ja lisää uuden."
-  [tiedote-data]
-  (poista!)
-  (let [tiedote (sql/insert taulut/tiedote
-                  (sql/values {:teksti_fi (:fi tiedote-data)
-                               :teksti_sv (:sv tiedote-data)}))]
-    (auditlog/tiedote-operaatio! (:tiedoteid tiedote) :lisays)))
