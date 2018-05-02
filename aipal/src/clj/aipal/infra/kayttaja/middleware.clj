@@ -4,9 +4,9 @@
 (def unauthorized-virheilmoitus
    (str
       "ARVO-palautejärjestelmän käyttö edellyttää käyttöoikeuksia, jotka sinun käyttäjätunnukseltasi puuttuvat. "
-      "Tarvittaessa ota yhteyttä oman organisaatiosi ARVO-koulutustoimijan pääkäyttäjään tai OKM:n ARVO-neuvontaan (arvo@postit.csc.fi).\n\n"
+      "Tarvittaessa ota yhteyttä oman organisaatiosi ARVO-koulutustoimijan pääkäyttäjään tai OKM:n ARVO-neuvontaan (arvo@csc.fi).\n\n"
       "Användningen av responssystemet ARVO förutsätter användarrättigheter. I din användarkod finns ej användarrättigheter. "
-      "Kontakta vid behov huvudanvändaren för ARVO i din egen organisation eller UBS ARVO-rådgivning (arvo@postit.csc.fi). "))
+      "Kontakta vid behov huvudanvändaren för ARVO i din egen organisation eller UBS ARVO-rådgivning (arvo@csc.fi). "))
 
 (defn wrap-kayttaja
   ([handler paasykielletty-virheilmoitus]
