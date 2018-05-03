@@ -136,8 +136,6 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   (some #(= elem %) coll))
 
 (defn hae-muuttuneet [uudet vanhat tunniste]
-  (log/info "UUDET" uudet)
-  (log/info "VANHAT" vanhat)
   (let [muuttuneet (set/difference (into #{} uudet) (into #{} vanhat))
         vanhat-idt (map tunniste vanhat)
         lisattavat (remove #(in? vanhat-idt (tunniste %)) muuttuneet)]
