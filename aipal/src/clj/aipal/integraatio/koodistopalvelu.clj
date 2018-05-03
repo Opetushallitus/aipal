@@ -24,11 +24,6 @@
             [clojure.set :as set]
             [clj-time.coerce :as c]))
 
-
-(defn temp-filter [tutkinto]
-  (or (= "781501" (:tutkintotunnus tutkinto))
-      (= "681503" (:tutkintotunnus tutkinto))))
-
 ;  "koulutusalaoph2002"
 (def ^:private koulutusala-koodisto "isced2011koulutusalataso1")
 
@@ -161,13 +156,12 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn hae-tutkinto-muutokset [asetukset]
   (let [tutkinto-kentat [:nimi_fi :nimi_sv :nimi_en :voimassa_alkupvm :voimassa_loppupvm :tutkintotunnus :opintoala :tutkintotyyppi]
         vanhat (->> (tutkinto-arkisto/hae-kaikki)
-                    (map #(select-keys % tutkinto-kentat))
-                    (filter temp-filter))
+                    (map #(select-keys % tutkinto-kentat)))
         uudet (->> (hae-tutkinnot asetukset)
-                   (filter temp-filter)
                    (map (partial lisaa-alakoodien-data asetukset))
                    (map #(select-keys % tutkinto-kentat))
-                   (map #(update % :voimassa_alkupvm c/to-date)))] ;TODO: update multiple keys (loppupvm)
+                   (map #(update % :voimassa_alkupvm c/to-date))
+                   (map #(update % :voimassa_loppupvm c/to-date)))]
     (hae-muuttuneet uudet vanhat :tutkintotunnus)))
 
 (defn hae-koulutusala-muutokset [asetukset]
@@ -206,7 +200,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn ^:integration-api tallenna-muuttuneet-opintoalat! [opintoalat]
   (doseq [ala opintoalat]
     (log/info "Päivitetään opintoala " (:opintoalatunnus ala))
-    (opintoala-arkisto/paivita! (:opintoalatunnus ala) ala)))
+    (opintoala-arkisto/paivita! ala)))
 
 (defn ^:integration-api tallenna-opintoalat! [opintoalat]
   (tallenna-uudet-opintoalat! (filter :koulutusala (:lisattavat opintoalat)))
