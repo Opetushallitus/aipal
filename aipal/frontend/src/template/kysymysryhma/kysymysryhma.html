@@ -83,7 +83,7 @@
                 </tr>
                 </thead>
                 <tbody ui-sortable="sortableOptions" ng-model="kysymysryhma.kysymykset">
-                    <tr ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys-{{$index}}" ng-class="{removed: kysymys.poistetaan_kysymysryhmasta, error: kysymys.vastaustyyppi === 'asteikko'}">
+                    <tr ng-repeat="kysymys in kysymysryhma.kysymykset" class="kysymys-{{$index}}" ng-class="{removed: kysymys.poistetaan_kysymysryhmasta}">
                         <td>{{ kysymys | lokalisoiKentta:'kysymys' }}</td>
                         <td class="nowrap">{{i18n.kysymys.tyyppi[kysymys.vastaustyyppi]}}</td>
                         <td class="nowrap">

@@ -52,7 +52,7 @@
         (and kysymys
              (or (not= "kylla_ei_valinta" (:vastaustyyppi kysymys)) (kylla-ei-vastaus-validi? vastaus kysymys))
              (or (not= "monivalinta" (:vastaustyyppi kysymys)) (monivalintavastaus-validi? vastaus kysymys))
-             (or (nil? (#{"arvosana" "asteikko" "likert_asteikko" "arvosana4_ja_eos" "asteikko5_1"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys)))))))
+             (or (nil? (#{"arvosana" "likert_asteikko" "arvosana4_ja_eos" "asteikko5_1"} (:vastaustyyppi kysymys))) (numerovalintavastaus-validi? vastaus kysymys)))))))
 
 (defn ^:private pakollisille-kysymyksille-loytyy-vastaukset?
   [vastaukset kysymykset]

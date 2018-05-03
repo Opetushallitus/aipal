@@ -140,7 +140,7 @@
     </jakauma-kaavio>
 
     <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
-      ng-if="kysymys.vastaustyyppi === 'asteikko' || kysymys.vastaustyyppi === 'likert_asteikko' || kysymys.vastaustyyppi === 'arvosana' || kysymys.vastaustyyppi === 'arvosana7' || kysymys.vastaustyyppi === 'nps-indeksi'"
+      ng-if="kysymys.vastaustyyppi === 'likert_asteikko' || kysymys.vastaustyyppi === 'arvosana' || kysymys.vastaustyyppi === 'arvosana7' || kysymys.vastaustyyppi === 'nps-indeksi' || kysymys.vastaustyyppi === 'asteikko5_1'"
       jakauma="kysymys.jakauma" vastaustyyppi="kysymys.vastaustyyppi" nimet="tulos.nimet"
       eos="kysymys.eos_vastaus_sallittu">
     </vaittama-kaavio>
@@ -154,7 +154,7 @@
       <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
         <h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>
         <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
-          ng-if="kysymys.jatkovastaukset.kylla.vastaustyyppi === 'asteikko' || kysymys.jatkovastaukset.kylla.vastaustyyppi === 'likert_asteikko'"
+          ng-if="kysymys.jatkovastaukset.kylla.vastaustyyppi === 'likert_asteikko'"
           jakauma="kysymys.jatkovastaukset.kylla.jakauma"
           vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi"
           nimet="tulos.nimet">

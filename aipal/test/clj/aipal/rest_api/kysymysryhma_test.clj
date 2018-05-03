@@ -32,7 +32,6 @@
   (testing "jatkokysymystä ei luoda kun kyllä/ei vastaustyypille"
     (are [odotettu saatu] (= odotettu saatu)
          {:kylla_teksti_fi "kysymys"} (api/muodosta-jatkokysymys {:vastaustyyppi "kylla_ei_valinta" :jatkokysymys {:kylla_teksti_fi "kysymys"}})
-         nil (api/muodosta-jatkokysymys {:vastaustyyppi "asteikko" :jatkokysymys {:kylla_teksti_fi "kysymys"}})
          nil (api/muodosta-jatkokysymys {:vastaustyyppi "likert_asteikko" :jatkokysymys {:kylla_teksti_fi "kysymys"}})
          nil (api/muodosta-jatkokysymys {:vastaustyyppi "monivalinta" :jatkokysymys {:kylla_teksti_fi "kysymys"}})
          nil (api/muodosta-jatkokysymys {:vastaustyyppi "vapaateksti" :jatkokysymys {:kylla_teksti_fi "kysymys"}})))

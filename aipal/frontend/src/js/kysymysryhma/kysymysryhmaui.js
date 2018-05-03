@@ -351,12 +351,6 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       $scope.kysymysryhma.kysymykset = _.reject($scope.kysymysryhma.kysymykset, 'poistetaan_kysymysryhmasta');
     };
 
-    function sisaltaaAsteikkokysymyksen(){
-      return _.any($scope.kysymysryhma.kysymykset, function(k){
-        return k.vastaustyyppi === 'asteikko';
-      });
-    }
-
     function onValidiNtmKysymysryhma() {
       return !kayttooikeudet.isNtmVastuuKayttaja() ||
         !!$scope.kysymysryhma.ntm_kysymykset;
@@ -364,9 +358,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     $scope.tallennusSallittu = function() {
       return $scope.form.$valid &&
-        !$scope.muokkaustila &&
-        !sisaltaaAsteikkokysymyksen() &&
-        onValidiNtmKysymysryhma();
+        !$scope.muokkaustila && onValidiNtmKysymysryhma();
     };
   }])
 

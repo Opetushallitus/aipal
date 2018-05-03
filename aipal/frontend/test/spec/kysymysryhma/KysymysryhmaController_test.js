@@ -187,25 +187,6 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     expect($scope.tallennusSallittu()).toBe(false);
   });
 
-  it('antaa tallentaa, jos yksikään kysymys ei ole asteikko-tyyppinen', function(){
-    alustaController();
-    $scope.kysymysryhma.kysymykset = [{vastaustyyppi: 'likert_asteikko'}];
-    expect($scope.tallennusSallittu()).toBe(true);
-  });
-
-  it('ei anna tallentaa, jos ryhmässä on asteikko-tyyppinen kysymys', function(){
-    alustaController();
-    $scope.kysymysryhma.kysymykset = [{vastaustyyppi: 'asteikko'}];
-    expect($scope.tallennusSallittu()).toBe(false);
-  });
-
-  it('antaa tallentaa, jos asteikkokysymyksen vastaustyyppi vaihdetaan toiseksi', function(){
-    alustaController();
-    $scope.kysymysryhma.kysymykset = [{vastaustyyppi: 'asteikko'}];
-    $scope.kysymysryhma.kysymykset[0].vastaustyyppi = 'likert_asteikko';
-    expect($scope.tallennusSallittu()).toBe(true);
-  });
-
   it('antaa tallentaa, jos ntm-kysymysryhmä on merkitty valtakunnalliseksi', function(){
     alustaController();
     $scope.kysymysryhma.ntm_kysymykset = true;
@@ -239,7 +220,6 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $httpBackend.whenGET(/api\/kysymysryhma\/1234.*/)
                 .respond(200, {kysymysryhmaid: 1234,
                                kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
-                                            {vastaustyyppi: 'asteikko'},
                                             {vastaustyyppi: 'monivalinta'}]});
     alustaControllerKopioimaan(1234);
     $httpBackend.flush();
@@ -263,35 +243,10 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $httpBackend.whenGET(/api\/kysymysryhma\/1234.*/)
                 .respond(200, {kysymysryhmaid: 1234,
                                kysymykset: [{vastaustyyppi: 'kylla_ei_valinta'},
-                                            {vastaustyyppi: 'asteikko'},
                                             {vastaustyyppi: 'monivalinta'}]});
     alustaControllerKopioimaan(1234);
     $httpBackend.flush();
     expect(ilmoitus.varoitus).toHaveBeenCalled();
-  });
-
-  it('kopioi vain likert-tyyppiset kyllä-jatkokysymykset', function(){
-    $httpBackend
-    .whenGET(/api\/kysymysryhma\/1234.*/)
-    .respond(200, {kysymysryhmaid: 1234,
-                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
-                                 jatkokysymys:
-                                 {kylla_kysymys_fi: 'k1',
-                                  kylla_vastaustyyppi: 'likert_asteikko'}},
-                                {vastaustyyppi: 'kylla_ei_valinta',
-                                 jatkokysymys:
-                                 {kylla_kysymys_fi: 'k2',
-                                  kylla_vastaustyyppi: 'asteikko'}},
-                                {vastaustyyppi: 'kylla_ei_valinta',
-                                 jatkokysymys:
-                                 {ei_kysymys_fi: 'k3'}}]});
-    alustaControllerKopioimaan(1234);
-    $httpBackend.flush();
-    expect(_.map($scope.kysymysryhma.kysymykset, 'jatkokysymys'))
-    .toEqual([{kylla_kysymys_fi: 'k1',
-               kylla_vastaustyyppi: 'likert_asteikko'},
-              undefined,
-              {ei_kysymys_fi: 'k3'}]);
   });
 
   it('ei näytä varoitusta, jos kaikki jatkokysymykset ovat kopioitavissa', function(){
@@ -309,21 +264,4 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     $httpBackend.flush();
     expect(ilmoitus.varoitus).not.toHaveBeenCalled();
   });
-
-  it('näyttää varoituksen, jos jokin jatkokysymys ei ole kopioitavissa', function(){
-    $httpBackend
-    .whenGET(/api\/kysymysryhma\/1234.*/)
-    .respond(200, {kysymysryhmaid: 1234,
-                   kysymykset: [{vastaustyyppi: 'kylla_ei_valinta',
-                                 jatkokysymys:
-                                 {kylla_kysymys_fi: 'k1',
-                                  kylla_vastaustyyppi: 'asteikko'}},
-                                {vastaustyyppi: 'kylla_ei_valinta',
-                                 jatkokysymys:
-                                 {ei_kysymys_fi: 'k4'}}]});
-    alustaControllerKopioimaan(1234);
-    $httpBackend.flush();
-    expect(ilmoitus.varoitus).toHaveBeenCalled();
-  });
-
 });

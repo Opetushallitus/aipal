@@ -32,13 +32,6 @@
                 </label>
             </div>
 
-            <div ng-if="kysymys.vastaustyyppi == 'asteikko'" class="vastaus_valinnat" >
-                <label ng-repeat="vaihtoehto in [1,2,3,4,5]" ng-class="{checked: kysymys.vastaus == vaihtoehto}" class="compact">
-                    <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">
-                    <span ng-bind="kielet[vastausKieli].yleiset.asteikko[vaihtoehto]"></span>
-                </label>
-            </div>
-
             <div ng-if="kysymys.vastaustyyppi == 'likert_asteikko'" class="vastaus_valinnat" >
                 <label ng-repeat="vaihtoehto in [1,2,3,4,5]" ng-class="{checked: kysymys.vastaus == vaihtoehto}" class="loose">
                     <input type="radio" ng-model="kysymys.vastaus" ng-value="vaihtoehto" name="kysymys_{{kysymys.kysymysid}}" ng-required="kysymys.pakollinen">

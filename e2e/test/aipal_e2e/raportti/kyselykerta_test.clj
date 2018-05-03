@@ -37,8 +37,8 @@
   (time-format/parse-local-date (time-format/formatters :year-month-day)
                                 paivamaara-iso-muodossa))
 (def tanaan-pvm (time/today))
-(def tanaan-kayttoliittyman-muodossa (time-format/unparse-local-date (time-format/formatter "dd.MM.yyyy")
-                                                                      tanaan-pvm))
+(def tanaan-kayttoliittyman-muodossa (time-format/unparse-local-date (time-format/formatter "dd.MM.yyyy"
+                                                                      tanaan-pvm)))
 
 (defn kysymykset []
   (w/find-elements {:css ".e2e-kysymysryhma-kysymykset-repeat"}))
@@ -81,10 +81,10 @@
     (testing
       "etusivu:"
       (with-data {:koulutustoimija [{:ytunnus "0000000-0"}]
-                  :rooli_organisaatio [{:organisaatio "0000000-0"
+                  :rooli_organisaatio [{:organisaatio "0000000-0"}]
                                       :rooli "OPL-KAYTTAJA"
                                       :kayttaja "OID.AIPAL-E2E"
-                                      :voimassa true}]
+                                      :voimassa true
                   :kysely [{:kyselyid 1
                             :nimi_fi "Kysely 1"
                             :koulutustoimija "0000000-0"}]
@@ -115,7 +115,7 @@
                              :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 4"
                              :jarjestys 3
-                             :vastaustyyppi "asteikko"}
+                             :vastaustyyppi "likert_asteikko"}
                             {:kysymysid 5
                              :kysymysryhmaid 10
                              :kysymys_fi "Kysymys 5"

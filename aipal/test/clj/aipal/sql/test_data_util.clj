@@ -56,7 +56,7 @@
 (def default-kysymys
   {:pakollinen true
    :poistettava false
-   :vastaustyyppi "asteikko"
+   :vastaustyyppi "likert_asteikko"
    :kysymys_fi "Kysymys"})
 
 (def default-jatkokysymys
