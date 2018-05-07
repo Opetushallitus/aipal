@@ -70,7 +70,6 @@
       arkisto/lisaa-monivalintavaihtoehto!)))
 
 (defn lisaa-kysymys! [kysymys kysymysryhmaid]
-  (assert (not= (:vastaustyyppi kysymys) "asteikko"))
   (let [kysymysid (-> kysymys
                     valitse-kysymyksen-kentat
                     korjaa-eos-vastaus-sallittu

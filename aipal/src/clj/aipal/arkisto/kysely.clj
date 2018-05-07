@@ -83,6 +83,9 @@
     sql/exec
     unique-or-nil))
 
+(defn hae-kyselytyypit []
+  (db/hae-kyselytyypit))
+
 (defn hae-organisaatiotieto
   "Hakee kyselyn luoneen organisaation tiedot"
   [kyselyid]

@@ -25,8 +25,6 @@
 (conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql" "sql/tutkinto.sql"
                              "sql/kyselykerta.sql" "sql/koodisto.sql" "sql/kayttaja.sql" "sql/vipunen.sql" "sql/kysely.sql")
 
-;(defn to-date [sql-date]
-;  (-> sql-date (.getTime) (java.util.Date.)))
 
 (extend-protocol jdbc/IResultSetReadColumn
   ;java.sql.Date

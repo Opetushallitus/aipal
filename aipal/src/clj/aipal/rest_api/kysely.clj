@@ -23,7 +23,8 @@
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
             [aipal.toimiala.kayttajaoikeudet :refer [kysymysryhma-luku? kysymysryhma-on-julkaistu?]]
             [oph.common.util.http-util :refer [response-or-404 parse-iso-date]]
-            [oph.common.util.util :refer [map-by paivita-arvot]]))
+            [oph.common.util.util :refer [map-by paivita-arvot]]
+            [clojure.tools.logging :as log]))
 
 (defn lisaa-kysymysryhma!
   [kyselyid kysymysryhma]
@@ -89,6 +90,10 @@
           (format "%s" (let [{:keys [kyselyid]}
                              (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija :tyyppi]))]
                         (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))))
+
+  (GET "/kyselytyypit" []
+    :kayttooikeus :kysely
+    (response-or-404 (arkisto/hae-kyselytyypit)))
 
   (POST "/:kyselyid" []
     :path-params [kyselyid :- s/Int]

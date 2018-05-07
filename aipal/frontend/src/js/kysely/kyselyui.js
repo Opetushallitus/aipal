@@ -120,8 +120,12 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
 
-      //TODO: Fetch these from DB
-      $scope.kyselytyypit = [{id: 1, nimi: "Palautekysely"}, {id: 2, nimi: "Rekrykysely"}, {id: 3, nimi: "Uraseuranta"}, {id: 4, nimi: "Itsearviointi"}, {id: 5, nimi: "Amispalaute"}];
+      $scope.kyselytyypit = [];
+
+      Kysely.kyselytyypit()
+        .success(function (tyypit){
+          $scope.kyselytyypit = tyypit;
+        })
 
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)

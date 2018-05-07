@@ -25,3 +25,6 @@ WHERE kysely.kyselyid = :kyselyid;
 -- :name hae-monivalinnat :? :*
 SELECT * FROM monivalintavaihtoehto
 WHERE kysymysid IN (:v*:kysymysidt);
+
+-- :name hae-kyselytyypit :? :*
+SELECT * FROM kyselytyyppi;

@@ -46,6 +46,9 @@ angular.module('rest.kysely', ['yhteiset.palvelut.pvm'])
       },
       poista: function(id) {
         return $http.delete('api/kysely/' + id);
+      },
+      kyselytyypit: function() {
+        return $http.get('api/kysely/kyselytyypit')
       }
     };
   }]);
