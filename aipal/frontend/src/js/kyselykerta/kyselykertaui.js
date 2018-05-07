@@ -52,7 +52,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         2: 'template/kysely/rekrykysely-tunnukset.html',
         3: 'template/kysely/uraseuranta-tunnukset.html',
         4: 'template/kysely/digikyvykkyys-tunnukset.html',
-        5: 'template/kysely/amis-tunnukset.html'
+        5: 'template/kysely/amis-tunnukset.html',
+        6: 'template/kysely/palautekysely-tunnukset.html'
       }
 
       $scope.luoTunnuksiaDialogi = function () {
