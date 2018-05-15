@@ -59,17 +59,6 @@
                                  :ominaisuus (cheshire/generate-string (:ominaisuus asetukset))}
                                 (when-let [cas-url (-> asetukset :cas-auth-server :url)]
                                   {:logout-url (str cas-url "/logout")})))})
-    (GET "/status" [] (s/render-file "status"
-                        (assoc (status)
-                               :asetukset (with-out-str
-                                            (pprint
-                                              (clojure.walk/postwalk (fn [elem]
-                                                                       (if (and (coll? elem)
-                                                                                (contains? #{:password :salasana :avopfi-shared-secret} (first elem)))
-                                                                         [(first elem) "*****"]
-                                                                         elem))
-                                                                     asetukset)))
-                               :build-id @build-id)))
     (context "/api/jslog" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest_api.js-log/reitit)
     (context "/api/i18n" [] aipal.rest-api.i18n/reitit)
     (context "/api/kieli" [] aipal.rest-api.kieli/reitit)
