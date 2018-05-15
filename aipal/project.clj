@@ -12,8 +12,8 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(defproject aipal "0.1.0-SNAPSHOT"
-  :description "AIPAL"
+(defproject aipal "2018.1.0"
+  :description "Arvo"
   :dependencies [[cas-single-sign-out "0.1.2" :exclusions [clj-cas-client]]
                  [ch.qos.logback/logback-classic "1.1.5"]
                  [cheshire "5.5.0"]
