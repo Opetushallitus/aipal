@@ -11,7 +11,7 @@
            (java.sql Timestamp Date PreparedStatement)
            (clojure.lang IPersistentVector IPersistentMap)))
 
-;(require 'clj-time.jdbc)
+(require 'clj-time.jdbc)
 
 (defn pool-spec []
   (let [db-conf (:db @asetukset)]
@@ -23,12 +23,13 @@
            :stop (conman/disconnect! *db*))
 
 (conman/bind-connection *db* "sql/vastaajatunnus.sql" "sql/uraseuranta.sql" "sql/kysymysryhma.sql" "sql/tutkinto.sql"
-                             "sql/kyselykerta.sql" "sql/koodisto.sql" "sql/kayttaja.sql" "sql/vipunen.sql" "sql/kysely.sql")
+                             "sql/kyselykerta.sql" "sql/koodisto.sql" "sql/kayttaja.sql" "sql/vipunen.sql" "sql/kysely.sql"
+                              "sql/koulutustoimija.sql")
 
 
 (extend-protocol jdbc/IResultSetReadColumn
-  ;java.sql.Date
-  ;(result-set-read-column [v _ _] (c/from-sql-date v))
+  java.sql.Date
+  (result-set-read-column [v _ _] (c/from-sql-date v))
   ;
   ;java.sql.Timestamp
   ;(result-set-read-column [v _ _] (c/from-sql-time v))

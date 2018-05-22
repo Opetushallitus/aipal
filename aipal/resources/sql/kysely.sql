@@ -1,6 +1,7 @@
 -- :name hae-vastaukset :? :*
 SELECT v.vastausid, k.kysymysid, vs.vastaajaid,
-  v.vapaateksti, v.numerovalinta, v.vaihtoehto, v.en_osaa_sanoa,
+  v.vapaateksti, v.numerovalinta, v.vaihtoehto, v.en_osaa_sanoa, v.vastausaika,
+  vs.luotuaika AS vastaaja_luotuaika,
   vt.tunnus AS vastaajatunnus, vt.tutkintotunnus, vt.taustatiedot,
   k.kysymysryhmaid, k.vastaustyyppi
 FROM vastaus v
@@ -16,3 +17,6 @@ SELECT * FROM monivalintavaihtoehto
 WHERE kysymysid IN (:v*:kysymysidt);
 -- :name hae-kyselytyypit :? :*
 SELECT * FROM kyselytyyppi;
+
+-- :name hae-kysely :? :1
+SELECT * FROM kysely WHERE kyselyid = :kyselyid;

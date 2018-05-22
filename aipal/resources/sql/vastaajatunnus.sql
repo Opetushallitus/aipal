@@ -12,15 +12,6 @@ SELECT k.tyyppi, ktk.kentta_id FROM kysely k
   JOIN kyselytyyppi_kentat ktk ON k.tyyppi = ktk.kyselytyyppi_id
   WHERE kk.kyselykertaid = :kyselykertaid;
 
--- :name vastaajatunnuksen_tiedot :? :*
-SELECT ktk.id, vt.tunnus, ktk.kentta_id, vtt.arvo FROM vastaajatunnus vt
-  JOIN kyselykerta kk on vt.kyselykertaid = kk.kyselykertaid
-  JOIN kysely k ON kk.kyselyid = k.kyselyid
-  JOIN kyselytyyppi_kentat ktk ON ktk.kyselytyyppi_id = k.tyyppi
-  LEFT JOIN vastaajatunnus_tiedot vtt on vtt.vastaajatunnus_id = vt.vastaajatunnusid AND vtt.kentta = ktk.id
-  WHERE vt.tunnus = :vastaajatunnus
-  ORDER BY ktk.id;
-
 -- :name kyselyn-kentat :? :*
 SELECT ktk.id, ktk.kentta_id, ktk.kentta_fi, ktk.kentta_sv, ktk.kentta_en FROM kyselytyyppi kt
   JOIN kyselytyyppi_kentat ktk ON ktk.kyselytyyppi_id = kt.id

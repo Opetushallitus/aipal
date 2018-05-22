@@ -97,17 +97,26 @@
     :kayttooikeus [:kysely-raportti kyselyid]
     (response-or-404 (muodosta-kyselyraportti kyselyid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
+(defn get-csv-name
+  ([csv-data modifier]
+   (str (:nimi csv-data) "-" (:date csv-data) "-" (:koulutustoimija csv-data) (when modifier (str "-" modifier))".csv"))
+  ([csv-data]
+   (get-csv-name csv-data nil)))
+
 (defroutes csv
   (GET "/kysely/:kyselyid" []
        :path-params [kyselyid :- s/Int]
+       :query-params [{lang :- s/Str "fi"}]
        :kayttooikeus [:kysely-raportti kyselyid]
-       (csv-download-response (apply str (kysely-csv kyselyid)) "kysely.csv"))
+       (let [csv-data (kysely-csv kyselyid lang)]
+         (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
 
   (GET "/kysely/vastauksittain/:kyselyid" []
        :path-params [kyselyid :- s/Int]
+       :query-params [{lang :- s/Str "fi"}]
        :kayttooikeus [:kysely-raportti kyselyid]
-       (csv-download-response (apply str (kysely-csv-vastauksittain kyselyid)) "kysely.csv")))
-
+       (let [csv-data (kysely-csv-vastauksittain kyselyid lang)]
+         (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data)))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param

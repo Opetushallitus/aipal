@@ -9,7 +9,9 @@ INSERT INTO kysymys (pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kys
 INSERT INTO kysymys_jatkokysymys(kysymysid, jatkokysymysid, vastaus) VALUES (:kysymysid, :jatkokysymysid, :vastaus);
 
 -- :name hae-kysymysryhman-kysymykset :? :*
-SELECT k.*, jk.kysymysid AS jatkokysymys_kysymysid, jk.vastaus AS jatkokysymys_vastaus FROM kysymys k
+SELECT k.*, kr.nimi_fi AS kysymysryhma_fi, kr.nimi_sv AS kysymysryhma_sv, kr.nimi_en AS kysymysryhma_sn,
+       jk.kysymysid AS jatkokysymys_kysymysid, jk.vastaus AS jatkokysymys_vastaus FROM kysymys k
+  JOIN kysymysryhma kr ON k.kysymysryhmaid = kr.kysymysryhmaid
   LEFT JOIN kysymys_jatkokysymys jk ON k.kysymysid = jk.jatkokysymysid
 WHERE k.kysymysryhmaid = :kysymysryhmaid
 ORDER BY k.jarjestys;

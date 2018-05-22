@@ -42,9 +42,9 @@
   (db/hae-tutkinnon-jarjestajat {:tutkintotunnus tutkintotunnus}))
 
 (defn tutkinto-voimassa? [tutkinto]
-  (let [alkupvm (c/to-local-date (c/from-sql-date (:voimassa_alkupvm tutkinto)))
-        loppupvm (c/to-local-date (c/from-sql-date (:voimassa_loppupvm tutkinto)))
-        siirtymaajan-loppupvm (c/to-local-date (c/from-sql-date (:siirtymaajan_loppupvm tutkinto)))]
+  (let [alkupvm (c/to-local-date (:voimassa_alkupvm tutkinto))
+        loppupvm (c/to-local-date (:voimassa_loppupvm tutkinto))
+        siirtymaajan-loppupvm (c/to-local-date (:siirtymaajan_loppupvm tutkinto))]
     (and (or (nil? alkupvm)
              (pvm-mennyt-tai-tanaan? alkupvm))
          (or (nil? loppupvm)

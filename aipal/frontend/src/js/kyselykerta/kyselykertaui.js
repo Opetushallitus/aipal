@@ -85,6 +85,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
             },
             kyselykerta: function () {
               return $scope.kyselykerta;
+            },
+            kyselytyyppi: function () {
+              return $scope.kysely.tyyppi;
             }
           }
         });
@@ -227,9 +230,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
   .controller('LuoTunnuksiaModalController', ['$uibModalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet',
     'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
-    'viimeksiValittuTutkinto', 'kayttooikeudet', 'Tutkinto',
+    'viimeksiValittuTutkinto', 'kayttooikeudet', 'Tutkinto', 'kyselytyyppi',
     function ($uibModalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat,
-              kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto, kayttooikeudet, Tutkinto) {
+              kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto, kayttooikeudet, Tutkinto, kyselytyyppi) {
 
       $scope.tutkinnonJarjestajat = [];
 
@@ -244,6 +247,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       };
 
       $scope.isYllapitaja = kayttooikeudet.isYllapitaja();
+
+      console.log("KT:" + kyselytyyppi);
+      $scope.naytaKoulutusmuoto = kyselytyyppi === 1;
+      console.log("naytaKoulutusmuoto:" + $scope.naytaKoulutusmuoto);
 
       $scope.kielet = kielet;
       $scope.rahoitusmuodot = rahoitusmuodot;
@@ -281,12 +288,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
             $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
           }
           $scope.oppilaitokset = oppilaitokset;
-          var oppilaitostyypit = oppilaitokset.map(function(o){return o.oppilaitostyyppi});
-
-          $scope.naytaKoulutusmuoto = oppilaitostyypit.indexOf("41") !== -1;
-
         });
-
       }
 
       function haeToimipaikat(oppilaitos) {
