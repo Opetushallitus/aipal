@@ -249,7 +249,7 @@
           kysymykset (->> (mapcat :kysymykset [suorittamisvaihe hakeutumisvaihe])
                        (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid))
                        (map lisaa-selite-taustakysymykseen)
-                       (map aseta-kysymyksen-jarjestys)
+                       ;(map aseta-kysymyksen-jarjestys)
                        (sort-by :jarjestys))]
       (assoc suorittamisvaihe
              :nimi_fi "Näyttötutkintojen taustakysymykset"
