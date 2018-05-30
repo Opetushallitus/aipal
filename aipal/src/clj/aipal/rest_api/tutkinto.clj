@@ -35,6 +35,10 @@
     :kayttooikeus :tutkinto
     (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
       (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus))))
+  (GET "/koulutustoimija/:y-tunnus" []
+    :kayttooikeus :tutkinto
+    :path-params [y-tunnus :- String]
+    (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus)))
   (GET "/jarjestajat/:tutkintotunnus" []
     :path-params [tutkintotunnus :- String]
     :kayttooikeus :tutkinto

@@ -58,6 +58,11 @@
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
+    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 5"
+            title="{{'vastaajatunnus.luonti_laajennettu_tooltip' | i18n}}">
+        {{'vastaajatunnus.luonti_laajennettu' | i18n }} &nbsp;&nbsp;
+        <span class="fa fa-plus"></span>
+    </button>
     <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary e2e-nayta-raportti">
       {{ 'kysely.raportti' | i18n }}&nbsp;
       <span class="glyphicon glyphicon-stats"></span>
