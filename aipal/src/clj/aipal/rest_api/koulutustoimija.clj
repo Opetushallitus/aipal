@@ -25,4 +25,7 @@
     (response-or-404 (koulutustoimija/hae (:aktiivinen-koulutustoimija *kayttaja*))))
   (GET "/" []
     :kayttooikeus :koulutustoimija
-    (response-or-404 (koulutustoimija/hae-kaikki))))
+    (response-or-404 (koulutustoimija/hae-kaikki)))
+  (GET "/koulutusluvalliset" []
+    :kayttooikeus :koulutustoimija
+    (response-or-404 (koulutustoimija/hae-koulutusluvalliset))))

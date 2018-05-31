@@ -287,7 +287,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.nollaaRajoite();
 
       if(laajennettu){
-        Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
+        Koulutustoimija.haeKoulutusluvalliset().success(function(koulutustoimijat) {
           $scope.tutkinnonJarjestajat = koulutustoimijat;
         });
       }
