@@ -110,9 +110,14 @@
 
 (def sallitut-taustatiedot ["tutkinto" "henkilonumero" "haun_numero" "ika" "sukupuoli" "koulutusmuoto"])
 
-(defn create-row [template lang {vastaajatunnus :vastaajatunnus taustatiedot :taustatiedot} kyselyn-taustatiedot choices answers]
+(defn hae-taustatiedot [taustatiedot tutkintotunnus]
+  (if (:tutkinto taustatiedot)
+    taustatiedot
+    (assoc taustatiedot :tutkinto tutkintotunnus)))
+
+(defn create-row [template lang {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus taustatiedot :taustatiedot} kyselyn-taustatiedot choices answers]
   (let [vastausaika (format-date (:vastaaja_luotuaika (first answers)))
-        vastaajatunnus-arvot (vals (select-keys taustatiedot (map (comp keyword :kentta_id) kyselyn-taustatiedot)))]
+        vastaajatunnus-arvot (vals (select-keys (hae-taustatiedot taustatiedot tutkintotunnus) kyselyn-taustatiedot))]
     (concat [vastaajatunnus vastausaika] vastaajatunnus-arvot (mapcat #(get-answer answers choices lang %) template))))
 
 (defn get-choices [questions]
@@ -152,7 +157,9 @@
         vastaukset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid}))
         vastaajatunnus-header (map #(translate-field "kentta" lang %) kyselyn-taustatiedot)
         kysymys-header (create-header-row template kysymykset vastaajatunnus-header lang)
-        vastausrivit (map #(create-row template lang (first (second %)) kyselyn-taustatiedot monivalintavaihtoehdot (second %)) vastaukset)]
+        vastausrivit (map #(create-row template lang (first (second %))
+                                       (map (comp keyword :kentta_id) kyselyn-taustatiedot)
+                                       monivalintavaihtoehdot (second %)) vastaukset)]
     (csv-response kyselyid lang
       (write-csv
         (muuta-kaikki-stringeiksi (apply concat [[kysymys-header] vastausrivit]))
@@ -163,9 +170,10 @@
     (get-answer-text monivalintavaihtoehdot (:vastaustyyppi kysymys) kysymyksen-vastaukset lang)))
 
 
+
 (defn luo-vastausrivi [[vastaajatunnus vastaukset] kysymykset kyselyn-taustatiedot monivalintavaihtoehdot lang]
   (let [vastausaika (format-date (:vastausaika (first vastaukset)))
-        taustatiedot (:taustatiedot (first vastaukset))
+        taustatiedot (hae-taustatiedot (:taustatiedot (first vastaukset)) (:tutkintotunnus (first vastaukset)))
         taustatieto-arvot (vals (select-keys taustatiedot (map (comp keyword :kentta_id) kyselyn-taustatiedot)))
         taustakysymysten-vastaukset (->> kysymykset
                                          (filter :taustakysymys)
