@@ -11,8 +11,8 @@
             [clj-time.format :as f]))
 
 (def translations {:fi {:vastaajatunnus "Vastaajatunnus" :vastausaika "Vastausaika"}
-                   :sv {:vastaajatunnus "Svarskod"}
-                   :en {:vastaajatunnus "Answer identifier"}})
+                   :sv {:vastaajatunnus "Svarskod" :vastausaika "Svarstid"}
+                   :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"}})
 
 (defn translate [lang prop]
   (or (get-in translations [lang prop])
