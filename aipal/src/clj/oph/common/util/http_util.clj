@@ -92,7 +92,7 @@
 
 (defn csv-download-response
   [data filename]
-  (file-download-response data filename "text/csv" {:charset "CP1252"}))
+  (file-download-response data filename "text/csv" {:charset "UTF-8"}))
 
 (defn file-upload-response
   [data]
