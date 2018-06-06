@@ -163,7 +163,8 @@
     (csv-response kyselyid lang
       (write-csv
         (muuta-kaikki-stringeiksi (apply concat [[kysymys-header] vastausrivit]))
-        :delimiter delimiter))))
+        :delimiter delimiter
+        :end-of-line "\r\n"))))
 
 (defn hae-vastaus [kysymys vastaukset monivalintavaihtoehdot lang]
   (let [kysymyksen-vastaukset (filter  #(= (:kysymysid kysymys) (:kysymysid %)) vastaukset)]
@@ -200,4 +201,5 @@
         vastausrivit (mapcat #(luo-vastausrivi % kysymykset kyselyn-taustatiedot monivalintavaihtoehdot lang) vastaukset)]
     (csv-response kyselyid lang
       (write-csv (muuta-kaikki-stringeiksi (cons header vastausrivit))
-                 :delimiter delimiter))))
+                 :delimiter delimiter
+                 :end-of-line "\r\n"))))
