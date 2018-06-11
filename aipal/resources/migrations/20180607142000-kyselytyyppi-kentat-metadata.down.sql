@@ -1,0 +1,1 @@
+ALTER TABLE kyselytyyppi_kentat DROP COLUMN raportointi;

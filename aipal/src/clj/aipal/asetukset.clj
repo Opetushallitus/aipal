@@ -34,6 +34,8 @@
         :name s/Str
         :user s/Str
         :password s/Str
+        :migration-user s/Str
+        :migration-password s/Str
         :maximum-pool-size s/Int
         :minimum-pool-size s/Int}
    :cas-auth-server {:url s/Str
@@ -69,6 +71,8 @@
         :name "arvo_db"
         :user "aipal_user"
         :password "aipal"
+        :migration-user "aipal_adm"
+        :migration-password "aipal-adm"
         :maximum-pool-size 15
         :minimum-pool-size 3}
    :cas-auth-server {:url "https://virkailija.testiopintopolku.fi/cas"

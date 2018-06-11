@@ -56,11 +56,11 @@
   ((ns-resolve 'aipal.infra.eraajo.organisaatiot 'paivita-organisaatiot!)
    {"url" (((repl-asetukset) :organisaatiopalvelu) :url)}))
 
-(defn start []
+(defn start [& args]
   {:pre [(not @palvelin)]
    :post [@palvelin]}
   (require 'aipal.palvelin)
-  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) @(ns-resolve 'aipal.asetukset 'oletusasetukset))))
+  (reset! palvelin ((ns-resolve 'aipal.palvelin 'kaynnista!) @(ns-resolve 'aipal.asetukset 'oletusasetukset) args)))
 
 (defn stop []
   {:pre [@palvelin]

@@ -51,7 +51,8 @@
             [aipal.integraatio.kayttooikeuspalvelu :as kop]
             [aipal.infra.eraajo :as eraajo]
             [aipal.infra.kayttaja.vakiot :refer [default-test-user-uid]]
-            [mount.core :as mount]))
+            [mount.core :as mount]
+            [arvo.db.migrations :as migrations]))
 
 (schema.core/set-fn-validation! true)
 
@@ -186,7 +187,7 @@
 (defn ^:integration-api kaynnista-eraajon-ajastimet! [asetukset]
   (eraajo/kaynnista-ajastimet! asetukset))
 
-(defn ^:integration-api kaynnista! [alkuasetukset]
+(defn ^:integration-api kaynnista! [alkuasetukset args]
   (try
     (log/info "Käynnistetään ARVO, versio " @build-id)
     (let [asetukset (hae-asetukset alkuasetukset)
@@ -196,6 +197,11 @@
           _ (mount/start)
           sammuta (hs/run-server (app asetukset)
                                  {:port (get-in asetukset [:server :port])})]
+      (cond
+        (some #{"migrate" "rollback"} args)
+        (do (migrations/migrate args) (System/exit 0))
+        :else
+        (migrations/migrate ["migrate"]))
       (when (or (not (:development-mode asetukset))
                 (:eraajo asetukset))
         (kaynnista-eraajon-ajastimet! asetukset))
@@ -209,5 +215,5 @@
         (.printStackTrace t *err*)
         (System/exit 1)))))
 
-(defn -main []
-  (kaynnista! oletusasetukset))
+(defn -main [& args]
+  (kaynnista! oletusasetukset args))

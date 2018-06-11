@@ -20,8 +20,8 @@
     [cheshire.core :as cheshire]
     [cheshire.generate :as json-gen]
     [clj-time.core :as time]
-    [clj-time.local :as time-local]
-    ))
+    [clj-time.local :as time-local]))
+
 
 ;; Nämä otetaan ring-wrapperilla requestista
 (s/defschema Request-meta {:ip         s/Str
@@ -90,16 +90,16 @@
                                :user            {:oid       (-> log-contents :user :oid)
                                                  :ip        (:ip *request-meta*)
                                                  :session   (:session *request-meta*)
-                                                 :userAgent (:user-agent *request-meta*)}
-                               }
+                                                 :userAgent (:user-agent *request-meta*)}}
+
                               (when (:delta log-contents)
                                 {:delta (map #(update-in % [:value] date-stringina) (:delta log-contents))})
                               (when (:resource log-contents) #_(and (:resource log-contents) (:resourceOid log-contents) (:id log-contents))
                                 {:target {(:resource log-contents) (:resourceOid log-contents)
                                           :id (:id log-contents)}})
                               (when (:message log-contents)
-                                {:message (:message log-contents)})
-                              )))
+                                {:message (:message log-contents)}))))
+
 
 (defn req-metadata-saver-wrapper
   "Tallentaa requestista tietoa logitusta varten"

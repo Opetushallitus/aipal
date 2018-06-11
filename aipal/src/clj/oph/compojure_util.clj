@@ -37,27 +37,3 @@
          (do
            (log/error "Käyttöoikeudet eivät riitä. Toiminto estetty.")
            (throw (ex-info "Käyttöoikeudet eivät riitä." {:cause :kayttooikeudet})))))))
-
-(defmacro autorisoitu-transaktio
-  "Tarkastaa käyttöoikeudet ja hallitsee tietokanta-transaktion"
-  [auth-map toiminto konteksti & body]
-  `(retrying Exception 3
-     (korma.db/transaction
-       (autorisoi ~auth-map ~toiminto ~konteksti ~@body))))
-
-(defmacro defapi
-  "Esittelee rajapinta-funktion sisältäen käyttöoikeuksien tarkastamisen ja tietokanta-transaktion hallinnan."
-  [auth-map toiminto konteksti-arg http-method path args & body]
-  (let [compojure-macro (get http-compojure http-method)
-        _ (log/info (str "declared " toiminto " on API: " http-method " at " path args))]
-    `(~compojure-macro ~path ~args
-       (autorisoitu-transaktio ~auth-map ~toiminto ~konteksti-arg
-         ~@body))))
-
-(defmacro defapi-within-transaction
-  "Esittelee rajapinta-funktion sisältäen käyttöoikeuksien tarkastamisen. Olettaa, että ollaan transaktion sisällä."
-  [auth-map toiminto konteksti-arg http-method path args & body]
-  (let [compojure-macro (get http-compojure http-method)
-        _ (log/info (str "declared " toiminto " on API: " http-method " at " path args))]
-    `(~compojure-macro ~path ~args
-       (autorisoi ~auth-map ~toiminto ~konteksti-arg ~@body))))

@@ -101,14 +101,8 @@
       tutkintotunnus-old
       (:arvo entry))))
 
-(defn get-vastaajatunnus-value [tutkintotunnus-old entry]
-  (let [arvo (get-value tutkintotunnus-old entry)]
-    (if (nil? arvo) "" arvo)))
-
 (defn in? [coll elem]
   (some #(= elem %) coll))
-
-(def sallitut-taustatiedot ["tutkinto" "henkilonumero" "haun_numero" "ika" "sukupuoli" "koulutusmuoto"])
 
 (defn hae-taustatiedot [taustatiedot tutkintotunnus]
   (if (:tutkinto taustatiedot)
@@ -151,7 +145,7 @@
 
 (defn kysely-csv [kyselyid lang]
   (let [kysymykset (hae-kysymykset kyselyid)
-        kyselyn-taustatiedot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (db/kyselyn-kentat {:kyselyid kyselyid}))
+        kyselyn-taustatiedot (filter #(get-in % [:raportointi :csv]) (db/kyselyn-kentat {:kyselyid kyselyid}))
         monivalintavaihtoehdot (get-choices kysymykset)
         template (create-row-template kysymykset)
         vastaukset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid}))
@@ -189,7 +183,7 @@
 (defn kysely-csv-vastauksittain [kyselyid lang]
   (let [kysymykset (hae-kysymykset kyselyid)
         vastaukset (group-by :vastaajatunnus (db/hae-vastaukset {:kyselyid kyselyid}))
-        kyselyn-taustatiedot (filter #(in? sallitut-taustatiedot (:kentta_id % )) (db/kyselyn-kentat {:kyselyid kyselyid}))
+        kyselyn-taustatiedot (filter #(get-in % [:raportointi :csv]) (db/kyselyn-kentat {:kyselyid kyselyid}))
         monivalintavaihtoehdot (get-choices kysymykset)
         taustakysymykset (->> kysymykset
                               (filter :taustakysymys)
