@@ -34,8 +34,7 @@
             aipal.rest-api.koulutustoimija
             aipal.rest-api.tiedote
             aipal.rest-api.vipunen
-            [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [oph.common.infra.status :refer [status]]))
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn reitit [asetukset]
   (api

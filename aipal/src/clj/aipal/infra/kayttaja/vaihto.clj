@@ -3,7 +3,6 @@
 ;; nimiavaruudesta aipal.infra.kayttaja.
 (ns aipal.infra.kayttaja.vaihto
   (:require [clojure.tools.logging :as log]
-            [korma.core :as sql]
             [aipal.asetukset :refer [asetukset]]
             [oph.common.util.util :refer [map-by some-value]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
@@ -11,7 +10,6 @@
             [aipal.toimiala.kayttajaroolit :refer [ldap-ryhma->rooli roolijarjestys]]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
-            [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.infra.kayttaja.sql :refer [with-sql-kayttaja]]
             [arvo.db.core :refer [*db*] :as db]
             [aipal.integraatio.kayttooikeuspalvelu :as kayttooikeuspalvelu]))

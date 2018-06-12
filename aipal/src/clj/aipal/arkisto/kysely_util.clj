@@ -25,8 +25,8 @@
 
 (defn kysely-on-tyhja [kyselyid]
   (sql/sqlfn :not (sql/sqlfn :exists (sql/subselect :kysely_kysymysryhma
-                            (sql/join :inner :kysymysryhma {:kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid})
-                            (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))))
+                                                    (sql/join :inner :kysymysryhma {:kysymysryhma.kysymysryhmaid :kysely_kysymysryhma.kysymysryhmaid})
+                                                    (sql/where {:kysely_kysymysryhma.kyselyid kyselyid})))))
 
 
 (defn rajaa-kayttajalle-sallittuihin-kyselyihin [query kyselyid koulutustoimija]
@@ -39,7 +39,7 @@
       (ntm-vastuukayttaja?) (-> query
                               (sql/where (and koulutustoimijan-oma
                                               (or tyhja-kysely
-                                              ntm-kysely))))
+                                               ntm-kysely))))
       :else                 (-> query
                               (sql/where (and koulutustoimijan-oma
                                               (not ntm-kysely)))))))

@@ -36,3 +36,13 @@ UPDATE vastaajatunnus SET
   valmistavan_koulutuksen_oppilaitos = :oppilaitos,
   taustatiedot = :taustatiedot
 WHERE tunnus = :vastaajatunnus;
+
+
+-- :name hae-viimeisin-tutkinto :? :*
+SELECT t.* FROM vastaajatunnus vt
+JOIN tutkinto t ON t.tutkintotunnus = vt.tutkintotunnus
+JOIN koulutustoimija_ja_tutkinto ktt
+    ON (ktt.tutkinto = t.tutkintotunnus AND ktt.koulutustoimija = :koulutustoimija)
+WHERE vt.kyselykertaid = :kyselykertaid
+ORDER BY vt.luotuaika DESC;
+
