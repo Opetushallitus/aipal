@@ -102,14 +102,7 @@
   "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
   [kyselykertaid koulutustoimija]
   (first
-    (sql/select taulut/vastaajatunnus
-      (sql/join :inner taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-      (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en)
-      (sql/where (and (= :vastaajatunnus.kyselykertaid kyselykertaid)
-                      [(sql/sqlfn :exists (sql/subselect :koulutustoimija_ja_tutkinto
-                                            (sql/where {:koulutustoimija_ja_tutkinto.tutkinto :tutkinto.tutkintotunnus
-                                                        :koulutustoimija_ja_tutkinto.koulutustoimija koulutustoimija})))]))
-      (sql/order :vastaajatunnus.luotuaika :desc))))
+    (db/hae-viimeisin-tutkinto {:koulutustoimija koulutustoimija :kyselykertaid kyselykertaid})))
 
 (defn hae [kyselykertaid vastaajatunnusid]
   (-> vastaajatunnus-select
