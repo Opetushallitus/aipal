@@ -5,7 +5,6 @@
             [clojure.core.match :refer [match]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
             [arvo.db.core :as db]
-            [clojure.tools.logging :as log]
             [aipal.arkisto.kysely :refer [aseta-jatkokysymysten-jarjestys hae-kyselyn-kysymykset]]
             [clj-time.core :as time]
             [clj-time.format :as f]))
@@ -35,10 +34,13 @@
            [:kysymysid 0] [(:kysymysryhma_nimi question)]
            :else [""])))
 
+(defn replace-control-chars [text]
+  (clojure.string/escape text {\newline " " \tab " " delimiter \,}))
+
 (defn translate-field [field lang obj]
   (let [translated (get obj (keyword (str field "_" lang)))]
     (if (not-empty translated)
-      translated
+      (replace-control-chars translated)
       (when (not= "fi" lang)
         (translate-field field "fi" obj)))))
 
@@ -85,7 +87,7 @@
                               (clojure.string/join ", "))
          ["likert_asteikko"] (:numerovalinta (first answers))
          ["vapaateksti"] (when (:vapaateksti (first answers))
-                           (clojure.string/escape (:vapaateksti (first answers)) {\newline " " \tab " " delimiter \,}))
+                           (replace-control-chars (:vapaateksti (first answers))))
          ["kylla_ei_valinta"] (:vaihtoehto (first answers))
          :else ""))
 
