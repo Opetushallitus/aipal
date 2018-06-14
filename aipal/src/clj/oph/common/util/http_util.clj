@@ -85,7 +85,7 @@
   ([data filename content-type options]
    {:status 200
     :body (if-let [charset (:charset options)]
-            (ByteArrayInputStream. (.getBytes (str data) charset))
+            (ByteArrayInputStream. (.getBytes (str \ufeff data) charset))
             (ByteArrayInputStream. data))
     :headers {"Content-type" content-type
               "Content-Disposition" (str "attachment; filename=\"" filename "\"")}}))
