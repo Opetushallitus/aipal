@@ -13,6 +13,11 @@
                    :sv {:vastaajatunnus "Svarskod" :vastausaika "Svarstid"}
                    :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"}})
 
+
+(defn select-keys-or-nil [map keyseq]
+  (let [defaults (zipmap keyseq (repeat nil))]
+    (select-keys (merge defaults map) keyseq)))
+
 (defn translate [lang prop]
   (or (get-in translations [lang prop])
       (get-in translations [:fi prop])))
@@ -113,7 +118,7 @@
 
 (defn create-row [template lang {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus taustatiedot :taustatiedot} kyselyn-taustatiedot choices answers]
   (let [vastausaika (format-date (:vastaaja_luotuaika (first answers)))
-        vastaajatunnus-arvot (vals (select-keys (hae-taustatiedot taustatiedot tutkintotunnus) kyselyn-taustatiedot))]
+        vastaajatunnus-arvot (vals (select-keys-or-nil (hae-taustatiedot taustatiedot tutkintotunnus) kyselyn-taustatiedot))]
     (concat [vastaajatunnus vastausaika] vastaajatunnus-arvot (mapcat #(get-answer answers choices lang %) template))))
 
 (defn get-choices [questions]
@@ -171,7 +176,7 @@
 (defn luo-vastausrivi [[vastaajatunnus vastaukset] kysymykset kyselyn-taustatiedot monivalintavaihtoehdot lang]
   (let [vastausaika (format-date (:vastausaika (first vastaukset)))
         taustatiedot (hae-taustatiedot (:taustatiedot (first vastaukset)) (:tutkintotunnus (first vastaukset)))
-        taustatieto-arvot (vals (select-keys taustatiedot (map (comp keyword :kentta_id) kyselyn-taustatiedot)))
+        taustatieto-arvot (vals (select-keys-or-nil taustatiedot (map (comp keyword :kentta_id) kyselyn-taustatiedot)))
         taustakysymysten-vastaukset (->> kysymykset
                                          (filter :taustakysymys)
                                          (map #(hae-vastaus % vastaukset monivalintavaihtoehdot lang)))]

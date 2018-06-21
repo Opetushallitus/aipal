@@ -270,9 +270,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.menneisyydessa = !_.isNull(kyselykerta.voimassa_loppupvm) && loppupvm < tanaan;
 
       $scope.oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
+
+      if(kyselytyyppi === 5){
+        $scope.oletusloppupvm = new Date(tanaan);
+        $scope.oletusloppupvm.setDate($scope.oletusloppupvm.getDate() + 30)
+      }
+
       $scope.tutkinnot = laajennettu ? [] : tutkinnot;
-
-
 
       $scope.koulutustoimijat = koulutustoimijat;
 

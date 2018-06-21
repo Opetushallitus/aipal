@@ -152,6 +152,7 @@ angular.module('aipal', [
       $scope.kayttooikeudet = data;
 
       $scope.yllapitaja = kayttooikeudet.isYllapitaja();
+      $scope.vastuuKayttaja = kayttooikeudet.isVastuuKayttaja();
       $scope.impersonoitu = kayttooikeudet.isImpersonoitu();
       $scope.ntmVastuuKayttaja = kayttooikeudet.isNtmVastuuKayttaja();
 
