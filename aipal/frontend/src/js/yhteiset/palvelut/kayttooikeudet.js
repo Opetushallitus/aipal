@@ -26,7 +26,7 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
         yllapitaja = false;
         impersonoitu = false;
         ntmVastuuKayttaja = false;
-        vastuukayttaja = data.aktiivinen_rooli === ('OPL-VASTUUKAYTTAJA');
+        vastuukayttaja = data.aktiivinen_rooli.rooli === 'OPL-VASTUUKAYTTAJA';
 
         if(_.where(data.roolit, {rooli: 'YLLAPITAJA'}).length > 0){
           yllapitaja = true;
