@@ -171,8 +171,6 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         poistaKysymysryhmat();
         var maxKysymyksia = 140;
 
-        console.log("Tallennetaan kysely: " + JSON.stringify($scope.kysely))
-
         if (apu.laskeLisakysymykset($scope.kysely) > maxKysymyksia) {
           ilmoitus.virhe(i18n.hae('kysely.liian_monta_lisakysymysta'));
         }

@@ -107,7 +107,7 @@
   (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
   (->
     (sql/update* taulut/kysely)
-    (sql/set-fields (assoc (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu])
+    (sql/set-fields (assoc (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu :tyyppi])
                       :muutettu_kayttaja (:oid *kayttaja*)))
     (sql/where {:kyselyid (:kyselyid kyselydata)})
     (sql/update)))

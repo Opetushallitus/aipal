@@ -99,9 +99,10 @@
     :path-params [kyselyid :- s/Int]
     :body [kysely s/Any]
     :kayttooikeus [:kysely-muokkaus kyselyid]
-    (let [kysely (paivita-arvot (assoc kysely :kyselyid kyselyid)
-                                [:voimassa_alkupvm :voimassa_loppupvm]
-                                parse-iso-date)]
+    (let [kysely (assoc (paivita-arvot (assoc kysely :kyselyid kyselyid)
+                                       [:voimassa_alkupvm :voimassa_loppupvm]
+                                       parse-iso-date)
+                        :tyyppi (->> kysely :tyyppi :id))]
       (if (arkisto/samanniminen-kysely? (assoc kysely :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)))
         {:status 400
          :body "kysely.samanniminen_kysely"}

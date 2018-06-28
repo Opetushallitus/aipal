@@ -101,6 +101,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus).success(function(uudetTunnukset) {
             _.forEach(uudetTunnukset, function(tunnus) {
               tunnus.new = true;
+              tunnus.rahoitusmuotoid = 5;
+              tunnus.vastauksia = 0;
               $scope.tunnukset.unshift(tunnus);
             });
             ilmoitus.onnistuminen(i18n.hae('vastaajatunnus.tallennus_onnistui'));

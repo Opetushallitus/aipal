@@ -201,7 +201,6 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     $scope.poistaVaihtoehto = apu.poistaVaihtoehto;
 
     $scope.tallenna = function() {
-      console.log("Tallennetaan kysymys:" + JSON.stringify($scope.aktiivinenKysymys))
       apu.poistaYlimaaraisetKentat($scope.aktiivinenKysymys);
       $scope.aktiivinenKysymys.muokattava = false;
       $scope.aktiivinenKysymys.uusi = false;
@@ -250,7 +249,6 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     }
 
     $scope.nollaa = function () {
-      console.log('Vastaustyyppi vaihtunut')
       if($scope.aktiivinenKysymys) {
         console.log('Nollataan kysymys')
         $scope.aktiivinenKysymys.kysymys_fi = ''
