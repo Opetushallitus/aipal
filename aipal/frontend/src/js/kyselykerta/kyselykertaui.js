@@ -256,9 +256,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       $scope.isYllapitaja = kayttooikeudet.isYllapitaja();
 
-      console.log("KT:" + kyselytyyppi);
       $scope.naytaKoulutusmuoto = kyselytyyppi === 1;
-      console.log("naytaKoulutusmuoto:" + $scope.naytaKoulutusmuoto);
 
       $scope.kielet = kielet;
       $scope.rahoitusmuodot = rahoitusmuodot;
@@ -273,11 +271,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       $scope.oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
 
-      if(kyselytyyppi === 5){
-        $scope.oletusloppupvm = new Date(tanaan);
-        $scope.oletusloppupvm.setDate($scope.oletusloppupvm.getDate() + 30)
-      }
-
       $scope.tutkinnot = laajennettu ? [] : tutkinnot;
 
       $scope.koulutustoimijat = koulutustoimijat;
@@ -291,6 +284,19 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         $scope.rullausrajoite = 20;
       };
       $scope.nollaaRajoite();
+
+      function asetaLoppupvm () {
+        if(kyselytyyppi === 5 && $scope.vastaajatunnus.voimassa_alkupvm){
+          $scope.oletusloppupvm = ($scope.vastaajatunnus.voimassa_alkupvm.getTime() > tanaan.getTime()) ? new Date($scope.vastaajatunnus.voimassa_alkupvm) : new Date(tanaan);
+          $scope.oletusloppupvm.setDate($scope.oletusloppupvm.getDate() + 30);
+          $scope.vastaajatunnus.voimassa_loppupvm = $scope.oletusloppupvm;
+        }
+      }
+
+
+      $scope.$watch('vastaajatunnus.voimassa_alkupvm', function(){
+        asetaLoppupvm();
+      });
 
       if(laajennettu){
         Koulutustoimija.haeKoulutusluvalliset().success(function(koulutustoimijat) {
