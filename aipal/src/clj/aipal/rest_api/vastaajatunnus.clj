@@ -68,7 +68,7 @@
       (when-not (:muokattavissa vastaajatunnus)
         (throw (IllegalArgumentException. "Vastaajatunnus ei ole enää muokattavissa")))
       (if (and (pos? lukumaara) (>= lukumaara vastaajat))
-        (response-or-404 (vastaajatunnus/muokkaa-lukumaaraa kyselykertaid vastaajatunnusid lukumaara))
+        (response-or-404 (vastaajatunnus/muokkaa-lukumaaraa! kyselykertaid vastaajatunnusid lukumaara))
         {:status 403})))
 
   (DELETE "/:kyselykertaid/tunnus/:vastaajatunnusid" []

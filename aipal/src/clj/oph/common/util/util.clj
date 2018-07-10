@@ -21,8 +21,7 @@
             [clj-http.client :as http]
             [clojure.set :refer [union]]
             [clojure.walk :refer [keywordize-keys]]
-            [clojure.tools.logging :as log]
-            [flatland.useful.seq :refer [groupings]]))
+            [clojure.tools.logging :as log]))
 
 ;; http://clojuredocs.org/clojure_contrib/clojure.contrib.map-utils/deep-merge-with
 (defn deep-merge-with
@@ -289,12 +288,3 @@
   [old-map new-map]
   (into {} (for [[k [new-v old-v]] (remove-nil-vals (diff-maps new-map old-map))]
              [k [old-v new-v]])))
-
-(defn erottele-lista
-  "Ottaa denormalisoidun listan, subentitylle halutun avaimen ja listan subentityn kentistä.
-   Erottelee subentityt pääentityistä ja liittää ne pääentityyn listaksi."
-  [avain kentat coll]
-  (let [avain-fn #(apply dissoc % kentat)
-        listat (groupings avain-fn #(select-keys % kentat) coll)]
-    (for [x (distinct (map avain-fn coll))]
-      (assoc x avain (listat x)))))
