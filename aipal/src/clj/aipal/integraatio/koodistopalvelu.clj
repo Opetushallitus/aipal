@@ -61,7 +61,6 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn koodi->opintoala [koodi]
   (koodi->kasite koodi :opintoalatunnus))
 
-; https://virkailija.opintopolku.fi/koodisto-service/rest/json/koulutusalaoph2002/koodi?koodistoVersio=1
 (defn ^:private hae-koodit
   "Hakee kaikki koodit annetusta koodistosta ja asettaa koodin koodiarvon avaimeksi arvokentta"
   ([asetukset koodisto] (get-json-from-url (str (:url asetukset) koodisto "/koodi")))
@@ -139,8 +138,6 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
   (let [muuttuneet (set/difference (into #{} uudet) (into #{} vanhat))
         vanhat-idt (map tunniste vanhat)
         lisattavat (remove #(in? vanhat-idt (tunniste %)) muuttuneet)]
-    (log/info "LISÄTÄÄN: " (count lisattavat))
-    (log/info "PÄIVITETÄÄN: " (count (set/difference muuttuneet lisattavat)))
     {:lisattavat    lisattavat
      :paivitettavat (set/difference muuttuneet lisattavat)}))
 
@@ -220,8 +217,8 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn ^:integration-api tallenna-tutkinnot! [tutkinnot]
   (logita-puutteelliset-tutkinnot tutkinnot)
-  (tallenna-uudet-tutkinnot! (filter :opintoala (:lisattavat tutkinnot)))
-  (tallenna-muuttuneet-tutkinnot! (filter :opintoala (:paivitettavat tutkinnot))))
+  (tallenna-uudet-tutkinnot! (:lisattavat tutkinnot))
+  (tallenna-muuttuneet-tutkinnot! (:paivitettavat tutkinnot)))
 
 (defn ^:integration-api tallenna-uudet-tutkintotyypit! [tutkintotyypit]
   (doseq [tutkintotyyppi tutkintotyypit]
