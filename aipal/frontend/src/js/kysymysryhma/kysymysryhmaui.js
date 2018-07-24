@@ -22,7 +22,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
                                                'yhteiset.palvelut.kayttooikeudet',
                                                'yhteiset.palvelut.tallennusMuistutus',
                                                'yhteiset.palvelut.varmistus',
-                                               'yhteiset.suodattimet.numerot'])
+                                               'yhteiset.suodattimet.numerot',
+                                               'yhteiset.suodattimet.tutkinto'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider

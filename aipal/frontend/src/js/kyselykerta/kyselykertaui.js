@@ -17,7 +17,7 @@
 angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.bootstrap','ngRoute', 'rest.tutkinto', 'rest.koulutustoimija', 'rest.kieli',
                                              'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
                                              'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus',
-                                             'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.varmistus'])
+                                             'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.varmistus', 'yhteiset.suodattimet.tutkinto'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
