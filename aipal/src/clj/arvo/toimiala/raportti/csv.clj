@@ -13,8 +13,8 @@
 (def translations {:fi {:vastaajatunnus "Vastaajatunnus" :vastausaika "Vastausaika"
                         :tunnus "Vastaajatunnus" :luotuaika "luotuaika"
                         :voimassa_alkupvm "Voimassa alkaen" :voimassa_loppupvm "Voimassaolo päättyy"
-                        :koulutuksen_jarjestaja "Koulutuksen järjestäjä"
-                        :tutkintotunnus "Tutkinto" :vastauksia "Vastauksia" :vastaajien_lkm "Vastaajien lkm"}
+                        :valmistavan_koulutuksen_jarjestaja "Koulutuksen järjestäjä"
+                        :tutkintotunnus "Tutkinto" :vastausten_lkm "Vastauksia" :vastaajien_lkm "Vastaajien lkm"}
                    :sv {:vastaajatunnus "Svarskod" :vastausaika "Svarstid"}
                    :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"}})
 
@@ -211,7 +211,7 @@
                  :delimiter delimiter
                  :end-of-line "\r\n"))))
 
-(def vastaajatunnus-kentat [:tunnus :luotuaika :voimassa_alkupvm :voimassa_loppupvm :koulutuksen_jarjestaja :tutkintotunnus :vastauksia :vastaajien_lkm])
+(def vastaajatunnus-kentat [:tunnus :luotuaika :voimassa_alkupvm :voimassa_loppupvm :valmistavan_koulutuksen_jarjestaja :vastausten_lkm :vastaajien_lkm])
 
 (defn vastaajatunnus-header [kyselyn-taustatiedot lang]
   (concat (map (partial translate (keyword lang)) vastaajatunnus-kentat)
