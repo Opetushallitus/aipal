@@ -26,14 +26,14 @@ angular.module('rest.tutkinto', [])
       haeVanhentuneetTutkinnotHierarkiassa: function() {
         return $http.get('api/tutkinto/vanhentuneet', {params: {nocache: Date.now()}});
       },
-      koulutustoimijanTutkinnot: function() {
-        return $http.get('api/tutkinto/koulutustoimija', {params: {nocache: Date.now()}});
+      koulutustoimijanTutkinnot: function(kyselytyyppi) {
+        return $http.get('api/tutkinto/koulutustoimija'+'?kyselytyyppi='+kyselytyyppi, {params: {nocache: Date.now()}});
       },
       haeTutkinnonJarjestajat: function(tutkintotunnus) {
         return $http.get('api/tutkinto/jarjestajat/'+tutkintotunnus, {params: {nocache: Date.now()}})
       },
-      haeKoulutustoimijanTutkinnot: function(ytunnus) {
-        return $http.get('api/tutkinto/koulutustoimija/'+ytunnus, {params: {nocache: Date.now()}});
+      haeKoulutustoimijanTutkinnot: function(ytunnus, kyselytyyppi) {
+        return $http.get('api/tutkinto/koulutustoimija/'+ytunnus+'?kyselytyyppi='+kyselytyyppi, {params: {nocache: Date.now()}});
       }
     };
   }]);

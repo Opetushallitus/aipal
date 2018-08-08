@@ -35,10 +35,9 @@ SELECT t.*,
 FROM tutkinto t
 INNER JOIN opintoala oa ON t.opintoala = oa.opintoalatunnus
 INNER JOIN koulutusala ka ON oa.koulutusala = ka.koulutusalatunnus
-LEFT JOIN oppilaitostyyppi_tutkintotyyppi ot_tt ON ot_tt.tutkintotyyppi = t.tutkintotyyppi
 LEFT JOIN koulutustoimija_ja_tutkinto ktt ON t.tutkintotunnus = ktt.tutkinto
 WHERE ktt.koulutustoimija = :koulutustoimija
---~(if (:oppilaitostyypit params) "OR ot_tt.oppilaitostyyppi IN (:v*:oppilaitostyypit)")
+--~(if (:tutkintotyypit params) "OR t.tutkintotyyppi IN (:v*:tutkintotyypit)")
 ;
 
 -- :name hae-tutkinnon-jarjestajat :? :*
