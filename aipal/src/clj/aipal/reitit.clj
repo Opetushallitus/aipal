@@ -34,6 +34,8 @@
             aipal.rest-api.koulutustoimija
             aipal.rest-api.tiedote
             aipal.rest-api.vipunen
+            arvo.rest-api.export
+            [arvo.auth :refer [wrap-authentication]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn reitit [asetukset]
@@ -87,4 +89,5 @@
     (context "/api/tiedote" [] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (context "/api/csv" [] aipal.rest-api.raportti.kysely/csv)
     (context "/api/vipunen" [] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
+    (context "/api/export/v1" [] :middleware [#(wrap-authentication %)] arvo.rest-api.export/v1)
     (r/not-found "Not found")))

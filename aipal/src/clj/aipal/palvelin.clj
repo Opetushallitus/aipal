@@ -81,6 +81,8 @@
   "Swagger API resources, not authenticated using CAS"
   #{"/api-docs" "/swagger.json" "/fi/swagger.json"})
 
+(def export-api
+  #{"/api/vipunen" "/api/export"})
 
 (def public-api
   "Public API methods, not authenticated using CAS"
@@ -99,9 +101,9 @@
             fake-auth-handler (anon-auth/auth-cas-user cas-handler ((:headers request) "uid"))
             auth-handler (cas cas-handler #(cas-server-url asetukset) #(service-url asetukset) :no-redirect? ajax-request?)]
        (cond
-         (.startsWith (path-info request) "/api/vipunen")
+         (some #(.startsWith (path-info request) %) export-api)
          (do
-           (log/info "Vipunen API, only Basic Auth")
+           (log/info "Vipunen or Export API, only Basic Auth")
            (handler request))
          (some #(.startsWith (path-info request) %) swagger-resources)
          (do
