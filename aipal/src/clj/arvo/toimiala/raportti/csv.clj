@@ -7,9 +7,14 @@
             [arvo.db.core :as db]
             [aipal.arkisto.kysely :refer [aseta-jatkokysymysten-jarjestys hae-kyselyn-kysymykset]]
             [clj-time.core :as time]
-            [clj-time.format :as f]))
+            [clj-time.format :as f]
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
-(def translations {:fi {:vastaajatunnus "Vastaajatunnus" :vastausaika "Vastausaika"}
+(def translations {:fi {:vastaajatunnus "Vastaajatunnus" :vastausaika "Vastausaika"
+                        :tunnus "Vastaajatunnus" :luotuaika "luotuaika"
+                        :voimassa_alkupvm "Voimassa alkaen" :voimassa_loppupvm "Voimassaolo päättyy"
+                        :koulutuksen_jarjestaja "Koulutuksen järjestäjä"
+                        :tutkintotunnus "Tutkinto" :vastauksia "Vastauksia" :vastaajien_lkm "Vastaajien lkm"}
                    :sv {:vastaajatunnus "Svarskod" :vastausaika "Svarstid"}
                    :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"}})
 
@@ -23,7 +28,8 @@
       (get-in translations [:fi prop])))
 
 (defn format-date [datetime]
-  (f/unparse (f/formatters :date) datetime))
+  (when datetime
+    (f/unparse (f/formatters :date) datetime)))
 
 (def delimiter \;)
 
@@ -204,3 +210,28 @@
       (write-csv (muuta-kaikki-stringeiksi (cons header vastausrivit))
                  :delimiter delimiter
                  :end-of-line "\r\n"))))
+
+(def vastaajatunnus-kentat [:tunnus :luotuaika :voimassa_alkupvm :voimassa_loppupvm :koulutuksen_jarjestaja :tutkintotunnus :vastauksia :vastaajien_lkm])
+
+(defn vastaajatunnus-header [kyselyn-taustatiedot lang]
+  (concat (map (partial translate (keyword lang)) vastaajatunnus-kentat)
+          (map (partial translate-field "kentta" lang) kyselyn-taustatiedot)))
+
+(defn vastaajatunnus-rivi [vastaajatunnus kyselyn-taustatiedot]
+  (concat (-> (select-keys-or-nil vastaajatunnus vastaajatunnus-kentat)
+              (update :voimassa_alkupvm format-date)
+              (update :voimassa_loppupvm format-date)
+              (update :luotuaika format-date)
+              vals)
+          (vals (select-keys-or-nil (:taustatiedot vastaajatunnus) (map (comp keyword :kentta_id) kyselyn-taustatiedot)))))
+
+(defn vastaajatunnus-csv [kyselykertaid lang]
+  (let [tunnukset (db/hae-vastaajatunnus {:kyselykertaid kyselykertaid})
+        kyselyn-taustatiedot (filter #(get-in % [:raportointi :csv]) (db/kyselyn-kentat {:kyselykertaid kyselykertaid}))
+        data (concat
+               [(vastaajatunnus-header kyselyn-taustatiedot lang)]
+               (map #(vastaajatunnus-rivi % kyselyn-taustatiedot) tunnukset))]
+    (write-csv (muuta-kaikki-stringeiksi data)
+               :delimiter delimiter
+               :end-of-line "\r\n")))
+

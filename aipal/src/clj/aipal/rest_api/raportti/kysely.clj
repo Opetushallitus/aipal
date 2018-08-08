@@ -23,7 +23,7 @@
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.taustakysymykset :as taustakysymykset]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
-            [arvo.toimiala.raportti.csv :refer [kysely-csv kysely-csv-vastauksittain]]
+            [arvo.toimiala.raportti.csv :refer [kysely-csv kysely-csv-vastauksittain vastaajatunnus-csv]]
             [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (defn ^:private muodosta-kyselyn-raportti-parametreilla
@@ -70,8 +70,7 @@
     (let [raportti (muodosta-kyselyn-raportti-parametreilla kyselyid parametrit)
           valtakunnallinen-raportti (some-> (muodosta-valtakunnallinen-vertailuraportti kyselyid parametrit)    ;; Suurin osa ajasta kuluu täällä
                                       (lisaa-raporttiin-nimi)
-                                      (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti)
-                                      (taustakysymykset/valitse-kyselyn-taustakysymykset raportti))]
+                                      (valitse-valtakunnalliseen-kyselyn-kysymysryhmat raportti))]
       [raportti valtakunnallinen-raportti])
     (muodosta-kyselyn-tutkintojen-raportit-parametreilla kyselyid parametrit)))
 
@@ -116,7 +115,12 @@
        :query-params [{lang :- s/Str "fi"}]
        :kayttooikeus [:kysely-raportti kyselyid]
        (let [csv-data (kysely-csv-vastauksittain kyselyid lang)]
-         (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data)))))
+         (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
+  (GET "/vastaajatunnus/:kyselykertaid" []
+       :path-params [kyselykertaid :- s/Int]
+       :kayttooikeus :vastaajatunnus
+       (let [csv-data (vastaajatunnus-csv kyselykertaid "fi")]
+         (csv-download-response csv-data (str "vastaajatunnukset -" kyselykertaid ".csv")))))
 
 (defn csv-reitit [asetukset]
   (yhteinen/wrap-muunna-raportti-json-param
