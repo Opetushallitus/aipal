@@ -21,9 +21,9 @@
             [arvo.db.core :refer [*db*] :as db]
             [clj-time.coerce :as c]))
 
-(def kyselytyyppi-tutkintotyypit {1 [6 7 12]
-                                  3 [6 7 12 13 14 15 16]
-                                  5 [13 14 15 16]})
+(def kyselytyyppi-tutkintotyypit {1 ["6" "7" "12"]
+                                  3 ["6" "7" "12" "13" "14" "15" "16"]
+                                  6 ["13" "14" "15" "16"]})
 
 (defn ^:integration-api lisaa! [tutkinto]
   (db/lisaa-tutkinto! tutkinto))
