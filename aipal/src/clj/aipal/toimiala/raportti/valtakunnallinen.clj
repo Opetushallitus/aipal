@@ -55,8 +55,8 @@
                      :jatkokysymys.ei_teksti_fi
                      :jatkokysymys.ei_teksti_sv
                      :jatkokysymys.ei_teksti_en))
-    (map (comp aseta-kysymyksen-jarjestys yhdista-taustakysymysten-kysymykset))
-    (sort kysymysten-jarjestys-vertailu)))
+    (map yhdista-taustakysymysten-kysymykset)
+    (sort-by :jarjestys)))
 
 (defn hae-valtakunnalliset-kysymysryhmat [taustakysymysryhmaid]
   (yhdista-valtakunnalliset-taustakysymysryhmat
@@ -75,7 +75,7 @@
   (reduce (fn [query {:keys [id arvot]}]
             (sql/where query (sql/sqlfn :exists (sql/subselect [:vastaus :v1]
                                                                (sql/where {:v1.vastaajaid :vastaus.vastaajaid
-                                                                           :v1.kysymysid [in (mappaa-kysymysid id)]
+                                                                           :v1.kysymysid [in [id]]
                                                                            :v1.numerovalinta [in arvot]})))))
           query
           ehdot))
@@ -95,7 +95,7 @@
     (sql/select* [:vastaus_jatkovastaus_valtakunnallinen_view :vastaus])
     (sql/join :inner :vastaaja_taustakysymysryhma_view
               {:vastaus.vastaajaid :vastaaja_taustakysymysryhma_view.vastaajaid
-               :vastaaja_taustakysymysryhma_view.taustakysymysryhmaid [in (mappaa-kysymysryhmaid taustakysymysryhmaid)]})
+               :vastaaja_taustakysymysryhma_view.taustakysymysryhmaid [in [taustakysymysryhmaid]]})
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi koulutustoimijat rahoitusmuoto suorituskieli oppilaitokset) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi rahoitusmuoto suorituskieli oppilaitokset) (sql/join :inner :vastaajatunnus
@@ -179,7 +179,7 @@
       tutkintotyyppi (rajaa-vastaajatunnukset-tutkintotyypille tutkintotyyppi)
       rahoitusmuoto (sql/where {:vastaajatunnus.rahoitusmuotoid rahoitusmuoto})
       suorituskieli (sql/where {:vastaajatunnus.suorituskieli suorituskieli}))
-    (sql/where {:kysymysryhma.kysymysryhmaid [in (mappaa-kysymysryhmaid kysymysryhmaid)]})
+    (sql/where {:kysymysryhma.kysymysryhmaid [in [kysymysryhmaid]]})
     (rajaa-vastaajatunnukset-ajalle alkupvm loppupvm)
     (sql/aggregate (sum :vastaajatunnus.vastaajien_lkm) :vastaajia)
     sql/exec
@@ -231,24 +231,24 @@
 
 (defn muodosta [parametrit]
   (let [alkupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_alkupvm parametrit)))
-       loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
-       rajaukset (:kysymykset parametrit)
-       tutkintotunnus (when (= "tutkinto" (:tutkintorakennetaso parametrit)) (first (:tutkinnot parametrit)))
-       opintoalatunnus (when (= "opintoala" (:tutkintorakennetaso parametrit)) (first (:opintoalat parametrit)))
-       koulutusalatunnus (when (= "koulutusala" (:tutkintorakennetaso parametrit)) (first (:koulutusalat parametrit)))
-       koulutustoimijat (not-empty (:koulutustoimijat parametrit))
-       oppilaitokset (not-empty (:oppilaitokset parametrit))
-       tutkintotyyppi (:tutkintotyyppi parametrit)
-       rahoitusmuoto (:rahoitusmuotoid parametrit)
-       suorituskieli (:suorituskieli parametrit)
-       taustakysymysryhmaid (Integer/parseInt (:taustakysymysryhmaid parametrit))
-       kysymysryhmat (liita-vastaajien-maksimimaarat
-                       (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
-                       alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi rahoitusmuoto suorituskieli)
-       kysymykset (hae-valtakunnalliset-kysymykset)
+        loppupvm (joda-date->sql-date (parse-iso-date (:vertailujakso_loppupvm parametrit)))
+        rajaukset (:kysymykset parametrit)
+        tutkintotunnus (when (= "tutkinto" (:tutkintorakennetaso parametrit)) (first (:tutkinnot parametrit)))
+        opintoalatunnus (when (= "opintoala" (:tutkintorakennetaso parametrit)) (first (:opintoalat parametrit)))
+        koulutusalatunnus (when (= "koulutusala" (:tutkintorakennetaso parametrit)) (first (:koulutusalat parametrit)))
+        koulutustoimijat (not-empty (:koulutustoimijat parametrit))
+        oppilaitokset (not-empty (:oppilaitokset parametrit))
+        tutkintotyyppi (:tutkintotyyppi parametrit)
+        rahoitusmuoto (:rahoitusmuotoid parametrit)
+        suorituskieli (:suorituskieli parametrit)
+        taustakysymysryhmaid (Integer/parseInt (:taustakysymysryhmaid parametrit))
+        kysymysryhmat (liita-vastaajien-maksimimaarat
+                        (hae-valtakunnalliset-kysymysryhmat taustakysymysryhmaid)
+                        alkupvm loppupvm koulutustoimijat koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi rahoitusmuoto suorituskieli)
+        kysymykset (hae-valtakunnalliset-kysymykset)
        ;; Suurin osa ajasta kuluu raportti-queryssa
-       data (raportti-query rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat oppilaitokset koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi rahoitusmuoto suorituskieli)
-       raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
+        data (raportti-query rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat oppilaitokset koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi rahoitusmuoto suorituskieli)
+        raportti (raportointi/muodosta-raportti kysymysryhmat kysymykset data)]
    (merge
      (raportin-otsikko parametrit)
      {:luontipvm (time/now)

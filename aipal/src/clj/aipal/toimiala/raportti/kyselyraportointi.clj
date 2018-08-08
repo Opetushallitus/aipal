@@ -160,8 +160,8 @@
                 :jatkokysymys.ei_teksti_en)
     sql/exec
     (->>
-      (map (comp aseta-kysymyksen-jarjestys yhdista-taustakysymysten-kysymykset))
-      (sort kysymysten-jarjestys-vertailu))))
+      (map yhdista-taustakysymysten-kysymykset)
+      (sort-by :jarjestys))))
 
 (defn hae-kysymysryhmat [{:keys [kyselykertaid kyselyid]}]
   (->
