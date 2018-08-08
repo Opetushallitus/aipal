@@ -122,9 +122,11 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         $scope.kielet = _.pluck(kielet, 'kieli');
       });
 
-      Tutkinto.haeVoimassaolevatTutkinnotListassa().success(function(tutkinnot) {
-        $scope.tutkinnot = tutkinnot;
-      });
+      function haeTutkinnot(kysely){
+        Tutkinto.koulutustoimijanTutkinnot(kysely.tyyppi).success(function(tutkinnot) {
+          $scope.tutkinnot = tutkinnot;
+        });
+      }
 
       Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
         $scope.koulutustoimijat = koulutustoimijat;
@@ -137,6 +139,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = pvm.parsePvm(kysely);
         if(!kysely.kaytettavissa) { $scope.muokkaustila = false; }
+        haeTutkinnot(kysely)
       }).error(function() {
         $location.url('/');
       });
@@ -328,8 +331,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         })
       }
 
-      function haeJarjestajanTutkinnot(ytunnus) {
-        Tutkinto.haeKoulutustoimijanTutkinnot(ytunnus).success(function (tutkinnot){
+      function haeJarjestajanTutkinnot(ytunnus, kyselytyyppi) {
+        console.log("KT"+ kyselytyyppi)
+        Tutkinto.haeKoulutustoimijanTutkinnot(ytunnus, kyselytyyppi).success(function (tutkinnot){
           $scope.tutkinnot = tutkinnot;
         })
       }
@@ -358,7 +362,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       $scope.$watch('vastaajatunnus.hankintakoulutuksen_toteuttaja', function (koulutustoimija){
         if(koulutustoimija && laajennettu){
-          haeJarjestajanTutkinnot(koulutustoimija.ytunnus);
+          haeJarjestajanTutkinnot(koulutustoimija.ytunnus, kyselytyyppi);
           $scope.vastaajatunnus.tutkinto = null;
         }
       });

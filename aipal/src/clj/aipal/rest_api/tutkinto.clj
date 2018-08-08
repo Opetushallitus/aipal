@@ -33,12 +33,14 @@
     (response-or-404 (tutkinto/hae-vanhentuneet-tutkinnot)))
   (GET "/koulutustoimija" []
     :kayttooikeus :tutkinto
+    :query-params [kyselytyyppi :- s/Int]
     (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
-      (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus))))
+      (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi))))
   (GET "/koulutustoimija/:y-tunnus" []
     :kayttooikeus :tutkinto
     :path-params [y-tunnus :- String]
-    (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus)))
+    :query-params [kyselytyyppi :- s/Int]
+    (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi)))
   (GET "/jarjestajat/:tutkintotunnus" []
     :path-params [tutkintotunnus :- String]
     :kayttooikeus :tutkinto

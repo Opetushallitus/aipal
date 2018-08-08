@@ -21,6 +21,10 @@
             [arvo.db.core :refer [*db*] :as db]
             [clj-time.coerce :as c]))
 
+(def kyselytyyppi-tutkintotyypit {1 [6 7 12]
+                                  3 [6 7 12 13 14 15 16]
+                                  5 [13 14 15 16]})
+
 (defn ^:integration-api lisaa! [tutkinto]
   (db/lisaa-tutkinto! tutkinto))
 
@@ -33,10 +37,10 @@
 (defn hae [tutkintotunnus]
   (db/hae-tutkinto {:tutkintotunnus tutkintotunnus}))
 
-(defn hae-koulutustoimijan-tutkinnot [y-tunnus]
-  (let [oppilaitostyypit (:oppilaitostyypit *kayttaja*)]
+(defn hae-koulutustoimijan-tutkinnot [y-tunnus kyselytyyppi]
+  (let [tutkintotyypit (get kyselytyyppi-tutkintotyypit kyselytyyppi)]
     (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
-                                         (when (not-empty oppilaitostyypit) {:oppilaitostyypit oppilaitostyypit})))))
+                                         (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit})))))
 
 (defn hae-tutkinnon-jarjestajat [tutkintotunnus]
   (db/hae-tutkinnon-jarjestajat {:tutkintotunnus tutkintotunnus}))
@@ -63,7 +67,7 @@
     (sort-by :koulutusalatunnus koulutusalat)))
 
 (defn hae-tutkinnot []
-  (hae-koulutustoimijan-tutkinnot (:aktiivinen-koulutustoimija *kayttaja*)))
+  (hae-koulutustoimijan-tutkinnot (:aktiivinen-koulutustoimija *kayttaja*) nil))
 
 (defn hae-voimassaolevat-tutkinnot-listana []
   (->>
