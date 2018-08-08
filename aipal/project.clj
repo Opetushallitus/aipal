@@ -29,6 +29,7 @@
                  [metosin/compojure-api "1.0.0"]
                  [buddy/buddy-core "0.12.1"]
                  [buddy/buddy-auth "0.13.0"]
+                 [buddy/buddy-hashers "1.3.0"]
                  [org.clojars.noidi/clj-cas-client "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1" :exclusions [ring]]
                  [org.clojars.pntblnk/clj-ldap "0.0.9"]
                  [org.clojure/clojure "1.8.0"]

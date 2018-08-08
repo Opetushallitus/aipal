@@ -1,0 +1,35 @@
+(ns arvo.auth
+  (:require [clojure.string :as str]
+            [arvo.db.core :refer [*db*] :as db]
+            [buddy.hashers :as hashers]
+            [clojure.tools.logging :as log])
+  (:import java.util.Base64))
+
+(defn parse-credentials [request]
+  (when-let [auth-header (get-in request [:headers "authorization"])]
+    (let [decoder (Base64/getMimeDecoder)
+          [_ auth-encoded] (re-matches #"Basic ([A-z0-9+/=]*)" auth-header)]
+      (when-not (str/blank? auth-encoded)
+        (try
+          (->
+            (.decode decoder auth-encoded)
+            (String. "UTF-8")
+            (str/split #":"))
+          (catch IllegalArgumentException _))))))
+
+(defn check-credentials [credentials]
+  (let [saved-credentials (db/hae-api-kayttaja {:tunnus (first credentials)})]
+    (log/info "Checking credentials " (hashers/check (second credentials) (:salasana saved-credentials)))
+    (when (hashers/check (second credentials) (:salasana saved-credentials))
+      saved-credentials)))
+
+(defn wrap-authentication [handler]
+  (fn [request]
+    (let [credentials (parse-credentials request)
+          api-user (check-credentials credentials)]
+      (if api-user
+        (handler (assoc request :organisaatio (:organisaatio api-user)))
+        {:status 401
+         :headers {"www-authenticate" "Basic realm=\"restricted\""}}))))
+
+
