@@ -243,19 +243,19 @@
 
 (defn hae-taustakysymysryhma
   [kysymysryhmaid]
-  (if (= kysymysryhmaid suorittamisvaihe-id)
-    (let [hakeutumisvaihe (hae hakeutumisvaihe-id)
-          suorittamisvaihe (hae suorittamisvaihe-id)
-          kysymykset (->> (mapcat :kysymykset [suorittamisvaihe hakeutumisvaihe])
-                       (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid))
-                       (map lisaa-selite-taustakysymykseen)
-                       ;(map aseta-kysymyksen-jarjestys)
-                       (sort-by :jarjestys))]
-      (assoc suorittamisvaihe
-             :nimi_fi "Näyttötutkintojen taustakysymykset"
-             :nimi_sv "Bakgrundsfrågor gällande fristående examina"
-             :kysymykset kysymykset))
-    (hae kysymysryhmaid)))
+  ;(if (= kysymysryhmaid suorittamisvaihe-id)
+  ;  (let [hakeutumisvaihe (hae hakeutumisvaihe-id)
+  ;        suorittamisvaihe (hae suorittamisvaihe-id)
+  ;        kysymykset (->> (mapcat :kysymykset [suorittamisvaihe hakeutumisvaihe])
+  ;                     (remove (comp valtakunnalliset-duplikaattikysymykset :kysymysid))
+  ;                     ;(map lisaa-selite-taustakysymykseen)
+  ;                     ;(map aseta-kysymyksen-jarjestys)
+  ;                     (sort-by :jarjestys))]
+  ;    (assoc suorittamisvaihe
+  ;           :nimi_fi "Näyttötutkintojen taustakysymykset"
+  ;           :nimi_sv "Bakgrundsfrågor gällande fristående examina"
+  ;           :kysymykset kysymykset))
+  (hae kysymysryhmaid))
 
 (defn hae-kysymysryhman-kysymyksien-idt
   [kysymysryhmaid]

@@ -19,7 +19,6 @@
             [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.toimiala.raportti.taustakysymykset :refer [kysymysten-jarjestys-vertailu]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
@@ -218,7 +217,7 @@
                      (kasittele-kysymys kysymys kysymyksen-vastaukset))
         kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
     (for [kysymysryhma kysymysryhmat
-          :let [kysymykset (sort kysymysten-jarjestys-vertailu (kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma)))
+          :let [kysymykset (sort-by :jarjestys (kysymysryhmien-kysymykset (:kysymysryhmaid kysymysryhma)))
                 vastaajat (reduce clojure.set/union (map :vastaajat kysymykset))]]
       (assoc kysymysryhma :kysymykset (map valitse-kysymyksen-kentat kysymykset)
                           :vastaajat vastaajat))))
