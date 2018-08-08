@@ -50,7 +50,7 @@ SELECT vt.*, vt.kaytettavissa,
 -- drop old columns, check migration to jsonb
 
 t.nimi_fi, t.nimi_sv, t.nimi_en, kaytettavissa(vt) AS kaytettavissa, (vt.taustatiedot ->> 'koulutusmuoto') AS KM,
-COALESCE(COALESCE(vt.voimassa_loppupvm, kk.voimassa_loppupvm, k.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE) AS muokattavisssa,
+COALESCE(COALESCE(vt.voimassa_loppupvm, kk.voimassa_loppupvm, k.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE) AS muokattavissa,
 (SELECT count(*) FROM vastaaja WHERE vastannut = TRUE AND vastaajatunnusid = vt.vastaajatunnusid) AS vastausten_lkm,
 o.oppilaitoskoodi, o.nimi_fi AS oppilaitos_nimi_fi, o.nimi_sv AS oppilaitos_nimi_sv, o.nimi_en AS oppilaitos_nimi_en,
 kt.ytunnus, kt.nimi_fi AS koulutustoimija_nimi_fi, kt.nimi_sv AS koulutustoimija_nimi_sv, kt.nimi_en AS koulutustoimija_nimi_en,
