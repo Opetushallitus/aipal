@@ -33,8 +33,8 @@ SELECT t.*,
     oa.opintoalatunnus, oa.nimi_fi AS opintoala_nimi_fi, oa.nimi_sv AS opintoala_nimi_sb, oa.nimi_en AS opintoala_nimi_en,
     ka.koulutusalatunnus, ka.nimi_fi AS koulutusala_nimi_fi, ka.nimi_sv AS koulutusala_nimi_sv, ka.nimi_en AS koulutusala_nimi_en
 FROM tutkinto t
-INNER JOIN opintoala oa ON t.opintoala = oa.opintoalatunnus
-INNER JOIN koulutusala ka ON oa.koulutusala = ka.koulutusalatunnus
+LEFT JOIN opintoala oa ON t.opintoala = oa.opintoalatunnus
+LEFT JOIN koulutusala ka ON oa.koulutusala = ka.koulutusalatunnus
 LEFT JOIN koulutustoimija_ja_tutkinto ktt ON t.tutkintotunnus = ktt.tutkinto
 WHERE ktt.koulutustoimija = :koulutustoimija
 --~(if (:tutkintotyypit params) "OR t.tutkintotyyppi IN (:v*:tutkintotyypit)")
