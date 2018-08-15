@@ -9,5 +9,3 @@ CREATE TABLE api_kayttajat(
   salasana TEXT NOT NULL,
   organisaatio TEXT NOT NULL REFERENCES koulutustoimija(ytunnus)
 );
-
-GRANT ALL PRIVILEGES ON TABLE api_kayttajat TO arvo_user;
