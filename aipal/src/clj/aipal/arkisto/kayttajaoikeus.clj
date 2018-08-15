@@ -37,7 +37,7 @@
   ([]
    (hae-oikeudet (:oid *kayttaja*))))
 
-(defn paivita-roolit! [tx k]
+(defn paivita-roolit! [tx k impersonoitu-oid]
   (let [vanhat-roolit (->> (db/hae-roolit tx {:kayttaja (:oid k)})
                           (map #(select-keys % [:rooli :organisaatio]))
                           (into #{}))
@@ -50,13 +50,13 @@
       (if (contains? vanhat-roolit (select-keys r [:rooli :organisaatio]))
         (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa true}))
         (db/lisaa-rooli! tx (assoc r :kayttaja (:oid k)))))
-    (db/hae-voimassaolevat-roolit tx {:kayttajaOid (:oid k)})))
+    (db/hae-voimassaolevat-roolit tx {:kayttajaOid (or impersonoitu-oid (:oid k))})))
 
 
-(defn paivita-kayttaja! [k]
+(defn paivita-kayttaja! [k impersonoitu-oid]
   (jdbc/with-db-transaction [tx *db*]
     (let [olemassa? (db/hae-kayttaja {:kayttajaOid (:oid k)})]
       (if olemassa?
         (db/paivita-kayttaja! tx {:kayttajaOid (:oid k) :etunimi (:etunimi k) :sukunimi (:sukunimi k)})
         (db/lisaa-kayttaja! tx (assoc k :kayttajaOid (:oid k)))))
-    (assoc k :roolit (paivita-roolit! tx k))))
+    (assoc k :roolit (paivita-roolit! tx k impersonoitu-oid))))

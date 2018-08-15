@@ -41,18 +41,20 @@
 (defn with-kayttaja* [uid impersonoitu-oid rooli f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
   (if-let [k (db/hae-voimassaoleva-kayttaja {:uid uid :voimassaolo (:kayttooikeus-tarkistusvali @asetukset)})]
-    (autentikoi-kayttaja (assoc k :roolit (db/hae-voimassaolevat-roolit {:kayttajaOid (:oid k)})) impersonoitu-oid rooli f)
-    (autentikoi-kayttaja (hae-kayttaja-kayttoikeuspalvelusta uid) impersonoitu-oid rooli f)))
+    (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
+          roolit (db/hae-voimassaolevat-roolit {:kayttajaOid aktiivinen-oid})]
+      (autentikoi-kayttaja (assoc k :roolit roolit) impersonoitu-oid rooli f))
+    (autentikoi-kayttaja (hae-kayttaja-kayttoikeuspalvelusta uid impersonoitu-oid) impersonoitu-oid rooli f)))
 
 (defmacro with-kayttaja [uid impersonoitu-oid rooli & body]
   `(with-kayttaja* ~uid ~impersonoitu-oid ~rooli (fn [] ~@body)))
 
-(defn hae-kayttaja-kayttoikeuspalvelusta [uid]
+(defn hae-kayttaja-kayttoikeuspalvelusta [uid impersonoitu-oid]
   (log/info "Yritetään hakea Käyttöoikeuspalvelusta käyttäjä" uid)
   (with-kayttaja integraatio-uid nil nil
     (let [oid->ytunnus (into {} (map (juxt :oid :ytunnus) (db/hae-oid->ytunnus)))
           kayttaja (kayttooikeuspalvelu/kayttaja uid ldap-ryhma->rooli oid->ytunnus)]
       (if (:voimassa kayttaja)
-        (kayttajaoikeus-arkisto/paivita-kayttaja! kayttaja)
+        (kayttajaoikeus-arkisto/paivita-kayttaja! kayttaja impersonoitu-oid)
         (do (db/passivoi-kayttaja! {:uid uid})
             (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid))))))))

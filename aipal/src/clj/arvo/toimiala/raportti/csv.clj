@@ -8,10 +8,12 @@
             [aipal.arkisto.kysely :refer [aseta-jatkokysymysten-jarjestys hae-kyselyn-kysymykset]]
             [clj-time.core :as time]
             [clj-time.format :as f]
+            [aipal.asetukset :refer [asetukset]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (def translations {:fi {:vastaajatunnus "Vastaajatunnus" :vastausaika "Vastausaika"
                         :tunnus "Vastaajatunnus" :luotuaika "luotuaika"
+                        :url "Vastauslinkki"
                         :voimassa_alkupvm "Voimassa alkaen" :voimassa_loppupvm "Voimassaolo päättyy"
                         :valmistavan_koulutuksen_jarjestaja "Koulutuksen järjestäjä"
                         :tutkintotunnus "Tutkinto" :vastausten_lkm "Vastauksia" :vastaajien_lkm "Vastaajien lkm"}
@@ -211,14 +213,17 @@
                  :delimiter delimiter
                  :end-of-line "\r\n"))))
 
-(def vastaajatunnus-kentat [:tunnus :luotuaika :voimassa_alkupvm :voimassa_loppupvm :valmistavan_koulutuksen_jarjestaja :vastausten_lkm :vastaajien_lkm])
+(def vastaajatunnus-kentat [:tunnus :url :luotuaika :voimassa_alkupvm :voimassa_loppupvm :valmistavan_koulutuksen_jarjestaja :vastausten_lkm :vastaajien_lkm])
 
 (defn vastaajatunnus-header [kyselyn-taustatiedot lang]
   (concat (map (partial translate (keyword lang)) vastaajatunnus-kentat)
           (map (partial translate-field "kentta" lang) kyselyn-taustatiedot)))
 
+(defn vastaajatunnus-url [tunnus]
+  (str (:vastaus-base-url @asetukset) "/" (:tunnus tunnus)))
+
 (defn vastaajatunnus-rivi [vastaajatunnus kyselyn-taustatiedot]
-  (concat (-> (select-keys-or-nil vastaajatunnus vastaajatunnus-kentat)
+  (concat (-> (select-keys-or-nil (assoc vastaajatunnus :url (vastaajatunnus-url vastaajatunnus)) vastaajatunnus-kentat)
               (update :voimassa_alkupvm format-date)
               (update :voimassa_loppupvm format-date)
               (update :luotuaika format-date)
