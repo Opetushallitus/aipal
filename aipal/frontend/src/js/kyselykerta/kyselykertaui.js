@@ -128,6 +128,20 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         });
       }
 
+      $scope.vain_omat = false;
+
+      function haeTunnukset (){
+        Vastaajatunnus.hae($routeParams.kyselykertaid, $scope.vain_omat)
+          .success(function(tunnukset) {
+            $scope.tunnukset = tunnukset;
+          });
+      }
+
+      $scope.toggleOmat = function(){
+        $scope.vain_omat = !$scope.vain_omat;
+        haeTunnukset();
+      }
+
       Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
         $scope.koulutustoimijat = koulutustoimijat;
       });
@@ -140,15 +154,15 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         $scope.kysely = pvm.parsePvm(kysely);
         if(!kysely.kaytettavissa) { $scope.muokkaustila = false; }
         haeTutkinnot(kysely)
+        $scope.vain_omat = kysely.tyyppi === 5
+        if(!$scope.uusi){
+          haeTunnukset();
+        }
       }).error(function() {
         $location.url('/');
       });
 
       if (!$scope.uusi) {
-        Vastaajatunnus.hae($routeParams.kyselykertaid)
-          .success(function(tunnukset) {
-            $scope.tunnukset = tunnukset;
-          });
         Kyselykerta.haeYksi($scope.kyselykertaid)
           .success(function(kyselykerta) {
             $scope.kyselykerta = pvm.parsePvm(kyselykerta);

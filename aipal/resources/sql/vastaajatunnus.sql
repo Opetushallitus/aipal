@@ -48,7 +48,6 @@ ORDER BY vt.luotuaika DESC;
 SELECT vt.*, vt.kaytettavissa,
 -- query vt.*, merge with taustatiedot??
 -- drop old columns, check migration to jsonb
-
 t.nimi_fi, t.nimi_sv, t.nimi_en, kaytettavissa(vt) AS kaytettavissa, (vt.taustatiedot ->> 'koulutusmuoto') AS KM,
 COALESCE(COALESCE(vt.voimassa_loppupvm, kk.voimassa_loppupvm, k.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE) AS muokattavissa,
 (SELECT count(*) FROM vastaaja WHERE vastannut = TRUE AND vastaajatunnusid = vt.vastaajatunnusid) AS vastausten_lkm,
@@ -65,6 +64,7 @@ JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN toimipaikka tp ON k.toimipaikka = tp.toimipaikkakoodi
 WHERE vt.kyselykertaid = :kyselykertaid
 --~ (if (:vastaajatunnusid params) "AND vastaajatunnusid = :vastaajatunnusid")
+--~ (if (:oid params) "AND vt.luotu_kayttaja = :oid")
 ORDER BY vt.luotuaika DESC;
 
 -- :name vastaajatunnus-olemassa? :? :1

@@ -17,8 +17,8 @@
 angular.module('rest.vastaajatunnus', ['ngResource'])
   .factory('Vastaajatunnus', ['$http', function($http) {
     return {
-      hae: function(kyselykertaid) {
-        return $http.get('api/vastaajatunnus/' + kyselykertaid, {params: {nocache: Date.now()}});
+      hae: function(kyselykertaid, omat) {
+        return $http.get('api/vastaajatunnus/' + kyselykertaid, {params: {nocache: Date.now(), omat: omat}});
       },
       luoUusia: function(kyselykertaid, vastaajatunnus) {
         return $http.post('api/vastaajatunnus/' + kyselykertaid, vastaajatunnus);

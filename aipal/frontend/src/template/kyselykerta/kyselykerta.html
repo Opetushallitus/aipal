@@ -73,6 +73,11 @@
     </a>
     <br/>
 
+    <label>
+        <input type="checkbox" ng-model="vain_omat" ng-change="toggleOmat()"/>
+        <span>{{'vastaajatunnus.nayta_omat' | i18n}}</span>
+    </label>
+
     <div class="center-block" ng-show="tunnukset.length>0">
       <div class="yhteenveto">
         <h2>{{'vastaajatunnus.vastauksia'|i18n}} {{getVastaustenLkm()}} / {{getVastaajienLkm()}}</h2>

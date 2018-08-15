@@ -29,7 +29,9 @@
         (db/lisaa-koulutustoimijan-tutkinto! tx {:ytunnus (:jarjestajaYtunnus koulutustoimija)
                                                  :tutkintotunnus tutkinto
                                                  :alkupvm (:alkupvm koulutustoimija)
-                                                 :loppupvm (:loppupvm koulutustoimija)})))
+                                                 :loppupvm (:loppupvm koulutustoimija)
+                                                 :laaja_oppisopimuskoulutus (if (= "1" (:laajaOppisopimuskoulutus koulutustoimija)) true false)})))
+
     (log/info "Koulutustoimijoiden tutkintojen päivitys Oivasta valmis")))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan

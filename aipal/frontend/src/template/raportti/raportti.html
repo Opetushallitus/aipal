@@ -149,35 +149,35 @@
 	         ng-if="kysymys.vastaustyyppi && kysymys.vastaustyyppi !== 'vapaateksti'">
 	</jakauma>
 
-    <div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">
-      <h3>{{$index + 1}}.1 {{i18n.raportit.jatkokysymykset}}</h3>
-      <div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">
-        <h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>
-        <vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"
-          ng-if="kysymys.jatkovastaukset.kylla.vastaustyyppi === 'likert_asteikko'"
-          jakauma="kysymys.jatkovastaukset.kylla.jakauma"
-          vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi"
-          nimet="tulos.nimet">
-        </vaittama-kaavio>
-        <jakauma kysymys="kysymys.jatkovastaukset.kylla" kysymysryhma="kysymysryhma" nimet="tulos.nimet"></jakauma>
-      </div>
-      <div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">
-        <h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>
-        <div ng-if="!printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n}})</div>
-        <table ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)"
-               class="report-table" 
-               ng-class="{ 'hidden-print': !printfreetext}">
-          <thead>
-            <tr><th>{{'raportti.vastaukset' |i18n}}: {{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th></tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vapaatekstivastaukset">
-              <td><span class="whitespace">{{vastaus.teksti[i]}}</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!--<div class="jatkokysymykset" ng-if="kysymys.jatkovastaukset">-->
+      <!--<h3>{{$index + 1}}.1 {{i18n.raportit.jatkokysymykset}}</h3>-->
+      <!--<div class="kylla-jatkokysymys" ng-if="kysymys.jatkovastaukset.kylla">-->
+        <!--<h4>{{kysymys.jatkovastaukset.kylla | lokalisoiKentta:'kysymys'}}</h4>-->
+        <!--<vaittama-kaavio ng-class="{ 'hidden-print': !printgraphs }"-->
+          <!--ng-if="kysymys.jatkovastaukset.kylla.vastaustyyppi === 'likert_asteikko'"-->
+          <!--jakauma="kysymys.jatkovastaukset.kylla.jakauma"-->
+          <!--vastaustyyppi="kysymys.jatkovastaukset.kylla.vastaustyyppi"-->
+          <!--nimet="tulos.nimet">-->
+        <!--</vaittama-kaavio>-->
+        <!--<jakauma kysymys="kysymys.jatkovastaukset.kylla" kysymysryhma="kysymysryhma" nimet="tulos.nimet"></jakauma>-->
+      <!--</div>-->
+      <!--<div class="ei-jatkokysymys" ng-if="kysymys.jatkovastaukset.ei">-->
+        <!--<h4>{{kysymys.jatkovastaukset.ei | lokalisoiKentta:'kysymys'}}</h4>-->
+        <!--<div ng-if="!printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n}})</div>-->
+        <!--<table ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)"-->
+               <!--class="report-table" -->
+               <!--ng-class="{ 'hidden-print': !printfreetext}">-->
+          <!--<thead>-->
+            <!--<tr><th>{{'raportti.vastaukset' |i18n}}: {{ tulos.nimet[i] | lokalisoiKentta:'nimi' }}</th></tr>-->
+          <!--</thead>-->
+          <!--<tbody>-->
+            <!--<tr ng-repeat="vastaus in kysymys.jatkovastaukset.ei.vapaatekstivastaukset">-->
+              <!--<td><span class="whitespace">{{vastaus.teksti[i]}}</span></td>-->
+            <!--</tr>-->
+          <!--</tbody>-->
+        <!--</table>-->
+      <!--</div>-->
+    <!--</div>-->
 
     <div ng-if="kysymys.vastaustyyppi === 'vapaateksti' && !printfreetext" class="visible-print">({{'raportti.ei_tulostettu' | i18n }})</div>
 

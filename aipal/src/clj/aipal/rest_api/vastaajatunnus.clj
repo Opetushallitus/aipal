@@ -84,8 +84,9 @@
 
   (GET "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
+    :query-params [{omat :- s/Bool false}]
     :kayttooikeus :vastaajatunnus
-    (response-or-404 (vastaajatunnus/hae-kyselykerralla kyselykertaid)))
+    (response-or-404 (vastaajatunnus/hae-kyselykerralla kyselykertaid omat)))
 
   (GET "/:kyselykertaid/tutkinto" []
     :path-params [kyselykertaid :- s/Int]

@@ -28,30 +28,6 @@
 
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
 
-;(def vastaajatunnus-select
-;  (-> (sql/select* taulut/vastaajatunnus)
-;    (sql/join :left taulut/tutkinto (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
-;    (sql/join :left taulut/koulutustoimija (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
-;    (sql/join :left taulut/oppilaitos (= :oppilaitos.oppilaitoskoodi :vastaajatunnus.valmistavan_koulutuksen_oppilaitos))
-;    (sql/join :kyselykerta (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
-;    (sql/join :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
-;    (sql/join :left taulut/toimipaikka (= :toimipaikka.toimipaikkakoodi :vastaajatunnus.valmistavan_koulutuksen_toimipaikka))
-;    (sql/fields :kyselykertaid :lukittu :rahoitusmuotoid :tunnus :tutkintotunnus :vastaajatunnusid :vastaajien_lkm :kaytettavissa :suorituskieli
-;                :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en :luotuaika
-;                :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_nimi_fi] [:koulutustoimija.nimi_sv :koulutustoimija_nimi_sv] [:koulutustoimija.nimi_en :koulutustoimija_nimi_en]
-;                :oppilaitos.oppilaitoskoodi [:oppilaitos.nimi_fi :oppilaitos_nimi_fi] [:oppilaitos.nimi_sv :oppilaitos_nimi_sv] [:oppilaitos.nimi_en :oppilaitos_nimi_en]
-;                [(sql/raw "COALESCE(COALESCE(vastaajatunnus.voimassa_loppupvm, kyselykerta.voimassa_loppupvm, kysely.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE)") :muokattavissa]
-;                :toimipaikka.toimipaikkakoodi [:toimipaikka.nimi_fi :toimipaikka_nimi_fi] [:toimipaikka.nimi_sv :toimipaikka_nimi_sv] [:toimipaikka.nimi_en :toimipaikka_nimi_en]
-;                :kunta
-;                :koulutusmuoto
-;                :voimassa_alkupvm :voimassa_loppupvm)
-;    (sql/fields [(sql/subselect taulut/vastaaja
-;                   (sql/aggregate (count :*) :count)
-;                   (sql/where {:vastannut true
-;                               :vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastausten_lkm])
-;    (sql/order :luotuaika :DESC)
-;    (sql/order :vastaajatunnusid :DESC)))
-
 (defn ^:private erota-tutkinto
   [vastaajatunnus]
   (let [tutkinto (select-keys vastaajatunnus [:nimi_fi :nimi_sv :nimi_en :tutkintotunnus])]
@@ -95,9 +71,11 @@
 
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
-  [kyselykertaid]
+  [kyselykertaid hae-kayttajalle]
   (map format-vastaajatunnus
-    (db/hae-vastaajatunnus {:kyselykertaid kyselykertaid})))
+    (db/hae-vastaajatunnus (merge
+                             {:kyselykertaid kyselykertaid}
+                             (when hae-kayttajalle {:oid (:aktiivinen-oid *kayttaja*)})))))
 
 (defn hae-viimeisin-tutkinto
   "Hakee vastaajatunnuksiin tallennetuista tutkinnoista viimeisimmän koulutustoimijalle kuuluvan"
@@ -106,7 +84,6 @@
     (db/hae-viimeisin-tutkinto {:koulutustoimija koulutustoimija :kyselykertaid kyselykertaid})))
 
 (defn hae [kyselykertaid vastaajatunnusid]
-  (log/info "Kyselykertaid " kyselykertaid "Vastaajatunnusid" vastaajatunnusid)
   (-> (db/hae-vastaajatunnus {:kyselykertaid kyselykertaid :vastaajatunnusid vastaajatunnusid})
     first
     format-vastaajatunnus))

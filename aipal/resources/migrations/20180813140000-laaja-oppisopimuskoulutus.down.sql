@@ -1,0 +1,1 @@
+ALTER TABLE koulutustoimija_ja_tutkinto DROP COLUMN laaja_oppisopimuskoulutus;

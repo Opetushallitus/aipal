@@ -2,8 +2,8 @@
 DELETE FROM koulutustoimija_ja_tutkinto;
 
 -- :name lisaa-koulutustoimijan-tutkinto! :! :n
-INSERT INTO koulutustoimija_ja_tutkinto (koulutustoimija, tutkinto, voimassa_alkupvm, voimassa_loppupvm)
-    SELECT :ytunnus, :tutkintotunnus, to_date(:alkupvm, 'YYYY-MM-DD'), to_date(:loppupvm, 'YYYY-MM-DD')
+INSERT INTO koulutustoimija_ja_tutkinto (koulutustoimija, tutkinto, voimassa_alkupvm, voimassa_loppupvm, laaja_oppisopimuskoulutus)
+    SELECT :ytunnus, :tutkintotunnus, to_date(:alkupvm, 'YYYY-MM-DD'), to_date(:loppupvm, 'YYYY-MM-DD'), :laaja_oppisopimuskoulutus
     WHERE EXISTS (SELECT ytunnus FROM koulutustoimija WHERE ytunnus = :ytunnus)
     AND   EXISTS(SELECT tutkintotunnus FROM tutkinto WHERE tutkintotunnus = :tutkintotunnus);
 
