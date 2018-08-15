@@ -26,18 +26,7 @@
             [clojure.set :as set]))
 
 (defn hae-roolit [oid]
-  (sql/select taulut/rooli_organisaatio
-    (sql/join taulut/koulutustoimija
-              (= :rooli_organisaatio.organisaatio :koulutustoimija.ytunnus))
-    (sql/join taulut/oppilaitos
-              (= :koulutustoimija.ytunnus :oppilaitos.koulutustoimija))
-    (sql/fields :rooli :organisaatio :rooli_organisaatio_id
-                [:koulutustoimija.nimi_fi :koulutustoimija_fi]
-                [:koulutustoimija.nimi_sv :koulutustoimija_sv]
-                [:koulutustoimija.nimi_en :koulutustoimija_en]
-                [:oppilaitos.oppilaitostyyppi :oppilaitostyyppi])
-    (sql/where {:kayttaja oid
-                :voimassa true})))
+  (db/hae-voimassaolevat-roolit {:kayttajaOid oid}))
 
 (defn hae-oikeudet
   ([oid]
@@ -60,7 +49,8 @@
     (doseq [r (:roolit k)]
       (if (contains? vanhat-roolit (select-keys r [:rooli :organisaatio]))
         (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa true}))
-        (db/lisaa-rooli! tx (assoc r :kayttaja (:oid k)))))))
+        (db/lisaa-rooli! tx (assoc r :kayttaja (:oid k)))))
+    (db/hae-voimassaolevat-roolit tx {:kayttajaOid (:oid k)})))
 
 
 (defn paivita-kayttaja! [k]
@@ -69,4 +59,4 @@
       (if olemassa?
         (db/paivita-kayttaja! tx {:kayttajaOid (:oid k) :etunimi (:etunimi k) :sukunimi (:sukunimi k)})
         (db/lisaa-kayttaja! tx (assoc k :kayttajaOid (:oid k)))))
-    (paivita-roolit! tx k)))
+    (assoc k :roolit (paivita-roolit! tx k))))

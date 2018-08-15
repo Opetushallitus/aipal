@@ -34,3 +34,11 @@ WHERE kayttaja = :kayttaja AND rooli = :rooli AND organisaatio = :organisaatio;
 
 --:name lisaa-rooli! :! :n
 INSERT INTO rooli_organisaatio (kayttaja, rooli, organisaatio, voimassa) VALUES (:kayttaja, :rooli, :organisaatio, TRUE);
+
+-- :name hae-voimassaolevat-roolit :? :*
+SELECT ro.rooli, ro.organisaatio, ro.rooli_organisaatio_id,
+k.nimi_fi AS koulutustoimija_fi, k.nimi_sv AS koulutustoimija_sv, k.nimi_en AS koulutustoimija_en
+FROM rooli_organisaatio ro
+JOIN koulutustoimija k on ro.organisaatio = k.ytunnus
+WHERE ro.kayttaja = :kayttajaOid
+AND ro.voimassa = TRUE;

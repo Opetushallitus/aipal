@@ -19,32 +19,30 @@
 
 (declare hae-kayttaja-kayttoikeuspalvelusta)
 
+(defn autentikoi-kayttaja [k impersonoitu-oid rooli f]
+  (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
+        aktiivinen-rooli (or (when rooli (some-value #(= rooli (:rooli_organisaatio_id %)) (:roolit k)))
+                             (first (sort-by (comp roolijarjestys :rooli) (:roolit k))))
+        aktiivinen-koulutustoimija (:organisaatio aktiivinen-rooli)
+        ik (when impersonoitu-oid
+             (kayttaja-arkisto/hae impersonoitu-oid))]
+    (binding [*kayttaja*
+              (assoc k
+                :aktiivinen-oid aktiivinen-oid
+                :aktiiviset-roolit (:roolit k)
+                :aktiivinen-rooli aktiivinen-rooli
+                :aktiivinen-koulutustoimija aktiivinen-koulutustoimija
+                :nimi (kayttajan-nimi k)
+                :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
+      (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
+      (with-sql-kayttaja (:oid k)
+                       (f)))))
+
 (defn with-kayttaja* [uid impersonoitu-oid rooli f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
   (if-let [k (db/hae-voimassaoleva-kayttaja {:uid uid :voimassaolo (:kayttooikeus-tarkistusvali @asetukset)})]
-    (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
-          aktiiviset-roolit (kayttajaoikeus-arkisto/hae-roolit aktiivinen-oid)
-          aktiivinen-rooli (or (when rooli (some-value #(= rooli (:rooli_organisaatio_id %)) aktiiviset-roolit))
-                               (first (sort-by (comp roolijarjestys :rooli) aktiiviset-roolit)))
-          aktiivinen-koulutustoimija (:organisaatio aktiivinen-rooli)
-          oppilaitostyypit  (distinct (remove nil? (map :oppilaitostyyppi aktiiviset-roolit)))
-          ik (when impersonoitu-oid
-               (kayttaja-arkisto/hae impersonoitu-oid))]
-      (binding [*kayttaja*
-                (assoc k
-                       :aktiivinen-oid aktiivinen-oid
-                       :aktiiviset-roolit aktiiviset-roolit
-                       :aktiivinen-rooli aktiivinen-rooli
-                       :aktiivinen-koulutustoimija aktiivinen-koulutustoimija
-                       :oppilaitostyypit oppilaitostyypit
-                       :nimi (kayttajan-nimi k)
-                       :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
-        (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
-        (with-sql-kayttaja (:oid k)
-          (f))))
-    (if (:voimassa (hae-kayttaja-kayttoikeuspalvelusta uid))
-      (recur uid impersonoitu-oid rooli f)
-      (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid))))))
+    (autentikoi-kayttaja (assoc k :roolit (db/hae-voimassaolevat-roolit {:kayttajaOid (:oid k)})) impersonoitu-oid rooli f)
+    (autentikoi-kayttaja (hae-kayttaja-kayttoikeuspalvelusta uid) impersonoitu-oid rooli f)))
 
 (defmacro with-kayttaja [uid impersonoitu-oid rooli & body]
   `(with-kayttaja* ~uid ~impersonoitu-oid ~rooli (fn [] ~@body)))
@@ -56,5 +54,5 @@
           kayttaja (kayttooikeuspalvelu/kayttaja uid ldap-ryhma->rooli oid->ytunnus)]
       (if (:voimassa kayttaja)
         (kayttajaoikeus-arkisto/paivita-kayttaja! kayttaja)
-        (db/passivoi-kayttaja! {:uid uid}))
-      kayttaja)))
+        (do (db/passivoi-kayttaja! {:uid uid})
+            (throw (IllegalStateException. (str "Ei voimassaolevaa käyttäjää " uid))))))))
