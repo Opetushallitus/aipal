@@ -25,6 +25,17 @@
                                   3 ["06" "07" "12" "13" "14" "15" "16"]
                                   6 ["13" "14" "15" "16"]})
 
+(defn tutkinto-voimassa? [tutkinto]
+  (let [alkupvm (c/to-local-date (:voimassa_alkupvm tutkinto))
+        loppupvm (c/to-local-date (:voimassa_loppupvm tutkinto))
+        siirtymaajan-loppupvm (c/to-local-date (:siirtymaajan_loppupvm tutkinto))]
+    (and (or (nil? alkupvm)
+             (pvm-mennyt-tai-tanaan? alkupvm))
+         (or (nil? loppupvm)
+             (pvm-tuleva-tai-tanaan? loppupvm)
+             (and siirtymaajan-loppupvm
+                  (pvm-tuleva-tai-tanaan? siirtymaajan-loppupvm))))))
+
 (defn ^:integration-api lisaa! [tutkinto]
   (db/lisaa-tutkinto! tutkinto))
 
@@ -39,8 +50,9 @@
 
 (defn hae-koulutustoimijan-tutkinnot [y-tunnus kyselytyyppi]
   (let [tutkintotyypit (get kyselytyyppi-tutkintotyypit kyselytyyppi)]
-    (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
-                                         (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit})))))
+    (filter tutkinto-voimassa?
+      (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
+                                           (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit}))))))
 
 (defn hae-kyselytyypin-tutkinnot [kyselytyyppi]
   (let [tutkintotyypit (-> kyselytyyppi-tutkintotyypit
@@ -51,17 +63,6 @@
 
 (defn hae-tutkinnon-jarjestajat [tutkintotunnus]
   (db/hae-tutkinnon-jarjestajat {:tutkintotunnus tutkintotunnus}))
-
-(defn tutkinto-voimassa? [tutkinto]
-  (let [alkupvm (c/to-local-date (:voimassa_alkupvm tutkinto))
-        loppupvm (c/to-local-date (:voimassa_loppupvm tutkinto))
-        siirtymaajan-loppupvm (c/to-local-date (:siirtymaajan_loppupvm tutkinto))]
-    (and (or (nil? alkupvm)
-             (pvm-mennyt-tai-tanaan? alkupvm))
-         (or (nil? loppupvm)
-             (pvm-tuleva-tai-tanaan? loppupvm)
-             (and siirtymaajan-loppupvm
-               (pvm-tuleva-tai-tanaan? siirtymaajan-loppupvm))))))
 
 (defn tutkinnot-hierarkiaksi
   [tutkinnot]

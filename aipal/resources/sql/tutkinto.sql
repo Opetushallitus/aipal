@@ -47,7 +47,7 @@ SELECT t.*,
 FROM tutkinto t
     LEFT JOIN opintoala oa ON t.opintoala = oa.opintoalatunnus
     LEFT JOIN koulutusala ka ON oa.koulutusala = ka.koulutusalatunnus
-WHERE tutkintotyyppi NOT IN (:v*:tutkintotyypit);
+WHERE (t.tutkintotyyppi IS NULL) OR t.tutkintotyyppi NOT IN (:v*:tutkintotyypit);
 
 -- :name hae-tutkinnon-jarjestajat :? :*
 SELECT k.*
