@@ -27,7 +27,13 @@ angular.module('rest.tutkinto', [])
         return $http.get('api/tutkinto/vanhentuneet', {params: {nocache: Date.now()}});
       },
       koulutustoimijanTutkinnot: function(kyselytyyppi) {
-        return $http.get('api/tutkinto/koulutustoimija'+'?kyselytyyppi='+kyselytyyppi, {params: {nocache: Date.now()}});
+        return $http.get('api/tutkinto/koulutustoimija',
+          {params: {
+            kyselytyyppi: kyselytyyppi,
+            nocache: Date.now()}});
+      },
+      kyselytyypinTutkinnot: function(kyselytyyppi) {
+        return $http.get('api/tutkinto/kyselytyyppi/'+kyselytyyppi, {params: {nocache: Date.now()}});
       },
       haeTutkinnonJarjestajat: function(tutkintotunnus) {
         return $http.get('api/tutkinto/jarjestajat/'+tutkintotunnus, {params: {nocache: Date.now()}})

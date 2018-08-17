@@ -35,6 +35,10 @@
         </ui-select>
       </label>
       <span class="text-muted" ng-if="tutkinnot.length==0">{{i18n.vastaajatunnus.ei_tutkintoja}}</span>
+      <label>
+        <input type="checkbox" ng-model="haeKaikkiTutkinnot" ng-change="toggleHaeKaikkiTutkinnot()">
+        <span>{{'vastaajatunnus.nayta_lisaa_tutkintoja' | i18n}}</span>
+      </label>
     </div>
     <div class="form-group">
       <label>{{'yleiset.tutkinnon_suorituskieli' | i18n}} *

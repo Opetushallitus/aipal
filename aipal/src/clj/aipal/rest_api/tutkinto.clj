@@ -41,6 +41,10 @@
     :path-params [y-tunnus :- String]
     :query-params [kyselytyyppi :- s/Int]
     (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi)))
+  (GET "/kyselytyyppi/:kyselytyyppi" []
+    :kayttooikeus :tutkinto
+    :path-params [kyselytyyppi :- s/Int]
+    (response-or-404 (tutkinto/hae-kyselytyypin-tutkinnot kyselytyyppi)))
   (GET "/jarjestajat/:tutkintotunnus" []
     :path-params [tutkintotunnus :- String]
     :kayttooikeus :tutkinto

@@ -123,7 +123,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
 
       function haeTutkinnot(kysely){
-        Tutkinto.koulutustoimijanTutkinnot(kysely.tyyppi).success(function(tutkinnot) {
+        Tutkinto.koulutustoimijanTutkinnot(kysely.tyyppi, false).success(function(tutkinnot) {
           $scope.tutkinnot = tutkinnot;
         });
       }
@@ -284,6 +284,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       var alkupvm = new Date(kyselykerta.voimassa_alkupvm),
         loppupvm = kyselykerta.voimassa_loppupvm ? new Date(kyselykerta.voimassa_loppupvm) : alkupvm;
 
+      $scope.haeKaikkiTutkinnot = false;
+
       $scope.menneisyydessa = !_.isNull(kyselykerta.voimassa_loppupvm) && loppupvm < tanaan;
 
       $scope.oletusalkupvm = alkupvm > tanaan ? alkupvm : ($scope.menneisyydessa ? loppupvm : tanaan);
@@ -346,14 +348,24 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       }
 
       function haeJarjestajanTutkinnot(ytunnus, kyselytyyppi) {
-        console.log("KT"+ kyselytyyppi)
         Tutkinto.haeKoulutustoimijanTutkinnot(ytunnus, kyselytyyppi).success(function (tutkinnot){
           $scope.tutkinnot = tutkinnot;
         })
       }
 
+      function haeTutkinnot(){
+        if($scope.haeKaikkiTutkinnot){
+          Tutkinto.kyselytyypinTutkinnot(kyselytyyppi).success(function (tutkinnot){
+            $scope.tutkinnot = tutkinnot;
+          })
+        } else {
+          Tutkinto.koulutustoimijanTutkinnot(kyselytyyppi).success(function (tutkinnot){
+            $scope.tutkinnot = tutkinnot;
+          })
+        }
+      }
+
       if(viimeksiValittuTutkinto && !laajennettu){
-        console.log("Haetaan tutkinnon järjestäjät")
         haeTutkinnonJarjestajat(viimeksiValittuTutkinto);
       }
 
@@ -367,6 +379,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           haeToimipaikat(oppilaitos.oppilaitoskoodi);
         }
       });
+
+      $scope.toggleHaeKaikkiTutkinnot = function(){
+        haeTutkinnot();
+      }
 
       $scope.$watch('vastaajatunnus.tutkinto', function (tutkinto) {
         if(tutkinto && !laajennettu){

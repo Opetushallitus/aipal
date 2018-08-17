@@ -42,6 +42,13 @@
     (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
                                          (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit})))))
 
+(defn hae-kyselytyypin-tutkinnot [kyselytyyppi]
+  (let [tutkintotyypit (-> kyselytyyppi-tutkintotyypit
+                           (dissoc kyselytyyppi)
+                           vals
+                           flatten)]
+    (db/hae-koulutustoimijan-kaikki-tutkinnot {:tutkintotyypit tutkintotyypit})))
+
 (defn hae-tutkinnon-jarjestajat [tutkintotunnus]
   (db/hae-tutkinnon-jarjestajat {:tutkintotunnus tutkintotunnus}))
 
