@@ -33,7 +33,7 @@
 ;    (= (:kysymysid kysymys) taustakysymys-6a-id) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6a_selite")
 ;    (= (:kysymysid kysymys) taustakysymys-6b-id) (assoc :taustakysymyksen_selite_raportointiin "raportit.taustakysymyksen_6b_selite")))
 
-(def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
+;(def valtakunnalliset-duplikaattikysymykset #{7312036 7312037 7312034 7312040 7312038 7312035})
 
 ;(def taustakysymysten-mappaus
 ;  "Mappaa hakeutumisvaiheen taustakysymysten ID:t niitä vastaaviin suoritusvaiheen taustakysymyksiin ja päinvastoin."

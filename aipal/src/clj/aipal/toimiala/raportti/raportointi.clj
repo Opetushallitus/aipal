@@ -19,7 +19,8 @@
             [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
+            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
+            [arvo.util :refer [in?]]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
@@ -118,43 +119,11 @@
                                 (assoc jakauma :eos (or (:en_osaa_sanoa vastaukset) 0))
                                 jakauma)))))
 
-(defn liita-kylla-jatkovastaukset
-  [kysymys vastaukset]
-  (when (:kylla_kysymys kysymys)
-    {:kysymys_fi (:kylla_teksti_fi kysymys)
-     :kysymys_sv (:kylla_teksti_sv kysymys)
-     :kysymys_en (:kylla_teksti_en kysymys)
-     :jakauma (butlast (muodosta-asteikko-jakauman-esitys (muotoile-jakauma (:jatkovastaus_jakauma vastaukset)) 5)) ;; EOS-vastaus on jakauman viimeinen eikä sitä käytetä jatkovastauksissa
-     :vastaustyyppi (:kylla_vastaustyyppi kysymys)
-     :vastaajien_lukumaara (or (:jatkovastaus_vastaajien_lukumaara vastaukset) 0)
-     :keskiarvo (or (:jatkovastaus_keskiarvo vastaukset) 0)
-     :keskihajonta (or (:jatkovastaus_keskihajonta vastaukset) 0)}))
-
-(defn liita-ei-jatkovastaukset
-  [kysymys vastaukset]
-  (when (:ei_kysymys kysymys)
-    (let [ei-vastaukset (:jatkovastaus_vapaatekstit vastaukset)]
-      {:kysymys_fi (:ei_teksti_fi kysymys)
-       :kysymys_sv (:ei_teksti_sv kysymys)
-       :kysymys_en (:ei_teksti_en kysymys)
-       :vapaatekstivastaukset (when ei-vastaukset
-                                (for [v ei-vastaukset
-                                      :when v]
-                                  {:teksti v}))
-       :vastaustyyppi "vapaateksti"})))
-
-(defn liita-jatkovastaukset
-  [kysymys vastaukset]
-  (when (:jatkokysymysid kysymys)
-    {:kylla (liita-kylla-jatkovastaukset kysymys vastaukset)
-     :ei (liita-ei-jatkovastaukset kysymys vastaukset)}))
-
 (defn kasittele-kyllaei-kysymys [kysymys vastaukset]
   (let [jakauma (muotoile-kyllaei-jakauma (:vaihtoehdot vastaukset))]
     (assoc kysymys :jakauma (muodosta-kylla-ei-jakauman-esitys (if (:eos_vastaus_sallittu kysymys)
                                                                  (assoc jakauma :eos (:en_osaa_sanoa vastaukset))
-                                                                 jakauma))
-                   :jatkovastaukset (liita-jatkovastaukset kysymys vastaukset))))
+                                                                 jakauma)))))
 
 (defn kasittele-vapaatekstikysymys [kysymys vastaukset]
   (let [vapaatekstit (:vapaatekstit vastaukset)]
@@ -172,9 +141,9 @@
                                (select-keys vastaukset [:keskiarvo :keskihajonta]))
         kysymys (case (:vastaustyyppi kysymys)
                   "arvosana" (kasittele-asteikkokysymys kysymys vastaukset 5)
-                  "arvosana6" (doto (kasittele-asteikkokysymys kysymys vastaukset 6) clojure.pprint/pprint)
-                  "arvosana7" (doto (kasittele-asteikkokysymys kysymys vastaukset 7) clojure.pprint/pprint)
-                  "nps" (doto (kasittele-asteikkokysymys kysymys vastaukset 11) clojure.pprint/pprint)
+                  "arvosana6" (kasittele-asteikkokysymys kysymys vastaukset 6)
+                  "arvosana7" (kasittele-asteikkokysymys kysymys vastaukset 7)
+                  "nps" (kasittele-asteikkokysymys kysymys vastaukset 11 :alku 0)
                   "kylla_ei_valinta" (kasittele-kyllaei-kysymys kysymys vastaukset)
                   "likert_asteikko" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "monivalinta" (kasittele-monivalintakysymys kysymys vastaukset)
@@ -212,7 +181,7 @@
 
 (defn muodosta-raportti [kysymysryhmat kysymykset vastaukset]
   (let [id->vastaukset (map-by :kysymysid vastaukset)
-        kysymykset (for [kysymys (filter #(not= (:vastaustyyppi %) "valiotsikko") kysymykset)
+        kysymykset (for [kysymys (filter #(not (in? ["valiotsikko"](:vastaustyyppi %))) kysymykset)
                          :let [kysymyksen-vastaukset (id->vastaukset (:kysymysid kysymys))]]
                      (kasittele-kysymys kysymys kysymyksen-vastaukset))
         kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]

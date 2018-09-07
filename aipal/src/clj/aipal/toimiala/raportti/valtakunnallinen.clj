@@ -32,8 +32,8 @@
          (sql/join :left :jatkokysymys
                    (= :jatkokysymys.jatkokysymysid
                       :kysymys.jatkokysymysid))
-         (sql/where {:kysymysryhma.valtakunnallinen true
-                     :kysymys.kysymysid [not-in valtakunnalliset-duplikaattikysymykset]})
+         (sql/where {:kysymysryhma.valtakunnallinen true})
+         (sql/where (not= :kysymys.vastaustyyppi "vapaateksti"))
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
          (sql/fields :kysymys.jarjestys
