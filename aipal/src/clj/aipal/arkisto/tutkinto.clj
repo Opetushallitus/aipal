@@ -58,8 +58,11 @@
   (let [tutkintotyypit (-> kyselytyyppi-tutkintotyypit
                            (dissoc kyselytyyppi)
                            vals
-                           flatten)]
-    (db/hae-koulutustoimijan-kaikki-tutkinnot {:tutkintotyypit tutkintotyypit})))
+                           flatten)
+        tutkinnot (db/hae-koulutustoimijan-kaikki-tutkinnot {:tutkintotyypit tutkintotyypit})]
+    (if (= 5 kyselytyyppi) ;filtteröidään väliaikaisena ratkaisuna väärän alkuiset tutkinnot joilla ei ole opintoalaa tai tutkintotyyppiä
+      (filter #(re-matches #"^[1234590]\w+"(:tutkintotunnus %)) tutkinnot)
+      tutkinnot)))
 
 (defn hae-tutkinnon-jarjestajat [tutkintotunnus]
   (db/hae-tutkinnon-jarjestajat {:tutkintotunnus tutkintotunnus}))
