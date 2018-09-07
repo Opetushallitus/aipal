@@ -95,7 +95,7 @@
                            :user "tunnus"
                            :password "salasana"}
    :basic-auth {:tunnus "testi" :salasana "kissa13"}
-   :raportointi-minimivastaajat 0
+   :raportointi-minimivastaajat 5
    :kayttooikeus-tarkistusvali "6h"
    :logback {:properties-file "resources/logback.xml"}
    :ajastus {:organisaatiopalvelu "0 25 15 ? * * *"
