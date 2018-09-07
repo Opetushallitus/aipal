@@ -84,6 +84,10 @@
         </ui-select>
       </label>
       <span class="text-muted" ng-if="tutkinnot.length==0">{{i18n.vastaajatunnus.valitse_koulutuksen_toteuttaja}}</span>
+      <label ng-show="tutkinnot.length>0">
+        <input type="checkbox" ng-model="haeKaikkiTutkinnot" ng-change="toggleHaeKaikkiTutkinnot()">
+        <span>{{'vastaajatunnus.nayta_lisaa_tutkintoja' | i18n}}</span>
+      </label>
     </div>
 
     <div>

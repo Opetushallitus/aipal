@@ -359,9 +359,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
             $scope.tutkinnot = tutkinnot;
           })
         } else {
-          Tutkinto.koulutustoimijanTutkinnot(kyselytyyppi).success(function (tutkinnot){
-            $scope.tutkinnot = tutkinnot;
-          })
+          if(laajennettu){
+            haeJarjestajanTutkinnot($scope.vastaajatunnus.hankintakoulutuksen_toteuttaja.ytunnus, kyselytyyppi);
+          } else{
+            Tutkinto.koulutustoimijanTutkinnot(kyselytyyppi).success(function (tutkinnot){
+              $scope.tutkinnot = tutkinnot;
+            })
+          }
         }
       }
 
