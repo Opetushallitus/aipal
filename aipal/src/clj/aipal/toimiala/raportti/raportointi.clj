@@ -19,8 +19,7 @@
             [clj-time.core :as time]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
-            [arvo.util :refer [in?]]))
+            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
@@ -181,7 +180,7 @@
 
 (defn muodosta-raportti [kysymysryhmat kysymykset vastaukset]
   (let [id->vastaukset (map-by :kysymysid vastaukset)
-        kysymykset (for [kysymys (filter #(not (in? ["valiotsikko"](:vastaustyyppi %))) kysymykset)
+        kysymykset (for [kysymys (filter #(not= "valiotsikko" (:vastaustyyppi %)) kysymykset)
                          :let [kysymyksen-vastaukset (id->vastaukset (:kysymysid kysymys))]]
                      (kasittele-kysymys kysymys kysymyksen-vastaukset))
         kysymysryhmien-kysymykset (group-by :kysymysryhmaid kysymykset)]
