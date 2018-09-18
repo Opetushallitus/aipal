@@ -5,12 +5,15 @@ SELECT k.koulutustoimija, k.tyyppi, k.kyselyid, k.nimi_fi AS kysely_fi, k.nimi_s
   kp.kyselypohjaid, kp.nimi_fi AS kyselypohja_nimi, kp.kategoria->>'tarkenne' AS kyselypohja_tarkenne
 FROM kyselykerta kk
 JOIN kysely k ON kk.kyselyid = k.kyselyid
-LEFT JOIN kyselypohja kp ON k.kyselypohjaid = kp.kyselypohjaid;
+LEFT JOIN kyselypohja kp ON k.kyselypohjaid = kp.kyselypohjaid
+WHERE k.koulutustoimija = :koulutustoimija
+--~(if (:vipunen params) "OR TRUE")
+;
 
 -- :name export-vastaukset :? :*
-SELECT k.koulutustoimija, k.tyyppi, k.kyselyid, kk.kyselykertaid,
+SELECT k.koulutustoimija, k.kyselyid, kk.kyselykertaid,
   vt.voimassa_alkupvm AS vastaajatunnus_alkupvm,
-  v.vastaajaid, vt.tunnus AS vastaajatunnus, vt.vastaajatunnusid,  vs.vastaajaid,
+  v.vastaajaid, vt.tunnus AS vastaajatunnus, vt.vastaajatunnusid,
   v.vastausid, v.kysymysid, v.vastausaika, v.numerovalinta, v.vapaateksti, v.vaihtoehto,
   monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
   monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
@@ -25,29 +28,42 @@ LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
                                    AND v.numerovalinta = monivalintavaihtoehto.jarjestys
 JOIN vastaajatunnus vt ON vs.vastaajatunnusid = vt.vastaajatunnusid
 JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
-JOIN kysely k ON kk.kyselyid = k.kyselyid;
+JOIN kysely k ON kk.kyselyid = k.kyselyid
+WHERE k.tila = 'julkaistu'
+AND k.koulutustoimija = :koulutustoimija
+--~(if (:vipunen params) "OR kys.valtakunnallinen = TRUE")
+;
 
 
 -- :name export-kysymykset :? :*
-SELECT k.kysymysid, k.vastaustyyppi, k.kysymys_fi, k.kysymys_sv, k.kysymys_en, k.kategoria, k.jatkokysymys,
+SELECT DISTINCT k.kysymysid, k.vastaustyyppi, k.kysymys_fi, k.kysymys_sv, k.kysymys_en, k.kategoria, k.jatkokysymys,
   kjk.kysymysid AS jatkokysymys_kysymysid,
   kr.kysymysryhmaid, kr.nimi_fi AS kysymysryhma_fi, kr.nimi_sv AS kysymysryhma_sv, kr.nimi_en AS kysymysryhma_en,
   kr.valtakunnallinen
 FROM kysymys k
 LEFT JOIN kysymys_jatkokysymys kjk ON k.kysymysid = kjk.jatkokysymysid
 JOIN kysymysryhma kr ON k.kysymysryhmaid = kr.kysymysryhmaid
+JOIN kysely_kysymysryhma kkr ON kr.kysymysryhmaid = kkr.kysymysryhmaid
+JOIN kysely kys ON kkr.kyselyid = kys.kyselyid
 -- TODO: Vapaatekstien ja omien kysymysten rajaus pois tarvittaessa (vipunen)
-WHERE kr.tila = 'julkaistu';
+WHERE kr.tila = 'julkaistu'
+AND kys.koulutustoimija = :koulutustoimija
+--~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
+;
+
 
 -- :name export-taustatiedot :? :*
 SELECT v.vastaajaid,vt.vastaajatunnusid,
-  vt.valmistavan_koulutuksen_jarjestaja, vt.valmistavan_koulutuksen_oppilaitos, vt.suorituskieli,
+  vt.valmistavan_koulutuksen_oppilaitos AS oppilaitos, vt.suorituskieli,
   vt.taustatiedot
 FROM vastaaja v
 JOIN vastaajatunnus vt ON v.vastaajatunnusid = vt.vastaajatunnusid
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
-JOIN kysely k on kk.kyselyid = k.kyselyid;
+JOIN kysely k on kk.kyselyid = k.kyselyid
 -- TODO: Taustatietojen raportointirajaukset
+WHERE k.koulutustoimija = :koulutustoimija
+--~(if (:vipunen params) "OR TRUE")
+;
 
 -- :name hae-api-kayttaja :? :1
 SELECT * FROM api_kayttajat WHERE tunnus = :tunnus;
