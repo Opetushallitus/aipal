@@ -19,7 +19,6 @@
 
 (defn check-credentials [credentials]
   (let [saved-credentials (db/hae-api-kayttaja {:tunnus (first credentials)})]
-    (log/info "Checking credentials " (hashers/check (second credentials) (:salasana saved-credentials)))
     (when (hashers/check (second credentials) (:salasana saved-credentials))
       saved-credentials)))
 
