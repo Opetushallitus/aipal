@@ -7,6 +7,10 @@
 
         <div ng-if="kysymys.vastaustyyppi === 'valiotsikko'">
             <h3>{{kysymys | lokalisoiKentta:'kysymys'}}<span ng-if="kysymys.pakollinen">*</span></h3>
+
+            <div class="kysymys-selite" ng-if="kysymyksellaSelite(kysymys)">
+                {{kysymys | lokalisoiKentta:'selite'}}
+            </div>
         </div>
 
         <ng-form name="kysymysForm" class="kysymysForm" ng-if="kysymys.vastaustyyppi !== 'valiotsikko'">
