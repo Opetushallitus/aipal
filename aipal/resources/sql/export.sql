@@ -34,7 +34,7 @@ JOIN vastaajatunnus vt ON vs.vastaajatunnusid = vt.vastaajatunnusid
 JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE k.tila = 'julkaistu'
-AND k.tyyppi IN :kyselytyypit
+AND k.tyyppi IN (:v*:kyselytyypit)
 AND k.koulutustoimija = :koulutustoimija
 --~(if (:vipunen params) "OR kys.valtakunnallinen = TRUE")
 ;
@@ -51,7 +51,7 @@ JOIN kysely_kysymysryhma kkr ON kr.kysymysryhmaid = kkr.kysymysryhmaid
 JOIN kysely kys ON kkr.kyselyid = kys.kyselyid
 -- TODO: Vapaatekstien ja omien kysymysten rajaus pois tarvittaessa (vipunen)
 WHERE kr.tila = 'julkaistu'
-AND kys.tyyppi IN :kyselytyypit
+AND kys.tyyppi IN (:v*:kyselytyypit)
 AND kys.koulutustoimija = :koulutustoimija
 --~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
 ;
@@ -66,7 +66,7 @@ JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k on kk.kyselyid = k.kyselyid
 -- TODO: Taustatietojen raportointirajaukset
 WHERE k.koulutustoimija = :koulutustoimija
-AND k.tyyppi IN :kyselytyypit
+AND k.tyyppi IN (:v*:kyselytyypit)
 --~(if (:vipunen params) "OR TRUE")
 ;
 
@@ -75,7 +75,7 @@ SELECT kkr.kyselyid, kkr.kysymysryhmaid, kkr.jarjestys
 FROM kysely_kysymysryhma kkr
 JOIN kysely k on kkr.kyselyid = k.kyselyid
 WHERE k.koulutustoimija = :koulutustoimija
-AND k.tyyppi IN :kyselytyypit
+AND k.tyyppi IN (:v*:kyselytyypit)
 --~(if (:vipunen params) "OR TRUE")
 ;
 
