@@ -4,14 +4,13 @@
             [clojure.walk :refer [keywordize-keys]]
             [aipal.asetukset :refer [asetukset]]))
 
-(def url "http://localhost:3000/api/export/v1/opiskeluoikeudet")
-
 (defn get-opiskeluoikeus-data [oppilaitokset]
-  (let [{;url :url
+  (let [{url :url
          user :user
          password :password }(@asetukset :kyselyynohjaus)]
     (-> (http/post url {:basic-auth [user password]
                         :form-params {:oppilaitokset oppilaitokset}
+                        :insecure? (:development-mode @asetukset)
                         :content-type :json})
 
         :body
