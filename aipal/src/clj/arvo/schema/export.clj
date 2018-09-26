@@ -4,7 +4,7 @@
 (s/defschema Kyselykerta
   {:kyselyid s/Int
    :koulutustoimija s/Str
-   :tyyppi s/Int
+   :tyyppi s/Str
    :kysely_fi (s/maybe s/Str)
    :kysely_sv (s/maybe s/Str)
    :kysely_en (s/maybe s/Str)
@@ -38,7 +38,9 @@
    :monivalintavaihtoehto_en (s/maybe s/Str)
    s/Any s/Any})
 
-(s/defschema Kysymyskategoria {})
+(s/defschema Kysymyskategoria
+  {(s/optional-key :rahoitusmallikysymys) (s/maybe s/Bool)
+   (s/optional-key :taustakysymyksen_tyyppi) (s/maybe s/Str)})
 
 (s/defschema Kysymys
   {:kysymysid s/Int
@@ -47,7 +49,7 @@
    :kysymys_fi (s/maybe s/Str)
    :kysymys_sv (s/maybe s/Str)
    :kysymys_en (s/maybe s/Str)
-   :kategoria s/Any
+   :kategoria (s/maybe Kysymyskategoria)
    :jatkokysymys s/Bool
    :jatkokysymys_kysymysid (s/maybe s/Int)
    :kysymysryhma_fi (s/maybe s/Str)
@@ -67,13 +69,17 @@
    (s/optional-key :haun_numero) (s/maybe s/Str)
    s/Any s/Any})
 
-
 (s/defschema Vastaajatunnus
   {:vastaajaid       s/Int
    :vastaajatunnusid s/Int
    :oppilaitos       (s/maybe s/Str)
    :taustatiedot     (s/maybe Taustatiedot)
    s/Any s/Any})
+
+(s/defschema Kysely-kysymysryhma
+  {:kyselyid s/Int
+   :kysymysryhmaid s/Int
+   :jarjestys s/Int})
 
 
 

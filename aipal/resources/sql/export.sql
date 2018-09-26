@@ -1,20 +1,24 @@
 -- :name export-kyselyt :? :*
-SELECT k.koulutustoimija, k.tyyppi, k.kyselyid, k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
-  k.voimassa_alkupvm AS kysely_voimassa_alkupvm, k.voimassa_loppupvm AS kysely_voimassa_loppupvm, k.tila AS kysely_tila,
+SELECT k.koulutustoimija,
+  CASE k.tyyppi WHEN 1 THEN 'avop' WHEN 2 THEN 'rekrykysely' WHEN 3 THEN 'uraseuranta' WHEN 4 THEN 'itsearviointi' WHEN 5 THEN 'amispalaute' WHEN 6 THEN 'kandipalaute' ELSE 'tuntematon' END AS tyyppi,
+  k.kyselyid, k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
+  to_char(k.voimassa_alkupvm, 'YYYY-MM-DD') AS kysely_voimassa_alkupvm, to_char(k.voimassa_loppupvm, 'YYYY-MM-DD')AS kysely_voimassa_loppupvm, k.tila AS kysely_tila,
   kk.kyselykertaid, kk.nimi AS kyselykerta, kk.kategoria->>'vuosi' AS kyselykerta_vuosi,
   kp.kyselypohjaid, kp.nimi_fi AS kyselypohja_nimi, kp.kategoria->>'tarkenne' AS kyselypohja_tarkenne
 FROM kyselykerta kk
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN kyselypohja kp ON k.kyselypohjaid = kp.kyselypohjaid
-WHERE k.koulutustoimija = :koulutustoimija
---~(if (:vipunen params) "OR TRUE")
+WHERE (k.koulutustoimija = :koulutustoimija
+        --~(if (:vipunen params) "OR TRUE")
+      )
+AND k.tyyppi IN (:v*:kyselytyypit)
 ;
 
 -- :name export-vastaukset :? :*
 SELECT k.koulutustoimija, k.kyselyid, kk.kyselykertaid,
-  vt.voimassa_alkupvm AS vastaajatunnus_alkupvm,
+  to_char(vt.voimassa_alkupvm, 'YYYY-MM-DD') AS vastaajatunnus_alkupvm,
   v.vastaajaid, vt.tunnus AS vastaajatunnus, vt.vastaajatunnusid,
-  v.vastausid, v.kysymysid, v.vastausaika, v.numerovalinta, v.vapaateksti, v.vaihtoehto,
+  v.vastausid, v.kysymysid, to_char(v.vastausaika, 'YYYY-MM-DD') AS vastausaika , v.numerovalinta, v.vapaateksti, v.vaihtoehto,
   monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
   monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
   monivalintavaihtoehto.teksti_en AS monivalintavaihtoehto_en
@@ -30,10 +34,10 @@ JOIN vastaajatunnus vt ON vs.vastaajatunnusid = vt.vastaajatunnusid
 JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE k.tila = 'julkaistu'
+AND k.tyyppi IN :kyselytyypit
 AND k.koulutustoimija = :koulutustoimija
 --~(if (:vipunen params) "OR kys.valtakunnallinen = TRUE")
 ;
-
 
 -- :name export-kysymykset :? :*
 SELECT DISTINCT k.kysymysid, k.vastaustyyppi, k.kysymys_fi, k.kysymys_sv, k.kysymys_en, k.kategoria, k.jatkokysymys,
@@ -47,10 +51,10 @@ JOIN kysely_kysymysryhma kkr ON kr.kysymysryhmaid = kkr.kysymysryhmaid
 JOIN kysely kys ON kkr.kyselyid = kys.kyselyid
 -- TODO: Vapaatekstien ja omien kysymysten rajaus pois tarvittaessa (vipunen)
 WHERE kr.tila = 'julkaistu'
+AND kys.tyyppi IN :kyselytyypit
 AND kys.koulutustoimija = :koulutustoimija
 --~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
 ;
-
 
 -- :name export-taustatiedot :? :*
 SELECT v.vastaajaid,vt.vastaajatunnusid,
@@ -62,6 +66,16 @@ JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k on kk.kyselyid = k.kyselyid
 -- TODO: Taustatietojen raportointirajaukset
 WHERE k.koulutustoimija = :koulutustoimija
+AND k.tyyppi IN :kyselytyypit
+--~(if (:vipunen params) "OR TRUE")
+;
+
+-- :name export-kysely-kysymysryhma :? :*
+SELECT kkr.kyselyid, kkr.kysymysryhmaid, kkr.jarjestys
+FROM kysely_kysymysryhma kkr
+JOIN kysely k on kkr.kyselyid = k.kyselyid
+WHERE k.koulutustoimija = :koulutustoimija
+AND k.tyyppi IN :kyselytyypit
 --~(if (:vipunen params) "OR TRUE")
 ;
 

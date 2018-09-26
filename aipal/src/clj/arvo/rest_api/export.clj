@@ -3,13 +3,13 @@
             [arvo.db.core :refer [*db*] :as db]
             [arvo.schema.export :refer :all]
             [oph.common.util.http-util :refer [response-or-404]]
-            [clojure.tools.logging :as log]))
-
-(def csc-ytunnus "0920632-0")
+            [clojure.tools.logging :as log]
+            [arvo.integraatio.kyselyynohjaus :as ko]))
 
 (defn export-params [request type]
   (let [params {:koulutustoimija (:organisaatio request)
-                :vipunen (= (:organisaatio request) csc-ytunnus)}]
+                :vipunen (-> request :oikeudet :vipunen)
+                :kyselytyypit (-> request :oikeudet :kyselytyypit)}]
     (log/info "Haetaan" type ":" params)
     params))
 
@@ -24,7 +24,14 @@
   (GET "/vastaukset" [:as request]
     :return [Vastaus]
     (response-or-404 (db/export-vastaukset (export-params request "vastaukset"))))
-  (GET "/taustatiedot" [:as request]
+  (GET "/vastaajat" [:as request]
     :return [Vastaajatunnus]
-    (response-or-404 (db/export-taustatiedot (export-params request "taustatiedot")))))
-
+    (response-or-404 (db/export-taustatiedot (export-params request "taustatiedot"))))
+  (GET "/opiskeluoikeudet" [:as request]
+    (let [params (export-params request "opiskeluoikeudet")
+          oppilaitokset (map :oppilaitoskoodi (db/hae-koulutustoimijan-oppilaitokset params))
+          opiskeluoikeudet (ko/get-opiskeluoikeus-data oppilaitokset)]
+      (response-or-404 opiskeluoikeudet)))
+  (GET "/kysely_kysymysryhma" [:as request]
+    :return [Kysely-kysymysryhma]
+    (response-or-404 (db/export-kysely-kysymysryhma (export-params request "kysely-kysymysryhma")))))

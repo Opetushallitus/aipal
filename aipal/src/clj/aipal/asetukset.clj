@@ -43,6 +43,7 @@
                      :enabled Boolean}
    :vastaus-base-url s/Str
    :oiva Palvelu
+   :kyselyynohjaus Palvelu
    :avopfi-shared-secret s/Str
    :organisaatiopalvelu {:url s/Str}
    :koodistopalvelu {:url s/Str}
@@ -86,6 +87,9 @@
    :oiva {:url "http://oiva.minedu.fi/api/export/koulutusluvat"
           :user "tunnus"
           :password "salasana"}
+   :kyselyynohjaus {:url "http://localhost:3000/api/export/v1/opiskeluoikeudet"
+                    :user "vipunen"
+                    :password "salasana"}
    :development-mode true ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
    :kayttooikeuspalvelu {:url "https://testi.virkailija.opintopolku.fi/kayttooikeus-service"

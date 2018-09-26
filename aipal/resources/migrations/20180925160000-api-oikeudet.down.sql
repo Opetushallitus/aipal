@@ -1,0 +1,1 @@
+ALTER TABLE api_kayttajat DROP COLUMN oikeudet;
