@@ -27,7 +27,7 @@
     (let [credentials (parse-credentials request)
           api-user (check-credentials credentials)]
       (if api-user
-        (handler (assoc request :organisaatio (:organisaatio api-user)))
+        (handler (merge request (select-keys api-user [:organisaatio :oikeudet])))
         {:status 401
          :headers {"www-authenticate" "Basic realm=\"restricted\""}}))))
 
