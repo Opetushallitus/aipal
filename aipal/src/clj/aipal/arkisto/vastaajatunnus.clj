@@ -160,7 +160,7 @@
 (defn lisaa-massana! [vastaajatunnukset]
   (jdbc/with-db-transaction [tx *db*]
     (doseq [tunnus vastaajatunnukset]
-      (db/lisaa-vastaajatunnus! tx (assoc tunnus :kayttaja (:oid *kayttaja*))))
+      (db/lisaa-vastaajatunnus! tx tunnus))
     vastaajatunnukset))
 
 (defn liita-taustatiedot! [taustatieto-seq]

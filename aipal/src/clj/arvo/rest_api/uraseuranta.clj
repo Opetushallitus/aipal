@@ -6,7 +6,8 @@
             [schema.core :as s]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
             [arvo.db.core :refer [*db*] :as db]
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [oph.common.util.http-util :refer [response-or-404]]
+            [clj-time.core :as time]))
 
 (defn get-shared-secret [asetukset]
   (get-in asetukset [:avopfi-shared-secret]))
@@ -18,6 +19,19 @@
    :headers {"Content-Type" "application/json"}
    :body {:tunnus message}})
 
+(defn uraseuranta-vastaajatunnus-defaults []
+  {:taustatiedot nil
+   :vastaajien_lkm 1
+   :toimipaikka nil
+   :voimassa_alkupvm (time/today)
+   :voimassa_loppupvm nil
+   :kayttaja "JARJESTELMA"})
+
+(defn format-tunnukset [tunnukset]
+  (let [defaults (uraseuranta-vastaajatunnus-defaults)]
+    (->> tunnukset
+         (map #(merge % defaults))
+         (map #(assoc % :valmistavan_koulutuksen_oppilaitos (:oppilaitos %))))))
 
 (defn format-vastaajatunnus-response [vastaajatunnukset]
   (let [grouped (group-by :kyselykertaid vastaajatunnukset)]
@@ -31,7 +45,7 @@
     :body [vastaajatunnukset s/Any]
     :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
     :header-params [authorization :- String]
-    (-> vastaajatunnukset
+    (-> (format-tunnukset vastaajatunnukset)
         vastaajatunnus/lisaa-massana!
         format-vastaajatunnus-response
         response-or-404))
