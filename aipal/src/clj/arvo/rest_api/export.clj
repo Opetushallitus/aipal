@@ -28,6 +28,7 @@
     :return [Vastaajatunnus]
     (response-or-404 (db/export-taustatiedot (export-params request "taustatiedot"))))
   (GET "/opiskeluoikeudet" [:as request]
+    :return [Opiskeluoikeus]
     (let [params (export-params request "opiskeluoikeudet")
           oppilaitokset (map :oppilaitoskoodi (db/hae-koulutustoimijan-oppilaitokset params))
           opiskeluoikeudet (ko/get-opiskeluoikeus-data oppilaitokset)]

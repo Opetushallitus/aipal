@@ -14,7 +14,7 @@
    :kyselykertaid s/Int
    :kyselykerta s/Str
    :kyselykerta_vuosi (s/maybe s/Str)
-   :kyselypohjaid (s/maybe s/Str)
+   :kyselypohjaid (s/maybe s/Int)
    :kyselypohja_nimi (s/maybe s/Str)
    :kyselypohja_tarkenne (s/maybe s/Str)
    s/Any s/Any})
@@ -81,7 +81,9 @@
    :kysymysryhmaid s/Int
    :jarjestys s/Int})
 
-
+(s/defschema Opiskeluoikeus
+  {:vastaajatunnus s/Str
+   :opiskeluoikeus s/Str})
 
 
 
