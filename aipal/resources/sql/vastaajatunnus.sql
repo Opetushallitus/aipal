@@ -20,13 +20,12 @@ ORDER BY ktk.id;
 -- :name lisaa-vastaajatunnus! :<!
 INSERT INTO vastaajatunnus (tunnus, kyselykertaid, suorituskieli, tutkintotunnus, taustatiedot,
                           vastaajien_lkm,
-                          valmistavan_koulutuksen_jarjestaja,
                           valmistavan_koulutuksen_oppilaitos,
                           valmistavan_koulutuksen_toimipaikka,
                           voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, rahoitusmuotoid)
 VALUES (:tunnus, :kyselykertaid, :kieli, :tutkinto, :taustatiedot,
-      :vastaajien_lkm, :valmistavan_koulutuksen_jarjestaja, :valmistavan_koulutuksen_oppilaitos, :toimipaikka,
-               :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja, 5)
+      :vastaajien_lkm, :valmistavan_koulutuksen_oppilaitos, :toimipaikka,
+      :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja, 5)
 RETURNING vastaajatunnusid;
 
 -- :name paivita-taustatiedot! :! :n
