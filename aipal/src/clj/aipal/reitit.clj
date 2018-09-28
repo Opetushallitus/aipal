@@ -89,7 +89,7 @@
     (context "/api/public/uraseuranta" [] :no-doc true :tags ["uraseuranta"] (arvo.rest-api.uraseuranta/uraseuranta-reitit asetukset))
     (context "/api/public/koodisto" [] :no-doc true :tags ["koodisto"] (arvo.rest-api.koodisto/koodisto-reitit asetukset))
     (context "/api/tiedote" [] :no-doc true :tags ["tiedote"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
-    (context "/api/csv" [] :no-doc true :tags ["csv"] :no-doc true aipal.rest-api.raportti.kysely/csv)
+    (context "/api/csv" [] :no-doc true :tags ["csv"] aipal.rest-api.raportti.kysely/csv)
     (context "/api/vipunen" [] :no-doc true :tags ["vipunen"] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
     (context "/api/export/v1" [] :tags ["export"] :middleware [#(wrap-authentication %)] arvo.rest-api.export/v1)
     (r/not-found "Not found")))
