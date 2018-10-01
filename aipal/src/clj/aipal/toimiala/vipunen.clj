@@ -34,7 +34,6 @@
                                :opintoala_fi (s/maybe s/Str)
                                :vastausaika org.joda.time.LocalDate
                                :koulutustoimija_fi s/Str
-                               :rahoitusmuoto s/Str
                                :valmistavan_koulutuksen_oppilaitos (s/maybe s/Str)
                                :valmistavan_koulutuksen_jarjestaja_sv (s/maybe s/Str)
                                :kysymysid s/Int

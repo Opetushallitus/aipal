@@ -47,7 +47,7 @@
     (sql/where query {:vastaajatunnus.tutkintotunnus [in tutkinnot]})))
 
 (defn yhteiset-rajaukset
-  [query {:keys [tutkinnot koulutuksen_jarjestajat jarjestavat_oppilaitokset kyselyid kyselykertaid rahoitusmuotoid suorituskieli]}]
+  [query {:keys [tutkinnot koulutuksen_jarjestajat jarjestavat_oppilaitokset kyselyid kyselykertaid suorituskieli]}]
   (cond-> query
     tutkinnot (sql/where {:vastaajatunnus.tutkintotunnus [in tutkinnot]})
     koulutuksen_jarjestajat (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in koulutuksen_jarjestajat]})
@@ -55,7 +55,6 @@
     kyselyid (sql/where {:kyselykerta.kyselyid kyselyid})
     ; vastaajatunnus.kyselykertaid tai kyselykerta.kyselykertaid
     kyselykertaid (sql/where {:kyselykertaid kyselykertaid})
-    rahoitusmuotoid (sql/where {:vastaajatunnus.rahoitusmuotoid rahoitusmuotoid})
     suorituskieli (sql/where {:vastaajatunnus.suorituskieli suorituskieli})))
 
 (defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
@@ -186,7 +185,7 @@
     sql/exec
     yhdista-valtakunnalliset-taustakysymysryhmat))
 
-(defn ^:private hae-vastaukset [{:keys [tutkinnot koulutuksen_jarjestajat rahoitusmuotoid suorituskieli
+(defn ^:private hae-vastaukset [{:keys [tutkinnot koulutuksen_jarjestajat suorituskieli
                                         jarjestavat_oppilaitokset vertailujakso_alkupvm vertailujakso_loppupvm]
                                  :as parametrit}]
   (->
@@ -203,7 +202,6 @@
     (cond->
       (or tutkinnot
           koulutuksen_jarjestajat
-          rahoitusmuotoid
           suorituskieli
           jarjestavat_oppilaitokset) (sql/join :inner :vastaajatunnus
                                                (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))

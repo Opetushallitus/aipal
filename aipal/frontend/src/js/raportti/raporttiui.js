@@ -64,14 +64,13 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Oppilaitos', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Rahoitusmuoto', 'Raportti', 'Tutkinto', 'Tutkintotyyppi', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
-    function($scope, Koulutustoimija, Oppilaitos, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Rahoitusmuoto, Raportti, Tutkinto, Tutkintotyyppi, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Oppilaitos', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'Tutkintotyyppi', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, Oppilaitos, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Raportti, Tutkinto, Tutkintotyyppi, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.kieli = kieli;
     $scope.raportti.tyyppi = 'vertailu';
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
-    $scope.raportti.rahoitusmuotoid = 5;
     $scope.printgraphs = true;
     $scope.printfreetext = true;
     $scope.$watch('raportti', function(uusi) {
@@ -126,9 +125,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
       if (tyyppi === 'kysely' || tyyppi === 'kyselykerta') {
         $scope.raportti.tutkintorakennetaso = 'tutkinto';
       }
-      // Säilytetään rahoitusmuodon ja suorituskielen valinta kysely- ja kyselykertasivuilla
+      // Säilytetään suorituskielen valinta kysely- ja kyselykertasivuilla
       else {
-        //delete $scope.raportti.rahoitusmuotoid;
         delete $scope.raportti.suorituskieli;
       }
     };
@@ -178,10 +176,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
 
     Tutkinto.haeVanhentuneetTutkinnotHierarkiassa().success(function(koulutusalat) {
       $scope.vanhentuneetKoulutusalat = koulutusalat;
-    });
-
-    Rahoitusmuoto.haeKaikki(function(rahoitusmuodot) {
-      $scope.rahoitusmuodot = rahoitusmuodot;
     });
     Kieli.haeKaikki().success(function(kielet) {
       $scope.kielet = _.pluck(kielet, 'kieli');

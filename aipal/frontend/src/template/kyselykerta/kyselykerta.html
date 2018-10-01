@@ -85,10 +85,9 @@
       </div>
     </div>
 
-    <div ng-repeat="rahoitusmuodot in rahoitusmuodotmap" ng-show="(tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}).length">
-        <h3>{{rahoitusmuodot.rahoitusmuoto | enumArvo:'rahoitusmuoto'}}</h3>
+    <div>
         <div class="well">
-        <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper>
+        <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper ng-if="kysely.tyyppi !== 3">
             <thead>
             <tr>
                 <th ts-criteria="tunnus">{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
@@ -106,7 +105,7 @@
                         {{'vastaajatunnus.vastauksia'|i18n}}
                     </td>
                     <td>
-                        <strong>{{getVastaustenLkm(rahoitusmuodot.rahoitusmuotoid)}} / {{getVastaajienLkm(rahoitusmuodot.rahoitusmuotoid)}}</strong>
+                        <strong>{{getVastaustenLkm()}} / {{getVastaajienLkm()}}</strong>
                     </td>
                     <td></td>
                 </tr>
@@ -115,13 +114,13 @@
                         {{'i18n.vastaajatunnus.vastausprosentti'|i18n}}
                     </td>
                     <td>
-                        <uib-progressbar value="getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0"><span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span></uib-progressbar>
+                        <uib-progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span></uib-progressbar>
                     </td>
                     <td></td>
                 </tr>
             </tfoot>
             <tbody>
-                <tr ng-repeat="tunnus in tunnukset | filter: {rahoitusmuotoid: rahoitusmuodot.rahoitusmuotoid}"
+                <tr ng-repeat="tunnus in tunnukset"
                     ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}"
                     ts-repeat>
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>

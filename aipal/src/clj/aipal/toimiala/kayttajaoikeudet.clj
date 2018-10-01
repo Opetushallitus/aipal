@@ -20,7 +20,7 @@
 (defn aipal-kayttaja?
   ([x] (aipal-kayttaja?))
   ([]
-    true))
+   true))
 
 (defn ^:private ntm-kysely? [kyselyid]
   (kysely-arkisto/ntm-kysely? (->int kyselyid)))
@@ -299,7 +299,6 @@
     :kayttajan_tiedot aipal-kayttaja?
     :ohjeet_luku aipal-kayttaja?
     :ohje_muokkaus kayttaja/yllapitaja?
-    :rahoitusmuoto aipal-kayttaja?
     :tutkinto aipal-kayttaja?
     :tutkintotyyppi aipal-kayttaja?
     :oppilaitos aipal-kayttaja?

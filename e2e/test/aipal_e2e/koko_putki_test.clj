@@ -93,7 +93,6 @@
       (kyselykerta-sivu/luo-vastaajatunnuksia)
       (kyselykerta-sivu/valitse-vastaajatunnusten-maara "5")
       ; ARVO \
-      ;;(kyselykerta-sivu/valitse-vastaajatunnuksen-rahoitusmuoto "Oppisopimus")
       (kyselykerta-sivu/valitse-vastaajatunnusten-tutkinto "Sairaanhoitaja")
       ;(kyselykerta-sivu/valitse-vastaajatunnusten-koulutuksen_jarjestaja "Ruikonperä")
       ; ARVO /

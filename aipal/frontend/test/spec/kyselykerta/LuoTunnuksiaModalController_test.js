@@ -27,7 +27,6 @@ describe('kysely.kyselyui.LuoTunnuksiaModalController', function(){
   beforeEach(module(function($provide){
     $provide.value('$uibModalInstance', {});
     $provide.value('kielet', {});
-    $provide.value('rahoitusmuodot', {});
     $provide.value('tutkinnot', {});
     $provide.value('koulutustoimijat', {});
     $provide.value('aktiivinenKoulutustoimija', {});

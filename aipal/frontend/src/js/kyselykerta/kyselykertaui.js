@@ -15,7 +15,7 @@
 'use strict';
 
 angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.bootstrap','ngRoute', 'rest.tutkinto', 'rest.koulutustoimija', 'rest.kieli',
-                                             'rest.rahoitusmuoto', 'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
+                                             'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
                                              'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus',
                                              'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.varmistus', 'yhteiset.suodattimet.tutkinto'])
 
@@ -39,8 +39,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Rahoitusmuoto', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm',
-    function (Kyselykerta, Kysely, Kieli, Rahoitusmuoto, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm',
+    function (Kyselykerta, Kysely, Kieli, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm) {
       $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function (form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -70,9 +70,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
             kielet: function () {
               return $scope.kielet;
             },
-            rahoitusmuodot: function () {
-              return $scope.rahoitusmuodot;
-            },
             tutkinnot: function() {
               return $scope.tutkinnot;
             },
@@ -101,7 +98,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus).success(function(uudetTunnukset) {
             _.forEach(uudetTunnukset, function(tunnus) {
               tunnus.new = true;
-              tunnus.rahoitusmuotoid = 5;
               tunnus.vastauksia = 0;
               $scope.tunnukset.unshift(tunnus);
             });
@@ -114,9 +110,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       $scope.uusi = uusi;
       $scope.kyselykertaid = $routeParams.kyselykertaid;
-      $scope.rahoitusmuodot = Rahoitusmuoto.haeKaikki(function(data) {
-        $scope.rahoitusmuodotmap = _.indexBy(data, 'rahoitusmuotoid');
-      });
 
       Kieli.haeKaikki().success(function(kielet) {
         $scope.kielet = _.pluck(kielet, 'kieli');
@@ -177,25 +170,16 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         $scope.kyselykerta = {};
       }
 
-      $scope.getVastaustenLkm = function(rahoitusmuotoid){
-        if(!rahoitusmuotoid) {
-          return _($scope.tunnukset).map('vastausten_lkm').reduce(function (sum, num) {return sum + num;});
-        }
-        return _($scope.tunnukset).filter({ 'rahoitusmuotoid': rahoitusmuotoid }).map('vastausten_lkm').reduce(function(sum, num) {return sum + num;});
+      $scope.getVastaustenLkm = function(){
+        return _($scope.tunnukset).map('vastausten_lkm').reduce(function (sum, num) {return sum + num;});
       };
-      $scope.getVastaajienLkm = function(rahoitusmuotoid){
-        if(!rahoitusmuotoid) {
-          return _($scope.tunnukset).map('vastaajien_lkm').reduce(function (sum, num) {return sum + num;});
-        }
-        return _($scope.tunnukset).filter({ 'rahoitusmuotoid': rahoitusmuotoid }).map('vastaajien_lkm').reduce(function(sum, num) {return sum + num;});
+
+      $scope.getVastaajienLkm = function(){
+        return _($scope.tunnukset).map('vastaajien_lkm').reduce(function (sum, num) {return sum + num;});
       };
-      $scope.getVastausProsentti = function(rahoitusmuotoid){
-        var prosentti;
-        if(!rahoitusmuotoid) {
-          prosentti = ($scope.getVastaustenLkm() / $scope.getVastaajienLkm()) * 100;
-        }
-        prosentti = ($scope.getVastaustenLkm(rahoitusmuotoid) / $scope.getVastaajienLkm(rahoitusmuotoid))*100;
-        return Math.min(100, prosentti);
+
+      $scope.getVastausProsentti = function(){
+        return Math.min(100, ($scope.getVastaustenLkm() / $scope.getVastaajienLkm()) * 100);
       };
 
       $scope.tallenna = function() {
@@ -253,9 +237,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
   )
 
   .controller('LuoTunnuksiaModalController', ['$uibModalInstance', '$scope', '$filter', 'Oppilaitos', 'kielet',
-    'rahoitusmuodot', 'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
+    'tutkinnot', 'koulutustoimijat', 'kyselykerta', 'aktiivinenKoulutustoimija',
     'viimeksiValittuTutkinto', 'kayttooikeudet', 'Tutkinto', 'kyselytyyppi', 'laajennettu', 'Koulutustoimija',
-    function ($uibModalInstance, $scope, $filter, Oppilaitos, kielet, rahoitusmuodot, tutkinnot, koulutustoimijat,
+    function ($uibModalInstance, $scope, $filter, Oppilaitos, kielet, tutkinnot, koulutustoimijat,
               kyselykerta, aktiivinenKoulutustoimija, viimeksiValittuTutkinto, kayttooikeudet, Tutkinto, kyselytyyppi,
               laajennettu, Koulutustoimija) {
 
@@ -264,7 +248,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.vastaajatunnus = {
         henkilokohtainen: true,
         koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
-        rahoitusmuotoid: 5,
         suorituskieli: 'fi',
         tutkinto: viimeksiValittuTutkinto,
         vastaajien_lkm: 1,
@@ -276,8 +259,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.naytaKoulutusmuoto = kyselytyyppi === 1;
 
       $scope.kielet = kielet;
-      $scope.rahoitusmuodot = rahoitusmuodot;
-      $scope.rahoitusmuodotmap = _.indexBy(rahoitusmuodot, 'rahoitusmuotoid');
       $scope.kyselykerta = kyselykerta;
       var tanaan = new Date();
       tanaan.setUTCHours(0, 0, 0, 0);
@@ -413,13 +394,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         } else {
           return tutkinto;
         }
-      };
-
-      //AVOP-45: deprecated, always required
-      $scope.tutkintoPakollinen = function () {
-        var rahoitusmuotoid = $scope.vastaajatunnus.rahoitusmuotoid;
-        return $scope.tutkinnot.length > 0 && (rahoitusmuotoid === undefined ||
-          $scope.rahoitusmuodotmap[rahoitusmuotoid].rahoitusmuoto !== 'ei_rahoitusmuotoa');
       };
     }])
 

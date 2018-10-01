@@ -55,9 +55,6 @@
 (defentity vastaus
   (sql/pk :vastausid))
 
-(defentity rahoitusmuoto
-  (sql/pk :rahoitusmuotoid))
-
 (defentity kieli
   (sql/pk :kieli))
 

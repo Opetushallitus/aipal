@@ -70,7 +70,6 @@
    :vastaajien_lkm 1
    :voimassa_alkupvm (alkupvm)
    :voimassa_loppupvm (loppupvm)
-   :rahoitusmuotoid 5
    :toimipaikka nil
    :tutkinto nil})
 
@@ -85,7 +84,6 @@
      :voimassa_alkupvm (alkupvm)
      :voimassa_loppupvm (loppupvm)
      :kieli kieli
-     :rahoitusmuotoid 5
      :toimipaikka nil
      :valmistavan_koulutuksen_jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus])) 
      :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])

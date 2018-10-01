@@ -38,10 +38,6 @@
   (w/input-text "#vastaajien_maara" maara)
   (w/click ".e2e-vastaajatunnus-henkilokohtainen"))
 
-(defn valitse-vastaajatunnuksen-rahoitusmuoto [rahoitusmuoto]
-  (odota-kunnes (w/present? {:css ".e2e-vastaajatunnuksen-rahoitusmuoto"}))
-  (w/select-by-text ".e2e-vastaajatunnuksen-rahoitusmuoto" rahoitusmuoto))
-
 ; ARVO
 (defn valitse-vastaajatunnusten-tutkinto [tutkinto]
   ; valintalista auki

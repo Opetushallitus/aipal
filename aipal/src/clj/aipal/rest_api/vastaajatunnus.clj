@@ -29,7 +29,6 @@
    :tutkinto (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
    :kieli (:suorituskieli vastaajatunnus)
    :kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
-   :rahoitusmuotoid (or (:rahoitusmuotoid vastaajatunnus) 5)
    :koulutusmuoto (:koulutusmuoto vastaajatunnus)
    :valmistavan_koulutuksen_jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
    :valmistavan_koulutuksen_oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
