@@ -45,6 +45,7 @@
         {:ui "/api-docs"
          :spec "/swagger.json"
          :data {:info {:title "Arvo API"
+                       :version "1.0.0"
                        :description "Arvon rajapinnat."}
                 :basePath (str (service-path (get-in asetukset [:server :base-url] "/api")))
                 :tags [{:name "export" :description "Kyselytietojen siirtorajapinta"}]}})

@@ -23,7 +23,6 @@
   {:vastausid s/Int
    :vastaajatunnusid s/Int
    :vastaajaid s/Int
-   :vastaajatunnus s/Str
    :kysymysid s/Int
    :vastausaika s/Any
    :numerovalinta (s/maybe s/Int)
@@ -32,7 +31,6 @@
    :koulutustoimija s/Str
    :kyselyid s/Int
    :kyselykertaid s/Int
-   :vastaajatunnus_alkupvm s/Any
    :monivalintavaihtoehto_fi (s/maybe s/Any)
    :monivalintavaihtoehto_sv (s/maybe s/Str)
    :monivalintavaihtoehto_en (s/maybe s/Str)
@@ -72,8 +70,11 @@
 (s/defschema Vastaajatunnus
   {:vastaajaid       s/Int
    :vastaajatunnusid s/Int
+   :vastaajatunnus   s/Str
    :oppilaitos       (s/maybe s/Str)
    :taustatiedot     (s/maybe Taustatiedot)
+   :vastaajatunnus_alkupvm (s/maybe s/Str)
+   :vastaajatunnus_loppupvm (s/maybe s/Str)
    s/Any s/Any})
 
 (s/defschema Kysely-kysymysryhma
