@@ -15,9 +15,9 @@
         kyselykerta (lisaa-kyselykerta! {:lukittu false} kysely)]
     (testing "lukittu kyselykerta ei ole käytettävissä"
       (is (not (:kaytettavissa (first
-                         (sql/select :kyselykerta
-                           (sql/fields :kyselykerta.kaytettavissa)
-                           (sql/where {:kyselykertaid (:kyselykertaid lukittu-kyselykerta)})))))))
+                                (sql/select :kyselykerta
+                                  (sql/fields :kyselykerta.kaytettavissa)
+                                  (sql/where {:kyselykertaid (:kyselykertaid lukittu-kyselykerta)})))))))
     (testing "lukitsematon kyselykerta on käytettävissä"
       (is (:kaytettavissa (first
                             (sql/select :kyselykerta
@@ -49,9 +49,9 @@
         kyselykerta (lisaa-kyselykerta! {:lukittu false} kysely)]
     (testing "lukittu kyselykerta ei ole käytettävissä"
       (is (not (:kaytettavissa (first
-                         (sql/select :kyselykerta
-                           (sql/fields :kyselykerta.kaytettavissa)
-                           (sql/where {:kyselykertaid (:kyselykertaid lukittu-kyselykerta)})))))))
+                                (sql/select :kyselykerta
+                                  (sql/fields :kyselykerta.kaytettavissa)
+                                  (sql/where {:kyselykertaid (:kyselykertaid lukittu-kyselykerta)})))))))
     (testing "lukitsematon kyselykerta ei ole käytettävissä"
       (is (not (:kaytettavissa (first
                                  (sql/select :kyselykerta
@@ -64,9 +64,9 @@
         kyselykerta (lisaa-kyselykerta! {:lukittu false} kysely)]
     (testing "lukittu kyselykerta ei ole käytettävissä"
       (is (not (:kaytettavissa (first
-                         (sql/select :kyselykerta
-                           (sql/fields :kyselykerta.kaytettavissa)
-                           (sql/where {:kyselykertaid (:kyselykertaid lukittu-kyselykerta)})))))))
+                                (sql/select :kyselykerta
+                                  (sql/fields :kyselykerta.kaytettavissa)
+                                  (sql/where {:kyselykertaid (:kyselykertaid lukittu-kyselykerta)})))))))
     (testing "lukitsematon kyselykerta ei ole käytettävissä"
       (is (not (:kaytettavissa (first
                                  (sql/select :kyselykerta

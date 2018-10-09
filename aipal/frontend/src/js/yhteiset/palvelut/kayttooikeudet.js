@@ -16,7 +16,8 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
         yllapitaja,
         impersonoitu,
         ntmVastuuKayttaja,
-        vastuukayttaja;
+        vastuukayttaja,
+        laajennettu;
 
     function paivitaOikeudet() {
       oikeudet = resource.get().$promise;
@@ -27,6 +28,8 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
         impersonoitu = false;
         ntmVastuuKayttaja = false;
         vastuukayttaja = data.aktiivinen_rooli.rooli === 'OPL-VASTUUKAYTTAJA';
+
+        laajennettu = data.laajennettu;
 
         if(_.where(data.roolit, {rooli: 'YLLAPITAJA'}).length > 0){
           yllapitaja = true;
@@ -55,6 +58,9 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
       },
       isNtmVastuuKayttaja: function() {
         return ntmVastuuKayttaja;
+      },
+      laajennettuOppisopimuskoulutus: function() {
+        return laajennettu;
       },
       paivita: paivitaOikeudet
     };

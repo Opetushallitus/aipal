@@ -1,6 +1,6 @@
 --:name hae-voimassaoleva-kayttaja :? :1
 SELECT * FROM kayttaja
-WHERE uid = :uid
+WHERE uid ILIKE :uid
       AND voimassa = TRUE
       AND (muutettuaika + :voimassaolo::interval >= now()
            OR uid IN ('JARJESTELMA', 'KONVERSIO', 'INTEGRAATIO', 'VASTAAJA'));
@@ -42,3 +42,12 @@ FROM rooli_organisaatio ro
 JOIN koulutustoimija k on ro.organisaatio = k.ytunnus
 WHERE ro.kayttaja = :kayttajaOid
 AND ro.voimassa = TRUE;
+
+-- :name hae-impersonoitavat-kayttajat :? :*
+SELECT oid, uid, etunimi, sukunimi FROM kayttaja
+WHERE NOT EXISTS (SELECT rooli_organisaatio_id FROM rooli_organisaatio WHERE kayttaja = oid AND rooli = 'YLLAPITAJA')
+AND oid NOT IN ('JARJESTELMA', 'KONVERSIO', 'INTEGRAATIO', 'VASTAAJA')
+AND voimassa = TRUE;
+
+-- :name hae-laajennettu :? :1
+SELECT EXISTS(SELECT * FROM koulutustoimija_ja_tutkinto WHERE koulutustoimija IN (:v*:koulutustoimijat) AND laaja_oppisopimuskoulutus = TRUE) AS laajennettu;

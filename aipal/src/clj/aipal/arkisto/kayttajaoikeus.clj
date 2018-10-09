@@ -13,16 +13,11 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kayttajaoikeus
-  (:require [korma.core :as sql]
-            [korma.db :as kdb]
-            [aipal.arkisto.kayttaja :as kayttaja-arkisto]
-            [clojure.tools.logging :as log]
+  (:require [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
-            [aipal.integraatio.sql.korma :as taulut]
             [arvo.db.core :refer [*db*] :as db]
             [clojure.java.jdbc :as jdbc]
-            [oph.korma.common :refer [select-unique-or-nil update-unique]]
             [clojure.set :as set]))
 
 (defn hae-roolit [oid]
@@ -30,10 +25,12 @@
 
 (defn hae-oikeudet
   ([oid]
-   (kdb/transaction
-     (let [kayttaja (kayttaja-arkisto/hae oid)
-           roolit (hae-roolit oid)]
-       (assoc kayttaja :roolit roolit))))
+   (let [kayttaja (kayttaja-arkisto/hae oid)
+         roolit (hae-roolit oid)
+         laajennettu (db/hae-laajennettu {:koulutustoimijat (map :organisaatio roolit)})]
+     (-> kayttaja
+         (merge laajennettu)
+         (assoc :roolit roolit))))
   ([]
    (hae-oikeudet (:oid *kayttaja*))))
 

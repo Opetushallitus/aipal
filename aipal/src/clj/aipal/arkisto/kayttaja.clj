@@ -13,81 +13,18 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kayttaja
-  (:require [korma.core :as sql]
-            [korma.db :as db]
-            [clojure.tools.logging :as log]
-            [oph.korma.common :refer [select-unique select-unique-or-nil update-unique]]
-            [aipal.integraatio.sql.korma :as taulut]
+  (:require [arvo.db.core :refer [*db*] :as db]
             [oph.common.util.util :refer [sisaltaako-kentat?]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [aipal.infra.kayttaja.vakiot
-             :refer [jarjestelma-oid integraatio-uid integraatio-oid
-                     konversio-oid vastaaja-oid]]))
+            [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
-(defn hae
-  "Hakee käyttäjätunnuksen perusteella."
-  [oid]
-  (select-unique-or-nil taulut/kayttaja (sql/where {:oid oid})))
-
-(defn hae-voimassaoleva [uid]
-  (select-unique-or-nil taulut/kayttaja (sql/where {(sql/sqlfn lower :uid) (sql/sqlfn lower uid), :voimassa true})))
+(defn hae [oid]
+  (db/hae-kayttaja {:kayttajaOid oid}))
 
 (defn olemassa? [k]
   (boolean (hae (:oid k))))
 
-(defn ^:integration-api paivita!
-  "Päivittää käyttäjätaulun uusilla käyttäjillä kt."
-  [kt]
-  {:pre [(= (:uid *kayttaja*) integraatio-uid)]}
-  (db/transaction
-    ;; Merkitään nykyiset käyttäjät ei-voimassaoleviksi
-    (log/debug "Merkitään olemassaolevat käyttäjät ei-voimassaoleviksi")
-    (sql/update taulut/kayttaja
-      (sql/set-fields {:voimassa false})
-      (sql/where {:luotu_kayttaja [= (:oid *kayttaja*)]}))
-    (doseq [k kt]
-      (log/debug "Päivitetään käyttäjä" (pr-str k))
-      (if (olemassa? k)
-        ;; Päivitetään olemassaoleva käyttäjä merkiten voimassaolevaksi
-        (do
-          (log/debug "Käyttäjä on jo olemassa, päivitetään tiedot")
-          (update-unique taulut/kayttaja
-            (sql/set-fields (assoc k :voimassa true))
-            (sql/where {:oid [= (:oid k)]})))
-        ;; Lisätään uusi käyttäjä
-        (do
-          (log/debug "Luodaan uusi käyttäjä")
-          (sql/insert taulut/kayttaja (sql/values k)))))))
-
-(defn hae-impersonoitava-termilla
-  "Hakee impersonoitavia käyttäjiä termillä"
-  [termi]
-  (for [kayttaja (sql/select taulut/kayttaja
-                   (sql/fields :oid :uid :etunimi :sukunimi)
-                   (sql/where (and
-                                (sql/sqlfn "not exists"
-                                  (sql/subselect taulut/rooli_organisaatio
-                                    (sql/fields :rooli_organisaatio_id)
-                                    (sql/where {:rooli "YLLAPITAJA"
-                                                :kayttaja :kayttaja.oid})))
-                                {:oid [not-in [jarjestelma-oid konversio-oid integraatio-oid vastaaja-oid]]
-                                 :voimassa true})))
+(defn hae-impersonoitava-termilla [termi]
+  (for [kayttaja (db/hae-impersonoitavat-kayttajat)
         :when (sisaltaako-kentat? kayttaja [:etunimi :sukunimi] termi)]
     {:nimi (str (:etunimi kayttaja) " " (:sukunimi kayttaja) " (" (:uid kayttaja) ")")
      :oid (:oid kayttaja)}))
-
-(defn ^:integration-api paivita-kayttaja!
-  "Päivittää tai lisää käyttäjän"
-  [k]
-  (log/debug "Päivitetään käyttäjä" (pr-str k))
-  (if (olemassa? k)
-    ;; Päivitetään olemassaoleva käyttäjä merkiten voimassaolevaksi
-    (do
-      (log/debug "Käyttäjä on jo olemassa, päivitetään tiedot")
-      (update-unique taulut/kayttaja
-                  (sql/set-fields k)
-                  (sql/where {:oid [= (:oid k)]})))
-    ;; Lisätään uusi käyttäjä
-    (do
-      (log/debug "Luodaan uusi käyttäjä")
-      (sql/insert taulut/kayttaja (sql/values k)))))

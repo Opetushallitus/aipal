@@ -256,6 +256,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       $scope.isYllapitaja = kayttooikeudet.isYllapitaja();
 
+      $scope.laajennettuOppisopimuskoulutus = kayttooikeudet.laajennettuOppisopimuskoulutus();
+
       $scope.naytaKoulutusmuoto = kyselytyyppi === 1;
 
       $scope.kielet = kielet;
