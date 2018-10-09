@@ -34,8 +34,9 @@ JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE k.tila = 'julkaistu'
 AND k.tyyppi IN (:v*:kyselytyypit)
-AND k.koulutustoimija = :koulutustoimija
---~(if (:vipunen params) "OR kys.valtakunnallinen = TRUE")
+--~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
+--~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
+--~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
 ;
 
 -- :name export-kysymykset :? :*

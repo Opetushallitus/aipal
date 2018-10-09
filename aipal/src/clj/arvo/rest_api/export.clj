@@ -4,7 +4,8 @@
             [arvo.schema.export :refer :all]
             [oph.common.util.http-util :refer [response-or-404]]
             [clojure.tools.logging :as log]
-            [arvo.integraatio.kyselyynohjaus :as ko]))
+            [arvo.integraatio.kyselyynohjaus :as ko]
+            [schema.core :as s]))
 
 (defn export-params [request type]
   (let [params {:koulutustoimija (:organisaatio request)
@@ -23,7 +24,9 @@
     (response-or-404 (db/export-kyselyt (export-params request "kyselykerrat"))))
   (GET "/vastaukset" [:as request]
     :return [Vastaus]
-    (response-or-404 (db/export-vastaukset (export-params request "vastaukset"))))
+    :query-params [{alkupvm :- #"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))" nil}
+                   {loppupvm :- #"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))" nil}]
+    (response-or-404 (db/export-vastaukset (merge {:alkupvm alkupvm :loppupvm loppupvm} (export-params request "vastaukset")))))
   (GET "/vastaajat" [:as request]
     :return [Vastaajatunnus]
     (response-or-404 (db/export-taustatiedot (export-params request "taustatiedot"))))
