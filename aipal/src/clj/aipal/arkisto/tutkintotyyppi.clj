@@ -20,8 +20,7 @@
   (db/hae-tutkintotyypit))
 
 (defn hae-kayttajalle []
-  (when (not-empty (:oppilaitostyypit *kayttaja*))
-    (db/hae-kayttajan-tutkintotyypit {:oppilaitostyypit (:oppilaitostyypit *kayttaja*)})))
+  (db/hae-kayttajan-tutkintotyypit {:koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)}))
 
 (defn ^:integration-api lisaa! [tutkintotyyppi]
   (db/lisaa-tutkintotyyppi! tutkintotyyppi))

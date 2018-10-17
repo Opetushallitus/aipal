@@ -98,7 +98,8 @@ WHERE tutkintotyyppi.tutkintotyyppi = :tutkintotyyppi;
 SELECT * FROM tutkintotyyppi ORDER BY tutkintotyyppi.tutkintotyyppi ASC;
 
 -- :name hae-kayttajan-tutkintotyypit :? :*
-SELECT tt.* FROM tutkintotyyppi tt
-JOIN oppilaitostyyppi_tutkintotyyppi ottt ON tt.tutkintotyyppi = ottt.tutkintotyyppi
-WHERE ottt.oppilaitostyyppi IN (:v*:oppilaitostyypit)
+SELECT tt.* FROM oppilaitos o
+JOIN oppilaitostyyppi_tutkintotyyppi ottt ON o.oppilaitostyyppi = ottt.oppilaitostyyppi
+JOIN tutkintotyyppi tt ON ottt.tutkintotyyppi = tt.tutkintotyyppi
+WHERE o.koulutustoimija = :koulutustoimija
 ORDER BY tt.tutkintotyyppi ASC;

@@ -92,10 +92,7 @@
 
 (defn ^:private raportti-query [rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat oppilaitokset koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi suorituskieli]
   (->
-    (sql/select* [:vastaus_jatkovastaus_valtakunnallinen_view :vastaus])
-    (sql/join :inner :vastaaja_taustakysymysryhma_view
-              {:vastaus.vastaajaid :vastaaja_taustakysymysryhma_view.vastaajaid
-               :vastaaja_taustakysymysryhma_view.taustakysymysryhmaid [in [taustakysymysryhmaid]]})
+    (sql/select* [:vastaus :vastaus])
     (cond->
       (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi koulutustoimijat suorituskieli oppilaitokset) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi suorituskieli oppilaitokset) (sql/join :inner :vastaajatunnus
@@ -109,8 +106,8 @@
       tutkintotyyppi (sql/where {:tutkinto.tutkintotyyppi tutkintotyyppi})
       koulutustoimijat (->
                          (sql/join :inner :kyselykerta (= :kyselykerta.kyselykertaid :vastaaja.kyselykertaid))
-                         (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
-                         (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]}))
+                         (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+                         (sql/where {:kysely.koulutustoimija [in koulutustoimijat]}))
       oppilaitokset (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in oppilaitokset]})
       suorituskieli (sql/where {:vastaajatunnus.suorituskieli suorituskieli}))
     (generoi-joinit (konvertoi-ehdot rajaukset))
@@ -123,12 +120,7 @@
                 [(sql/sqlfn array_agg :vastaus.vaihtoehto) :vaihtoehdot]
                 [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
                 [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
-                [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa]
-                [(sql/sqlfn count :vastaus.kylla_asteikko) :jatkovastaus_vastaajien_lukumaara]
-                [(sql/sqlfn avg :vastaus.kylla_asteikko) :jatkovastaus_keskiarvo]
-                [(sql/sqlfn stddev_samp :vastaus.kylla_asteikko) :jatkovastaus_keskihajonta]
-                [(sql/sqlfn jakauma :vastaus.kylla_asteikko) :jatkovastaus_jakauma]
-                [(sql/sqlfn array_agg :vastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
+                [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa])
     (sql/group (sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid))
     sql/exec))
 
@@ -150,8 +142,8 @@
 
 (defn rajaa-kyselykerrat-koulutustoimijoihin [query koulutustoimijat]
   (-> query
-    (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselykerta.kyselyid))
-    (sql/where {:kysely_organisaatio_view.koulutustoimija [in koulutustoimijat]})))
+    (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
+    (sql/where {:kysely.koulutustoimija [in koulutustoimijat]})))
 
 (defn rajaa-aikavalille
   [query [alkupvm-sarake loppupvm-sarake] [alkupvm loppupvm]]
@@ -223,8 +215,6 @@
                           :nimi_en (get-in tekstit-en [:yleiset :valtakunnallinen])})))
 
 (defn paivita-nakymat []
-  (sql/exec-raw "REFRESH MATERIALIZED VIEW CONCURRENTLY vastaus_jatkovastaus_valtakunnallinen_view;")
-  (sql/exec-raw "REFRESH MATERIALIZED VIEW vastaaja_taustakysymysryhma_view;")
   (sql/exec-raw "REFRESH MATERIALIZED VIEW kysymysryhma_taustakysymysryhma_view;"))
 
 (defn muodosta [parametrit]

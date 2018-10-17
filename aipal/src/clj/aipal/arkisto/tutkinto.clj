@@ -25,6 +25,12 @@
                                   3 ["06" "07" "12" "13" "14" "15" "16"]
                                   6 ["13" "14" "15" "16"]})
 
+
+(def opintoala-koulutusala-defaults
+  {:opintoala_nimi_fi "Ei opintoalaa" :koulutusala_nimi_fi "Ei koulutusalaa"
+   :opintoala_nimi_sv "Studieområde saknas" :koulutusala_nimi_sv "Utbildningsområde saknas"
+   :opintoala_nimi_en "Missing field of study" :koulutusala_nimi_en "Missing field of education"})
+
 (defn tutkinto-voimassa? [tutkinto]
   (let [alkupvm (c/to-local-date (:voimassa_alkupvm tutkinto))
         loppupvm (c/to-local-date (:voimassa_loppupvm tutkinto))
@@ -48,11 +54,20 @@
 (defn hae [tutkintotunnus]
   (db/hae-tutkinto {:tutkintotunnus tutkintotunnus}))
 
+(defn fix-opintoala [tutkinto]
+  (if (nil? (:opintoala tutkinto))
+      (merge tutkinto opintoala-koulutusala-defaults)
+      tutkinto))
+
 (defn hae-koulutustoimijan-tutkinnot [y-tunnus kyselytyyppi]
-  (let [tutkintotyypit (get kyselytyyppi-tutkintotyypit kyselytyyppi)]
-    (filter tutkinto-voimassa?
-      (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
-                                           (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit}))))))
+  (let [tutkintotyypit (if kyselytyyppi
+                         (get kyselytyyppi-tutkintotyypit kyselytyyppi)
+                         (map :tutkintotyyppi (db/hae-kayttajan-tutkintotyypit {:koulutustoimija y-tunnus})))]
+      (->> (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
+                                                (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit})))
+           (filter tutkinto-voimassa?)
+           (map fix-opintoala))))
+
 
 (defn hae-kyselytyypin-tutkinnot [kyselytyyppi]
   (let [tutkintotyypit (-> kyselytyyppi-tutkintotyypit
