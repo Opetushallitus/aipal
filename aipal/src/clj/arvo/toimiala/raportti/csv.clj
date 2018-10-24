@@ -175,6 +175,7 @@
 
 (defn taustatieto-kentat [taustatiedot]
   (->> taustatiedot
+       (filter (comp :raportoi :csv :raportointi))
        (sort-by (comp :jarjestys :csv :raportointi))
        (map get-csv-field)
        flatten))
