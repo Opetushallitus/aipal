@@ -53,7 +53,7 @@
 (defn create-csv [data]
   (write-csv (muuta-kaikki-stringeiksi data)
              :delimiter delimiter
-             :end-of-line \r\n))
+             :end-of-line "\r\n"))
 
 (defn select-values-or-nil [m keyseq]
   (let [defaults (zipmap keyseq (repeat nil))]
