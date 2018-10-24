@@ -107,14 +107,14 @@
        :path-params [kyselyid :- s/Int]
        :query-params [{lang :- s/Str "fi"}]
        :kayttooikeus [:kysely-raportti kyselyid]
-       (let [csv-data (kysely-csv kyselyid lang)]
+       (let [csv-data (kysely-csv kyselyid (keyword lang))]
          (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
 
   (GET "/kysely/vastauksittain/:kyselyid" []
        :path-params [kyselyid :- s/Int]
        :query-params [{lang :- s/Str "fi"}]
        :kayttooikeus [:kysely-raportti kyselyid]
-       (let [csv-data (kysely-csv-vastauksittain kyselyid lang)]
+       (let [csv-data (kysely-csv-vastauksittain kyselyid (keyword lang))]
          (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
   (GET "/vastaajatunnus/:kyselykertaid" []
        :path-params [kyselykertaid :- s/Int]

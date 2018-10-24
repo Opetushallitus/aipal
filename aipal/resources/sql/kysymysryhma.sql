@@ -10,7 +10,7 @@ INSERT INTO kysymys_jatkokysymys(kysymysid, jatkokysymysid, vastaus) VALUES (:ky
 
 -- :name hae-kysymysryhman-kysymykset :? :*
 SELECT k.*, kr.nimi_fi AS kysymysryhma_fi, kr.nimi_sv AS kysymysryhma_sv, kr.nimi_en AS kysymysryhma_sn,
-       jk.kysymysid AS jatkokysymys_kysymysid, jk.vastaus AS jatkokysymys_vastaus FROM kysymys k
+       jk.kysymysid AS jatkokysymys_kysymysid, jk.vastaus AS jatkokysymys_vastaus, kr.taustakysymykset AS taustakysymys FROM kysymys k
   JOIN kysymysryhma kr ON k.kysymysryhmaid = kr.kysymysryhmaid
   LEFT JOIN kysymys_jatkokysymys jk ON k.kysymysid = jk.jatkokysymysid
 WHERE k.kysymysryhmaid = :kysymysryhmaid

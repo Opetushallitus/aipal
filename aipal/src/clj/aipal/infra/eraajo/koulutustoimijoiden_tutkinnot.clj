@@ -16,6 +16,7 @@
   (:require [clojure.tools.logging :as log]
             [aipal.integraatio.oiva :as oiva]
             [arvo.db.core :refer [*db*] :as db]
+            [cheshire.core :as json]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [clojure.java.jdbc :as jdbc]))
 
@@ -23,7 +24,7 @@
   (let [koulutustoimijoiden-tutkinnot (oiva/hae-koulutustoimijoiden-tutkinnot)]
     (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Oivasta")
     (jdbc/with-db-transaction [tx *db*]
-      (db/poista-koulutustoimijoiden-tutkinnot!)
+      (db/poista-koulutustoimijoiden-tutkinnot! tx)
       (doseq [koulutustoimija koulutustoimijoiden-tutkinnot
               tutkinto (:koulutukset koulutustoimija)]
         (db/lisaa-koulutustoimijan-tutkinto! tx {:ytunnus (:jarjestajaYtunnus koulutustoimija)

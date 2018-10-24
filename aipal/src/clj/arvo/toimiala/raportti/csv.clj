@@ -9,31 +9,63 @@
             [clj-time.core :as time]
             [clj-time.format :as f]
             [aipal.asetukset :refer [asetukset]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]))
+            [aipal.infra.kayttaja :refer [*kayttaja*]]
+            [arvo.util :refer [in?]]))
 
-(def translations {:fi {:vastaajatunnus "Vastaajatunnus" :vastausaika "Vastausaika"
-                        :tunnus "Vastaajatunnus" :luotuaika "luotuaika"
-                        :url "Vastauslinkki"
-                        :voimassa_alkupvm "Voimassa alkaen" :voimassa_loppupvm "Voimassaolo päättyy"
-                        :valmistavan_koulutuksen_jarjestaja "Koulutuksen järjestäjä"
-                        :tutkintotunnus "Tutkinto" :vastausten_lkm "Vastauksia" :vastaajien_lkm "Vastaajien lkm"}
-                   :sv {:vastaajatunnus "Svarskod" :vastausaika "Svarstid"}
-                   :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"}})
+(def default-translations {:fi {:vastaajatunnus "Vastaajatunnus"
+                                :vastausaika "Vastausaika"
+                                :tunnus "Vastaajatunnus"
+                                :luotuaika "Luontiaika"
+                                :url "Vastauslinkki"
+                                :kysymysryhma "Kysymysryhma"
+                                :kysymys "Kysymys"
+                                :vastaus "Vastaus"
+                                :voimassa_alkupvm "Voimassa alkaen"
+                                :voimassa_loppupvm "Voimassaolo päättyy"
+                                :tutkintotunnus "Tutkinto" :vastausten_lkm "Vastauksia" :vastaajien_lkm "Vastaajien lkm"
+                                :tutkinto_selite "Tutkinnon nimi"
+                                :hankintakoulutuksen_toteuttaja_selite "Hankintakoulutuksen toteuttajan nimi"
+                                :toimipaikka_selite "Toimipaikan nimi"}
+                           :sv {:vastaajatunnus "Svarskod"
+                                :vastausaika "Svarstid"
+                                :tunnus "Svarskod"
+                                :luotuaika "Skapat"
+                                :url "Svararkod"
+                                :voimassa_alkupvm "Första svarsdag"
+                                :voimassa_loppupvm "Sista svarsdag"
+                                :tutkintotunnus "Tutkinto" :vastausten_lkm "Respondents antal" :vastaajien_lkm "Svarsantal"
+                                :tutkinto_selite "Namn på examen"
+                                :hankintakoulutuksen_toteuttaja_selite "Namn på anordnaren av anskaffad utbildning"
+                                :toimipaikka_selite "Namn på verksamhetsställe"}
+                           :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"
+                                :tunnus "Answer identifier"
+                                :luotuaika "TimeCreated"
+                                :url "Credential"
+                                :voimassa_alkupvm "ValidityStartDate"
+                                :voimassa_loppupvm "ValidityEndDate"
+                                :tutkintotunnus "Tutkinto" :vastausten_lkm "RespondentCount" :vastaajien_lkm "ResponseCount"
+                                :tutkinto_selite "Name of degree"
+                                :hankintakoulutuksen_toteuttaja_selite "Name of provider (procured training)"
+                                :toimipaikka_selite "Name of operational unit"}})
 
+(def delimiter \;)
 
-(defn select-keys-or-nil [map keyseq]
+(defn create-csv [data]
+  (write-csv (muuta-kaikki-stringeiksi data)
+             :delimiter delimiter
+             :end-of-line \r\n))
+
+(defn select-values-or-nil [m keyseq]
   (let [defaults (zipmap keyseq (repeat nil))]
-    (select-keys (merge defaults map) keyseq)))
+    (map #(get (merge defaults m) %) keyseq)))
 
-(defn translate [lang prop]
+(defn translate [lang prop translations]
   (or (get-in translations [lang prop])
       (get-in translations [:fi prop])))
 
 (defn format-date [datetime]
   (when datetime
     (f/unparse (f/formatters :date) datetime)))
-
-(def delimiter \;)
 
 (defn get-template-parts [q]
   (filter second (select-keys q [:kysymysid])))
@@ -56,21 +88,6 @@
       (replace-control-chars translated)
       (when (not= "fi" lang)
         (translate-field field "fi" obj)))))
-
-(defn get-header-fields [entry]
-  (match [(first entry)]
-         [:kysymysid] [:kysymys_fi]))
-
-(defn get-header-text [questions lang entry]
-  (let [question (some #(if (= (get % (first entry)) (second entry))%) questions)]
-    (translate-field "kysymys" lang question)))
-
-(defn create-header-row [template questions vastaajatunnus-header lang]
-  (concat
-    [(translate (keyword lang) :vastaajatunnus)
-     (translate (keyword lang) :vastausaika)]
-    vastaajatunnus-header
-    (flatten (map #(get-header-text questions lang %) template))))
 
 (defn get-choice-text [choices lang answer]
   (let [kysymysid (:kysymysid answer)
@@ -116,20 +133,12 @@
       tutkintotunnus-old
       (:arvo entry))))
 
-(defn in? [coll elem]
-  (some #(= elem %) coll))
-
 (defn hae-taustatiedot [taustatiedot tutkintotunnus]
   (if (:tutkinto taustatiedot)
     taustatiedot
     (assoc taustatiedot :tutkinto tutkintotunnus)))
 
-(defn create-row [template lang {vastaajatunnus :vastaajatunnus tutkintotunnus :tutkintotunnus taustatiedot :taustatiedot} kyselyn-taustatiedot choices answers]
-  (let [vastausaika (format-date (:vastaaja_luotuaika (first answers)))
-        vastaajatunnus-arvot (vals (select-keys-or-nil (hae-taustatiedot taustatiedot tutkintotunnus) kyselyn-taustatiedot))]
-    (concat [vastaajatunnus vastausaika] vastaajatunnus-arvot (mapcat #(get-answer answers choices lang %) template))))
-
-(defn get-choices [questions]
+(defn hae-monivalinnat [questions]
   (let [monivalinnat (filter #(= "monivalinta" (:vastaustyyppi %)) questions)
         kysymysidt (map :kysymysid monivalinnat)]
     (db/hae-monivalinnat {:kysymysidt kysymysidt})))
@@ -141,8 +150,6 @@
 
 (defn poista-valiotsikot [kysymykset]
   (filter #(not= (:vastaustyyppi %) "valiotsikko") kysymykset))
-
-(map aseta-jatkokysymysten-jarjestys)
 
 (defn hae-kysymykset [kyselyid]
   (->> (hae-kyselyn-kysymykset kyselyid)
@@ -158,85 +165,140 @@
      :date (f/unparse (f/formatters :date) (time/now))
      :csv data}))
 
-(defn kysely-csv [kyselyid lang]
-  (let [kysymykset (hae-kysymykset kyselyid)
-        kyselyn-taustatiedot (filter #(get-in % [:raportointi :csv]) (db/kyselyn-kentat {:kyselyid kyselyid}))
-        monivalintavaihtoehdot (get-choices kysymykset)
-        template (create-row-template kysymykset)
-        vastaukset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid}))
-        vastaajatunnus-header (map #(translate-field "kentta" lang %) kyselyn-taustatiedot)
-        kysymys-header (create-header-row template kysymykset vastaajatunnus-header lang)
-        vastausrivit (map #(create-row template lang (first (second %))
-                                       (map (comp keyword :kentta_id) kyselyn-taustatiedot)
-                                       monivalintavaihtoehdot (second %)) vastaukset)]
-    (csv-response kyselyid lang
-      (write-csv
-        (muuta-kaikki-stringeiksi (apply concat [[kysymys-header] vastausrivit]))
-        :delimiter delimiter
-        :end-of-line "\r\n"))))
+(def default-csv-fields [:tunnus :vastausaika])
+(def default-vastaajatunnus-fields [:tunnus :url :luotuaika :voimassa_alkupvm :voimassa_loppupvm :vastausten_lkm :vastaajien_lkm])
+
+(defn get-csv-field [kentta]
+  (if (get-in kentta [:raportointi :csv :selitteet])
+    [(keyword (:kentta_id kentta)) (keyword (str (:kentta_id kentta) "_selite"))]
+    (keyword (:kentta_id kentta))))
+
+(defn taustatieto-kentat [taustatiedot]
+  (->> taustatiedot
+       (sort-by (comp :jarjestys :csv :raportointi))
+       (map get-csv-field)
+       flatten))
+
+(defn get-csv-fields [taustatiedot]
+  (concat default-csv-fields (taustatieto-kentat taustatiedot)))
+
+(defn luo-käännökset [taustatiedot lang]
+  (into (lang default-translations)
+    (for [taustatieto (sort-by (comp :jarjestys :csv :raportointi) taustatiedot)]
+      (let [translate-key (keyword (:kentta_id taustatieto))
+            value (translate-field "kentta" lang taustatieto)]
+        {translate-key value}))))
 
 (defn hae-vastaus [kysymys vastaukset monivalintavaihtoehdot lang]
   (let [kysymyksen-vastaukset (filter  #(= (:kysymysid kysymys) (:kysymysid %)) vastaukset)]
     (get-answer-text monivalintavaihtoehdot (:vastaustyyppi kysymys) kysymyksen-vastaukset lang)))
 
+(defn lisaa-selitteet [data selitteet lang]
+  (-> data
+      (assoc :tutkinto_selite
+             (translate-field "nimi" lang
+               (first (filter #(= (:tutkinto data) (:tutkintotunnus %)) (:tutkinnot selitteet)))))
+      (assoc :toimipaikka_selite
+             (translate-field "nimi" lang
+               (first (filter #(= (:toimipaikka data) (:toimipaikkakoodi %)) (:toimipaikat selitteet)))))
+      (assoc :hankintakoulutuksen_toteuttaja_selite
+             (translate-field "nimi" lang
+               (first (filter #(= (:hankintakoulutuksen_toteuttaja data) (:ytunnus %)) (:koulutustoimijat selitteet)))))))
 
 
-(defn luo-vastausrivi [[vastaajatunnus vastaukset] kysymykset kyselyn-taustatiedot monivalintavaihtoehdot lang]
-  (let [vastausaika (format-date (:vastausaika (first vastaukset)))
-        taustatiedot (hae-taustatiedot (:taustatiedot (first vastaukset)) (:tutkintotunnus (first vastaukset)))
-        taustatieto-arvot (vals (select-keys-or-nil taustatiedot (map (comp keyword :kentta_id) kyselyn-taustatiedot)))
+(defn format-vastaus [vastaus selitteet lang]
+  (-> (merge (:taustatiedot vastaus) vastaus)
+      (update :vastausaika format-date)
+      (lisaa-selitteet selitteet lang)))
+
+(defn luo-vastausrivi [template lang taustatieto-fields choices selitteet answers]
+  (let [formatted-answers (map #(format-vastaus % selitteet lang) answers)
+        taustatiedot (select-values-or-nil (first formatted-answers) taustatieto-fields)]
+    (concat taustatiedot (mapcat #(get-answer formatted-answers choices lang %) template))))
+
+(defn luo-vastaajan-vastausrivit [[_ answers] kysymykset taustatieto-fields choices selitteet lang]
+  (let [formatted-answers (map #(format-vastaus % selitteet lang) answers)
+        taustatiedot (select-values-or-nil (first formatted-answers) taustatieto-fields)
         taustakysymysten-vastaukset (->> kysymykset
                                          (filter :taustakysymys)
-                                         (map #(hae-vastaus % vastaukset monivalintavaihtoehdot lang)))]
+                                         (map #(hae-vastaus % answers choices lang)))]
     (->> kysymykset
          (filter (complement :taustakysymys))
-         (map #(concat [vastaajatunnus vastausaika] taustatieto-arvot taustakysymysten-vastaukset
+         (map #(concat taustatiedot taustakysymysten-vastaukset
                        [(translate-field "kysymysryhma" lang %) (translate-field "kysymys" lang %)
-                        (hae-vastaus % vastaukset monivalintavaihtoehdot lang)])))))
+                        (hae-vastaus % answers choices lang)])))))
 
+(defn create-header-row [header kysymykset lang translations]
+  (let [header-fields (map #(get translations %) header)
+        kysymys-fields (map #(translate-field "kysymys" lang %) kysymykset)]
+    (concat header-fields kysymys-fields)))
+
+(defn create-header-row-single [taustatieto-fields taustakysymykset translations]
+  (concat (map #(get translations %) taustatieto-fields)
+          taustakysymykset
+          (map #(get translations %) [:kysymysryhma :kysymys :vastaus])))
+
+(defn hae-selitteet [kyselyid]
+  {:tutkinnot (db/hae-kyselyn-tutkinnot {:kyselyid kyselyid})
+   :toimipaikat (db/hae-kyselyn-toimipaikat {:kyselyid kyselyid})
+   :koulutustoimijat (db/hae-kyselyn-koulutustoimijat {:kyselyid kyselyid})})
+
+(defn kysely-csv [kyselyid lang]
+  (let [taustatiedot (db/kyselyn-kentat {:kyselyid kyselyid})
+        taustatieto-fields (get-csv-fields taustatiedot)
+        kysymykset (hae-kysymykset kyselyid)
+        translations (luo-käännökset taustatiedot lang)
+        vastaukset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid}))
+        monivalintavaihtoehdot (hae-monivalinnat kysymykset)
+        selitteet (hae-selitteet kyselyid)
+        template (create-row-template kysymykset)
+        header (create-header-row taustatieto-fields kysymykset lang translations)
+        vastausrivit (map #(luo-vastausrivi template lang
+                                            taustatieto-fields
+                                            monivalintavaihtoehdot
+                                            selitteet
+                                            (second %)) vastaukset)]
+    (csv-response kyselyid lang (create-csv (cons header vastausrivit)))))
 
 (defn kysely-csv-vastauksittain [kyselyid lang]
-  (let [kysymykset (hae-kysymykset kyselyid)
+  (let [taustatiedot (db/kyselyn-kentat {:kyselyid kyselyid})
+        taustatieto-fields (get-csv-fields taustatiedot)
+        kysymykset (hae-kysymykset kyselyid)
+        selitteet (hae-selitteet kyselyid)
+        translations (luo-käännökset taustatiedot lang)
         vastaukset (group-by :vastaajatunnus (db/hae-vastaukset {:kyselyid kyselyid}))
-        kyselyn-taustatiedot (filter #(get-in % [:raportointi :csv]) (db/kyselyn-kentat {:kyselyid kyselyid}))
-        monivalintavaihtoehdot (get-choices kysymykset)
+        monivalintavaihtoehdot (hae-monivalinnat kysymykset)
         taustakysymykset (->> kysymykset
                               (filter :taustakysymys)
                               (sort-by :jarjestys)
-                              (map translate-field "kysymys" lang))
-        header (concat [(translate (keyword lang) :vastaajatunnus)
-                        (translate (keyword lang) :vastausaika)]
-                       (map #(translate-field "kentta" lang %) kyselyn-taustatiedot) taustakysymykset ["Kysymysryhmä" "Kysymys" "Vastaus"])
-        vastausrivit (mapcat #(luo-vastausrivi % kysymykset kyselyn-taustatiedot monivalintavaihtoehdot lang) vastaukset)]
-    (csv-response kyselyid lang
-      (write-csv (muuta-kaikki-stringeiksi (cons header vastausrivit))
-                 :delimiter delimiter
-                 :end-of-line "\r\n"))))
-
-(def vastaajatunnus-kentat [:tunnus :url :luotuaika :voimassa_alkupvm :voimassa_loppupvm :valmistavan_koulutuksen_jarjestaja :vastausten_lkm :vastaajien_lkm])
-
-(defn vastaajatunnus-header [kyselyn-taustatiedot lang]
-  (concat (map (partial translate (keyword lang)) vastaajatunnus-kentat)
-          (map (partial translate-field "kentta" lang) kyselyn-taustatiedot)))
+                              (map #(translate-field "kysymys" lang %)))
+        header (create-header-row-single taustatieto-fields taustakysymykset translations)
+        vastausrivit (mapcat #(luo-vastaajan-vastausrivit % kysymykset taustatieto-fields monivalintavaihtoehdot selitteet lang) vastaukset)]
+    (csv-response kyselyid lang (create-csv (concat header vastausrivit)))))
 
 (defn vastaajatunnus-url [tunnus]
   (str (:vastaus-base-url @asetukset) "/" (:tunnus tunnus)))
 
-(defn vastaajatunnus-rivi [vastaajatunnus kyselyn-taustatiedot]
-  (concat (-> (select-keys-or-nil (assoc vastaajatunnus :url (vastaajatunnus-url vastaajatunnus)) vastaajatunnus-kentat)
-              (update :voimassa_alkupvm format-date)
-              (update :voimassa_loppupvm format-date)
-              (update :luotuaika format-date)
-              vals)
-          (vals (select-keys-or-nil (:taustatiedot vastaajatunnus) (map (comp keyword :kentta_id) kyselyn-taustatiedot)))))
+(defn create-header-row-single [taustatieto-fields taustakysymykset translations]
+  (concat (map #(get translations %) taustatieto-fields)
+          taustakysymykset
+          (map #(get translations %) [:kysymysryhma :kysymys :vastaus])))
+
+(defn format-tunnus [tunnus selitteet lang]
+  (-> (merge (:taustatiedot tunnus) tunnus)
+      (assoc :url (vastaajatunnus-url tunnus))
+      (update :voimassa_alkupvm format-date)
+      (update :voimassa_loppupvm format-date)
+      (update :luotuaika format-date)
+      (lisaa-selitteet selitteet lang)))
 
 (defn vastaajatunnus-csv [kyselykertaid lang]
-  (let [tunnukset (db/hae-vastaajatunnus {:kyselykertaid kyselykertaid})
-        kyselyn-taustatiedot (filter #(get-in % [:raportointi :csv]) (db/kyselyn-kentat {:kyselykertaid kyselykertaid}))
-        data (concat
-               [(vastaajatunnus-header kyselyn-taustatiedot lang)]
-               (map #(vastaajatunnus-rivi % kyselyn-taustatiedot) tunnukset))]
-    (write-csv (muuta-kaikki-stringeiksi data)
-               :delimiter delimiter
-               :end-of-line "\r\n")))
-
+  (let [kyselyid (:kyselyid (db/hae-kyselykerta {:kyselykertaid kyselykertaid}))
+        selitteet (hae-selitteet kyselyid)
+        tunnukset (map #(format-tunnus % selitteet lang) (db/hae-vastaajatunnus {:kyselykertaid kyselykertaid}))
+        taustatiedot (db/kyselyn-kentat {:kyselyid kyselyid})
+        translations (luo-käännökset taustatiedot lang)
+        vastaajatunnus-kentat (concat default-vastaajatunnus-fields (taustatieto-kentat taustatiedot))
+        header (map #(get translations %) vastaajatunnus-kentat)
+        rows (map #(select-values-or-nil % vastaajatunnus-kentat) tunnukset)]
+    (create-csv (concat header rows))))
