@@ -302,4 +302,4 @@
         vastaajatunnus-kentat (concat default-vastaajatunnus-fields (taustatieto-kentat taustatiedot))
         header (map #(get translations %) vastaajatunnus-kentat)
         rows (map #(select-values-or-nil % vastaajatunnus-kentat) tunnukset)]
-    (create-csv (concat header rows))))
+    (create-csv (cons header rows))))

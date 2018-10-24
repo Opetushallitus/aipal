@@ -119,7 +119,7 @@
   (GET "/vastaajatunnus/:kyselykertaid" []
        :path-params [kyselykertaid :- s/Int]
        :kayttooikeus :vastaajatunnus
-       (let [csv-data (vastaajatunnus-csv kyselykertaid "fi")]
+       (let [csv-data (vastaajatunnus-csv kyselykertaid :fi)]
          (csv-download-response csv-data (str "vastaajatunnukset -" kyselykertaid ".csv")))))
 
 (defn csv-reitit [asetukset]
