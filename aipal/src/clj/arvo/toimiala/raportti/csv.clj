@@ -165,7 +165,7 @@
      :date (f/unparse (f/formatters :date) (time/now))
      :csv data}))
 
-(def default-csv-fields [:tunnus :vastausaika])
+(def default-csv-fields [:vastaajatunnus :vastausaika])
 (def default-vastaajatunnus-fields [:tunnus :url :luotuaika :voimassa_alkupvm :voimassa_loppupvm :vastausten_lkm :vastaajien_lkm])
 
 (defn get-csv-field [kentta]
@@ -274,7 +274,7 @@
                               (map #(translate-field "kysymys" lang %)))
         header (create-header-row-single taustatieto-fields taustakysymykset translations)
         vastausrivit (mapcat #(luo-vastaajan-vastausrivit % kysymykset taustatieto-fields monivalintavaihtoehdot selitteet lang) vastaukset)]
-    (csv-response kyselyid lang (create-csv (concat header vastausrivit)))))
+    (csv-response kyselyid lang (create-csv (cons header vastausrivit)))))
 
 (defn vastaajatunnus-url [tunnus]
   (str (:vastaus-base-url @asetukset) "/" (:tunnus tunnus)))
