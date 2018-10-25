@@ -83,7 +83,7 @@
         virheelliset (filter :virhe kaikki-raportit)
         yhteenveto (muodosta-yhteenveto kyselyid (paivita-parametrit parametrit))]
     (merge (when (seq naytettavat)
-             (yhdistaminen/yhdista-raportit naytettavat))
+             (yhdistaminen/yhdista-raportit naytettavat true))
            (when (seq naytettavat)
              {:yhteenveto yhteenveto})
            {:raportoitavia (count naytettavat)
