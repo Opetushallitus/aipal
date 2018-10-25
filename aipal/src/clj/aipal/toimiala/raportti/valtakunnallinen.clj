@@ -29,11 +29,8 @@
 (defn ^:private hae-valtakunnalliset-kysymykset []
   (->> (sql/select taulut/kysymys
          (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
-         (sql/join :left :jatkokysymys
-                   (= :jatkokysymys.jatkokysymysid
-                      :kysymys.jatkokysymysid))
          (sql/where {:kysymysryhma.valtakunnallinen true})
-         (sql/where (not= :kysymys.vastaustyyppi "vapaateksti"))
+         ;(sql/where (not= :kysymys.vastaustyyppi "vapaateksti"))
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
          (sql/fields :kysymys.jarjestys
@@ -44,17 +41,7 @@
                      :kysymys.kysymys_en
                      :kysymys.kysymysryhmaid
                      :kysymys.eos_vastaus_sallittu
-                     :kysymys.vastaustyyppi
-                     :jatkokysymys.jatkokysymysid
-                     :jatkokysymys.kylla_kysymys
-                     :jatkokysymys.kylla_teksti_fi
-                     :jatkokysymys.kylla_teksti_sv
-                     :jatkokysymys.kylla_teksti_en
-                     :jatkokysymys.kylla_vastaustyyppi
-                     :jatkokysymys.ei_kysymys
-                     :jatkokysymys.ei_teksti_fi
-                     :jatkokysymys.ei_teksti_sv
-                     :jatkokysymys.ei_teksti_en))
+                     :kysymys.vastaustyyppi))
     (map yhdista-taustakysymysten-kysymykset)
     (sort-by :jarjestys)))
 

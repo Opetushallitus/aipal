@@ -39,7 +39,7 @@
         yhteenveto (muodosta-yhteenveto kyselykertaid (paivita-parametrit parametrit))
         nimi (:kyselykerta yhteenveto)]
     (merge (when (seq naytettavat)
-             (yhdistaminen/yhdista-raportit naytettavat))
+             (yhdistaminen/yhdista-raportit naytettavat false))
            {:nimi nimi
             :nimet [{:nimi_fi nimi
                      :nimi_sv nimi

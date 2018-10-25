@@ -159,7 +159,7 @@
         naytettavat (filter (comp nil? :virhe) kaikki-raportit)
         virheelliset (filter :virhe kaikki-raportit)]
     (merge (when (seq naytettavat)
-             (yhdistaminen/yhdista-raportit naytettavat))
+             (yhdistaminen/yhdista-raportit naytettavat true))
       {:raportoitavia (count naytettavat)
        :virheelliset virheelliset})))
 
