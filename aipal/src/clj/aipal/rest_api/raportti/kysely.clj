@@ -118,8 +118,9 @@
          (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
   (GET "/vastaajatunnus/:kyselykertaid" []
        :path-params [kyselykertaid :- s/Int]
+       :query-params [{lang :- s/Str "fi"}]
        :kayttooikeus :vastaajatunnus
-       (let [csv-data (vastaajatunnus-csv kyselykertaid :fi)]
+       (let [csv-data (vastaajatunnus-csv kyselykertaid (keyword lang))]
          (csv-download-response csv-data (str "vastaajatunnukset -" kyselykertaid ".csv")))))
 
 (defn csv-reitit [asetukset]

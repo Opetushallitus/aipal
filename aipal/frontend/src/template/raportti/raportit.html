@@ -38,7 +38,7 @@
       <ng-include src="'template/raportti/osat/kyselyraportit.html'"></ng-include>
     </uib-tab>
     <uib-tab class="hidden-print" heading="CSV" select="vaihdaTyyppi('csv', i18n.raportit.csv)" ng-show="vastuuKayttaja">
-      <h2 class="hidden-print">Kyselyn vastaukset CSV:nä</h2>
+      <h2 class="hidden-print">{{'raportit.csv_otsikko' | i18n}}</h2>
       <div class="btn-group tutkintorakennetaso">
         <label class="btn btn-primary" ng-model="tilafilter.tila" uib-btn-radio="'julkaistu'">{{ 'yleiset.julkaistut' | i18n }}</label>
         <label class="btn btn-primary" ng-model="tilafilter.tila" uib-btn-radio="'suljettu'">{{ 'yleiset.suljetut' | i18n }}</label>

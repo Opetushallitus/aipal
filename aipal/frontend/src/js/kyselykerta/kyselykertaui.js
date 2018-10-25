@@ -47,6 +47,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
 
+      $scope.kieli = localStorage.getItem('kieli');
+
       const templateMap = {
         1: 'template/kysely/palautekysely-tunnukset.html',
         2: 'template/kysely/rekrykysely-tunnukset.html',

@@ -9,7 +9,6 @@
             [clj-time.core :as time]
             [clj-time.format :as f]
             [aipal.asetukset :refer [asetukset]]
-            [aipal.infra.kayttaja :refer [*kayttaja*]]
             [arvo.util :refer [in?]]))
 
 (def default-translations {:fi {:vastaajatunnus "Vastaajatunnus"
@@ -83,7 +82,7 @@
   (clojure.string/escape text {\newline " " \tab " " delimiter \,}))
 
 (defn translate-field [field lang obj]
-  (let [translated (get obj (keyword (str field "_" lang)))]
+  (let [translated (get obj (keyword (str field "_" (name lang))))]
     (if (not-empty translated)
       (replace-control-chars translated)
       (when (not= "fi" lang)
