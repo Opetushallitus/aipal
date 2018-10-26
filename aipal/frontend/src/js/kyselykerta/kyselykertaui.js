@@ -39,8 +39,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm',
-    function (Kyselykerta, Kysely, Kieli, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm','kayttooikeudet',
+    function (Kyselykerta, Kysely, Kieli, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm, kayttooikeudet) {
       $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function (form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
@@ -48,6 +48,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
 
       $scope.kieli = localStorage.getItem('kieli');
+      $scope.laajennettuOppisopimuskoulutus = kayttooikeudet.laajennettuOppisopimuskoulutus();
 
       const templateMap = {
         1: 'template/kysely/palautekysely-tunnukset.html',
@@ -62,7 +63,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         var kyselykertaId = $routeParams.kyselykertaid;
 
         var templateUrl = laajennettu ? 'template/kysely/amis-laajennettu.html' : templateMap[$scope.kysely.tyyppi]
-
         var template = {templateUrl: templateUrl, controller: 'LuoTunnuksiaModalController'}
 
         var modalInstance = $uibModal.open({
@@ -257,8 +257,6 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       };
 
       $scope.isYllapitaja = kayttooikeudet.isYllapitaja();
-
-      $scope.laajennettuOppisopimuskoulutus = kayttooikeudet.laajennettuOppisopimuskoulutus();
 
       $scope.naytaKoulutusmuoto = kyselytyyppi === 1;
 
