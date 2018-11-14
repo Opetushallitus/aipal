@@ -37,6 +37,8 @@ AND k.tyyppi IN (:v*:kyselytyypit)
 --~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
 --~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
 --~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
+--~(if (:since params) "AND v.vastausid > :since")
+ORDER BY v.vastausid ASC LIMIT :pagelength;
 ;
 
 -- :name export-kysymykset :? :*
@@ -70,6 +72,8 @@ JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija = :koulutustoimija
 AND k.tyyppi IN (:v*:kyselytyypit)
 --~(if (:vipunen params) "OR TRUE")
+--~(if (:since params) "AND v.vastaajaid > :since")
+ORDER BY v.vastaajaid ASC LIMIT :pagelength;
 ;
 
 -- :name export-kysely-kysymysryhma :? :*

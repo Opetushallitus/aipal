@@ -25,9 +25,10 @@
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [arvo.db.core :refer [*db*] :as db]
             [aipal.asetukset :refer [asetukset]]
-            [oph.common.util.http-util :refer [parse-iso-date]]))
+            [oph.common.util.http-util :refer [parse-iso-date]]
+            [arvo.util :refer [paginated-response]]))
 
-(defn ^:private hae-vipunen-vastaukset [api-nimi alkupvm loppupvm rivimaara-funktio hae-funktio]
+(defn ^:private hae-vipunen-vastaukset [alkupvm loppupvm rivimaara-funktio hae-funktio]
   (let [alkupv (parse-iso-date alkupvm)
         loppupv (parse-iso-date loppupvm)]
     (log/info "Vipunen-API: Haetaan aikaväli" alkupvm "-" loppupvm)
@@ -38,33 +39,20 @@
      :headers {"Content-Type" "application/json; charset=utf-8"}}))
 
 
-(defn format-url [base params]
-  (str base "?"(->> params
-                 (map #(str (name (first %))"=" (second %)))
-                 (interpose "&")
-                 (apply str))))
-
-(defn paginated-response [result page-length api-url params]
-  (let [next-id (when (= page-length (count result)) (-> result last :vastausid))
-        next-url (format-url (str (-> @asetukset :server :base-url) api-url) (merge params {:since next-id}))]
-    {:status 200
-     :body {:data result
-            :pagination {:next_url (if next-id next-url "null")}}
-     :headers {"Content-Type" "application/json; charset=utf-8"}}))
 
 (defn hae-vastaukset [alkupvm loppupvm since]
-  (let [page-length (:vipunen-page-length @asetukset)
+  (let [page-length (:api-page-length @asetukset)
         result (db/hae-vipunen-vastaukset (merge{:alkupvm alkupvm
                                                  :pagelength page-length
                                                  :loppupvm loppupvm}
                                               (when since {:since since})))]
-    (paginated-response result page-length "/api/vipunen" {:alkupvm alkupvm :loppupvm loppupvm})))
+    (paginated-response result :vastausid page-length "/api/vipunen" {:alkupvm alkupvm :loppupvm loppupvm})))
 
 (defn hae-uraseuranta-vastaukset [since]
-  (let [page-length (:vipunen-page-length @asetukset)
+  (let [page-length (:api-page-length @asetukset)
         result (db/hae-uraseuranta-vastaukset (merge {:pagelength page-length}
                                                      (when since {:since since})))]
-    (paginated-response result page-length "/api/vipunen/uraseuranta" {})))
+    (paginated-response result :vastausid page-length "/api/vipunen/uraseuranta" {})))
 
 (defroutes reitit
   (GET "/" []
@@ -86,4 +74,4 @@
                   loppupvm :- s/Str]
     :summary "Valtakunnallisten kysymysten vastausten siirtorajapinta Vipuseen"
     :return [vipunen-skeema/VastauksenTiedot]
-    (hae-vipunen-vastaukset "/valtakunnallinen" alkupvm loppupvm vipunen/laske-valtakunnalliset vipunen/hae-valtakunnalliset)))
+    (hae-vipunen-vastaukset alkupvm loppupvm vipunen/laske-valtakunnalliset vipunen/hae-valtakunnalliset)))

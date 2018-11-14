@@ -60,7 +60,7 @@
              :raportointi s/Str
              :tutkinnot s/Str}
    :kayttooikeus-tarkistusvali s/Str
-   :vipunen-page-length s/Int
+   :api-page-length s/Int
    (s/optional-key :basic-auth) {:tunnus s/Str
                                  :salasana s/Str}})
 
@@ -107,7 +107,7 @@
              :koulutustoimijoiden-tutkinnot "0 40 17 ? * * *"
              :raportointi "0 30 5 * * ?"
              :tutkinnot "0 0 2 * * ?"}
-   :vipunen-page-length 50000})
+   :api-page-length 50000})
 
 (def common-audit-log-asetukset {:boot-time        (time-local/local-now)
                                  :hostname         "localhost"
