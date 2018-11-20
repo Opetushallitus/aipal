@@ -17,7 +17,8 @@
 
 (defn paginated-response [data key page-length api-url params]
   (let [next-id (when (= page-length (count data)) (-> data last key))
-        next-url (format-url (str (-> @asetukset :server :base-url) api-url) (merge params {:since next-id}))]
+        query-params (into {} (filter second params))
+        next-url (format-url (str (-> @asetukset :server :base-url) api-url) (merge query-params {:since next-id}))]
     (if (some? data)
       (api-response {:data data
                      :pagination {:next_url (if next-id next-url "null")}})

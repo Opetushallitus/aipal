@@ -19,6 +19,8 @@
 (s/defschema Pagination
   {(s/optional-key :next_url) (s/maybe s/Str)})
 
+(def api-location "/api/export/v1/")
+
 (defroutes v1
   (GET "/kysymykset" [:as request]
     :summary "Kysymysten siirtorajapinta"
@@ -36,14 +38,14 @@
     (let [query-params {:alkupvm alkupvm :loppupvm loppupvm :since since :limit limit}
           page-length (if limit (min limit (:api-page-length @asetukset)) (:api-page-length @asetukset))
           data (db/export-vastaukset (apply merge {:pagelength page-length} query-params (export-params request "vastaukset")))]
-      (paginated-response data :vastausid page-length "/api/export/vastaukset" query-params)))
+      (paginated-response data :vastausid page-length (str api-location "vastaukset") query-params)))
   (GET "/vastaajat" [:as request]
     :return {:data [Vastaajatunnus] :pagination Pagination}
     :query-params [{since :- s/Int nil}
                    {limit :- s/Int nil}]
     (let [page-length (if limit (min limit (:api-page-length @asetukset)) (:api-page-length @asetukset))
           sql-params (merge {:pagelength page-length :since since}(export-params request "taustatiedot"))]
-      (paginated-response (db/export-taustatiedot sql-params) :vastaajaid page-length "/api/export/vastaajat" {:limit limit})))
+      (paginated-response (db/export-taustatiedot sql-params) :vastaajaid page-length (str api-location "vastaajat") {:limit limit})))
   (GET "/opiskeluoikeudet" [:as request]
     :return {:data [Opiskeluoikeus]}
     (let [params (export-params request "opiskeluoikeudet")
