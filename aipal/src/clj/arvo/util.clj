@@ -21,5 +21,5 @@
         next-url (format-url (str (-> @asetukset :server :base-url) api-url) (merge query-params {:since next-id}))]
     (if (some? data)
       (api-response {:data data
-                     :pagination {:next_url (if next-id next-url "null")}})
+                     :pagination {:next_url (if next-id next-url nil)}})
       {:status 404})))
