@@ -86,6 +86,10 @@
   {:vastaajatunnus s/Str
    :opiskeluoikeus s/Str})
 
+(s/defschema Luodut-tunnukset
+  {:koulutustoimija s/Str
+   :tunnuksia s/Int})
+
 
 
 

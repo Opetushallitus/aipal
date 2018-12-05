@@ -253,8 +253,7 @@
         toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit)
-    (paivita-toimipaikat! toimipaikkakoodit)
-    (koulutustoimija-arkisto/poista-koulutustoimijat-ilman-oppilaitoksia-ja-kayttajia!)))
+    (paivita-toimipaikat! toimipaikkakoodit)))
 
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
