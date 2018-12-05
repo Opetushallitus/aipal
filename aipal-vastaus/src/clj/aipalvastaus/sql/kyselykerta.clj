@@ -130,9 +130,9 @@
         kysymykset (hae-kysymysryhmien-kysymykset tunnus)
         jarjestetty (map #(jarjestysnumero-jatkokysymykselle kysymykset %) kysymykset)
         monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot tunnus)]
-    (yhdista-tietorakenteet kysymysryhmat (sort-by :jarjestys jarjestetty) monivalintavaihtoehdot))
+    (yhdista-tietorakenteet kysymysryhmat (sort-by :jarjestys jarjestetty) monivalintavaihtoehdot)))
 
-;(defn hae-kysymykset [tunnus]
+(defn hae-kysymykset [tunnus]
   (let [kysymykset (hae-kysymysryhmien-kysymykset tunnus)
         monivalintavaihtoehdot (hae-kysymysten-monivalintavaihtoehdot tunnus)]
     (yhdista-monivalintavaihtoehdot-kysymyksiin kysymykset monivalintavaihtoehdot)))
