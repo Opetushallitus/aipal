@@ -21,7 +21,6 @@ SELECT k.koulutustoimija, k.kyselyid, kk.kyselykertaid,
   monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
   monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
   monivalintavaihtoehto.teksti_en AS monivalintavaihtoehto_en
-
 FROM vastaus v
 JOIN vastaaja vs ON v.vastaajaid = vs.vastaajaid
 JOIN kysymys kys ON v.kysymysid = kys.kysymysid
@@ -43,7 +42,7 @@ ORDER BY v.vastausid ASC LIMIT :pagelength;
 
 -- :name export-kysymykset :? :*
 SELECT DISTINCT k.kysymysid, k.vastaustyyppi, k.kysymys_fi, k.kysymys_sv, k.kysymys_en, k.kategoria, k.jatkokysymys,
-  kjk.kysymysid AS jatkokysymys_kysymysid,
+  kjk.kysymysid AS jatkokysymys_kysymysid, k.jarjestys,
   kr.kysymysryhmaid, kr.nimi_fi AS kysymysryhma_fi, kr.nimi_sv AS kysymysryhma_sv, kr.nimi_en AS kysymysryhma_en,
   kr.valtakunnallinen
 FROM kysymys k
@@ -84,6 +83,14 @@ WHERE k.koulutustoimija = :koulutustoimija
 AND k.tyyppi IN (:v*:kyselytyypit)
 --~(if (:vipunen params) "OR TRUE")
 ;
+
+-- :name export-luodut-tunnukset :? :*
+SELECT k.koulutustoimija, count(vt) AS tunnuksia FROM kysely k
+JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
+JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
+WHERE k.tyyppi = 5
+--~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
+GROUP BY k.koulutustoimija;
 
 -- :name hae-api-kayttaja :? :1
 SELECT * FROM api_kayttajat WHERE tunnus = :tunnus;

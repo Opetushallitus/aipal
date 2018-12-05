@@ -24,7 +24,6 @@
   (let [koulutustoimijoiden-tutkinnot (oiva/hae-koulutustoimijoiden-tutkinnot)]
     (log/info "Aloitetaan koulutustoimijoiden tutkintojen päivitys Oivasta")
     (jdbc/with-db-transaction [tx *db*]
-      (db/poista-koulutustoimijoiden-tutkinnot! tx)
       (doseq [koulutustoimija koulutustoimijoiden-tutkinnot
               tutkinto (:koulutukset koulutustoimija)]
         (db/lisaa-koulutustoimijan-tutkinto! tx {:ytunnus (:jarjestajaYtunnus koulutustoimija)

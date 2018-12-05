@@ -1,0 +1,1 @@
+ALTER TABLE koulutustoimija_ja_tutkinto ADD COLUMN historiatieto BOOLEAN DEFAULT FALSE;

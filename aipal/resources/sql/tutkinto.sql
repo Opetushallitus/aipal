@@ -5,7 +5,7 @@ DELETE FROM koulutustoimija_ja_tutkinto;
 INSERT INTO koulutustoimija_ja_tutkinto (koulutustoimija, tutkinto, voimassa_alkupvm, voimassa_loppupvm, laaja_oppisopimuskoulutus)
     SELECT :ytunnus, :tutkintotunnus, to_date(:alkupvm, 'YYYY-MM-DD'), to_date(:loppupvm, 'YYYY-MM-DD'), :laaja_oppisopimuskoulutus
     WHERE EXISTS (SELECT ytunnus FROM koulutustoimija WHERE ytunnus = :ytunnus)
-    AND   EXISTS(SELECT tutkintotunnus FROM tutkinto WHERE tutkintotunnus = :tutkintotunnus);
+    AND   EXISTS(SELECT tutkintotunnus FROM tutkinto WHERE tutkintotunnus = :tutkintotunnus) ON CONFLICT DO NOTHING;
 
 -- :name poista-koulutustoimijan-tutkinto! :! :n
 DELETE FROM koulutustoimija_ja_tutkinto WHERE koulutustoimija = :koulutustoimija AND tutkinto = :tutkinto;
@@ -29,7 +29,7 @@ UPDATE tutkinto SET
 WHERE tutkintotunnus = :tutkintotunnus;
 
 -- :name hae-koulutustoimijan-tutkinnot :? :*
-SELECT t.*,
+SELECT DISTINCT t.*,
     oa.opintoalatunnus, oa.nimi_fi AS opintoala_nimi_fi, oa.nimi_sv AS opintoala_nimi_sb, oa.nimi_en AS opintoala_nimi_en,
     ka.koulutusalatunnus, ka.nimi_fi AS koulutusala_nimi_fi, ka.nimi_sv AS koulutusala_nimi_sv, ka.nimi_en AS koulutusala_nimi_en
 FROM tutkinto t
@@ -50,7 +50,7 @@ FROM tutkinto t
 WHERE (t.tutkintotyyppi IS NULL) OR t.tutkintotyyppi NOT IN (:v*:tutkintotyypit);
 
 -- :name hae-tutkinnon-jarjestajat :? :*
-SELECT k.*
+SELECT DISTINCT k.*
 FROM koulutustoimija k
 JOIN koulutustoimija_ja_tutkinto ktt ON k.ytunnus = ktt.koulutustoimija
 WHERE ktt.tutkinto = :tutkintotunnus;
