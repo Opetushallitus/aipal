@@ -85,14 +85,14 @@ AND k.tyyppi IN (:v*:kyselytyypit)
 ;
 
 -- :name export-luodut-tunnukset :? :*
-SELECT o.oppilaitoskoodi, count(vt) AS tunnuksia FROM kysely k
-JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
-JOIN oppilaitos o ON o.koulutustoimija = k.koulutustoimija
-LEFT JOIN vastaajatunnus vt ON o.oppilaitoskoodi = vt.valmistavan_koulutuksen_oppilaitos
+SELECT kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto' AS tutkintotunnus, count(vt) AS tunnuksia FROM kyselykerta kk
+JOIN kysely k on kk.kyselyid = k.kyselyid
+LEFT JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
+LEFT JOIN oppilaitos o on vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
 WHERE k.tyyppi = 5
 --~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
-GROUP BY o.oppilaitoskoodi
-ORDER BY o.oppilaitoskoodi;
+GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto'
+ORDER BY kk.kyselykertaid;
 
 -- :name hae-api-kayttaja :? :1
 SELECT * FROM api_kayttajat WHERE tunnus = :tunnus;
