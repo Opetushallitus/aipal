@@ -54,4 +54,7 @@
       (api-response {:data opiskeluoikeudet})))
   (GET "/kysely_kysymysryhma" [:as request]
     :return {:data [Kysely-kysymysryhma]}
-    (api-response {:data (db/export-kysely-kysymysryhma (export-params request "kysely-kysymysryhma"))})))
+    (api-response {:data (db/export-kysely-kysymysryhma (export-params request "kysely-kysymysryhma"))}))
+  (GET "/luodut_tunnukset" [:as request]
+    :return {:data [Luodut-tunnukset]}
+    (api-response {:data (db/export-luodut-tunnukset (export-params request "luodut-tunnukset"))})))
