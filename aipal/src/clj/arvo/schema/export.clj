@@ -87,7 +87,7 @@
    :opiskeluoikeus s/Str})
 
 (s/defschema Luodut-tunnukset
-  {:koulutustoimija s/Str
+  {:oppilaitoskoodi s/Str
    :tunnuksia s/Int})
 
 
