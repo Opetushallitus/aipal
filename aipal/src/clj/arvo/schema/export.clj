@@ -90,6 +90,7 @@
   {:kyselykertaid s/Int
    :oppilaitoskoodi (s/maybe s/Str)
    :tutkintotunnus (s/maybe s/Str)
+   :kuukausi (s/maybe s/Str)
    :tunnuksia s/Int})
 
 
