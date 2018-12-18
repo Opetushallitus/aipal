@@ -91,7 +91,7 @@ FROM kyselykerta kk
 JOIN kysely k on kk.kyselyid = k.kyselyid
 LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
 LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
-WHERE k.tyyppi = 5 AND vt.kyselykertaid
+WHERE k.tyyppi = 5
 --~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
 GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto', kuukausi
 ORDER BY kk.kyselykertaid, vt.taustatiedot->>'tutkinto';
