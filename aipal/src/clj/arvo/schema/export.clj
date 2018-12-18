@@ -54,6 +54,7 @@
    :kysymysryhma_sv (s/maybe s/Str)
    :kysymysryhma_en (s/maybe s/Str)
    :valtakunnallinen s/Bool
+   :jarjestys (s/maybe s/Int)
    s/Any s/Any})
 
 (s/defschema Taustatiedot
@@ -91,7 +92,8 @@
    :oppilaitoskoodi (s/maybe s/Str)
    :tutkintotunnus (s/maybe s/Str)
    :kuukausi (s/maybe s/Str)
-   :tunnuksia s/Int})
+   :tunnuksia s/Int
+   :vastauskertoja s/Int})
 
 
 

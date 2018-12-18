@@ -73,7 +73,6 @@ AND k.tyyppi IN (:v*:kyselytyypit)
 --~(if (:vipunen params) "OR TRUE")
 --~(if (:since params) "AND v.vastaajaid > :since")
 ORDER BY v.vastaajaid ASC LIMIT :pagelength;
-;
 
 -- :name export-kysely-kysymysryhma :? :*
 SELECT kkr.kyselyid, kkr.kysymysryhmaid, kkr.jarjestys
@@ -87,11 +86,12 @@ AND k.tyyppi IN (:v*:kyselytyypit)
 -- :name export-luodut-tunnukset :? :*
 SELECT kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto' AS tutkintotunnus,
        to_char(vt.voimassa_alkupvm, 'YYYY-MM') AS kuukausi,
-       count(vt) AS tunnuksia FROM kyselykerta kk
+       count(vt) AS tunnuksia, sum(vt.vastaajien_lkm) AS vastauskertoja
+FROM kyselykerta kk
 JOIN kysely k on kk.kyselyid = k.kyselyid
-LEFT JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
-LEFT JOIN oppilaitos o on vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
-WHERE k.tyyppi = 5
+LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
+LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
+WHERE k.tyyppi = 5 AND vt.kyselykertaid
 --~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
 GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto', kuukausi
 ORDER BY kk.kyselykertaid, vt.taustatiedot->>'tutkinto';
