@@ -24,10 +24,10 @@
 
     <div>
         <h3>{{'kyselykerta.vastausaika' | i18n}}</h3>
-        <span ng-if="!muokkaustila">
+        <span ng-if="!muokkaustila || (muokkaustila && !vastuuKayttaja && !uusi)">
             {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
         </span>
-        <span ng-if="muokkaustila && kyselykerta && kysely">
+        <span ng-if="muokkaustila && kyselykerta && kysely && vastuuKayttaja || (uusi && !vastuuKayttaja)">
             <pvm-valitsin
                     otsikko="{{i18n.yleiset.alkaen}}"
                     oletus-pvm="kysely.voimassa_alkupvm"

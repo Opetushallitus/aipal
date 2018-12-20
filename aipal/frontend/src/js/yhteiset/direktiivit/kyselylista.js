@@ -20,7 +20,7 @@ angular.module('yhteiset.direktiivit.kyselylista',
      'rest.kysely',
      'rest.kyselykerta'])
 
-  .controller('KyselylistaController', ['$filter', '$scope', '$location', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', 'varmistus', function($filter, $scope, $location, Kysely, Kyselykerta, ilmoitus, i18n, varmistus) {
+  .controller('KyselylistaController', ['$filter', '$scope', '$location', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', 'varmistus', 'kayttooikeudet', function($filter, $scope, $location, Kysely, Kyselykerta, ilmoitus, i18n, varmistus, kayttooikeudet) {
     $scope.julkaiseKyselyModal = function(kysely) {
       varmistus.varmista(i18n.hae('kysely.julkaise'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.julkaise_ohjeistus'), i18n.hae('kysely.julkaise')).then(function() {
         Kysely.julkaise(kysely.kyselyid)
@@ -105,6 +105,8 @@ angular.module('yhteiset.direktiivit.kyselylista',
           _.assign(kyselykerta, uusiKyselykerta);
         });
     };
+
+    $scope.vastuuKayttaja = kayttooikeudet.isVastuuKayttaja();
 
     $scope.kyselykertojen_lajitteluperuste = 'luotuaika';
   }])

@@ -36,7 +36,7 @@
             <span class="fa fa-trash"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">
+        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">
           <button class="btn btn-primary pull-left e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">
             {{ 'kyselykerta.uusi_kyselykerta' | i18n }}&nbsp;
             <span class="fa fa-plus"></span>
@@ -67,7 +67,7 @@
           </a>
         </auth>
         <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']" ng-if="kysely.tila !== 'luonnos'">
-          <a ng-href="#/raportit/kysely/{{kysely.kyselyid}}" class="btn btn-primary pull-left" ng-disabled="kysely.vastaajia < 5">
+          <a ng-href="#/raportit/kysely/{{kysely.kyselyid}}" class="btn btn-primary pull-left" ng-disabled="kysely.vastaajia < 0">
             {{ 'kysely.raportti' | i18n }}&nbsp;
             <span class="glyphicon glyphicon-stats"></span>
           </a>
@@ -113,13 +113,13 @@
             </button>
           </auth>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA','OPL-KATSELIJA','OPH-KATSELIJA']">
-            <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left e2e-nayta-raportti" ng-disabled="kyselykerta.vastaajia < 5">
+            <a ng-href="#/raportit/kyselykerrat/kyselykerta/{{kyselykerta.kyselykertaid}}" class="btn btn-primary btn-sm pull-left e2e-nayta-raportti" ng-disabled="kyselykerta.vastaajia < 0">
               {{ 'kysely.raportti' | i18n }}&nbsp;
               <span class="glyphicon glyphicon-stats"></span>
             </a>
           </auth>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA','OPL-KAYTTAJA']">
-            <span ng-show="kyselykerta.poistettavissa">
+            <span ng-show="kyselykerta.poistettavissa && vastuuKayttaja">
               <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)" ng-if="kyselykerta.poistettavissa">
                 {{ 'kyselykerta.poista' | i18n }}&nbsp;
                 <span class="fa fa-trash"></span>
