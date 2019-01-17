@@ -8,7 +8,7 @@ SELECT k.koulutustoimija,
 FROM kyselykerta kk
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN kyselypohja kp ON k.kyselypohjaid = kp.kyselypohjaid
-WHERE (k.koulutustoimija = :koulutustoimija
+WHERE (k.koulutustoimija = :koulutustoimija AND (kk.kategoria->>'ei_raportoida')::BOOLEAN IS NULL
         --~(if (:vipunen params) "OR TRUE")
       )
 AND k.tyyppi IN (:v*:kyselytyypit)
@@ -33,6 +33,7 @@ JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE k.tila = 'julkaistu'
 AND k.tyyppi IN (:v*:kyselytyypit)
+AND (kk.kategoria->>'ei_raportoida')::BOOLEAN IS NULL
 --~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
 --~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
 --~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
@@ -70,6 +71,7 @@ JOIN kysely k on kk.kyselyid = k.kyselyid
 -- TODO: Taustatietojen raportointirajaukset
 WHERE k.koulutustoimija = :koulutustoimija
 AND k.tyyppi IN (:v*:kyselytyypit)
+AND (kk.kategoria->>'ei_raportoida')::BOOLEAN IS NULL
 --~(if (:vipunen params) "OR TRUE")
 --~(if (:since params) "AND v.vastaajaid > :since")
 ORDER BY v.vastaajaid ASC LIMIT :pagelength;
@@ -92,6 +94,7 @@ JOIN kysely k on kk.kyselyid = k.kyselyid
 LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
 LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
 WHERE k.tyyppi = 5
+AND (kk.kategoria->>'ei_raportoida')::boolean IS NULL
 --~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
 GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto', kuukausi
 ORDER BY kk.kyselykertaid, vt.taustatiedot->>'tutkinto';
