@@ -31,7 +31,7 @@ LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
 JOIN vastaajatunnus vt ON vs.vastaajatunnusid = vt.vastaajatunnusid
 JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
 JOIN kysely k ON kk.kyselyid = k.kyselyid
-WHERE k.tila = 'julkaistu'
+WHERE k.tila != 'luonnos'
 AND k.tyyppi IN (:v*:kyselytyypit)
 AND coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 --~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
@@ -52,7 +52,7 @@ JOIN kysymysryhma kr ON k.kysymysryhmaid = kr.kysymysryhmaid
 JOIN kysely_kysymysryhma kkr ON kr.kysymysryhmaid = kkr.kysymysryhmaid
 JOIN kysely kys ON kkr.kyselyid = kys.kyselyid
 -- TODO: Vapaatekstien ja omien kysymysten rajaus pois tarvittaessa (vipunen)
-WHERE kr.tila = 'julkaistu'
+WHERE kr.tila != 'luonnos'
 AND kys.tyyppi IN (:v*:kyselytyypit)
 AND kys.koulutustoimija = :koulutustoimija
 --~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
@@ -90,7 +90,7 @@ SELECT kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto' AS tutk
        to_char(vt.voimassa_alkupvm, 'YYYY-MM') AS kuukausi,
        count(vt) AS tunnuksia, coalesce (sum(vt.vastaajien_lkm), 0) AS vastauskertoja
 FROM kyselykerta kk
-JOIN kysely k on kk.kyselyid = k.kyselyid
+JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
 LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
 WHERE k.tyyppi = 5
