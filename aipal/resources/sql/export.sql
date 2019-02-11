@@ -54,9 +54,9 @@ JOIN kysely kys ON kkr.kyselyid = kys.kyselyid
 -- TODO: Vapaatekstien ja omien kysymysten rajaus pois tarvittaessa (vipunen)
 WHERE kr.tila != 'luonnos'
 AND kys.tyyppi IN (:v*:kyselytyypit)
-AND kys.koulutustoimija = :koulutustoimija
---~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
-;
+AND (kys.koulutustoimija = :koulutustoimija
+    --~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
+);
 
 -- :name export-taustatiedot :? :*
 SELECT v.vastaajaid,vt.vastaajatunnusid, vt.tunnus AS vastaajatunnus,
@@ -68,11 +68,11 @@ FROM vastaaja v
 JOIN vastaajatunnus vt ON v.vastaajatunnusid = vt.vastaajatunnusid
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k on kk.kyselyid = k.kyselyid
--- TODO: Taustatietojen raportointirajaukset
-WHERE k.koulutustoimija = :koulutustoimija
+WHERE coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
+AND(k.koulutustoimija = :koulutustoimija
+      --~(if (:vipunen params) "OR TRUE")
+)
 AND k.tyyppi IN (:v*:kyselytyypit)
-AND coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
---~(if (:vipunen params) "OR TRUE")
 --~(if (:since params) "AND v.vastaajaid > :since")
 ORDER BY v.vastaajaid ASC LIMIT :pagelength;
 
@@ -80,10 +80,10 @@ ORDER BY v.vastaajaid ASC LIMIT :pagelength;
 SELECT kkr.kyselyid, kkr.kysymysryhmaid, kkr.jarjestys
 FROM kysely_kysymysryhma kkr
 JOIN kysely k on kkr.kyselyid = k.kyselyid
-WHERE k.koulutustoimija = :koulutustoimija
-AND k.tyyppi IN (:v*:kyselytyypit)
---~(if (:vipunen params) "OR TRUE")
-;
+WHERE (k.koulutustoimija = :koulutustoimija
+          --~(if (:vipunen params) "OR TRUE")
+)
+AND k.tyyppi IN (:v*:kyselytyypit);
 
 -- :name export-luodut-tunnukset :? :*
 SELECT kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto' AS tutkintotunnus,
