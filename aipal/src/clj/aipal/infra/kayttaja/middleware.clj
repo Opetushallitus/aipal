@@ -1,5 +1,6 @@
 (ns aipal.infra.kayttaja.middleware
-  (:require [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]))
+  (:require [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
+            [clojure.tools.logging :as log]))
 
 (def unauthorized-virheilmoitus
    (str
@@ -14,9 +15,10 @@
       ;; CAS-middleware lisää käyttäjätunnuksen :username-avaimen alle
      (let [uid (:username request)
            impersonoitu-oid (get-in request [:session :impersonoitu-oid])
+           vaihdettu-organisaatio (get-in request [:session :vaihdettu-organisaatio])
            rooli (get-in request [:session :rooli])]
        (try
-         (with-kayttaja uid impersonoitu-oid rooli
+         (with-kayttaja uid {:kayttaja impersonoitu-oid :organisaatio vaihdettu-organisaatio} rooli
            (handler request))
          (catch IllegalStateException _
            {:headers {"Content-Type" "text/plain;charset=utf-8"}

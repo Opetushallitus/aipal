@@ -64,6 +64,7 @@
               </a>
                   <ul ng-if="yllapitaja || impersonoitu || kayttooikeudet.roolit.length > 1" ng-mouseover="$parent.valikkoAvattu = false">
                       <li ng-if="!impersonoitu && yllapitaja"><a href="" ng-click="valitse()">{{i18n.impersonointi.vaihda_avustettavaksi_kayttajaksi}}</a></li>
+                      <li ng-if="!impersonoitu && yllapitaja"><a href="" ng-click="valitseOrganisaatio()">Vaihda organisaatio</a></li>
                       <li ng-if="impersonoitu"><a href="" ng-click="lopetaImpersonointi()">{{i18n.impersonointi.lopeta_avustus}}</a></li>
                       <li ng-if="kayttooikeudet.roolit.length > 1"><a class="vaihda-roolia-e2e" href="" ng-click="vaihdaRoolia()">{{i18n.roolit.vaihda_roolia}}</a></li>
                 </ul>

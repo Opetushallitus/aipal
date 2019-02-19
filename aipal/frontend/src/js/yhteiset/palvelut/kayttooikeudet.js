@@ -35,7 +35,7 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
           yllapitaja = true;
         }
 
-        if(data.impersonoitu_kayttaja.trim().length > 0){
+        if(data.impersonoitu_kayttaja.trim().length > 0 || data.vaihdettu_organisaatio.trim().length > 0){
           impersonoitu = true;
         }
       });

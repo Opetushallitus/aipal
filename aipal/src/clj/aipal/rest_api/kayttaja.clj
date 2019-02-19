@@ -19,19 +19,23 @@
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [oph.common.util.http-util :refer [response-or-404]]
+            [clojure.tools.logging :as log]))
 
 (defroutes reitit
   (POST "/impersonoi" [:as {session :session}, oid]
     :kayttooikeus :impersonointi
     {:status 200
      :session (assoc session :impersonoitu-oid oid)})
-
+  (POST "/vaihda-organisaatio" [:as {session :session} oid]
+    :kayttooikeus :impersonointi
+    (log/info "Session:" session)
+    {:status 200
+     :session (assoc session :vaihdettu-organisaatio oid)})
   (POST "/lopeta-impersonointi" {session :session}
     :kayttooikeus :impersonointi-lopetus
     {:status 200
-     :session (dissoc session :impersonoitu-oid)})
-
+     :session (apply dissoc session [:impersonoitu-oid :vaihdettu-organisaatio])})
   (POST "/rooli" {{rooli :rooli_organisaatio_id} :params
                   session :session}
     :kayttooikeus :roolin-valinta
@@ -45,6 +49,7 @@
     :kayttooikeus :omat_tiedot
     (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:aktiivinen-oid *kayttaja*))]
       (response-or-404 (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)
+                                       :vaihdettu_organisaatio (:vaihdettu-organisaatio *kayttaja*)
                                        :aktiivinen_rooli (:aktiivinen-rooli *kayttaja*)))))
   (GET "/:oid" []
     :path-params [oid :- s/Str]

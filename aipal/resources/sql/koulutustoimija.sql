@@ -7,3 +7,9 @@ SELECT DISTINCT ytunnus, nimi_fi, nimi_sv, nimi_en FROM koulutustoimija
 
 -- :name hae-koulutustoimijan-oppilaitokset :? :*
 SELECT * FROM oppilaitos WHERE koulutustoimija = :koulutustoimija
+
+-- :name hae-koulutustoimija-nimella :? :*
+SELECT * FROM koulutustoimija
+WHERE nimi_fi ILIKE '%' || :termi  || '%'
+OR nimi_sv ILIKE '%' || :termi  || '%'
+OR nimi_sv ILIKE '%' || :termi  || '%';

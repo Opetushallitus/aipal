@@ -17,7 +17,8 @@
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [oph.common.util.http-util :refer [response-or-404]]))
+            [oph.common.util.http-util :refer [response-or-404]]
+            [schema.core :as s]))
 
 (defroutes reitit
   (GET "/aktiivinen" []
@@ -28,4 +29,8 @@
     (response-or-404 (koulutustoimija/hae-kaikki)))
   (GET "/koulutusluvalliset" []
     :kayttooikeus :koulutustoimija
-    (response-or-404 (koulutustoimija/hae-koulutusluvalliset))))
+    (response-or-404 (koulutustoimija/hae-koulutusluvalliset)))
+  (GET "/hae-nimella" [termi]
+    :kayttooikeus :impersonointi
+    :query-params [termi :- s/Str]
+    (response-or-404 (koulutustoimija/hae-nimella termi))))

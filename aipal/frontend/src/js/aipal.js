@@ -116,6 +116,7 @@ angular.module('aipal', [
       }
     };
     $scope.timestamp = Date.now();
+
     $scope.valitse = function () {
       var modalInstance = $uibModal.open({
         templateUrl: 'template/impersonointi.html',
@@ -127,6 +128,19 @@ angular.module('aipal', [
         });
       });
     };
+
+    $scope.valitseOrganisaatio = function () {
+      var modalInstance = $uibModal.open({
+        templateUrl: 'template/organisaation_vaihto.html',
+        controller: 'ImpersonointiModalController'
+      });
+      modalInstance.result.then(function(impersonoitava) {
+        impersonaatioResource.vaihdaOrganisaatio({oid: impersonoitava.ytunnus}, function () {
+          $window.location = $scope.baseUrl + '/';
+        });
+      });
+    };
+
     $scope.lopetaImpersonointi = function () {
       impersonaatioResource.lopeta(null, function () {
         $window.location = $scope.baseUrl + '/';
@@ -193,10 +207,15 @@ angular.module('aipal', [
   .controller('ImpersonointiModalController', ['$uibModalInstance', '$scope', 'i18n', function($uibModalInstance, $scope, i18n) {
     $scope.i18n = i18n;
     $scope.impersonointi = {
-      impersonoitava: {}
+      impersonoitava: {},
+      organisaatio: {}
     };
     $scope.impersonoi = function() {
       $uibModalInstance.close($scope.impersonointi.impersonoitava);
+    };
+    $scope.vaihdaOrganisaatio = function() {
+      console.log("IMPERSONOINTI " + JSON.stringify($scope.impersonointi))
+      $uibModalInstance.close($scope.impersonointi.organisaatio);
     };
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');
@@ -262,6 +281,11 @@ angular.module('aipal', [
         method: 'POST',
         url: 'api/kayttaja/impersonoi',
         id: 'impersonoi'
+      },
+      vaihdaOrganisaatio: {
+        method: 'POST',
+        url: 'api/kayttaja/vaihda-organisaatio',
+        id: 'vaihda-organisaatio'
       },
       lopeta: {
         method: 'POST',

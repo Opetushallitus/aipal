@@ -19,35 +19,45 @@
 
 (declare hae-kayttaja-kayttoikeuspalvelusta)
 
-(defn autentikoi-kayttaja [k impersonoitu-oid rooli f]
+(defn vaihdettu-rooli [aktiivinen-rooli vaihdettu-organisaatio]
+  (let [organisaatio (db/hae-koulutustoimija {:ytunnus vaihdettu-organisaatio})]
+    (merge aktiivinen-rooli {:organisaatio vaihdettu-organisaatio
+                             :koulutustoimija_fi (:nimi_fi organisaatio)
+                             :koulutustoimija_sv (:nimi_sv organisaatio)
+                             :koulutustoimija_en (:nimi_en organisaatio)})))
+
+(defn autentikoi-kayttaja [k impersonoitu-oid vaihdettu-organisaatio rooli f]
   (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
         aktiivinen-rooli (or (when rooli (some-value #(= rooli (:rooli_organisaatio_id %)) (:roolit k)))
                              (first (sort-by (comp roolijarjestys :rooli) (:roolit k))))
-        aktiivinen-koulutustoimija (:organisaatio aktiivinen-rooli)
+        aktiivinen-koulutustoimija (or vaihdettu-organisaatio (:organisaatio aktiivinen-rooli))
         ik (when impersonoitu-oid
              (kayttaja-arkisto/hae impersonoitu-oid))]
     (binding [*kayttaja*
               (assoc k
                 :aktiivinen-oid aktiivinen-oid
                 :aktiiviset-roolit (:roolit k)
-                :aktiivinen-rooli aktiivinen-rooli
+                :aktiivinen-rooli (if vaihdettu-organisaatio (vaihdettu-rooli aktiivinen-rooli vaihdettu-organisaatio)aktiivinen-rooli)
                 :aktiivinen-koulutustoimija aktiivinen-koulutustoimija
                 :nimi (kayttajan-nimi k)
+                :vaihdettu-organisaatio (or vaihdettu-organisaatio "")
                 :impersonoidun-kayttajan-nimi (if ik (kayttajan-nimi ik) ""))]
       (log/info "Käyttäjä autentikoitu:" (pr-str *kayttaja*))
       (with-sql-kayttaja (:oid k)
                        (f)))))
 
-(defn with-kayttaja* [uid impersonoitu-oid rooli f]
+(defn with-kayttaja* [uid impersonoitu-oid vaihdettu-organisaatio rooli f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
   (if-let [k (db/hae-voimassaoleva-kayttaja {:uid uid :voimassaolo (:kayttooikeus-tarkistusvali @asetukset)})]
     (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
           roolit (db/hae-voimassaolevat-roolit {:kayttajaOid aktiivinen-oid})]
-      (autentikoi-kayttaja (assoc k :roolit roolit) impersonoitu-oid rooli f))
-    (autentikoi-kayttaja (hae-kayttaja-kayttoikeuspalvelusta uid impersonoitu-oid) impersonoitu-oid rooli f)))
+      (autentikoi-kayttaja (assoc k :roolit roolit) impersonoitu-oid vaihdettu-organisaatio rooli f))
+    (autentikoi-kayttaja (hae-kayttaja-kayttoikeuspalvelusta uid impersonoitu-oid) impersonoitu-oid vaihdettu-organisaatio rooli f)))
 
-(defmacro with-kayttaja [uid impersonoitu-oid rooli & body]
-  `(with-kayttaja* ~uid ~impersonoitu-oid ~rooli (fn [] ~@body)))
+(defmacro with-kayttaja [uid impersonointi rooli & body]
+  `(if (map? ~impersonointi)
+     (with-kayttaja* ~uid (:kayttaja ~impersonointi) (:organisaatio ~impersonointi) ~rooli (fn [] ~@body))
+     (with-kayttaja* ~uid ~impersonointi nil ~rooli (fn [] ~@body))))
 
 (defn hae-kayttaja-kayttoikeuspalvelusta [uid impersonoitu-oid]
   (log/info "Yritetään hakea Käyttöoikeuspalvelusta käyttäjä" uid)

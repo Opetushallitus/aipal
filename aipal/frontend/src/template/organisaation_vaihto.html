@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <a class="pull-right" ng-click="cancel()">X</a>
+    <h4>Vaihda organisaatio</h4>
+
+</div>
+<div class="modal-body">
+    <form name="impersonoiForm">
+        <haku-valitsin
+            otsikko="Vaihda organisaatio"
+            url="api/koulutustoimija/hae-nimella"
+            model="impersonointi.organisaatio"
+            model-id-property="oid"
+            model-text-property="nimi"
+            pakollinen="true">
+        </haku-valitsin>
+    </form>
+</div>
+<div class="modal-footer">
+    <small class="pull-right pakollinen"><pakollisia-kenttia></pakollisia-kenttia></small>
+    <tallenna class="btn btn-primary pull-left" formi-validi="impersonoiForm.$valid" ng-click="vaihdaOrganisaatio()" teksti="Valitse organisaatio"></tallenna>
+    <button class="btn btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
+</div>
+
