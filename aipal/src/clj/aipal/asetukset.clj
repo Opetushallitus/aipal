@@ -90,7 +90,7 @@
    :kyselyynohjaus {:url "http://localhost:3000/api/export/v1/opiskeluoikeudet"
                     :user "vipunen"
                     :password "salasana"}
-   :development-mode true ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
+   :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
    :kayttooikeuspalvelu {:url "https://testi.virkailija.opintopolku.fi/kayttooikeus-service"
                          :user "tunnus"
