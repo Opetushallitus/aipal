@@ -9,7 +9,8 @@
             [clj-time.core :as time]
             [clj-time.format :as f]
             [aipal.asetukset :refer [asetukset]]
-            [arvo.util :refer [in?]]))
+            [arvo.util :refer [in?]]
+            [aipal.integraatio.koodistopalvelu :refer [hae-kunnat]]))
 
 (def default-translations {:fi {:vastaajatunnus "Vastaajatunnus"
                                 :vastausaika "Vastausaika"
@@ -203,7 +204,13 @@
                (first (filter #(= (:toimipaikka data) (:toimipaikkakoodi %)) (:toimipaikat selitteet)))))
       (assoc :hankintakoulutuksen_toteuttaja_selite
              (translate-field "nimi" lang
-               (first (filter #(= (:hankintakoulutuksen_toteuttaja data) (:ytunnus %)) (:koulutustoimijat selitteet)))))))
+               (first (filter #(= (:hankintakoulutuksen_toteuttaja data) (:ytunnus %)) (:koulutustoimijat selitteet)))))
+      (assoc :koulutusala_selite
+             (translate-field "nimi" lang
+               (first (filter #(= (:koulutusala data) (:koulutusalakoodi %)) (:koulutusalat selitteet)))))
+      (assoc :kunta_selite
+             (translate-field "nimi" lang
+               (first (filter #(= (:kunta data) (:kuntakoodi %)) (:kunnat selitteet)))))))
 
 
 (defn format-vastaus [vastaus selitteet lang]
@@ -241,14 +248,23 @@
 (defn hae-selitteet [kyselyid]
   {:tutkinnot (db/hae-kyselyn-tutkinnot {:kyselyid kyselyid})
    :toimipaikat (db/hae-kyselyn-toimipaikat {:kyselyid kyselyid})
-   :koulutustoimijat (db/hae-kyselyn-koulutustoimijat {:kyselyid kyselyid})})
+   :koulutustoimijat (db/hae-kyselyn-koulutustoimijat {:kyselyid kyselyid})
+   :koulutusalat (db/hae-kyselyn-koulutusalat {:kyselyid kyselyid})
+   :kunnat (hae-kunnat (:koodistopalvelu @asetukset))})
+
+(defn luovutuslupa [[vastaajaid vastaukset] kysymysid]
+  (= 0 (:numerovalinta (first (filter #(= kysymysid (:kysymysid %)) vastaukset)))))
+
+(defn filter-not-allowed [kysymykset vastaukset]
+  (let [lupakysymys (:kysymysid (first (filter #(= "tietojen_luovutus" (-> % :kategoria :taustakysymyksen_tyyppi)) kysymykset)))]
+    (filter #(luovutuslupa % lupakysymys) vastaukset)))
 
 (defn kysely-csv [kyselyid lang]
   (let [taustatiedot (db/kyselyn-kentat {:kyselyid kyselyid})
         taustatieto-fields (get-csv-fields taustatiedot)
         kysymykset (hae-kysymykset kyselyid)
         translations (luo-käännökset taustatiedot lang)
-        vastaukset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid}))
+        vastaukset (filter-not-allowed kysymykset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid})))
         monivalintavaihtoehdot (hae-monivalinnat kysymykset)
         selitteet (hae-selitteet kyselyid)
         template (create-row-template kysymykset)

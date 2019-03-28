@@ -35,5 +35,13 @@ WHERE kk.kyselyid = :kyselyid;
 SELECT DISTINCT kt.ytunnus, kt.nimi_fi, kt.nimi_sv, kt.nimi_en
 FROM vastaajatunnus vt
   JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
-  JOIN koulutustoimija kt ON kt.ytunnus = vt.valmistavan_koulutuksen_jarjestaja OR kt.ytunnus = vt.taustatiedot->>'hankintakoulutuksen_toteuttaja'
+  JOIN koulutustoimija kt ON kt.ytunnus = vt.valmistavan_koulutuksen_jarjestaja
+                          OR kt.ytunnus = vt.taustatiedot->>'hankintakoulutuksen_toteuttaja'
+WHERE kk.kyselyid = :kyselyid;
+
+-- :name hae-kyselyn-koulutusalat :? :*
+SELECT DISTINCT ka.koulutusalatunnus, ka.nimi_fi, ka.nimi_sv, ka.nimi_en
+FROM vastaajatunnus vt
+  JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
+  JOIN koulutusala ka ON vt.taustatiedot->>'koulutusalakoodi' = ka.koulutusalatunnus
 WHERE kk.kyselyid = :kyselyid;

@@ -131,6 +131,10 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (map (partial lisaa-opintoalaan-koulutusala asetukset))
     (map #(dissoc % :kuvaus_fi :kuvaus_sv :kuvaus_en))))
 
+(defn hae-kunnat [asetukset]
+  (->> (hae-koodit asetukset "kunta")
+       (map #(koodi->kasite % :kuntakoodi))))
+
 (defn in? [coll elem]
   (some #(= elem %) coll))
 
