@@ -134,10 +134,10 @@
                         <div>{{tunnus.tutkinto | lokalisoiKentta:'nimi'}}</div>
                         <div>
                             <span ng-show="tunnus.tutkinto.tutkintotunnus">{{ tunnus.suorituskieli }}</span>
-                            <span ng-show="tunnus.koulutusmuoto == 'paivaopiskelu'">
+                            <span ng-show="tunnus.taustatiedot.koulutusmuoto == 'paivaopiskelu'">
                                 {{i18n.vastaajatunnus.koulutusmuoto_paivaopiskelu}}
                             </span>
-                            <span ng-show="tunnus.koulutusmuoto == 'monimuoto'">
+                            <span ng-show="tunnus.taustatiedot.koulutusmuoto == 'monimuoto'">
                                  {{i18n.vastaajatunnus.koulutusmuoto_monimuoto}}
                             </span>
                         </div>
