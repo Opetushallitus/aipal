@@ -21,19 +21,19 @@
 
 (defroutes reitit
   (GET "/" []
-    :kayttooikeus :tiedote-luku
+    :kayttooikeus :kayttaja
     (response-or-404 (or (arkisto/hae) {})))
 
   (POST "/" request
     :body-params [fi :- s/Str
                   sv :- s/Str
                   en :- s/Str]
-    :kayttooikeus :tiedote-muokkaus
+    :kayttooikeus :yllapitaja
     (response-or-404 (arkisto/poista-ja-lisaa! {:fi fi
                                                 :sv sv
                                                 :en en})))
 
   (DELETE "/" []
-    :kayttooikeus :tiedote-muokkaus
+    :kayttooikeus :yllapitaja
     (arkisto/poista!)
     {:status 200}))

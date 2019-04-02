@@ -84,12 +84,12 @@
   (GET "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
     :query-params [{omat :- s/Bool false}]
-    :kayttooikeus :vastaajatunnus
+    :kayttooikeus :kayttaja
     (response-or-404 (vastaajatunnus/hae-kyselykerralla kyselykertaid omat)))
 
   (GET "/:kyselykertaid/tutkinto" []
     :path-params [kyselykertaid :- s/Int]
-    :kayttooikeus :vastaajatunnus
+    :kayttooikeus :kayttaja
     (if-let [tutkinto (vastaajatunnus/hae-viimeisin-tutkinto kyselykertaid (:aktiivinen-koulutustoimija *kayttaja*))]
       (response-or-404 tutkinto)
       {:status 200})))

@@ -97,6 +97,7 @@
       (kayttaja/kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
           "OPL-KATSELIJA"
+          "OPL-KYSELYKERTAKAYTTAJA"
           "OPH-KATSELIJA"})))
 
 (defn kysely-luonti? []
@@ -121,7 +122,7 @@
         #{"OPL-VASTUUKAYTTAJA"
           "OPL-KAYTTAJA"
           "OPL-KATSELIJA"
-          "OPL-NTMVASTUUKAYTTAJA"
+          "OPL-KYSELYKERTAKAYTTAJA"
           "OPH-KATSELIJA"}
         kyselyid)))
 
@@ -131,6 +132,7 @@
       (kayttaja/ntm-vastuukayttaja?)
       (kayttaja/kayttajalla-on-jokin-rooleista?
         #{"OPL-KAYTTAJA"
+          "OPL-KYSELYKERTAKAYTTAJA"
           "OPL-KATSELIJA"
           "OPH-KATSELIJA"})))
 
@@ -215,7 +217,7 @@
        (or (kayttaja/yllapitaja?)
            (kayttajalla-on-jokin-rooleista-kyselyssa?
              #{"OPL-VASTUUKAYTTAJA"
-               "OPL-NTMVASTUUKAYTTAJA"}
+               "OPL-KYSELYKERTAKAYTTAJA"}
              kyselyid))))
 
 (defn kyselykerta-luku? [kyselykertaid]
@@ -231,6 +233,16 @@
          (kyselykerta-luonti? kyselyid)
          (not (kyselykerta-lukittu? kyselykertaid)))))
 
+(defn vastaajatunnus-luonti? [kyselykertaid]
+  (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
+    (and (kysely-on-julkaistu? kyselyid)
+         (or
+           (kayttaja/yllapitaja?)
+           (kayttajalla-on-jokin-rooleista-kyselyssa?
+             #{"OPL-VASTUUKAYTTAJA" "OPL-KYSELYKERTAKAYTTAJA" "OPL-KAYTTAJA"}
+             kyselyid))
+         (not (kyselykerta-lukittu? kyselykertaid)))))
+
 (defn kyselykerta-tilamuutos? [kyselykertaid]
   (let [kyselyid (kyselykerta-arkisto/kyselykertaid->kyselyid (->int kyselykertaid))]
     (kyselykerta-luonti? kyselyid)))
@@ -240,7 +252,7 @@
     (or (kayttaja/yllapitaja?)
         (kayttajalla-on-jokin-rooleista-kyselyssa?
           #{"OPL-VASTUUKAYTTAJA"
-            "OPL-NTMVASTUUKAYTTAJA"}
+            "OPL-KYSELYKERTAKAYTTAJA"}
           kyselyid))))
 
 (defn raportti-koulutustoimijoista? [koulutustoimijat]
@@ -254,53 +266,48 @@
          (kyselykerta-luonti? kyselyid))))
 
 (def kayttajatoiminnot
-  `{:logitus aipal-kayttaja?
-    :kieli aipal-kayttaja?
-    :vastaajatunnus aipal-kayttaja?
-    :vastaajatunnus-tilamuutos kyselykerta-muokkaus?
-    :vastaajatunnus-poisto vastaajatunnus-muokkaus?
-    :vastaajatunnus-luonti kyselykerta-muokkaus?
-    :vastaajatunnus-muokkaus vastaajatunnus-muokkaus?
-    :kysely kyselyiden-listaaminen?
-    :kysely-luonti kysely-luonti?
-    :kysely-luku kysely-luku?
-    :kysely-muokkaus kysely-muokkaus?
-    :kysely-tilamuutos kysely-yleinen-muokkausoikeus?
-    :kysely-poisto kysely-yleinen-muokkausoikeus?
-    :kysely-raportti kysely-luku?
-    :kyselykerta-luku kyselykerta-luku?
-    :kyselykerta-raportti kyselykerta-luku?
-    :kyselykerta-luonti kyselykerta-luonti?
-    :kyselykerta-muokkaus kyselykerta-muokkaus?
-    :kyselykerta-tilamuutos kyselykerta-tilamuutos?
-    :kyselykerta-poisto kyselykerta-poisto?
-    :kysymysryhma-listaaminen kysymysryhma-listaaminen?
-    :kysymysryhma-luku kysymysryhma-luku?
-    :kysymysryhma-luonti kysymysryhma-luonti?
-    :kysymysryhma-muokkaus kysymysryhma-muokkaus?
-    :kysymysryhma-poisto kysymysryhma-muokkaus?
-    :kysymysryhma-julkaisu kysymysryhma-julkaisu?
-    :kysymysryhma-sulkeminen kysymysryhma-sulkeminen?
-    :kysymysryhma-palautus-luonnokseksi kysymysryhma-palautus-luonnokseksi?
-    :kyselypohja-listaaminen kyselypohja-listaaminen?
-    :kyselypohja-luku kyselypohja-luku?
-    :kyselypohja-muokkaus kyselypohja-muokkaus?
-    :kyselypohja-poisto kyselypohja-poisto?
-    :kyselypohja-luonti kyselypohja-luonti?
-    :impersonointi kayttaja/yllapitaja?
-    :impersonointi-lopetus impersonoiva-yllapitaja?
-    :roolin-valinta aipal-kayttaja?
-    :kayttajan_tiedot aipal-kayttaja?
-    :ohjeet_luku aipal-kayttaja?
-    :ohje_muokkaus kayttaja/yllapitaja?
-    :tutkinto aipal-kayttaja?
-    :tutkintotyyppi aipal-kayttaja?
-    :oppilaitos aipal-kayttaja?
-    :toimipaikka aipal-kayttaja?
-    :koulutustoimija aipal-kayttaja?
-    :valtakunnallinen-raportti raportti-koulutustoimijoista?
-    :omat_tiedot aipal-kayttaja?
-    :tiedote-luku aipal-kayttaja?
-    :tiedote-muokkaus kayttaja/yllapitaja?})
+  {
+
+   :kyselykerta-luonti kyselykerta-luonti?
+
+   :kysely kyselyiden-listaaminen?
+
+   :vastaajatunnus-tilamuutos kyselykerta-muokkaus?
+   :vastaajatunnus-luonti vastaajatunnus-luonti?
+   :kyselykerta-muokkaus kyselykerta-muokkaus?
+
+   :vastaajatunnus-poisto vastaajatunnus-luonti?
+   :vastaajatunnus-muokkaus vastaajatunnus-luonti?
+
+   :kyselykerta-luku kyselykerta-luku?
+   :kyselykerta-raportti kyselykerta-luku?
+
+
+   :kysely-luonti kysely-luonti?
+   :kysely-luku kysely-luku?
+   :kysely-muokkaus kysely-muokkaus?
+   :kysely-tilamuutos kysely-yleinen-muokkausoikeus?
+   :kysely-poisto kysely-yleinen-muokkausoikeus?
+   :kysely-raportti kysely-luku?
+
+   :kyselykerta-tilamuutos kyselykerta-tilamuutos?
+   :kyselykerta-poisto kyselykerta-poisto?
+   :kysymysryhma-listaaminen kysymysryhma-listaaminen?
+   :kysymysryhma-luku kysymysryhma-luku?
+   :kysymysryhma-luonti kysymysryhma-luonti?
+   :kysymysryhma-muokkaus kysymysryhma-muokkaus?
+   :kysymysryhma-poisto kysymysryhma-muokkaus?
+   :kysymysryhma-julkaisu kysymysryhma-julkaisu?
+   :kysymysryhma-sulkeminen kysymysryhma-sulkeminen?
+   :kysymysryhma-palautus-luonnokseksi kysymysryhma-palautus-luonnokseksi?
+   :kyselypohja-listaaminen kyselypohja-listaaminen?
+   :kyselypohja-luku kyselypohja-luku?
+   :kyselypohja-muokkaus kyselypohja-muokkaus?
+   :kyselypohja-poisto kyselypohja-poisto?
+   :kyselypohja-luonti kyselypohja-luonti?
+   :valtakunnallinen-raportti raportti-koulutustoimijoista?
+   ;uudet
+   :kayttaja aipal-kayttaja?
+   :yllapitaja kayttaja/yllapitaja?})
 
 (def toiminnot kayttajatoiminnot)

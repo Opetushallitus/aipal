@@ -22,5 +22,5 @@
 (defroutes reitit
   (GET "/" [koulutustoimija]
     :query-params [koulutustoimija :- s/Str]
-    :kayttooikeus :oppilaitos
+    :kayttooikeus :kayttaja
     (response-or-404 (oppilaitos/hae-koulutustoimijan-oppilaitokset koulutustoimija))))

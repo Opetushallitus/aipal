@@ -38,5 +38,5 @@
 (defroutes reitit
   (GET "/:kieli" [kieli :as req]
     :path-params [kieli :- Kieli]
-    :kayttooikeus :kieli
+    :kayttooikeus :kayttaja
     (response-or-404 (hae-tekstit kieli))))

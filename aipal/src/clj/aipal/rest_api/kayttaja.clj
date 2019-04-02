@@ -24,34 +24,34 @@
 
 (defroutes reitit
   (POST "/impersonoi" [:as {session :session}, oid]
-    :kayttooikeus :impersonointi
+    :kayttooikeus :yllapitaja
     {:status 200
      :session (assoc session :impersonoitu-oid oid)})
   (POST "/vaihda-organisaatio" [:as {session :session} oid]
-    :kayttooikeus :impersonointi
+    :kayttooikeus :yllapitaja
     (log/info "Session:" session)
     {:status 200
      :session (assoc session :vaihdettu-organisaatio oid)})
   (POST "/lopeta-impersonointi" {session :session}
-    :kayttooikeus :impersonointi-lopetus
+    :kayttooikeus :yllapitaja
     {:status 200
      :session (apply dissoc session [:impersonoitu-oid :vaihdettu-organisaatio])})
   (POST "/rooli" {{rooli :rooli_organisaatio_id} :params
                   session :session}
-    :kayttooikeus :roolin-valinta
+    :kayttooikeus :kayttaja
     {:status 200
      :session (assoc session :rooli rooli)})
   (GET "/impersonoitava" [termi]
-    :kayttooikeus :impersonointi
+    :kayttooikeus :yllapitaja
     :query-params [termi :- s/Str]
     (response-or-404 (arkisto/hae-impersonoitava-termilla termi)))
   (GET "/" []
-    :kayttooikeus :omat_tiedot
+    :kayttooikeus :kayttaja
     (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:aktiivinen-oid *kayttaja*))]
       (response-or-404 (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)
                                        :vaihdettu_organisaatio (:vaihdettu-organisaatio *kayttaja*)
                                        :aktiivinen_rooli (:aktiivinen-rooli *kayttaja*)))))
   (GET "/:oid" []
     :path-params [oid :- s/Str]
-    :kayttooikeus [:kayttajan_tiedot oid]
+    :kayttooikeus [:kayttaja oid]
     true))

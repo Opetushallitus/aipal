@@ -119,7 +119,7 @@
   (GET "/vastaajatunnus/:kyselykertaid" []
        :path-params [kyselykertaid :- s/Int]
        :query-params [{lang :- s/Str "fi"}]
-       :kayttooikeus :vastaajatunnus
+       :kayttooikeus :kayttaja
        (let [csv-data (vastaajatunnus-csv kyselykertaid (keyword lang))]
          (csv-download-response csv-data (str "vastaajatunnukset -" kyselykertaid ".csv")))))
 

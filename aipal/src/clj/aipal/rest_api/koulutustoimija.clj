@@ -22,15 +22,15 @@
 
 (defroutes reitit
   (GET "/aktiivinen" []
-    :kayttooikeus :koulutustoimija
+    :kayttooikeus :kayttaja
     (response-or-404 (koulutustoimija/hae (:aktiivinen-koulutustoimija *kayttaja*))))
   (GET "/" []
-    :kayttooikeus :koulutustoimija
+    :kayttooikeus :kayttaja
     (response-or-404 (koulutustoimija/hae-kaikki)))
   (GET "/koulutusluvalliset" []
-    :kayttooikeus :koulutustoimija
+    :kayttooikeus :kayttaja
     (response-or-404 (koulutustoimija/hae-koulutusluvalliset)))
   (GET "/hae-nimella" [termi]
-    :kayttooikeus :impersonointi
+    :kayttooikeus :yllapitaja
     :query-params [termi :- s/Str]
     (response-or-404 (koulutustoimija/hae-nimella termi))))

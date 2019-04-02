@@ -20,5 +20,5 @@
 
 (defroutes reitit
   (GET "/" []
-    :kayttooikeus :kieli
+    :kayttooikeus :kayttaja
     (response-or-404 (kieli/hae-kaikki))))

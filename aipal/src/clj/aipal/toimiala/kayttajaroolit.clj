@@ -24,12 +24,13 @@
                         "ARVO-YO-KAYTTAJA" "OPL-KAYTTAJA"
                         "ARVO-YO-KATSELIJA" "OPL-KATSELIJA"
                         "ARVO-KT-VASTUUKAYTTAJA" "OPL-VASTUUKAYTTAJA"
+                        "ARVO-KT-KYSELYKERTAKAYTTAJA" "OPL-KYSELYKERTAKAYTTAJA"
                         "ARVO-KT-KAYTTAJA" "OPL-KAYTTAJA"
                         "ARVO-KT-KATSELIJA" "OPL-KATSELIJA"})
 
 
 ;; roolit jotka liittyvät koulutustoimijaan
-(def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})
+(def koulutustoimija-roolit #{"OPL-VASTUUKAYTTAJA" "OPL-KYSELYKERTAKAYTTAJA" "OPL-KAYTTAJA" "OPL-KATSELIJA"})
 
 (def oph-roolit #{"YLLAPITAJA"})
 
@@ -37,6 +38,7 @@
   "Roolien prioriteettijärjestys, jolla valitaan aktiivinen rooli jos käyttäjä ei ole sitä valinnut"
   {"YLLAPITAJA" 0
    "OPL-VASTUUKAYTTAJA" 2
-   "OPL-KAYTTAJA" 3
-   "OPL-KATSELIJA" 4
+   "OPL-KYSELYKERTAKAYTTAJA" 3
+   "OPL-KAYTTAJA" 4
+   "OPL-KATSELIJA" 5
    "KATSELIJA" 6})

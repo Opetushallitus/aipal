@@ -19,5 +19,5 @@
 
 (defroutes reitit
   (POST "/virhe" [virheenUrl userAgent virheviesti stackTrace cause]
-    :kayttooikeus :logitus
+    :kayttooikeus :kayttaja
     (logita virheenUrl userAgent virheviesti stackTrace cause)))
