@@ -16,11 +16,10 @@
       </div>
     </div>
 
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" class="e2e-vastaajatunnus-henkilokohtainen" ng-model="vastaajatunnus.henkilokohtainen"> {{i18n.vastaajatunnus.henkilokohtainen}}
-      </label>
-    </div>
+    <label>
+      <input type="checkbox" class="e2e-vastaajatunnus-henkilokohtainen" ng-model="vastaajatunnus.henkilokohtainen">
+      <span>{{i18n.vastaajatunnus.henkilokohtainen}}</span>
+    </label>
 
     <div class="form-group">
       <label>{{'yleiset.tutkinnon_suorituskieli' | i18n}} *
