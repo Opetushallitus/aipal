@@ -151,10 +151,14 @@
 (defn poista-valiotsikot [kysymykset]
   (filter #(not= (:vastaustyyppi %) "valiotsikko") kysymykset))
 
+(defn poista-raportoimattomat [kysymykset]
+  (filter #(not= false (-> % :kategoria :raportointi :csv)) kysymykset))
+
 (defn hae-kysymykset [kyselyid]
   (->> (hae-kyselyn-kysymykset kyselyid)
        flatten
        poista-valiotsikot
+       poista-raportoimattomat
        muuta-taustakysymykset))
 
 (defn csv-response [kyselyid lang data]
