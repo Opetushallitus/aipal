@@ -33,12 +33,12 @@
     {:status 200
      :session (assoc session :vaihdettu-organisaatio oid)})
   (POST "/lopeta-impersonointi" {session :session}
-    :kayttooikeus :yllapitaja
+    :kayttooikeus :katselu
     {:status 200
      :session (apply dissoc session [:impersonoitu-oid :vaihdettu-organisaatio])})
   (POST "/rooli" {{rooli :rooli_organisaatio_id} :params
                   session :session}
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     {:status 200
      :session (assoc session :rooli rooli)})
   (GET "/impersonoitava" [termi]
@@ -46,12 +46,8 @@
     :query-params [termi :- s/Str]
     (response-or-404 (arkisto/hae-impersonoitava-termilla termi)))
   (GET "/" []
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (let [oikeudet (kayttajaoikeus-arkisto/hae-oikeudet (:aktiivinen-oid *kayttaja*))]
       (response-or-404 (assoc oikeudet :impersonoitu_kayttaja (:impersonoidun-kayttajan-nimi *kayttaja*)
                                        :vaihdettu_organisaatio (:vaihdettu-organisaatio *kayttaja*)
-                                       :aktiivinen_rooli (:aktiivinen-rooli *kayttaja*)))))
-  (GET "/:oid" []
-    :path-params [oid :- s/Str]
-    :kayttooikeus [:kayttaja oid]
-    true))
+                                       :aktiivinen_rooli (:aktiivinen-rooli *kayttaja*))))))

@@ -44,7 +44,7 @@
   (POST "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
     :body [vastaajatunnus s/Any]
-    :kayttooikeus [:vastaajatunnus-luonti kyselykertaid]
+    :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
     (let [vastaajatunnus (-> vastaajatunnus
                            (ui->vastaajatunnus kyselykertaid)
                            (paivita-arvot [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))]
@@ -54,14 +54,14 @@
     :path-params [kyselykertaid :- s/Int
                   vastaajatunnusid :- s/Int]
     :body-params [lukitse :- Boolean]
-    :kayttooikeus [:vastaajatunnus-tilamuutos kyselykertaid]
+    :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
     (response-or-404 (vastaajatunnus/aseta-lukittu! kyselykertaid vastaajatunnusid lukitse)))
 
   (POST "/:kyselykertaid/tunnus/:vastaajatunnusid/muokkaa-lukumaaraa" []
     :path-params [kyselykertaid :- s/Int
                   vastaajatunnusid :- s/Int]
     :body-params [lukumaara :- s/Int]
-    :kayttooikeus [:vastaajatunnus-muokkaus kyselykertaid]
+    :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
     (let [vastaajatunnus (vastaajatunnus/hae kyselykertaid vastaajatunnusid)
           vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
       (when-not (:muokattavissa vastaajatunnus)
@@ -73,7 +73,7 @@
   (DELETE "/:kyselykertaid/tunnus/:vastaajatunnusid" []
     :path-params [kyselykertaid :- s/Int
                   vastaajatunnusid :- s/Int]
-    :kayttooikeus [:vastaajatunnus-poisto kyselykertaid]
+    :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
     (let [vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
       (if (zero? vastaajat)
         (do
@@ -84,12 +84,12 @@
   (GET "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
     :query-params [{omat :- s/Bool false}]
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (response-or-404 (vastaajatunnus/hae-kyselykerralla kyselykertaid omat)))
 
   (GET "/:kyselykertaid/tutkinto" []
     :path-params [kyselykertaid :- s/Int]
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (if-let [tutkinto (vastaajatunnus/hae-viimeisin-tutkinto kyselykertaid (:aktiivinen-koulutustoimija *kayttaja*))]
       (response-or-404 tutkinto)
       {:status 200})))

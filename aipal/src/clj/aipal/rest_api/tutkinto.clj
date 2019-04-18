@@ -23,29 +23,29 @@
 
 (defroutes reitit
    (GET "/voimassaolevat-listana" []
-        :kayttooikeus :kayttaja
+        :kayttooikeus :katselu
         (response-or-404 (tutkinto/hae-voimassaolevat-tutkinnot-listana)))
   (GET "/voimassaolevat" []
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (response-or-404 (tutkinto/hae-voimassaolevat-tutkinnot)))
   (GET "/vanhentuneet" []
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (response-or-404 (tutkinto/hae-vanhentuneet-tutkinnot)))
   (GET "/koulutustoimija" []
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     :query-params [kyselytyyppi :- s/Int]
     (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
       (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi))))
   (GET "/koulutustoimija/:y-tunnus" []
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     :path-params [y-tunnus :- String]
     :query-params [kyselytyyppi :- s/Int]
     (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi)))
   (GET "/kyselytyyppi/:kyselytyyppi" []
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     :path-params [kyselytyyppi :- s/Int]
     (response-or-404 (tutkinto/hae-kyselytyypin-tutkinnot kyselytyyppi)))
   (GET "/jarjestajat/:tutkintotunnus" []
     :path-params [tutkintotunnus :- String]
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (response-or-404 (tutkinto/hae-tutkinnon-jarjestajat tutkintotunnus))))

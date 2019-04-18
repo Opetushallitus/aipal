@@ -45,3 +45,8 @@ FROM vastaajatunnus vt
   JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
   JOIN koulutusala ka ON vt.taustatiedot->>'koulutusalakoodi' = ka.koulutusalatunnus
 WHERE kk.kyselyid = :kyselyid;
+
+-- :name hae-kyselykerran-organisaatio :? :1
+SELECT k.koulutustoimija FROM kyselykerta kk
+JOIN kysely k on kk.kyselyid = k.kyselyid
+WHERE kk.kyselykertaid = :kyselykertaid;

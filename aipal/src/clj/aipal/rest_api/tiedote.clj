@@ -21,7 +21,7 @@
 
 (defroutes reitit
   (GET "/" []
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (response-or-404 (or (arkisto/hae) {})))
 
   (POST "/" request

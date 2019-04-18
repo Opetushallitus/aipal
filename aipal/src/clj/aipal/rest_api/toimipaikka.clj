@@ -20,5 +20,5 @@
 
 (defroutes reitit
   (GET "/" [oppilaitos]
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (response-or-404 (toimipaikka/hae-oppilaitoksen-voimassaolevat-toimipaikat oppilaitos))))

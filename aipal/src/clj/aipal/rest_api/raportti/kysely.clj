@@ -93,7 +93,7 @@
   (POST "/:kyselyid" []
     :path-params [kyselyid :- s/Int]
     :body [parametrit s/Any]
-    :kayttooikeus [:kysely-raportti kyselyid]
+    :kayttooikeus [:katselu kyselyid]
     (response-or-404 (muodosta-kyselyraportti kyselyid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
 (defn get-csv-name
@@ -106,20 +106,20 @@
   (GET "/kysely/:kyselyid" []
        :path-params [kyselyid :- s/Int]
        :query-params [{lang :- s/Str "fi"}]
-       :kayttooikeus [:kysely-raportti kyselyid]
+       :kayttooikeus [:vastuukayttaja {:kyselyid kyselyid}]
        (let [csv-data (kysely-csv kyselyid (keyword lang))]
          (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
 
   (GET "/kysely/vastauksittain/:kyselyid" []
        :path-params [kyselyid :- s/Int]
        :query-params [{lang :- s/Str "fi"}]
-       :kayttooikeus [:kysely-raportti kyselyid]
+       :kayttooikeus [:vastuukayttaja {:kyselyid kyselyid}]
        (let [csv-data (kysely-csv-vastauksittain kyselyid (keyword lang))]
          (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
   (GET "/vastaajatunnus/:kyselykertaid" []
        :path-params [kyselykertaid :- s/Int]
        :query-params [{lang :- s/Str "fi"}]
-       :kayttooikeus :kayttaja
+       :kayttooikeus :katselu
        (let [csv-data (vastaajatunnus-csv kyselykertaid (keyword lang))]
          (csv-download-response csv-data (str "vastaajatunnukset -" kyselykertaid ".csv")))))
 
@@ -128,7 +128,7 @@
     (GET "/:kyselyid/csv" []
       :path-params [kyselyid :- s/Int]
       :query-params [parametrit]
-      :kayttooikeus [:kysely-raportti kyselyid]
+      :kayttooikeus [:katselu {:kyselyid kyselyid}]
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             raportit (muodosta-raportit-parametreilla kyselyid parametrit)
             kieli (:kieli parametrit)]
