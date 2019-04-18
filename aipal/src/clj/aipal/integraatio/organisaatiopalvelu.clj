@@ -226,24 +226,23 @@
   (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)
                                              :when (:oid o)]
                                          [(:oid o) (:oppilaitoskoodi o)]))
-        toimipaikat (->> (toimipaikka-arkisto/hae-kaikki)
-                      (map-by :toimipaikkakoodi))]
-    (doseq [koodi (vals (map-by :toimipistekoodi koodit)) ;; Poistetaan duplikaatit
-            ;; Poistetaan toimipaikat joille ei löydy oppilaitosta
+        toimipaikat (map-by :oid (toimipaikka-arkisto/hae-kaikki))]
+    (doseq [koodi (vals (map-by :oid koodit)) ;; Poistetaan duplikaatit. Voi kuitenkin olla useita samalla toimipistekoodilla (vaikkei pitäisi)
+            ;; Poistetaan toimipaikat jotka eivät ole suoraan oppilaitoksen alla
             ;; Toimipaikalla on oltava oppilaitos
             :when (oid->oppilaitostunnus (:parentOid koodi))
-            :let [toimipaikkakoodi (:toimipistekoodi koodi)
-                  oppilaitos (oid->oppilaitostunnus (:parentOid koodi))
-                  vanha-toimipaikka (toimipaikan-kentat (get toimipaikat toimipaikkakoodi))
+            :let [oid (:oid koodi)
+                  oppilaitoskoodi (oid->oppilaitostunnus (:parentOid koodi))
+                  vanha-toimipaikka (toimipaikan-kentat (get toimipaikat oid))
                   uusi-toimipaikka (assoc (koodi->toimipaikka koodi)
-                                          :oppilaitos oppilaitos)]]
+                                          :oppilaitos oppilaitoskoodi)]]
       (cond
         (nil? vanha-toimipaikka) (do
-                                   (log/info "Uusi toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka))
+                                   (log/info "Uusi toimipaikka: " (:oid uusi-toimipaikka))
                                    (toimipaikka-arkisto/lisaa! uusi-toimipaikka))
         (not= vanha-toimipaikka uusi-toimipaikka) (do
                                                     (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka) (muutos vanha-toimipaikka uusi-toimipaikka))
-                                                    (toimipaikka-arkisto/paivita! toimipaikkakoodi uusi-toimipaikka)))))
+                                                    (toimipaikka-arkisto/paivita! oid uusi-toimipaikka)))))
   (toimipaikka-arkisto/laske-voimassaolo!))
 
 (defn ^:integration-api ^:private paivita-haetut-organisaatiot! [koodit]
