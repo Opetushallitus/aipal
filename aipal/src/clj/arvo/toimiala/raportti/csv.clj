@@ -25,7 +25,10 @@
                                 :tutkintotunnus "Tutkinto" :vastausten_lkm "Vastauksia" :vastaajien_lkm "Vastaajien lkm"
                                 :tutkinto_selite "Tutkinnon nimi"
                                 :hankintakoulutuksen_toteuttaja_selite "Hankintakoulutuksen toteuttajan nimi"
-                                :toimipaikka_selite "Toimipaikan nimi"}
+                                :toimipaikka_selite "Toimipaikan nimi"
+                                :koulutusalakoodi_selite "Koulutusala"
+                                :asuinkunta_koodi_selite "Asuinkunta selite"
+                                :opiskelupaikkakunta_koodi_selite "Opiskelupaikkakunta selite"}
                            :sv {:vastaajatunnus "Svarskod"
                                 :vastausaika "Svarstid"
                                 :tunnus "Svarskod"
@@ -35,8 +38,11 @@
                                 :voimassa_loppupvm "Sista svarsdag"
                                 :tutkintotunnus "Tutkinto" :vastausten_lkm "Respondents antal" :vastaajien_lkm "Svarsantal"
                                 :tutkinto_selite "Namn på examen"
-                                :hankintakoulutuksen_toteuttaja_selite "Namn på anordnaren av anskaffad utbildning"
-                                :toimipaikka_selite "Namn på verksamhetsställe"}
+                                :hankintakoulutuksen_toteluttaja_selite "Namn på anordnaren av anskaffad utbildning"
+                                :toimipaikka_selite "Namn på verksamhetsställe"
+                                :koulutusalakoodi_selite "Utbildningsområde"
+                                :asuinkunta_koodi_selite "Bostadskommun"
+                                :opiskelupaikkakunta_koodi_selite "Field of education"}
                            :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"
                                 :tunnus "Answer identifier"
                                 :luotuaika "TimeCreated"
@@ -46,7 +52,10 @@
                                 :tutkintotunnus "Tutkinto" :vastausten_lkm "RespondentCount" :vastaajien_lkm "ResponseCount"
                                 :tutkinto_selite "Name of degree"
                                 :hankintakoulutuksen_toteuttaja_selite "Name of provider (procured training)"
-                                :toimipaikka_selite "Name of operational unit"}})
+                                :toimipaikka_selite "Name of operational unit"
+                                :koulutusalakoodi_selite "Field of education"
+                                :asuinkunta_koodi_selite "Municipality of residence"
+                                :opiskelupaikkakunta_koodi_selite "Municipality of education"}})
 
 (def delimiter \;)
 
@@ -209,12 +218,15 @@
       (assoc :hankintakoulutuksen_toteuttaja_selite
              (translate-field "nimi" lang
                (first (filter #(= (:hankintakoulutuksen_toteuttaja data) (:ytunnus %)) (:koulutustoimijat selitteet)))))
-      (assoc :koulutusala_selite
+      (assoc :koulutusalakoodi_selite
              (translate-field "nimi" lang
-               (first (filter #(= (:koulutusala data) (:koulutusalakoodi %)) (:koulutusalat selitteet)))))
-      (assoc :kunta_selite
+               (first (filter #(= (:koulutusalakoodi data) (:koulutusalatunnus %)) (:koulutusalat selitteet)))))
+      (assoc :asuinkunta_koodi_selite
              (translate-field "nimi" lang
-               (first (filter #(= (:kunta data) (:kuntakoodi %)) (:kunnat selitteet)))))))
+               (first (filter #(= (:asuinkunta_koodi data) (:kuntakoodi %)) (:kunnat selitteet)))))
+      (assoc :opiskelupaikkakunta_koodi_selite
+             (translate-field "nimi" lang
+                              (first (filter #(= (:opiskelupaikkakunta_koodi data) (:kuntakoodi %)) (:kunnat selitteet)))))))
 
 
 (defn format-vastaus [vastaus selitteet lang]
@@ -261,7 +273,9 @@
 
 (defn filter-not-allowed [kysymykset vastaukset]
   (let [lupakysymys (:kysymysid (first (filter #(= "tietojen_luovutus" (-> % :kategoria :taustakysymyksen_tyyppi)) kysymykset)))]
-    (filter #(luovutuslupa % lupakysymys) vastaukset)))
+    (if lupakysymys
+      (filter #(luovutuslupa % lupakysymys) vastaukset)
+      vastaukset)))
 
 (defn kysely-csv [kyselyid lang]
   (let [taustatiedot (db/kyselyn-kentat {:kyselyid kyselyid})
@@ -286,7 +300,7 @@
         kysymykset (hae-kysymykset kyselyid)
         selitteet (hae-selitteet kyselyid)
         translations (luo-käännökset taustatiedot lang)
-        vastaukset (group-by :vastaajatunnus (db/hae-vastaukset {:kyselyid kyselyid}))
+        vastaukset (filter-not-allowed kysymykset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid})))
         monivalintavaihtoehdot (hae-monivalinnat kysymykset)
         taustakysymykset (->> kysymykset
                               (filter :taustakysymys)
