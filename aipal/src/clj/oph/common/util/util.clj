@@ -127,6 +127,16 @@
      cheshire/parse-string
      keywordize-keys)))
 
+(defn post-json-from-url
+  ([url]
+   (get-json-from-url url {}))
+  ([url options]
+   (->
+     (http/post url options)
+     :body
+     cheshire/parse-string
+     keywordize-keys)))
+
 (defn uusin-muokkausaika
   "Palauttaa uusimman muokkausajan annetuista arvoista.
    Polut ovat get-in-tyylisiä avainpolkuja, jotka kertovat mistä muokkausajat haetaan."

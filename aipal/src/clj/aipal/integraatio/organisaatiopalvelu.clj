@@ -18,8 +18,9 @@
             [aipal.arkisto.toimipaikka :as toimipaikka-arkisto]
             [aipal.arkisto.organisaatiopalvelu :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
+            [cheshire.core :as json]
             [clj-time.coerce :as time-coerce]
-            [oph.common.util.util :refer [get-json-from-url map-by some-value muutos]]
+            [oph.common.util.util :refer [get-json-from-url post-json-from-url map-by some-value muutos]]
             [clojure.tools.logging :as log]
             [korma.db :as db]))
 
@@ -35,16 +36,21 @@
 (defn lisaa-oppilaitostyyppi [koodi]
   (assoc koodi :oppilaitostyyppi (oppilaitostyyppi (:oppilaitosTyyppiUri koodi))))
 
-(defn hae-kaikki [url]
-  (log/info "Haetaan kaikki organisaatiot organisaatiopalvelusta " url)
-  (let [oids (get-json-from-url url)]
-    (for [oid oids]
-      (lisaa-oppilaitostyyppi (halutut-kentat (get-json-from-url (str url oid)))))))
+; Käytetyt tyypit: KOULUTUSTOIMIJA OPPILAITOS TOIMIPISTE https://github.com/Opetushallitus/organisaatio/blob/84d7f0822a76c802c9de30b1d1fb08b161164115/organisaatio-api/src/main/java/fi/vm/sade/organisaatio/api/model/types/OrganisaatioTyyppi.java
+(defn hae-oidit-tyypilla [url tyyppi]
+  (get-json-from-url url {:query-params {"searchTerms" (str "type=" tyyppi)}}))
 
 (defn hae-muuttuneet [url viimeisin-paivitys]
   (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta" url)
   (map (comp lisaa-oppilaitostyyppi halutut-kentat)
-       (get-json-from-url (str url "v2/muutetut") {:query-params {"lastModifiedSince" viimeisin-paivitys}})))
+       (get-json-from-url (str url "v4/muutetut") {:query-params {"lastModifiedSince" viimeisin-paivitys}})))
+
+(defn hae-era [oid-era url]
+  (log/info "Haetaan erä " (count oid-era) "kpl")
+  (let [body (json/generate-string oid-era)
+        full-url (str url "v4/findbyoids")]
+    (map (comp lisaa-oppilaitostyyppi halutut-kentat)
+         (post-json-from-url full-url {:body body :content-type "application/json"}))))
 
 ;; Koodistopalvelun oppilaitostyyppikoodistosta
 (def ^:private halutut-tyypit
@@ -166,7 +172,7 @@
 
 (defn ^:private tyyppi [koodi]
   (cond
-    (some #{"Koulutustoimija"} (:tyypit koodi)) :koulutustoimija
+    (some #{"organisaatiotyyppi_01"} (:tyypit koodi)) :koulutustoimija
     (haluttu-tyyppi? koodi) :oppilaitos
     (:toimipistekoodi koodi) :toimipaikka))
 
@@ -183,7 +189,7 @@
             (log/warn "Oppilaitos ilman parenttia:" (:oppilaitosKoodi oppilaitos)))
           oid->ytunnus)))))
 
-(defn ^:private ^:integration-api paivita-koulutustoimijat! [koodit]
+(defn ^:integration-api paivita-koulutustoimijat! [koodit]
   (let [koulutustoimijat (->> (koulutustoimija-arkisto/hae-kaikki-organisaatiopalvelulle)
                            (map-by :ytunnus))]
     (doseq [koodi (vals (map-by y-tunnus koodit)) ;; Poistetaan duplikaatit
@@ -222,7 +228,7 @@
                                                   (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos)))))
   (oppilaitos-arkisto/laske-voimassaolo!))
 
-(defn ^:private ^:integration-api paivita-toimipaikat! [koodit]
+(defn ^:integration-api paivita-toimipaikat! [koodit]
   (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)
                                              :when (:oid o)]
                                          [(:oid o) (:oppilaitoskoodi o)]))
@@ -254,6 +260,19 @@
     (paivita-oppilaitokset! oppilaitoskoodit)
     (paivita-toimipaikat! toimipaikkakoodit)))
 
+(defn paivita-erassa [oids paivitys-funktio url]
+  (let [oid-erat (partition 200 oids)]
+    (db/transaction
+     (run! (comp paivitys-funktio #(hae-era % url)) oid-erat))))
+
+(defn hae-ja-paivita-kaikki [url]
+  (let [koulutustoimija-oidit (hae-oidit-tyypilla url "KOULUTUSTOIMIJA")
+        oppilaitos-oidit (hae-oidit-tyypilla url "OPPILAITOS")
+        toimipiste-oidit (hae-oidit-tyypilla url "TOIMIPISTE")]
+    (paivita-erassa koulutustoimija-oidit paivita-koulutustoimijat! url)
+    (paivita-erassa oppilaitos-oidit paivita-oppilaitokset! url)
+    (paivita-erassa toimipiste-oidit paivita-toimipaikat! url)))
+
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
   (log/info "Aloitetaan organisaatioiden päivitys organisaatiopalvelusta")
@@ -264,8 +283,7 @@
           vanhat-koulutustoimijat (set (map :ytunnus (koulutustoimija-arkisto/hae-kaikki)))
           nyt (time/now)
           koodit (if viimeisin-paivitys
-                   (hae-muuttuneet url viimeisin-paivitys)
-                   (hae-kaikki url))]
+                   (hae-muuttuneet url viimeisin-paivitys))]
       (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
       (when-not viimeisin-paivitys
         ;; Ajetaan käytännössä vain kerran. Konversiossa on tuotu organisaatioita, joita ei käytetä eikä haeta organisaatiopalvelusta
@@ -273,7 +291,9 @@
         (koulutustoimija-arkisto/aseta-kaikki-vanhentuneiksi!)
         (oppilaitos-arkisto/aseta-kaikki-vanhentuneiksi!)
         (toimipaikka-arkisto/aseta-kaikki-vanhentuneiksi!))
-      (paivita-haetut-organisaatiot! koodit)
+      (if viimeisin-paivitys
+        (paivita-haetut-organisaatiot! koodit)
+        (hae-ja-paivita-kaikki url))
       (organisaatiopalvelu-arkisto/tallenna-paivitys! nyt)
       (let [nykyiset-koulutustoimijat (set (map :ytunnus (koulutustoimija-arkisto/hae-kaikki)))]
         (doseq [kt (clojure.set/difference nykyiset-koulutustoimijat vanhat-koulutustoimijat)]
