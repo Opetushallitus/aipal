@@ -65,7 +65,7 @@ alter table kyselypohja drop column toimipaikka;
 
 -- vastaajatunnus (valmistavan_koulutuksen_toimipaikka) rajakkeen tietojen talteenotto ja poisto
 update vastaajatunnus set taustatiedot = '{}' where taustatiedot is null;
-update vastaajatunnus set taustatiedot = taustatiedot::jsonb || ('{"toimipaikka":' || valmistavan_koulutuksen_toimipaikka || '}')::jsonb where valmistavan_koulutuksen_toimipaikka is not null;
+update vastaajatunnus set taustatiedot = taustatiedot::jsonb || ('{"toimipaikka":"' || valmistavan_koulutuksen_toimipaikka || '"}')::jsonb where valmistavan_koulutuksen_toimipaikka is not null;
 alter table vastaajatunnus drop column valmistavan_koulutuksen_toimipaikka;
 
 
