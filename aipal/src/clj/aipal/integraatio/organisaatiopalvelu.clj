@@ -256,6 +256,7 @@
         koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
         oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
         toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
+    (log/info "Haettu muuttuneet organisaatiot," (count koodit) "kpl")
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit)
     (paivita-toimipaikat! toimipaikkakoodit)))
@@ -266,6 +267,7 @@
      (run! (comp paivitys-funktio #(hae-era % url)) oid-erat))))
 
 (defn hae-ja-paivita-kaikki [url]
+  (log/info "Haetaan kaikki koulutustoimijat, oppilaitokset ja toimipisteet organisaatiopalvelusta")
   (let [koulutustoimija-oidit (hae-oidit-tyypilla url "KOULUTUSTOIMIJA")
         oppilaitos-oidit (hae-oidit-tyypilla url "OPPILAITOS")
         toimipiste-oidit (hae-oidit-tyypilla url "TOIMIPISTE")]
@@ -282,9 +284,7 @@
           url (get asetukset "url")
           vanhat-koulutustoimijat (set (map :ytunnus (koulutustoimija-arkisto/hae-kaikki)))
           nyt (time/now)
-          koodit (if viimeisin-paivitys
-                   (hae-muuttuneet url viimeisin-paivitys))]
-      (log/info "Haettu kaikki organisaatiot," (count koodit) "kpl")
+          koodit (when viimeisin-paivitys (hae-muuttuneet url viimeisin-paivitys))]
       (when-not viimeisin-paivitys
         ;; Ajetaan käytännössä vain kerran. Konversiossa on tuotu organisaatioita, joita ei käytetä eikä haeta organisaatiopalvelusta
         ;; ja tällä tavalla saadaan ne merkittyä vanhentuneiksi.
