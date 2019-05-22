@@ -18,6 +18,7 @@
             [aipal.arkisto.toimipaikka :as toimipaikka-arkisto]
             [aipal.arkisto.organisaatiopalvelu :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
+            [clj-time.format :as f]
             [cheshire.core :as json]
             [clj-time.coerce :as time-coerce]
             [oph.common.util.util :refer [get-json-from-url post-json-from-url map-by some-value muutos]]
@@ -40,10 +41,14 @@
 (defn hae-oidit-tyypilla [url tyyppi]
   (get-json-from-url url {:query-params {"searchTerms" (str "type=" tyyppi)}}))
 
+(def organisaatiopalvelu-formatter (f/formatter "yyyy-MM-dd hh:mm"))
+
+; Haetaan minuutin tarkkuudella niin voidaan tarvittaessa hakea useasti päivässä
 (defn hae-muuttuneet [url viimeisin-paivitys]
-  (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta" url)
-  (map (comp lisaa-oppilaitostyyppi halutut-kentat)
-       (get-json-from-url (str url "v4/muutetut") {:query-params {"lastModifiedSince" viimeisin-paivitys}})))
+  (let [org-aikaleima (f/unparse organisaatiopalvelu-formatter (f/parse viimeisin-paivitys))]
+    (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta" url "aikaleimalla" org-aikaleima)
+    (map (comp lisaa-oppilaitostyyppi halutut-kentat)
+         (get-json-from-url (str url "v4/muutetut") {:query-params {"lastModifiedSince" org-aikaleima}}))))
 
 (defn hae-era [oid-era url]
   (log/info "Haetaan erä " (count oid-era) "kpl")
