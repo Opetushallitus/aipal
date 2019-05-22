@@ -45,7 +45,8 @@
 
 ; Haetaan minuutin tarkkuudella niin voidaan tarvittaessa hakea useasti päivässä
 (defn hae-muuttuneet [url viimeisin-paivitys]
-  (let [org-aikaleima (f/unparse organisaatiopalvelu-formatter (f/parse viimeisin-paivitys))]
+;  Substracting one minute to be sure no data is omitted
+  (let [org-aikaleima (f/unparse organisaatiopalvelu-formatter (time/minus viimeisin-paivitys (time/minutes 1)))]
     (log/info "Haetaan muuttuneet organisaatiot organisaatiopalvelusta" url "aikaleimalla" org-aikaleima)
     (map (comp lisaa-oppilaitostyyppi halutut-kentat)
          (get-json-from-url (str url "v4/muutetut") {:query-params {"lastModifiedSince" org-aikaleima}}))))
