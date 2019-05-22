@@ -51,6 +51,13 @@
                             (t/with-identity "daily3")
                             (t/start-now)
                             (t/with-schedule (ajastus asetukset :organisaatiopalvelu)))
+        org-job2 (j/build
+                 (j/of-type PaivitaOrganisaatiotJob)
+                 (j/with-identity "paivita-organisaatiot2")
+                 (j/using-job-data {"asetukset" (:organisaatiopalvelu asetukset)}))
+        org-trigger-once (t/build
+                          (t/with-identity "startup")
+                          (t/start-now))
         koul-job (j/build
                    (j/of-type PaivitaKoulutustoimijoidenTutkinnotJob)
                    (j/with-identity "paivita-koulutustoimijoiden-tutkinnot"))
@@ -74,6 +81,7 @@
                             (t/start-now)
                             (t/with-schedule (ajastus asetukset :tutkinnot)))]
     (qs/schedule @ajastin org-job org-trigger-daily)
+    (qs/schedule @ajastin org-job2 org-trigger-once)
     (qs/schedule @ajastin koul-job koul-trigger-daily)
     (qs/schedule @ajastin raportointi-job raportointi-trigger)
     (qs/schedule @ajastin tutkinnot-job tutkinnot-trigger)))
