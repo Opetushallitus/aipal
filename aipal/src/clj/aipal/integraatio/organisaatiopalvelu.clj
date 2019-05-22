@@ -262,7 +262,7 @@
     (paivita-toimipaikat! toimipaikkakoodit)))
 
 (defn paivita-erassa [oids paivitys-funktio url]
-  (let [oid-erat (partition 200 oids)]
+  (let [oid-erat (partition-all 200 oids)]
     (db/transaction
      (run! (comp paivitys-funktio #(hae-era % url)) oid-erat))))
 
