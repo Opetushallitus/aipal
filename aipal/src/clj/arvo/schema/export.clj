@@ -95,6 +95,13 @@
    :tunnuksia s/Int
    :vastauskertoja s/Int})
 
-
-
-
+(s/defschema Luo-kyselylinkki
+ {:vastaamisajan_alkupvm s/Str ;ISO formaatti
+  :kyselyn_tyyppi s/Str
+  :tutkintotunnus s/Str ;6 merkkiä
+  :tutkinnon_suorituskieli_koodi s/Str ;maatjavaltiot2 koodisto
+  :koulutustoimija_oid s/Str ;organisaatio-oid
+  :oppilaitos_oid s/Str ;organisaatio-oid
+  :toimipiste_oid (s/maybe s/Str) ;organisaatio-oid
+  :hankintakoulutuksen_toteuttaja (s/maybe s/Str)
+  :request_id s/Str})
