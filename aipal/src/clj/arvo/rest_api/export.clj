@@ -57,10 +57,4 @@
     (api-response {:data (db/export-kysely-kysymysryhma (export-params request "kysely-kysymysryhma"))}))
   (GET "/luodut_tunnukset" [:as request]
     :return {:data [Luodut-tunnukset]}
-    (api-response {:data (db/export-luodut-tunnukset (export-params request "luodut-tunnukset"))}))
-  (POST "/luo_kyselylinkki" [:as request]
-    :body [data Luo-kyselylinkki]
-    :return {:kysely_linkki s/Str}
-    :summary "Kyselylinkin luominen"
-    :description "Päivämäärät ovat ISO-formaatin mukaisia."
-    (api-response {:kysely_linkki "Not implemented"})))
+    (api-response {:data (db/export-luodut-tunnukset (export-params request "luodut-tunnukset"))})))
