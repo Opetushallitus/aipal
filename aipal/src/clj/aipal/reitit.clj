@@ -34,6 +34,7 @@
             aipal.rest-api.tiedote
             aipal.rest-api.vipunen
             arvo.rest-api.export
+            arvo.rest-api.vastauslinkki
             [compojure.api.middleware :as mw]
             [arvo.auth :refer [wrap-authentication]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
@@ -92,4 +93,5 @@
     (context "/api/csv" [] :no-doc true :tags ["csv"] aipal.rest-api.raportti.kysely/csv)
     (context "/api/vipunen" [] :no-doc true :tags ["vipunen"] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
     (context "/api/export/v1" [] :tags ["export"] :middleware [#(wrap-authentication %)] arvo.rest-api.export/v1)
+    (context "/api/vastauslinkki/v1" [] :tags ["vastauslinkki"] :middleware [#(wrap-authentication %)] arvo.rest-api.vastauslinkki/v1)
     (r/not-found "Not found")))
