@@ -24,5 +24,6 @@
         :body [data Luo-vastauslinkki]
         :return {:kysely_linkki s/Str}
         :summary "Kyselylinkin luominen"
-        :description "Päivämäärät ovat ISO-formaatin mukaisia. Suorituskieli on fi, sv tai en."
+        :description (str "Päivämäärät ovat ISO-formaatin mukaisia. Suorituskieli on fi, sv tai en. Tutkintotunnus
+        on opintopolun koulutus koodiston 6 numeroinen koodi.")
         (api-response {:kysely_linkki "Not implemented"})))
