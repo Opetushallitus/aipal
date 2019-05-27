@@ -23,6 +23,7 @@ UNION ALL
     k.oppilaitos
    FROM kysely k
   WHERE k.koulutustoimija IS NOT NULL;
+grant select on kysely_organisaatio_view to PUBLIC;
 alter table kysely drop column toimipaikka;
 
 -- kysymysryhma (toimipaikka) sarakkeen viittausten siivous ja poisto
@@ -42,6 +43,7 @@ UNION ALL
     kr.valtakunnallinen
    FROM kysymysryhma kr
   WHERE kr.koulutustoimija IS NOT NULL OR kr.valtakunnallinen = true;
+grant select on kysymysryhma_organisaatio_view to PUBLIC;
 alter table kysymysryhma drop column toimipaikka;
 
 -- kyselypohja (toimipaikka) sarakkeen viittausten siivous ja poisto
@@ -61,6 +63,7 @@ UNION ALL
     kp.valtakunnallinen
    FROM kyselypohja kp
   WHERE kp.koulutustoimija IS NOT NULL OR kp.valtakunnallinen = true;
+grant select on kyselypohja_organisaatio_view to PUBLIC;
 alter table kyselypohja drop column toimipaikka;
 
 -- vastaajatunnus (valmistavan_koulutuksen_toimipaikka) rajakkeen tietojen talteenotto ja poisto
