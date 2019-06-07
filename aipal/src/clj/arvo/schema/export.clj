@@ -94,7 +94,3 @@
    :kuukausi (s/maybe s/Str)
    :tunnuksia s/Int
    :vastauskertoja s/Int})
-
-
-
-
