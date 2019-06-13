@@ -1,14 +1,12 @@
 (ns aipal.compojure-util
   (:require compojure.api.meta
-            [oph.compojure-util :as cu]
-            [korma.db :as db]
-            [aipal.toimiala.kayttajaoikeudet :as ko]))
+            [arvo.auth.user-rights :refer [authorize]]))
 
 (defmacro autorisoitu-transaktio
   "Tarkastaa käyttöoikeudet ja hallitsee tietokanta-transaktion"
-  [auth-map toiminto konteksti & body]
+  [toiminto konteksti & body]
   `(korma.db/transaction
-     (cu/autorisoi ~auth-map ~toiminto ~konteksti ~@body)))
+     (authorize ~toiminto ~konteksti ~@body)))
 
 
 (defmethod compojure.api.meta/restructure-param :kayttooikeus
@@ -16,7 +14,7 @@
   " Käyttöoikeuslaajennos compojure-apin rajapintoihin. Esim:
     :kayttooikeus :jasenesitys-poisto
     :kayttooikeus [:jasenesitys-poisto jasenyysid]"
-  (let [[kayttooikeus konteksti] (if (vector? kayttooikeus_spec) kayttooikeus_spec [kayttooikeus_spec])]
+  (let [[kayttooikeus konteksti] (if (vector? kayttooikeus_spec) kayttooikeus_spec [kayttooikeus_spec nil])]
     (-> acc
         (assoc-in [:swagger :description] (str "Käyttöoikeus " kayttooikeus " , konteksti: " (or konteksti "N/A")))
-        (assoc :body [`(autorisoitu-transaktio ~ko/toiminnot ~kayttooikeus ~konteksti ~@body)]))))
+        (assoc :body [`(autorisoitu-transaktio ~kayttooikeus ~konteksti ~@body)]))))

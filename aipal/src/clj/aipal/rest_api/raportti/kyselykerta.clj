@@ -53,7 +53,7 @@
   (POST "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
     :body [parametrit s/Any]
-    :kayttooikeus [:kyselykerta-raportti kyselykertaid]
+    :kayttooikeus [:katselija {:kyselykertaid kyselykertaid}]
     (response-or-404 (muodosta-kyselykertaraportti kyselykertaid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
 (defn csv-reitit [asetukset]

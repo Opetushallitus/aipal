@@ -20,3 +20,8 @@ SELECT * FROM kyselytyyppi;
 
 -- :name hae-kysely :? :1
 SELECT * FROM kysely WHERE kyselyid = :kyselyid;
+
+-- :name hae-kyselykerran-kysely :? :1
+SELECT k.* FROM kyselykerta kk
+JOIN kysely k on kk.kyselyid = k.kyselyid
+WHERE kk.kyselykertaid = :kyselykertaid;

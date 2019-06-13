@@ -16,7 +16,7 @@ SELECT k.*, kr.nimi_fi AS kysymysryhma_fi, kr.nimi_sv AS kysymysryhma_sv, kr.nim
 WHERE k.kysymysryhmaid = :kysymysryhmaid
 ORDER BY k.jarjestys;
 
--- :name hae-kysymysryhma :? :*
+-- :name hae-kysymysryhma :? :1
 SELECT * FROM kysymysryhma WHERE kysymysryhmaid = :kysymysryhmaid;
 
 -- :name hae-kyselypohjan-kysymysryhmat :? :*

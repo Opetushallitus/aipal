@@ -36,7 +36,7 @@
             arvo.rest-api.export
             arvo.rest-api.vastauslinkki
             [compojure.api.middleware :as mw]
-            [arvo.auth :refer [wrap-authentication]]
+            [arvo.auth.api :refer [wrap-authentication]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
 
 (defn reitit [asetukset]

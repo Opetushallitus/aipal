@@ -22,17 +22,19 @@
             [oph.common.util.http-util :refer [parse-iso-date response-or-404 file-download-response]]
             [oph.common.util.util :refer [paivita-arvot]]
             [cheshire.core :as cheshire]
-            [aipal.rest-api.kysymysryhma :as kysymysryhma]))
+            [aipal.rest-api.kysymysryhma :as kysymysryhma]
+            [arvo.db.core :refer [*db*] :as db]
+            [clojure.java.jdbc :as jdbc]))
 
 (defroutes reitit
   (GET "/" []
     :query-params [{voimassa :- Boolean false}]
-    :kayttooikeus :kyselypohja-listaaminen
+    :kayttooikeus :katselu
     (response-or-404 (arkisto/hae-kyselypohjat (:aktiivinen-koulutustoimija *kayttaja*) voimassa)))
 
   (GET "/:kyselypohjaid" []
     :path-params [kyselypohjaid :- s/Int]
-    :kayttooikeus [:kyselypohja-luku kyselypohjaid]
+    :kayttooikeus [:katselu {:kyselypohjaid kyselypohjaid}]
     (let [kyselypohja (arkisto/hae-kyselypohja kyselypohjaid)
           kysymysryhmat (kysymysryhma-arkisto/hae-kyselypohjasta kyselypohjaid)]
       (when kyselypohja
@@ -40,30 +42,30 @@
 
   (PUT "/:kyselypohjaid/julkaise" []
     :path-params [kyselypohjaid :- s/Int]
-    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+    :kayttooikeus [:kyselypohja {:kyselypohjaid kyselypohjaid}]
     (response-or-404 (arkisto/julkaise-kyselypohja! kyselypohjaid)))
 
   (PUT "/:kyselypohjaid/palauta" []
     :path-params [kyselypohjaid :- s/Int]
-    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+    :kayttooikeus [:kyselypohja {:kyselypohjaid kyselypohjaid}]
     (response-or-404 (arkisto/palauta-kyselypohja-luonnokseksi! kyselypohjaid)))
 
   (PUT "/:kyselypohjaid/sulje" []
     :path-params [kyselypohjaid :- s/Int]
-    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+    :kayttooikeus [:kyselypohja {:kyselypohjaid kyselypohjaid}]
     (response-or-404 (arkisto/sulje-kyselypohja! kyselypohjaid)))
 
   (PUT "/:kyselypohjaid" []
     :path-params [kyselypohjaid :- s/Int]
     :body [kyselypohja s/Any]
-    :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+    :kayttooikeus [:kyselypohja {:kyselypohjaid kyselypohjaid}]
     (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
           valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
       (response-or-404 (arkisto/tallenna-kyselypohja! kyselypohjaid (assoc kyselypohja :valtakunnallinen valtakunnallinen)))))
 
   (POST "/" []
     :body [kyselypohja s/Any]
-    :kayttooikeus :kyselypohja-luonti
+    :kayttooikeus :kyselypohja
     (let [kyselypohja (paivita-arvot kyselypohja [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)
           valtakunnallinen (and (yllapitaja?) (true? (:valtakunnallinen kyselypohja)))]
       (response-or-404
@@ -74,12 +76,12 @@
 
   (GET "/:kyselypohjaid/kysymysryhmat" []
     :path-params [kyselypohjaid :- s/Int]
-    :kayttooikeus [:kyselypohja-luku kyselypohjaid]
+    :kayttooikeus [:katselu {:kyselypohjaid kyselypohjaid}]
     (response-or-404 (kysymysryhma-arkisto/hae-kyselypohjasta kyselypohjaid)))
 
   (DELETE "/:kyselypohjaid" []
     :path-params [kyselypohjaid :- s/Int]
-    :kayttooikeus [:kyselypohja-poisto kyselypohjaid]
+    :kayttooikeus [:kyselypohja {:kyselypohjaid kyselypohjaid}]
     (arkisto/poista-kyselypohja! kyselypohjaid)
     {:status 204}))
 
@@ -89,7 +91,7 @@
 (defroutes tiedosto-reitit
   (GET "/:kyselypohjaid/lataa" []
        :path-params [kyselypohjaid :- s/Int]
-       :kayttooikeus [:kyselypohja-muokkaus kyselypohjaid]
+       :kayttooikeus [:kyselypohja {:kyselypohjaid kyselypohjaid}]
        (let [id kyselypohjaid
              kyselypohja (arkisto/hae-kyselypohja id)
              kysymysryhmat (kysymysryhma-arkisto/hae-kyselypohjaan-kuuluvat id)
@@ -102,7 +104,7 @@
 
   (POST "/lisaa-tiedostosta" []
         :body [kyselypohja s/Any]
-        :kayttooikeus :kyselypohja-luonti
+        :kayttooikeus :kyselypohja
     (let [tallennettu-pohja (arkisto/lisaa-kyselypohja! kyselypohja)
           kyselypohjaid (:kyselypohjaid tallennettu-pohja)
           kysymysryhmat (doall (map lisaa-kysymysryhma! (:kysymysryhmat kyselypohja)))

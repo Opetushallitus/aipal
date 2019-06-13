@@ -64,16 +64,24 @@ ORDER BY kyselykerta.kyselykertaid ASC")
       (sql/join :inner :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid))
       (sql/where {:kyselykerta.kyselykertaid id}))))
 
+(defn kysely-julkaistu? [kyselyid]
+  (boolean (= "julkaistu" (:tila (db/hae-kysely {:kyselyid kyselyid})))))
+
+(defn muokattavissa? [kyselykertaid]
+  (let [kyselykerta (db/hae-kyselykerta {:kyselykertaid kyselykertaid})]
+    (kysely-julkaistu? (:kyselyid kyselykerta))))
+
 (defn lisaa!
   [kyselyid kyselykerta-data]
-  (let [kyselykerta (sql/insert taulut/kyselykerta
-                      (sql/values
-                        (assoc
-                          (merge (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
-                                 {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)})
-                          :kyselyid kyselyid)))]
-    (auditlog/kyselykerta-luonti! (:kyselykertaid kyselykerta) kyselyid (:nimi kyselykerta-data))
-    kyselykerta))
+  (when kysely-julkaistu?
+    (let [kyselykerta (sql/insert taulut/kyselykerta
+                        (sql/values
+                          (assoc
+                            (merge (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
+                                   {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)})
+                            :kyselyid kyselyid)))]
+      (auditlog/kyselykerta-luonti! (:kyselykertaid kyselykerta) kyselyid (:nimi kyselykerta-data))
+      kyselykerta)))
 
 ;avop.fi
 (defn hae-nimella-ja-oppilaitoksella
@@ -103,11 +111,12 @@ ORDER BY kyselykerta.kyselykertaid ASC")
 (defn paivita!
   [kyselykertaid kyselykertadata]
   (auditlog/kyselykerta-muokkaus! kyselykertaid)
-  (sql/update taulut/kyselykerta
-    (sql/set-fields (assoc (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
-                           :muutettu_kayttaja (:oid *kayttaja*)))
-    (sql/where {:kyselykertaid kyselykertaid}))
-  (assoc kyselykertadata :kyselykertaid kyselykertaid))
+  (when (muokattavissa? kyselykertaid)
+    (sql/update taulut/kyselykerta
+      (sql/set-fields (assoc (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
+                             :muutettu_kayttaja (:oid *kayttaja*)))
+      (sql/where {:kyselykertaid kyselykertaid}))
+    (assoc kyselykertadata :kyselykertaid kyselykertaid)))
 
 (defn kyselykertaid->kyselyid
   [kyselykertaid]

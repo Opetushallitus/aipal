@@ -15,16 +15,13 @@
 (ns aipal.rest-api.kysely
   (:require [compojure.api.core :refer [defroutes DELETE GET POST PUT]]
             [schema.core :as s]
-            [aipal.compojure-util :as cu]
             [aipal.arkisto.kysely :as arkisto]
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
-            [aipal.toimiala.kayttajaoikeudet :refer [kysymysryhma-luku? kysymysryhma-on-julkaistu?]]
             [oph.common.util.http-util :refer [response-or-404 parse-iso-date]]
-            [oph.common.util.util :refer [map-by paivita-arvot]]
-            [clojure.tools.logging :as log]))
+            [oph.common.util.util :refer [map-by paivita-arvot]]))
 
 (defn lisaa-kysymysryhma!
   [kyselyid kysymysryhma]
@@ -47,24 +44,21 @@
      (remove :poistettu)
      count))
 
-(defn valtakunnallisia-ryhmia?
-  [kysymysryhmat]
-  (some :valtakunnallinen kysymysryhmat))
-
 (def ^:const max-kysymyksia 140)
+
+(defn kysymysryhma-on-julkaistu? [kysymysryhmaid]
+  (= "julkaistu" (:tila (kysymysryhma-arkisto/hae kysymysryhmaid false))))
 
 (defn paivita-kysely!
   [kysely]
   (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) max-kysymyksia)))
+  (assert (= "luonnos" (:tila kysely)))
   (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
   (arkisto/poista-kysymykset! (:kyselyid kysely))
   (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
-    (assert (kysymysryhma-luku? (:kysymysryhmaid kysymysryhma)))
     (assert (kysymysryhma-on-julkaistu? (:kysymysryhmaid kysymysryhma)))
     (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
   (arkisto/muokkaa-kyselya! kysely))
-
-(defn _400 [body] {:status 400 :body body})
 
 (defn valid-url? "jäljittelee angular-puolen äärisimppeliä validointia"
   [url]
@@ -73,11 +67,11 @@
 
 (defroutes reitit
   (GET  "/" []
-    :kayttooikeus :kysely
+    :kayttooikeus :katselu
     (response-or-404 (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
   (POST "/" []
     :body [kysely s/Any]
-    :kayttooikeus :kysely-luonti
+    :kayttooikeus :kysely
     (let [kysely (assoc (paivita-arvot kysely
                                       [:voimassa_alkupvm :voimassa_loppupvm]
                                       parse-iso-date)
@@ -92,13 +86,13 @@
                         (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))))
 
   (GET "/kyselytyypit" []
-    :kayttooikeus :kysely
+    :kayttooikeus :katselu
     (response-or-404 (arkisto/hae-kyselytyypit)))
 
   (POST "/:kyselyid" []
     :path-params [kyselyid :- s/Int]
     :body [kysely s/Any]
-    :kayttooikeus [:kysely-muokkaus kyselyid]
+    :kayttooikeus [:kysely {:kyselyid kyselyid}]
     (let [kysely (assoc (paivita-arvot (assoc kysely :kyselyid kyselyid)
                                        [:voimassa_alkupvm :voimassa_loppupvm]
                                        parse-iso-date)
@@ -111,7 +105,7 @@
 
   (DELETE "/:kyselyid" []
     :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:kysely-poisto kyselyid]
+    :kayttooikeus [:kysely {:kyselyid kyselyid}]
     (if (arkisto/kysely-poistettavissa? kyselyid)
       (do
         (arkisto/poista-kysely! kyselyid)
@@ -120,35 +114,35 @@
 
   (GET "/:kyselyid/vastaustunnustiedot" []
     :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:kysely-luku kyselyid]
+    :kayttooikeus [:katselu {:kyselyid kyselyid}]
     (response-or-404 (kyselykerta-arkisto/hae-vastaustunnustiedot-kyselylta kyselyid)))
 
   (GET "/:kyselyid" []
     :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:kysely-luku kyselyid]
+    :kayttooikeus [:katselu {:kyselyid kyselyid}]
     (response-or-404 (when-let [kysely (arkisto/hae kyselyid)]
                        (assoc kysely :kysymysryhmat (kysymysryhma-arkisto/hae-kyselysta kyselyid)))))
 
   (PUT "/julkaise/:kyselyid" []
     :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:kysely-tilamuutos kyselyid]
+    :kayttooikeus [:kysely {:kyselyid kyselyid}]
     (if (> (arkisto/laske-kysymysryhmat kyselyid) 0)
       (response-or-404 (arkisto/julkaise-kysely! kyselyid))
       {:status 403}))
 
   (PUT "/sulje/:kyselyid" []
     :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:kysely-tilamuutos kyselyid]
+    :kayttooikeus [:kysely {:kyselyid kyselyid}]
     (response-or-404 (arkisto/sulje-kysely! kyselyid)))
 
   (PUT "/palauta/:kyselyid" []
     :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:kysely-tilamuutos kyselyid]
+    :kayttooikeus [:kysely {:kyselyid kyselyid}]
     (response-or-404 (arkisto/julkaise-kysely! kyselyid)))
 
   (PUT "/palauta-luonnokseksi/:kyselyid" []
     :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:kysely-tilamuutos kyselyid]
+    :kayttooikeus [:kysely {:kyselyid kyselyid}]
     (if (= (arkisto/laske-kyselykerrat kyselyid) 0)
       (response-or-404 (arkisto/palauta-luonnokseksi! kyselyid))
       {:status 403})))

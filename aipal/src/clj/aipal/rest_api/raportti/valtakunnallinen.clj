@@ -176,7 +176,7 @@
 (defn reitit [asetukset]
   (POST "/" [& parametrit]
     :body [parametrit s/Any]
-    :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
+    :kayttooikeus :yllapitaja
     (response-or-404
       (if (= "kehitys-ketjutettu" (:tyyppi parametrit))
         (muodosta-ketjutettu parametrit asetukset)
@@ -187,7 +187,7 @@
     (GET "/:kieli/csv" [kieli parametrit]
       :path-params [kieli]
       :query-params [parametrit]
-      :kayttooikeus [:valtakunnallinen-raportti (:koulutustoimijat parametrit)]
+      :kayttooikeus :yllapitaja
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
         (csv-download-response
           (apply str

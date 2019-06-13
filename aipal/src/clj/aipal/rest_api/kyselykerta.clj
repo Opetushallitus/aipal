@@ -23,23 +23,23 @@
 
 (defroutes reitit
   (GET "/" []
-    :kayttooikeus :kysely
+    :kayttooikeus :katselu
     (response-or-404 (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
 
   (GET "/:kyselykertaid/vastaustunnustiedot" []
     :path-params [kyselykertaid :- s/Int]
-    :kayttooikeus [:kyselykerta-luku kyselykertaid]
+    :kayttooikeus [:katselu {:kyselykertaid kyselykertaid}]
     (response-or-404 (arkisto/hae-vastaustunnustiedot-kyselykerralta kyselykertaid)))
 
   (GET "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
-    :kayttooikeus [:kyselykerta-luku kyselykertaid]
+    :kayttooikeus [:katselu {:kyselykertaid kyselykertaid}]
     (response-or-404 (arkisto/hae-yksi kyselykertaid)))
 
   (POST "/" []
     :body-params [kyselyid :- s/Int
                   kyselykerta]
-    :kayttooikeus [:kyselykerta-luonti kyselyid]
+    :kayttooikeus [:kyselykerta {:kyselyid kyselyid}]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
          (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselyid kyselyid))
            {:status 400
@@ -49,7 +49,7 @@
   (POST "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
     :body [kyselykerta s/Any]
-    :kayttooikeus [:kyselykerta-muokkaus kyselykertaid]
+    :kayttooikeus [:kyselykerta {:kyselykertaid kyselykertaid}]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
       (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselykertaid kyselykertaid))
         {:status 400
@@ -59,11 +59,11 @@
   (PUT "/:kyselykertaid/lukitse" []
     :path-params [kyselykertaid :- s/Int]
     :body-params [lukitse :- Boolean]
-    :kayttooikeus [:kyselykerta-tilamuutos kyselykertaid]
+    :kayttooikeus [:kyselykerta {:kyselykertaid kyselykertaid}]
     (response-or-404 (arkisto/aseta-lukittu! kyselykertaid lukitse)))
 
   (DELETE "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
-    :kayttooikeus [:kyselykerta-poisto kyselykertaid]
+    :kayttooikeus [:kyselykerta {:kyselykertaid kyselykertaid}]
     (arkisto/poista! kyselykertaid)
     {:status 204}))

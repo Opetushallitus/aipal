@@ -22,7 +22,7 @@
 (defroutes reitit
   (GET "/:ohjetunniste" []
     :path-params [ohjetunniste :- s/Str]
-    :kayttooikeus :kayttaja
+    :kayttooikeus :katselu
     (if-let [ohje (arkisto/hae ohjetunniste)]
       (response-or-404 ohje)
       {:status 200}))

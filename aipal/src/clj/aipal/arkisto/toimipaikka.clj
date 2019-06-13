@@ -23,10 +23,10 @@
     (sql/values tiedot)))
 
 (defn ^:integration-api paivita!
-  [toimipaikkakoodi tiedot]
+  [oid tiedot]
   (sql/update taulut/toimipaikka
     (sql/set-fields tiedot)
-    (sql/where {:toimipaikkakoodi toimipaikkakoodi})))
+    (sql/where {:oid oid})))
 
 (defn ^:integration-api aseta-kaikki-vanhentuneiksi!
   []

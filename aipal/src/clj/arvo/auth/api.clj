@@ -1,4 +1,4 @@
-(ns arvo.auth
+(ns arvo.auth.api
   (:require [clojure.string :as str]
             [arvo.db.core :refer [*db*] :as db]
             [buddy.hashers :as hashers]

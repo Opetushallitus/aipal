@@ -121,71 +121,73 @@
     (lisaa-kysymykset-kysymysryhmaan! kysymykset (:kysymysryhmaid kysymysryhma))
     (doall kysymysryhma)))
 
-
 (defn paivita-kysymysryhma! [kysymysryhma]
-  (let [kysymysryhma (-> kysymysryhma
-                       korjaa-eos-vastaus-sallittu
-                       (assoc :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)
-                              :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
-                              :ntm_kysymykset (suodata-vain-ntm-vastuukayttajille kysymysryhma :ntm_kysymykset)))
-        kysymysryhmaid (:kysymysryhmaid kysymysryhma)
-        kysymykset (:kysymykset kysymysryhma)]
-    (arkisto/poista-kysymysryhman-kysymykset! kysymysryhmaid)
-    (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
-    (arkisto/paivita! kysymysryhma)
-    kysymysryhma))
+  (when (arkisto/luonnos? (:kysymysryhmaid kysymysryhma))
+    (let [kysymysryhma (-> kysymysryhma
+                         korjaa-eos-vastaus-sallittu
+                         (assoc :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)
+                                :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
+                                :ntm_kysymykset (suodata-vain-ntm-vastuukayttajille kysymysryhma :ntm_kysymykset)))
+          kysymysryhmaid (:kysymysryhmaid kysymysryhma)
+          kysymykset (:kysymykset kysymysryhma)]
+      (arkisto/poista-kysymysryhman-kysymykset! kysymysryhmaid)
+      (lisaa-kysymykset-kysymysryhmaan! kysymykset kysymysryhmaid)
+      (arkisto/paivita! kysymysryhma)
+      kysymysryhma)))
+
 
 (defn poista-kysymysryhma! [kysymysryhmaid]
-  (arkisto/poista-kysymysryhman-kysymykset! kysymysryhmaid)
-  (arkisto/poista! kysymysryhmaid))
+  (when (arkisto/luonnos? kysymysryhmaid)
+    (arkisto/poista-kysymysryhman-kysymykset! kysymysryhmaid)
+    (arkisto/poista! kysymysryhmaid)))
 
 (defroutes reitit
   (GET "/" []
     :query-params [{taustakysymysryhmat :- Boolean false}
                    {voimassa :- Boolean false}]
-    :kayttooikeus :kysymysryhma-listaaminen
+    :kayttooikeus :katselu
     (response-or-404
       (if taustakysymysryhmat
         (arkisto/hae-taustakysymysryhmat)
         (arkisto/hae-kysymysryhmat (:aktiivinen-koulutustoimija *kayttaja*) voimassa))))
 
   (GET "/asteikot" []
-    :kayttooikeus :kysymysryhma-listaaminen
+    :kayttooikeus :katselu
     (response-or-404 (arkisto/hae-asteikot (:aktiivinen-koulutustoimija *kayttaja*))))
 
   (POST "/asteikot" []
     :body [asteikko s/Any]
-    :kayttooikeus :kysymysryhma-luonti
+    :kayttooikeus :kysymysryhma
     (let [tallennettava-asteikko (assoc asteikko :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
       (response-or-404 (arkisto/tallenna-asteikko tallennettava-asteikko))))
 
   (POST "/" []
     :body [kysymysryhma s/Any]
-    :kayttooikeus :kysymysryhma-luonti
+    :kayttooikeus :kysymysryhma
     (response-or-404 (lisaa-kysymysryhma! kysymysryhma (:kysymykset kysymysryhma))))
 
   (PUT "/:kysymysryhmaid" []
     :path-params [kysymysryhmaid :- s/Int]
     :body [kysymysryhma s/Any]
-    :kayttooikeus [:kysymysryhma-muokkaus kysymysryhmaid]
+    :kayttooikeus [:kysymysryhma {:kysymysryhmaid kysymysryhmaid}]
     (response-or-404 (paivita-kysymysryhma! (assoc kysymysryhma :kysymysryhmaid kysymysryhmaid))))
 
   (DELETE "/:kysymysryhmaid" []
     :path-params [kysymysryhmaid :- s/Int]
-    :kayttooikeus [:kysymysryhma-poisto kysymysryhmaid]
+    :kayttooikeus [:kysymysryhma {:kysymysryhmaid kysymysryhmaid}]
     (poista-kysymysryhma! kysymysryhmaid)
     {:status 204})
 
   (PUT "/:kysymysryhmaid/julkaise" []
     :path-params [kysymysryhmaid :- s/Int]
-    :kayttooikeus [:kysymysryhma-julkaisu kysymysryhmaid]
+    :kayttooikeus [:kysymysryhma {:kysymysryhmaid kysymysryhmaid}]
     (if (pos? (arkisto/laske-kysymykset kysymysryhmaid))
       (response-or-404 (arkisto/julkaise! kysymysryhmaid))
       {:status 403}))
 
   (PUT "/:kysymysryhmaid/palauta" []
     :path-params [kysymysryhmaid :- s/Int]
-    :kayttooikeus [:kysymysryhma-palautus-luonnokseksi kysymysryhmaid]
+    :kayttooikeus [:kysymysryhma {:kysymysryhmaid kysymysryhmaid}]
     (if (and
           (zero? (arkisto/laske-kyselyt kysymysryhmaid))
           (zero? (arkisto/laske-kyselypohjat kysymysryhmaid)))
@@ -194,21 +196,21 @@
 
   (PUT "/:kysymysryhmaid/sulje" []
     :path-params [kysymysryhmaid :- s/Int]
-    :kayttooikeus [:kysymysryhma-sulkeminen kysymysryhmaid]
+    :kayttooikeus [:kysymysryhma {:kysymysryhmaid kysymysryhmaid}]
     (response-or-404 (arkisto/sulje! kysymysryhmaid)))
 
   (GET "/:kysymysryhmaid" []
     :path-params [kysymysryhmaid :- s/Int]
-    :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
+    :kayttooikeus [:katselu {:kysymysryhmaid kysymysryhmaid}]
     (response-or-404 (arkisto/hae kysymysryhmaid)))
 
   ;; Muuten sama kuin ylläoleva, mutta haettaessa vuoden 2015 taustakysymysryhmiä yhdistää hakeutumis- ja suoritusvaiheen kysymysryhmät
   (GET "/taustakysymysryhma/:kysymysryhmaid" []
     :path-params [kysymysryhmaid :- s/Int]
-    :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
+    :kayttooikeus [:katselu {:kysymysryhmaid kysymysryhmaid}]
     (response-or-404 (arkisto/hae-taustakysymysryhma kysymysryhmaid)))
 
   (GET "/:kysymysryhmaid/esikatselu" []
     :path-params [kysymysryhmaid :- s/Int]
-    :kayttooikeus [:kysymysryhma-luku kysymysryhmaid]
+    :kayttooikeus [:katselu {:kysymysryhmaid kysymysryhmaid}]
     (response-or-404 (arkisto/hae-esikatselulle kysymysryhmaid))))

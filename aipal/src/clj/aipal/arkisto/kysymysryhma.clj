@@ -233,13 +233,25 @@
   ([kysymysryhmaid]
    (hae kysymysryhmaid true))
   ([kysymysryhmaid hae-kysymykset]
-   (let [kysymysryhma (first (db/hae-kysymysryhma {:kysymysryhmaid kysymysryhmaid}))]
+   (let [kysymysryhma (db/hae-kysymysryhma {:kysymysryhmaid kysymysryhmaid})]
      (if hae-kysymykset
        (-> kysymysryhma
          (select-keys kysymysryhma-fields)
          taydenna-kysymysryhma
          taydenna-kysymysryhman-kysymykset)
        kysymysryhma))))
+
+(defn kysymysryhma-tilassa? [kysymysryhmaid & tilat]
+  (boolean (some #{(:tila (hae kysymysryhmaid false))} (into #{} tilat))))
+
+(defn luonnos? [kysymysryhmaid]
+  (kysymysryhma-tilassa? kysymysryhmaid "luonnos"))
+
+(defn julkaistu? [kysymysryhmaid]
+  (kysymysryhma-tilassa? kysymysryhmaid "julkaistu"))
+
+(defn julkaistavissa? [kysymysryhmaid]
+  (kysymysryhma-tilassa? kysymysryhmaid "luonnos" "suljettu"))
 
 (defn hae-taustakysymysryhma
   [kysymysryhmaid]
@@ -394,8 +406,9 @@
 
 (defn julkaise!
   [kysymysryhmaid]
-  (auditlog/kysymysryhma-muokkaus! kysymysryhmaid :julkaistu)
-  (aseta-tila! kysymysryhmaid "julkaistu"))
+  (when (julkaistavissa? kysymysryhmaid)
+    (auditlog/kysymysryhma-muokkaus! kysymysryhmaid :julkaistu)
+    (aseta-tila! kysymysryhmaid "julkaistu")))
 
 (defn sulje!
   [kysymysryhmaid]
@@ -404,6 +417,7 @@
 
 (defn palauta-luonnokseksi!
   [kysymysryhmaid]
+  (when (julkaistu? kysymysryhmaid))
   (auditlog/kysymysryhma-muokkaus! kysymysryhmaid :luonnos)
   (aseta-tila! kysymysryhmaid "luonnos"))
 
