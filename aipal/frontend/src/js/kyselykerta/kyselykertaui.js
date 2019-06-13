@@ -39,15 +39,15 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm','kayttooikeudet',
-    function (Kyselykerta, Kysely, Kieli, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm, kayttooikeudet) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm','kayttooikeudet', 'kieli',
+    function (Kyselykerta, Kysely, Kieli, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm, kayttooikeudet, kieli) {
       $scope.muokkaustila = true;
       $scope.$watch('kyselykertaForm', function (form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
 
-      $scope.kieli = localStorage.getItem('kieli');
+      $scope.kieli = kieli
       $scope.laajennettuOppisopimuskoulutus = kayttooikeudet.laajennettuOppisopimuskoulutus();
 
       const templateMap = {

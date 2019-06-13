@@ -54,7 +54,7 @@
   (let [toimipaikka (select-and-rename-keys vastaajatunnus [:toimipaikkakoodi [:toimipaikka_nimi_fi :nimi_fi] [:toimipaikka_nimi_sv :nimi_sv] [:toimipaikka_nimi_en :nimi_en]])]
     (some-> vastaajatunnus
             (dissoc :toimipaikkakoodi :toimipaikka_nimi_fi :toimipaikka_nimi_sv :toimipaikka_nimi_en)
-            (assoc :valmistavan_koulutuksen_toimipaikka toimipaikka))))
+            (assoc :toimipaikka toimipaikka))))
 
 (defn yhdistä-taustatiedot [vastaajatunnus]
   (let [taustatiedot (:taustatieot vastaajatunnus)]
