@@ -1,6 +1,6 @@
 -- :name export-kyselyt :? :*
 SELECT k.koulutustoimija,
-  CASE k.tyyppi WHEN 1 THEN 'avop' WHEN 2 THEN 'rekrykysely' WHEN 3 THEN 'uraseuranta' WHEN 4 THEN 'itsearviointi' WHEN 5 THEN 'amispalaute' WHEN 6 THEN 'kandipalaute' ELSE 'tuntematon' END AS tyyppi,
+  CASE k.tyyppi WHEN 1 THEN 'avop' WHEN 2 THEN 'rekrykysely' WHEN 3 THEN 'uraseuranta' WHEN 4 THEN 'itsearviointi' WHEN 5 THEN 'amispalaute' WHEN 6 THEN 'kandipalaute' WHEN 7 THEN 'amk-uraseuranta' ELSE 'tuntematon' END AS tyyppi,
   k.kyselyid, k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
   to_char(k.voimassa_alkupvm, 'YYYY-MM-DD') AS kysely_voimassa_alkupvm, to_char(k.voimassa_loppupvm, 'YYYY-MM-DD')AS kysely_voimassa_loppupvm, k.tila AS kysely_tila,
   kk.kyselykertaid, kk.nimi AS kyselykerta, kk.kategoria->>'vuosi' AS kyselykerta_vuosi,
@@ -93,7 +93,6 @@ FROM kyselykerta kk
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
 LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
-WHERE k.tyyppi = 5
 AND coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 --~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
 GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto', kuukausi
