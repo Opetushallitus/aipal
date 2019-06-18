@@ -53,7 +53,7 @@
   (POST "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
     :body [parametrit s/Any]
-    :kayttooikeus [:katselija {:kyselykertaid kyselykertaid}]
+    :kayttooikeus [:katselu {:kyselykertaid kyselykertaid}]
     (response-or-404 (muodosta-kyselykertaraportti kyselykertaid (yhteinen/korjaa-numero-avaimet parametrit) asetukset))))
 
 (defn csv-reitit [asetukset]
@@ -61,7 +61,7 @@
     (GET "/:kyselykertaid/csv" []
       :path-params [kyselykertaid :- s/Int]
       :query-params [parametrit]
-      :kayttooikeus [:kyselykerta-raportti kyselykertaid]
+      :kayttooikeus [:kysely {:kyselykertaid kyselykertaid}]
       (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)
             raportti (muodosta-raportti-parametreilla kyselykertaid parametrit)]
         (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)

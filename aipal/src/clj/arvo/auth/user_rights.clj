@@ -11,7 +11,6 @@
    "OPL-KAYTTAJA" [:vastaajatunnus :katselu]
    "OPL-KATSELIJA" [:katselu]})
 
-
 (defn valtakunnallinen-organization [fn context]
   (let [data (fn context)]
     (if (:valtakunnallinen data)
@@ -24,10 +23,6 @@
 (defn kysymysryhma->organization [context]
   (valtakunnallinen-organization db/hae-kysymysryhma context))
 
-
-;useampi koulutustoimija? monta -> ylläpitäjä, muuten: pelkkä oma organisaatio
-; context = :koulutustoimijat {foo bar baz} | ylläpitäjä -> oma org else -> eka ei oma??
-
 (defn context->organization [context]
   (match [context]
          [{:kyselypohjaid _}] (kyselypohja->organization context)
@@ -35,7 +30,6 @@
          [{:kyselyid _}] (:koulutustoimija (db/hae-kysely context))
          [{:kysymysryhmaid _}] (kysymysryhma->organization context)
          :else (-> *kayttaja* :aktiivinen-rooli :organisaatio)))
-
 
 (defn check-right [right context]
   (let [organization (context->organization context)
