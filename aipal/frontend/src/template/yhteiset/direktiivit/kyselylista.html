@@ -20,12 +20,12 @@
       </uib-accordion-heading>
 
       <div class="panel-tools-content">
-        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.tila === 'luonnos'">
+        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="['luonnos', 'julkaistu'].indexOf(kysely.tila) !== -1">
           <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}" class="btn btn-primary pull-left">
             {{ 'kysely.muokkaa' | i18n }}&nbsp;
             <span class="fa fa-pencil"></span>
           </a>
-          <button class="btn btn-primary pull-left e2e-julkaise-kysely" ng-click="julkaiseKyselyModal(kysely)" ng-disabled="kysely.kysymysryhmien_lkm === 0">
+          <button ng-if="kysely.tila === 'luonnos'" class="btn btn-primary pull-left e2e-julkaise-kysely" ng-click="julkaiseKyselyModal(kysely)" ng-disabled="kysely.kysymysryhmien_lkm === 0">
             {{ 'kysely.julkaise' | i18n }}&nbsp;
             <span class="fa fa-share"></span>
           </button>

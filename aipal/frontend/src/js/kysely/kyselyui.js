@@ -120,12 +120,16 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
       });
 
+      $scope.isJulkaistu = function() {
+        return $scope.kysely && $scope.kysely.tila === 'julkaistu';
+      };
+
       $scope.kyselytyypit = [];
 
       Kysely.kyselytyypit()
         .success(function (tyypit){
           $scope.kyselytyypit = tyypit;
-        })
+        });
 
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)
@@ -223,7 +227,12 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.lisaaKysymysryhmaModal = function() {
         var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
-          controller: 'LisaaKysymysryhmaModalController'
+          controller: 'LisaaKysymysryhmaModalController',
+          resolve: {
+            isJulkaistu: function() {
+              return $scope.isJulkaistu();
+            },
+          },
         });
         modalInstance.result.then(function (kysymysryhmaid) {
           Kysymysryhma.haeEsikatselulle(kysymysryhmaid)
@@ -291,8 +300,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     };
   }])
 
-  .controller('LisaaKysymysryhmaModalController', ['$uibModalInstance', '$scope', 'Kysymysryhma', function ($uibModalInstance, $scope, Kysymysryhma) {
+  .controller('LisaaKysymysryhmaModalController', ['$uibModalInstance', '$scope', 'Kysymysryhma', 'isJulkaistu', function ($uibModalInstance, $scope, Kysymysryhma, isJulkaistu) {
     $scope.outerscope = {};
+    $scope.isJulkaistu = isJulkaistu;
+
     Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat){
       $scope.kysymysryhmat = kysymysryhmat;
     });

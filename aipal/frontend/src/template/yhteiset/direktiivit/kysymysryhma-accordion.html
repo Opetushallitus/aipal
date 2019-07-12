@@ -1,7 +1,7 @@
 <uib-accordion close-others="true">
   <div ui-sortable="sortableOptions" ng-model="kysymysryhmat">
     <div ng-repeat="kysymysryhma in kysymysryhmat">
-        <a href="" class="pull-right trash" ng-click="poistaTaiPalautaKysymysryhma(kysymysryhma)">
+        <a href="" class="pull-right trash" ng-click="poistaTaiPalautaKysymysryhma(kysymysryhma)" ng-if="isMuokattavissa(kysymysryhma)">
           <span class="fa fa-trash"></span>
         </a>
         <uib-accordion-group is-open="group.open">
