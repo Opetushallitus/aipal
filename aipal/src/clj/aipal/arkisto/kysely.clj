@@ -285,9 +285,11 @@
 (defn get-kyselyn-pakolliset-kysymysryhmaidt
   "Hakee kyselyn kaikki valtakunnalliset ja taustakysymykset. Näiden muokkausta ei sallita julkaistussa kyselyssä."
   [kyselyid]
-  (sql/select taulut/kysely_kysymysryhma
-              (sql/join taulut/kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymysryhmaid))
-              (sql/fields :kysymysryhmaid)
-              (sql/where {:kyselyid kyselyid})
-              (sql/where (or {:kysymysryhma.taustakysymykset true}
-                             {:kysymysryhma.valtakunnallinen true}))))
+  (seq
+   (sql/select taulut/kysely_kysymysryhma
+               (sql/join taulut/kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymysryhmaid))
+               (sql/where  (or {:kyselyid kyselyid
+                                :kysymysryhma.taustakysymykset true}
+                               {:kyselyid kyselyid
+                                :kysymysryhma.valtakunnallinen true}))
+               (sql/fields :kysymysryhmaid))))
