@@ -76,6 +76,7 @@
                                       [:voimassa_alkupvm :voimassa_loppupvm]
                                       parse-iso-date)
                         :tyyppi (->> kysely :tyyppi :id)
+                        :tila "luonnos"
                         :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*))]
       (if (arkisto/samanniminen-kysely? kysely)
         {:status 400
