@@ -186,7 +186,7 @@
      :csv data}))
 
 (defn default-csv-fields [kyselytyyppi]
-  (if (= 5 kyselytyyppi)
+  (if (= "amispalaute"' kyselytyyppi)
     [:vastaajatunnus :vastausaika :oppilaitos_nimi]
     [:vastaajatunnus :vastausaika]))
 
@@ -285,7 +285,7 @@
 
 (defn filter-not-allowed [kyselytyyppi kysymykset vastaukset]
   (let [lupakysymys (:kysymysid (first (filter #(= "tietojen_luovutus" (-> % :kategoria :taustakysymyksen_tyyppi)) kysymykset)))]
-    (if (and lupakysymys (some #{1 6} #{kyselytyyppi}))
+    (if (and lupakysymys (some #{"avop" "kandipalaute"} #{kyselytyyppi}))
       (filter #(luovutuslupa % lupakysymys) vastaukset)
       vastaukset)))
 

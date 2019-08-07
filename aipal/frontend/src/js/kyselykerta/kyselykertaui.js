@@ -51,12 +51,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.laajennettuOppisopimuskoulutus = kayttooikeudet.laajennettuOppisopimuskoulutus();
 
       const templateMap = {
-        1: 'template/kysely/palautekysely-tunnukset.html',
-        2: 'template/kysely/rekrykysely-tunnukset.html',
-        3: 'template/kysely/uraseuranta-tunnukset.html',
-        4: 'template/kysely/digikyvykkyys-tunnukset.html',
-        5: 'template/kysely/amis-tunnukset.html',
-        6: 'template/kysely/palautekysely-tunnukset.html'
+        'avop': 'template/kysely/palautekysely-tunnukset.html',
+        'rekrykysely': 'template/kysely/rekrykysely-tunnukset.html',
+        'yo-uraseuranta': 'template/kysely/uraseuranta-tunnukset.html',
+        'itsearviointi': 'template/kysely/digikyvykkyys-tunnukset.html',
+        'amispalaute': 'template/kysely/amis-tunnukset.html',
+        'kandipalaute': 'template/kysely/palautekysely-tunnukset.html',
+        'amk-uraseuranta': 'template/kysely/uraseuranta-tunnukset.html'
       }
 
       $scope.luoTunnuksiaDialogi = function (laajennettu) {
@@ -149,7 +150,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         $scope.kysely = pvm.parsePvm(kysely);
         if(!kysely.kaytettavissa) { $scope.muokkaustila = false; }
         haeTutkinnot(kysely)
-        $scope.vain_omat = kysely.tyyppi === 5
+        $scope.vain_omat = kysely.tyyppi === 'amispalaute'
         if(!$scope.uusi){
           haeTunnukset();
         }
@@ -258,7 +259,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       $scope.isYllapitaja = kayttooikeudet.isYllapitaja();
 
-      $scope.naytaKoulutusmuoto = kyselytyyppi === 1;
+      $scope.naytaKoulutusmuoto = kyselytyyppi === "avop";
 
       $scope.kielet = kielet;
       $scope.kyselykerta = kyselykerta;
@@ -288,7 +289,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.nollaaRajoite();
 
       function asetaLoppupvm () {
-        if(kyselytyyppi === 5 && $scope.vastaajatunnus.voimassa_alkupvm){
+        if(kyselytyyppi === "amispalaute" && $scope.vastaajatunnus.voimassa_alkupvm){
           $scope.oletusloppupvm = ($scope.vastaajatunnus.voimassa_alkupvm.getTime() > tanaan.getTime()) ? new Date($scope.vastaajatunnus.voimassa_alkupvm) : new Date(tanaan);
           $scope.oletusloppupvm.setDate($scope.oletusloppupvm.getDate() + 30);
           $scope.vastaajatunnus.voimassa_loppupvm = $scope.oletusloppupvm;

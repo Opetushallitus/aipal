@@ -122,7 +122,6 @@
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
 
 (defn find-id [kentta kyselytyyppi-kentat]
-  (log/info "Find id: " kentta "FROM" kyselytyyppi-kentat)
   (:id (first (filter #(= kentta (:kentta_id %)) kyselytyyppi-kentat))))
 
 

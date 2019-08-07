@@ -1,16 +1,16 @@
 
 -- :name kyselytyypin_kentat :? :*
-SELECT * FROM kyselytyyppi_kentat WHERE kyselytyyppi_id = :kyselytyyppi;
+SELECT * FROM kyselytyyppi_kentat WHERE kyselytyyppi = :kyselytyyppi;
 
 -- :name kyselykerran-tyyppi :? :1
 SELECT k.tyyppi, ktk.kentta_id FROM kysely k
   JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
-  JOIN kyselytyyppi_kentat ktk ON k.tyyppi = ktk.kyselytyyppi_id
+  JOIN kyselytyyppi_kentat ktk ON k.tyyppi = ktk.kyselytyyppi
   WHERE kk.kyselykertaid = :kyselykertaid;
 
 -- :name kyselyn-kentat :? :*
 SELECT ktk.id, ktk.kentta_id, ktk.kentta_fi, ktk.kentta_sv, ktk.kentta_en, ktk.raportointi FROM kyselytyyppi kt
-  JOIN kyselytyyppi_kentat ktk ON ktk.kyselytyyppi_id = kt.id
+  JOIN kyselytyyppi_kentat ktk ON ktk.kyselytyyppi = kt.id
   JOIN kysely k ON k.tyyppi = kt.id
 --~ (if (:kyselykertaid params) "WHERE k.kyselyid = (SELECT kyselyid FROM kyselykerta WHERE kyselykertaid = :kyselykertaid)")
 --~ (if (:kyselyid params) "WHERE k.kyselyid = :kyselyid")

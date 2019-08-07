@@ -21,9 +21,9 @@
             [arvo.db.core :refer [*db*] :as db]
             [clj-time.coerce :as c]))
 
-(def kyselytyyppi-tutkintotyypit {1 ["06" "07" "12"]
-                                  3 ["06" "07" "12" "13" "14" "15" "16"]
-                                  6 ["13" "14" "15" "16"]})
+(def kyselytyyppi-tutkintotyypit {"avop" ["06" "07" "12"]
+                                  "yo-uraseuranta" ["06" "07" "12" "13" "14" "15" "16"]
+                                  "kandipalaute" ["13" "14" "15" "16"]})
 
 
 (def opintoala-koulutusala-defaults
@@ -75,7 +75,7 @@
                            vals
                            flatten)
         tutkinnot (db/hae-koulutustoimijan-kaikki-tutkinnot {:tutkintotyypit tutkintotyypit})]
-    (if (= 5 kyselytyyppi) ;filtteröidään väliaikaisena ratkaisuna väärän alkuiset tutkinnot joilla ei ole opintoalaa tai tutkintotyyppiä
+    (if (= "amispalaute"' kyselytyyppi) ;filtteröidään väliaikaisena ratkaisuna väärän alkuiset tutkinnot joilla ei ole opintoalaa tai tutkintotyyppiä
       (filter #(re-matches #"^[1234590]\w+"(:tutkintotunnus %)) tutkinnot)
       tutkinnot)))
 

@@ -40,7 +40,7 @@ LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
   AND monivalintavaihtoehto.kysymysid = kys.kysymysid
   AND v.numerovalinta = monivalintavaihtoehto.jarjestys
 LEFT JOIN kysymys_jatkokysymys kjk ON kys.kysymysid = kjk.jatkokysymysid
-WHERE k.tyyppi = 3
+WHERE k.tyyppi = 'yo-uraseuranta'
 AND kys.raportoitava = TRUE
 AND taustatiedot IS NOT NULL
 --~(if (:since params) "AND vastausid > :since")

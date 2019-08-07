@@ -58,7 +58,7 @@
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
-    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 5 && laajennettuOppisopimuskoulutus"
+    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 'amispalaute' && laajennettuOppisopimuskoulutus"
             title="{{'vastaajatunnus.luonti_laajennettu_tooltip' | i18n}}">
         {{'vastaajatunnus.luonti_laajennettu' | i18n }} &nbsp;
         <span class="fa fa-plus"></span>
@@ -87,7 +87,7 @@
 
     <div>
         <div class="well">
-        <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper ng-if="kysely.tyyppi !== 3">
+        <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper ng-if="(kysely.tyyppi !== 'yo-uraseuranta') && (kysely.tyyppi !== 'amk-uraseuranta') ">
             <thead>
             <tr>
                 <th ts-criteria="tunnus">{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
