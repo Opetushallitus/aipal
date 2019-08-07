@@ -4,14 +4,15 @@
 
         <div class="checkbox">
             <label>
-                <input type="checkbox" ng-model="kysely.sivutettu">
+                <input type="checkbox" ng-model="kysely.sivutettu"
+                ng-disabled="isJulkaistu()">
                 Sivutettu
             </label>
         </div>
     <div class = "row">
         <div class="col-md-4">
             <label>Kyselytyyppi *</label>
-            <ui-select id="kyselytyyppi" ng-model="kysely.tyyppi" ng-disabled="disabled" required="true">
+            <ui-select id="kyselytyyppi" ng-model="kysely.tyyppi" ng-disabled="disabled || isJulkaistu()" required="true">
                 <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
                 <ui-select-choices repeat="kyselytyyppi in kyselytyypit">
                     <div ng-bind-html="kyselytyyppi | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
@@ -24,7 +25,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label ng-class="{pakollinen: !(kysely.nimi_sv || kysely.nimi_en)}"><span>{{i18n.kysely.nimi}} ({{i18n.yleiset.suomeksi}}) ({{i18n.kysely.nakyy_vastaajalle}})</span>
-                    <input type="text" class="form-control e2e-kysely-nimi-fi" ng-model="kysely.nimi_fi" ng-required="!(kysely.nimi_sv || kysely.nimi_en)"/>
+                    <input type="text" class="form-control e2e-kysely-nimi-fi" ng-model="kysely.nimi_fi" ng-required="!(kysely.nimi_sv || kysely.nimi_en)" ng-disabled="isJulkaistu()"/>
                 </label>
             </div>
 
@@ -37,7 +38,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label ng-class="{pakollinen: !(kysely.nimi_fi || kysely.nimi_en)}"><span>{{i18n.kysely.nimi}} ({{i18n.yleiset.ruotsiksi}}) ({{i18n.kysely.nakyy_vastaajalle}})</span>
-            <input type="text" class="form-control" ng-model="kysely.nimi_sv" ng-required="!(kysely.nimi_fi || kysely.nimi_en)"/>
+            <input type="text" class="form-control" ng-model="kysely.nimi_sv" ng-required="!(kysely.nimi_fi || kysely.nimi_en)" ng-disabled="isJulkaistu()"/>
           </label>
         </div>
 
@@ -50,7 +51,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label ng-class="{pakollinen: !(kysely.nimi_fi || kysely.nimi_sv)}"><span>{{i18n.kysely.nimi}} ({{i18n.yleiset.englanniksi}}) ({{i18n.kysely.nakyy_vastaajalle}})</span>
-            <input type="text" class="form-control" ng-model="kysely.nimi_en" ng-required="!(kysely.nimi_fi || kysely.nimi_sv)"/>
+            <input type="text" class="form-control" ng-model="kysely.nimi_en" ng-required="!(kysely.nimi_fi || kysely.nimi_sv)" ng-disabled="isJulkaistu()"/>
           </label>
         </div>
 
@@ -80,7 +81,8 @@
             min-pvm="'2000-01-01'"
             max-pvm="kysely.voimassa_loppupvm"
             ng-model="kysely.voimassa_alkupvm"
-            pakollinen="true">
+            pakollinen="true"
+            ng-disabled="isJulkaistu()">
     </pvm-valitsin>
     <pvm-valitsin
             otsikko="{{i18n.yleiset.asti}}"
@@ -89,17 +91,18 @@
             min-pvm="kysely.voimassa_alkupvm"
             max-pvm="'2099-12-31'"
             ng-model="kysely.voimassa_loppupvm"
-            pakollinen="false">
+            pakollinen="false"
+            ng-disabled="isJulkaistu()">
     </pvm-valitsin>
 
     <div class="row"><br /></div>
 
     <div>
-        <button class="btn btn-primary" ng-click="lisaaKyselypohjaModal()">
+        <button class="btn btn-primary" ng-click="lisaaKyselypohjaModal()" ng-if="!isJulkaistu()">
             {{i18n.kysely.lisaa_kyselypohja}}&nbsp;
             <span class="fa fa-plus"></span>
         </button>
-        <button class="btn btn-primary e2e-lisaa-kysymysryhma" ng-click="lisaaKysymysryhmaModal()">
+        <button class="btn btn-primary e2e-lisaa-kysymysryhma" ng-click="lisaaKysymysryhmaModal(isJulkaistu())">
             {{i18n.kysely.lisaa_kysymysryhma}}&nbsp;
             <span class="fa fa-plus"></span>
         </button>
@@ -107,7 +110,7 @@
 
     <div class="row"><br /></div>
 
-    <kysymysryhma-accordion kysymysryhmat="kysely.kysymysryhmat" kysymysten-poisto="true"></kysymysryhma-accordion>
+    <kysymysryhma-accordion kysymysryhmat="kysely.kysymysryhmat" kysymysten-poisto="true" is-julkaistu="isJulkaistu()"></kysymysryhma-accordion>
 
     <div class="alert alert-warning" ng-if="!validoiKysymysryhmat()">
       {{ 'kysely.taustakysymysryhma_puuttuu' | i18n }}

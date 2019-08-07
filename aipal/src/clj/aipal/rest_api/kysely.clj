@@ -20,6 +20,7 @@
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
             [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
+            [clojure.tools.logging :as log]
             [oph.common.util.http-util :refer [response-or-404 parse-iso-date]]
             [oph.common.util.util :refer [map-by paivita-arvot]]))
 
@@ -49,15 +50,31 @@
 (defn kysymysryhma-on-julkaistu? [kysymysryhmaid]
   (= "julkaistu" (:tila (kysymysryhma-arkisto/hae kysymysryhmaid false))))
 
-(defn paivita-kysely!
-  [kysely]
-  (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) max-kysymyksia)))
-  (assert (= "luonnos" (:tila kysely)))
+(defn valmistele-luonnos-paivitys [kysely]
   (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
   (arkisto/poista-kysymykset! (:kyselyid kysely))
   (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
     (assert (kysymysryhma-on-julkaistu? (:kysymysryhmaid kysymysryhma)))
-    (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma))
+    (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma)))
+
+(defn validoi-vain-omia-organisaatioita [kysely]
+  (let [loytyvat-pakolliset-kysymysryhmaidt (map :kysymysryhmaid (arkisto/get-kyselyn-pakolliset-kysymysryhmaidt (:kyselyid kysely)))
+        kyselyn-kysymysryhmaidt (set (map :kysymysryhmaid (:kysymysryhmat kysely)))]
+    (log/info loytyvat-pakolliset-kysymysryhmaidt)
+    (log/info kyselyn-kysymysryhmaidt)
+    (assert (every? kyselyn-kysymysryhmaidt loytyvat-pakolliset-kysymysryhmaidt))))
+
+(defn valmistele-julkaistu-paivitys [kysely]
+  (assert (= "julkaistu" (:tila kysely)))
+  (validoi-vain-omia-organisaatioita kysely)
+  (valmistele-luonnos-paivitys kysely))
+
+(defn paivita-kysely!
+  [kysely]
+  (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) max-kysymyksia)))
+  (if (= "luonnos" (:tila kysely))
+    (valmistele-luonnos-paivitys kysely)
+    (valmistele-julkaistu-paivitys kysely))
   (arkisto/muokkaa-kyselya! kysely))
 
 (defn valid-url? "jäljittelee angular-puolen äärisimppeliä validointia"

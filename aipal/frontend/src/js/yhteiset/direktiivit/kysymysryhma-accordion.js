@@ -20,7 +20,8 @@ angular.module('yhteiset.direktiivit.kysymysryhma-accordion', [])
       restrict: 'E',
       scope: {
         kysymysryhmat: '=',
-        kysymystenPoisto: '='
+        kysymystenPoisto: '=',
+        isJulkaistu: '='
       },
       templateUrl: 'template/yhteiset/direktiivit/kysymysryhma-accordion.html',
       controller: ['$scope', 'i18n', function($scope, i18n) {
@@ -28,6 +29,10 @@ angular.module('yhteiset.direktiivit.kysymysryhma-accordion', [])
 
         $scope.poistaTaiPalautaKysymysryhma = function(kysymysryhma) {
           kysymysryhma.poistetaan_kyselysta = !kysymysryhma.poistetaan_kyselysta;
+        };
+
+        $scope.isMuokattavissa = function (kysymysryhma) {
+          return !$scope.isJulkaistu || (!kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset);
         };
 
         var jarjesta = function() {

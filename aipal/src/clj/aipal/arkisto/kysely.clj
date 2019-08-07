@@ -105,12 +105,17 @@
 
 (defn muokkaa-kyselya! [kyselydata]
   (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
-  (->
-    (sql/update* taulut/kysely)
-    (sql/set-fields (assoc (select-keys kyselydata [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu :tyyppi])
-                      :muutettu_kayttaja (:oid *kayttaja*)))
-    (sql/where {:kyselyid (:kyselyid kyselydata)})
-    (sql/update)))
+  (let [paivitettavat-kentat (if (= "julkaistu" (:tila kyselydata))
+                               [:selite_fi :selite_sv :selite_en :uudelleenohjaus_url]
+                               [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu :tyyppi])]
+    (log/info paivitettavat-kentat)
+    (->
+     (sql/update* taulut/kysely)
+     (sql/set-fields (assoc (select-keys kyselydata paivitettavat-kentat)
+                            :muutettu_kayttaja (:oid *kayttaja*)))
+     (sql/where {:kyselyid (:kyselyid kyselydata)})
+     (sql/update))))
+
 
 (defn julkaise-kysely! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :julkaistu)
@@ -276,3 +281,15 @@
     sql/exec
     first
     :poistettavissa))
+
+(defn get-kyselyn-pakolliset-kysymysryhmaidt
+  "Hakee kyselyn kaikki valtakunnalliset ja taustakysymykset. Näiden muokkausta ei sallita julkaistussa kyselyssä."
+  [kyselyid]
+  (seq
+   (sql/select taulut/kysely_kysymysryhma
+               (sql/join taulut/kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymysryhmaid))
+               (sql/where  (or {:kyselyid kyselyid
+                                :kysymysryhma.taustakysymykset true}
+                               {:kyselyid kyselyid
+                                :kysymysryhma.valtakunnallinen true}))
+               (sql/fields :kysymysryhmaid))))
