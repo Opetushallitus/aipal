@@ -17,6 +17,7 @@
             [clojure-csv.core :refer [write-csv]]
             [aipal.rest-api.i18n :as i18n]
             [clj-time.core :as time]
+            [arvo.util :refer [parse-int]]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
             [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
@@ -110,6 +111,25 @@
                               vaihtoehtoja
                               :alku alku))))
 
+(defn jakaumat-summa [jakauma ehto]
+  (->> jakauma
+       (filter #(some? (parse-int (:vaihtoehto-avain %))))
+       (filter #(ehto (parse-int (:vaihtoehto-avain %))))
+       (map :lukumaara)
+       (reduce +)))
+
+(defn laske-nps-luku [jakauma]
+  (when (not-empty jakauma)
+    (let [yhteensä (jakaumat-summa jakauma #(some? %))
+          arvostelijat (jakaumat-summa jakauma #(< % 7))
+          suosittelijat (jakaumat-summa jakauma #(> % 8))]
+      (when (> yhteensä 0)
+        (Math/round (float (* 100 (- (/ suosittelijat yhteensä) (/ arvostelijat yhteensä)))))))))
+
+(defn kasittele-npskysymys [kysymys vastaukset]
+  (let [npskysymys (kasittele-asteikkokysymys kysymys vastaukset 11 :alku 0) ]
+    (assoc npskysymys :nps_luku (laske-nps-luku (:jakauma npskysymys)))))
+
 (defn kasittele-monivalintakysymys [kysymys vastaukset]
   (let [jakauma (muotoile-jakauma (:jakauma vastaukset))]
     (assoc kysymys :jakauma (muodosta-monivalinta-jakauman-esitys
@@ -142,19 +162,22 @@
                   "arvosana" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "arvosana6" (kasittele-asteikkokysymys kysymys vastaukset 6)
                   "arvosana7" (kasittele-asteikkokysymys kysymys vastaukset 7)
-                  "nps" (kasittele-asteikkokysymys kysymys vastaukset 11 :alku 0)
+                  "nps" (kasittele-npskysymys kysymys vastaukset)
                   "kylla_ei_valinta" (kasittele-kyllaei-kysymys kysymys vastaukset)
                   "likert_asteikko" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "monivalinta" (kasittele-monivalintakysymys kysymys vastaukset)
                   "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset)
                   "arvosana4_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "asteikko5_1" (kasittele-asteikkokysymys kysymys vastaukset 5)
-                  "arvosana6_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 7 :alku 0))]
+                  "arvosana6_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 7 :alku 0))
+        nps-luku (when (= "nps" (:vastaustyyppi kysymys))
+                   (laske-nps-luku (:jakauma kysymys)))]
     (-> kysymys
-      (assoc :vastaajien_lukumaara vastaajia
-             :vastaajat vastaajat)
-      (merge keskiarvo-ja-hajonta)
-      suodata-eos-vastaukset)))
+        (assoc :vastaajien_lukumaara vastaajia
+               :vastaajat vastaajat
+               :nps_luku nps-luku)
+        (merge keskiarvo-ja-hajonta)
+        suodata-eos-vastaukset)))
 
 (defn valitse-kysymyksen-kentat
   [kysymys]
@@ -167,6 +190,7 @@
                         :vastaajien_lukumaara
                         :keskiarvo
                         :keskihajonta
+                        :nps_luku
                         :jatkovastaukset
                         :vastaustyyppi
                         :eos_vastaus_sallittu

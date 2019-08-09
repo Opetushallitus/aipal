@@ -4,6 +4,10 @@
 (defn in? [coll elem]
   (some #(= elem %) coll))
 
+(defn parse-int [number-string]
+  (try (Integer/parseInt number-string)
+    (catch Exception e nil)))
+
 (defn format-url [base params]
   (str base "?"(->> params
                     (map #(str (name (first %))"=" (second %)))
