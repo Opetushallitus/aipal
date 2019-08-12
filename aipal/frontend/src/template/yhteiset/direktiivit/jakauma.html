@@ -23,11 +23,7 @@
   </tbody>
   <tfoot style="text-align: center">
     <tr ng-if="kysymys.keskiarvo !== undefined">
-      <td>NPS</td>
-      <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ kysymys.nps_luku[i] | number:2 }}</td>
-    </tr>
-    <tr ng-if="kysymys.nps_luku !== undefined">
-      <td>{{ 'raportti.nps_luku' | i18n }}</td>
+      <td>{{ 'raportti.keskiarvo' | i18n }}</td>
       <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ kysymys.keskiarvo[i] | number:2 }}</td>
     </tr>
     <tr ng-if="kysymys.keskihajonta !== undefined">
