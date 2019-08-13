@@ -31,6 +31,11 @@ angular.module('yhteiset.direktiivit.jakauma', ['yhteiset.palvelut.i18n', 'rapor
         $scope.lukumaaratYhteensa = kaavioApurit.lukumaaratYhteensa;
         $scope.prosenttiosuus = kaavioApurit.prosenttiosuus;
         $scope.raporttiIndeksit = kaavioApurit.raporttiIndeksit;
+        $scope.anyNotNull = function (array) {
+          return !!array && array.some(function (item) {
+            return item !== null && item !== undefined;
+          });
+        };
       }]
     };
   }]);
