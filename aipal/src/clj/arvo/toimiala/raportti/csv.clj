@@ -157,7 +157,7 @@
 (defn hae-monivalinnat [questions]
   (let [monivalinnat (filter #(= "monivalinta" (:vastaustyyppi %)) questions)
         kysymysidt (map :kysymysid monivalinnat)]
-    (db/hae-monivalinnat {:kysymysidt kysymysidt})))
+    (when (not-empty kysymysidt) (db/hae-monivalinnat {:kysymysidt kysymysidt}))))
 
 (defn muuta-taustakysymykset [kysymykset]
   (if (every? :taustakysymys kysymykset)
