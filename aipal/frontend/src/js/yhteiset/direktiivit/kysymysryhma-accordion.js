@@ -32,7 +32,7 @@ angular.module('yhteiset.direktiivit.kysymysryhma-accordion', [])
         };
 
         $scope.isMuokattavissa = function (kysymysryhma) {
-          return !$scope.isJulkaistu || (!kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset);
+          return !$scope.isJulkaistu && (!kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset);
         };
 
         var jarjesta = function() {
