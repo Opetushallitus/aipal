@@ -26,7 +26,7 @@
       <td>{{ 'raportti.keskiarvo' | i18n }}</td>
       <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ kysymys.keskiarvo[i] | number:2 }}</td>
     </tr>
-    <tr ng-if="kysymys.nps_luku && Number.isInteger(kysymys.nps_luku[0])">
+    <tr ng-if="anyNotNull(kysymys.nps_luku)">
       <td>NPS</td>
       <td ng-repeat="i in raporttiIndeksit(kysymys.vastaajien_lukumaara)" colspan="2">{{ kysymys.nps_luku[i] }}</td>
     </tr>
