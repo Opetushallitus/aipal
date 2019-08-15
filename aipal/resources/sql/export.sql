@@ -1,6 +1,5 @@
 -- :name export-kyselyt :? :*
-SELECT k.koulutustoimija,
-  CASE k.tyyppi WHEN 1 THEN 'avop' WHEN 2 THEN 'rekrykysely' WHEN 3 THEN 'uraseuranta' WHEN 4 THEN 'itsearviointi' WHEN 5 THEN 'amispalaute' WHEN 6 THEN 'kandipalaute' WHEN 7 THEN 'amk-uraseuranta' ELSE 'tuntematon' END AS tyyppi,
+SELECT k.koulutustoimija, k.tyyppi,
   k.kyselyid, k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
   to_char(k.voimassa_alkupvm, 'YYYY-MM-DD') AS kysely_voimassa_alkupvm, to_char(k.voimassa_loppupvm, 'YYYY-MM-DD')AS kysely_voimassa_loppupvm, k.tila AS kysely_tila,
   kk.kyselykertaid, kk.nimi AS kyselykerta, kk.kategoria->>'vuosi' AS kyselykerta_vuosi,
