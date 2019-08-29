@@ -186,7 +186,7 @@
      :csv data}))
 
 (defn default-csv-fields [kyselytyyppi]
-  (if (= "amispalaute"' kyselytyyppi)
+  (if (= "amispalaute" kyselytyyppi)
     [:vastaajatunnus :vastausaika :oppilaitos_nimi]
     [:vastaajatunnus :vastausaika]))
 
