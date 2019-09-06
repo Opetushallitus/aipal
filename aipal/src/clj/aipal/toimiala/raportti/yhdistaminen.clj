@@ -24,8 +24,12 @@
 
 (defn yhdistä-vektorit [vektorit]
   (when (not-every? nil? vektorit)
-    (apply map vector
-           (replace {nil (repeat nil)} vektorit))))
+    (if (not-any? empty? vektorit)
+      (apply map vector
+             (replace {nil (repeat nil)} vektorit))
+;      Luodaan tyhjät parit omille kysymyksille joita ei ole valtakunnallisessa vertailuraportissa
+      (map vector (first vektorit) (map (constantly {}) (first vektorit))))))
+
 
 (defn yhdistä-samat [xs]
   {:pre [(let [xs (remove nil? xs)]
