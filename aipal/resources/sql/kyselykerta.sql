@@ -64,3 +64,7 @@ WHERE kk.kyselyid = :kyselyid;
 SELECT k.koulutustoimija FROM kyselykerta kk
 JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE kk.kyselykertaid = :kyselykertaid;
+
+-- :name luo-kyselykerta! :! :n
+INSERT INTO kyselykerta (kyselyid, nimi, voimassa_alkupvm, luotu_kayttaja, muutettu_kayttaja, automaattinen, kategoria)
+VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :kayttaja, :kayttaja, :automaattinen, :kategoria)

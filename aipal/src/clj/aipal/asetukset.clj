@@ -58,7 +58,8 @@
              :kayttooikeuspalvelu s/Str
              :koulutustoimijoiden-tutkinnot s/Str
              :raportointi s/Str
-             :tutkinnot s/Str}
+             :tutkinnot s/Str
+             :automaattikyselyt s/Str}
    :kayttooikeus-tarkistusvali s/Str
    :api-page-length s/Int
    (s/optional-key :basic-auth) {:tunnus s/Str
@@ -90,7 +91,7 @@
    :kyselyynohjaus {:url "http://localhost:3000/api/export/v1/opiskeluoikeudet"
                     :user "vipunen"
                     :password "salasana"}
-   :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
+   :development-mode true ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
    :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
    :kayttooikeuspalvelu {:url "https://testi.virkailija.opintopolku.fi/kayttooikeus-service"
                          :user "tunnus"
@@ -104,9 +105,10 @@
    :logback {:properties-file "resources/logback.xml"}
    :ajastus {:organisaatiopalvelu "0 25 15 ? * * *"
              :kayttooikeuspalvelu "0 0 4 * * ?"
-             :koulutustoimijoiden-tutkinnot "0 40 17 ? * * *"
+             :koulutustoimijoiden-tutkinnot "0 34 15 ? * * *"
              :raportointi "0 30 5 * * ?"
-             :tutkinnot "0 0 2 * * ?"}
+             :tutkinnot "0 34 15 ? * * *"
+             :automaattikyselyt "0 0 23 ? * * *"}
    :api-page-length 50000})
 
 (def common-audit-log-asetukset {:boot-time        (time-local/local-now)
@@ -117,7 +119,6 @@
 (def build-id (delay (if-let [resource (io/resource "build-id.txt")]
                        (.trim (slurp resource :encoding "UTF-8"))
                        "dev")))
-
 
 (def project-version
   (delay
