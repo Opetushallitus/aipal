@@ -1,5 +1,5 @@
 
--- :name kyselytyypin_kentat :? :*
+-- :name kyselytyypin-kentat :? :*
 SELECT * FROM kyselytyyppi_kentat WHERE kyselytyyppi = :kyselytyyppi;
 
 -- :name kyselykerran-tyyppi :? :1
@@ -46,8 +46,6 @@ ORDER BY vt.luotuaika DESC;
 SELECT vt.vastaajatunnusid, vt.kyselykertaid, vt.tutkintotunnus, vt.tunnus, vt.lukittu, vt.luotu_kayttaja, vt.muutettu_kayttaja,
        vt.luotuaika, vt.muutettuaika, vt.valmistavan_koulutuksen_jarjestaja, vt.valmistavan_koulutuksen_oppilaitos,
        vt.suorituskieli, vt.kunta, vt.taustatiedot, vt.voimassa_alkupvm, vt.voimassa_loppupvm, vt.vastaajien_lkm, vt.kaytettavissa,
--- query vt.*, merge with taustatiedot??
--- drop old columns, check migration to jsonb
 t.nimi_fi, t.nimi_sv, t.nimi_en, kaytettavissa(vt) AS kaytettavissa, (vt.taustatiedot ->> 'koulutusmuoto') AS koulutusmuoto,
 COALESCE(COALESCE(vt.voimassa_loppupvm, kk.voimassa_loppupvm, k.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE) AS muokattavissa,
 (SELECT count(*) FROM vastaaja WHERE vastannut = TRUE AND vastaajatunnusid = vt.vastaajatunnusid) AS vastausten_lkm,
@@ -80,3 +78,9 @@ UPDATE vastaajatunnus SET vastaajien_lkm = :vastaajia WHERE vastaajatunnusid = :
 
 -- :name vastaajien-lkm :? :1
 SELECT count(*) FROM vastaaja AS vastaajia WHERE vastaajatunnusid = :vastaajatunnusid;
+
+-- :name vastaajatunnus-status :? :1
+SELECT vt.vastaajatunnusid, vt.tunnus, vt.voimassa_loppupvm,
+EXISTS(SELECT 1 FROM vastaaja v WHERE v.vastaajatunnusid = vt.vastaajatunnusid) AS vastattu
+FROM vastaajatunnus vt
+WHERE vt.tunnus = :tunnus

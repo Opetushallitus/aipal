@@ -22,11 +22,12 @@
     (when (hashers/check (second credentials) (:salasana saved-credentials))
       saved-credentials)))
 
-(defn wrap-authentication [handler]
+(defn wrap-authentication
+  [required-right handler]
   (fn [request]
     (let [credentials (parse-credentials request)
           api-user (check-credentials credentials)]
-      (if api-user
+      (if (and api-user (get-in api-user [:oikeudet required-right]))
         (handler (merge request (select-keys api-user [:organisaatio :oikeudet])))
         {:status 401
          :headers {"www-authenticate" "Basic realm=\"restricted\""}}))))

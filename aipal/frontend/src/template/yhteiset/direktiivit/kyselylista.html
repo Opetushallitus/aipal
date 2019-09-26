@@ -30,13 +30,13 @@
             <span class="fa fa-share"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.poistettavissa">
-          <button class="btn btn-primary pull-left e2e-poista-kysely" ng-click="poistaKyselyModal(kyselyt, kysely)">
+        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.poistettavissa && !kysely.automatisoitu">
+          <button class="btn btn-primary pull-left e2e-poista-kysely" ng-click="poistaKyselyModal(kyselyt, kysely)" ng-if="!kysely.automatisoitu">
             {{ 'kysely.poista' | i18n }}&nbsp;
             <span class="fa fa-trash"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA', 'OPL-KYSELYKERTAKAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa">
+        <auth roolit="['OPL-VASTUUKAYTTAJA', 'OPL-KYSELYKERTAKAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa && !kysely.automatisoitu">
           <button class="btn btn-primary pull-left e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">
             {{ 'kyselykerta.uusi_kyselykerta' | i18n }}&nbsp;
             <span class="fa fa-plus"></span>
@@ -60,7 +60,7 @@
             <span class="fa fa-check"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA']">
+        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="!kysely.automatisoitu">
           <a ng-href="#/kyselyt/kysely/{{kysely.kyselyid}}/kopioi" class="btn btn-primary pull-left">
             {{ 'kysely.kopioi' | i18n }}&nbsp;
             <span class="fa fa-copy"></span>
@@ -119,7 +119,7 @@
             </a>
           </auth>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KYSELYKERTAKAYTTAJA']">
-            <span ng-show="kyselykerta.poistettavissa">
+            <span ng-show="kyselykerta.poistettavissa && !kysely.automatisoitu">
               <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)" ng-if="kyselykerta.poistettavissa">
                 {{ 'kyselykerta.poista' | i18n }}&nbsp;
                 <span class="fa fa-trash"></span>

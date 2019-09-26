@@ -26,7 +26,12 @@
             [clojure.java.jdbc :as jdbc]
             [clj-time.coerce :refer [to-sql-date]]))
 
+
+(def errors {:ei-kyselykertaa {:error "ei-kyselykertaa" :msg "Ei kyselykertaa annetuille tiedoille"}})
+
 (def sallitut-merkit "ACEFHJKLMNPRTWXY347")
+
+(def jarjestelma-kayttajat #{"INTEGRAATIO" "JARJESTELMA"})
 
 (defn ^:private erota-tutkinto
   [vastaajatunnus]
@@ -124,7 +129,6 @@
 (defn find-id [kentta kyselytyyppi-kentat]
   (:id (first (filter #(= kentta (:kentta_id %)) kyselytyyppi-kentat))))
 
-
 (defn get-vastaajatunnukset [tunnusten-lkm]
   (->> (luo-tunnuksia 6)
        (remove vastaajatunnus-olemassa?)
@@ -137,7 +141,7 @@
 (defn lisaa! [vastaajatunnus]
   {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
   (let [kyselytyyppi (:tyyppi (db/kyselykerran-tyyppi vastaajatunnus))
-        kyselytyypin_kentat (map (comp keyword :kentta_id) (db/kyselytyypin_kentat {:kyselytyyppi kyselytyyppi}))]
+        kyselytyypin_kentat (map (comp keyword :kentta_id) (db/kyselytyypin-kentat {:kyselytyyppi kyselytyyppi}))]
     (doall
       (for [tunnus (get-vastaajatunnukset (:tunnusten-lkm vastaajatunnus))]
         (let [base-data (vastaajatunnus-base-data vastaajatunnus tunnus)
@@ -146,15 +150,15 @@
                                        (assoc :taustatiedot taustatiedot)
                                        (update :voimassa_alkupvm to-sql-date)
                                        (update :voimassa_loppupvm to-sql-date))
-              vastaajatunnusid (:vastaajatunnusid (db/lisaa-vastaajatunnus! (assoc tallennettava-tunnus :kayttaja (:oid *kayttaja*))))
-              _ (log/info "Vastaajatunnusid "  vastaajatunnusid)]
+              vastaajatunnusid (:vastaajatunnusid (db/lisaa-vastaajatunnus! (assoc tallennettava-tunnus :kayttaja (:oid *kayttaja*))))]
           (hae (:kyselykertaid tallennettava-tunnus) vastaajatunnusid))))))
 
-;;AVOP.FI FIXME: binding manually to INTEGRAATIO user (check if that is right)
-(defn lisaa-avopfi! [vastaajatunnus]
-  (with-kayttaja integraatio-uid nil nil
-     (lisaa! vastaajatunnus)))
-;;END AVOP.FI
+(defn lisaa-automaattitunnus! [vastaajatunnus]
+  (log/info "Lisätään tunnus:" vastaajatunnus)
+  (if (:kyselykertaid vastaajatunnus)
+    (with-kayttaja integraatio-uid nil nil
+       {:tunnus (:tunnus (first (lisaa! vastaajatunnus)))})
+    {:error (:ei-kyselykertaa errors)}))
 
 (defn lisaa-massana! [vastaajatunnukset]
   (jdbc/with-db-transaction [tx *db*]
@@ -188,6 +192,10 @@
 
 (defn laske-vastaajat [vastaajatunnusid]
   (:count (db/vastaajien-lkm {:vastaajatunnusid vastaajatunnusid})))
+
+(defn tunnus-poistettavissa? [kyselykertaid vastaajatunnusid]
+  (let [tunnus (hae kyselykertaid vastaajatunnusid)]
+    (or false (jarjestelma-kayttajat (:luotu_kayttaja tunnus)))))
 
 (defn muokkaa-lukumaaraa!
   [kyselykertaid vastaajatunnusid lukumaara]

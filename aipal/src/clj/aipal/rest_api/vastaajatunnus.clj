@@ -75,7 +75,7 @@
                   vastaajatunnusid :- s/Int]
     :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
     (let [vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
-      (if (zero? vastaajat)
+      (if (and (zero? vastaajat) (vastaajatunnus/tunnus-poistettavissa? kyselykertaid vastaajatunnusid))
         (do
           (vastaajatunnus/poista! kyselykertaid vastaajatunnusid)
           {:status 204})

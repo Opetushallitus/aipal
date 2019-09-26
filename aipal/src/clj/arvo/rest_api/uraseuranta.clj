@@ -5,6 +5,7 @@
             [buddy.auth.backends.token :refer (jws-backend)]
             [schema.core :as s]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
+            [buddy.auth :refer [authenticated? throw-unauthorized]]
             [arvo.db.core :refer [*db*] :as db]
             [oph.common.util.http-util :refer [response-or-404]]
             [clj-time.core :as time]))
@@ -40,10 +41,23 @@
                       :oppilaitoskoodi (:oppilaitoskoodi (first v))
                       :uraseuranta_tyyppi (:uraseuranta_tyyppi (first v))}) grouped)))
 
+(defn on-403 [request]
+  {:status  403
+   :headers {"Content-Type" "application/json"}
+   :body   {:status 403
+            :detail  (str "Access to " (:uri request) " is forbidden")}})
+
+
+(defn auth-mw [handler]
+  (fn [request]
+    (if (authenticated? request)
+      (handler request)
+      (on-403 request))))
+
 (defroutes reitit
   (POST "/luotunnuksia" []
     :body [vastaajatunnukset s/Any]
-    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :middleware [auth-mw]
     :header-params [authorization :- String]
     (-> (format-tunnukset vastaajatunnukset)
         vastaajatunnus/lisaa-massana!
@@ -51,19 +65,18 @@
         response-or-404))
   (POST "/taustatiedot" []
     :body [taustatiedot s/Any]
-    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :middleware [auth-mw]
     :header-params [authorization :- String]
     (-> taustatiedot
         vastaajatunnus/liita-taustatiedot!
         response-or-404))
-
   (GET "/kyselyt" []
-    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :middleware [auth-mw]
     :header-params [authorization :- String]
     (response-or-404 (db/hae-uraseurannat)))
   (GET "/vastanneet/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
-    :middleware [arvo.rest-api.avopvastaajatunnus/auth-mw]
+    :middleware [auth-mw]
     :header-params [authorization :- String]
     (map :tunnus (db/hae-vastaajat {:kyselykertaid kyselykertaid}))))
 

@@ -148,7 +148,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = pvm.parsePvm(kysely);
-        if(!kysely.kaytettavissa) { $scope.muokkaustila = false; }
+
+        if(!kysely.kaytettavissa || kysely.automatisoitu) { $scope.muokkaustila = false; }
         haeTutkinnot(kysely)
         $scope.vain_omat = kysely.tyyppi === 'amispalaute'
         if(!$scope.uusi){

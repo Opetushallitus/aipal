@@ -42,19 +42,8 @@
                                " WHERE (kyselykerta.kyselyid = kysely.kyselyid))"
                                " AND tila IN ('luonnos', 'suljettu')")) :poistettavissa])))
 
-(defn hae-kyselyt
-  "Hae koulutustoimijan kyselyt"
-  [koulutustoimija]
-  (->
-    kysely-poistettavissa-query
-    (sql/join :inner :kysely_organisaatio_view (= :kysely_organisaatio_view.kyselyid :kyselyid))
-    (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin :kysely.kyselyid koulutustoimija)
-    kysely-kentat
-    (sql/fields [(sql/subselect taulut/kysely_kysymysryhma
-                   (sql/aggregate (count :*) :lkm)
-                   (sql/where {:kysely_kysymysryhma.kyselyid :kysely.kyselyid})) :kysymysryhmien_lkm])
-    (sql/order :kyselyid :desc)
-    sql/exec))
+(defn hae-kyselyt [koulutustoimija]
+  (db/hae-kyselyt {:koulutustoimija koulutustoimija}))
 
 ;; käytetään samaan kun korman with yhden suhde moneen tapauksessa, mutta päästään kahdella sql haulla korman n+1:n sijaan
 (defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat]
@@ -72,16 +61,8 @@
         kyselykerrat (kyselykerta/hae-kaikki koulutustoimija)]
     (yhdista-kyselykerrat-kyselyihin kyselyt kyselykerrat)))
 
-(defn hae
-  "Hakee kyselyn tiedot pääavaimella"
-  [kyselyid]
-  (->
-    kysely-poistettavissa-query
-    kysely-kentat
-    (sql/fields :kysely.selite_fi :kysely.selite_sv :kysely.selite_en :kysely.tyyppi)
-    (sql/where (= :kyselyid kyselyid))
-    sql/exec
-    unique-or-nil))
+(defn hae [kyselyid]
+  (db/hae-kysely {:kyselyid kyselyid}))
 
 (defn hae-kyselytyypit []
   (db/hae-kyselytyypit))
@@ -265,14 +246,6 @@
                           (when (:nimi_en kysely)
                             {:nimi_en (:nimi_en kysely)})))
            (sql/where {:kyselyid [not= (:kyselyid kysely)]})))))
-
-(defn ntm-kysely?
-  "Onko NTM-kysely."
-   [kyselyid]
-  (boolean
-   (seq (sql/select taulut/kysely
-          (sql/where (and {:kyselyid kyselyid}
-                          (kysely-util/kysely-sisaltaa-ntm-kysymysryhman :kysely.kyselyid)))))))
 
 (defn kysely-poistettavissa? [kyselyid]
   (->

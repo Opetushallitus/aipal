@@ -17,6 +17,20 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
   AND (kk.kategoria ->'vuosi')::TEXT::INTEGER = :vuosi
   AND kk.lukittu = FALSE;
 
+-- :name hae-automaatti-kyselykerta :? :1
+SELECT kk.kyselykertaid FROM kyselykerta kk
+  JOIN kysely k on kk.kyselyid = k.kyselyid
+WHERE k.koulutustoimija = :koulutustoimija
+AND kk.automaattinen = TRUE
+AND kk.kategoria ->> 'tarkenne' = :tarkenne
+AND k.tila = 'julkaistu' AND kk.lukittu = FALSE;
+
+-- :name hae-kyselykerta-nimella-ja-koulutustoimijalla :? :*
+SELECT * FROM kyselykerta kk
+JOIN kysely k on kk.kyselyid = k.kyselyid
+WHERE kk.nimi = :nimi
+AND k.koulutustoimija = :koulutustoimija;
+
 -- :name hae-kyselyn-tutkinnot :? :*
 SELECT DISTINCT t.tutkintotunnus, t.nimi_fi, t.nimi_sv, t.nimi_en
 FROM vastaajatunnus vt

@@ -24,7 +24,7 @@
             aipal.rest-api.raportti.valtakunnallinen
             aipal.rest_api.js-log
             aipal.rest-api.vastaajatunnus
-            arvo.rest-api.avopvastaajatunnus
+            arvo.rest-api.automaattitunnus
             arvo.rest-api.uraseuranta
             arvo.rest-api.koodisto
             aipal.rest-api.kayttaja
@@ -77,8 +77,6 @@
     (context "/api/raportti/kysely" [] :no-doc true :tags ["raportti"] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.kysely/reitit asetukset))
     (context "/api/raportti/kyselykerta" [] :no-doc true :tags ["raportti"] (aipal.rest-api.raportti.kyselykerta/csv-reitit asetukset))
     (context "/api/raportti/kyselykerta" [] :no-doc true :tags ["raportti"] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.kyselykerta/reitit asetukset))
-    ;(context "/api/raportti/valtakunnallinen" [] (aipal.rest-api.raportti.valtakunnallinen/csv-reitit asetukset))
-    ;(context "/api/raportti/valtakunnallinen" [] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.valtakunnallinen/reitit asetukset))
     (context "/api/kysely" [] :no-doc true :tags ["kysely"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kysely/reitit)
     (context "/api/kysymysryhma" [] :no-doc true :tags ["kysymysryhma"]:middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kysymysryhma/reitit)
     (context "/api/vastaajatunnus" [] :no-doc true :tags ["vastaajatunnus"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.vastaajatunnus/reitit)
@@ -86,12 +84,12 @@
     (context "/api/tutkinto" [] :no-doc true :tags ["tutkinto"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkinto/reitit)
     (context "/api/tutkintotyyppi" [] :no-doc true :tags ["tutkinto"]  :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :no-doc true :tags ["koulutustoimija"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
-    (context "/api/public/luovastaajatunnus" [] :no-doc true :tags ["vastaajatunnus"] (arvo.rest-api.avopvastaajatunnus/reitit asetukset))
     (context "/api/public/uraseuranta" [] :no-doc true :tags ["uraseuranta"] (arvo.rest-api.uraseuranta/uraseuranta-reitit asetukset))
-    (context "/api/public/koodisto" [] :no-doc true :tags ["koodisto"] (arvo.rest-api.koodisto/koodisto-reitit asetukset))
+    (context "/api/public/koodisto" [] :no-doc true :tags ["koodisto"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.koodisto/reitit)
     (context "/api/tiedote" [] :no-doc true :tags ["tiedote"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (context "/api/csv" [] :no-doc true :tags ["csv"] aipal.rest-api.raportti.kysely/csv)
     (context "/api/vipunen" [] :no-doc true :tags ["vipunen"] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
-    (context "/api/export/v1" [] :tags ["export"] :middleware [#(wrap-authentication %)] arvo.rest-api.export/v1)
-    (context "/api/vastauslinkki/v1" [] :tags ["vastauslinkki"] :middleware [#(wrap-authentication %)] arvo.rest-api.vastauslinkki/v1)
+    (context "/api/export/v1" [] :tags ["export"] :middleware [#(wrap-authentication :export %)] arvo.rest-api.export/v1)
+    (context "/api/public/luovastaajatunnus" [] :no-doc true :tags ["vastaajatunnus"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.automaattitunnus/kyselyynohjaus-v1)
+    (context "/api/vastauslinkki/v1" [] :tags ["vastauslinkki"] :middleware [#(wrap-authentication :ehoks_tunnukset %)] arvo.rest-api.automaattitunnus/ehoks-v1)
     (r/not-found "Not found")))
