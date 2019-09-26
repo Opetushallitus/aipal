@@ -86,12 +86,12 @@ ORDER BY kyselykerta.kyselykertaid ASC")
 ;avop.fi
 (defn hae-nimella-ja-oppilaitoksella
   "Hae kyselykerta nimella ja oppilaitoksella"
-  [kyselykertanimi oppilaitosid]
+  [kyselykertanimi oppilaitos]
   (first (sql/select taulut/kyselykerta
                      (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
                      (sql/join :inner :oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
                      (sql/fields :kyselykerta.kyselykertaid)
-                     (sql/where {:oppilaitos.oppilaitoskoodi oppilaitosid :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false}))))
+                     (sql/where {:oppilaitos.oppilaitoskoodi (:oppilaitoskoodi oppilaitos) :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false}))))
 
 (defn hae-rekrykysely [oppilaitos vuosi]
   (first (db/hae-rekry-kyselykerta {:oppilaitoskoodi oppilaitos :vuosi vuosi})))
