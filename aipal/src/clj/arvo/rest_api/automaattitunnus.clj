@@ -137,9 +137,18 @@
     (api-response {:kysely_linkki (str (:vastaus-base-url @asetukset)"/"(:tunnus luotu-tunnus))})
     (handle-error (:error luotu-tunnus))))
 
+(defn kyselyynohjaus-response [luotu-tunnus]
+  (if {:tunnus luotu-tunnus}
+    (api-response {:tunnus (:tunnus luotu-tunnus)})
+    (handle-error {:error luotu-tunnus})))
+
 (defn lisaa-amispalaute-automatisointi! [tunnus]
   (db/lisaa-automatisointiin! {:koulutustoimija (:valmistavan_koulutuksen_jarjestaja tunnus)
                                :lahde "EHOKS"}))
+
+(defn lisaa-kyselyynohjaus! [tunnus]
+  (let [luotu-tunnus (vastaajatunnus/lisaa-automaattitunnus! tunnus)]
+    (kyselyynohjaus-response luotu-tunnus)))
 
 (defn lisaa-automaattitunnus! [tunnus]
   (let [luotu-tunnus (vastaajatunnus/lisaa-automaattitunnus! tunnus)]
@@ -150,7 +159,7 @@
     :body [avopdata s/Any]
     (try
       (let [vastaajatunnus (palaute-tunnus avopdata)]
-        (lisaa-automaattitunnus! vastaajatunnus))
+        (lisaa-kyselyynohjaus! vastaajatunnus))
       (catch java.lang.AssertionError e1
         (log/error e1 "Mandatory fields missing")
         (on-validation-error (format "Mandatory fields are missing or not found")))
@@ -161,7 +170,7 @@
     :body [rekrydata s/Any]
     (try
       (let [vastaajatunnus (rekry-tunnus rekrydata)]
-        (lisaa-automaattitunnus! vastaajatunnus))
+        (lisaa-kyselyynohjaus! vastaajatunnus))
       (catch java.lang.AssertionError e1
         (log/error e1 "Mandatory fields missing")
         (on-validation-error (format "Mandatory fields are missing or not found")))
