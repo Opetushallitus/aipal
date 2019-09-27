@@ -33,5 +33,4 @@
       (do (luo-automaattikyselyt!)
           (log/info "Automaattikyselyiden luonti valmis"))
       (catch Exception e
-        (log/error "Automaattikyselyiden luonti epäonnistui")
-        (.printStackTrace e)))))
+        (log/error e "Automaattikyselyiden luonti epäonnistui")))))
