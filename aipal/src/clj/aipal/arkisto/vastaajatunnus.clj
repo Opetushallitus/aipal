@@ -183,7 +183,7 @@
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
   (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
-  (db/lukitse-vastaajatunnus! {:vastaajatunnusid vastaajatunnusid})
+  (db/lukitse-vastaajatunnus! {:vastaajatunnusid vastaajatunnusid :lukittu lukitse})
   (hae kyselykertaid vastaajatunnusid))
 
 (defn poista! [kyselykertaid vastaajatunnusid]
