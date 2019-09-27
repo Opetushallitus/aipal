@@ -111,7 +111,8 @@
        :henkilonumero henkilonumero
        :valmistavan_koulutuksen_jarjestaja (get-in ent_koulutustoimija [:ytunnus])
        :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
-       :kieli "fi"})))
+       :kieli "fi"
+       :tutkinto nil})))
 
 (defn amispalaute-tunnus [data]
  (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
