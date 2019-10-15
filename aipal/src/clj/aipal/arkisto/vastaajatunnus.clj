@@ -195,7 +195,7 @@
 
 (defn tunnus-poistettavissa? [kyselykertaid vastaajatunnusid]
   (let [tunnus (hae kyselykertaid vastaajatunnusid)]
-    (or false (jarjestelma-kayttajat (:luotu_kayttaja tunnus)))))
+    (not (contains? jarjestelma-kayttajat (:luotu_kayttaja tunnus)))))
 
 (defn muokkaa-lukumaaraa!
   [kyselykertaid vastaajatunnusid lukumaara]
