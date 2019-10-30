@@ -12,18 +12,6 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/vastaus/:tunnus', {
-        controller: 'VastausController',
-        templateUrl: 'template/vastaus/vastaus.html'
-      })
-      .when('/vastaus/:tunnus/:lang', {
-        redirectTo: function (pathParams, path) {
-          if(['fi', 'sv', 'en'].indexOf(pathParams.lang) !== -1){
-            asetaKieli(pathParams.lang);
-          }
-          return '/vastaus/' + pathParams.tunnus;
-        }
-      })
       .when('/vastausaika-loppunut', {
         templateUrl: 'template/vastaus/lukittu.html'
       })
@@ -34,6 +22,18 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
       .when('/preview', {
         controller: 'PreviewController',
         templateUrl: 'template/vastaus/vastaus.html'
+      })
+      .when('/:tunnus', {
+        controller: 'VastausController',
+        templateUrl: 'template/vastaus/vastaus.html'
+      })
+      .when('/:tunnus/:lang', {
+        redirectTo: function (pathParams, path) {
+          if(['fi', 'sv', 'en'].indexOf(pathParams.lang) !== -1){
+            asetaKieli(pathParams.lang);
+          }
+          return '/' + pathParams.tunnus;
+        }
       })
     ;
   }])

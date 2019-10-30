@@ -58,8 +58,8 @@
     (context "/api/kyselykerta" [] aipalvastaus.rest-api.kyselykerta/reitit)
     (context "/api/vastaus" [] aipalvastaus.rest-api.vastaus/reitit)
     (GET "/" [] (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
-    (GET ["/:tunnus" :tunnus #"[0-9a-zA-Z]{5,13}"] [tunnus]
-           (response/redirect (str (-> asetukset :server :base-url) "/#/vastaus/" tunnus)))
+    (GET ["/:path"] []
+      (s/render-file "public/app/index.html" {:base-url (-> asetukset :server :base-url)}))
     (r/not-found "Not found")))
 
 (defn sammuta [palvelin]

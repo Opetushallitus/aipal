@@ -32,5 +32,8 @@
     "karma-script-launcher": "0.1.0",
     "load-grunt-tasks": "0.4.0",
     "time-grunt": "0.2.10"
+  },
+  "dependencies": {
+    "node-sass": "^4.13.0"
   }
 }

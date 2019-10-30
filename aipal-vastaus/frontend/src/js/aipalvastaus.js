@@ -25,6 +25,10 @@ angular.module('aipalvastaus', [
     'ngPostMessage'
   ])
 
+  .config(function ($locationProvider) {
+    $locationProvider.html5Mode(true)
+  })
+
   .controller('AipalvastausController', ['$scope', '$window', 'i18n', 'Kielet', 'kieli', function($scope, $window, i18n, Kielet, kieli){
     $scope.i18n = i18n;
     $scope.baseUrl = _.has($window, 'hakuBaseUrl') ?  $window.hakuBaseUrl : '';

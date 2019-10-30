@@ -16,13 +16,14 @@
 
 angular.module('lomake.lomakeui', ['ngRoute'])
 
-  .config(['$routeProvider', function($routeProvider) {
+  .config(function($routeProvider) {
     $routeProvider
       .when('/', {
         controller: 'LomakeController',
         templateUrl: 'template/lomake/lomake.html'
       });
-  }])
+
+  })
 
   .controller('LomakeController', [
     function() {}
