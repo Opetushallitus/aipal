@@ -285,7 +285,7 @@
 
 (defn filter-not-allowed [kyselytyyppi kysymykset vastaukset]
   (let [lupakysymys (:kysymysid (first (filter #(= "tietojen_luovutus" (-> % :kategoria :taustakysymyksen_tyyppi)) kysymykset)))]
-    (if (and lupakysymys (some #{"avop" "kandipalaute"} #{kyselytyyppi}))
+    (if (and lupakysymys (some #{"amk-uraseuranta"} #{kyselytyyppi}))
       (filter #(luovutuslupa % lupakysymys) vastaukset)
       vastaukset)))
 
