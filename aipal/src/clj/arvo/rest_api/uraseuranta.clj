@@ -22,7 +22,7 @@
 
 (defn uraseuranta-vastaajatunnus-defaults []
   {:taustatiedot nil
-   :vastaajien_lkm 1
+   :kohteiden_lkm 1
    :toimipaikka nil
    :voimassa_alkupvm (time/today)
    :voimassa_loppupvm nil

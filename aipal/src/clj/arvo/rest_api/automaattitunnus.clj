@@ -77,7 +77,7 @@
 
 (def automaattitunnus-defaults
   {:tunnusten-lkm 1
-   :vastaajien_lkm 1})
+   :kohteiden_lkm 1})
 
 (defn automaatti-vastaajatunnus [tyyppi tunnus]
   (merge automaattitunnus-defaults

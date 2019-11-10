@@ -158,7 +158,7 @@
       suorituskieli (sql/where {:vastaajatunnus.suorituskieli suorituskieli}))
     (sql/where {:kysymysryhma.kysymysryhmaid [in [kysymysryhmaid]]})
     (rajaa-vastaajatunnukset-ajalle alkupvm loppupvm)
-    (sql/aggregate (sum :vastaajatunnus.vastaajien_lkm) :vastaajia)
+    (sql/aggregate (sum :vastaajatunnus.kohteiden_lkm) :vastaajia)
     sql/exec
     first
     :vastaajia))

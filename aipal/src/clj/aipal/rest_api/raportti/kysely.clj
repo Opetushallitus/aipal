@@ -23,7 +23,7 @@
             [aipal.toimiala.raportti.raportointi :refer [ei-riittavasti-vastaajia muodosta-csv muodosta-tyhja-csv]]
             [aipal.toimiala.raportti.taustakysymykset :as taustakysymykset]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
-            [arvo.toimiala.raportti.csv :refer [kysely-csv kysely-csv-vastauksittain vastaajatunnus-csv]]
+            [arvo.toimiala.raportti.csv :refer [kysely-csv kysely-csv-vastauksittain vastaajatunnus-csv kohteet-csv vastanneet-csv]]
             [oph.common.util.http-util :refer [csv-download-response response-or-404]]))
 
 (defn ^:private muodosta-kyselyn-raportti-parametreilla
@@ -116,6 +116,19 @@
        :kayttooikeus [:kysely {:kyselyid kyselyid}]
        (let [csv-data (kysely-csv-vastauksittain kyselyid (keyword lang))]
          (csv-download-response (apply str (:csv csv-data)) (get-csv-name csv-data))))
+  (GET "/kysely/kohteet/:kyselyid" []
+       :path-params [kyselyid :- s/Int]
+       :query-params [{lang :- s/Str "fi"}]
+       :kayttooikeus [:kysely {:kyselyid kyselyid}]
+       (let [csv-data (kohteet-csv kyselyid (keyword lang))]
+         (csv-download-response csv-data (str "Kohteet -" kyselyid ".csv"))))
+  (GET "/kysely/vastaajat/:kyselyid" []
+       :path-params [kyselyid :- s/Int]
+       :query-params [{lang :- s/Str "fi"}]
+       :kayttooikeus [:kysely {:kyselyid kyselyid}]
+       (let [csv-data (vastanneet-csv kyselyid (keyword lang))]
+         (csv-download-response csv-data (str "Vastaajat -"kyselyid ".csv"))))
+
   (GET "/vastaajatunnus/:kyselykertaid" []
        :path-params [kyselykertaid :- s/Int]
        :query-params [{lang :- s/Str "fi"}]

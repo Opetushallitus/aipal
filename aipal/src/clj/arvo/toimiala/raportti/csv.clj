@@ -23,7 +23,7 @@
                                 :vastaus "Vastaus"
                                 :voimassa_alkupvm "Voimassa alkaen"
                                 :voimassa_loppupvm "Voimassaolo päättyy"
-                                :tutkintotunnus "Tutkinto" :vastausten_lkm "Vastauksia" :vastaajien_lkm "Vastaajien lkm"
+                                :tutkintotunnus "Tutkinto" :vastaajien_lkm "Vastaajien lkm" :kohteiden_lkm "Kohteiden lkm"
                                 :tutkinto_selite "Tutkinnon nimi"
                                 :hankintakoulutuksen_toteuttaja_selite "Hankintakoulutuksen toteuttajan nimi"
                                 :toimipaikka_selite "Toimipaikan nimi"
@@ -31,7 +31,8 @@
                                 :asuinkunta_koodi_selite "Asuinkunta selite"
                                 :opiskelupaikkakunta_koodi_selite "Opiskelupaikkakunta selite"
                                 :oppilaitos_nimi "Oppilaitos"
-                                :koulutusmuoto "Koulutusmuoto"}
+                                :koulutusmuoto "Koulutusmuoto"
+                                :nimi "Kyselykerta"}
                            :sv {:vastaajatunnus "Svarskod"
                                 :vastausaika "Svarstid"
                                 :tunnus "Svarskod"
@@ -39,7 +40,7 @@
                                 :url "Svararkod"
                                 :voimassa_alkupvm "Första svarsdag"
                                 :voimassa_loppupvm "Sista svarsdag"
-                                :tutkintotunnus "Tutkinto" :vastausten_lkm "Respondents antal" :vastaajien_lkm "Svarsantal"
+                                :tutkintotunnus "Tutkinto" :vastausten_lkm "Respondents antal" :kohteiden_lkm "Svarsantal"
                                 :tutkinto_selite "Namn på examen"
                                 :hankintakoulutuksen_toteluttaja_selite "Namn på anordnaren av anskaffad utbildning"
                                 :toimipaikka_selite "Namn på verksamhetsställe"
@@ -54,7 +55,7 @@
                                 :url "Credential"
                                 :voimassa_alkupvm "ValidityStartDate"
                                 :voimassa_loppupvm "ValidityEndDate"
-                                :tutkintotunnus "Tutkinto" :vastausten_lkm "RespondentCount" :vastaajien_lkm "ResponseCount"
+                                :tutkintotunnus "Tutkinto" :vastausten_lkm "RespondentCount" :kohteiden_lkm "ResponseCount"
                                 :tutkinto_selite "Name of degree"
                                 :hankintakoulutuksen_toteuttaja_selite "Name of provider (procured training)"
                                 :toimipaikka_selite "Name of operational unit"
@@ -190,7 +191,7 @@
     [:vastaajatunnus :vastausaika :oppilaitos_nimi]
     [:vastaajatunnus :vastausaika]))
 
-(def default-vastaajatunnus-fields [:tunnus :url :luotuaika :voimassa_alkupvm :voimassa_loppupvm :vastausten_lkm :vastaajien_lkm])
+(def default-vastaajatunnus-fields [:tunnus :url :luotuaika :voimassa_alkupvm :voimassa_loppupvm :vastausten_lkm :kohteiden_lkm])
 
 (defn get-csv-field [kentta]
   (if (get-in kentta [:raportointi :csv :selitteet])
@@ -350,4 +351,20 @@
         vastaajatunnus-kentat (concat default-vastaajatunnus-fields (taustatieto-kentat taustatiedot))
         header (map #(get translations %) vastaajatunnus-kentat)
         rows (map #(select-values-or-nil % vastaajatunnus-kentat) tunnukset)]
+    (create-csv (cons header rows))))
+
+(def kohteet-fields [:tunnus :nimi :voimassa_alkupvm :kohteiden_lkm :vastaajien_lkm])
+
+(defn kohteet-csv [kyselyid lang]
+  (let [res (db/hae-kyselyn-kohteet {:kyselyid kyselyid})
+        header (map #(get-in default-translations [lang %]) kohteet-fields)
+        rows (map #(select-values-or-nil % kohteet-fields) res)]
+    (create-csv (cons header rows))))
+
+(def vastanneet-fields [:tunnus :nimi :voimassa_alkupvm :vastausaika])
+
+(defn vastanneet-csv [kyselyid lang]
+  (let [vastanneet (db/hae-kyselyn-vastaajat {:kyselyid kyselyid})
+        header (map #(get-in default-translations [lang %]) vastanneet-fields)
+        rows (map #(select-values-or-nil % vastanneet-fields) vastanneet)]
     (create-csv (cons header rows))))

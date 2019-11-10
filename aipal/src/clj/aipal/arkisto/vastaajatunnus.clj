@@ -113,7 +113,7 @@
                    :tunnus
                    :voimassa_alkupvm
                    :voimassa_loppupvm
-                   :vastaajien_lkm
+                   :kohteiden_lkm
                    :valmistavan_koulutuksen_jarjestaja
                    :valmistavan_koulutuksen_oppilaitos])
 
@@ -139,7 +139,7 @@
     (select-keys taustatieto-kentat)))
 
 (defn lisaa! [vastaajatunnus]
-  {:pre [(pos? (:vastaajien_lkm vastaajatunnus))]}
+  {:pre [(pos? (:kohteiden_lkm vastaajatunnus))]}
   (let [kyselytyyppi (:tyyppi (db/kyselykerran-tyyppi vastaajatunnus))
         kyselytyypin_kentat (map (comp keyword :kentta_id) (db/kyselytyypin-kentat {:kyselytyyppi kyselytyyppi}))]
     (doall

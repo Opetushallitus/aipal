@@ -24,8 +24,8 @@
 
 (defn ui->vastaajatunnus [vastaajatunnus kyselykertaid]
   {:kyselykertaid kyselykertaid
-   :tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:vastaajien_lkm vastaajatunnus) 1)
-   :vastaajien_lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
+   :tunnusten-lkm (if (:henkilokohtainen vastaajatunnus) (:kohteiden_lkm vastaajatunnus) 1)
+   :kohteiden_lkm (if (:henkilokohtainen vastaajatunnus) 1 (:vastaajien_lkm vastaajatunnus))
    :tutkinto (get-in vastaajatunnus [:tutkinto :tutkintotunnus])
    :kieli (:suorituskieli vastaajatunnus)
    :kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])

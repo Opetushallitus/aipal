@@ -15,7 +15,7 @@
    (lisaa-kyselykerta-johon-on-vastattu! kyselykerta (test-data/lisaa-kysely!)))
   ([kyselykerta kysely]
    (let [kyselykerta      (test-data/lisaa-kyselykerta! kyselykerta kysely)
-         [vastaajatunnus] (test-data/lisaa-vastaajatunnus! {:vastaajien_lkm 1} kyselykerta)
+         [vastaajatunnus] (test-data/lisaa-vastaajatunnus! {:kohteiden_lkm 1} kyselykerta)
          _                (test-data/lisaa-vastaaja! {:vastannut true} vastaajatunnus)]
      kyselykerta)))
 

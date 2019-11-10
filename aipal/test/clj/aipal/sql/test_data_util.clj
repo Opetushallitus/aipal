@@ -197,7 +197,7 @@
    (lisaa-vastaajatunnus! vastaajatunnus (lisaa-kyselykerta!)))
   ([vastaajatunnus kyselykerta]
    (aipal.arkisto.vastaajatunnus/lisaa! (merge {:kyselykertaid (:kyselykertaid kyselykerta)
-                                                :vastaajien_lkm 1}
+                                                :kohteiden_lkm 1}
                                                vastaajatunnus))))
 
 (defn lisaa-vastaaja!
