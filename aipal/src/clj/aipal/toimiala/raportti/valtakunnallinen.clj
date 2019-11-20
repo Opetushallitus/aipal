@@ -105,7 +105,6 @@
                 [(sql/sqlfn stddev_samp :vastaus.numerovalinta) :keskihajonta]
                 [(sql/sqlfn array_agg :vastaus.vaihtoehto) :vaihtoehdot]
                 [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
-                [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
                 [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa])
     (sql/group :vastaus.kysymysid)
     sql/exec))

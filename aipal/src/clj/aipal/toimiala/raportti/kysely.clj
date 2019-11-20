@@ -46,8 +46,6 @@
                                        :tutkintorakennetaso "tutkinto"
                                        :kysymykset (into {} (for [kysymysid kysymysidt]
                                                               {kysymysid {:monivalinnat {}}})))
-          parametrit (merge parametrit
-                            (raportointi/valtakunnallinen-raportti-vertailujakso (:vertailujakso_alkupvm parametrit) (:vertailujakso_loppupvm parametrit)))
           raportti (valtakunnallinen-raportti/muodosta parametrit)]
       (assoc raportti :parametrit parametrit))))
 
