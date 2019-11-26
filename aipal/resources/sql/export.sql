@@ -15,27 +15,28 @@ AND k.tyyppi IN (:v*:kyselytyypit);
 
 -- :name export-vastaukset :? :*
 SELECT k.koulutustoimija, k.kyselyid, kk.kyselykertaid,
-  v.vastaajaid, vt.vastaajatunnusid,
-  v.vastausid, v.kysymysid, to_char(v.vastausaika, 'YYYY-MM-DD') AS vastausaika, v.numerovalinta, v.vapaateksti, v.vaihtoehto,
-  monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
-  monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
-  monivalintavaihtoehto.teksti_en AS monivalintavaihtoehto_en
+       v.vastaajaid, vt.vastaajatunnusid,
+       v.vastausid, v.kysymysid, to_char(v.vastausaika, 'YYYY-MM-DD') AS vastausaika, v.numerovalinta, v.vapaateksti, v.vaihtoehto,
+       monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
+       monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
+       monivalintavaihtoehto.teksti_en AS monivalintavaihtoehto_en
 FROM vastaus v
-JOIN vastaaja vs ON v.vastaajaid = vs.vastaajaid
-JOIN kysymys kys ON v.kysymysid = kys.kysymysid
-JOIN kysymysryhma kr ON kys.kysymysryhmaid = kr.kysymysryhmaid
-LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
-                                   AND monivalintavaihtoehto.kysymysid = kys.kysymysid
-                                   AND v.numerovalinta = monivalintavaihtoehto.jarjestys
-JOIN vastaajatunnus vt ON vs.vastaajatunnusid = vt.vastaajatunnusid
-JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
-JOIN kysely k ON kk.kyselyid = k.kyselyid
+         JOIN vastaaja vs ON v.vastaajaid = vs.vastaajaid
+         JOIN kysymys kys ON v.kysymysid = kys.kysymysid
+         JOIN kysymysryhma kr ON kys.kysymysryhmaid = kr.kysymysryhmaid
+         LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
+    AND monivalintavaihtoehto.kysymysid = kys.kysymysid
+    AND v.numerovalinta = monivalintavaihtoehto.jarjestys
+         JOIN vastaajatunnus vt ON vs.vastaajatunnusid = vt.vastaajatunnusid
+         JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
+         JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE k.tila != 'luonnos'
-AND k.tyyppi IN (:v*:kyselytyypit)
-AND coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
+  AND k.tyyppi IN (:v*:kyselytyypit)
+  AND coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 --~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
 --~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
 --~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
+--~(if (:vipunen params) "AND kys.vastaustyyppi != 'vapaateksti')
 --~(if (:since params) "AND v.vastausid > :since")
 ORDER BY v.vastausid ASC LIMIT :pagelength;
 
