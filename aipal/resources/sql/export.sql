@@ -36,7 +36,7 @@ WHERE k.tila != 'luonnos'
 --~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
 --~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
 --~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
---~(if (:vipunen params) "AND kys.vastaustyyppi != 'vapaateksti')
+--~(if (:vipunen params) "AND kys.vastaustyyppi != 'vapaateksti'")
 --~(if (:since params) "AND v.vastausid > :since")
 ORDER BY v.vastausid ASC LIMIT :pagelength;
 
