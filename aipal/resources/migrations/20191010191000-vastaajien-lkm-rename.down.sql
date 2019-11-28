@@ -1,0 +1,1 @@
+ALTER TABLE vastaajatunnus RENAME COLUMN kohteiden_lkm TO vastaajien_lkm;
