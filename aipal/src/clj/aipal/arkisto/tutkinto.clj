@@ -63,11 +63,12 @@
   (let [tutkintotyypit (if kyselytyyppi
                          (get kyselytyyppi-tutkintotyypit kyselytyyppi)
                          (map :tutkintotyyppi (db/hae-kayttajan-tutkintotyypit {:koulutustoimija y-tunnus})))]
-      (->> (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
-                                                (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit})))
-           (filter tutkinto-voimassa?)
-           (map fix-opintoala))))
+    (->> (db/hae-koulutustoimijan-tutkinnot (merge {:koulutustoimija y-tunnus}
+                                                   (when (not-empty tutkintotyypit) {:tutkintotyypit tutkintotyypit})))
+         (map fix-opintoala))))
 
+(defn hae-koulutustoimijan-voimassaolevat-tutkinnot [y-tunnus kyselytyyppi]
+  (filter tutkinto-voimassa? (hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi)))
 
 (defn hae-kyselytyypin-tutkinnot [kyselytyyppi]
   (let [tutkintotyypit (-> kyselytyyppi-tutkintotyypit
@@ -93,7 +94,8 @@
     (sort-by :koulutusalatunnus koulutusalat)))
 
 (defn hae-tutkinnot []
-  (hae-koulutustoimijan-tutkinnot (:aktiivinen-koulutustoimija *kayttaja*) nil))
+  (hae-koulutustoimijan-tutkinnot
+    (:aktiivinen-koulutustoimija *kayttaja*) nil))
 
 (defn hae-voimassaolevat-tutkinnot-listana []
   (->>

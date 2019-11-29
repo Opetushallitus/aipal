@@ -32,15 +32,15 @@
     :kayttooikeus :katselu
     (response-or-404 (tutkinto/hae-vanhentuneet-tutkinnot)))
   (GET "/koulutustoimija" []
-    :kayttooikeus :katselu
-    :query-params [kyselytyyppi :- String]
-    (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
-      (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi))))
+       :kayttooikeus :katselu
+       :query-params [kyselytyyppi :- String]
+       (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
+      (response-or-404 (tutkinto/hae-koulutustoimijan-voimassaolevat-tutkinnot y-tunnus kyselytyyppi))))
   (GET "/koulutustoimija/:y-tunnus" []
-    :kayttooikeus :katselu
-    :path-params [y-tunnus :- String]
-    :query-params [kyselytyyppi :- String]
-    (response-or-404 (tutkinto/hae-koulutustoimijan-tutkinnot y-tunnus kyselytyyppi)))
+       :kayttooikeus :katselu
+       :path-params [y-tunnus :- String]
+       :query-params [kyselytyyppi :- String]
+       (response-or-404 (tutkinto/hae-koulutustoimijan-voimassaolevat-tutkinnot y-tunnus kyselytyyppi)))
   (GET "/kyselytyyppi/:kyselytyyppi" []
     :kayttooikeus :katselu
     :path-params [kyselytyyppi :- String]
