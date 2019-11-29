@@ -179,7 +179,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       };
 
       $scope.getVastaajienLkm = function(){
-        return _($scope.tunnukset).map('vastaajien_lkm').reduce(function (sum, num) {return sum + num;});
+        return _($scope.tunnukset).map('kohteiden_lkm').reduce(function (sum, num) {return sum + num;});
       };
 
       $scope.getVastausProsentti = function(){
@@ -217,9 +217,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           }
         });
 
-        modalInstance.result.then(function(vastaajien_lkm) {
-          Vastaajatunnus.muokkaaVastaajienLukumaaraa($scope.kyselykertaid, tunnus.vastaajatunnusid, vastaajien_lkm).success(function() {
-            tunnus.vastaajien_lkm = vastaajien_lkm;
+        modalInstance.result.then(function(kohteiden_lkm) {
+          Vastaajatunnus.muokkaaVastaajienLukumaaraa($scope.kyselykertaid, tunnus.vastaajatunnusid, kohteiden_lkm).success(function() {
+            tunnus.kohteiden_lkm = kohteiden_lkm;
           });
         });
       };
@@ -254,7 +254,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         koulutuksen_jarjestaja: aktiivinenKoulutustoimija,
         suorituskieli: 'fi',
         tutkinto: viimeksiValittuTutkinto,
-        vastaajien_lkm: 1,
+        kohteiden_lkm: 1,
         koulutusmuoto: null
       };
 
@@ -407,10 +407,10 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       $scope.minimi = Math.max(1, tunnus.vastausten_lkm);
       $scope.vastausten_lkm = tunnus.vastausten_lkm;
-      $scope.vastaajien_lkm = tunnus.vastaajien_lkm;
+      $scope.kohteiden_lkm = tunnus.kohteiden_lkm;
 
       $scope.save = function () {
-        $uibModalInstance.close(parseInt($scope.vastaajien_lkm));
+        $uibModalInstance.close(parseInt($scope.kohteiden_lkm));
       };
 
       $scope.cancel = $uibModalInstance.dismiss;
