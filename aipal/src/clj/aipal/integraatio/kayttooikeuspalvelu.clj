@@ -27,6 +27,12 @@
       cheshire/parse-string
       keywordize-keys))
 
+(defn postpalvelukutsu [palvelu url options]
+  (-> (cas/post-with-cas-auth palvelu url options)
+      :body
+      cheshire/parse-string
+      keywordize-keys))
+
 (defn hae-ytunnus [oid oid->ytunnus]
   (let [ytunnus (get oid->ytunnus oid)]
     (if ytunnus
@@ -67,3 +73,14 @@
      :uid uid
      :voimassa ((complement empty?) roolit)
      :roolit roolit}))
+
+(defn kaikki-oidit [oid]
+  (let [oppijanumerorekisteri-url (format "%s/s2s/duplicateHenkilos" (-> @asetukset :oppijanumerorekisteri :url))
+        vastaus (postpalvelukutsu :oppijanumerorekisteri oppijanumerorekisteri-url {:body (format "{\"henkiloOids\": [\"%s\"]}" oid) :content-type :json})
+        oidit (->> vastaus
+                   (mapcat vals)
+                   distinct)]
+;    Normaali tapaus on, että henkilöllä ei ole duplikaatteja
+    (if (empty? oidit)
+      (list oid)
+      oidit)))

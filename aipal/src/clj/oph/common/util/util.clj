@@ -23,6 +23,9 @@
             [clojure.walk :refer [keywordize-keys]]
             [clojure.tools.logging :as log]))
 
+(defn oletus-header [options]
+  (assoc-in options [:headers "Caller-Id"] "1.2.246.562.10.2013112012294919827487.arvo"))
+
 ;; http://clojuredocs.org/clojure_contrib/clojure.contrib.map-utils/deep-merge-with
 (defn deep-merge-with
   "Like merge-with, but merges maps recursively, applying the given fn
@@ -122,20 +125,20 @@
    (get-json-from-url url {}))
   ([url options]
    (->
-     (http/get url options)
-     :body
-     cheshire/parse-string
-     keywordize-keys)))
+    (http/get url (oletus-header options))
+    :body
+    cheshire/parse-string
+    keywordize-keys)))
 
 (defn post-json-from-url
   ([url]
    (get-json-from-url url {}))
   ([url options]
    (->
-     (http/post url options)
-     :body
-     cheshire/parse-string
-     keywordize-keys)))
+    (http/post url (oletus-header options))
+    :body
+    cheshire/parse-string
+    keywordize-keys)))
 
 (defn uusin-muokkausaika
   "Palauttaa uusimman muokkausajan annetuista arvoista.
