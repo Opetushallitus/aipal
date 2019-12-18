@@ -17,7 +17,6 @@
             [clojure.pprint :refer [pprint]]
             [clojure.java.shell :refer [with-sh-dir sh]]
             [clojure.tools.namespace.repl :as nsr]
-            [clj-http.client :as hc]
             clojure.core.cache
             schema.core
             stencil.loader))

@@ -25,6 +25,7 @@
             aipal.rest_api.js-log
             aipal.rest-api.vastaajatunnus
             arvo.rest-api.automaattitunnus
+            arvo.rest-api.henkilo
             arvo.rest-api.uraseuranta
             arvo.rest-api.koodisto
             aipal.rest-api.kayttaja
@@ -91,5 +92,6 @@
     (context "/api/vipunen" [] :no-doc true :tags ["vipunen"] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
     (context "/api/export/v1" [] :tags ["export"] :middleware [#(wrap-authentication :export %)] arvo.rest-api.export/v1)
     (context "/api/public/luovastaajatunnus" [] :no-doc true :tags ["vastaajatunnus"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.automaattitunnus/kyselyynohjaus-v1)
+    (context "/api/public/henkilo" [] :no-doc true :tags ["henkilooidit"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.henkilo/hae-kaikki-oidit)
     (context "/api/vastauslinkki/v1" [] :tags ["vastauslinkki"] :middleware [#(wrap-authentication :ehoks_tunnukset %)] arvo.rest-api.automaattitunnus/ehoks-v1)
     (r/not-found "Not found")))
