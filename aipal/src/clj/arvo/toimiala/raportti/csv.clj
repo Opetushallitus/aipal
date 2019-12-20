@@ -40,7 +40,7 @@
                                 :url "Svararkod"
                                 :voimassa_alkupvm "Första svarsdag"
                                 :voimassa_loppupvm "Sista svarsdag"
-                                :tutkintotunnus "Tutkinto" :vastausten_lkm "Respondents antal" :kohteiden_lkm "Svarsantal"
+                                :tutkintotunnus "Tutkinto" :vastaajien_lkm "Respondents antal" :kohteiden_lkm "Svarsantal"
                                 :tutkinto_selite "Namn på examen"
                                 :hankintakoulutuksen_toteluttaja_selite "Namn på anordnaren av anskaffad utbildning"
                                 :toimipaikka_selite "Namn på verksamhetsställe"
@@ -48,14 +48,15 @@
                                 :asuinkunta_koodi_selite "Bostadskommun"
                                 :opiskelupaikkakunta_koodi_selite "Field of education"
                                 :oppilaitos_nimi "Läroanstalt"
-                                :koulutusmuoto "Utbildningsform"}
+                                :koulutusmuoto "Utbildningsform"
+                                :nimi "Frågeformulärsomgång"}
                            :en {:vastaajatunnus "Answer identifier" :vastausaika "Response time"
                                 :tunnus "Answer identifier"
                                 :luotuaika "TimeCreated"
                                 :url "Credential"
                                 :voimassa_alkupvm "ValidityStartDate"
                                 :voimassa_loppupvm "ValidityEndDate"
-                                :tutkintotunnus "Tutkinto" :vastausten_lkm "RespondentCount" :kohteiden_lkm "ResponseCount"
+                                :tutkintotunnus "Tutkinto" :vastaajien_lkm "RespondentCount" :kohteiden_lkm "ResponseCount"
                                 :tutkinto_selite "Name of degree"
                                 :hankintakoulutuksen_toteuttaja_selite "Name of provider (procured training)"
                                 :toimipaikka_selite "Name of operational unit"
@@ -63,7 +64,8 @@
                                 :asuinkunta_koodi_selite "Municipality of residence"
                                 :opiskelupaikkakunta_koodi_selite "Municipality of education"
                                 :oppilaitos_nimi "Educational institution"
-                                :koulutusmuoto "Form of education"}})
+                                :koulutusmuoto "Form of education"
+                                :nimi " Questionnaire instance"}})
 
 (def delimiter \;)
 
