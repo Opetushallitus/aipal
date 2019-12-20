@@ -88,7 +88,7 @@ AND k.tyyppi IN (:v*:kyselytyypit);
 -- :name export-luodut-tunnukset :? :*
 SELECT kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto' AS tutkintotunnus,
        to_char(vt.voimassa_alkupvm, 'YYYY-MM') AS kuukausi,
-       count(vt) AS tunnuksia, coalesce (sum(vt.vastaajien_lkm), 0) AS vastauskertoja
+       count(vt) AS tunnuksia, coalesce (sum(vt.kohteiden_lkm), 0) AS vastauskertoja
 FROM kyselykerta kk
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid

@@ -31,11 +31,11 @@
   [vastaajatunnus]
   (let [kyselytyyppi (:tyyppi (hae-kyselyn-tiedot vastaajatunnus))
         tulos (first (sql/select :vastaajatunnus
-                       (sql/fields :vastaajien_lkm [(sql/subselect :vastaaja
-                                                      (sql/aggregate (count :*) :vastaajia)
-                                                      (sql/where {:vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajia])
+                       (sql/fields :kohteiden_lkm [(sql/subselect :vastaaja
+                                                     (sql/aggregate (count :*) :vastaajia)
+                                                     (sql/where {:vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajia])
                        (vastaajatunnus-where vastaajatunnus)))]
-    (or (= kyselytyyppi 4) (> (:vastaajien_lkm tulos) (:vastaajia tulos)))))
+    (or (= kyselytyyppi "itsearviointi") (> (:kohteiden_lkm tulos) (:vastaajia tulos)))))
 
 (defn validoi-vastaajatunnus
   [vastaajatunnus]

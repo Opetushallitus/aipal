@@ -121,7 +121,7 @@
             </tfoot>
             <tbody>
                 <tr ng-repeat="tunnus in tunnukset"
-                    ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.vastaajien_lkm > tunnus.vastausten_lkm}"
+                    ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.kohteiden_lkm > tunnus.vastausten_lkm}"
                     ts-repeat>
                     <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.luotuaika | date:'dd.MM.yyyy hh:mm:ss'}}</td>
@@ -142,9 +142,9 @@
                             </span>
                         </div>
                     </td>
-                    <td>{{tunnus.vastausten_lkm}} / {{tunnus.vastaajien_lkm}} <a ng-click="muokkaaVastaajienMaaraa(tunnus)" ng-if="tunnus.muokattavissa"><span class="fa fa-pencil"></span></a></td>
+                    <td>{{tunnus.vastausten_lkm}} / {{tunnus.kohteiden_lkm}} <a ng-click="muokkaaVastaajienMaaraa(tunnus)" ng-if="tunnus.muokattavissa"><span class="fa fa-pencil"></span></a></td>
                     <td class="nowrap actions">
-                        <span ng-if="tunnus.vastaajien_lkm > tunnus.vastausten_lkm">
+                        <span ng-if="tunnus.kohteiden_lkm > tunnus.vastausten_lkm">
                             <a ng-if="tunnus.vastausten_lkm === 0" ng-click="poistaTunnus(tunnus)">
                                 <span class="fa fa-remove"></span>
                             </a>

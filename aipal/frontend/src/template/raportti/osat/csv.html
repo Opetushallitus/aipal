@@ -9,5 +9,13 @@
             {{'raportit.muodosta_csv_vastauksittain' | i18n}}
             <span class="fa fa-file-excel-o"></span>
         </a>
+        <a class="btn btn-primary" ng-href="api/csv/kysely/kohteet/{{raportti.kyselyid}}?lang={{raportti.kieli}}" ng-disabled="!raporttiValidi(raportti)">
+            {{'raportit.csv_kohteet' | i18n}}
+            <span class="fa fa-file-excel-o"></span>
+        </a>
+        <a class="btn btn-primary" ng-href="api/csv/kysely/vastaajat/{{raportti.kyselyid}}?lang={{raportti.kieli}}" ng-disabled="!raporttiValidi(raportti)">
+            {{'raportit.csv_vastaajat' | i18n}}
+            <span class="fa fa-file-excel-o"></span>
+        </a>
     </auth>
 </div>

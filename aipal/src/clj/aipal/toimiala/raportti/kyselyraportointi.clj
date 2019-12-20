@@ -27,7 +27,7 @@
   (->>
     (let [tutkinnot (group-by #(select-keys % [:tutkintotunnus :nimi_fi :nimi_sv :nimi_en]) tutkinnot)]
       (for [[tutkinto lukumaarat] tutkinnot]
-        (assoc tutkinto :vastaajien_lukumaara (reduce + 0 (map :vastaajien_lkm lukumaarat)))))
+        (assoc tutkinto :vastaajien_lukumaara (reduce + 0 (map :kohteiden_lkm lukumaarat)))))
     (sort-by :tutkintotunnus)))
 
 (defn koulutustoimijat-hierarkiaksi
@@ -38,7 +38,7 @@
             (dissoc koulutustoimija :ytunnus)
             (select-keys parametrit [:koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_en]))
         (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
-               :vastaajien_lukumaara (reduce + 0 (map :vastaajien_lkm tutkinnot)))))))
+               :vastaajien_lukumaara (reduce + 0 (map :kohteiden_lkm tutkinnot)))))))
 
 (defn rajaa-vastaajatunnukset-tutkintoihin
   [query tutkinnot]
@@ -75,12 +75,12 @@
               (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
     (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
                 [(sql/subselect :vastaaja
-                                (sql/aggregate (count :*) :vastaajien_lkm)
+                                (sql/aggregate (count :*) :kohteiden_lkm)
                                 (sql/where (or (nil? vertailujakso_alkupvm)
                                                (>= :vastaaja.luotuaika vertailujakso_alkupvm)))
                                 (sql/where (or (nil? vertailujakso_loppupvm)
                                                (<= :vastaaja.luotuaika vertailujakso_loppupvm)))
-                                (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :vastaajien_lkm]
+                                (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :kohteiden_lkm]
                 :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv] [:koulutustoimija.nimi_en :koulutustoimija_en])
     sql/exec
     (koulutustoimijat-hierarkiaksi parametrit)))
@@ -94,7 +94,7 @@
     (sql/select* :kyselykerta)
     (sql/join :inner :vastaajatunnus
               (= :kyselykerta.kyselykertaid :vastaajatunnus.kyselykertaid))
-    (sql/aggregate (sum :vastaajatunnus.vastaajien_lkm) :vastaajien_maksimimaara)
+    (sql/aggregate (sum :vastaajatunnus.kohteiden_lkm) :vastaajien_maksimimaara)
     (cond->
       tutkinnot (rajaa-vastaajatunnukset-tutkintoihin tutkinnot)
       vertailujakso_alkupvm (sql/where (or (= :vastaajatunnus.voimassa_loppupvm nil)

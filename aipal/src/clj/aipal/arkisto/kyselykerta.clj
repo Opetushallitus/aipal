@@ -39,9 +39,9 @@
 SELECT kyselykerta.kyselyid, kyselykerta.kyselykertaid, kyselykerta.nimi, kyselykerta.voimassa_alkupvm, kyselykerta.voimassa_loppupvm,
        kyselykerta.lukittu, kyselykerta.luotuaika, kyselykerta_kaytettavissa.kaytettavissa,
        vastaajat.vastaajia = 0 AS poistettavissa,
-       coalesce(sum(vastaajatunnus.vastaajien_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
+       coalesce(sum(vastaajatunnus.kohteiden_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
        vastaajat.aktiivisia_vastaajia,
-       coalesce(sum(vastaajatunnus.vastaajien_lkm), 0) AS vastaajatunnuksia,
+       coalesce(sum(vastaajatunnus.kohteiden_lkm), 0) AS vastaajatunnuksia,
        vastaajat.vastaajia,
        vastaajat.viimeisin_vastaus
 FROM (((((kyselykerta
