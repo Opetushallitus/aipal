@@ -10,7 +10,7 @@
           <span ng-if="kysely.vastaajatunnuksia > 0">({{kysely.vastaajia / kysely.vastaajatunnuksia * 100 | number:1}} %).</span><br/>
           <span ng-if="kysely.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kysely.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
         </span>
-        <span class="tilastot" ng-if="kysely.sijainti === 'julkaistu'" ng-class="{tulevaisuudessa: kysely.tulevaisuudessa}">
+        <span class="tilastot" ng-if="kysely.tila === 'julkaistu'" ng-class="{tulevaisuudessa: kysely.tulevaisuudessa}">
           {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
         </span>
         <span class="tilastot" ng-if="kysely.kysymysryhmien_lkm === 0">
@@ -36,13 +36,13 @@
             <span class="fa fa-trash"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA', 'OPL-KYSELYKERTAKAYTTAJA']" ng-if="kysely.sijainti === 'julkaistu' && kysely.kaytettavissa && !kysely.automatisoitu">
+        <auth roolit="['OPL-VASTUUKAYTTAJA', 'OPL-KYSELYKERTAKAYTTAJA']" ng-if="kysely.tila === 'julkaistu' && kysely.kaytettavissa && !kysely.automatisoitu">
           <button class="btn btn-primary pull-left e2e-uusi-kyselykerta" ng-click="uusiKyselykerta(kysely)">
             {{ 'kyselykerta.uusi_kyselykerta' | i18n }}&nbsp;
             <span class="fa fa-plus"></span>
           </button>
         </auth>
-        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.kaytettavissa && kysely.sijainti === 'julkaistu'">
+        <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="kysely.kaytettavissa && kysely.tila === 'julkaistu'">
           <button class="btn btn-primary pull-left" ng-click="suljeKyselyModal(kysely)">
             {{ 'kysely.sulje' | i18n }}
             <span class="fa fa-close"></span>
