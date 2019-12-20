@@ -22,8 +22,6 @@
       body
       (throw (RuntimeException. "Service ticketin pyytäminen CASilta epäonnistui")))))
 
-(def cookie-store (clj-http.cookies/cookie-store))
-
 (defn request-with-cas-auth [palvelu options]
   (let [{cas-url :url
          unsafe-https :unsafe-https
@@ -32,7 +30,8 @@
          user :user
          password :password} (get @asetukset palvelu)]
     (if cas-enabled
-      (let [ticket-granting-url (hae-ticket-granting-url cas-url user password unsafe-https)
+      (let [cookie-store (clj-http.cookies/cookie-store)
+            ticket-granting-url (hae-ticket-granting-url cas-url user password unsafe-https)
             service-ticket (hae-service-ticket ticket-granting-url (str palvelu-url "/j_spring_cas_security_check") unsafe-https)
             prequel-url (format "%s/cas/prequel" palvelu-url)]
 ;        Lämmittelypyyntö. Ilman tätä muut kuin get-pyynnöt epäonnistuvat (ohjaa kirjautumissivulle)
