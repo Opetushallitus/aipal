@@ -30,12 +30,11 @@
   (->> (sql/select taulut/kysymys
          (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
          (sql/where {:kysymysryhma.valtakunnallinen true})
-         ;(sql/where (not= :kysymys.vastaustyyppi "vapaateksti"))
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
          (sql/fields :kysymys.jarjestys
                      :kysymys.luotuaika
-                     [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
+                     :kysymys.kysymysid
                      :kysymys.kysymys_fi
                      :kysymys.kysymys_sv
                      :kysymys.kysymys_en
@@ -100,15 +99,14 @@
     (generoi-joinit (konvertoi-ehdot rajaukset))
     (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
     (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
-    (sql/fields [(sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid) :kysymysid]
+    (sql/fields :vastaus.kysymysid
                 [(sql/sqlfn array_agg :vastaus.vastaajaid) :vastaajat]
                 [(sql/sqlfn avg :vastaus.numerovalinta) :keskiarvo]
                 [(sql/sqlfn stddev_samp :vastaus.numerovalinta) :keskihajonta]
                 [(sql/sqlfn array_agg :vastaus.vaihtoehto) :vaihtoehdot]
                 [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
-                [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
                 [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa])
-    (sql/group (sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid))
+    (sql/group :vastaus.kysymysid)
     sql/exec))
 
 (defn rajaa-vastaajatunnukset-opintoalalle [query opintoalatunnus]

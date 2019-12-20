@@ -140,7 +140,7 @@
     (sql/order :kysymys.jarjestys :ASC)
     (sql/fields :kysymys.kysymysryhmaid
                 :kysymys.luotuaika
-                [(sql/sqlfn yhdistetty_kysymysid :kysymys.kysymysid) :kysymysid]
+                :kysymys.kysymysid
                 :kysymys.kysymys_fi
                 :kysymys.kysymys_sv
                 :kysymys.kysymys_en
@@ -209,7 +209,7 @@
       vertailujakso_alkupvm (sql/where (>= :vastaus.vastausaika vertailujakso_alkupvm))
       vertailujakso_loppupvm (sql/where (<= :vastaus.vastausaika vertailujakso_loppupvm)))
     (yhteiset-rajaukset parametrit)
-    (sql/fields [(sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid) :kysymysid]
+    (sql/fields :vastaus.kysymysid
                 [(sql/sqlfn array_agg :vastaus.vastaajaid) :vastaajat]
                 [(sql/sqlfn avg :vastaus.numerovalinta) :keskiarvo]
                 [(sql/sqlfn stddev_samp :vastaus.numerovalinta) :keskihajonta]
@@ -221,7 +221,7 @@
                 [(sql/sqlfn stddev_samp :jatkovastaus.kylla_asteikko) :keskihajonta]
                 [(sql/sqlfn jakauma :jatkovastaus.kylla_asteikko) :jatkovastaus_jakauma]
                 [(sql/sqlfn array_agg :jatkovastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
-    (sql/group (sql/sqlfn yhdistetty_kysymysid :vastaus.kysymysid))
+    (sql/group :vastaus.kysymysid)
     sql/exec))
 
 (defn muodosta-raportti [parametrit]
