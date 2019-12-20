@@ -124,7 +124,31 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         return $scope.kysely && $scope.kysely.tila === 'julkaistu';
       };
 
+      function haeKyselypohja(kyselypohjaid){
+        Kyselypohja.hae(kyselypohjaid).success(function(kyselypohja){
+          Kyselypohja.haeKysymysryhmat(kyselypohja.kyselypohjaid).success(
+            function (kysymysryhmat){
+              const pohja = {id: kyselypohja.kyselypohjaid,
+                nimi_fi: kyselypohja.nimi_fi,
+                nimi_sv: kyselypohja.nimi_sv,
+                nimi_en: kyselypohja.nimi_en,
+                valtakunnallinen: kyselypohja.valtakunnallinen,
+                kysymysryhmat: _.map(kysymysryhmat, 'kysymysryhmaid')};
+              _.map(kysymysryhmat, function(kr){_.set(kr, 'kyselypohjaid', pohja.id)});
+              apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhmat);
+              if(pohja.valtakunnallinen){
+                $scope.kysely.kyselypohjaid = pohja.id;
+                $scope.kyselypohja = pohja;
+              }
+              $scope.kyselyForm.$setDirty();
+            }
+          )
+        })
+      }
+
       $scope.kyselytyypit = [];
+
+      $scope.kyselypohjat = [];
 
       Kysely.kyselytyypit()
         .success(function (tyypit){
@@ -137,6 +161,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
             $scope.kysely = pvm.parsePvm(kysely);
 
             $scope.kysely.tyyppi = _.find($scope.kyselytyypit, function(kt) {return kt.id === kysely.tyyppi});
+
+            if(kysely.kyselypohjaid) {
+
+              $scope.kyselypohjat.push(kysely.kyselypohjaid)
+
+              haeKyselypohja(kysely.kyselypohjaid)
+            }
 
             if(kopioi) {
               tallennusFn = Kysely.luoUusi;
@@ -207,20 +238,24 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         $location.path('/kyselyt');
       };
 
+      $scope.poistaKyselypohja = function(){
+        $scope.kysely.kysymysryhmat = _.reject($scope.kysely.kysymysryhmat,
+          function(kr){
+          return !(_.includes(_.map($scope.kyselypohja.kysymysryhmat, 'kysymysryhmaid'), kr.kysymysryhmaid))});
+        $scope.kysely.kyselypohjaid = null;
+        $scope.kyselypohja = null;
+      };
+
       $scope.lisaaKyselypohjaModal = function () {
         var modalInstance = $uibModal.open({
           templateUrl: 'template/kysely/lisaa-kyselypohja.html',
-          controller: 'LisaaKyselypohjaModalController'
+          controller: 'LisaaKyselypohjaModalController',
+          resolve: {valittuPohja: function () {
+              return $scope.kyselypohja
+            }}
         });
-        modalInstance.result.then(function (kyselypohjaId) {
-          Kyselypohja.haeKysymysryhmat(kyselypohjaId)
-          .success(function(kysymysryhmat) {
-            apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhmat);
-            $scope.kyselyForm.$setDirty();
-          })
-          .error(function(){
-            ilmoitus.virhe(i18n.hae('kysely.pohjan_haku_epaonnistui'));
-          });
+        modalInstance.result.then(function (kyselypohja) {
+          haeKyselypohja(kyselypohja.kyselypohjaid)
         });
       };
 
@@ -287,13 +322,14 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     }
   ])
 
-  .controller('LisaaKyselypohjaModalController', ['$uibModalInstance', '$scope', 'Kyselypohja', function ($uibModalInstance, $scope, Kyselypohja) {
+  .controller('LisaaKyselypohjaModalController', ['$uibModalInstance', '$scope', 'Kyselypohja', 'valittuPohja', function ($uibModalInstance, $scope, Kyselypohja, valittuPohja) {
     Kyselypohja.haeVoimassaolevat()
     .success(function (data) {
-      $scope.kyselypohjat = data;
+      $scope.kyselypohjat = _.filter(data, function(kp){return !kp.valtakunnallinen || (valittuPohja === null || valittuPohja === undefined)})
+
     });
-    $scope.tallenna = function (kyselypohjaId) {
-      $uibModalInstance.close(kyselypohjaId);
+    $scope.tallenna = function (valittuPohja) {
+      $uibModalInstance.close(valittuPohja);
     };
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');
@@ -305,7 +341,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     $scope.isJulkaistu = isJulkaistu;
 
     Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat){
-      $scope.kysymysryhmat = kysymysryhmat;
+      $scope.kysymysryhmat = _.filter(kysymysryhmat, function(kr) {
+        return !kr.valtakunnallinen
+      });
     });
     $scope.tallenna = function (kysymysryhmaid) {
       $uibModalInstance.close(kysymysryhmaid);

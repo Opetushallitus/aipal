@@ -18,12 +18,12 @@
      viesti="{{i18n.yleiset.ladataan}}" virheviesti="{{i18n.yleiset.lataus_epaonnistui}}" yrita-uudelleen="haeKyselyt()"></div>
 
 <h2>{{ 'yleiset.julkaistut' | i18n }}</h2>
-<kyselylista kyselyt="kyselyt" suodatus="{sijainti:'julkaistu'}" haku="hakuehto.teksti">
+<kyselylista kyselyt="kyselyt" suodatus="{tila:'julkaistu'}" haku="hakuehto.teksti">
 </kyselylista>
 
 <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
     <h2>{{ 'yleiset.luonnokset' | i18n }}</h2>
-    <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'luonnos'}" haku="hakuehto.teksti">
+    <kyselylista kyselyt="kyselyt" suodatus="{tila:'luonnos'}" haku="hakuehto.teksti">
     </kyselylista>
 </auth>
 
@@ -37,7 +37,7 @@
 
   <div ng-if="naytaSuljetut">
     <h2>{{ 'yleiset.suljetut' | i18n }}</h2>
-    <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'suljettu'}" haku="hakuehto.teksti">
+    <kyselylista kyselyt="kyselyt" suodatus="{tila:'suljettu'}" haku="hakuehto.teksti">
     </kyselylista>
   </div>
 </auth>

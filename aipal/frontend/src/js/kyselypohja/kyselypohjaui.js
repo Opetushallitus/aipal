@@ -77,7 +77,11 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     $scope.lisaaKysymysryhmaModal = function() {
       var modalInstance = $uibModal.open({
         templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
-        controller: 'LisaaKysymysryhmaModalController'
+        controller: 'LisaaKysymysryhmaModalController',
+        resolve: {
+          isJulkaistu: function() {
+            return $scope.kyselypohja.tila === 'julkaistu';
+          }}
       });
       modalInstance.result.then(function (kysymysryhmaid) {
         Kysymysryhma.hae(kysymysryhmaid)

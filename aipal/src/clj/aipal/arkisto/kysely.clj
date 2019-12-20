@@ -24,16 +24,6 @@
             [oph.korma.common :refer [select-unique-or-nil select-unique unique-or-nil]]
             [aipal.auditlog :as auditlog]))
 
-(defn kysely-kentat
-  [query]
-  (->
-    query
-    (sql/fields :kysely.kyselyid :kysely.nimi_fi :kysely.nimi_sv :kysely.nimi_en
-                :kysely.voimassa_alkupvm :kysely.voimassa_loppupvm
-                :kysely.tila :kysely.kaytettavissa :uudelleenohjaus_url :kysely.sivutettu
-                [(sql/raw "now() < voimassa_alkupvm") :tulevaisuudessa]
-                [(sql/raw "CASE WHEN kysely.tila='luonnos' THEN 'luonnos' WHEN kysely.kaytettavissa OR now() < kysely.voimassa_alkupvm THEN 'julkaistu' ELSE 'suljettu' END") :sijainti])))
-
 (def ^:private kysely-poistettavissa-query
   (->
     (sql/select* taulut/kysely)
@@ -67,14 +57,6 @@
 (defn hae-kyselytyypit []
   (db/hae-kyselytyypit))
 
-(defn hae-organisaatiotieto
-  "Hakee kyselyn luoneen organisaation tiedot"
-  [kyselyid]
-  (select-unique
-    :kysely_organisaatio_view
-    (sql/fields :koulutustoimija)
-    (sql/where {:kyselyid kyselyid})))
-
 (defn lisaa!
   "Lisää uuden kyselyn"
   [tiedot]
@@ -100,25 +82,18 @@
 
 (defn julkaise-kysely! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :julkaistu)
-  (sql/update taulut/kysely
-    (sql/set-fields {:tila "julkaistu" :muutettu_kayttaja (:oid *kayttaja*)})
-    (sql/where {:kyselyid kyselyid}))
+  (db/muuta-kyselyn-tila! {:kyselyid kyselyid :tila "julkaistu" :kayttaja (:oid *kayttaja*)})
   ;; haetaan kysely, jotta saadaan myös kaytettavissa tieto mukaan paluuarvona
   (hae kyselyid))
 
 (defn palauta-luonnokseksi! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :luonnos)
-  (sql/update taulut/kysely
-    (sql/set-fields {:tila "luonnos" :muutettu_kayttaja (:oid *kayttaja*)})
-    (sql/where {:kyselyid kyselyid
-                :tila "julkaistu"}))
+  (db/muuta-kyselyn-tila! {:kyselyid kyselyid :tila "luonnos" :kayttaja (:oid *kayttaja*)})
   (hae kyselyid))
 
 (defn sulje-kysely! [kyselyid]
   (auditlog/kysely-muokkaus! kyselyid :suljettu)
-  (sql/update taulut/kysely
-    (sql/set-fields {:tila "suljettu" :muutettu_kayttaja (:oid *kayttaja*)})
-    (sql/where {:kyselyid kyselyid}))
+  (db/muuta-kyselyn-tila! {:kyselyid kyselyid :tila "suljettu" :kayttaja (:oid *kayttaja*)})
   (hae kyselyid))
 
 (defn poista-kysely! [kyselyid]
@@ -126,8 +101,6 @@
                                       (sql/fields :vastaajatunnusid)
                                       (sql/where {:kyselykertaid [in (sql/subselect taulut/kyselykerta (sql/fields :kyselykertaid) (sql/where {:kyselyid kyselyid}))]}))]
     (auditlog/kysely-poisto! kyselyid)
-    (sql/delete taulut/vastaajatunnus_tiedot
-      (sql/where {:vastaajatunnus_id [in vastaajatunnusids]}))
     (sql/delete taulut/vastaajatunnus
       (sql/where {:kyselykertaid [in vastaajatunnusids]}))
     (sql/delete taulut/kyselykerta

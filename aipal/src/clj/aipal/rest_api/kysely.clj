@@ -100,7 +100,7 @@
          :body "kysely.samanniminen_kysely"}
         (response-or-404
           (format "%s" (let [{:keys [kyselyid]}
-                             (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija :tyyppi]))]
+                             (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija :tyyppi :kyselypohjaid]))]
                         (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))))
 
   (GET "/kyselytyypit" []

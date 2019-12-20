@@ -81,3 +81,6 @@ AND NOT EXISTS (SELECT 1 FROM kysely k WHERE k.koulutustoimija = kt.ytunnus AND 
 
 -- :name hae-automaattikysely-data :? :*
 SELECT * FROM automaattikysely WHERE automatisointi_voimassa_loppupvm >= now();
+
+-- :name muuta-kyselyn-tila! :! :n
+UPDATE kysely SET tila = :tila, muutettu_kayttaja = :kayttaja WHERE kyselyid = :kyselyid;
