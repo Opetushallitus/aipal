@@ -22,11 +22,9 @@
             [aipal.arkisto.koulutustoimija :as koulutustoimija]
             [aipal.arkisto.kyselykerta :as kyselykerta]
             [clojure.tools.logging :as log]
-            [buddy.auth :refer [authenticated? throw-unauthorized]]
             [clj-time.core :as time]
-            [oph.common.util.http-util :refer [parse-iso-date]]
             [arvo.db.core :refer [*db*] :as db]
-            [arvo.util :refer [api-response paginated-response]]
+            [arvo.util :refer [api-response]]
             [aipal.asetukset :refer [asetukset]]))
 
 (s/defschema Amispalaute-tunnus
@@ -129,14 +127,19 @@
       :hankintakoulutuksen_toteuttaja (db/hae-oidilla {:taulu "koulutustoimija":oid (:hankintakoulutuksen_toteuttaja data)})
       :tarkenne (:kyselyn_tyyppi data)})))
 
-(defn handle-error [error]
-  (log/error "Virhe vastaajatunnuksen luonnissa: " + (:msg error))
-  (:status 404 :body [error]))
+(defn handle-error
+  ([error request-id]
+   (log/error "Virhe vastaajatunnuksen luonnissa: "
+              (if request-id (str "request-id "request-id " - ") "")
+              (:msg error))
+   {:status 404 :body error})
+  ([error]
+   (handle-error error nil)))
 
-(defn vastauslinkki-response [luotu-tunnus]
-  (if {:tunnus luotu-tunnus}
+(defn vastauslinkki-response [luotu-tunnus request-id]
+  (if (:tunnus luotu-tunnus)
     (api-response {:kysely_linkki (str (:vastaus-base-url @asetukset)"/"(:tunnus luotu-tunnus))})
-    (handle-error (:error luotu-tunnus))))
+    (handle-error (:error luotu-tunnus) request-id)))
 
 (defn kyselyynohjaus-response [luotu-tunnus]
   (if {:tunnus luotu-tunnus}
@@ -151,9 +154,9 @@
   (let [luotu-tunnus (vastaajatunnus/lisaa-automaattitunnus! tunnus)]
     (kyselyynohjaus-response luotu-tunnus)))
 
-(defn lisaa-automaattitunnus! [tunnus]
+(defn lisaa-automaattitunnus! [tunnus request-id]
   (let [luotu-tunnus (vastaajatunnus/lisaa-automaattitunnus! tunnus)]
-    (vastauslinkki-response luotu-tunnus)))
+    (vastauslinkki-response luotu-tunnus request-id)))
 
 (defroutes kyselyynohjaus-v1
   (POST "/" []
@@ -187,9 +190,9 @@
     :description (str "Päivämäärät ovat ISO-formaatin mukaisia. Suorituskieli on fi, sv tai en. Tutkintotunnus
         on opintopolun koulutus koodiston 6 numeroinen koodi.")
     (let [tunnus (amispalaute-tunnus data)]
-      (lisaa-amispalaute-automatisointi! tunnus)
       (log/info "Luodaan automaattitunnus, request-id:" (:request-id data))
-      (lisaa-automaattitunnus! tunnus)))
+      (when (:kyselykertaid tunnus ) (lisaa-amispalaute-automatisointi! tunnus))
+      (lisaa-automaattitunnus! tunnus (:request-id data))))
   (GET "/status/:tunnus" []
     :path-params [tunnus :- s/Str]
     (let [status (db/vastaajatunnus-status {:tunnus tunnus})]
