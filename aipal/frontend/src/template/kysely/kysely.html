@@ -108,7 +108,7 @@
         </button>
         <span ng-if="kyselypohja">
             {{i18n.kyselypohja.kyselypohja}}: {{kyselypohja| lokalisoiKentta:'nimi'}}
-            <a ng-click="poistaKyselypohja()"> <span class="fa fa-trash"></span></a>
+            <a ng-if="!isJulkaistu()" ng-click="poistaKyselypohja()"> <span class="fa fa-trash"></span></a>
         </span>
     </div>
 
