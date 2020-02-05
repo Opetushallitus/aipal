@@ -42,6 +42,11 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
   .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm','kayttooikeudet', 'kieli',
     function (Kyselykerta, Kysely, Kieli, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm, kayttooikeudet, kieli) {
       $scope.muokkaustila = true;
+
+      function setMuokkaustila(muokkaustila){
+        $scope.muokkaustila = kayttooikeudet.isYllapitaja() || muokkaustila;
+      }
+
       $scope.$watch('kyselykertaForm', function (form) {
         // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
         tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
@@ -149,7 +154,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
         $scope.kysely = pvm.parsePvm(kysely);
 
-        if(!kysely.kaytettavissa || kysely.automatisoitu) { $scope.muokkaustila = false; }
+        if(!kysely.kaytettavissa || kysely.automatisoitu) { setMuokkaustila(false); }
         haeTutkinnot(kysely)
         $scope.vain_omat = kysely.tyyppi === 'amispalaute'
         if(!$scope.uusi){
@@ -163,7 +168,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         Kyselykerta.haeYksi($scope.kyselykertaid)
           .success(function(kyselykerta) {
             $scope.kyselykerta = pvm.parsePvm(kyselykerta);
-            if (kyselykerta.lukittu) { $scope.muokkaustila = false; }
+            if (kyselykerta.lukittu) { setMuokkaustila(false); }
           })
           .error(function() {
             $location.url('/');
