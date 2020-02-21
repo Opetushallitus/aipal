@@ -25,7 +25,8 @@
             [clj-time.core :as time]
             [arvo.db.core :refer [*db*] :as db]
             [arvo.util :refer [api-response]]
-            [aipal.asetukset :refer [asetukset]]))
+            [aipal.asetukset :refer [asetukset]]
+            [clj-time.format :as f]))
 
 (s/defschema Amispalaute-tunnus
   {:vastaamisajan_alkupvm s/Str ;ISO formaatti
@@ -60,8 +61,6 @@
    :headers {"Content-Type" "application/json"}
    :body   {:status 403
             :detail  (str "Access to " (:uri request) " is forbidden")}})
-
-(defn alkupvm [] (time/today))
 
 (def palaute-voimassaolo (time/months 6))
 (def amispalaute-voimassaolo (time/days 30))
@@ -116,10 +115,12 @@
  (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
        kyselykertaid (:kyselykertaid (db/hae-automaatti-kyselykerta
                                        {:koulutustoimija koulutustoimija
-                                        :tarkenne (:kyselyn_tyyppi data)}))]
+                                        :tarkenne (:kyselyn_tyyppi data)}))
+       alkupvm (:vastaamisajan_alkupvm data)]
    (automaatti-vastaajatunnus :amispalaute
      {:kyselykertaid kyselykertaid
       :valmistavan_koulutuksen_jarjestaja koulutustoimija
+      :voimassa_alkupvm (when alkupvm (f/parse (f/formatters :date) alkupvm))
       :kieli (:tutkinnon_suorituskieli data)
       :toimipaikka (:toimipaikkakoodi (db/hae-oidilla {:taulu "toimipaikka" :oid (:toimipiste_oid data)}))
       :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
