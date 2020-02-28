@@ -295,13 +295,26 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.nollaaRajoite();
 
       function asetaLoppupvm () {
-        if(kyselytyyppi === "amispalaute" && $scope.vastaajatunnus.voimassa_alkupvm){
-          $scope.oletusloppupvm = ($scope.vastaajatunnus.voimassa_alkupvm.getTime() > tanaan.getTime()) ? new Date($scope.vastaajatunnus.voimassa_alkupvm) : new Date(tanaan);
-          $scope.oletusloppupvm.setDate($scope.oletusloppupvm.getDate() + 30);
-          $scope.vastaajatunnus.voimassa_loppupvm = $scope.oletusloppupvm;
+        var vastaajatunnusVoimassaAlkaen = $scope.vastaajatunnus.voimassa_alkupvm;
+        if(kyselytyyppi === 'amispalaute' && vastaajatunnusVoimassaAlkaen){
+          // Asetetaan viimeinen sallittu loppupäivämäärä seuraavan rahoituskauden alkuun tai kyselykerran loppupäivä,
+          // kumpi vain on ensin. Tähän lisätään 30 päivää vastausaikaa.
+          var rahoituskausiVaihtuu = new Date(tanaan.getFullYear(), 5, 30);
+          if (rahoituskausiVaihtuu < tanaan) {
+            rahoituskausiVaihtuu.setFullYear(tanaan.getFullYear() + 1);
+          }
+          var astiMaxLoppupvm = kyselykerta.voimassa_loppupvm && kyselykerta.voimassa_loppupvm < rahoituskausiVaihtuu ? new Date(kyselykerta.voimassa_loppupvm) : rahoituskausiVaihtuu;
+          astiMaxLoppupvm.setDate(astiMaxLoppupvm.getDate() + 30);
+          $scope.astiMaxLoppupvm = astiMaxLoppupvm;
+
+          // Ehdotetaan käyttäjälle 30 päivää nykyhetkestä, vastaajatunnuksen voimassaolosta tai viimeisestä sallitusta päivämäärästä.
+          var oletusloppupvm = (vastaajatunnusVoimassaAlkaen.getTime() > tanaan.getTime()) ? new Date(vastaajatunnusVoimassaAlkaen) : new Date(tanaan);
+          oletusloppupvm.setDate(oletusloppupvm.getDate() + 30);
+          var min = oletusloppupvm < $scope.astiMaxLoppupvm ? oletusloppupvm : $scope.astiMaxLoppupvm;
+          $scope.oletusloppupvm = min;
+          $scope.vastaajatunnus.voimassa_loppupvm = min;
         }
       }
-
 
       $scope.$watch('vastaajatunnus.voimassa_alkupvm', function(){
         asetaLoppupvm();
