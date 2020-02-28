@@ -33,9 +33,7 @@
             aipal.rest-api.tutkintotyyppi
             aipal.rest-api.koulutustoimija
             aipal.rest-api.tiedote
-            aipal.rest-api.vipunen
             arvo.rest-api.export
-            arvo.rest-api.vastauslinkki
             [compojure.api.middleware :as mw]
             [arvo.auth.api :refer [wrap-authentication]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
@@ -89,7 +87,6 @@
     (context "/api/public/koodisto" [] :no-doc true :tags ["koodisto"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.koodisto/reitit)
     (context "/api/tiedote" [] :no-doc true :tags ["tiedote"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (context "/api/csv" [] :no-doc true :tags ["csv"] aipal.rest-api.raportti.kysely/csv)
-    (context "/api/vipunen" [] :no-doc true :tags ["vipunen"] :middleware [#(wrap-basic-authentication % asetukset)] aipal.rest-api.vipunen/reitit)
     (context "/api/export/v1" [] :tags ["export"] :middleware [#(wrap-authentication :export %)] arvo.rest-api.export/v1)
     (context "/api/public/luovastaajatunnus" [] :no-doc true :tags ["vastaajatunnus"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.automaattitunnus/kyselyynohjaus-v1)
     (context "/api/public/henkilo" [] :no-doc true :tags ["henkilooidit"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.henkilo/hae-kaikki-oidit)

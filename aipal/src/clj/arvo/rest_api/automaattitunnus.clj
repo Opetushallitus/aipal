@@ -84,13 +84,11 @@
 (defn palaute-tunnus
   [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto kyselykerran_nimi]}]
   (let [ent_oppilaitos (oppilaitos/hae oppilaitos)
-        ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
         ent_tutkinto (tutkinto/hae koulutus)
         kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi ent_oppilaitos)]
     (automaatti-vastaajatunnus :palaute
       {:kieli kieli
        :toimipaikka nil
-       :valmistavan_koulutuksen_jarjestaja (if (nil? ent_koulutustoimija) nil (get-in ent_koulutustoimija [:ytunnus]))
        :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
        :tutkinto (ent_tutkinto :tutkintotunnus)
        :kunta kunta
@@ -101,12 +99,10 @@
 (defn rekry-tunnus [tunnus]
   (let [{henkilonumero :henkilonumero oppilaitos :oppilaitos vuosi :vuosi} tunnus
         ent_oppilaitos (oppilaitos/hae oppilaitos)
-        ent_koulutustoimija (koulutustoimija/hae-kentat (ent_oppilaitos :koulutustoimija))
         kyselykerta-id (kyselykerta/hae-rekrykysely oppilaitos vuosi)]
     (automaatti-vastaajatunnus :rekry
       {:kyselykertaid (kyselykerta-id :kyselykertaid)
        :henkilonumero henkilonumero
-       :valmistavan_koulutuksen_jarjestaja (get-in ent_koulutustoimija [:ytunnus])
        :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
        :kieli "fi"
        :tutkinto nil})))
@@ -119,8 +115,8 @@
        alkupvm (:vastaamisajan_alkupvm data)]
    (automaatti-vastaajatunnus :amispalaute
      {:kyselykertaid kyselykertaid
-      :valmistavan_koulutuksen_jarjestaja koulutustoimija
       :voimassa_alkupvm (when alkupvm (f/parse (f/formatters :date) alkupvm))
+      :koulutustoimija koulutustoimija
       :kieli (:tutkinnon_suorituskieli data)
       :toimipaikka (:toimipaikkakoodi (db/hae-oidilla {:taulu "toimipaikka" :oid (:toimipiste_oid data)}))
       :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
@@ -131,7 +127,7 @@
 (defn handle-error
   ([error request-id]
    (log/error "Virhe vastaajatunnuksen luonnissa: "
-              (if request-id (str "request-id "request-id " - ") "")
+              (if request-id (str "request-id " request-id " - ") "")
               (:msg error))
    {:status 404 :body error})
   ([error]
@@ -148,7 +144,7 @@
     (handle-error {:error luotu-tunnus})))
 
 (defn lisaa-amispalaute-automatisointi! [tunnus]
-  (db/lisaa-automatisointiin! {:koulutustoimija (:valmistavan_koulutuksen_jarjestaja tunnus)
+  (db/lisaa-automatisointiin! {:koulutustoimija (:koulutustoimija tunnus)
                                :lahde "EHOKS"}))
 
 (defn lisaa-kyselyynohjaus! [tunnus]

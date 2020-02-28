@@ -30,7 +30,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         _.forEach(kyselyt, function(kysely) {
           delete kysely.valittu;
         });
-        raportti.koulutuksen_jarjestajat = [];
         raportti.jarjestavat_oppilaitokset = [];
         delete raportti.kyselyid;
       },
@@ -39,7 +38,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         _.forEach(kyselykerrat, function(kyselykerta) {
           delete kyselykerta.valittu;
         });
-        raportti.koulutuksen_jarjestajat = [];
         raportti.jarjestavat_oppilaitokset = [];
         delete raportti.kyselykertaid;
       },
@@ -239,7 +237,6 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
 
     $scope.raportti.koulutustoimijat = [];
     $scope.raportti.oppilaitokset = [];
-    $scope.raportti.koulutuksen_jarjestajat = [];
     $scope.raportti.jarjestavat_oppilaitokset = [];
     $scope.oppilaitokset = [];
     $scope.vaihdaValinta = function(elementti, taulukko, idAvain) {

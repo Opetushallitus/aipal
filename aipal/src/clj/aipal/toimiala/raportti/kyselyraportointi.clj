@@ -34,11 +34,9 @@
   [vastaajatunnus-tiedot parametrit]
   (let [koulutustoimijat (group-by #(select-keys % [:ytunnus :koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_en]) vastaajatunnus-tiedot)]
     (for [[koulutustoimija tutkinnot] koulutustoimijat]
-      (-> (if (:ytunnus koulutustoimija)
-            (dissoc koulutustoimija :ytunnus)
-            (select-keys parametrit [:koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_en]))
-        (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
-               :vastaajien_lukumaara (reduce + 0 (map :kohteiden_lkm tutkinnot)))))))
+      (-> (select-keys parametrit [:koulutustoimija_fi :koulutustoimija_sv :koulutustoimija_en])
+          (assoc :tutkinnot (yhdista-ja-jarjesta-tutkinnot tutkinnot)
+                 :vastaajien_lukumaara (reduce + 0 (map :kohteiden_lkm tutkinnot)))))))
 
 (defn rajaa-vastaajatunnukset-tutkintoihin
   [query tutkinnot]
@@ -47,10 +45,9 @@
     (sql/where query {:vastaajatunnus.tutkintotunnus [in tutkinnot]})))
 
 (defn yhteiset-rajaukset
-  [query {:keys [tutkinnot koulutuksen_jarjestajat jarjestavat_oppilaitokset kyselyid kyselykertaid suorituskieli]}]
+  [query {:keys [tutkinnot jarjestavat_oppilaitokset kyselyid kyselykertaid suorituskieli]}]
   (cond-> query
     tutkinnot (sql/where {:vastaajatunnus.tutkintotunnus [in tutkinnot]})
-    koulutuksen_jarjestajat (sql/where {:vastaajatunnus.valmistavan_koulutuksen_jarjestaja [in koulutuksen_jarjestajat]})
     jarjestavat_oppilaitokset (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in jarjestavat_oppilaitokset]})
     kyselyid (sql/where {:kyselykerta.kyselyid kyselyid})
     ; vastaajatunnus.kyselykertaid tai kyselykerta.kyselykertaid
@@ -69,8 +66,6 @@
       vertailujakso_loppupvm (sql/where (or (= :vastaajatunnus.voimassa_alkupvm nil)
                                             (<= :vastaajatunnus.voimassa_alkupvm vertailujakso_loppupvm))))
     (yhteiset-rajaukset parametrit)
-    (sql/join :left :koulutustoimija
-              (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
     (sql/join :left :tutkinto
               (= :tutkinto.tutkintotunnus :vastaajatunnus.tutkintotunnus))
     (sql/fields :tutkinto.tutkintotunnus :tutkinto.nimi_fi :tutkinto.nimi_sv :tutkinto.nimi_en
@@ -80,8 +75,7 @@
                                                (>= :vastaaja.luotuaika vertailujakso_alkupvm)))
                                 (sql/where (or (nil? vertailujakso_loppupvm)
                                                (<= :vastaaja.luotuaika vertailujakso_loppupvm)))
-                                (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :kohteiden_lkm]
-                :koulutustoimija.ytunnus [:koulutustoimija.nimi_fi :koulutustoimija_fi] [:koulutustoimija.nimi_sv :koulutustoimija_sv] [:koulutustoimija.nimi_en :koulutustoimija_en])
+                                (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :kohteiden_lkm])
     sql/exec
     (koulutustoimijat-hierarkiaksi parametrit)))
 
@@ -185,7 +179,7 @@
     sql/exec
     yhdista-valtakunnalliset-taustakysymysryhmat))
 
-(defn ^:private hae-vastaukset [{:keys [tutkinnot koulutuksen_jarjestajat suorituskieli
+(defn ^:private hae-vastaukset [{:keys [tutkinnot suorituskieli
                                         jarjestavat_oppilaitokset vertailujakso_alkupvm vertailujakso_loppupvm]
                                  :as parametrit}]
   (->
@@ -201,7 +195,6 @@
                  :vastaus.jatkovastausid))
     (cond->
       (or tutkinnot
-          koulutuksen_jarjestajat
           suorituskieli
           jarjestavat_oppilaitokset) (sql/join :inner :vastaajatunnus
                                                (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))

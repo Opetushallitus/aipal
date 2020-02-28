@@ -729,7 +729,6 @@
      :oppilaitokset [],
      :koulutustoimijat [],
      :tutkinnot ["X00001"],
-     :koulutuksen_jarjestajat [],
      :opintoalat [],
      :kysymykset
      {:7312027 {:monivalinnat {}},
@@ -1520,7 +1519,6 @@
       :oppilaitokset [],
       :koulutustoimijat [],
       :tutkinnot ["X00002"],
-      :koulutuksen_jarjestajat [],
       :opintoalat [],
       :kysymykset
       {:7312027 {:monivalinnat {}},

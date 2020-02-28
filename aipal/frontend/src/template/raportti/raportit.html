@@ -12,8 +12,6 @@
       <valintalista class="hidden-print" valittavat="kyselykerratTilassa" hakuteksti="{{ 'raportit.hae_kyselykertoja' | i18n }}" valitse="valitseKyselykerta(valittava)"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
-      <h3 class="hidden-print" ng-if="vastaustunnustiedot.koulutustoimijat.length > 0">{{ 'vastaajatunnus.koulutuksen_jarjestaja' | i18n }}</h3>
-      <valintalista class="hidden-print" pieni="true" valittavat="vastaustunnustiedot.koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutuksen_jarjestajat', 'ytunnus')"></valintalista>
       <h3 class="hidden-print" ng-if="vastaustunnustiedot.oppilaitokset.length > 0">{{ 'vastaajatunnus.koulutuksen_jarjestava_oppilaitos' | i18n }}</h3>
       <valintalista class="hidden-print" pieni="true" valittavat="vastaustunnustiedot.oppilaitokset" hakuteksti="{{ 'raportit.hae_oppilaitoksia' | i18n }}" valitse="vaihdaValinta(valittava, 'jarjestavat_oppilaitokset', 'oppilaitoskoodi')"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/suorituskieli.html'"></ng-include>
@@ -30,8 +28,6 @@
       <valintalista class="hidden-print" valittavat="kyselytTilassa" hakuteksti="{{ 'raportit.hae_kyselyita' | i18n }}" valitse="valitseKysely(valittava)"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/aikavali.html'"></ng-include>
       <ng-include class="hidden-print" src="'template/raportti/osat/tutkinnot.html'"></ng-include>
-      <h3 class="hidden-print" ng-if="vastaustunnustiedot.koulutustoimijat.length > 0">{{ 'vastaajatunnus.koulutuksen_jarjestaja' | i18n }}</h3>
-      <valintalista class="hidden-print" pieni="true" valittavat="vastaustunnustiedot.koulutustoimijat" hakuteksti="{{ 'raportit.hae_koulutustoimijoita' | i18n }}" valitse="vaihdaValinta(valittava, 'koulutuksen_jarjestajat', 'ytunnus')"></valintalista>
       <h3 class="hidden-print" ng-if="vastaustunnustiedot.oppilaitokset.length > 0">{{ 'vastaajatunnus.koulutuksen_jarjestava_oppilaitos' | i18n }}</h3>
       <valintalista class="hidden-print" pieni="true" valittavat="vastaustunnustiedot.oppilaitokset" hakuteksti="{{ 'raportit.hae_oppilaitoksia' | i18n }}" valitse="vaihdaValinta(valittava, 'jarjestavat_oppilaitokset', 'oppilaitoskoodi')"></valintalista>
       <ng-include class="hidden-print" src="'template/raportti/osat/suorituskieli.html'"></ng-include>

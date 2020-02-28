@@ -11,7 +11,7 @@
 (def perustapaus-json
   (str "{\"kieli\":\"fi\",\"tyyppi\":\"vertailu\",\"tutkintorakennetaso\":\"tutkinto\",\"koulutusalat\":[],\"opintoalat\":[],"
        "\"tutkinnot\":[\"X00002\",\"X00001\"],"
-       "\"koulutuksen_jarjestajat\":[],\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
+       "\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
        "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
        "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
        "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))
@@ -19,7 +19,7 @@
 (def kehitysraportti-json
   (str "{\"kieli\":\"fi\",\"tyyppi\":\"kehitys\",\"tutkintorakennetaso\":\"tutkinto\",\"koulutusalat\":[],\"opintoalat\":[],"
        "\"tutkinnot\":[\"X00001\"],"
-       "\"koulutuksen_jarjestajat\":[],\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
+       "\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
        "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
        "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
        "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))
@@ -27,7 +27,7 @@
 (def kehitysraportti-ketjutettu-json
   (str "{\"kieli\":\"fi\",\"tyyppi\":\"kehitys-ketjutettu\",\"tutkintorakennetaso\":\"tutkinto\",\"koulutusalat\":[],\"opintoalat\":[],"
        "\"tutkinnot\":[\"X00001\",\"X00002\"],"
-       "\"koulutuksen_jarjestajat\":[],\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
+       "\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
        "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
        "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
        "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))
@@ -35,7 +35,7 @@
 (def kehitysraportti-ei-vastaajia-json
   (str "{\"kieli\":\"fi\",\"tyyppi\":\"kehitys\",\"tutkintorakennetaso\":\"tutkinto\",\"koulutusalat\":[],\"opintoalat\":[],"
        "\"tutkinnot\":[\"344102\"],"
-       "\"koulutuksen_jarjestajat\":[],\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
+       "\"jarjestavat_oppilaitokset\":[],\"koulutustoimijat\":[],"
        "\"oppilaitokset\":[],\"taustakysymysryhmaid\":\"3341885\",\"kysymykset\":{\"7312027\":{\"monivalinnat\":{}},\"7312028\":"
        "{\"monivalinnat\":{}},\"7312029\":{\"monivalinnat\":{}},\"7312030\":{\"monivalinnat\":{}},\"7312031\":{\"monivalinnat\":{}},\"7312032\":"
        "{\"monivalinnat\":{}},\"7312033\":{\"monivalinnat\":{}},\"7312039\":{\"monivalinnat\":{}}}}"))

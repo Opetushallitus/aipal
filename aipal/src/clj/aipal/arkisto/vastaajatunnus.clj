@@ -40,13 +40,6 @@
       (dissoc :nimi_fi :nimi_sv :nimi_en :tutkintotunnus)
       (assoc :tutkinto tutkinto))))
 
-(defn ^:private erota-koulutustoimija
-  [vastaajatunnus]
-  (let [koulutustoimija (select-and-rename-keys vastaajatunnus [:ytunnus [:koulutustoimija_nimi_fi :nimi_fi] [:koulutustoimija_nimi_sv :nimi_sv] [:koulutustoimija_nimi_en :nimi_en]])]
-    (some-> vastaajatunnus
-      (dissoc :ytunnus :koulutustoimija_nimi_fi :koulutustoimija_nimi_sv :koulutustoimija_nimi_en)
-      (assoc :valmistavan_koulutuksen_jarjestaja koulutustoimija))))
-
 (defn ^:private erota-oppilaitos
   [vastaajatunnus]
   (let [oppilaitos (select-and-rename-keys vastaajatunnus [:oppilaitoskoodi [:oppilaitos_nimi_fi :nimi_fi] [:oppilaitos_nimi_sv :nimi_sv] [:oppilaitos_nimi_en :nimi_en]])]
@@ -70,7 +63,6 @@
   (-> vastaajatunnus
       yhdistä-taustatiedot
       erota-tutkinto
-      erota-koulutustoimija
       erota-oppilaitos
       erota-toimipaikka))
 
@@ -114,7 +106,6 @@
                    :voimassa_alkupvm
                    :voimassa_loppupvm
                    :kohteiden_lkm
-                   :valmistavan_koulutuksen_jarjestaja
                    :valmistavan_koulutuksen_oppilaitos])
 
 (def legacy-props [:toimipaikka :kunta :koulutusmuoto :kieli :tutkinto])

@@ -148,16 +148,6 @@ ORDER BY kyselykerta.kyselykertaid ASC")
     (sql/delete taulut/kyselykerta
                 (sql/where {:kyselykertaid id}))))
 
-(defn hae-koulutustoimijatiedot
-  "Hakee valmistavan koulutuksen järjestäjät"
-  [kyselykerta-where]
-  (sql/select taulut/kyselykerta
-    (sql/modifier "distinct")
-    (sql/join :inner taulut/vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
-    (sql/join :inner taulut/koulutustoimija (= :koulutustoimija.ytunnus :vastaajatunnus.valmistavan_koulutuksen_jarjestaja))
-    (sql/fields :koulutustoimija.ytunnus :koulutustoimija.nimi_fi :koulutustoimija.nimi_sv :koulutustoimija.nimi_en)
-    (sql/where kyselykerta-where)))
-
 (defn hae-oppilaitostiedot
   "Hakee valmistavan koulutuksen oppilaitokset"
   [kyselykerta-where]
@@ -171,11 +161,9 @@ ORDER BY kyselykerta.kyselykertaid ASC")
 (defn hae-vastaustunnustiedot
   "Hakee vastaustunnuksista tiedot kyselykerta taulun kautta"
   [kyselykerta-where]
-  (let [koulutustoimijat (hae-koulutustoimijatiedot kyselykerta-where)
-        oppilaitokset (hae-oppilaitostiedot kyselykerta-where)]
-    (when (or koulutustoimijat oppilaitokset)
-      {:koulutustoimijat koulutustoimijat
-       :oppilaitokset oppilaitokset})))
+  (let [oppilaitokset (hae-oppilaitostiedot kyselykerta-where)]
+    (when oppilaitokset
+      {:oppilaitokset oppilaitokset})))
 
 (defn hae-vastaustunnustiedot-kyselykerralta
   "Hakee vastaustunnuksista tiedot kyselykerran pääavaimella"

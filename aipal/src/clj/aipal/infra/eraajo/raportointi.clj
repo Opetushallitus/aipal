@@ -15,7 +15,6 @@
 (ns aipal.infra.eraajo.raportointi
   (:require [clojure.tools.logging :as log]
             [aipal.toimiala.raportti.valtakunnallinen :as raportti]
-            [aipal.arkisto.vipunen :as vipunen]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-uid]]))
 
@@ -23,7 +22,6 @@
   (with-kayttaja jarjestelma-uid nil nil
     (log/info "Päivitetään raportoinnin ja Vipusen näkymät")
     (raportti/paivita-nakymat)
-    (vipunen/paivita-nakyma)
     (log/info "Raportoinnin ja Vipusen näkymien päivitys valmis")))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan

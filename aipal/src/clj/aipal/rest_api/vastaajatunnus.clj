@@ -30,7 +30,6 @@
    :kieli (:suorituskieli vastaajatunnus)
    :kunta (get-in vastaajatunnus [:koulutuksen_toimipaikka :kunta])
    :koulutusmuoto (:koulutusmuoto vastaajatunnus)
-   :valmistavan_koulutuksen_jarjestaja (get-in vastaajatunnus [:koulutuksen_jarjestaja :ytunnus])
    :valmistavan_koulutuksen_oppilaitos (get-in vastaajatunnus [:koulutuksen_jarjestaja_oppilaitos :oppilaitoskoodi])
    :toimipaikka (get-in vastaajatunnus [:koulutuksen_toimipaikka :toimipaikkakoodi])
    :voimassa_alkupvm (:voimassa_alkupvm vastaajatunnus)
