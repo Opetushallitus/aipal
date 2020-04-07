@@ -17,7 +17,7 @@
   :dependencies [[cas-single-sign-out "0.1.3" :exclusions [clj-cas-client]]
                  [ch.qos.logback/logback-classic "1.1.5"]
                  [cheshire "5.5.0"]
-                 [clj-http "2.1.0"]
+                 [clj-http "3.10.0"]
                  [clj-time "0.11.0"]
                  [clojure-csv/clojure-csv "2.0.1"]
                  [clojurewerkz/quartzite "2.0.0"]
@@ -50,7 +50,8 @@
                  [mount "0.1.11"]
                  [conman "0.6.6"]
                  [org.flatland/useful "0.11.5"]
-                 [migratus "1.0.6"]]
+                 [migratus "1.0.6"]
+                 [listora/again "1.0.0"]]
 
   :plugins [[test2junit "1.0.1"]
             [codox "0.8.12"]
