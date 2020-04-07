@@ -36,7 +36,7 @@
             schema.core
 
             [clj-cas-client.core :refer [cas]]
-            [cas-single-sign-out.middleware :refer [wrap-cas-single-sign-out]]
+            [arvo.auth.cas-middleware :refer [wrap-cas-single-sign-out]]
 
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
             [oph.common.infra.anon-auth :as anon-auth]
