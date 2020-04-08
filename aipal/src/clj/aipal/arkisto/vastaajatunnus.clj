@@ -148,7 +148,9 @@
   (log/info "Lisätään tunnus:" vastaajatunnus)
   (if (:kyselykertaid vastaajatunnus)
     (with-kayttaja integraatio-uid nil nil
-       {:tunnus (:tunnus (first (lisaa! vastaajatunnus)))})
+      (-> (lisaa! vastaajatunnus)
+          first
+          (select-keys [:tunnus :voimassa_loppupvm])))
     {:error (:ei-kyselykertaa errors)}))
 
 (defn lisaa-massana! [vastaajatunnukset]
