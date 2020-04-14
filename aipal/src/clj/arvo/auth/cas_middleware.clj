@@ -55,6 +55,7 @@
               ;; This will break if the user changes the session cookie's
               ;; name. If someone really does that, we'll have to make the
               ;; cookie name configurable.
+;              TODO: Käytetäänkö tätä vain ring-session id:n selvittämiseen? Voitaisiinko hakea jostain muualta?
               s (get-in *cookies* ["ring-session" :value])]
           (swap! ticket->session-key assoc t s)
           response)))))
