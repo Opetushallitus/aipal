@@ -1,12 +1,11 @@
 (ns arvo.auth.cas-middleware
+  "Based on https://github.com/solita/cas-single-sign-out/blob/master/src/cas_single_sign_out/middleware.clj"
   (:require [clojure.zip :as zip]
             [clojure.xml :as xml]
             [clojure.data.zip.xml :refer [xml1-> text]]
             [clojure.tools.logging :as log]
             [ring.middleware.params :refer [params-request]]
             [ring.middleware.session.store :refer [delete-session]]
-            [ring.middleware.cookies :refer [cookies-response]]
-            [robert.hooke :refer [add-hook]]
             [clojure.tools.logging :as log]
             [clj-cas-client.core :refer [ticket]])
   (:import java.io.ByteArrayInputStream))
@@ -25,49 +24,32 @@
                                :headers {"Content-Type" "text/plain"}
                                :body "OK"})
 
-(defn handle-sign-out [request ticket->session-key session-store]
-  (when-let [t (single-sign-out-ticket request)]
-    (let [s (@ticket->session-key t)]
-      (log/info (str "Single sign out request received for ticket " t
-                     ", destroying session " s))
-      (delete-session session-store s)
+(defn handle-sign-out
+  "Cas server sent us logout request including user's service ticket (ST)"
+  [request session-store session-map]
+  (when-let [ticket (single-sign-out-ticket request)]
+    (let [matching-sessions (filter #(= ((second %) :ticket) ticket) @session-map)
+          session-key (first (map first matching-sessions))]
+      (log/info (str "Single sign out request received for ticket " ticket ", destroying session " session-key))
+      (delete-session session-store session-key)
       single-sign-out-response)))
 
-;; The use of thread-local bindings as auxiliary return values is described in
-;; O'Reilly's Clojure Programming book on page 205.
-(def ^:dynamic *cookies*)
-(defn capture-cookies-hook [f response & _]
-  (when (thread-bound? #'*cookies*)
-    (set! *cookies* (:cookies response)))
-  (f response {}))
-
-(add-hook #'cookies-response #'capture-cookies-hook)
-
-(defn handle-sign-in [handler request ticket->session-key session-store]
-  (when-let [t (ticket (params-request request))]
-    (when (not (contains? @ticket->session-key t))
-      ;; The session is created just before wrap-session returns the
-      ;; response. When it passes the session cookie data to
-      ;; cookies-response, we intercept it with capture-cookies-hook, dig out
-      ;; the session key and associate it with the CAS ticket.
-      (binding [*cookies* nil]
-        (let [response (handler request)
-              ;; This will break if the user changes the session cookie's
-              ;; name. If someone really does that, we'll have to make the
-              ;; cookie name configurable.
-;              TODO: Käytetäänkö tätä vain ring-session id:n selvittämiseen? Voitaisiinko hakea jostain muualta?
-              s (get-in *cookies* ["ring-session" :value])]
-          (swap! ticket->session-key assoc t s)
-          response)))))
+(defn handle-sign-in
+  "When receiving service ticket (ST) save it to current ring-session as :ticket attribute"
+  [handler request]
+  (when-let [ticket (ticket (params-request request))]
+    (when (nil? (get-in request [:session :ticket]) ))
+      (let [response (handler request)
+            session (assoc (response :session) :ticket ticket)]
+        (assoc response :session session))))
 
 (defn wrap-cas-single-sign-out
-  "Middleware to destroy a user's session when the CAS server notifies the
-  client that the user has signed out.
+  "Middleware that adds :ticket to ring-session and destroys user's session when the CAS server notifies the client
+  that the user should be signed out.
 
-  Must be used *outside* wrap-session!"
-  [handler session-store]
-  (let [ticket->session-key (atom {})]
-    (fn [request]
-      (or (handle-sign-out request ticket->session-key session-store)
-          (handle-sign-in handler request ticket->session-key session-store)
-          (handler request)))))
+  Must be provided as a handler for wrap-session since session data is removed from request/response after wrap-session call"
+  [handler session-store session-map]
+  (fn [request]
+    (or (handle-sign-out request session-store session-map)
+        (handle-sign-in handler request)
+        (handler request))))

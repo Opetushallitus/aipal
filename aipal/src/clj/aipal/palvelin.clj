@@ -164,7 +164,8 @@
                         (fn [c json-generator]
                           (.writeString json-generator (.toString c "yyyy-MM-dd"))))
 
-  (let [session-store (memory-store)]
+  (let [session-map (atom {})
+        session-store (memory-store session-map)]
     (-> (aipal.reitit/reitit asetukset)
       wrap-internal-forbidden
       (wrap-resource "public/app")
@@ -178,11 +179,11 @@
       req-metadata-saver-wrapper   ;; Huom: Tämän oltava "auth-middleware":n jälkeen
 
       (wrap-frame-options :deny)
+      (wrap-cas-single-sign-out session-store session-map)
       (wrap-session {:store session-store
                      :cookie-attrs {:http-only true
                                     :path (service-path (get-in asetukset [:server :base-url]))
                                     :secure (not (:development-mode asetukset))}})
-      (wrap-cas-single-sign-out session-store)
       wrap-kayttooikeudet-forbidden)))
 
 
