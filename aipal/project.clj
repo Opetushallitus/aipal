@@ -14,7 +14,8 @@
 
 (defproject aipal "2020.1.1"
   :description "Arvo"
-  :dependencies [[ch.qos.logback/logback-classic "1.1.5"]
+  :dependencies [[org.clojure/data.zip "0.1.1"]
+                 [ch.qos.logback/logback-classic "1.1.5"]
                  [cheshire "5.5.0"]
                  [clj-http "3.10.0"]
                  [clj-time "0.11.0"]
