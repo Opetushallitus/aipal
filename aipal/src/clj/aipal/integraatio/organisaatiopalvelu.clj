@@ -26,7 +26,7 @@
             [korma.db :as db]))
 
 (defn halutut-kentat [koodi]
-  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid :lakkautusPvm :kotipaikkaUri]))
+  (select-keys koodi [:nimi :oppilaitosTyyppiUri :postiosoite :yhteystiedot :virastoTunnus :ytunnus :oppilaitosKoodi :toimipistekoodi :oid :tyypit :parentOid :lakkautusPvm :kotipaikkaUri :yhteystietoArvos]))
 
 
 (defn oppilaitostyyppi [oppilaitostyyppi_uri]
@@ -100,6 +100,10 @@
 (defn ^:private email [koodi]
   (some :email (:yhteystiedot koodi)))
 
+(defn- move-sahkoposti [oppilaitos-data]
+  (let [move-sahkopostit (filter #(= (:YhteystietojenTyyppi.oid %) "1.2.246.562.5.11045629125") (:yhteystietoArvos oppilaitos-data))]
+    (some :YhteystietoArvo.arvoText move-sahkopostit)))
+
 (defn ^:private www-osoite [koodi]
   (some :www (:yhteystiedot koodi)))
 
@@ -114,52 +118,53 @@
     (not (time/before? lakkautus-pvm (time/today)))
     true))
 
-(defn ^:private koodi->koulutustoimija [koodi]
-  {:nimi_fi (nimi koodi)
-   :nimi_sv (nimi-sv koodi)
-   :nimi_en (nimi-en koodi)
-   :oid (:oid koodi)
-   :sahkoposti (email koodi)
-   :puhelin (puhelin koodi)
-   :osoite (get-in koodi [:postiosoite :osoite])
-   :postinumero (postinumero koodi)
-   :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
-   :www_osoite (www-osoite koodi)
-   :ytunnus (y-tunnus koodi)
-   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
-   :voimassa (voimassa? koodi)})
+(defn ^:private koodi->koulutustoimija [koulutustoimija-data]
+  {:nimi_fi (nimi koulutustoimija-data)
+   :nimi_sv (nimi-sv koulutustoimija-data)
+   :nimi_en (nimi-en koulutustoimija-data)
+   :oid (:oid koulutustoimija-data)
+   :sahkoposti (email koulutustoimija-data)
+   :puhelin (puhelin koulutustoimija-data)
+   :osoite (get-in koulutustoimija-data [:postiosoite :osoite])
+   :postinumero (postinumero koulutustoimija-data)
+   :postitoimipaikka (get-in koulutustoimija-data [:postiosoite :postitoimipaikka])
+   :www_osoite (www-osoite koulutustoimija-data)
+   :ytunnus (y-tunnus koulutustoimija-data)
+   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koulutustoimija-data))
+   :voimassa (voimassa? koulutustoimija-data)})
 
-(defn ^:private koodi->oppilaitos [koodi]
-  {:nimi_fi (nimi koodi)
-   :nimi_sv (nimi-sv koodi)
-   :nimi_en (nimi-en koodi)
-   :oid (:oid koodi)
-   :sahkoposti (email koodi)
-   :puhelin (puhelin koodi)
-   :osoite (get-in koodi [:postiosoite :osoite])
-   :postinumero (postinumero koodi)
-   :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
-   :www_osoite (www-osoite koodi)
-   :oppilaitoskoodi (:oppilaitosKoodi koodi)
-   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
-   :voimassa (voimassa? koodi)
-   :oppilaitostyyppi (:oppilaitostyyppi koodi)})
+(defn ^:private koodi->oppilaitos [oppilaitos-data]
+  {:nimi_fi (nimi oppilaitos-data)
+   :nimi_sv (nimi-sv oppilaitos-data)
+   :nimi_en (nimi-en oppilaitos-data)
+   :oid (:oid oppilaitos-data)
+   :sahkoposti (email oppilaitos-data)
+   :puhelin (puhelin oppilaitos-data)
+   :osoite (get-in oppilaitos-data [:postiosoite :osoite])
+   :postinumero (postinumero oppilaitos-data)
+   :postitoimipaikka (get-in oppilaitos-data [:postiosoite :postitoimipaikka])
+   :www_osoite (www-osoite oppilaitos-data)
+   :oppilaitoskoodi (:oppilaitosKoodi oppilaitos-data)
+   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm oppilaitos-data))
+   :voimassa (voimassa? oppilaitos-data)
+   :oppilaitostyyppi (:oppilaitostyyppi oppilaitos-data)
+   :move_sahkoposti (move-sahkoposti oppilaitos-data)})
 
-(defn ^:private koodi->toimipaikka [koodi]
-  {:kunta (kunta koodi)
-   :nimi_fi (nimi koodi)
-   :nimi_sv (nimi-sv koodi)
-   :nimi_en (nimi-en koodi)
-   :oid (:oid koodi)
-   :sahkoposti (email koodi)
-   :puhelin (puhelin koodi)
-   :osoite (get-in koodi [:postiosoite :osoite])
-   :postinumero (postinumero koodi)
-   :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
-   :www_osoite (www-osoite koodi)
-   :toimipaikkakoodi (:toimipistekoodi koodi)
-   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
-   :voimassa (voimassa? koodi)})
+(defn ^:private koodi->toimipaikka [toimipaikka-data]
+  {:kunta (kunta toimipaikka-data)
+   :nimi_fi (nimi toimipaikka-data)
+   :nimi_sv (nimi-sv toimipaikka-data)
+   :nimi_en (nimi-en toimipaikka-data)
+   :oid (:oid toimipaikka-data)
+   :sahkoposti (email toimipaikka-data)
+   :puhelin (puhelin toimipaikka-data)
+   :osoite (get-in toimipaikka-data [:postiosoite :osoite])
+   :postinumero (postinumero toimipaikka-data)
+   :postitoimipaikka (get-in toimipaikka-data [:postiosoite :postitoimipaikka])
+   :www_osoite (www-osoite toimipaikka-data)
+   :toimipaikkakoodi (:toimipistekoodi toimipaikka-data)
+   :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm toimipaikka-data))
+   :voimassa (voimassa? toimipaikka-data)})
 
 (def ^:private yhteiset-kentat [:nimi_fi :nimi_sv :nimi_en :oid :sahkoposti :puhelin :osoite
                                 :postinumero :postitoimipaikka :www_osoite :voimassa :lakkautuspaiva])
@@ -170,7 +175,7 @@
 
 (defn ^:private oppilaitoksen-kentat [oppilaitos]
   (when oppilaitos
-    (select-keys oppilaitos (conj yhteiset-kentat :oppilaitoskoodi :koulutustoimija :oppilaitostyyppi))))
+    (select-keys oppilaitos (conj yhteiset-kentat :oppilaitoskoodi :koulutustoimija :oppilaitostyyppi :move_sahkoposti))))
 
 (defn ^:private toimipaikan-kentat [toimipaikka]
   (when toimipaikka
@@ -210,20 +215,21 @@
                                   (koulutustoimija-arkisto/paivita! y-tunnus uusi-kt)))))
   (koulutustoimija-arkisto/laske-voimassaolo!))
 
-(defn ^:private ^:integration-api paivita-oppilaitokset! [koodit]
-  (let [oid->ytunnus (generoi-oid->y-tunnus (into {} (for [k (koulutustoimija-arkisto/hae-kaikki-organisaatiopalvelulle)]
-                                                       [(:oid k) (:ytunnus k)]))
-                                            koodit)
+(defn ^:integration-api paivita-oppilaitokset! [oppilaitos-datat]
+  (let [oid->ytunnus (generoi-oid->y-tunnus
+                      (into {} (for [koulutustoimija (koulutustoimija-arkisto/hae-kaikki-organisaatiopalvelulle)]
+                                 [(:oid koulutustoimija) (:ytunnus koulutustoimija)]))
+                      oppilaitos-datat)
         oppilaitokset (->> (oppilaitos-arkisto/hae-kaikki)
                         (map-by :oppilaitoskoodi))]
-    (doseq [koodi (vals (map-by :oppilaitosKoodi koodit)) ;; Poistetaan duplikaatit
+    (doseq [oppilaitos-data (vals (map-by :oppilaitosKoodi oppilaitos-datat)) ;; Poistetaan duplikaatit
             ;; Poistetaan oppilaitokset joille ei löydy koulutustoimijaa
             ;; Oppilaitoksella on oltava koulutustoimija
-            :when (oid->ytunnus (:parentOid koodi))
-            :let [oppilaitoskoodi (:oppilaitosKoodi koodi)
-                  koulutustoimija (oid->ytunnus (:parentOid koodi))
+            :when (oid->ytunnus (:parentOid oppilaitos-data))
+            :let [oppilaitoskoodi (:oppilaitosKoodi oppilaitos-data)
+                  koulutustoimija (oid->ytunnus (:parentOid oppilaitos-data))
                   vanha-oppilaitos (oppilaitoksen-kentat (get oppilaitokset oppilaitoskoodi))
-                  uusi-oppilaitos (assoc (koodi->oppilaitos koodi)
+                  uusi-oppilaitos (assoc (koodi->oppilaitos oppilaitos-data)
                                          :koulutustoimija koulutustoimija)]]
       (cond
         (nil? vanha-oppilaitos) (do
