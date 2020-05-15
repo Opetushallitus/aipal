@@ -13,7 +13,7 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
   JOIN kysely k ON kk.kyselyid = k.kyselyid
   JOIN oppilaitos o ON k.koulutustoimija = o.koulutustoimija
   WHERE o.oppilaitoskoodi = :oppilaitoskoodi AND k.tyyppi = 'rekrykysely'
-    AND kk.automaattinen = TRUE
+    AND kk.automaattinen @> NOW()::DATE
   AND (kk.kategoria ->'vuosi')::TEXT::INTEGER = :vuosi
   AND kk.lukittu = FALSE;
 
@@ -21,7 +21,7 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
 SELECT kk.kyselykertaid FROM kyselykerta kk
   JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija = :koulutustoimija
-AND kk.automaattinen = TRUE
+AND kk.automaattinen @> NOW()::DATE
 AND kk.kategoria ->> 'tarkenne' = :tarkenne
 AND k.tila = 'julkaistu' AND kk.lukittu = FALSE;
 
@@ -66,4 +66,9 @@ WHERE kk.kyselykertaid = :kyselykertaid;
 
 -- :name luo-kyselykerta! :! :n
 INSERT INTO kyselykerta (kyselyid, nimi, voimassa_alkupvm, luotu_kayttaja, muutettu_kayttaja, automaattinen, kategoria)
-VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :kayttaja, :kayttaja, :automaattinen, :kategoria)
+VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :kayttaja, :kayttaja, :automaattinen::DATERANGE, :kategoria);
+
+-- :name paata-kyselykerrat! :! :n
+WITH t AS (SELECT kk.kyselykertaid as id FROM kysely k JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
+    WHERE k.koulutustoimija = :koulutustoimija AND k.tyyppi = :tyyppi AND UPPER(kk.automaattinen) IS NULL AND kk.automaattinen @> now()::DATE)
+UPDATE kyselykerta SET automaattinen = daterange(LOWER(automaattinen), :paattymis_pvm::DATE) FROM t WHERE t.id = kyselykertaid;
