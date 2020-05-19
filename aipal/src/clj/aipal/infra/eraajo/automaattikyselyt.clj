@@ -36,7 +36,6 @@
   (let [kuvaukset (db/hae-automaattikysely-data)]
     (jdbc/with-db-transaction [tx *db*]
       (doseq [kuvaus kuvaukset]
-        (log/info kuvaus)
         (luo-kyselyt! kuvaus tx)))))
 
 (defrecord LuoAutomaattikyselytJob []
