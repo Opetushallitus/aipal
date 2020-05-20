@@ -70,5 +70,5 @@ VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :kayttaja, :kayttaja, :automaattine
 
 -- :name paata-kyselykerrat! :! :n
 WITH t AS (SELECT kk.kyselykertaid as id FROM kysely k JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
-    WHERE k.koulutustoimija = :koulutustoimija AND k.tyyppi = :tyyppi AND UPPER(kk.automaattinen) IS NULL AND kk.automaattinen @> now()::DATE)
+    WHERE k.koulutustoimija = :koulutustoimija AND k.tyyppi = :tyyppi AND kk.automaattinen IS NOT NULL AND UPPER(kk.automaattinen) IS NULL AND kk.automaattinen @> now()::DATE)
 UPDATE kyselykerta SET automaattinen = daterange(LOWER(automaattinen), :paattymis_pvm::DATE) FROM t WHERE t.id = kyselykertaid;
