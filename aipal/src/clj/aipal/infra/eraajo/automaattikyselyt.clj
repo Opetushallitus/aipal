@@ -5,25 +5,17 @@
             [arvo.db.core :refer [*db*] :as db])
   (:import (org.quartz Job)))
 
-(defn get-rahoituskauden-alku [kyselytyyppi]
-  (if (= "amispalaute" kyselytyyppi)
-;    Amispalaute rahoituskausi vaihtuu 1.7.
-    (time/local-date (time/year (time/today)) 7 1)
-;    Muuten oletetaan vuodenvaihde
-    (time/local-date (+ 1 (time/year (time/today))) 1 1)))
-
-(defn get-rahtoituskauden-loppu [kyselytyyppi]
-  (.minusDays (get-rahoituskauden-alku kyselytyyppi) 1))
-
 (defn luo-kysely! [koulutustoimija kuvaus tx]
   (let [kyselyid (:kyselyid (first (db/luo-kysely! tx (merge kuvaus {:tila "julkaistu" :koulutustoimija (:ytunnus koulutustoimija)
                                                                      :kayttaja "JARJESTELMA" :tyyppi (:kyselytyyppi kuvaus)
                                                                      :kategoria {:automatisointi_tunniste (:tunniste kuvaus)}}))))]
     (db/liita-kyselyn-kyselypohja! tx {:kyselyid kyselyid :kyselypohjaid (:kyselypohjaid kuvaus) :kayttaja "JARJESTELMA"})
     (db/liita-kyselyn-kysymykset! tx {:kyselyid kyselyid :kayttaja "JARJESTELMA"})
-    (db/paata-kyselykerrat! tx {:tyyppi (:kyselytyyppi kuvaus) :koulutustoimija (:ytunnus koulutustoimija) :paattymis_pvm (get-rahtoituskauden-loppu (:kyselytyyppi kuvaus))})
+    ;(db/paata-kyselykerrat! tx {:tyyppi (:kyselytyyppi kuvaus) :koulutustoimija (:ytunnus koulutustoimija) :paattymis_pvm (get-rahoituskauden-loppu (:kyselytyyppi kuvaus))})
     (db/luo-kyselykerta! tx {:kyselyid kyselyid :nimi (:kyselykerta_nimi kuvaus) :kayttaja "JARJESTELMA"
-                             :automaattinen (format "[%s,]" (get-rahoituskauden-alku (:kyselytyyppi kuvaus))) :kategoria (:kyselykerta_kategoria kuvaus) :voimassa_alkupvm (:voimassa_alkupvm kuvaus)})
+                             :automaattinen (format "[%s,%s]" (:automatisointi_voimassa_alkupvm kuvaus)
+                                                              (:automatisointi_voimassa_loppupvm kuvaus))
+                             :kategoria (:kyselykerta_kategoria kuvaus) :voimassa_alkupvm (:voimassa_alkupvm kuvaus)})
     kyselyid))
 
 (defn luo-kyselyt! [kuvaus tx]
