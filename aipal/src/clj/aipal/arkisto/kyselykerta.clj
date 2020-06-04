@@ -103,7 +103,7 @@ ORDER BY kyselykerta.kyselykertaid ASC")
   [kyselykertaid]
   (->
     (sql/select* taulut/kyselykerta)
-    (sql/fields :kyselyid :kyselykertaid :nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu)
+    (sql/fields :kyselyid :kyselykertaid :nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu :automaattinen)
     (sql/where (= :kyselykertaid kyselykertaid))
     sql/exec
     first))

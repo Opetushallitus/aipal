@@ -77,10 +77,14 @@ SELECT ytunnus, nimi_fi FROM koulutustoimija kt
 -- löytyy aiempi halutun tyyppinen kysely
 WHERE EXISTS (SELECT 1 FROM kysely k WHERE k.koulutustoimija = kt.ytunnus AND k.tyyppi = :kyselytyyppi)
 -- muttei löydy voimassaolevaa automaattisesti luotua
-AND NOT EXISTS (SELECT 1 FROM kysely k WHERE k.koulutustoimija = kt.ytunnus AND k.tyyppi = :kyselytyyppi AND k.kyselypohjaid = :kyselypohjaid AND k.kategoria->>'automatisointi_tunniste' = :tunniste);
+AND NOT EXISTS (
+    SELECT 1
+    FROM kysely k
+    WHERE k.kategoria->>'automatisointi_tunniste' = :tunniste
+);
 
 -- :name hae-automaattikysely-data :? :*
-SELECT * FROM automaattikysely WHERE automatisointi_voimassa_loppupvm >= now();
+SELECT * FROM automaattikysely WHERE tunniste IN (SELECT MAX(tunniste) FROM automaattikysely GROUP BY LEFT(tunniste, -4));
 
 -- :name muuta-kyselyn-tila! :! :n
 UPDATE kysely SET tila = :tila, muutettu_kayttaja = :kayttaja WHERE kyselyid = :kyselyid;

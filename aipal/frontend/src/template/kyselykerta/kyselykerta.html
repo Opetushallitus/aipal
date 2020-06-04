@@ -35,7 +35,8 @@
                     min-pvm="kysely.voimassa_alkupvm"
                     max-pvm="kyselykerta.voimassa_loppupvm"
                     ng-model="kyselykerta.voimassa_alkupvm"
-                    pakollinen="true">
+                    pakollinen="true"
+                    ng-disabled="kyselykerta.automaattinen !== null && kyselykerta.automaattinen !== undefined">
             </pvm-valitsin>
             <pvm-valitsin
                     otsikko="{{i18n.yleiset.asti}}"
@@ -44,6 +45,7 @@
                     min-pvm="kyselykerta.voimassa_alkupvm"
                     max-pvm="kysely.voimassa_loppupvm"
                     ng-model="kyselykerta.voimassa_loppupvm"
+                    ng-disabled="kyselykerta.automaattinen !== null && kyselykerta.automaattinen !== undefined"
                     pakollinen="false">
             </pvm-valitsin>
         </span>

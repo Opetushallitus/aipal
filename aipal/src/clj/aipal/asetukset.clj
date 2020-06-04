@@ -108,7 +108,7 @@
              :koulutustoimijoiden-tutkinnot "0 34 15 ? * * *"
              :raportointi "0 30 5 * * ?"
              :tutkinnot "0 34 15 ? * * *"
-             :automaattikyselyt "0 10 8 ? * * *"}
+             :automaattikyselyt "0 10 4 ? * * *"}
    :api-page-length 50000})
 
 (def common-audit-log-asetukset {:boot-time        (time-local/local-now)

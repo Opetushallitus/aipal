@@ -1,6 +1,7 @@
 (ns aipal.infra.eraajo.automaattikyselyt
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
+            [clj-time.core :as time]
             [arvo.db.core :refer [*db*] :as db])
   (:import (org.quartz Job)))
 
@@ -10,8 +11,11 @@
                                                                      :kategoria {:automatisointi_tunniste (:tunniste kuvaus)}}))))]
     (db/liita-kyselyn-kyselypohja! tx {:kyselyid kyselyid :kyselypohjaid (:kyselypohjaid kuvaus) :kayttaja "JARJESTELMA"})
     (db/liita-kyselyn-kysymykset! tx {:kyselyid kyselyid :kayttaja "JARJESTELMA"})
+    ;(db/paata-kyselykerrat! tx {:tyyppi (:kyselytyyppi kuvaus) :koulutustoimija (:ytunnus koulutustoimija) :paattymis_pvm (get-rahoituskauden-loppu (:kyselytyyppi kuvaus))})
     (db/luo-kyselykerta! tx {:kyselyid kyselyid :nimi (:kyselykerta_nimi kuvaus) :kayttaja "JARJESTELMA"
-                             :automaattinen true :kategoria (:kyselykerta_kategoria kuvaus) :voimassa_alkupvm (:voimassa_alkupvm kuvaus)})
+                             :automaattinen (format "[%s,%s]" (:automatisointi_voimassa_alkupvm kuvaus)
+                                                              (:automatisointi_voimassa_loppupvm kuvaus))
+                             :kategoria (:kyselykerta_kategoria kuvaus) :voimassa_alkupvm (:voimassa_alkupvm kuvaus)})
     kyselyid))
 
 (defn luo-kyselyt! [kuvaus tx]
