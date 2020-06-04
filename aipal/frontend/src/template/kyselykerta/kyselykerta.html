@@ -13,7 +13,7 @@
             <div class="form-group" ng-if="muokkaustila">
                 <label for="kyselykerta_nimi" class="pakollinen"><span>{{'kyselykerta.kyselykerran_nimi' | i18n }}</span></label>
                 <input id="kyselykerta_nimi" type="text" ng-model="kyselykerta.nimi" class="form-control e2e-kyselykerta-nimi"
-                       ng-required="true"/>
+                       ng-required="true" ng-disabled="kyselykerta.automaattinen !== null && kyselykerta.automaattinen !== undefined"/>
             </div>
             <div ng-if="!muokkaustila">
                 <label><span>{{'kyselykerta.kyselykerran_nimi' | i18n }}</span></label>
@@ -56,11 +56,11 @@
 
 <div ng-if="!uusi">
     <h2>{{'vastaajatunnus.lista' | i18n}} <ohje tunniste="kyselykerran_vastaajatunnukset"></ohje></h2>
-    <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()" ng-if="muokkaustila">
+    <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()" ng-if="muokkaustila && (kyselykerta.automaattinen === null || kyselykerta.automaattinen === undefined)" >
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
-    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 'amispalaute' && laajennettuOppisopimuskoulutus"
+    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 'amispalaute' && laajennettuOppisopimuskoulutus && (kyselykerta.automaattinen === null || kyselykerta.automaattinen === undefined)"
             title="{{'vastaajatunnus.luonti_laajennettu_tooltip' | i18n}}">
         {{'vastaajatunnus.luonti_laajennettu' | i18n }} &nbsp;
         <span class="fa fa-plus"></span>
