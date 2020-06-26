@@ -55,7 +55,6 @@
                       (map #(into {} {:rooli %
                                       :organisaatio (hae-ytunnus (:organisaatioOid organisaatio) oid->ytunnus)
                                       :voimassa true})))]
-     (log/info "Saatiin käyttäjälle" uid "oikeudet" oikeudet)
      oikeudet)))
 
 (defn kayttaja [uid ldap-ryhma->rooli oid->ytunnus]
@@ -67,6 +66,7 @@
                     flatten
                     (filter #(and (:organisaatio %) (:rooli %))))
         tiedot (when kayttaja (palvelukutsu :oppijanumerorekisteri (str oppijanumerorekisteri-url (:oidHenkilo kayttaja)) {}))]
+    (log/info "Saatiin käyttäjälle" uid "oikeudet" roolit)
     {:oid (:oidHenkilo kayttaja)
      :etunimi (or (:kutsumanimi tiedot) (:etunimet tiedot))
      :sukunimi (:sukunimi tiedot)
