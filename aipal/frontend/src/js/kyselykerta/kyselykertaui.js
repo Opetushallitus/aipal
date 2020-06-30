@@ -300,7 +300,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           // Asetetaan viimeinen sallittu loppupäivämäärä seuraavan rahoituskauden alkuun tai kyselykerran loppupäivä,
           // kumpi vain on ensin. Tähän lisätään 30 päivää vastausaikaa.
           var rahoituskausiVaihtuu = new Date(tanaan.getFullYear(), 5, 30);
-          if (rahoituskausiVaihtuu < tanaan) {
+          if (rahoituskausiVaihtuu < tanaan || rahoituskausiVaihtuu < vastaajatunnusVoimassaAlkaen) {
             rahoituskausiVaihtuu.setFullYear(tanaan.getFullYear() + 1);
           }
           var astiMaxLoppupvm = kyselykerta.voimassa_loppupvm && kyselykerta.voimassa_loppupvm < rahoituskausiVaihtuu ? new Date(kyselykerta.voimassa_loppupvm) : rahoituskausiVaihtuu;
