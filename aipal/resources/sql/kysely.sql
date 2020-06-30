@@ -81,6 +81,7 @@ AND NOT EXISTS (
     SELECT 1
     FROM kysely k
     WHERE k.kategoria->>'automatisointi_tunniste' = :tunniste
+    AND koulutustoimija != ytunnus
 );
 
 -- :name hae-automaattikysely-data :? :*
