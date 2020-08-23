@@ -13,6 +13,10 @@
       <div>({{ 'kysymys.vapaa_tekstikentta' | i18n }})</div>
     </div>
 
+    <div ng-if="kysymys.vastaustyyppi == 'luku'" class="vastaus_valinnat">
+      <div>({{ 'kysymys.luku' | i18n }})</div>
+    </div>
+
     <div ng-if="kysymys.vastaustyyppi == 'kylla_ei_valinta'" class="vastaus_valinnat">
       <div>{{ 'kysymys.kylla_ei_valinta.kylla' | i18n }}</div>
 

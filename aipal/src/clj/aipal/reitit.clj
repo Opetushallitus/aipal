@@ -34,6 +34,7 @@
             aipal.rest-api.koulutustoimija
             aipal.rest-api.tiedote
             arvo.rest-api.export
+            arvo.rest-api.move
             [compojure.api.middleware :as mw]
             [arvo.auth.api :refer [wrap-authentication]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
@@ -84,6 +85,7 @@
     (context "/api/tutkintotyyppi" [] :no-doc true :tags ["tutkinto"]  :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tutkintotyyppi/reitit)
     (context "/api/koulutustoimija" [] :no-doc true :tags ["koulutustoimija"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.koulutustoimija/reitit)
     (context "/api/public/uraseuranta" [] :no-doc true :tags ["uraseuranta"] (arvo.rest-api.uraseuranta/uraseuranta-reitit asetukset))
+    (context "/api/public/move" [] :no-doc true :tags ["move"] (arvo.rest-api.move/move-reitit asetukset))
     (context "/api/public/koodisto" [] :no-doc true :tags ["koodisto"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.koodisto/reitit)
     (context "/api/tiedote" [] :no-doc true :tags ["tiedote"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
     (context "/api/csv" [] :no-doc true :tags ["csv"] aipal.rest-api.raportti.kysely/csv)

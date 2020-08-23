@@ -20,7 +20,8 @@
             [arvo.util :refer [parse-int]]
             [oph.common.util.http-util :refer [parse-iso-date]]
             [oph.common.util.util :refer [map-by]]
-            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]))
+            [aipal.toimiala.raportti.util :refer [muuta-kaikki-stringeiksi]]
+            [clojure.tools.logging :as log]))
 
 (defn ^:private hae-monivalintavaihtoehdot [kysymysid]
   (->
@@ -32,7 +33,7 @@
 (defn ^:private laske-osuus
   [lukumaara yhteensa]
   (if (> yhteensa 0)
-    (/ lukumaara yhteensa)
+    (/ (int lukumaara) (int yhteensa))
     0))
 
 (defn prosentteina
@@ -48,14 +49,15 @@
                                {:vaihtoehto-avain avain
                                 :lukumaara lukumaara
                                 :osuus (prosentteina
-                                         (laske-osuus (or lukumaara 0) yhteensa))})]
+                                         (laske-osuus (or (int lukumaara) 0) (int yhteensa)))})]
     (conj (vec (for [x vaihtoehdot] (tiedot-vaihtoehdolle (str x) (jakauma x))))
           (tiedot-vaihtoehdolle "eos" (jakauma :eos)))))
 
 (defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]
-  (let [jakauma (merge {:kylla 0, :ei 0, :eos 0} jakauma)
-        yhteensa (+ (:kylla jakauma) (:ei jakauma) (:eos jakauma))]
+  (let [_ (log/info "Lasketaan k-e jakauma: " jakauma)
+        jakauma (merge {:kylla 0 :ei 0 :eos 0} jakauma)
+        yhteensa (+ (or (:kylla jakauma) 0) (or (:ei jakauma) 0) (or (:eos jakauma) 0))]
     [{:vaihtoehto-avain "kylla"
       :lukumaara (:kylla jakauma)
       :osuus (prosentteina
@@ -79,7 +81,7 @@
   (let [yhteensa (reduce + (vals jakauma))]
     (for [vaihtoehto vaihtoehdot
           :let [lukumaara (or (get jakauma (:jarjestys vaihtoehto)) 0)
-                osuus (laske-osuus lukumaara yhteensa)]]
+                osuus (laske-osuus (int lukumaara) (int yhteensa))]]
       {:vaihtoehto_fi (:teksti_fi vaihtoehto)
        :vaihtoehto_sv (:teksti_sv vaihtoehto)
        :vaihtoehto_en (:teksti_en vaihtoehto)
@@ -120,14 +122,14 @@
 
 (defn laske-nps-luku [jakauma]
   (when (not-empty jakauma)
-    (let [yhteensä (jakaumat-summa jakauma #(some? %))
-          arvostelijat (jakaumat-summa jakauma #(< % 7))
-          suosittelijat (jakaumat-summa jakauma #(> % 8))]
+    (let [yhteensä (int (jakaumat-summa jakauma #(some? %)))
+          arvostelijat (int (jakaumat-summa jakauma #(< % 7)))
+          suosittelijat (int (jakaumat-summa jakauma #(> % 8)))]
       (when (> yhteensä 0)
         (Math/round (float (* 100 (- (/ suosittelijat yhteensä) (/ arvostelijat yhteensä)))))))))
 
 (defn kasittele-npskysymys [kysymys vastaukset]
-  (let [npskysymys (kasittele-asteikkokysymys kysymys vastaukset 11 :alku 0) ]
+  (let [npskysymys (kasittele-asteikkokysymys kysymys vastaukset 11 :alku 0)]
     (assoc npskysymys :nps_luku (laske-nps-luku (:jakauma npskysymys)))))
 
 (defn kasittele-monivalintakysymys [kysymys vastaukset]
@@ -169,7 +171,8 @@
                   "vapaateksti" (kasittele-vapaatekstikysymys kysymys vastaukset)
                   "arvosana4_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "asteikko5_1" (kasittele-asteikkokysymys kysymys vastaukset 5)
-                  "arvosana6_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 7 :alku 0))
+                  "arvosana6_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 7 :alku 0)
+                  "luku" (kasittele-asteikkokysymys kysymys vastaukset 5))
         nps-luku (when (= "nps" (:vastaustyyppi kysymys))
                    (laske-nps-luku (:jakauma kysymys)))]
     (-> kysymys

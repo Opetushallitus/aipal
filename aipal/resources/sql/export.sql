@@ -16,7 +16,7 @@ AND k.tyyppi IN (:v*:kyselytyypit);
 -- :name export-vastaukset :? :*
 SELECT k.koulutustoimija, k.kyselyid, kk.kyselykertaid,
        v.vastaajaid, vt.vastaajatunnusid,
-       v.vastausid, v.kysymysid, to_char(v.vastausaika, 'YYYY-MM-DD') AS vastausaika, v.numerovalinta, v.vapaateksti, v.vaihtoehto,
+       v.vastausid, v.kysymysid, to_char(v.vastausaika, 'YYYY-MM-DD') AS vastausaika, v.numerovalinta::int, v.vapaateksti, v.vaihtoehto,
        monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
        monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
        monivalintavaihtoehto.teksti_en AS monivalintavaihtoehto_en
@@ -26,7 +26,7 @@ FROM vastaus v
          JOIN kysymysryhma kr ON kys.kysymysryhmaid = kr.kysymysryhmaid
          LEFT JOIN monivalintavaihtoehto ON kys.vastaustyyppi = 'monivalinta'
     AND monivalintavaihtoehto.kysymysid = kys.kysymysid
-    AND v.numerovalinta = monivalintavaihtoehto.jarjestys
+    AND v.numerovalinta::int = monivalintavaihtoehto.jarjestys
          JOIN vastaajatunnus vt ON vs.vastaajatunnusid = vt.vastaajatunnusid
          JOIN kyselykerta kk ON vs.kyselykertaid = kk.kyselykertaid
          JOIN kysely k ON kk.kyselyid = k.kyselyid

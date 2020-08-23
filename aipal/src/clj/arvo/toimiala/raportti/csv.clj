@@ -141,6 +141,7 @@
          ["vapaateksti"] (when (:vapaateksti (first answers))
                            (replace-control-chars (:vapaateksti (first answers))))
          ["kylla_ei_valinta"] (:vaihtoehto (first answers))
+         ["luku"] (:numerovalinta (first answers))
          :else ""))
 
 (defn get-answer [answers choices lang [key value]]
@@ -303,9 +304,11 @@
         translations (luo-käännökset taustatiedot lang)
         vastaukset (filter-not-allowed kyselytyyppi kysymykset
                                        (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid})))
+        _ (println vastaukset)
         monivalintavaihtoehdot (hae-monivalinnat kysymykset)
         selitteet (hae-selitteet kyselyid)
         template (create-row-template kysymykset)
+        _ (println template)
         header (create-header-row taustatieto-fields kysymykset lang translations)
         vastausrivit (map #(luo-vastausrivi template lang
                                             taustatieto-fields
@@ -358,7 +361,7 @@
         rows (map #(select-values-or-nil % vastaajatunnus-kentat) tunnukset)]
     (create-csv (cons header rows))))
 
-(def kohteet-fields [:tunnus :nimi :voimassa_alkupvm :kohteiden_lkm :vastaajien_lkm])
+(def kohteet-fields [:tunnus :nimi :voimassa_alkupvm :kohteiden_lkm :vastaajien_lkm :tutkintotunnus :tutkinto_fi])
 
 (defn kohteet-csv [kyselyid lang]
   (let [res (db/hae-kyselyn-kohteet {:kyselyid kyselyid})
@@ -366,7 +369,7 @@
         rows (map #(select-values-or-nil % kohteet-fields) res)]
     (create-csv (cons header rows))))
 
-(def vastanneet-fields [:tunnus :nimi :voimassa_alkupvm :vastausaika])
+(def vastanneet-fields [:tunnus :nimi :voimassa_alkupvm :vastausaika :tutkintotunnus :tutkinto_fi])
 
 (defn vastanneet-csv [kyselyid lang]
   (let [vastanneet (db/hae-kyselyn-vastaajat {:kyselyid kyselyid})

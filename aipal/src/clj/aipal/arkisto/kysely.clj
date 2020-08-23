@@ -55,7 +55,11 @@
   (db/hae-kysely {:kyselyid kyselyid}))
 
 (defn hae-kyselytyypit []
-  (db/hae-kyselytyypit))
+  (let [kyselytyypit (db/hae-kyselytyypit)]
+    (if (yllapitaja?)
+      kyselytyypit
+      (filter #(not= (:id %) "move") kyselytyypit))))
+
 
 (defn lisaa!
   "Lisää uuden kyselyn"

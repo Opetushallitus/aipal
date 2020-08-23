@@ -103,7 +103,6 @@
     (when (some-> vastaukset
             (validoi-vastaukset kysymykset kyselytyyppi)
             (tallenna-vastaukset! vastaajaid kysymykset kyselytyyppi))
-      (vastaaja/paivata-vastaaja! vastaajaid)
       true)))
 
 (defn hae-vastaus [vastaus]

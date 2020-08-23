@@ -62,6 +62,8 @@
              :automaattikyselyt s/Str}
    :kayttooikeus-tarkistusvali s/Str
    :api-page-length s/Int
+   :email {:host s/Str
+           :ssl s/Bool}
    (s/optional-key :basic-auth) {:tunnus s/Str
                                  :salasana s/Str}})
 
@@ -109,7 +111,9 @@
              :raportointi "0 30 5 * * ?"
              :tutkinnot "0 34 15 ? * * *"
              :automaattikyselyt "0 10 4 ? * * *"}
-   :api-page-length 50000})
+   :api-page-length 50000
+   :email {:host "changeme"
+           :ssl false}})
 
 (def common-audit-log-asetukset {:boot-time        (time-local/local-now)
                                  :hostname         "localhost"

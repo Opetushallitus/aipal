@@ -29,7 +29,8 @@
 (defn ^:private hae-valtakunnalliset-kysymykset []
   (->> (sql/select taulut/kysymys
          (sql/join :inner :kysymysryhma (= :kysymysryhma.kysymysryhmaid :kysymys.kysymysryhmaid))
-         (sql/where {:kysymysryhma.valtakunnallinen true})
+         (sql/where {:kysymysryhma.valtakunnallinen true
+                     :kysymys.vastaustyyppi [not= "luku"]})
          (sql/order :kysymysryhma.kysymysryhmaid :ASC)
          (sql/order :kysymys.jarjestys :ASC)
          (sql/fields :kysymys.jarjestys

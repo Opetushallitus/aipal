@@ -1,0 +1,53 @@
+Hei
+
+Tässä koulunne {{nimi_fi}} linkki Move!-mittaustulosten syöttämiseksi valtakunnalliseen tiedonkeruuseen: https://move.arvovastaus.csc.fi/v/{{tunnus}}
+
+Tämä viesti on lähetty Opetushallituksen Opintopolku-palveluun kirjattuun koulun yleiseen sähköpostiosoitteeseen. Välittäkää linkki koulussanne Move!-mittaustulosten syöttämisen vuonna 2020 tekeville henkilöille. Tulokset tulee syöttää 30.9.2020 mennessä.
+
+
+
+·         Move!-mittaukset toteutetaan syksyisin kouluilla osana 5. ja 8. luokkien liikunnanopetusta.
+
+·         Koulukohtaiset tulokset syötetään ja raportoidaan virallisen koulurekisterin mukaisesti, jossa jokaisella koululla on yksi Tilastokeskuksen tunnus. Mikäli koulullanne on monta yksikköä, syötetään kaikkien yksiköiden tulokset edellä olevan linkin kautta.
+
+·         Kaikkia koulun mittaustuloksia ei tarvitse syöttää yhdellä kertaa. Tuloksia voi syöttää koululla useampi henkilö.
+
+·         Lisätietoja Move!-mittauksista: https://www.oph.fi/fi/move
+
+·         Ota yhteyttä: https://www.oph.fi/fi/koulutus-ja-tutkinnot/ota-yhteytta
+
+
+
+
+
+Tämä on järjestelmästä automaattisesti lähetetty sähköposti. Tähän sähköpostiin lähetettyjä vastauksia ei käsitellä.
+
+
+
+************************************
+
+
+
+Hej,
+
+Här är {{nimi_sv}}:s länk för inmatning av Move!-mätresultaten i den riksomfattande datainsamlingen: https://move.arvovastaus.csc.fi/v/{{tunnus}}
+
+Detta meddelande har sänts till skolans allmänna e-postadress som antecknats i Utbildningsstyrelsens tjänst Studieinfo. Förmedla länken till de personer som gör Move!-mätningarna i er skola 2020. Resultaten ska matas in senast 30.9.2020.
+
+
+
+·         Move!-mätningarna genomförs på hösten i skolorna som en del av gymnastikundervisningen i årskurs 5 och 8.
+
+·         De skolspecifika resultaten matas in och rapporteras enligt det officiella skolregistret, där varje skola har en beteckning som getts av Statistikcentralen. Om det finns flera enheter i er skola, mata in resultaten från alla enheter via länken ovan.
+
+·         Alla skolans mätresultat behöver inte matas in på en gång. Resultaten kan matas in av flera personer i skolan.
+
+·         Mer information om Move!-mätningarna: https://www.oph.fi/sv/move
+
+·         Kontakta: https://www.oph.fi/sv/utbildning-och-examina/ta-kontakt
+
+
+
+
+
+Detta är ett automatiskt e-postmeddelande. Mejl till denna e-postadress besvaras inte.

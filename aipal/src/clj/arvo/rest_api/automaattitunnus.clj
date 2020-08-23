@@ -87,7 +87,7 @@
         ent_oppilaitos (oppilaitos/hae oppilaitos)
         kyselykerta-id (kyselykerta/hae-rekrykysely oppilaitos vuosi)]
     (automaatti-vastaajatunnus :rekry
-      {:kyselykertaid (kyselykerta-id :kyselykertaid)
+      {:kyselykertaid (:kyselykertaid kyselykerta-id)
        :henkilonumero henkilonumero
        :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
        :kieli "fi"

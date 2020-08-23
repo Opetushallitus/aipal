@@ -150,7 +150,7 @@ angular.module('vastaus.vastausui', ['ngRoute', 'toimiala.vastaus', 'yhteiset.pa
 
       $scope.onTextChange = function(kysymys){
         if(kysymys.rajoite === 'numero'){
-          kysymys.vastaus=kysymys.vastaus.replace(/[^0-9.]/g, '');
+          kysymys.vastaus=kysymys.vastaus.replace(/[^0-9.,]/g, '');
         }
       }
 

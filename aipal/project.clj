@@ -12,7 +12,7 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(defproject aipal "2020.1.2"
+(defproject aipal "2020.2.0"
   :description "Arvo"
   :dependencies [[org.clojure/data.zip "0.1.1"]
                  [ch.qos.logback/logback-classic "1.1.5"]
@@ -52,7 +52,9 @@
                  [conman "0.6.6"]
                  [org.flatland/useful "0.11.5"]
                  [migratus "1.0.6"]
-                 [listora/again "1.0.0"]]
+                 [listora/again "1.0.0"]
+                 [selmer "1.12.28"]
+                 [com.draines/postal "2.0.3"]]
 
   :plugins [[test2junit "1.0.1"]
             [codox "0.8.12"]

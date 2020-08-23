@@ -21,10 +21,10 @@ ORDER BY ktk.id;
 INSERT INTO vastaajatunnus (tunnus, kyselykertaid, suorituskieli, tutkintotunnus, taustatiedot,
                           kohteiden_lkm,
                           valmistavan_koulutuksen_oppilaitos,
-                          voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja)
+                          voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika)
 VALUES (:tunnus, :kyselykertaid, :kieli, :tutkinto, :taustatiedot,
       :kohteiden_lkm, :valmistavan_koulutuksen_oppilaitos,
-      :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja)
+      :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja, now(), now())
 RETURNING vastaajatunnusid;
 
 -- :name paivita-taustatiedot! :! :n
@@ -48,7 +48,7 @@ SELECT vt.vastaajatunnusid, vt.kyselykertaid, vt.tutkintotunnus, vt.tunnus, vt.l
        vt.suorituskieli, vt.kunta, vt.taustatiedot, vt.voimassa_alkupvm, vt.voimassa_loppupvm, vt.kohteiden_lkm, vt.kaytettavissa,
 t.nimi_fi, t.nimi_sv, t.nimi_en, kaytettavissa(vt) AS kaytettavissa, (vt.taustatiedot ->> 'koulutusmuoto') AS koulutusmuoto,
 COALESCE(COALESCE(vt.voimassa_loppupvm, kk.voimassa_loppupvm, k.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE) AS muokattavissa,
-(SELECT count(*) FROM vastaaja WHERE vastannut = TRUE AND vastaajatunnusid = vt.vastaajatunnusid) AS vastausten_lkm,
+(SELECT count(*) FROM vastaaja WHERE vastaajatunnusid = vt.vastaajatunnusid) AS vastausten_lkm,
 o.oppilaitoskoodi, o.nimi_fi AS oppilaitos_nimi_fi, o.nimi_sv AS oppilaitos_nimi_sv, o.nimi_en AS oppilaitos_nimi_en,
 tmp.toimipaikkakoodi, tmp.nimi_fi AS toimipaikka_nimi_fi, tmp.nimi_sv AS toimipaikka_nimi_sv, tmp.nimi_en AS toimipaikka_nimi_en
 FROM vastaajatunnus vt
@@ -81,20 +81,25 @@ SELECT count(*) FROM vastaaja AS vastaajia WHERE vastaajatunnusid = :vastaajatun
 SELECT vt.vastaajatunnusid, vt.tunnus, vt.voimassa_loppupvm,
 EXISTS(SELECT 1 FROM vastaaja v WHERE v.vastaajatunnusid = vt.vastaajatunnusid) AS vastattu
 FROM vastaajatunnus vt
-WHERE vt.tunnus = :tunnus
+WHERE vt.tunnus = :tunnus;
 
 -- :name hae-kyselyn-kohteet :? :*
 SELECT vt.tunnus, kk.nimi, vt.voimassa_alkupvm,
-       vt.kohteiden_lkm, count(v) AS vastaajien_lkm
+       vt.kohteiden_lkm, count(v) AS vastaajien_lkm,
+       t.tutkintotunnus, t.nimi_fi AS tutkinto_fi, t.nimi_sv AS tutkinto_sv, t.nimi_en AS tutkinto_en
 FROM vastaajatunnus vt
 LEFT JOIN vastaaja v on vt.vastaajatunnusid = v.vastaajatunnusid
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
+JOIN tutkinto t on vt.taustatiedot->>'tutkinto' = t.tutkintotunnus
 WHERE kk.kyselyid = :kyselyid
-GROUP BY vt.tunnus, kk.nimi, vt.voimassa_alkupvm, vt.kohteiden_lkm;
+GROUP BY vt.tunnus, kk.nimi, vt.voimassa_alkupvm, vt.kohteiden_lkm,
+         t.tutkintotunnus, t.nimi_fi, t.nimi_sv, t.nimi_en;
 
 -- :name hae-kyselyn-vastaajat :? :*
-SELECT vt.tunnus, kk.nimi, vt.voimassa_alkupvm, v.luotuaika AS vastausaika
+SELECT vt.tunnus, kk.nimi, vt.voimassa_alkupvm, v.luotuaika AS vastausaika, t.tutkintotunnus,
+       t.nimi_fi AS tutkinto_fi, t.nimi_sv AS tutkinto_sv, t.nimi_en AS tutkinto_en
 FROM vastaaja v
 JOIN vastaajatunnus vt ON v.vastaajatunnusid = vt.vastaajatunnusid
+JOIN tutkinto t ON vt.taustatiedot->>'tutkinto' = t.tutkintotunnus
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 WHERE kk.kyselyid = :kyselyid;
