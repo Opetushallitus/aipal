@@ -88,7 +88,12 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
               return $scope.aktiivinenKoulutustoimija;
             },
             viimeksiValittuTutkinto: function() {
-              return Vastaajatunnus.haeViimeisinTutkinto($routeParams.kyselykertaid).then(function(response) { return response.data; });
+              return Vastaajatunnus.haeViimeisinTutkinto($routeParams.kyselykertaid).then(function(resp) {
+                if (!resp.data) {
+                  console.error('resp.data missing');
+                }
+                return resp.data;
+              });
             },
             kyselykerta: function () {
               return $scope.kyselykerta;
@@ -103,14 +108,18 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         });
 
         modalInstance.result.then(function(vastaajatunnus) {
-          Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus).success(function(uudetTunnukset) {
+          Vastaajatunnus.luoUusia(kyselykertaId, vastaajatunnus).then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            const uudetTunnukset = resp.data;
             _.forEach(uudetTunnukset, function(tunnus) {
               tunnus.new = true;
               tunnus.vastauksia = 0;
               $scope.tunnukset.unshift(tunnus);
             });
             ilmoitus.onnistuminen(i18n.hae('vastaajatunnus.tallennus_onnistui'));
-          }).error(function() {
+          }).catch(function() {
             ilmoitus.virhe(i18n.hae('vastaajatunnus.tallennus_epaonnistui'));
           });
         });
@@ -119,13 +128,24 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.uusi = uusi;
       $scope.kyselykertaid = $routeParams.kyselykertaid;
 
-      Kieli.haeKaikki().success(function(kielet) {
+      Kieli.haeKaikki().then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const kielet = resp.data;
         $scope.kielet = _.pluck(kielet, 'kieli');
+      }).catch(function (e) {
+        console.error(e);
       });
 
       function haeTutkinnot(kysely){
-        Tutkinto.koulutustoimijanTutkinnot(kysely.tyyppi, false).success(function(tutkinnot) {
-          $scope.tutkinnot = tutkinnot;
+        Tutkinto.koulutustoimijanTutkinnot(kysely.tyyppi, false).then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.tutkinnot = resp.data;
+        }).catch(function (e) {
+          console.error(e);
         });
       }
 
@@ -133,25 +153,44 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
 
       function haeTunnukset (){
         Vastaajatunnus.hae($routeParams.kyselykertaid, $scope.vain_omat)
-          .success(function(tunnukset) {
-            $scope.tunnukset = tunnukset;
-          });
+          .then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            $scope.tunnukset = resp.data;
+          }).catch(function (e) {
+          console.error(e);
+        });
       }
 
       $scope.toggleOmat = function(){
         $scope.vain_omat = !$scope.vain_omat;
         haeTunnukset();
-      }
+      };
 
-      Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
-        $scope.koulutustoimijat = koulutustoimijat;
+      Koulutustoimija.haeKaikki().then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        $scope.koulutustoimijat = resp.data;
+      }).catch(function (e) {
+        console.error(e);
       });
 
-      Koulutustoimija.haeAktiivinen().success(function(koulutustoimija) {
-        $scope.aktiivinenKoulutustoimija = koulutustoimija;
+      Koulutustoimija.haeAktiivinen().then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        $scope.aktiivinenKoulutustoimija = resp.data;
+      }).catch(function (e) {
+        console.error(e);
       });
 
-      Kysely.haeId($routeParams.kyselyid).success(function(kysely) {
+      Kysely.haeId($routeParams.kyselyid).then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const kysely = resp.data;
         $scope.kysely = pvm.parsePvm(kysely);
 
         if(!kysely.kaytettavissa || kysely.automatisoitu) { setMuokkaustila(false); }
@@ -160,17 +199,21 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         if(!$scope.uusi){
           haeTunnukset();
         }
-      }).error(function() {
+      }).catch(function() {
         $location.url('/');
       });
 
       if (!$scope.uusi) {
         Kyselykerta.haeYksi($scope.kyselykertaid)
-          .success(function(kyselykerta) {
+          .then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            const kyselykerta = resp.data;
             $scope.kyselykerta = pvm.parsePvm(kyselykerta);
             if (kyselykerta.lukittu) { setMuokkaustila(false); }
           })
-          .error(function() {
+          .catch(function() {
             $location.url('/');
           });
       }
@@ -194,20 +237,24 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.tallenna = function() {
         if ($scope.uusi) {
           Kyselykerta.luoUusi(parseInt($routeParams.kyselyid, 10), $scope.kyselykerta)
-            .success(function(kyselykerta) {
+            .then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              const kyselykerta = resp.data;
               $scope.kyselykertaForm.$setPristine();
               $location.url('/kyselyt/' + $routeParams.kyselyid + '/kyselykerta/' + kyselykerta.kyselykertaid);
             })
-            .error(function(virhe) {
+            .catch(function(virhe) {
               ilmoitus.virhe(i18n.hae(virhe), i18n.hae('kyselykerta.tallennus_epaonnistui'));
             });
         } else {
           Kyselykerta.tallenna($scope.kyselykertaid, $scope.kyselykerta)
-            .success(function() {
+            .then(function() {
               $scope.kyselykertaForm.$setPristine();
               ilmoitus.onnistuminen(i18n.hae('kyselykerta.tallennus_onnistui'));
             })
-            .error(function(virhe) {
+            .catch(function(virhe) {
               ilmoitus.virhe(i18n.hae(virhe), i18n.hae('kyselykerta.tallennus_epaonnistui'));
             });
         }
@@ -223,23 +270,33 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         });
 
         modalInstance.result.then(function(kohteiden_lkm) {
-          Vastaajatunnus.muokkaaVastaajienLukumaaraa($scope.kyselykertaid, tunnus.vastaajatunnusid, kohteiden_lkm).success(function() {
+          Vastaajatunnus.muokkaaVastaajienLukumaaraa($scope.kyselykertaid, tunnus.vastaajatunnusid, kohteiden_lkm).then(function() {
             tunnus.kohteiden_lkm = kohteiden_lkm;
+          }).catch(function (e) {
+            console.error(e);
           });
         });
       };
 
       $scope.poistaTunnus = function(tunnus) {
         varmistus.varmista(i18n.hae('vastaajatunnus.poista_otsikko'), null, i18n.hae('vastaajatunnus.poista_teksti'), i18n.hae('yleiset.poista')).then(function() {
-          Vastaajatunnus.poista($scope.kyselykertaid, tunnus.vastaajatunnusid).success(function() {
+          Vastaajatunnus.poista($scope.kyselykertaid, tunnus.vastaajatunnusid).then(function() {
             $scope.tunnukset = _.reject($scope.tunnukset, function(t) { return t.vastaajatunnusid === tunnus.vastaajatunnusid; });
+          }).catch(function (e) {
+            console.error(e);
           });
         });
       };
 
       $scope.lukitseTunnus = function(tunnus, lukitse) {
-        Vastaajatunnus.lukitse($routeParams.kyselykertaid, tunnus.vastaajatunnusid, lukitse).success(function(uusiTunnus) {
+        Vastaajatunnus.lukitse($routeParams.kyselykertaid, tunnus.vastaajatunnusid, lukitse).then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const uusiTunnus = resp.data;
           _.assign(tunnus, uusiTunnus);
+        }).catch(function (e) {
+          console.error(e);
         });
       };
     }]
@@ -321,53 +378,88 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
 
       if(laajennettu){
-        Koulutustoimija.haeKoulutusluvalliset().success(function(koulutustoimijat) {
-          $scope.tutkinnonJarjestajat = koulutustoimijat;
+        Koulutustoimija.haeKoulutusluvalliset().then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.tutkinnonJarjestajat = resp.data;
+        }).catch(function (e) {
+          console.error(e);
         });
       }
 
       function haeOppilaitokset(koulutustoimija) {
-        Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).success(function (oppilaitokset) {
-
+        Oppilaitos.haeKoulutustoimijanOppilaitokset(koulutustoimija).then(function (resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const oppilaitokset = resp.data;
           if (oppilaitokset.length === 1) {
             $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = oppilaitokset[0];
           } else {
             $scope.vastaajatunnus.koulutuksen_jarjestaja_oppilaitos = null;
           }
           $scope.oppilaitokset = oppilaitokset;
+        }).catch(function (e) {
+          console.error(e);
         });
       }
 
       function haeToimipaikat(oppilaitos) {
-        Oppilaitos.haeOppilaitoksenToimipaikat(oppilaitos).success(function (toimipaikat) {
-          $scope.toimipaikat = toimipaikat;
-        })
+        Oppilaitos.haeOppilaitoksenToimipaikat(oppilaitos).then(function (resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.toimipaikat = resp.data;
+        }).catch(function (e) {
+          console.error(e);
+        });
       }
 
       function haeTutkinnonJarjestajat(tutkinto) {
-        Tutkinto.haeTutkinnonJarjestajat(tutkinto.tutkintotunnus).success(function (jarjestajat) {
-          $scope.tutkinnonJarjestajat = jarjestajat;
-        })
+        Tutkinto.haeTutkinnonJarjestajat(tutkinto.tutkintotunnus).then(function (resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.tutkinnonJarjestajat = resp.data;
+        }).catch(function (e) {
+          console.error(e);
+        });
       }
 
       function haeJarjestajanTutkinnot(ytunnus, kyselytyyppi) {
-        Tutkinto.haeKoulutustoimijanTutkinnot(ytunnus, kyselytyyppi).success(function (tutkinnot){
-          $scope.tutkinnot = tutkinnot;
-        })
+        Tutkinto.haeKoulutustoimijanTutkinnot(ytunnus, kyselytyyppi).then(function (resp){
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.tutkinnot = resp.data;
+        }).catch(function (e) {
+          console.error(e);
+        });
       }
 
       function haeTutkinnot(){
         if($scope.haeKaikkiTutkinnot){
-          Tutkinto.kyselytyypinTutkinnot(kyselytyyppi).success(function (tutkinnot){
-            $scope.tutkinnot = tutkinnot;
-          })
+          Tutkinto.kyselytyypinTutkinnot(kyselytyyppi).then(function (resp){
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            $scope.tutkinnot = resp.data;
+          }).catch(function (e) {
+            console.error(e);
+          });
         } else {
           if(laajennettu){
             haeJarjestajanTutkinnot($scope.vastaajatunnus.hankintakoulutuksen_toteuttaja.ytunnus, kyselytyyppi);
           } else{
-            Tutkinto.koulutustoimijanTutkinnot(kyselytyyppi).success(function (tutkinnot){
-              $scope.tutkinnot = tutkinnot;
-            })
+            Tutkinto.koulutustoimijanTutkinnot(kyselytyyppi).then(function (resp){
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              $scope.tutkinnot = resp.data;
+            }).catch(function (e) {
+              console.error(e);
+            });
           }
         }
       }

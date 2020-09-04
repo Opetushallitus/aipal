@@ -102,6 +102,10 @@ angular.module('aipal', [
     $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
+  .config(['$locationProvider', function ($locationProvider) {
+    $locationProvider.hashPrefix('');
+  }])
+
   .controller('AipalController', ['$location', '$uibModal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', '$filter',
               function ($location, $uibModal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs, $filter) {
     $scope.aipalOminaisuus = _.has($window, 'aipalOminaisuus') ? $window.aipalOminaisuus : {};
@@ -162,6 +166,7 @@ angular.module('aipal', [
       });
     };
 
+    // NOTE: .hae() is not http call an returns prefetched data so no resp.data.
     kayttooikeudet.hae().then(function (data) {
       $scope.kayttooikeudet = data;
 

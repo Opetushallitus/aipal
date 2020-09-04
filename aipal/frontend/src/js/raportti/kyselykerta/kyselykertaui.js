@@ -35,11 +35,14 @@ angular.module('raportti.kyselykerta.kyselykertaui', ['raportti.kyselykerta.jaka
     'kaavioApurit', 'Raportti', '$location', '$routeParams', '$scope',
     function(kaavioApurit, Raportti, $location, $routeParams, $scope) {
       Raportti.muodostaKyselykertaraportti($routeParams.kyselykertaid, {})
-        .success(function onSuccess(tulos) {
-          $scope.tulos = tulos;
-          $scope.$parent.timestamp = new Date(); 
+        .then(function onSuccess(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.tulos = resp.data;
+          $scope.$parent.timestamp = new Date();
         })
-        .error(function onError(value) {
+        .catch(function onError(value) {
           if (value.status !== 500) {
             $location.url('/');
           }

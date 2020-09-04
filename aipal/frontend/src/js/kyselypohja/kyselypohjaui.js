@@ -46,29 +46,39 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
 
       reader.onload = function(e) {
         var data = e.target.result
-        Kyselypohja.lisaaTiedostosta(data).success(function(kyselypohja){
+        Kyselypohja.lisaaTiedostosta(data).then(function(resp){
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
           $window.location.reload();
-        })
-      }
+        }).catch(function (e) {
+          console.error(e);
+        });
+      };
       reader.readAsText(file, 'UTF-8')
-    }
+    };
 
     $scope.fileChanged = function(ele){
       var files = ele.files;
       if(files.length > 0 ){
         $scope.uploadFile(files[0]);
       }
-    }
+    };
 
-    Kyselypohja.haeKaikki().success(function(kyselypohjat) {
+    Kyselypohja.haeKaikki().then(function(resp) {
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
       // angular-tablesort haluaa lajitella rivioliosta löytyvän (filtteröidyn)
       // attribuutin perusteella, mutta lokalisoitujen kenttien kanssa täytyy
       // antaa filtterille koko rivi. Lisätään riviolioon viittaus itseensä,
       // jolloin voidaan kertoa angular-tablesortille attribuutti, josta koko
       // rivi löytyy.
-      $scope.kyselypohjat = _.map(kyselypohjat, function(k){
+      $scope.kyselypohjat = _.map(resp.data, function(k){
         return _.assign(k, {self: k});
       });
+    }).catch(function (e) {
+      console.error(e);
     });
   }])
 
@@ -85,14 +95,20 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       });
       modalInstance.result.then(function (kysymysryhmaid) {
         Kysymysryhma.hae(kysymysryhmaid)
-          .success(function(kysymysryhma) {
+          .then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            const kysymysryhma = resp.data;
             _.assign($scope.kyselypohja, { kysymysryhmat: _($scope.kyselypohja.kysymysryhmat.concat(kysymysryhma)).uniq('kysymysryhmaid').value() });
             $scope.kyselypohja.kysymysryhmat = _.sortBy($scope.kyselypohja.kysymysryhmat, function(kysymysryhma, index) {
               return (kysymysryhma.taustakysymykset ? 0 : 100) + (kysymysryhma.valtakunnallinen ? 0 : 1000) + index;
             });
 
             $scope.kyselypohjaForm.$setDirty();
-          });
+          }).catch(function (e) {
+          console.error(e);
+        });
       });
     };
 
@@ -117,19 +133,22 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     $scope.tallenna = function() {
       poistaKysymysryhmat();
       if ($routeParams.kyselypohjaid) {
-        Kyselypohja.muokkaa($scope.kyselypohja).success(function() {
+        Kyselypohja.muokkaa($scope.kyselypohja).then(function() {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
           $location.url('/kyselypohjat');
-        }).error(function() {
+        }).catch(function() {
           ilmoitus.virhe(i18n.hae('kyselypohja.tallennus_epaonnistui'));
         });
       } else {
-        Kyselypohja.luoUusi($scope.kyselypohja).success(function() {
+        Kyselypohja.luoUusi($scope.kyselypohja).then(function() {
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
           $location.url('/kyselypohjat');
-        }).error(function() {
+        }).catch(function() {
           ilmoitus.virhe(i18n.hae('kyselypohja.tallennus_epaonnistui'));
         });
       }
@@ -144,9 +163,13 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     });
 
     if ($routeParams.kyselypohjaid) {
-      Kyselypohja.hae($routeParams.kyselypohjaid).success(function(kyselypohja) {
+      Kyselypohja.hae($routeParams.kyselypohjaid).then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const kyselypohja = resp.data;
         $scope.kyselypohja = pvm.parsePvm(kyselypohja);
-      }).error(function(data, status) {
+      }).catch(function(data, status) {
         if (status !== 500) {
           $location.url('/kyselypohjat');
         }
@@ -182,8 +205,14 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
     };
 
     if(!kyselypohja.kysymysryhmat) {
-      Kyselypohja.hae(kyselypohja.kyselypohjaid).success(function(kyselypohja) {
+      Kyselypohja.hae(kyselypohja.kyselypohjaid).then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const kyselypohja = resp.data;
         setKysymykset(kyselypohja);
+      }).catch(function (e) {
+        console.error(e);
       });
     }else{
       setKysymykset(kyselypohja);

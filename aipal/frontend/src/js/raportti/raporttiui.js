@@ -132,18 +132,27 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
-      Kysymysryhma.haeTaustakysymysryhma(kysymysryhmaid).success(function(kysymysryhma) {
+      Kysymysryhma.haeTaustakysymysryhma(kysymysryhmaid).then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const kysymysryhma = resp.data;
         $scope.taustakysymysryhma = kysymysryhma;
 
         $scope.raportti.kysymykset = {};
         _.forEach(kysymysryhma.kysymykset, function(kysymys) {
           $scope.raportti.kysymykset[kysymys.kysymysid] = { monivalinnat: {} };
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
-    Kysymysryhma.haeTaustakysymysryhmat().success(function(kysymysryhmat) {
-      $scope.taustakysymysryhmat = kysymysryhmat;
+    Kysymysryhma.haeTaustakysymysryhmat().then(function(resp) {
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
+      $scope.taustakysymysryhmat = resp.data;
       _.forEach($scope.taustakysymysryhmat, function(taustakysymysryhma) {
         if (taustakysymysryhma.kysymysryhmaid === 1) {
           taustakysymysryhma.lisateksti = i18n.raportit.taustakysymysryhma_vanha_lisateksti;
@@ -158,25 +167,48 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
       });
 
       $scope.raportti.taustakysymysryhmaid = $scope.taustakysymysryhmat[0].kysymysryhmaid.toString();
+    }).catch(function (e) {
+      console.error(e);
     });
 
-    Koulutustoimija.haeKaikki().success(function(koulutustoimijat) {
+    Koulutustoimija.haeKaikki().then(function(resp) {
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
+      const koulutustoimijat = resp.data;
       if ($scope.yllapitaja) {
         $scope.koulutustoimijat = koulutustoimijat;
       } else {
         $scope.koulutustoimijat = _.where(koulutustoimijat, {ytunnus: $scope.kayttooikeudet.aktiivinen_rooli.organisaatio});
       }
+    }).catch(function (e) {
+      console.error(e);
     });
 
-    Tutkinto.haeVoimassaolevatTutkinnotHierarkiassa().success(function(koulutusalat) {
-      $scope.koulutusalat = koulutusalat;
+    Tutkinto.haeVoimassaolevatTutkinnotHierarkiassa().then(function(resp) {
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
+      $scope.koulutusalat = resp.data;
+    }).catch(function (e) {
+      console.error(e);
     });
 
-    Tutkinto.haeVanhentuneetTutkinnotHierarkiassa().success(function(koulutusalat) {
-      $scope.vanhentuneetKoulutusalat = koulutusalat;
+    Tutkinto.haeVanhentuneetTutkinnotHierarkiassa().then(function(resp) {
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
+      $scope.vanhentuneetKoulutusalat = resp.data;
+    }).catch(function (e) {
+      console.error(e);
     });
-    Kieli.haeKaikki().success(function(kielet) {
-      $scope.kielet = _.pluck(kielet, 'kieli');
+    Kieli.haeKaikki().then(function(resp) {
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
+      $scope.kielet = _.pluck(resp.data, 'kieli');
+    }).catch(function (e) {
+      console.error(e);
     });
     Tutkintotyyppi.haeKaikki(function(tutkintotyypit) {
       $scope.tutkintotyypit = tutkintotyypit;
@@ -244,8 +276,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
         elementti.valittu = true;
         $scope.raportti[taulukko].push(elementti[idAvain]);
         if(taulukko === 'koulutustoimijat') {
-          Oppilaitos.haeKoulutustoimijanOppilaitokset(elementti[idAvain]).success(function(oppilaitokset) {
+          Oppilaitos.haeKoulutustoimijanOppilaitokset(elementti[idAvain]).then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            const oppilaitokset = resp.data;
             $scope.oppilaitokset = $scope.oppilaitokset.concat(oppilaitokset);
+          }).catch(function (e) {
+            console.error(e);
           });
         }
       } else {
@@ -281,7 +319,11 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
 
     $scope.muodostaRaportti = function() {
       seuranta.asetaLatausIndikaattori(Raportti.muodosta($scope.raportti), 'raportinMuodostus')
-        .success(function(tulos) {
+        .then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const tulos = resp.data;
           if(tulos.raportit !== undefined) {
             delete $scope.tulos;
             $scope.raportit = tulos.raportit;
@@ -290,7 +332,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
             $scope.tulos = tulos;
           }
           $scope.$parent.timestamp = new Date();
-        }).error(function(data, status) {
+        }).catch(function(data, status) {
           if (status !== 500) {
             ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
           }
@@ -330,15 +372,25 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
           suodataKyselyt();
         });
 
-        Kysely.hae().success(function (data) {
-          $scope.kyselyt = data;
+        Kysely.hae().then(function (resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.kyselyt = resp.data;
           suodataKyselyt();
+        }).catch(function (e) {
+          console.error(e);
         });
 
         $scope.$watch('raportti.kyselyid', function(uusi) {
           if (!_.isUndefined(uusi)) {
-            Kysely.haeVastaustunnustiedot(uusi).success(function(tiedot) {
-              $scope.vastaustunnustiedot = tiedot;
+            Kysely.haeVastaustunnustiedot(uusi).then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              $scope.vastaustunnustiedot = resp.data;
+            }).catch(function (e) {
+              console.error(e);
             });
           }
           else {
@@ -362,11 +414,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
 
         $scope.muodostaKyselyraportti = function(raportti) {
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselyraportti(raportti.kyselyid, raportti), 'raportinMuodostus')
-            .success(function(tulos) {
-              $scope.tulos = tulos;
+            .then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              $scope.tulos = resp.data;
               $scope.$parent.timestamp = new Date();
             })
-            .error(function(value) {
+            .catch(function(value) {
               if (value.status !== 500) {
                 ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
               }
@@ -399,15 +454,25 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
           suodataKyselykerrat();
         });
 
-        Kyselykerta.hae().success(function(data) {
-          $scope.kyselykerrat = data;
+        Kyselykerta.hae().then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.kyselykerrat = resp.data;
           suodataKyselykerrat();
+        }).catch(function (e) {
+          console.error(e);
         });
 
         $scope.$watch('raportti.kyselykertaid', function(uusi) {
           if (!_.isUndefined(uusi)) {
-            Kyselykerta.haeVastaustunnustiedot(uusi).success(function(tiedot) {
-              $scope.vastaustunnustiedot = tiedot;
+            Kyselykerta.haeVastaustunnustiedot(uusi).then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              $scope.vastaustunnustiedot = resp.data;
+            }).catch(function (e) {
+              console.error(e);
             });
           }
           else {
@@ -431,11 +496,14 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
 
         $scope.muodostaKyselykertaraportti = function(raportti) {
           seuranta.asetaLatausIndikaattori(Raportti.muodostaKyselykertaraportti(raportti.kyselykertaid, raportti), 'raportinMuodostus')
-            .success(function(tulos) {
-              $scope.tulos = tulos;
+            .then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              $scope.tulos = resp.data;
               $scope.$parent.timestamp = new Date();
             })
-            .error(function(value) {
+            .catch(function(value) {
               if (value.status !== 500) {
                 ilmoitus.virhe(i18n.hae('raportti.muodostus_epaonnistui'));
               }

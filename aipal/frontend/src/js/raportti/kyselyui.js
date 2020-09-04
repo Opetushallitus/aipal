@@ -34,11 +34,14 @@ angular.module('raportti.kyselyui', ['raportti.kyselykerta.jakaumakaavio',
     'kaavioApurit', 'kieli', 'Raportti', '$location', '$routeParams', '$scope',
     function(kaavioApurit, kieli, Raportti, $location, $routeParams, $scope) {
       Raportti.muodostaKyselyraportti($routeParams.kyselyid, {kieli: kieli})
-        .success(function(tulos) {
-          $scope.tulos = tulos;
-          $scope.$parent.timestamp = new Date(); 
+        .then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.tulos = resp.data;
+          $scope.$parent.timestamp = new Date();
         })
-        .error(function(value) {
+        .catch(function(value) {
           if (value.status !== 500) {
             $location.url('/');
           }

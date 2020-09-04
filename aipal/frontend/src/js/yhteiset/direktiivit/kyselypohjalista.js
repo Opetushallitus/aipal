@@ -61,11 +61,15 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
 
         $scope.julkaiseKyselypohja = function(kyselypohja) {
           varmistus.varmista(i18n.hae('kyselypohja.julkaise'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.julkaise_teksti'), i18n.hae('kyselypohja.julkaise')).then(function() {
-            Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
+            Kyselypohja.julkaise(kyselypohja).then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              const uusiKyselypohja = resp.data;
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.julkaistu'));
               _.assign(kyselypohja, uusiKyselypohja);
               $location.url('/kyselypohjat/');
-            }).error(function() {
+            }).catch(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
             });
           });
@@ -75,11 +79,11 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
           varmistus.varmista(i18n.hae('kyselypohja.poista'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.poista_teksti'), i18n.hae('kyselypohja.poista')).then(function() {
             var kyselypohjaid = kyselypohja.kyselypohjaid;
             var kyselypohjaindex = _.findIndex(kyselypohjalista, {kyselypohjaid: kyselypohjaid});
-            Kyselypohja.poista(kyselypohjaid).success(function() {
+            Kyselypohja.poista(kyselypohjaid).then(function() {
               kyselypohjalista.splice(kyselypohjaindex, 1);
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_onnistui'));
               $location.url('/kyselypohjat/');
-            }).error(function() {
+            }).catch(function() {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_epaonnistui'));
             });
           });
@@ -87,12 +91,16 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
 
         $scope.palautaKyselypohjaLuonnokseksi = function(kyselypohja) {
           varmistus.varmista(i18n.hae('kyselypohja.palauta_luonnokseksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_luonnokseksi_teksti'), i18n.hae('kyselypohja.palauta_luonnokseksi')).then(function() {
-            Kyselypohja.palautaLuonnokseksi(kyselypohja).success(function(uusiKyselypohja) {
+            Kyselypohja.palautaLuonnokseksi(kyselypohja).then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              const uusiKyselypohja = resp.data;
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_luonnokseksi_onnistui'));
 
               _.assign(kyselypohja, uusiKyselypohja);
               $location.url('/kyselypohjat/');
-            }).error(function() {
+            }).catch(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.palautus_luonnokseksi_epaonnistui'));
             });
           });
@@ -100,11 +108,15 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
 
         $scope.suljeKyselypohja = function(kyselypohja) {
           varmistus.varmista(i18n.hae('kyselypohja.sulje'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.sulje_teksti'), i18n.hae('kyselypohja.sulje')).then(function() {
-            Kyselypohja.sulje(kyselypohja).success(function(uusiKyselypohja) {
+            Kyselypohja.sulje(kyselypohja).then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              const uusiKyselypohja = resp.data;
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.suljettu'));
               _.assign(kyselypohja, uusiKyselypohja);
               $location.url('/kyselypohjat/');
-            }).error(function() {
+            }).catch(function() {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.sulkeminen_epaonnistui'));
             });
           });
@@ -112,11 +124,15 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
 
         $scope.palautaKyselypohjaJulkaistuksi = function(kyselypohja) {
           varmistus.varmista(i18n.hae('kyselypohja.palauta_julkaistuksi'), $filter('lokalisoiKentta')(kyselypohja, 'nimi'), i18n.hae('kyselypohja.palauta_julkaistuksi_teksti'), i18n.hae('kyselypohja.palauta_julkaistuksi')).then(function() {
-            Kyselypohja.julkaise(kyselypohja).success(function(uusiKyselypohja) {
+            Kyselypohja.julkaise(kyselypohja).then(function(resp) {
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              const uusiKyselypohja = resp.data;
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.palautus_julkaistuksi_onnistui'));
               _.assign(kyselypohja, uusiKyselypohja);
               $location.url('/kyselypohjat/');
-            }).error(function() {
+            }).catch(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.palautus_julkaistuksi_epaonnistui'));
             });
           });
