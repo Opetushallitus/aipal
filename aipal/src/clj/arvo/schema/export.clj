@@ -38,7 +38,10 @@
 
 (s/defschema Kysymyskategoria
   {(s/optional-key :rahoitusmallikysymys) (s/maybe s/Bool)
-   (s/optional-key :taustakysymyksen_tyyppi) (s/maybe s/Str)})
+   (s/optional-key :taustakysymyksen_tyyppi) (s/maybe s/Str)
+   (s/optional-key :min) (s/maybe s/Str)
+   (s/optional-key :max) (s/maybe s/Str)
+   s/Any s/Any})
 
 (s/defschema Kysymys
   {:kysymysid s/Int
