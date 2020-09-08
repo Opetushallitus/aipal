@@ -53,7 +53,7 @@
                      :vastaajatunnusid (:vastaajatunnusid vastaajatunnus)})))))
 
 (defn hae-vastaaja [vastaajatunnus]
-  (first (sql/select :vasta
+  (first (sql/select :vastaaja
            (sql/join :inner :vastaajatunnus (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
            (sql/fields :vastaaja.vastaajaid :vastaaja.kyselykertaid :vastaaja.vastaajatunnusid)
            (vastaajatunnus-where vastaajatunnus))))
@@ -69,6 +69,7 @@
 (defn paivata-vastaaja! [vastaajaid]
   (->
     (sql/update* :vastaaja)
+    (sql/set-fields {:vastannut true})
     (sql/where {:vastaajaid vastaajaid})
     sql/exec))
 
