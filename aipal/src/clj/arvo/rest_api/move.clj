@@ -47,7 +47,11 @@
   (GET "/vastaanottajat" []
     :middleware [auth-mw]
     :header-params [authorization :- String]
-    (response-or-404 (move/vastaanottajat))))
+    (response-or-404 (move/vastaanottajat)))
+  (GET "/muistutus-vastaanottajat" []
+    :middleware [auth-mw]
+    :header-params [authorization :- String]
+    (response-or-404 (move/muistutus-vastaanottajat))))
 
 (defn move-reitit [asetukset]
   (wrap-authentication reitit (auth-backend asetukset)))

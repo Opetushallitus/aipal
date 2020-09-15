@@ -32,6 +32,10 @@
   (let [kyselykerta (first (db/hae-move-kyselykerta {:tunniste "move-2020"}))]
     (db/hae-move-vastaanottajat (merge kyselykerta {:tunniste "move-2020"}))))
 
+(defn muistutus-vastaanottajat []
+  (let [kyselykerta (first (db/hae-move-kyselykerta {:tunniste "move-2020"}))]
+    (db/hae-move-muistutus-vastaanottajat (merge kyselykerta {:tunniste "move-2020"}))))
+
 (defn luo-tunnukset []
   (let [kyselykerta (first (db/hae-move-kyselykerta {:tunniste "move-2020"}))
         oppilaitokset (db/hae-move-oppilaitokset-ilman-tunnusta kyselykerta)
@@ -52,4 +56,3 @@
     (doseq [recipient recipients]
       (let [message (format-message recipient "move-2020")]
         (email/send-email message)))))
-

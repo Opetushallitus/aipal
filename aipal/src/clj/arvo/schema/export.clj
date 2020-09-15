@@ -25,7 +25,7 @@
    :vastaajaid s/Int
    :kysymysid s/Int
    :vastausaika s/Any
-   :numerovalinta (s/maybe s/Int)
+   :numerovalinta (s/maybe s/Num)
    :vapaateksti (s/maybe s/Str)
    :vaihtoehto (s/maybe s/Str)
    :koulutustoimija s/Str
