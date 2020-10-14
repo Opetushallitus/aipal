@@ -27,17 +27,15 @@
     </kyselylista>
 </auth>
 
-<auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
-  <div>
-    <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
-      <span ng-if="!naytaSuljetut">{{ 'yleiset.nayta_suljetut' | i18n }}</span>
-      <span ng-if="naytaSuljetut">{{ 'yleiset.piilota_suljetut' | i18n }}</span>
-    </button>
-  </div>
+<div>
+  <button class="btn btn-primary" ng-click="naytaSuljetut=!naytaSuljetut">
+    <span ng-if="!naytaSuljetut">{{ 'yleiset.nayta_suljetut' | i18n }}</span>
+    <span ng-if="naytaSuljetut">{{ 'yleiset.piilota_suljetut' | i18n }}</span>
+  </button>
+</div>
 
-  <div ng-if="naytaSuljetut">
-    <h2>{{ 'yleiset.suljetut' | i18n }}</h2>
-    <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'suljettu'}" haku="hakuehto.teksti">
-    </kyselylista>
-  </div>
-</auth>
+<div ng-if="naytaSuljetut">
+  <h2>{{ 'yleiset.suljetut' | i18n }}</h2>
+  <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'suljettu'}" haku="hakuehto.teksti">
+  </kyselylista>
+</div>
