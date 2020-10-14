@@ -35,7 +35,7 @@
             [ring.util.response :as resp]
             schema.core
 
-            [clj-cas-client.core :refer [cas]]
+            [arvo.auth.cas-auth-middleware :refer [cas]]
             [arvo.auth.cas-middleware :refer [wrap-cas-single-sign-out]]
 
             [oph.common.infra.asetukset :refer [konfiguroi-lokitus]]
