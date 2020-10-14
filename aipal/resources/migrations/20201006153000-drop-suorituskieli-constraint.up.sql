@@ -1,0 +1,1 @@
+ALTER TABLE vastaajatunnus DROP CONSTRAINT vastaajatunnus_suorituskieli_fkey;

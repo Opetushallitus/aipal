@@ -24,7 +24,7 @@ ALTER TABLE kysymysryhma DROP COLUMN voimassa_alkupvm;
 ALTER TABLE kysymysryhma DROP COLUMN voimassa_loppupvm;
 ALTER TABLE kysymysryhma DROP COLUMN ntm_kysymykset;
 
-CREATE TABLE move.email_log (
+CREATE TABLE email_log (
     id SERIAL PRIMARY KEY,
     sahkoposti TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT now(),

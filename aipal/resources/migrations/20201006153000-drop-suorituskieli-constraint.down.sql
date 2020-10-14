@@ -1,0 +1,1 @@
+ALTER TABLE vastaajatunnus ADD CONSTRAINT vastaajatunnus_suorituskieli_fkey FOREIGN KEY (suorituskieli) REFERENCES kieli(kieli)
