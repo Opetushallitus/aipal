@@ -38,6 +38,8 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
         if(data.impersonoitu_kayttaja.trim().length > 0 || data.vaihdettu_organisaatio.trim().length > 0){
           impersonoitu = true;
         }
+      }).catch(function (e) {
+        console.error(e);
       });
 
     }

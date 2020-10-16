@@ -129,6 +129,8 @@ angular.module('aipal', [
         impersonaatioResource.impersonoi({oid: impersonoitava.oid}, function () {
           $window.location = $scope.baseUrl + '/';
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -141,6 +143,8 @@ angular.module('aipal', [
         impersonaatioResource.vaihdaOrganisaatio({oid: impersonoitava.ytunnus}, function () {
           $window.location = $scope.baseUrl + '/';
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -162,6 +166,8 @@ angular.module('aipal', [
         rooliResource.valitse({rooli_organisaatio_id: rooli_organisaatio_id}, function () {
           $window.location = $scope.baseUrl + '/';
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -183,8 +189,12 @@ angular.module('aipal', [
         var rooli = $scope.kayttooikeudet.aktiivinen_rooli.rooli;
         i18n.$promise.then(function(){
           $scope.rooli_koulutustoimija = i18n.hae('roolit.rooli.' + rooli) + ' / ' + koulutustoimija;
+        }).catch(function (e) {
+          console.error(e);
         });
       }
+    }).catch(function (e) {
+      console.error(e);
     });
 
     $scope.unohdaAvoimetKyselyt = function() {

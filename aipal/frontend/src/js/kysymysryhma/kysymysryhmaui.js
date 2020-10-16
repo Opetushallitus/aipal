@@ -349,6 +349,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
         resolve: {
           kysymysryhma: function() { return $scope.kysymysryhma; }
         }
+      }).result.then(function () { }).catch(function (e) {
+        console.error(e);
       });
     };
 

@@ -38,6 +38,8 @@ angular.module('yhteiset.palvelut.seuranta', [])
           latausIndikaattorit[id].valmis = true;
           latausIndikaattorit[id].ok = false;
           latausIndikaattorit[id].paivitetty = aikaleima();
+        }).catch(function (e) {
+          console.error(e);
         });
 
         return promise;

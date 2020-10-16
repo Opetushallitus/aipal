@@ -34,6 +34,8 @@ angular.module('yhteiset.direktiivit.kyselylista',
           .catch(function() {
             ilmoitus.virhe(i18n.hae('kysely.julkaisu_epaonnistui'));
           });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -49,6 +51,8 @@ angular.module('yhteiset.direktiivit.kyselylista',
           .catch(function() {
             ilmoitus.virhe(i18n.hae('kysely.poisto_epaonnistui'));
           });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -69,6 +73,8 @@ angular.module('yhteiset.direktiivit.kyselylista',
         .catch(function(){
           ilmoitus.virhe(i18n.hae('kyselykerta.poistaminen_epaonnistui'));
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -84,6 +90,8 @@ angular.module('yhteiset.direktiivit.kyselylista',
         }).catch(function (e) {
           console.error(e);
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -124,6 +132,8 @@ angular.module('yhteiset.direktiivit.kyselylista',
           }).catch(function (e) {
           console.error(e);
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
     $scope.avaaKyselykerta = function(kyselykerta) {

@@ -58,6 +58,8 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
                     console.error('resp.data missing');
                   }
                   return resp.data;
+                }).catch(function (e) {
+                  console.error(e);
                 });
               }
             }
@@ -76,6 +78,8 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.julkaisu_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -90,9 +94,13 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
                       console.error('resp.data missing');
                     }
                     return resp.data;
+                  }).catch(function (e) {
+                    console.error(e);
                   });
                 }
               }
+            }).result.then(function () { }).catch(function (e) {
+              console.error(e);
             });
           };
 
@@ -111,6 +119,8 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.sulkeminen_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -127,6 +137,8 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.poistaminen_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -145,6 +157,8 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.palautus_julkaistuksi_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -163,6 +177,8 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
               .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.palautus_luonnokseksi_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
       }]

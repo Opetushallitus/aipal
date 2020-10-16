@@ -277,11 +277,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           templateUrl: 'template/kysely/lisaa-kyselypohja.html',
           controller: 'LisaaKyselypohjaModalController',
           resolve: {valittuPohja: function () {
-              return $scope.kyselypohja
+              return $scope.kyselypohja;
             }}
         });
         modalInstance.result.then(function (kyselypohja) {
-          haeKyselypohja(kyselypohja.kyselypohjaid)
+          haeKyselypohja(kyselypohja.kyselypohjaid);
+        }).catch(function (e) {
+          console.error(e);
         });
       };
 
@@ -308,6 +310,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           .catch(function() {
             ilmoitus.virhe(i18n.hae('kysely.ryhman_haku_epaonnistui'));
           });
+        }).catch(function (e) {
+          console.error(e);
         });
       };
 
@@ -347,6 +351,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           resolve: {vastausBaseUrl: function(){
             return $scope.vastausBaseUrl;
           }}
+        }).result.then(function () {}).catch(function (e) {
+          console.error(e);
         });
       };
     }
@@ -382,9 +388,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       const kysymysryhmat = resp.data;
       $scope.kysymysryhmat = _.filter(kysymysryhmat, function(kr) {
         return !kr.valtakunnallinen;
-      }).catch(function (e) {
-        console.error(e);
       });
+    }).catch(function (e) {
+      console.error(e);
     });
     $scope.tallenna = function (kysymysryhmaid) {
       $uibModalInstance.close(kysymysryhmaid);

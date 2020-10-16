@@ -156,6 +156,8 @@ angular.module('aipal')
           }, function(){
             resetMatches();
             isLoadingSetter(originalScope, false);
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 

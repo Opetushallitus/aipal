@@ -109,6 +109,8 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
           }).catch(function (e) {
           console.error(e);
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -119,6 +121,8 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         resolve: {
           kyselypohja: function() { return $scope.kyselypohja; }
         }
+      }).result.then(function () { }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -134,9 +138,6 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       poistaKysymysryhmat();
       if ($routeParams.kyselypohjaid) {
         Kyselypohja.muokkaa($scope.kyselypohja).then(function() {
-          if (!resp.data) {
-            console.error('resp.data missing');
-          }
           $scope.kyselypohjaForm.$setPristine();
           ilmoitus.onnistuminen(i18n.hae('kyselypohja.tallennus_onnistui'));
           $location.url('/kyselypohjat');

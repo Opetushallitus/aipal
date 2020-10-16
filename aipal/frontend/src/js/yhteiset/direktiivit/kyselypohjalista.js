@@ -44,6 +44,8 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             resolve: {
               kyselypohja: function() { return kyselypohja; }
             }
+          }).result.then(function () { }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -72,6 +74,8 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             }).catch(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.julkaisu_epaonnistui'));
             });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -86,6 +90,8 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             }).catch(function() {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.poistaminen_epaonnistui'));
             });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -103,6 +109,8 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             }).catch(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.palautus_luonnokseksi_epaonnistui'));
             });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -119,6 +127,8 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             }).catch(function() {
               ilmoitus.onnistuminen(i18n.hae('kyselypohja.sulkeminen_epaonnistui'));
             });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -135,6 +145,8 @@ angular.module('yhteiset.direktiivit.kyselypohjalista', ['yhteiset.palvelut.i18n
             }).catch(function() {
               ilmoitus.virhe(i18n.hae('kyselypohja.palautus_julkaistuksi_epaonnistui'));
             });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 

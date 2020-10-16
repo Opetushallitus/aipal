@@ -63,13 +63,13 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         'amispalaute': 'template/kysely/amis-tunnukset.html',
         'kandipalaute': 'template/kysely/palautekysely-tunnukset.html',
         'amk-uraseuranta': 'template/kysely/uraseuranta-tunnukset.html'
-      }
+      };
 
       $scope.luoTunnuksiaDialogi = function (laajennettu) {
         var kyselykertaId = $routeParams.kyselykertaid;
 
-        var templateUrl = laajennettu ? 'template/kysely/amis-laajennettu.html' : templateMap[$scope.kysely.tyyppi]
-        var template = {templateUrl: templateUrl, controller: 'LuoTunnuksiaModalController'}
+        var templateUrl = laajennettu ? 'template/kysely/amis-laajennettu.html' : templateMap[$scope.kysely.tyyppi];
+        var template = {templateUrl: templateUrl, controller: 'LuoTunnuksiaModalController'};
 
         var modalInstance = $uibModal.open({
           templateUrl: template.templateUrl,
@@ -93,6 +93,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
                   console.error('resp.data missing');
                 }
                 return resp.data;
+              }).catch(function (e) {
+                console.error(e);
               });
             },
             kyselykerta: function () {
@@ -122,6 +124,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           }).catch(function() {
             ilmoitus.virhe(i18n.hae('vastaajatunnus.tallennus_epaonnistui'));
           });
+        }).catch(function (e) {
+          console.error(e);
         });
       };
 
@@ -275,6 +279,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           }).catch(function (e) {
             console.error(e);
           });
+        }).catch(function (e) {
+          console.error(e);
         });
       };
 
@@ -285,6 +291,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           }).catch(function (e) {
             console.error(e);
           });
+        }).catch(function (e) {
+          console.error(e);
         });
       };
 
