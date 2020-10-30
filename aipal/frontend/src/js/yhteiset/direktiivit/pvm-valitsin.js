@@ -30,6 +30,19 @@ angular.module('yhteiset.direktiivit.pvm-valitsin', [])
       },
       templateUrl : 'template/yhteiset/direktiivit/pvm-valitsin.html',
       link : function(scope) {
+        scope.dateOptions = {
+          minDate: scope.minPvm,
+          maxDate: scope.maxPvm,
+        };
+
+        scope.$watch('minPvm', function(newMinPvm) {
+          scope.dateOptions.minDate = newMinPvm;
+        });
+
+        scope.$watch('maxPvm', function(newMaxPvm) {
+          scope.dateOptions.maxDate = newMaxPvm;
+        });
+
         scope.$watch('oletusPvm', function(value){
           if(value && !scope.valittuPvm) {
             scope.valittuPvm = value;
