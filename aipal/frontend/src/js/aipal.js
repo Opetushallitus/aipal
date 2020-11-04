@@ -54,7 +54,6 @@ angular.module('aipal', [
   'yhteiset.direktiivit.jakauma',
   'yhteiset.suodattimet.enumarvo',
   'yhteiset.suodattimet.i18n',
-  'pasvaz.bindonce',
   'ui.bootstrap',
   'ngCookies',
   'ngRoute',
@@ -102,6 +101,10 @@ angular.module('aipal', [
     $httpProvider.defaults.headers.common['angular-ajax-request'] = true;
   }])
 
+  .config(['$locationProvider', function ($locationProvider) {
+    $locationProvider.hashPrefix('');
+  }])
+
   .controller('AipalController', ['$location', '$uibModal', '$scope', '$window', 'i18n', 'impersonaatioResource', 'rooliResource', 'kayttooikeudet', 'breadcrumbs', '$filter',
               function ($location, $uibModal, $scope, $window, i18n, impersonaatioResource, rooliResource, kayttooikeudet, breadcrumbs, $filter) {
     $scope.aipalOminaisuus = _.has($window, 'aipalOminaisuus') ? $window.aipalOminaisuus : {};
@@ -126,6 +129,8 @@ angular.module('aipal', [
         impersonaatioResource.impersonoi({oid: impersonoitava.oid}, function () {
           $window.location = $scope.baseUrl + '/';
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -138,6 +143,8 @@ angular.module('aipal', [
         impersonaatioResource.vaihdaOrganisaatio({oid: impersonoitava.ytunnus}, function () {
           $window.location = $scope.baseUrl + '/';
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -159,9 +166,12 @@ angular.module('aipal', [
         rooliResource.valitse({rooli_organisaatio_id: rooli_organisaatio_id}, function () {
           $window.location = $scope.baseUrl + '/';
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
+    // NOTE: .hae() is not http call an returns prefetched data so no resp.data.
     kayttooikeudet.hae().then(function (data) {
       $scope.kayttooikeudet = data;
 
@@ -179,8 +189,12 @@ angular.module('aipal', [
         var rooli = $scope.kayttooikeudet.aktiivinen_rooli.rooli;
         i18n.$promise.then(function(){
           $scope.rooli_koulutustoimija = i18n.hae('roolit.rooli.' + rooli) + ' / ' + koulutustoimija;
+        }).catch(function (e) {
+          console.error(e);
         });
       }
+    }).catch(function (e) {
+      console.error(e);
     });
 
     $scope.unohdaAvoimetKyselyt = function() {

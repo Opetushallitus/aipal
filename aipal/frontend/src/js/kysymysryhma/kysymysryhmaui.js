@@ -64,17 +64,20 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
   .controller('KysymysryhmatController', ['$filter', '$scope', '$uibModal', 'Kysymysryhma',
                                           function($filter, $scope, $uibModal, Kysymysryhma) {
     $scope.latausValmis = false;
-    Kysymysryhma.haeKaikki().success(function(kysymysryhmat){
+    Kysymysryhma.haeKaikki().then(function(resp){
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
       // angular-tablesort haluaa lajitella rivioliosta löytyvän (filtteröidyn)
       // attribuutin perusteella, mutta lokalisoitujen kenttien kanssa täytyy
       // antaa filtterille koko rivi. Lisätään riviolioon viittaus itseensä,
       // jolloin voidaan kertoa angular-tablesortille attribuutti, josta koko
       // rivi löytyy.
-      $scope.kysymysryhmat = _.map(kysymysryhmat, function(k){
+      $scope.kysymysryhmat = _.map(resp.data, function(k){
         return _.assign(k, {self: k});
       });
       $scope.latausValmis = true;
-    }).error(function() {
+    }).catch(function() {
       $scope.latausValmis = true;
     });
   }])
@@ -148,13 +151,17 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     if (kopioi || !uusi) {
       Kysymysryhma.hae($routeParams.kysymysryhmaid)
-        .success(function(kysymysryhma) {
+        .then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const kysymysryhma = resp.data;
           if (kopioi) {
             delete kysymysryhma.kysymysryhmaid;
           }
           $scope.kysymysryhma = kysymysryhma;
         })
-        .error(function(data, status) {
+        .catch(function(data, status) {
           if (status !== 500) {
             $location.url('/kysymysryhmat');
           }
@@ -229,15 +236,21 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     $scope.asteikkoValidi = function(){
       return _.every($scope.aktiivinenKysymys.monivalintavaihtoehdot, 'teksti_fi')
-    }
+    };
 
     Kysymysryhma.haeAsteikot()
-      .success(function(data){
+      .then(function(resp){
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const data = resp.data;
         $scope.asteikot = data;
         if(data.length > 0){
           $scope.valittuAsteikko = data[0];
         }
-      });
+      }).catch(function (e) {
+      console.error(e);
+    });
 
     $scope.lataaAsteikko = function(asteikko){
       if(asteikko === null) return;
@@ -245,9 +258,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       var vaihtoehdot = asteikko.asteikko.vaihtoehdot;
       _.forEach(vaihtoehdot, function(vaihtoehto){
         $scope.aktiivinenKysymys.monivalintavaihtoehdot.push(vaihtoehto)
-      })
+      });
       $scope.latausNakyvissa = false;
-    }
+    };
 
     $scope.nollaa = function () {
       if($scope.aktiivinenKysymys) {
@@ -267,24 +280,30 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
         $scope.aktiivinenKysymys.selite_sv = ''
         $scope.aktiivinenKysymys.selite_en = ''
       }
-    }
+    };
 
     $scope.tallennaAsteikko = function(nimi){
       var asteikko = $scope.aktiivinenKysymys.monivalintavaihtoehdot;
       Kysymysryhma.tallennaAsteikko(nimi, asteikko)
-        .success(function(tallennettu){
-          $scope.asteikot.push(tallennettu)
-        })
+        .then(function(resp){
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const tallennettu = resp.data;
+          $scope.asteikot.push(tallennettu);
+        }).catch(function (e) {
+        console.error(e);
+      });
       $scope.tallennusNakyvissa = false;
-    }
+    };
 
     $scope.naytaTallennus = function (nakyvissa) {
       $scope.tallennusNakyvissa = nakyvissa;
-    }
+    };
 
     $scope.naytaLataus = function (nakyvissa) {
       $scope.latausNakyvissa = nakyvissa;
-    }
+    };
 
     $scope.peruuta = function(){
       $location.path('/kysymysryhmat');
@@ -292,24 +311,24 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     function luoUusiKysymysryhma(){
       Kysymysryhma.luoUusi($scope.kysymysryhma)
-      .success(function(){
+      .then(function(){
         $scope.form.$setPristine();
         $location.path('/kysymysryhmat');
         ilmoitus.onnistuminen(i18n.hae('kysymysryhma.luonti_onnistui'));
       })
-      .error(function(){
+      .catch(function(){
         ilmoitus.virhe(i18n.hae('kysymysryhma.luonti_epaonnistui'));
       });
     }
 
     function tallennaKysymysryhma() {
       Kysymysryhma.tallenna($scope.kysymysryhma)
-      .success(function(){
+      .then(function(){
         $scope.form.$setPristine();
         $location.path('/kysymysryhmat');
         ilmoitus.onnistuminen(i18n.hae('kysymysryhma.tallennus_onnistui'));
       })
-      .error(function(){
+      .catch(function(){
         ilmoitus.virhe(i18n.hae('kysymysryhma.tallennus_epaonnistui'));
       });
     }
@@ -330,6 +349,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
         resolve: {
           kysymysryhma: function() { return $scope.kysymysryhma; }
         }
+      }).result.then(function () { }).catch(function (e) {
+        console.error(e);
       });
     };
 

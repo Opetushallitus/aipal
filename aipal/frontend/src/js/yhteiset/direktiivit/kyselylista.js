@@ -24,13 +24,18 @@ angular.module('yhteiset.direktiivit.kyselylista',
     $scope.julkaiseKyselyModal = function(kysely) {
       varmistus.varmista(i18n.hae('kysely.julkaise'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.julkaise_ohjeistus'), i18n.hae('kysely.julkaise')).then(function() {
         Kysely.julkaise(kysely.kyselyid)
-          .success(function(response) {
-            _.assign(kysely, response);
+          .then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            _.assign(kysely, resp.data);
             ilmoitus.onnistuminen(i18n.hae('kysely.julkaisu_onnistui'));
           })
-          .error(function() {
+          .catch(function() {
             ilmoitus.virhe(i18n.hae('kysely.julkaisu_epaonnistui'));
           });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -39,13 +44,15 @@ angular.module('yhteiset.direktiivit.kyselylista',
         var kyselyid = kysely.kyselyid;
         var kyselyindex = _.findIndex(kyselylista, {kyselyid: kyselyid});
         Kysely.poista(kyselyid)
-          .success(function() {
+          .then(function() {
             kyselylista.splice(kyselyindex, 1);
             ilmoitus.onnistuminen(i18n.hae('kysely.poisto_onnistui'));
           })
-          .error(function() {
+          .catch(function() {
             ilmoitus.virhe(i18n.hae('kysely.poisto_epaonnistui'));
           });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
@@ -57,53 +64,89 @@ angular.module('yhteiset.direktiivit.kyselylista',
       varmistus.varmista(i18n.hae('kyselykerta.poista'), kyselykerta.nimi, i18n.hae('kyselykerta.poista_ohjeistus'), i18n.hae('kyselykerta.poista')).then(function() {
         var id = kyselykerta.kyselykertaid;
         Kyselykerta.poista(id)
-        .success(function(){
+        .then(function(){
           _.forEach($scope.kyselyt, function(kysely){
             _.remove(kysely.kyselykerrat, {kyselykertaid: id});
           });
           ilmoitus.onnistuminen(i18n.hae('kyselykerta.poistaminen_onnistui'));
         })
-        .error(function(){
+        .catch(function(){
           ilmoitus.virhe(i18n.hae('kyselykerta.poistaminen_epaonnistui'));
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
     $scope.suljeKyselyModal = function(kysely) {
       varmistus.varmista(i18n.hae('kysely.sulje'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.sulje_ohjeistus'), i18n.hae('kysely.sulje')).then(function() {
-        Kysely.sulje(kysely.kyselyid).success(function(uusiKysely) {
+        Kysely.sulje(kysely.kyselyid).then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const uusiKysely = resp.data;
           _.assign(kysely, uusiKysely);
           ilmoitus.onnistuminen(i18n.hae('kysely.sulkeminen_onnistui'));
+        }).catch(function (e) {
+          console.error(e);
         });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
 
     $scope.palautaKysely = function(kysely) {
-      Kysely.palauta(kysely.kyselyid).success(function(uusiKysely) {
+      Kysely.palauta(kysely.kyselyid).then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const uusiKysely = resp.data;
         _.assign(kysely, uusiKysely);
         ilmoitus.onnistuminen(i18n.hae('kysely.palautus_onnistui'));
+      }).catch(function (e) {
+        console.error(e);
       });
     };
     $scope.palautaLuonnokseksi = function(kysely) {
-      Kysely.palautaLuonnokseksi(kysely.kyselyid).success(function(uusiKysely) {
+      Kysely.palautaLuonnokseksi(kysely.kyselyid).then(function(resp) {
+        if (!resp.data) {
+          console.error('resp.data missing');
+        }
+        const uusiKysely = resp.data;
         _.assign(kysely, uusiKysely);
         ilmoitus.onnistuminen(i18n.hae('kysely.palautus_onnistui'));
+      }).catch(function (e) {
+        console.error(e);
       });
     };
     $scope.lukitseKyselykerta = function(kyselykerta) {
       varmistus.varmista(i18n.hae('kyselykerta.lukitse'), kyselykerta.nimi, i18n.hae('kyselykerta.lukitse_teksti'), i18n.hae('kyselykerta.lukitse')).then(function() {
         Kyselykerta.lukitse(kyselykerta.kyselykertaid, true)
-          .success(function(uusiKyselykerta) {
+          .then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            const uusiKyselykerta = resp.data;
             _.assign(kyselykerta, uusiKyselykerta);
             ilmoitus.onnistuminen(i18n.hae('kyselykerta.lukitseminen_onnistui'));
-          });
+          }).catch(function (e) {
+          console.error(e);
+        });
+      }).catch(function (e) {
+        console.error(e);
       });
     };
     $scope.avaaKyselykerta = function(kyselykerta) {
       Kyselykerta.lukitse(kyselykerta.kyselykertaid, false)
-        .success(function(uusiKyselykerta) {
+        .then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const uusiKyselykerta = resp.data;
           _.assign(kyselykerta, uusiKyselykerta);
-        });
+        }).catch(function (e) {
+        console.error(e);
+      });
     };
 
     $scope.vastuuKayttaja = kayttooikeudet.isVastuuKayttaja();

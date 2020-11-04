@@ -31,8 +31,11 @@ angular.module('yhteiset.direktiivit.auth', [])
 
         scope.sallittu = false;
 
+        // NOTE: .hae() is not http call an returns prefetched data so no resp.data.
         kayttooikeudet.hae().then(function (oikeudet) {
           scope.sallittu = _.contains(roolit, oikeudet.aktiivinen_rooli.rooli);
+        }).catch(function (e) {
+          console.error(e);
         });
 
       }

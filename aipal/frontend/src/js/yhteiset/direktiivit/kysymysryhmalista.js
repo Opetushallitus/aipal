@@ -53,46 +53,74 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
             controller: 'JulkaiseKysymysryhmaModalController',
             resolve: {
               kysymysryhma: function() {
-                return Kysymysryhma.hae(kysymysryhma.kysymysryhmaid).then(function(response) { return response.data; });
+                return Kysymysryhma.hae(kysymysryhma.kysymysryhmaid).then(function(resp) {
+                  if (!resp.data) {
+                    console.error('resp.data missing');
+                  }
+                  return resp.data;
+                }).catch(function (e) {
+                  console.error(e);
+                });
               }
             }
           });
           modalInstance.result.then(function () {
             Kysymysryhma.julkaise(kysymysryhma)
-              .success(function(uusiKysymysryhma) {
+              .then(function(resp) {
+                if (!resp.data) {
+                  console.error('resp.data missing');
+                }
+                const uusiKysymysryhma = resp.data;
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.julkaisu_onnistui'));
                 $location.url('/kysymysryhmat/');
               })
-              .error(function() {
+              .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.julkaisu_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
-        
+
         $scope.naytaRakenneModal = function(kysymysryhma) {
             $uibModal.open({
               templateUrl: 'template/kysymysryhma/rakenne.html',
               controller: 'KysymysryhmaRakenneModalController',
               resolve: {
                 kysymysryhma: function() {
-                  return Kysymysryhma.hae(kysymysryhma.kysymysryhmaid).then(function(response) { return response.data; });
+                  return Kysymysryhma.hae(kysymysryhma.kysymysryhmaid).then(function(resp) {
+                    if (!resp.data) {
+                      console.error('resp.data missing');
+                    }
+                    return resp.data;
+                  }).catch(function (e) {
+                    console.error(e);
+                  });
                 }
               }
+            }).result.then(function () { }).catch(function (e) {
+              console.error(e);
             });
-          };        
+          };
 
         $scope.suljeKysymysryhma = function(kysymysryhma) {
           varmistus.varmista(i18n.hae('kysymysryhma.sulje'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.sulje_teksti'), i18n.hae('kysymysryhma.sulje')).then(function() {
             Kysymysryhma.sulje(kysymysryhma)
-              .success(function(uusiKysymysryhma) {
+              .then(function(resp) {
+                if (!resp.data) {
+                  console.error('resp.data missing');
+                }
+                const uusiKysymysryhma = resp.data;
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.sulkeminen_onnistui'));
                 $location.url('/kysymysryhmat/');
               })
-              .error(function() {
+              .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.sulkeminen_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
@@ -101,42 +129,56 @@ angular.module('yhteiset.direktiivit.kysymysryhmalista', ['yhteiset.palvelut.i18
             var kysymysryhmaid = kysymysryhma.kysymysryhmaid;
             var kysymysryhmaindex = _.findIndex(kysymysryhmalista, {kysymysryhmaid: kysymysryhmaid});
             Kysymysryhma.poista(kysymysryhmaid)
-              .success(function() {
+              .then(function() {
                 kysymysryhmalista.splice(kysymysryhmaindex, 1);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.poistaminen_onnistui'));
                 $location.url('/kysymysryhmat/');
               })
-              .error(function() {
+              .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.poistaminen_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
         $scope.palautaKysymysryhmaJulkaistuksi = function(kysymysryhma) {
           varmistus.varmista(i18n.hae('kysymysryhma.palauta_julkaistuksi'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.palauta_julkaistuksi_teksti'), i18n.hae('kysymysryhma.palauta_julkaistuksi')).then(function() {
             Kysymysryhma.julkaise(kysymysryhma)
-              .success(function(uusiKysymysryhma) {
+              .then(function(resp) {
+                if (!resp.data) {
+                  console.error('resp.data missing');
+                }
+                const uusiKysymysryhma = resp.data;
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.palautus_julkaistuksi_onnistui'));
                 $location.url('/kysymysryhmat/');
               })
-              .error(function() {
+              .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.palautus_julkaistuksi_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
 
         $scope.palautaKysymysryhmaLuonnokseksi = function(kysymysryhma) {
           varmistus.varmista(i18n.hae('kysymysryhma.palauta_luonnokseksi'), $filter('lokalisoiKentta')(kysymysryhma, 'nimi'), i18n.hae('kysymysryhma.palauta_luonnokseksi_teksti'), i18n.hae('kysymysryhma.palauta_luonnokseksi')).then(function() {
             Kysymysryhma.palautaLuonnokseksi(kysymysryhma)
-              .success(function(uusiKysymysryhma) {
+              .then(function(resp) {
+                if (!resp.data) {
+                  console.error('resp.data missing');
+                }
+                const uusiKysymysryhma = resp.data;
                 _.assign(kysymysryhma, uusiKysymysryhma);
                 ilmoitus.onnistuminen(i18n.hae('kysymysryhma.palautus_luonnokseksi_onnistui'));
                 $location.url('/kysymysryhmat/');
               })
-              .error(function() {
+              .catch(function() {
                 ilmoitus.virhe(i18n.hae('kysymysryhma.palautus_luonnokseksi_epaonnistui'));
               });
+          }).catch(function (e) {
+            console.error(e);
           });
         };
       }]

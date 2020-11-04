@@ -39,6 +39,8 @@ angular.module('yhteiset.palvelut.varmistus', [])
           deferred.resolve();
         }, function() {
           deferred.reject();
+        }).catch(function (e) {
+          console.error(e);
         });
 
         return deferred.promise;

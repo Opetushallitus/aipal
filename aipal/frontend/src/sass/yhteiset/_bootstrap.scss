@@ -148,29 +148,36 @@ button.calendar-clear{
     font-size: 1em;
     font-weight: 400;
   }
-  button.btn{
+  span.btn{
     border: 1px solid $primary-color;
     padding: 2px 5px;
     margin: 0;
     font-weight: 400 !important;
   }
-
-  .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
-  .btn-group>.btn:last-child:not(:first-child),
-  .btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){
+  .ui-select-match>.btn:first-child:not(:last-child):not(.dropdown-toggle),
+  .ui-select-match>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){
     height: 2em;
   }
-  .btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){
+  .ui-select-match>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){
     border: 0;
     border-bottom: 1px solid $primary-color;
     border-top: 1px solid $primary-color;
     margin-left: -1px;
     padding-right: 1px;
   }
-  .btn-group>.btn:last-child:not(:first-child){
+  .ui-select-match>.btn>i{
     background-color: $primary-color;
     color: #ffffff;
-    width: 2em;
+    top: 0;
+    right: 0;
+    margin-top: 0.85em;
+    margin-right: 0.6em;
+  }
+
+  .ui-select-match>.btn {
+    // After ui-select update there is no longer container for icon so we need to use gradient
+    background: linear-gradient(270deg, $primary-color 2em, transparent 0);
+    text-align: center !important;
   }
 
 }

@@ -84,10 +84,15 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
       $scope.haeKyselyt = function () {
         seuranta.asetaLatausIndikaattori(Kysely.hae(), 'kyselylistaus')
-        .success(function (data) {
-          $scope.kyselyt = data;
+        .then(function (resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.kyselyt = resp.data;
           avaaMuistetutKyselyt();
           muistaAvattavatKyselyt();
+        }).catch(function (e) {
+          console.error(e);
         });
       };
       $scope.haeKyselyt();
@@ -125,9 +130,17 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       };
 
       function haeKyselypohja(kyselypohjaid){
-        Kyselypohja.hae(kyselypohjaid).success(function(kyselypohja){
-          Kyselypohja.haeKysymysryhmat(kyselypohja.kyselypohjaid).success(
-            function (kysymysryhmat){
+        Kyselypohja.hae(kyselypohjaid).then(function(resp) {
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          const kyselypohja = resp.data;
+          Kyselypohja.haeKysymysryhmat(kyselypohja.kyselypohjaid).then(
+            function (resp){
+              if (!resp.data) {
+                console.error('resp.data missing');
+              }
+              const kysymysryhmat = resp.data;
               const pohja = {id: kyselypohja.kyselypohjaid,
                 nimi_fi: kyselypohja.nimi_fi,
                 nimi_sv: kyselypohja.nimi_sv,
@@ -142,8 +155,12 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
               }
               $scope.kyselyForm.$setDirty();
             }
-          )
-        })
+          ).catch(function (e) {
+            console.error(e);
+          });
+        }).catch(function (e) {
+          console.error(e);
+        });
       }
 
       $scope.kyselytyypit = [];
@@ -151,13 +168,22 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
       $scope.kyselypohjat = [];
 
       Kysely.kyselytyypit()
-        .success(function (tyypit){
-          $scope.kyselytyypit = tyypit;
-        });
+        .then(function (resp){
+          if (!resp.data) {
+            console.error('resp.data missing');
+          }
+          $scope.kyselytyypit = resp.data;
+        }).catch(function (e) {
+        console.error(e);
+      });
 
       if ($routeParams.kyselyid) {
         Kysely.haeId($routeParams.kyselyid)
-          .success(function(kysely) {
+          .then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            const kysely = resp.data;
             $scope.kysely = pvm.parsePvm(kysely);
 
             $scope.kysely.tyyppi = _.find($scope.kyselytyypit, function(kt) {return kt.id === kysely.tyyppi});
@@ -186,7 +212,7 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
               tallennusFn = Kysely.tallenna;
             }
           })
-          .error(function() {
+          .catch(function() {
             ilmoitus.virhe(i18n.hae('yleiset.lataus_epaonnistui'));
           });
       }
@@ -211,12 +237,12 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         }
         else {
           seuranta.asetaLatausIndikaattori(tallennusFn($scope.kysely), 'kyselynTallennus')
-          .success(function () {
+          .then(function () {
             $scope.kyselyForm.$setPristine();
             $location.path('/kyselyt');
             ilmoitus.onnistuminen(i18n.hae('kysely.tallennus_onnistui'));
           })
-          .error(function (virhe) {
+          .catch(function (virhe) {
             ilmoitus.virhe(i18n.hae(virhe), i18n.hae('kysely.tallennus_epaonnistui'));
           });
         }
@@ -251,11 +277,13 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           templateUrl: 'template/kysely/lisaa-kyselypohja.html',
           controller: 'LisaaKyselypohjaModalController',
           resolve: {valittuPohja: function () {
-              return $scope.kyselypohja
+              return $scope.kyselypohja;
             }}
         });
         modalInstance.result.then(function (kyselypohja) {
-          haeKyselypohja(kyselypohja.kyselypohjaid)
+          haeKyselypohja(kyselypohja.kyselypohjaid);
+        }).catch(function (e) {
+          console.error(e);
         });
       };
 
@@ -271,13 +299,19 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         });
         modalInstance.result.then(function (kysymysryhmaid) {
           Kysymysryhma.haeEsikatselulle(kysymysryhmaid)
-          .success(function(kysymysryhma) {
+          .then(function(resp) {
+            if (!resp.data) {
+              console.error('resp.data missing');
+            }
+            const kysymysryhma = resp.data;
             apu.lisaaUniikitKysymysryhmatKyselyyn($scope.kysely, kysymysryhma);
             $scope.kyselyForm.$setDirty();
           })
-          .error(function() {
+          .catch(function() {
             ilmoitus.virhe(i18n.hae('kysely.ryhman_haku_epaonnistui'));
           });
+        }).catch(function (e) {
+          console.error(e);
         });
       };
 
@@ -317,6 +351,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           resolve: {vastausBaseUrl: function(){
             return $scope.vastausBaseUrl;
           }}
+        }).result.then(function () {}).catch(function (e) {
+          console.error(e);
         });
       };
     }
@@ -324,9 +360,14 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
 
   .controller('LisaaKyselypohjaModalController', ['$uibModalInstance', '$scope', 'Kyselypohja', 'valittuPohja', function ($uibModalInstance, $scope, Kyselypohja, valittuPohja) {
     Kyselypohja.haeVoimassaolevat()
-    .success(function (data) {
-      $scope.kyselypohjat = _.filter(data, function(kp){return !kp.valtakunnallinen || (valittuPohja === null || valittuPohja === undefined)})
+    .then(function (resp) {
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
+      $scope.kyselypohjat = _.filter(resp.data, function(kp){return !kp.valtakunnallinen || (valittuPohja === null || valittuPohja === undefined)})
 
+    }).catch(function (e) {
+      console.error(e);
     });
     $scope.tallenna = function (valittuPohja) {
       $uibModalInstance.close(valittuPohja);
@@ -340,10 +381,16 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
     $scope.outerscope = {};
     $scope.isJulkaistu = isJulkaistu;
 
-    Kysymysryhma.haeVoimassaolevat().success(function(kysymysryhmat){
+    Kysymysryhma.haeVoimassaolevat().then(function(resp){
+      if (!resp.data) {
+        console.error('resp.data missing');
+      }
+      const kysymysryhmat = resp.data;
       $scope.kysymysryhmat = _.filter(kysymysryhmat, function(kr) {
-        return !kr.valtakunnallinen
+        return !kr.valtakunnallinen;
       });
+    }).catch(function (e) {
+      console.error(e);
     });
     $scope.tallenna = function (kysymysryhmaid) {
       $uibModalInstance.close(kysymysryhmaid);

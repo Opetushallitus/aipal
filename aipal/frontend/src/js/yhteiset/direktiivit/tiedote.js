@@ -30,19 +30,21 @@ angular.module('yhteiset.direktiivit.tiedote',
           var tiedote = {fi: $scope.tiedoteFi,
                          sv: $scope.tiedoteSv,
                          en: $scope.tiedoteEn};
-          Tiedote.tallenna(tiedote).success(function(){
+          Tiedote.tallenna(tiedote).then(function(){
             ilmoitus.onnistuminen(i18n.hae('tiedote.tallennus_onnistui'));
             $scope.naytettavaTiedote = tiedote[kieli];
-          }).error(function(){
+          }).catch(function(){
             ilmoitus.virhe(i18n.hae('yleiset.tallennus_epaonnistui'));
           });
           $scope.tila = 'nayta';
         };
-        Tiedote.hae().success(function(tiedote){
+        Tiedote.hae().then(function(tiedote){
           $scope.naytettavaTiedote = tiedote[kieli];
           $scope.tiedoteFi = tiedote.fi;
           $scope.tiedoteSv = tiedote.sv;
           $scope.tiedoteEn = tiedote.en;
+        }).catch(function (e) {
+          console.error(e);
         });
       }
     };
