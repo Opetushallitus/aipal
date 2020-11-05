@@ -79,9 +79,9 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         templateUrl: 'template/kysely/lisaa-kysymysryhma.html',
         controller: 'LisaaKysymysryhmaModalController',
         resolve: {
-          isJulkaistu: function() {
-            return $scope.kyselypohja.tila === 'julkaistu';
-          }}
+          isJulkaistu: function() { return $scope.kyselypohja.tila === 'julkaistu';},
+          isPohja: function() {return true;}
+        }
       });
       modalInstance.result.then(function (kysymysryhmaid) {
         Kysymysryhma.hae(kysymysryhmaid)
