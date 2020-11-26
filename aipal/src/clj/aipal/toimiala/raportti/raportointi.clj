@@ -55,8 +55,7 @@
 
 (defn muodosta-kylla-ei-jakauman-esitys
   [jakauma]
-  (let [_ (log/info "Lasketaan k-e jakauma: " jakauma)
-        jakauma (merge {:kylla 0 :ei 0 :eos 0} jakauma)
+  (let [jakauma (merge {:kylla 0 :ei 0 :eos 0} jakauma)
         yhteensa (+ (or (:kylla jakauma) 0) (or (:ei jakauma) 0) (or (:eos jakauma) 0))]
     [{:vaihtoehto-avain "kylla"
       :lukumaara (:kylla jakauma)

@@ -12,7 +12,8 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.toimiala.raportti.yhdistaminen)
+(ns aipal.toimiala.raportti.yhdistaminen
+  (:require [clojure.tools.logging :as log]))
 
 (defn yhdistä-kentästä [kenttä datat]
   {kenttä (map kenttä datat)})
@@ -32,8 +33,8 @@
 
 
 (defn yhdistä-samat [xs]
-  {:pre [(let [xs (remove nil? xs)]
-           (or (empty? xs) (apply = xs)))]}
+  (let [xs (remove nil? xs)]
+    (if-not (or (empty? xs) (apply = xs)) (log/info "Mismatching values in yhdistä-samat:" xs)))
   (first xs))
 
 (defn päivitä-polusta [[k & ks] päivitä rakenne]
