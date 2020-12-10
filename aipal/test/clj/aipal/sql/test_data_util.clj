@@ -239,11 +239,6 @@
   (let [kysymys (merge default-kysymys uusi-kysymys)]
     (sql/insert :kysymys (sql/values [kysymys]))))
 
-(defn lisaa-jatkokysymys!
-  [uusi-jatkokysymys]
-  (let [jatkokysymys (merge default-jatkokysymys uusi-jatkokysymys)]
-    (sql/insert :jatkokysymys (sql/values [jatkokysymys]))))
-
 (defn lisaa-monivalintavaihtoehto!
   [uusi-monivalintavaihtoehto]
   (let [monivalintavaihtoehto (merge default-monivalintavaihtoehto uusi-monivalintavaihtoehto)]

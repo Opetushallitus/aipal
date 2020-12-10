@@ -143,34 +143,6 @@
          false (:kyselyid luonnos-kysely)
          false (:kyselyid suljettu-kysely))))
 
-(deftest ^:integraatio kysymysryhma-lisattavissa-test
-  (let [koulutustoimija (anna-koulutustoimija!)
-        luonnos-kysymysryhma (lisaa-kysymysryhma! {:tila "luonnos"} koulutustoimija)
-        julkaistu-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"} koulutustoimija)
-        suljettu-kysymysryhma (lisaa-kysymysryhma! {:tila "suljettu"} koulutustoimija)
-        voimassaoleva-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"
-                                                         :voimassa_alkupvm (time/minus (time/today) (time/days 1))
-                                                         :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
-                                                        koulutustoimija)
-        voimaantuleva-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"
-                                                         :voimassa_alkupvm (time/plus (time/today) (time/days 1))
-                                                         :voimassa_loppupvm (time/plus (time/today) (time/days 1))}
-                                                        koulutustoimija)
-        vanhentunut-kysymysryhma (lisaa-kysymysryhma! {:tila "julkaistu"
-                                                       :voimassa_alkupvm (time/minus (time/today) (time/days 1))
-                                                       :voimassa_loppupvm (time/minus (time/today) (time/days 1))}
-                                                      koulutustoimija)]
-    (are [tulos kysymysryhmaid] (= tulos (:lisattavissa (first
-                                                          (sql/select :kysymysryhma
-                                                            (sql/fields :kysymysryhma.lisattavissa)
-                                                            (sql/where {:kysymysryhmaid kysymysryhmaid})))))
-         false (:kysymysryhmaid luonnos-kysymysryhma)
-         true (:kysymysryhmaid julkaistu-kysymysryhma)
-         false (:kysymysryhmaid suljettu-kysymysryhma)
-         true (:kysymysryhmaid voimassaoleva-kysymysryhma)
-         false (:kysymysryhmaid voimaantuleva-kysymysryhma)
-         false (:kysymysryhmaid vanhentunut-kysymysryhma))))
-
 (deftest ^:integraatio kyselypohja-kaytettavissa-test
   (let [koulutustoimija (anna-koulutustoimija!)
         luonnos-kyselypohja (lisaa-kyselypohja! {:tila "luonnos"} koulutustoimija)

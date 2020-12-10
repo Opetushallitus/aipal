@@ -51,42 +51,6 @@
                                           :tila "julkaistu"}]))
     (is (= #{"a" "b"} (set (map :nimi_fi (hae-kyselypohjat (:ytunnus koulutustoimija))))))))
 
-(deftest ^:integraatio hae-kyselypohjat-ntm-kyselypohja
-  (let [opetushallitus        (lisaa-koulutustoimija! {:ytunnus "1234567-8"})
-        kysymysryhma          (lisaa-kysymysryhma! {:ntm_kysymykset true
-                                                    :taustakysymykset false
-                                                    :tila "julkaistu"
-                                                    :valtakunnallinen true}
-                                                   opetushallitus)
-        kyselypohja           (lisaa-kyselypohja! {:nimi_fi "NTM-kyselypohja"
-                                                   :tila "julkaistu"
-                                                   :valtakunnallinen true}
-                                                  opetushallitus)
-        {:keys [ytunnus]}     (lisaa-koulutustoimija! {:ytunnus "8765432-1"})
-        sisaltaa-kyselypohjan (fn [kyselypohjat kyselypohjaid]
-                                (some #{kyselypohjaid}
-                                      (map :kyselypohjaid kyselypohjat)))]
-    (sql/insert :kysymysryhma_kyselypohja (sql/values [{:kysymysryhmaid (:kysymysryhmaid kysymysryhma)
-                                                        :kyselypohjaid (:kyselypohjaid kyselypohja)
-                                                        :jarjestys 1}]))
-    (testing
-      "pääkäyttäjä näkee NTM-kyselypohjat"
-      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly true)]
-        (is (sisaltaa-kyselypohjan (hae-kyselypohjat ytunnus)
-                                   (:kyselypohjaid kyselypohja)))))
-    (testing
-      "NTM-vastuukäyttäjä näkee NTM-kyselypohjan"
-      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
-                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly true)]
-        (is (sisaltaa-kyselypohjan (hae-kyselypohjat ytunnus)
-                                   (:kyselypohjaid kyselypohja)))))
-    (testing
-      "tavallinen käyttäjä ei näe NTM-kyselypohjia"
-      (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
-                    aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
-        (is (not (sisaltaa-kyselypohjan (hae-kyselypohjat ytunnus)
-                                        (:kyselypohjaid kyselypohja))))))))
-
 ;; tarkastetaan ettei haku duplikoi organisaatiolla olevia valtakunnallisia pohjia
 (deftest ^:integraatio hae-kyselypohjat-valtakunnalliset-oph
   (let [oph (lisaa-koulutustoimija!  {:ytunnus "1111111-1"})]

@@ -62,8 +62,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     };
   }])
 
-  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Oppilaitos', 'kyselyValilehti', 'kyselykertaValilehti', 'Kieli', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'Tutkintotyyppi', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
-    function($scope, Koulutustoimija, Oppilaitos, kyselyValilehti, kyselykertaValilehti, Kieli, Kysymysryhma, Raportti, Tutkinto, Tutkintotyyppi, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
+  .controller('RaportitController', ['$scope', 'Koulutustoimija', 'Oppilaitos', 'kyselyValilehti', 'kyselykertaValilehti', 'Kysymysryhma', 'Raportti', 'Tutkinto', 'Tutkintotyyppi', 'kaavioApurit', 'kieli', 'i18n', 'ilmoitus', 'raporttiApurit', 'seuranta',
+    function($scope, Koulutustoimija, Oppilaitos, kyselyValilehti, kyselykertaValilehti, Kysymysryhma, Raportti, Tutkinto, Tutkintotyyppi, kaavioApurit, kieli, i18n, ilmoitus, raporttiApurit, seuranta) {
     $scope.kyselykertaraportitValittu = !$scope.yllapitaja;
     $scope.raportti = {};
     $scope.raportti.kieli = kieli;
@@ -71,6 +71,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
     $scope.printgraphs = true;
     $scope.printfreetext = true;
+    $scope.kielet = ["fi", "sv", "en"]
+
     $scope.$watch('raportti', function(uusi) {
       $scope.parametrit = JSON.stringify(uusi);
     }, true);
@@ -130,6 +132,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     };
 
     $scope.vaihdaTyyppi('vertailu','Vertailuraportti');
+
+
 
     var haeTaustakysymykset = function(kysymysryhmaid) {
       Kysymysryhma.haeTaustakysymysryhma(kysymysryhmaid).then(function(resp) {
@@ -202,14 +206,7 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     }).catch(function (e) {
       console.error(e);
     });
-    Kieli.haeKaikki().then(function(resp) {
-      if (!resp.data) {
-        console.error('resp.data missing');
-      }
-      $scope.kielet = _.pluck(resp.data, 'kieli');
-    }).catch(function (e) {
-      console.error(e);
-    });
+
     Tutkintotyyppi.haeKaikki(function(tutkintotyypit) {
       $scope.tutkintotyypit = tutkintotyypit;
     });

@@ -253,11 +253,9 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
           return true;
         }
         var kysymysryhmat = _.reject($scope.kysely.kysymysryhmat, 'poistetaan_kyselysta');
-        var vainNtmKysymyksia = _.every(kysymysryhmat, 'ntm_kysymykset');
-        var ntmKysymyksia = _.find(kysymysryhmat, 'ntm_kysymykset') !== undefined;
         var taustakysymysryhma = _.size(_.filter(kysymysryhmat, 'taustakysymykset')) === 1;
         var valtakunnallisia = _.find(kysymysryhmat, 'valtakunnallinen') !== undefined;
-        return !valtakunnallisia || (!ntmKysymyksia && taustakysymysryhma) || (vainNtmKysymyksia);
+        return !valtakunnallisia || taustakysymysryhma;
       };
 
       $scope.peruuta = function() {

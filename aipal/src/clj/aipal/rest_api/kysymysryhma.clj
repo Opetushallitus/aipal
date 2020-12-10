@@ -4,7 +4,7 @@
             [schema.core :as s]
             [aipal.arkisto.kysymysryhma :as arkisto]
             aipal.compojure-util
-            [aipal.infra.kayttaja :refer [*kayttaja* ntm-vastuukayttaja? yllapitaja?]]
+            [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
             [oph.common.util.http-util :refer [response-or-404]]
             [ring.util.http-response :as response]))
 
@@ -106,16 +106,9 @@
     (true? (kentta kysymysryhma))
     false))
 
-(defn ^:private suodata-vain-ntm-vastuukayttajille [kysymysryhma kentta]
-  (if (or (yllapitaja?)
-          (ntm-vastuukayttaja?))
-    (true? (kentta kysymysryhma))
-    false))
-
 (defn lisaa-kysymysryhma! [kysymysryhma kysymykset]
   (let [kysymysryhma (arkisto/lisaa-kysymysryhma! (merge (valitse-kysymysryhman-peruskentat kysymysryhma)
                                                          {:koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)
-                                                          :ntm_kysymykset (suodata-vain-ntm-vastuukayttajille kysymysryhma :ntm_kysymykset)
                                                           :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
                                                           :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)}))]
     (lisaa-kysymykset-kysymysryhmaan! kysymykset (:kysymysryhmaid kysymysryhma))
@@ -126,8 +119,7 @@
     (let [kysymysryhma (-> kysymysryhma
                          korjaa-eos-vastaus-sallittu
                          (assoc :valtakunnallinen (suodata-vain-yllapitajalle kysymysryhma :valtakunnallinen)
-                                :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)
-                                :ntm_kysymykset (suodata-vain-ntm-vastuukayttajille kysymysryhma :ntm_kysymykset)))
+                                :taustakysymykset (suodata-vain-yllapitajalle kysymysryhma :taustakysymykset)))
           kysymysryhmaid (:kysymysryhmaid kysymysryhma)
           kysymykset (:kysymykset kysymysryhma)]
       (arkisto/poista-kysymysryhman-kysymykset! kysymysryhmaid)

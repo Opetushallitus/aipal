@@ -187,21 +187,6 @@ describe('kysymysryhma.kysymysryhmaui.KysymysryhmaController', function(){
     expect($scope.tallennusSallittu()).toBe(false);
   });
 
-  it('antaa tallentaa, jos ntm-kysymysryhmä on merkitty valtakunnalliseksi', function(){
-    alustaController();
-    $scope.kysymysryhma.ntm_kysymykset = true;
-    $scope.kysymysryhma.valtakunnallinen = false;
-    expect($scope.tallennusSallittu()).toBe(true);
-  });
-
-  it('antaa tallentaa, jos ntm-kysymysryhmä on merkitty taustakysymysryhmäksi', function(){
-    alustaController();
-    $scope.kysymysryhma.ntm_kysymykset = true;
-    $scope.kysymysryhma.taustakysymykset = true;
-    $scope.kysymysryhma.valtakunnallinen = true;
-    expect($scope.tallennusSallittu()).toBe(true);
-  });
-
   it('hakee kopioitavan ryhmän tiedot palvelimelta', function(){
     $httpBackend.whenGET(/api\/kysymysryhma\/1234.*/)
                 .respond(200, {kysymysryhmaid: 1234,

@@ -15,7 +15,6 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
     var oikeudet,
         yllapitaja,
         impersonoitu,
-        ntmVastuuKayttaja,
         vastuukayttaja,
         laajennettu;
 
@@ -26,7 +25,6 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
       oikeudet.then(function(data){
         yllapitaja = false;
         impersonoitu = false;
-        ntmVastuuKayttaja = false;
         vastuukayttaja = data.aktiivinen_rooli.rooli === 'OPL-VASTUUKAYTTAJA';
 
         laajennettu = data.laajennettu;
@@ -57,9 +55,6 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
       },
       isVastuuKayttaja: function(){
         return vastuukayttaja || yllapitaja;
-      },
-      isNtmVastuuKayttaja: function() {
-        return ntmVastuuKayttaja;
       },
       laajennettuOppisopimuskoulutus: function() {
         return laajennettu;

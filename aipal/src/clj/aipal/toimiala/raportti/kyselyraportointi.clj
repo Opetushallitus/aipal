@@ -121,9 +121,6 @@
                       :kysymys.kysymysryhmaid)
                    (= :kysely_kysymys.kysymysid
                       :kysymys.kysymysid)))
-    (sql/join :left :jatkokysymys
-              (= :jatkokysymys.jatkokysymysid
-                 :kysymys.jatkokysymysid))
     (cond->
       kyselykertaid (->
                       (sql/join :inner :kyselykerta
@@ -140,17 +137,7 @@
                 :kysymys.kysymys_en
                 :kysymys.vastaustyyppi
                 :kysymys.eos_vastaus_sallittu
-                :kysymys.jarjestys
-                :jatkokysymys.jatkokysymysid
-                :jatkokysymys.kylla_kysymys
-                :jatkokysymys.kylla_teksti_fi
-                :jatkokysymys.kylla_teksti_sv
-                :jatkokysymys.kylla_teksti_en
-                :jatkokysymys.kylla_vastaustyyppi
-                :jatkokysymys.ei_kysymys
-                :jatkokysymys.ei_teksti_fi
-                :jatkokysymys.ei_teksti_sv
-                :jatkokysymys.ei_teksti_en)
+                :kysymys.jarjestys)
     sql/exec
     (->>
       (map yhdista-taustakysymysten-kysymykset)
@@ -190,9 +177,6 @@
     (sql/join :inner :vastaus
               (= :vastaaja.vastaajaid
                  :vastaus.vastaajaid))
-    (sql/join :left :jatkovastaus
-              (= :jatkovastaus.jatkovastausid
-                 :vastaus.jatkovastausid))
     (cond->
       (or tutkinnot
           suorituskieli
@@ -209,11 +193,7 @@
                 [(sql/sqlfn array_agg :vastaus.vaihtoehto) :vaihtoehdot]
                 [(sql/sqlfn jakauma :vastaus.numerovalinta) :jakauma]
                 [(sql/sqlfn array_agg :vastaus.vapaateksti) :vapaatekstit]
-                [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa]
-                [(sql/sqlfn avg :jatkovastaus.kylla_asteikko) :jatkovastaus_keskiarvo]
-                [(sql/sqlfn stddev_samp :jatkovastaus.kylla_asteikko) :keskihajonta]
-                [(sql/sqlfn jakauma :jatkovastaus.kylla_asteikko) :jatkovastaus_jakauma]
-                [(sql/sqlfn array_agg :jatkovastaus.ei_vastausteksti) :jatkovastaus_vapaatekstit])
+                [(sql/sqlfn count (sql/raw "case when vastaus.en_osaa_sanoa then 1 end")) :en_osaa_sanoa])
     (sql/group :vastaus.kysymysid)
     sql/exec))
 

@@ -8,32 +8,12 @@
   (with-redefs [arkisto/hae (fn [kysymysryhmaid] {})
                 arkisto/poista-kysymys! (fn [kysymysid])
                 arkisto/poista-kysymyksen-monivalintavaihtoehdot! (fn [kysymysid])
-                arkisto/lisaa-jatkokysymys! (fn [jatkokysymys] {})
                 arkisto/lisaa-kysymys! (fn [kysymys] {})
                 arkisto/lisaa-monivalintavaihtoehto! (fn [vaihtoehto] {})
                 arkisto/paivita! (fn [kysymysryhma] kysymysryhma)]
     (f)))
 
 (use-fixtures :each arkisto-stub-fixture)
-
-(deftest lisaa-kysymys-lisaa-jatkokysymyksen
-  (let [lisatty-jatkokysymys (atom nil)
-        lisatty-kysymys (atom nil)]
-    (with-redefs [arkisto/lisaa-kysymys!
-                  (partial reset! lisatty-kysymys)
-
-                  arkisto/lisaa-jatkokysymys!
-                  (fn [jatkokysymys]
-                    (reset! lisatty-jatkokysymys
-                            (assoc jatkokysymys :jatkokysymysid 3)))]
-      (lisaa-kysymys! {:vastaustyyppi "kylla_ei_valinta"
-                       :jatkokysymys {:kylla_teksti_fi "Jatkokysymys"}} 1)
-      (testing
-        "lisää jatkokysymyksen"
-        (is (= (:kylla_teksti_fi @lisatty-jatkokysymys) "Jatkokysymys")))
-      (testing
-        "liittää kysymykseen jatkokysymyksen"
-        (is (= (:jatkokysymysid @lisatty-kysymys) 3))))))
 
 (deftest lisaa-kysymys-lisaa-kysymyksen
   (let [kysymys {:kysymys_fi "Kysymys"}

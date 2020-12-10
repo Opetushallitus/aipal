@@ -9,7 +9,6 @@
   (with-redefs [arkisto/hae (fn [kysymysryhmaid] {})
                 arkisto/poista-kysymys! (fn [kysymysid])
                 arkisto/poista-kysymyksen-monivalintavaihtoehdot! (fn [kysymysid])
-                arkisto/lisaa-jatkokysymys! (fn [jatkokysymys] {})
                 arkisto/lisaa-kysymys! (fn [kysymys] {})
                 arkisto/lisaa-monivalintavaihtoehto! (fn [vaihtoehto] {})
                 arkisto/paivita! (fn [kysymysryhma] kysymysryhma)]
@@ -36,15 +35,6 @@
       (paivita-kysymysryhma! {:kysymysryhmaid 1})
       (is (= @poista-vaihtoehdot-kysymykselta 2)))))
 
-(deftest paivita-kysymysryhma-poistaa-jatkokysymyksen
-  (let [poista-jatkokysymysid (atom nil)]
-    (with-redefs [arkisto/hae (constantly {:kysymysryhmaid 1
-                                           :kysymykset [{:kysymysid 2
-                                                         :jatkokysymysid 3}]})
-                  arkisto/poista-jatkokysymys! (partial reset! poista-jatkokysymysid)]
-      (paivita-kysymysryhma! {:kysymysryhmaid 1})
-      (is (= @poista-jatkokysymysid 3)))))
-
 (deftest paivita-kysymysryhma-lisaa-kysymyksen
  (let [lisaa-kysymys!-kutsut (atom [])]
    (with-redefs [arkisto/hae (constantly {:kysymysryhmaid 1
@@ -63,25 +53,3 @@
     (is (= (:nimi_fi (paivita-kysymysryhma! {:kysymysryhmaid 1
                                              :nimi_fi "Uusi"}))
            "Uusi"))))
-
-(deftest paivita-ntm-kysymysryhma
-  (testing "ntm-kysymysryhman päivitys"
-    (let [kysymysryhma (merge test-data/default-kysymysryhma {:ntm_kysymykset true})
-          paivitetty-kysymysryhma (atom nil)]
-      (with-redefs [arkisto/paivita! (partial reset! paivitetty-kysymysryhma)]
-        (testing "on sallittu pääkäyttäjälle"
-          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly true)]
-            (paivita-kysymysryhma! kysymysryhma)
-            (is (true? (:ntm_kysymykset @paivitetty-kysymysryhma)))))
-
-        (testing "on sallittu ntm-vastuukäyttäjälle"
-          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
-                        aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly true)]
-            (paivita-kysymysryhma! kysymysryhma)
-            (is (true? (:ntm_kysymykset @paivitetty-kysymysryhma)))))
-
-        (testing "ei ole sallittu muille käyttäjille"
-          (with-redefs [aipal.infra.kayttaja/yllapitaja? (constantly false)
-                        aipal.infra.kayttaja/ntm-vastuukayttaja? (constantly false)]
-            (paivita-kysymysryhma! kysymysryhma)
-            (is (false? (:ntm_kysymykset @paivitetty-kysymysryhma)))))))))

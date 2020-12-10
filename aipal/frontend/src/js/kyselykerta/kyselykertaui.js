@@ -14,7 +14,7 @@
 
 'use strict';
 
-angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.bootstrap','ngRoute', 'rest.tutkinto', 'rest.koulutustoimija', 'rest.kieli',
+angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.bootstrap','ngRoute', 'rest.tutkinto', 'rest.koulutustoimija',
                                              'rest.vastaajatunnus', 'rest.kyselykerta', 'rest.kysely',
                                              'rest.oppilaitos', 'yhteiset.palvelut.tallennusMuistutus', 'yhteiset.palvelut.ilmoitus',
                                              'yhteiset.palvelut.kayttooikeudet', 'yhteiset.palvelut.varmistus', 'yhteiset.suodattimet.tutkinto'])
@@ -39,8 +39,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       });
   }])
 
-  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Kieli', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm','kayttooikeudet', 'kieli',
-    function (Kyselykerta, Kysely, Kieli, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm, kayttooikeudet, kieli) {
+  .controller('KyselykertaController', ['Kyselykerta', 'Kysely', 'Tutkinto', 'Vastaajatunnus', 'Koulutustoimija', 'tallennusMuistutus', '$location', '$uibModal', '$routeParams', '$scope', 'ilmoitus', 'i18n', 'uusi', 'varmistus', 'pvm','kayttooikeudet', 'kieli',
+    function (Kyselykerta, Kysely, Tutkinto, Vastaajatunnus, Koulutustoimija, tallennusMuistutus, $location, $uibModal, $routeParams, $scope, ilmoitus, i18n, uusi, varmistus, pvm, kayttooikeudet, kieli) {
       $scope.muokkaustila = true;
 
       function setMuokkaustila(muokkaustila){
@@ -132,15 +132,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       $scope.uusi = uusi;
       $scope.kyselykertaid = $routeParams.kyselykertaid;
 
-      Kieli.haeKaikki().then(function(resp) {
-        if (!resp.data) {
-          console.error('resp.data missing');
-        }
-        const kielet = resp.data;
-        $scope.kielet = _.pluck(kielet, 'kieli');
-      }).catch(function (e) {
-        console.error(e);
-      });
+      $scope.kielet = ["fi", "sv", "en"]
 
       function haeTutkinnot(kysely){
         Tutkinto.koulutustoimijanTutkinnot(kysely.tyyppi, false).then(function(resp) {

@@ -121,14 +121,6 @@
   (kirjoita! :kysymys nil kysymysid :lisays {:kysymysid kysymysid
                                              :monivalinnat true}))
 
-(defn jatkokysymys-poisto!
-  [jatkokysymysid]
-  (kirjoita! :jatkokysymys nil jatkokysymysid  :poisto {:jatkokysymysid jatkokysymysid}))
-
-(defn jatkokysymys-luonti!
-  [jatkokysymysid]
-  (kirjoita! :jatkokysymys nil jatkokysymysid :lisays {:jatkokysymysid jatkokysymysid}))
-
 (defn kysymys-muokkaus!
   [kysymysid]
   (kirjoita! :kysymys nil kysymysid :paivitys {:kysymysid kysymysid}))

@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-sm-6 col-sm-push-6" style="text-align: right">
-    <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
+    <auth roolit="['OPL-VASTUUKAYTTAJA']">
       <a class="btn btn-primary e2e-luo-uusi-kysely" ng-click="luoUusiKysely()" style="margin: 0;">
         {{ 'yleiset.luo_uusi_kysely' | i18n }}&nbsp;
         <span class="fa fa-plus"></span>
@@ -21,7 +21,7 @@
 <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'julkaistu'}" haku="hakuehto.teksti">
 </kyselylista>
 
-<auth roolit="['OPL-VASTUUKAYTTAJA','OPL-NTMVASTUUKAYTTAJA']">
+<auth roolit="['OPL-VASTUUKAYTTAJA']">
     <h2>{{ 'yleiset.luonnokset' | i18n }}</h2>
     <kyselylista kyselyt="kyselyt" suodatus="{sijainti:'luonnos'}" haku="hakuehto.teksti">
     </kyselylista>

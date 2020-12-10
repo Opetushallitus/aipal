@@ -14,9 +14,8 @@
 
 (ns aipal.arkisto.kysely
   (:require [korma.core :as sql]
-            [aipal.arkisto.kysely-util :as kysely-util]
             [aipal.arkisto.kyselykerta :as kyselykerta]
-            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? yllapitaja? *kayttaja*]]
+            [aipal.infra.kayttaja :refer [yllapitaja? *kayttaja*]]
             [aipal.integraatio.sql.korma :as taulut]
             [oph.common.util.util :refer [max-date]]
             [clojure.tools.logging :as log]
@@ -201,7 +200,6 @@
 
 (defn aseta-jatkokysymysten-jarjestys [kysymykset]
   (map #(aseta-jatkokysymyksen-jarjestys % kysymykset) kysymykset))
-
 
 (defn hae-kysymysryhman-kysymykset [kysymysryhma]
   (->> kysymysryhma

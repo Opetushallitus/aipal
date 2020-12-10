@@ -15,7 +15,7 @@
 (ns aipal.arkisto.kysymysryhma
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique]]
-            [aipal.infra.kayttaja :refer [ntm-vastuukayttaja? vastuukayttaja? yllapitaja?]]
+            [aipal.infra.kayttaja :refer [vastuukayttaja? yllapitaja?]]
             [aipal.integraatio.sql.korma :as taulut]
             [aipal.auditlog :as auditlog]
             [clojure.tools.logging :as log]
@@ -27,23 +27,15 @@
 (defn ^:private rajaa-kayttajalle-sallittuihin-kysymysryhmiin [query organisaatio]
   (let [koulutustoimijan-oma {:kysymysryhma_organisaatio_view.koulutustoimija organisaatio}
         valtakunnallinen     {:kysymysryhma_organisaatio_view.valtakunnallinen true}
-        lisattavissa         {:kysymysryhma.lisattavissa true}
-        ntm-kysymykset       {:kysymysryhma.ntm_kysymykset true}
-        ei-ntm-kysymyksia    {:kysymysryhma.ntm_kysymykset false}]
+        lisattavissa         {:kysymysryhma.tila "julkaistu"}]
     (cond
       (yllapitaja?)         (-> query
                               (sql/where (or koulutustoimijan-oma
                                              valtakunnallinen)))
-      (ntm-vastuukayttaja?) (-> query
-                              (sql/where (and (or koulutustoimijan-oma
-                                                  (and valtakunnallinen
-                                                       lisattavissa))
-                                              ntm-kysymykset)))
       :else                 (-> query
                               (sql/where (and (or koulutustoimijan-oma
                                                   (and valtakunnallinen
-                                                       lisattavissa))
-                                              ei-ntm-kysymyksia))))))
+                                                       lisattavissa))))))))
 
 (defn hae-kysymysryhmat
   ([organisaatio vain-voimassaolevat]
@@ -51,10 +43,10 @@
      (sql/join :inner :kysymysryhma_organisaatio_view (= :kysymysryhma_organisaatio_view.kysymysryhmaid :kysymysryhmaid))
      (rajaa-kayttajalle-sallittuihin-kysymysryhmiin organisaatio)
      (cond->
-       vain-voimassaolevat (sql/where {:kysymysryhma.lisattavissa true}))
+       vain-voimassaolevat (sql/where {:kysymysryhma.tila "julkaistu"}))
      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.nimi_en
                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.selite_en :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
-                 :kysymysryhma.lisattavissa :kysymysryhma.tila :kysymysryhma.kuvaus_fi :kysymysryhma.kuvaus_sv :kysymysryhma.kuvaus_en
+                 :kysymysryhma.tila :kysymysryhma.kuvaus_fi :kysymysryhma.kuvaus_sv :kysymysryhma.kuvaus_en
                  [(sql/subselect taulut/kysymys
                     (sql/aggregate (count :*) :lkm)
                     (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
@@ -68,14 +60,7 @@
    (hae-kysymysryhmat organisaatio false)))
 
 (defn ^:private rajaa-kayttajalle-sallittuihin-taustakysymysryhmiin [query]
-  (let [ntm-kysymykset       {:kysymysryhma.ntm_kysymykset true}
-        ei-ntm-kysymyksia    {:kysymysryhma.ntm_kysymykset false}]
-    (cond
-      (yllapitaja?)         query
-      (ntm-vastuukayttaja?) (-> query
-                              (sql/where ntm-kysymykset))
-      :else                 (-> query
-                              (sql/where ei-ntm-kysymyksia)))))
+  query)
 
 (defn hae-taustakysymysryhmat
   []
@@ -127,19 +112,14 @@
     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en
                 :selite_fi :selite_sv :selite_en
                 :kuvaus_fi :kuvaus_sv :kuvaus_en
-                :ntm_kysymykset :taustakysymykset :valtakunnallinen :tila)))
+                :taustakysymykset :valtakunnallinen :tila)))
 
 (def kysymys-select
   (->
     (sql/select* taulut/kysymys)
-    (sql/join :left :jatkokysymys (= :jatkokysymys.jatkokysymysid :kysymys.jatkokysymysid))
     (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv :kysymys.kysymys_en :kysymys.luotuaika
                 :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi :kysymys.eos_vastaus_sallittu
-                :kysymys.max_vastaus :kysymys.monivalinta_max :kysymys.jarjestys
-                :jatkokysymys.kylla_teksti_fi :jatkokysymys.kylla_teksti_sv :jatkokysymys.kylla_teksti_en
-                :jatkokysymys.ei_teksti_fi :jatkokysymys.ei_teksti_sv :jatkokysymys.ei_teksti_en
-                :jatkokysymys.kylla_vastaustyyppi
-                [:jatkokysymys.max_vastaus :jatkokysymys_max_vastaus])
+                :kysymys.max_vastaus :kysymys.monivalinta_max :kysymys.jarjestys)
     (sql/order :kysymys.jarjestys)))
 
 (defn taydenna-monivalintakysymys
@@ -147,20 +127,20 @@
   (let [kysymysid (:kysymysid monivalintakysymys)]
     (assoc monivalintakysymys :monivalintavaihtoehdot (hae-monivalintakysymyksen-vaihtoehdot kysymysid))))
 
-(def kylla-jatkokysymykset-kentat
+(def kylla-jatkokysymyksen-kentat
   [:kylla_teksti_fi
    :kylla_teksti_sv
    :kylla_teksti_en
    :kylla_vastaustyyppi])
 
-(def ei-jatkokysymykset-kentat
+(def ei-jatkokysymyksen-kentat
   [:ei_teksti_fi
    :ei_teksti_sv
    :ei_teksti_en
    :jatkokysymys_max_vastaus])
 
-(def jatkokysymykset-kentat
-  (into kylla-jatkokysymykset-kentat ei-jatkokysymykset-kentat))
+(def jatkokysymyksen-kentat
+  (into kylla-jatkokysymyksen-kentat ei-jatkokysymyksen-kentat))
 
 (defn onko-jokin-kentista-annettu?
   [m kentat]
@@ -185,7 +165,7 @@
 (defn erottele-jatkokysymys
   [kysymys]
   (-> kysymys
-    (select-keys jatkokysymykset-kentat)
+    (select-keys jatkokysymyksen-kentat)
     poista-nil-kentat
     (clojure.set/rename-keys {:jatkokysymys_max_vastaus :max_vastaus})
     (assoc :kylla_jatkokysymys (kylla-jatkokysymys? kysymys))
@@ -195,8 +175,8 @@
   [kysymys]
   (let [jatkokysymys (erottele-jatkokysymys kysymys)]
     (-> kysymys
-      (assoc :jatkokysymys jatkokysymys)
-      (as-> kysymys (apply dissoc kysymys jatkokysymykset-kentat)))))
+        (assoc :jatkokysymys jatkokysymys)
+        (as-> kysymys (apply dissoc kysymys jatkokysymyksen-kentat)))))
 
 (defn taydenna-kysymys
   [kysymys]
@@ -216,7 +196,7 @@
   [kysymysryhma]
   (update-in kysymysryhma [:kysymykset] #(doall (map taydenna-kysymys %))))
 
-(def kysymysryhma-fields [:kysymysryhmaid :tila :ntm_kysymykset :nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en :taustakysymykset :valtakunnallinen])
+(def kysymysryhma-fields [:kysymysryhmaid :tila :nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en :taustakysymykset :valtakunnallinen])
 
 (defn liita-jatkokysymykset [jatkokysymykset-map kysymys]
   (if-let [jatkokysymykset (get jatkokysymykset-map (:kysymysid kysymys))]
@@ -280,7 +260,7 @@
   ([kyselyid]
    (->
      (sql/select* taulut/kysymysryhma)
-     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :ntm_kysymykset)
+     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset)
      (sql/with taulut/kysymys
        (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu :jatkokysymys :jarjestys :kysymysryhmaid :max_vastaus
                    [:kysymys_jatkokysymys.kysymysid :jatkokysymys_kysymysid]
@@ -316,7 +296,7 @@
     (sql/join :inner taulut/kysymysryhma_kyselypohja (= :kysymysryhma_kyselypohja.kysymysryhmaid :kysymysryhma.kysymysryhmaid))
     (sql/fields :kysymysryhma_kyselypohja.kyselypohjaid :kysymysryhma_kyselypohja.jarjestys)
     (sql/where {:kysymysryhma_kyselypohja.kyselypohjaid kyselypohjaid
-                :kysymysryhma.lisattavissa true})
+                :kysymysryhma.tila "julkaistu"})
     (sql/order :kysymysryhma_kyselypohja.jarjestys)
     sql/exec
     (->> (map (comp taydenna-kysymysryhman-monivalintakysymykset vaihda-kysymysavain)))))
@@ -348,7 +328,7 @@
   (->
     (sql/update* taulut/kysymysryhma)
     (sql/set-fields (assoc (select-keys kysymysryhma [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kuvaus_fi :kuvaus_sv :kuvaus_en
-                                                      :valtakunnallinen :koulutustoimija :taustakysymykset :ntm_kysymykset])
+                                                      :valtakunnallinen :koulutustoimija :taustakysymykset])
                       :muutettu_kayttaja (:oid *kayttaja*)))
     (sql/where {:kysymysryhmaid (:kysymysryhmaid kysymysryhma)})
     (sql/update)))

@@ -11,7 +11,6 @@
             [aipal.asetukset :refer [service-path build-id project-version]]
             [aipal.basic-auth :refer [wrap-basic-authentication]]
             aipal.rest-api.i18n
-            aipal.rest-api.kieli
             aipal.rest-api.kysely
             aipal.rest-api.kyselykerta
             aipal.rest-api.kyselypohja
@@ -66,7 +65,6 @@
                                   {:logout-url (str cas-url "/logout")})))})
     (context "/api/jslog" [] :no-doc true :middleware [wrap-tarkasta-csrf-token] aipal.rest_api.js-log/reitit)
     (context "/api/i18n" [] :no-doc true aipal.rest-api.i18n/reitit)
-    (context "/api/kieli" [] :no-doc true  aipal.rest-api.kieli/reitit)
     (context "/api/kyselykerta" [] :no-doc true :tags ["kyselykerta"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kyselykerta/reitit)
     (context "/api/kyselypohja" [] :no-doc true :tags ["kyselypohja"] aipal.rest-api.kyselypohja/tiedosto-reitit)
     (context "/api/kyselypohja" [] :no-doc true :tags ["kyselypohja"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kyselypohja/reitit)

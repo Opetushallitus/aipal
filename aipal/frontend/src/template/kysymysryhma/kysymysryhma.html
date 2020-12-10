@@ -18,14 +18,6 @@
                     </label>
                 </div>
             </div>
-            <div ng-if="yllapitaja || ntmVastuuKayttaja" class="checkbox">
-                <div>
-                    <label>
-                        <input type="checkbox" ng-model="kysymysryhma.ntm_kysymykset">
-                        {{i18n.kysymysryhma.ntm_kysymykset}}
-                    </label>
-                </div>
-            </div>
 
             <label ng-class="{pakollinen: !(kysymysryhma.nimi_en || kysymysryhma.nimi_sv)}"><span>{{i18n.kysymysryhma.nimi}} ({{i18n.yleiset.suomeksi}}) ({{i18n.yleiset.nakyy_vastaajalle}})</span>
                 <input type="text" class="form-control e2e-kysymysryhma-nimi-fi" ng-model="kysymysryhma.nimi_fi" maxlength="200" autofocus ng-required="!(kysymysryhma.nimi_en || kysymysryhma.nimi_sv)"/>

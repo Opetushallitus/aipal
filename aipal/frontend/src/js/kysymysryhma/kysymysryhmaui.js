@@ -145,8 +145,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     }
 
     $scope.kysymysryhma = {
-      kysymykset: [],
-      ntm_kysymykset: kayttooikeudet.isNtmVastuuKayttaja()
+      kysymykset: []
     };
 
     if (kopioi || !uusi) {
@@ -371,14 +370,9 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       $scope.kysymysryhma.kysymykset = _.reject($scope.kysymysryhma.kysymykset, 'poistetaan_kysymysryhmasta');
     };
 
-    function onValidiNtmKysymysryhma() {
-      return !kayttooikeudet.isNtmVastuuKayttaja() ||
-        !!$scope.kysymysryhma.ntm_kysymykset;
-    }
-
     $scope.tallennusSallittu = function() {
       return $scope.form.$valid &&
-        !$scope.muokkaustila && onValidiNtmKysymysryhma();
+        !$scope.muokkaustila;
     };
   }])
 
