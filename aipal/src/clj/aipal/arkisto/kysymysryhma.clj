@@ -73,23 +73,56 @@
     sql/exec
     yhdista-valtakunnalliset-taustakysymysryhmat))
 
-(defn lisaa-kysymysryhma! [k]
-  (let [kysymysryhma (sql/insert taulut/kysymysryhma
-                       (sql/values (merge k {:luotu_kayttaja (:oid *kayttaja*)
-                                             :muutettu_kayttaja (:oid *kayttaja*)})))]
-    (auditlog/kysymysryhma-luonti! (:kysymysryhmaid kysymysryhma) (:nimi_fi kysymysryhma))
-    kysymysryhma))
+(def tyhja-kysymysryhma { :taustakysymykset false
+                          :valtakunnallinen false
+                          :nimi_fi nil
+                          :nimi_sv nil
+                          :selite_fi nil
+                          :selite_sv nil
+                          :koulutustoimija nil
+                          :oppilaitos nil
+                          :luotuaika nil
+                          :muutettuaika nil
+                          :tila "luonnos"
+                          :kuvaus_fi nil
+                          :kuvaus_sv nil
+                          :nimi_en nil
+                          :selite_en nil
+                          :kuvaus_en nil})
 
-(defn lisaa-kysymys! [k]
-  (let [kysymys  (sql/insert taulut/kysymys
-                   (sql/values (merge k {:luotu_kayttaja (:oid *kayttaja*)
-                                         :muutettu_kayttaja (:oid *kayttaja*)})))]
-    (auditlog/kysymys-luonti! (:kysymysryhmaid kysymys) (:kysymysid kysymys))
-    kysymys))
+(defn lisaa-kysymysryhma! [kysymysryhma-data]
+  (let [kysymysryhma  (merge tyhja-kysymysryhma (assoc kysymysryhma-data :kayttaja (:oid *kayttaja*)))
+        kysymysryhma-id (db/lisaa-kysymysryhma! kysymysryhma)]
+    (auditlog/kysymysryhma-luonti! (:kysymysryhmaid kysymysryhma-id) (:nimi_fi (:nimi_fi kysymysryhma)))
+    (first kysymysryhma-id)))
+
+(def tyhja-kysymys { :kysymysryhmaid nil
+                     :pakollinen nil
+                     :eos_vastaus_sallittu nil
+                     :poistettava nil
+                     :vastaustyyppi nil
+                     :kysymys_fi nil
+                     :kysymys_sv nil
+                     :kysymys_en nil
+                     :selite_fi nil
+                     :selite_sv nil
+                     :selite_en nil
+                     :max_vastaus nil
+                     :monivalinta_max nil
+                     :jatkokysymys false
+                     :rajoite nil
+                     :jarjestys nil
+                     :kategoria {} })
+
+
+(defn lisaa-kysymys! [kysymys-data kysymysryhmaid]
+  (let [kysymys (assoc (merge tyhja-kysymys kysymys-data) :kayttaja (:oid *kayttaja*))
+         kysymysid (db/lisaa-kysymys! kysymys)]
+    (auditlog/kysymys-luonti! (:kysymysryhmaid kysymysryhmaid) (:kysymysid kysymysid))
+    kysymysid))
 
 (defn liita-jatkokysymys! [kysymysid jatkokysymysid vastaus]
-  (sql/insert taulut/kysymys_jatkokysymys
-      (sql/values {:kysymysid kysymysid :jatkokysymysid jatkokysymysid :vastaus vastaus})))
+  (db/liita-jatkokysymys! {:kysymysid kysymysid :jatkokysymysid jatkokysymysid :vastaus vastaus}))
 
 
 (defn lisaa-monivalintavaihtoehto! [v]
@@ -339,38 +372,23 @@
   (sql/delete taulut/kysymysryhma
     (sql/where {:kysymysryhmaid kysymysryhmaid})))
 
-(defn poista-kysymys!
-  [kysymysid]
-  (auditlog/kysymys-poisto! kysymysid)
-  (sql/delete
-    taulut/kysymys
-    (sql/where {:kysymysid kysymysid})))
-
 (defn poista-kysymyksen-monivalintavaihtoehdot!
   [kysymysid]
   (auditlog/kysymys-monivalinnat-poisto! kysymysid)
-  (sql/delete
-    :monivalintavaihtoehto
-    (sql/where {:kysymysid kysymysid})))
+  (db/poista-monivalintavaihtoehdot! {:kysymysidt kysymysid}))
 
 (defn poista-jatkokysymys!
   [kysymysid]
   (auditlog/kysymys-poisto! kysymysid)
-  (sql/delete
-    taulut/kysymys_jatkokysymys
-    (sql/where (or (= :jatkokysymysid kysymysid)
-                   (= :kysymysid kysymysid)))))
+  (db/poista-jatkokysymykset! {:kysymysidt kysymysid}))
 
 (defn poista-kysymys! [kysymys]
   (when (= "monivalinta" (:vastaustyyppi kysymys))
     (poista-kysymyksen-monivalintavaihtoehdot! (:kysymysid kysymys)))
   (poista-jatkokysymys! (:kysymysid kysymys))
   (auditlog/kysymys-poisto! (:kysymysid kysymys))
-  (sql/delete
-    taulut/kysymys
-    (sql/where {:kysymysid (:kysymysid kysymys)}))
+  (db/poista-kysymykset! {:kysymysidt (:kysymysid kysymys)})
   (:kysymysid kysymys))
-
 
 (defn poista-kysymysryhman-kysymykset! [kysymysryhmaid]
   (let [kysymykset (db/hae-kysymysryhman-kysymykset {:kysymysryhmaid kysymysryhmaid})]

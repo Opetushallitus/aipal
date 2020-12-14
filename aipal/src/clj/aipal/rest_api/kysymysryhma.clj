@@ -30,7 +30,8 @@
                         :max_vastaus
                         :monivalinta_max
                         :rajoite
-                        :jarjestys]))
+                        :jarjestys
+                        :kategoria]))
 
 (defn valitse-vaihtoehdon-kentat [vaihtoehto]
   (select-keys vaihtoehto [:jarjestys
@@ -76,19 +77,22 @@
                     (assoc :kysymysryhmaid kysymysryhmaid)
                     (assoc :luotu_kayttaja (:oid *kayttaja*))
                     (assoc :muutettu_kayttaja (:oid *kayttaja*))
-                    arkisto/lisaa-kysymys!
-                    :kysymysid)
+                      (arkisto/lisaa-kysymys! kysymysryhmaid)
+                      first
+                      :kysymysid)
         jatkokysymykset (muodosta-jatkokysymykset kysymys kysymysryhmaid)]
     (doseq [jatkokysymys jatkokysymykset]
-      (let [jatkokysymysid (:kysymysid (arkisto/lisaa-kysymys! (select-keys jatkokysymys kysymys-fields)))]
-        (arkisto/liita-jatkokysymys! kysymysid, jatkokysymysid, (:vastaus jatkokysymys))))
+      (let [jatkokysymysid (arkisto/lisaa-kysymys! (select-keys jatkokysymys kysymys-fields) kysymysryhmaid)]
+        (log/info kysymysid)
+        (log/info jatkokysymysid)
+        (arkisto/liita-jatkokysymys! kysymysid, (:kysymysid (first jatkokysymysid)), (:vastaus jatkokysymys))))
 
     (when (= "monivalinta" (:vastaustyyppi kysymys))
       (lisaa-monivalintavaihtoehdot! (:monivalintavaihtoehdot kysymys) kysymysid))))
 
 (defn lisaa-kysymykset-kysymysryhmaan! [kysymykset kysymysryhmaid]
-  (doseq [k (lisaa-jarjestys kysymykset)]
-    (lisaa-kysymys! k kysymysryhmaid)))
+  (doseq [kysymys (lisaa-jarjestys kysymykset)]
+    (lisaa-kysymys! kysymys kysymysryhmaid)))
 
 (defn ^:private valitse-kysymysryhman-peruskentat [kysymysryhma]
   (select-keys kysymysryhma [:nimi_fi

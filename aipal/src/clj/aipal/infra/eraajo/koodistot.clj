@@ -12,27 +12,27 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.infra.eraajo.tutkinnot
+(ns aipal.infra.eraajo.koodistot
   (:require [clojurewerkz.quartzite.jobs :as j
              :refer [defjob]]
             [clojurewerkz.quartzite.conversion :as qc]
             [clojure.tools.logging :as log]
-            [aipal.integraatio.koodistopalvelu :as org]
+            [aipal.integraatio.koodistopalvelu :as koodisto]
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]))
 
-(defn ^:integration-api paivita-tutkinnot! [asetukset]
+(defn ^:integration-api paivita-koodistot! [asetukset]
   (with-kayttaja integraatio-uid nil nil
-    (org/paivita-tutkinnot! asetukset)))
+                 (koodisto/paivita-koodistot! asetukset)))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.
-(defrecord PaivitaTutkinnotJob []
+(defrecord PaivitaKoodistotJob []
    org.quartz.Job
    (execute [this ctx]
      (try
       (let [{asetukset "asetukset"} (qc/from-job-data ctx)]
-        (paivita-tutkinnot! (clojure.walk/keywordize-keys asetukset)))
+        (paivita-koodistot! (clojure.walk/keywordize-keys asetukset)))
       (catch Exception e
-        (log/error "Tutkintojen päivitys koodistopalvelusta epäonnistui"
+        (log/error "Koodistojen päivitys koodistopalvelusta epäonnistui"
                    (map str (.getStackTrace e)))))))

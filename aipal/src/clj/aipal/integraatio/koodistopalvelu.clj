@@ -20,7 +20,8 @@
             [clojure.set :refer [intersection difference rename-keys]]
             [oph.common.util.util :refer :all]
             [clojure.tools.logging :as log]
-            [korma.db :as db]
+            korma.db
+            [arvo.db.core :refer [*db*] :as db]
             [clojure.set :as set]
             [clj-time.coerce :as c]))
 
@@ -60,6 +61,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 
 (defn koodi->opintoala [koodi]
   (koodi->kasite koodi :opintoalatunnus))
+
+(defn koodi->koodi [koodi]
+  (koodi->kasite koodi :koodi_arvo))
 
 (defn ^:private hae-koodit
   "Hakee kaikki koodit annetusta koodistosta ja asettaa koodin koodiarvon avaimeksi arvokentta"
@@ -131,6 +135,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (map (partial lisaa-opintoalaan-koulutusala asetukset))
     (map #(dissoc % :kuvaus_fi :kuvaus_sv :kuvaus_en))))
 
+; TODO pitääkö hakea kannasta?
 (defn hae-kunnat [asetukset]
   (->> (hae-koodit asetukset "kunta")
        (map #(koodi->kasite % :kuntakoodi))))
@@ -138,7 +143,9 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn in? [coll elem]
   (some #(= elem %) coll))
 
-(defn hae-muuttuneet [uudet vanhat tunniste]
+(defn hae-muuttuneet
+  "Lajittelee koodit lisättäviin ja päivitettäviin. Ei tutki löytyykö ennestään samoilla tiedoilla."
+  [uudet vanhat tunniste]
   (let [muuttuneet (set/difference (into #{} uudet) (into #{} vanhat))
         vanhat-idt (map tunniste vanhat)
         lisattavat (remove #(in? vanhat-idt (tunniste %)) muuttuneet)]
@@ -238,15 +245,50 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
     (tallenna-uudet-tutkintotyypit! (filter :tutkintotyyppi (:lisattavat tutkintotyypit)))
     (tallenna-muuttuneet-tutkintotyypit! (filter :tutkintotyyppi (:paivitettavat tutkintotyypit))))
 
-(defn ^:integration-api paivita-tutkinnot! [asetukset]
+(defn ^:integration-api tallenna-uudet-koodisto! [uudet-koodit koodisto-uri]
+  (doseq [koodi uudet-koodit]
+;    (log/info "lisätään koodia" (assoc koodi :koodisto_uri koodisto-uri))
+    (db/lisaa-koodiston-koodi! (assoc koodi :koodisto_uri koodisto-uri)))
+  (log/info (count uudet-koodit) "uutta tallennettiin"))
+
+(defn ^:integration-api tallenna-muuttuneet-koodisto! [muuttuneet-koodit koodisto-uri]
+  (doseq [koodi muuttuneet-koodit]
+;    (log/info "lisätään koodia" (assoc koodi :koodisto_uri koodisto-uri))
+    (db/paivita-koodiston-koodi! (assoc koodi :koodisto_uri koodisto-uri)))
+  (log/info (count muuttuneet-koodit) "muutosta tallenttiin"))
+
+(defn ^:integration-api tallenna-koodisto! [koodistomuutokset koodisto-uri]
+  (tallenna-uudet-koodisto! (filter :koodi_arvo (:lisattavat koodistomuutokset)) koodisto-uri)
+  (tallenna-muuttuneet-koodisto! (filter :koodi_arvo (:paivitettavat koodistomuutokset)) koodisto-uri))
+
+(defn hae-koodisto-muutokset [koodisto-uri asetukset]
+  (let [vanhat (db/hae-koodiston-koodit {:koodistouri koodisto-uri})
+        uudet (map koodi->koodi (hae-koodit asetukset koodisto-uri))
+        muuttuneet (hae-muuttuneet uudet vanhat :koodi_arvo)]
+    (log/info (count vanhat) "vanhaa" (count uudet) "uutta")
+    (log/info "lisattavia" (count (:lisattavat muuttuneet)) "paivitettavia" (count (:paivitettavat muuttuneet)))
+    muuttuneet))
+
+(defn paivita-koodisto! [asetukset koodisto-uri]
+  (log/info "Päivitetään koodisto" koodisto-uri)
+  (-> koodisto-uri
+      (hae-koodisto-muutokset asetukset )
+      (tallenna-koodisto! koodisto-uri)))
+
+(defn ^:integration-api paivita-koodistot! [asetukset]
   (try
-    (db/transaction
+    (korma.db/transaction
       (log/info "Aloitetaan tutkintojen päivitys koodistopalvelusta")
       (tallenna-tutkintotyypit! (hae-tutkintotyyppi-muutokset asetukset))
       (tallenna-koulutusalat! (hae-koulutusala-muutokset asetukset))
       (tallenna-opintoalat! (hae-opintoala-muutokset asetukset))
       (tallenna-tutkinnot! (hae-tutkinto-muutokset asetukset))
       (log/info "Tutkintojen päivitys koodistopalvelusta valmis"))
+    (korma.db/transaction
+     (log/info "Päivitetään muut koodistot")
+     (paivita-koodisto! asetukset "maatjavaltiot2")
+     (paivita-koodisto! asetukset "kunta")
+     (log/info "Muiden koodistojen päivitys valmis"))
     (catch org.postgresql.util.PSQLException e
       (log/error e "Tutkintojen päivitys koodistopalvelusta epäonnistui"))))
 

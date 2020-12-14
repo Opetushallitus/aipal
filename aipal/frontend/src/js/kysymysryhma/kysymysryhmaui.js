@@ -142,7 +142,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     $scope.toggleSelitteet = function () {
       $scope.selitteet = !$scope.selitteet;
-    }
+    };
 
     $scope.kysymysryhma = {
       kysymykset: []
@@ -180,16 +180,17 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       'arvosana4_ja_eos',
       'asteikko5_1',
       'arvosana6_ja_eos',
-      'valiotsikko'
+      'valiotsikko',
+      'alasvetovalikko'
     ];
 
     $scope.kysymystekstinTyyppi = function() {
-      return $scope.aktiivinenKysymys.vastaustyyppi === 'valiotsikko' ? 'valiotsikko' : 'kysymys'
-    }
+      return $scope.aktiivinenKysymys.vastaustyyppi === 'valiotsikko' ? 'valiotsikko' : 'kysymys';
+    };
 
     $scope.vapaateksti_maksimit = [10, 100, 500,1000,1500,2000,2500,3000];
 
-    $scope.vapaateksti_rajoitteet = ['ei_rajoitetta', 'numero']
+    $scope.vapaateksti_rajoitteet = ['ei_rajoitetta', 'numero'];
 
     $scope.lisaaKysymys = function() {
       $scope.kysymysryhma.kysymykset.push(apu.uusiKysymys());
@@ -209,16 +210,18 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     $scope.tallenna = function() {
       apu.poistaYlimaaraisetKentat($scope.aktiivinenKysymys);
+      // Kategorian pitää olla jsonia
+      // $scope.aktiivinenKysymys.kategoria = JSON.stringify($scope.aktiivinenKysymys.kategoria);
       $scope.aktiivinenKysymys.muokattava = false;
       $scope.aktiivinenKysymys.uusi = false;
       $scope.muokkaustila = false;
     };
 
-    $scope.peruutaKysymysTallennus = function(){
+    $scope.peruutaKysymysTallennus = function() {
       $scope.aktiivinenKysymys.muokattava = false;
       $scope.muokkaustila = false;
 
-      if(!$scope.aktiivinenKysymys.uusi ){
+      if (!$scope.aktiivinenKysymys.uusi ) {
         $scope.kysymysryhma.kysymykset = originals;
       }
       // Uudet "tyhjät" pois jos painetaan peruuta
@@ -228,7 +231,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
       );
     };
 
-    $scope.asteikot = []
+    $scope.asteikot = [];
     $scope.tallenusNakyvissa = false;
     $scope.latausNakyvissa = false;
 
@@ -252,32 +255,35 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
     });
 
     $scope.lataaAsteikko = function(asteikko){
-      if(asteikko === null) return;
+      if (asteikko === null) {
+        return;
+      }
       $scope.aktiivinenKysymys.monivalintavaihtoehdot = [];
       var vaihtoehdot = asteikko.asteikko.vaihtoehdot;
       _.forEach(vaihtoehdot, function(vaihtoehto){
-        $scope.aktiivinenKysymys.monivalintavaihtoehdot.push(vaihtoehto)
+        $scope.aktiivinenKysymys.monivalintavaihtoehdot.push(vaihtoehto);
       });
       $scope.latausNakyvissa = false;
     };
 
     $scope.nollaa = function () {
-      if($scope.aktiivinenKysymys) {
-        console.log('Nollataan kysymys')
-        $scope.aktiivinenKysymys.kysymys_fi = ''
-        $scope.aktiivinenKysymys.kysymys_sv = ''
-        $scope.aktiivinenKysymys.kysymys_en = ''
-        $scope.aktiivinenKysymys.pakollinen = true
-        $scope.aktiivinenKysymys.poistettava = false
-        $scope.aktiivinenKysymys.poistetaan_kysymysryhmasta = false
-        $scope.aktiivinenKysymys.muokattava = true
-        $scope.aktiivinenKysymys.jatkokysymykset = {}
-        $scope.aktiivinenKysymys.max_vastaus = 500
-        $scope.aktiivinenKysymys.monivalinta_max = 1
-        $scope.aktiivinenKysymys.monivalintavaihtoehdot = [apu.uusiVaihtoehto(), apu.uusiVaihtoehto()]
-        $scope.aktiivinenKysymys.selite_fi = ''
-        $scope.aktiivinenKysymys.selite_sv = ''
-        $scope.aktiivinenKysymys.selite_en = ''
+      if ($scope.aktiivinenKysymys) {
+        console.log('Nollataan kysymys');
+        $scope.aktiivinenKysymys.kysymys_fi = '';
+        $scope.aktiivinenKysymys.kysymys_sv = '';
+        $scope.aktiivinenKysymys.kysymys_en = '';
+        $scope.aktiivinenKysymys.pakollinen = true;
+        $scope.aktiivinenKysymys.poistettava = false;
+        $scope.aktiivinenKysymys.poistetaan_kysymysryhmasta = false;
+        $scope.aktiivinenKysymys.muokattava = true;
+        $scope.aktiivinenKysymys.jatkokysymykset = {};
+        $scope.aktiivinenKysymys.max_vastaus = 500;
+        $scope.aktiivinenKysymys.monivalinta_max = 1;
+        $scope.aktiivinenKysymys.monivalintavaihtoehdot = [apu.uusiVaihtoehto(), apu.uusiVaihtoehto()];
+        $scope.aktiivinenKysymys.selite_fi = '';
+        $scope.aktiivinenKysymys.selite_sv = '';
+        $scope.aktiivinenKysymys.selite_en = '';
+        $scope.aktiivinenKysymys.kategoria = {};
       }
     };
 

@@ -1,6 +1,6 @@
 -- :name lisaa-kysymysryhma! <:!
-INSERT INTO kysymysryhma (taustakysymykset, valtakunnallinen, nimi_fi, nimi_sv, selite_fi, selite_sv, koulutustoimija, luotu_kayttaja, muutettu_kayttaja, tila, kuvaus_fi, kuvaus_sv, nimi_en, selite_en, kuvaus_en, luotuaika, muutettuaika)
-VALUES (:taustakysymykset, :valtakunnallinen, :nimi_fi, :nimi_sv, :selite_fi, :selite_sv, :koulutustoimija, :kayttaja, :kayttaja, :tila, :kuvaus_fi, :kuvaus_sv, :nimi_en, :selite_en, :kuvaus_en, now(), now())
+INSERT INTO kysymysryhma (taustakysymykset, valtakunnallinen, nimi_fi, nimi_sv, selite_fi, selite_sv, koulutustoimija, oppilaitos, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, tila, kuvaus_fi, kuvaus_sv, nimi_en, selite_en, kuvaus_en)
+VALUES (:taustakysymykset, :valtakunnallinen, :nimi_fi, :nimi_sv, :selite_fi, :selite_sv, :koulutustoimija, :oppilaitos, :kayttaja, :kayttaja, now(), now(), :tila, :kuvaus_fi, :kuvaus_sv, :nimi_en, :selite_en, :kuvaus_en)
 RETURNING kysymysryhmaid;
 
 -- :name paivita-kysymysryhma! :! :n
@@ -17,9 +17,11 @@ DELETE FROM kysymysryhma WHERE kysymysryhmaid = :kysymysryhmaid;
 
 -- :name lisaa-kysymys! :<!
 INSERT INTO kysymys (pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, kysymys_en,
-                     jarjestys, monivalinta_max, max_vastaus, eos_vastaus_sallittu, jatkokysymys, luotu_kayttaja, muutettu_kayttaja, kategoria, luotuaika, muutettuaika)
-    VALUES (:pakollinen, :poistettava, :vastaustyyppi, :kysymysryhmaid, :kysymys_fi, :kysymys_sv, :kysymys_en, :jarjestys,
-                         :monivalinta_max, :max_vastaus, :eos_vastaus_sallittu, :jatkokysymys, :kayttaja, :kayttaja, :kategoria, now(), now())
+                     jarjestys, monivalinta_max, max_vastaus, eos_vastaus_sallittu, luotu_kayttaja, muutettu_kayttaja, kategoria,
+                     luotuaika, muutettuaika, jatkokysymys)
+    VALUES (:pakollinen, :poistettava, :vastaustyyppi, :kysymysryhmaid, :kysymys_fi, :kysymys_sv, :kysymys_en,
+            :jarjestys, :monivalinta_max, :max_vastaus, :eos_vastaus_sallittu, :kayttaja, :kayttaja, :kategoria,
+            now(), now(), :jatkokysymys)
     RETURNING kysymysid;
 
 -- :name paivita-kysymys! :! :n
@@ -31,6 +33,9 @@ WHERE kysymysid = :kysymysid;
 
 -- :name poista-kysymykset! :! :n
 DELETE FROM kysymys WHERE kysymysid IN (:kysymysidt);
+
+-- :name poista-jatkokysymykset! :! :n
+DELETE FROM kysymys_jatkokysymys WHERE kysymysid IN (:kysymysidt) or jatkokysymysid IN (:kysymysidt);
 
 -- :name lisaa-monivalintavaihtoehto! :! :n
 INSERT INTO monivalintavaihtoehto(kysymysid, teksti_fi, teksti_sv, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika, teksti_en)
