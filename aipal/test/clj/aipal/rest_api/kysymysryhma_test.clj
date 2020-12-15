@@ -1,10 +1,11 @@
 (ns aipal.rest-api.kysymysryhma_test
-  (:require [aipal.rest-api.kysymysryhma :as api])
+  (:require [aipal.rest-api.kysymysryhma :as api]
+            [arvo.util :refer [add-index]])
   (:use clojure.test))
 
 (deftest kysymyksiin-lisataan-jarjestys
   (testing "kysymysten järjestys lisää järjestyksen kysymyksiin"
-    (is (= (api/lisaa-jarjestys [{:kysymys "a"} {:kysymys "b"}])
+    (is (= (add-index :jarjestys [{:kysymys "a"} {:kysymys "b"}])
            [{:kysymys "a" :jarjestys 0} {:kysymys "b" :jarjestys 1}]))))
 
 (deftest kysymyksesta-valitaan-oikeat-kentat

@@ -34,6 +34,7 @@ SELECT *, k.kaytettavissa,
 -- :name hae-kyselyt :? :*
 SELECT k.kyselyid, k.nimi_fi, k.nimi_sv, k.nimi_en, k.voimassa_alkupvm, k.voimassa_loppupvm,
        k.tila, k.kaytettavissa, k.uudelleenohjaus_url, k.sivutettu, k.koulutustoimija,
+       k.kategoria,
        NOT EXISTS(SELECT 1
                   FROM kyselykerta kk
                            JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
@@ -55,13 +56,33 @@ SELECT k.* FROM kyselykerta kk
 JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE kk.kyselykertaid = :kyselykertaid;
 
+-- :name aseta-kyselyn-tila! :! :n
+UPDATE kysely SET tila = :tila,
+                  muutettu_kayttaja = :muutettu_kayttaja
+WHERE kyselyid = :kyselyid;
+
 -- :name luo-kysely! :<!
-INSERT INTO kysely (koulutustoimija, voimassa_alkupvm, nimi_fi, nimi_sv, nimi_en, selite_fi, selite_sv, selite_en, kyselypohjaid, tyyppi, tila, kategoria, luotu_kayttaja, muutettu_kayttaja)
-VALUES (:koulutustoimija, :voimassa_alkupvm, :nimi_fi, :nimi_sv, :nimi_en, :selite_fi, :selite_sv, :selite_en, :kyselypohjaid, :tyyppi, :tila, :kategoria, :kayttaja, :kayttaja)
+INSERT INTO kysely (koulutustoimija, voimassa_alkupvm, voimassa_loppupvm, nimi_fi, nimi_sv, nimi_en, selite_fi, selite_sv, selite_en, kyselypohjaid, tyyppi, tila,
+                    kategoria, uudelleenohjaus_url, luotu_kayttaja, muutettu_kayttaja, muutettuaika, luotuaika)
+VALUES (:koulutustoimija, :voimassa_alkupvm, :voimassa_loppupvm, :nimi_fi, :nimi_sv, :nimi_en, :selite_fi, :selite_sv, :selite_en, :kyselypohjaid, :tyyppi, :tila,
+        :kategoria, :uudelleenohjaus_url, :kayttaja, :kayttaja, now(), now())
+RETURNING kyselyid;
+
+-- :name muokkaa-kyselya! :<!
+UPDATE kysely SET
+      nimi_fi = :nimi_fi, nimi_sv = :nimi_sv, nimi_en = :nimi_en, selite_fi = :selite_fi, selite_sv = :selite_sv, selite_en = :selite_en,
+      voimassa_alkupvm = :voimassa_alkupvm, voimassa_loppupvm = :voimassa_loppupvm,
+      tila = :tila, uudelleenohjaus_url = :uudelleenohjaus_url, sivutettu = :sivutettu, tyyppi = :tyyppi
+WHERE kyselyid = :kyselyid
 RETURNING kyselyid;
 
 -- :name lisaa-kyselyn-kysymysryhma! :! :n
-INSERT INTO kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys) VALUES (kyselyid, kysymysryhmaid, jarjestys);
+INSERT INTO kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys, luotu_kayttaja, muutettu_kayttaja)
+VALUES (:kyselyid, :kysymysryhmaid, :jarjestys, :kayttaja, :kayttaja);
+
+
+-- :name poista-kyselyn-kysymysryhmat! :! :n
+DELETE FROM kysely_kysymysryhma WHERE kyselyid = :kyselyid;
 
 -- :name liita-kyselyn-kyselypohja! :! :n
 INSERT INTO kysely_kysymysryhma (kyselyid, kysymysryhmaid, jarjestys, luotu_kayttaja, muutettu_kayttaja)
@@ -89,3 +110,40 @@ SELECT * FROM automaattikysely WHERE tunniste IN (SELECT MAX(tunniste) FROM auto
 
 -- :name muuta-kyselyn-tila! :! :n
 UPDATE kysely SET tila = :tila, muutettu_kayttaja = :kayttaja WHERE kyselyid = :kyselyid;
+
+-- :name kysely-poistettavissa? :? :1
+SELECT 1 AS poistettavissa FROM kysely
+WHERE NOT EXISTS (SELECT 1
+            FROM (vastaaja JOIN vastaajatunnus ON vastaajatunnus.vastaajatunnusid = vastaaja.vastaajatunnusid)
+                           JOIN kyselykerta ON kyselykerta.kyselykertaid = vastaajatunnus.kyselykertaid
+            WHERE (kyselykerta.kyselyid = kysely.kyselyid))
+  AND tila IN ('luonnos', 'suljettu') AND kyselyid = :kyselyid;
+
+-- :name poista-kyselyn-kysymysryhmat! :! :n
+DELETE FROM kysely_kysymysryhma WHERE kyselyid = :kyselyid ;
+
+-- :name lisaa-kysymys-kyselyyn! :! :n
+INSERT INTO kysely_kysymys (kyselyid, kysymysid, luotu_kayttaja, muutettu_kayttaja)
+VALUES (:kyselyid, :kysymysid, :kayttaja, :kayttaja);
+
+-- :name poista-kyselyn-kysymykset! :! :n
+DELETE FROM kysely_kysymys WHERE kyselyid = :kyselyid;
+
+-- :name poista-kysely! :! :n
+DELETE FROM kysely WHERE kyselyid = :kyselyid;
+
+-- :name hae-kyselyn-pakolliset-kysymysryhmat :? :*
+SELECT kkr.kysymysryhmaid FROM kysely_kysymysryhma kkr
+                                   JOIN kysymysryhma kr ON kkr.kysymysryhmaid = kr.kysymysryhmaid
+WHERE kkr.kyselyid = :kyselyid AND (kr.taustakysymykset = TRUE OR kr.valtakunnallinen = TRUE);
+
+-- :name samanniminen-kysely? :? :1
+SELECT TRUE FROM kysely
+WHERE koulutustoimija = :koulutustoimija
+AND (nimi_fi = :nimi_fi OR nimi_sv = :nimi_sv OR nimi_en = :nimi_en);
+
+-- :name hae-kyselyn-taustakysymysryhmaid :? :1
+SELECT kkr.kysymysryhmaid FROM kysely_kysymysryhma kkr
+JOIN kysymysryhma k on kkr.kysymysryhmaid = k.kysymysryhmaid
+WHERE k.valtakunnallinen = TRUE AND k.taustakysymykset = TRUE
+AND kkr.kyselyid = :kyselyid

@@ -27,3 +27,6 @@
       (api-response {:data data
                      :pagination {:next_url (if next-id next-url nil)}})
       {:status 404})))
+
+(defn add-index [key coll]
+  (map #(assoc %1 key %2) coll (range)))

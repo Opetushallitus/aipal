@@ -15,8 +15,7 @@
 
 (defn fake-kysely-fixture [f]
   (tyhjaa-fake-kanta!)
-  (with-redefs [aipal.arkisto.kysely/lisaa-kysymys! (fn [kyselyid kysymysid]
-                                                      (swap! kysely->kysymys update-in [kyselyid] (fnil conj #{}) kysymysid))
+  (with-redefs [(swap! kysely->kysymys update-in [kyselyid] (fnil conj #{}) kysymysid)
                 aipal.arkisto.kysely/poista-kysymykset! (fn [kyselyid]
                                                           (swap! kysely->kysymys dissoc kyselyid))
                 aipal.arkisto.kysely/lisaa-kysymysryhma! (fn [kyselyid kysymysryhma]

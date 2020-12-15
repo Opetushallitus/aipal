@@ -65,7 +65,7 @@
 (defn validoi-vastaukset
   [vastaukset kysymykset kyselytyyppi]
   (if (and (vastausvalinnat-valideja? vastaukset kysymykset)
-           (or (= kyselytyyppi 4) (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset)))
+           (or (= kyselytyyppi "itsearviointi") (pakollisille-kysymyksille-loytyy-vastaukset? vastaukset kysymykset)))
     vastaukset
     (log/error "Vastausten validointi epäonnistui. Ei voida tallentaa vastauksia.")))
 
@@ -79,7 +79,7 @@
 (defn tallenna-vastaukset!
   [vastaukset vastaajaid kysymykset kyselytyyppi]
   (let [kysymysid->kysymys (map-by :kysymysid kysymykset)]
-    (when (= 4 kyselytyyppi) (arkisto/poista! vastaajaid))
+    (when (= "itsearviointi" kyselytyyppi) (arkisto/poista! vastaajaid))
     (doseq [vastaus vastaukset
             :let [vastauksen-kysymys (kysymysid->kysymys (:kysymysid vastaus))
                   vastaustyyppi (:vastaustyyppi vastauksen-kysymys)

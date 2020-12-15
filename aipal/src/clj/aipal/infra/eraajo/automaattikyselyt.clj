@@ -2,13 +2,18 @@
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [clj-time.core :as time]
-            [arvo.db.core :refer [*db*] :as db])
+            [arvo.db.core :refer [*db*] :as db]
+            [aipal.arkisto.kysely :refer [random-hash]])
   (:import (org.quartz Job)))
+
 
 (defn luo-kysely! [koulutustoimija kuvaus tx]
   (let [kyselyid (:kyselyid (first (db/luo-kysely! tx (merge kuvaus {:tila "julkaistu" :koulutustoimija (:ytunnus koulutustoimija)
                                                                      :kayttaja "JARJESTELMA" :tyyppi (:kyselytyyppi kuvaus)
-                                                                     :kategoria {:automatisointi_tunniste (:tunniste kuvaus)}}))))]
+                                                                     :uudelleenohjaus_url nil
+                                                                     :kategoria (merge (:kysely_kategoria kuvaus)
+                                                                                       {:automatisointi_tunniste (:tunniste kuvaus)
+                                                                                        :esikatselu_tunniste (random-hash)})}))))]
     (db/liita-kyselyn-kyselypohja! tx {:kyselyid kyselyid :kyselypohjaid (:kyselypohjaid kuvaus) :kayttaja "JARJESTELMA"})
     (db/liita-kyselyn-kysymykset! tx {:kyselyid kyselyid :kayttaja "JARJESTELMA"})
     ;(db/paata-kyselykerrat! tx {:tyyppi (:kyselytyyppi kuvaus) :koulutustoimija (:ytunnus koulutustoimija) :paattymis_pvm (get-rahoituskauden-loppu (:kyselytyyppi kuvaus))})

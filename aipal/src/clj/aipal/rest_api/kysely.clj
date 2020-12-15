@@ -19,23 +19,11 @@
             [aipal.arkisto.kyselykerta :as kyselykerta-arkisto]
             [aipal.arkisto.kysymysryhma :as kysymysryhma-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
-            [aipal.rest-api.kysymysryhma :refer [lisaa-jarjestys]]
+            [arvo.util :refer [add-index]]
             [clojure.tools.logging :as log]
+            [arvo.db.core :refer [*db*] :as db]
             [oph.common.util.http-util :refer [response-or-404 parse-iso-date]]
             [oph.common.util.util :refer [map-by paivita-arvot]]))
-
-(defn lisaa-kysymysryhma!
-  [kyselyid kysymysryhma]
-  (let [kayttajan-kysymykset (map-by :kysymysid (:kysymykset kysymysryhma))]
-    (doseq [kysymys (arkisto/hae-kysymysten-poistettavuus (:kysymysryhmaid kysymysryhma))
-            :let [kysymysid (:kysymysid kysymys)
-                  kayttajan-kysymys (get kayttajan-kysymykset kysymysid)]
-            :when (not (and (:poistettu kayttajan-kysymys)
-                            (:poistettava kysymys)))]
-      ;; Assertiin pitäisi törmätä vain jos käyttäjä on muokannut poistetuksi kysymyksen jota ei saisi poistaa
-      (assert (not (:poistettu kayttajan-kysymys)))
-      (arkisto/lisaa-kysymys! kyselyid kysymysid)))
-  (arkisto/lisaa-kysymysryhma! kyselyid kysymysryhma))
 
 (defn lisakysymysten-lukumaara
   [kysymysryhmat]
@@ -51,11 +39,7 @@
   (= "julkaistu" (:tila (kysymysryhma-arkisto/hae kysymysryhmaid false))))
 
 (defn valmistele-luonnos-paivitys [kysely]
-  (arkisto/poista-kysymysryhmat! (:kyselyid kysely))
-  (arkisto/poista-kysymykset! (:kyselyid kysely))
-  (doseq [kysymysryhma (lisaa-jarjestys (:kysymysryhmat kysely))]
-    (assert (kysymysryhma-on-julkaistu? (:kysymysryhmaid kysymysryhma)))
-    (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma)))
+  (arkisto/paivita-kysely! kysely))
 
 (defn validoi-vain-omia-organisaatioita [kysely]
   (let [loytyvat-pakolliset-kysymysryhmaidt (map :kysymysryhmaid (arkisto/get-kyselyn-pakolliset-kysymysryhmaidt (:kyselyid kysely)))
@@ -74,8 +58,7 @@
   (assert (not (> (lisakysymysten-lukumaara (:kysymysryhmat kysely)) max-kysymyksia)))
   (if (= "luonnos" (:tila kysely))
     (valmistele-luonnos-paivitys kysely)
-    (valmistele-julkaistu-paivitys kysely))
-  (arkisto/muokkaa-kyselya! kysely))
+    (valmistele-julkaistu-paivitys kysely)))
 
 (defn valid-url? "jäljittelee angular-puolen äärisimppeliä validointia"
   [url]
@@ -98,10 +81,7 @@
       (if (arkisto/samanniminen-kysely? kysely)
         {:status 400
          :body "kysely.samanniminen_kysely"}
-        (response-or-404
-          (format "%s" (let [{:keys [kyselyid]}
-                             (arkisto/lisaa! (select-keys kysely [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :koulutustoimija :tyyppi :kyselypohjaid]))]
-                        (paivita-kysely! (assoc kysely :kyselyid kyselyid))))))))
+        (response-or-404 (arkisto/lisaa! kysely)))))
 
   (GET "/kyselytyypit" []
     :kayttooikeus :katselu
@@ -115,10 +95,7 @@
                                        [:voimassa_alkupvm :voimassa_loppupvm]
                                        parse-iso-date)
                         :tyyppi (->> kysely :tyyppi :id))]
-      (if (arkisto/samanniminen-kysely? (assoc kysely :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)))
-        {:status 400
-         :body "kysely.samanniminen_kysely"}
-        (response-or-404 (format "%s" (paivita-kysely! kysely))))))
+      (response-or-404 (format "%s" (paivita-kysely! kysely)))))
 
 
   (DELETE "/:kyselyid" []

@@ -72,3 +72,24 @@ VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :kayttaja, :kayttaja, :automaattine
 WITH t AS (SELECT kk.kyselykertaid as id FROM kysely k JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
     WHERE k.koulutustoimija = :koulutustoimija AND k.tyyppi = :tyyppi AND kk.automaattinen IS NOT NULL AND UPPER(kk.automaattinen) IS NULL AND kk.automaattinen @> now()::DATE)
 UPDATE kyselykerta SET automaattinen = daterange(LOWER(automaattinen), :paattymis_pvm::DATE) FROM t WHERE t.id = kyselykertaid;
+
+-- :name hae-koulutustoimijan-kyselykerrat :? :*
+SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu, max(vs.luotuaika) AS viimeisin_vastaus,
+count(vt) AS vastaajatunnuksia, count(vs) AS vastaajia,
+coalesce(sum(vt.kohteiden_lkm) filter (where vt.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
+count(vs) filter (where vt.kaytettavissa) AS aktiivisia_vastaajia
+FROM kyselykerta kk
+JOIN kysely k ON kk.kyselyid = k.kyselyid
+LEFT JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
+LEFT JOIN vastaaja vs on vt.vastaajatunnusid = vs.vastaajatunnusid
+WHERE k.koulutustoimija = :koulutustoimija
+GROUP BY kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu;
+
+-- :name hae-kyselyn-kyselykerrat :? :*
+SELECT * FROM kyselykerta WHERE kyselyid = :kyselyid;
+
+-- :name poista-kyselyn-kyselykerrat! :! :n
+DELETE FROM kyselykerta WHERE kyselyid = :kyselyid;
+
+-- :name laske-kyselyn-kyselykerrat :? :1
+SELECT count(*) AS lkm FROM kyselykerta WHERE kyselyid = :kyselyid;

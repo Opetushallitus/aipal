@@ -272,7 +272,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
 (defn paivita-koodisto! [asetukset koodisto-uri]
   (log/info "Päivitetään koodisto" koodisto-uri)
   (-> koodisto-uri
-      (hae-koodisto-muutokset asetukset )
+      (hae-koodisto-muutokset asetukset)
       (tallenna-koodisto! koodisto-uri)))
 
 (defn ^:integration-api paivita-koodistot! [asetukset]

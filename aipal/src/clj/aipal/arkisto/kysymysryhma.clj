@@ -46,7 +46,7 @@
        vain-voimassaolevat (sql/where {:kysymysryhma.tila "julkaistu"}))
      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.nimi_en
                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.selite_en :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
-                 :kysymysryhma.tila :kysymysryhma.kuvaus_fi :kysymysryhma.kuvaus_sv :kysymysryhma.kuvaus_en
+                 :kysymysryhma.tila :kysymysryhma.kuvaus_fi :kysymysryhma.kuvaus_sv :kysymysryhma.kuvaus_en :kysymysryhma.kategoria
                  [(sql/subselect taulut/kysymys
                     (sql/aggregate (count :*) :lkm)
                     (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
@@ -112,7 +112,7 @@
                      :jatkokysymys false
                      :rajoite nil
                      :jarjestys nil
-                     :kategoria {} })
+                     :kategoria {}})
 
 
 (defn lisaa-kysymys! [kysymys-data kysymysryhmaid]

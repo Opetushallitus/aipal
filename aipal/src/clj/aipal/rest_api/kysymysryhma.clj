@@ -6,10 +6,8 @@
             aipal.compojure-util
             [aipal.infra.kayttaja :refer [*kayttaja* yllapitaja?]]
             [oph.common.util.http-util :refer [response-or-404]]
+            [arvo.util :refer [add-index]]
             [ring.util.http-response :as response]))
-
-(defn lisaa-jarjestys [alkiot]
-  (map #(assoc %1 :jarjestys %2) alkiot (range)))
 
 (defn korjaa-eos-vastaus-sallittu [{:keys [eos_vastaus_sallittu pakollinen vastaustyyppi] :as kysymys}]
   (assoc kysymys :eos_vastaus_sallittu (and eos_vastaus_sallittu
@@ -62,7 +60,7 @@
 (defn lisaa-monivalintavaihtoehdot! [vaihtoehdot kysymysid]
   (when (nil? vaihtoehdot)
     (log/error "Kysymyksellä" kysymysid "ei ole monivalintavaihtoehtoja."))
-  (doseq [v (lisaa-jarjestys vaihtoehdot)]
+  (doseq [v (add-index :jarjestys vaihtoehdot)]
     (-> v
       valitse-vaihtoehdon-kentat
       (assoc :kysymysid kysymysid)
@@ -76,10 +74,10 @@
                     korjaa-eos-vastaus-sallittu
                     (assoc :kysymysryhmaid kysymysryhmaid)
                     (assoc :luotu_kayttaja (:oid *kayttaja*))
-                    (assoc :muutettu_kayttaja (:oid *kayttaja*))
+                    (assoc :muutettu_kayttaja (:oid *kayttaja*)
                       (arkisto/lisaa-kysymys! kysymysryhmaid)
                       first
-                      :kysymysid)
+                      :kysymysid))
         jatkokysymykset (muodosta-jatkokysymykset kysymys kysymysryhmaid)]
     (doseq [jatkokysymys jatkokysymykset]
       (let [jatkokysymysid (arkisto/lisaa-kysymys! (select-keys jatkokysymys kysymys-fields) kysymysryhmaid)]
@@ -91,8 +89,8 @@
       (lisaa-monivalintavaihtoehdot! (:monivalintavaihtoehdot kysymys) kysymysid))))
 
 (defn lisaa-kysymykset-kysymysryhmaan! [kysymykset kysymysryhmaid]
-  (doseq [kysymys (lisaa-jarjestys kysymykset)]
-    (lisaa-kysymys! kysymys kysymysryhmaid)))
+  (doseq [k (add-index :jarjestys kysymykset)]
+    (lisaa-kysymys! k kysymysryhmaid)))
 
 (defn ^:private valitse-kysymysryhman-peruskentat [kysymysryhma]
   (select-keys kysymysryhma [:nimi_fi

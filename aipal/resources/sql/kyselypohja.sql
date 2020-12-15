@@ -3,8 +3,8 @@ SELECT kp.kyselypohjaid, kp.nimi_fi, kp.nimi_sv, kp.nimi_en, kp.valtakunnallinen
 FROM kyselypohja kp
 WHERE kp.koulutustoimija = :koulutustoimija
 --~(if (:valtakunnallinen params) "OR kp.valtakunnallinen = :valtakunnallinen")
---~(if (:voimassa params) "AND kp.voimassa_alkupvm < now() AND kp.voimassa_loppupvm > now())
-AND kp.tila = 'julkaistu';
+--~(if (:voimassa params) "AND (kp.voimassa_alkupvm IS NULL OR kp.voimassa_alkupvm < now()) AND (kp.voimassa_loppupvm > now() OR kp.voimassa_loppupvm IS NULL)")
+AND kp.tila = 'julkaistu' ORDER BY muutettuaika;
 
 -- :name hae-kyselypohja :? :1
 SELECT * FROM kyselypohja WHERE kyselypohjaid = :kyselypohjaid;
@@ -21,15 +21,18 @@ UPDATE kyselypohja SET valtakunnallinen = :valtakunnallinen, voimassa_alkupvm = 
   nimi_fi = :nimi_fi, nimi_sv = :nimi_sv, nimi_en = :nimi_en, selite_fi = :selite_fi, selite_en = :selite_en, muutettu_kayttaja = :kayttaja
 WHERE kyselypohjaid = :kyselypohjaid;
 
--- :name luo-kyselypohja! :! :n
+-- :name luo-kyselypohja! :! :<!
 INSERT INTO kyselypohja (valtakunnallinen, voimassa_alkupvm, voimassa_loppupvm, nimi_fi, nimi_sv, nimi_en,
 selite_fi, selite_sv, selite_en, koulutustoimija, luotu_kayttaja, muutettu_kayttaja)
 VALUES (:valtakunnallinen, :voimassa_alkupvm, :voimassa_loppupvm, :nimi_fi, :nimi_sv, :nimi_en,
-:selite_fi, :selite_sv, :selite_en, :koulutustoimija, :kayttaja, :kayttaja);
+:selite_fi, :selite_sv, :selite_en, :koulutustoimija, :kayttaja, :kayttaja)
+RETURNING kyselypohjaid;
 
 -- :name aseta-kyselypohjan-tila! :! :n
 UPDATE kyselypohja SET tila = :tila, muutettu_kayttaja = :muutettu_kayttaja WHERE kyselypohjaid = :kyselypohjaid;
--- poista-kyselypohja!
+
+-- :name poista-kyselypohja! :! :n
+DELETE FROM kyselypohja WHERE kyselypohjaid = :kyselypohjaid;
 
 -- :name hae-kyselypohjan-organisaatio! :? :1
 SELECT koulutustoimija, valtakunnallinen FROM kyselypohja WHERE kyselypohjaid = :kyselypohjaid;

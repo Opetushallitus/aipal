@@ -58,6 +58,9 @@ ORDER BY kyselykerta.kyselykertaid ASC")
                  [koulutustoimija koulutustoimija]]
                 :results))
 
+(defn hae-koulutustoimijan-kyselykerrat [koulutustoimija]
+  (db/hae-koulutustoimijan-kyselykerrat {:koulutustoimija koulutustoimija}))
+
 (defn poistettavissa? [id]
   (empty?
     (sql/select taulut/kyselykerta
@@ -138,15 +141,10 @@ ORDER BY kyselykerta.kyselykertaid ASC")
 (defn poista! [id]
   {:pre [(poistettavissa? id)]}
   (auditlog/kyselykerta-poisto! id)
-  (let [vastaajatunnukset (sql/select taulut/vastaajatunnus
-                            (sql/fields :vastaajatunnusid)
-                            (sql/where {:kyselykertaid id}))]
-    (sql/delete taulut/vastaajatunnus_tiedot
-                (sql/where {:vastaajatunnus_id [in (map :vastaajatunnusid vastaajatunnukset)]}))
-    (sql/delete taulut/vastaajatunnus
-                (sql/where {:kyselykertaid id}))
-    (sql/delete taulut/kyselykerta
-                (sql/where {:kyselykertaid id}))))
+  (sql/delete taulut/vastaajatunnus
+              (sql/where {:kyselykertaid id}))
+  (sql/delete taulut/kyselykerta
+              (sql/where {:kyselykertaid id})))
 
 (defn hae-oppilaitostiedot
   "Hakee valmistavan koulutuksen oppilaitokset"

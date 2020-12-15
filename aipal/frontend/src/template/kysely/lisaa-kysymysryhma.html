@@ -8,6 +8,9 @@
 
   <select class="form-control e2e-valittavat-kysymysryhmat" ng-model="outerscope.kysymysryhmaid" ng-if="kysymysryhmat.length > 0">
     <option></option>
+    <optgroup label="{{ 'kysymysryhma.valtakunnalliset' | i18n }}">
+      <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: false, valtakunnallinen: true} | orderBy:['!selite_fi','selite_fi']" value="{{ryhma.kysymysryhmaid}}">{{ryhma | lokalisoiKentta:'nimi'}} - {{ryhma | lokalisoiKentta: 'selite'}}</option>
+    </optgroup>
     <optgroup label="{{ 'kysymysryhma.muut' | i18n }}">
       <option ng-repeat="ryhma in kysymysryhmat | filter:{taustakysymykset: false, valtakunnallinen: false} | orderBy:['!selite_fi','selite_fi']" value="{{ryhma.kysymysryhmaid}}">{{ryhma | lokalisoiKentta:'nimi'}} - {{ryhma | lokalisoiKentta: 'selite'}}</option>
     </optgroup>

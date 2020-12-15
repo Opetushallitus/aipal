@@ -20,7 +20,12 @@ angular.module('yhteiset.direktiivit.kyselylista',
      'rest.kysely',
      'rest.kyselykerta'])
 
-  .controller('KyselylistaController', ['$filter', '$scope', '$location', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', 'varmistus', 'kayttooikeudet', function($filter, $scope, $location, Kysely, Kyselykerta, ilmoitus, i18n, varmistus, kayttooikeudet) {
+  .controller('KyselylistaController', ['$filter', '$scope', '$location', '$sce', 'Kysely', 'Kyselykerta', 'ilmoitus', 'i18n', 'varmistus', 'kayttooikeudet', function($filter, $scope, $location, $sce, Kysely, Kyselykerta, ilmoitus, i18n, varmistus, kayttooikeudet) {
+
+    $scope.getVastausBaseUrl = function(){
+      return $sce.trustAsResourceUrl(vastausBaseUrl);
+    };
+
     $scope.julkaiseKyselyModal = function(kysely) {
       varmistus.varmista(i18n.hae('kysely.julkaise'), $filter('lokalisoiKentta')(kysely, 'nimi'), i18n.hae('kysely.julkaise_ohjeistus'), i18n.hae('kysely.julkaise')).then(function() {
         Kysely.julkaise(kysely.kyselyid)
