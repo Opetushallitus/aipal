@@ -74,10 +74,10 @@
                     korjaa-eos-vastaus-sallittu
                     (assoc :kysymysryhmaid kysymysryhmaid)
                     (assoc :luotu_kayttaja (:oid *kayttaja*))
-                    (assoc :muutettu_kayttaja (:oid *kayttaja*)
-                      (arkisto/lisaa-kysymys! kysymysryhmaid)
-                      first
-                      :kysymysid))
+                    (assoc :muutettu_kayttaja (:oid *kayttaja*))
+                    (arkisto/lisaa-kysymys! kysymysryhmaid)
+                    first
+                    :kysymysid)
         jatkokysymykset (muodosta-jatkokysymykset kysymys kysymysryhmaid)]
     (doseq [jatkokysymys jatkokysymykset]
       (let [jatkokysymysid (arkisto/lisaa-kysymys! (select-keys jatkokysymys kysymys-fields) kysymysryhmaid)]
