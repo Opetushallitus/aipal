@@ -75,4 +75,11 @@ SELECT * FROM asteikko WHERE koulutustoimija = :koulutustoimija;
 INSERT INTO asteikko (koulutustoimija, nimi, asteikko) VALUES (:koulutustoimija, :nimi, :asteikko::json);
 
 -- :name hae-kyselyn-kysymysryhmat :? :*
-SELECT kysymysryhmaid FROM kysely_kysymysryhma WHERE kyselyid = :kyselyid ORDER BY jarjestys;
+SELECT kr.* FROM kysely_kysymysryhma kkr
+JOIN kysymysryhma kr ON kkr.kysymysryhmaid = kr.kysymysryhmaid
+WHERE kyselyid = :kyselyid ORDER BY kkr.jarjestys;
+
+-- :name hae-monivalintavaihtoehdot :? :*
+SELECT jarjestys, teksti_fi, teksti_sv, teksti_en FROM monivalintavaihtoehto
+WHERE kysymysid = :kysymysid
+ORDER BY jarjestys;

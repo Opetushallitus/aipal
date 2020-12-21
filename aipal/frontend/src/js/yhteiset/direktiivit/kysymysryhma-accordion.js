@@ -21,7 +21,8 @@ angular.module('yhteiset.direktiivit.kysymysryhma-accordion', [])
       scope: {
         kysymysryhmat: '=',
         kysymystenPoisto: '=',
-        isJulkaistu: '='
+        isJulkaistu: '=',
+        isPoistettavissa: '='
       },
       templateUrl: 'template/yhteiset/direktiivit/kysymysryhma-accordion.html',
       controller: ['$scope', 'i18n', function($scope, i18n) {
@@ -32,7 +33,11 @@ angular.module('yhteiset.direktiivit.kysymysryhma-accordion', [])
         };
 
         $scope.isMuokattavissa = function (kysymysryhma) {
-          return !$scope.isJulkaistu && (!kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset);
+
+          const kategoria_ok = _.get(kysymysryhma, ['kategoria', 'lisattavissa_kyselyyn'], null) !== null;
+          const tyyppi_ok = (!kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset)
+
+          return $scope.isPoistettavissa && (tyyppi_ok || kategoria_ok);
         };
 
         var jarjesta = function() {

@@ -129,6 +129,10 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         return $scope.kysely && $scope.kysely.tila === 'julkaistu';
       };
 
+      $scope.isPoistettavissa = function() {
+        return $scope.kysely && $scope.kysely.poistettavissa === true;
+      };
+
       function haeKyselypohja(kyselypohjaid){
         Kyselypohja.hae(kyselypohjaid).then(function(resp) {
           if (!resp.data) {

@@ -26,7 +26,7 @@ SELECT *, k.kaytettavissa,
                   FROM kyselykerta kk
                            JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
                            JOIN vastaaja v on kk.kyselykertaid = vt.kyselykertaid
-                  WHERE kk.kyselyid = k.kyselyid AND k.tila IN ('luonnos', 'suljettu')) AS poistettavissa,
+                  WHERE kk.kyselyid = k.kyselyid) AS poistettavissa,
        (EXISTS (SELECT 1 FROM amispalaute_automatisointi a WHERE a.voimassa_alkaen < now() AND a.koulutustoimija = k.koulutustoimija))
            OR (k.kategoria->>'automatisointi_tunniste' IS NOT NULL) AS automatisoitu
        FROM kysely k WHERE kyselyid = :kyselyid;
@@ -135,7 +135,8 @@ DELETE FROM kysely WHERE kyselyid = :kyselyid;
 -- :name hae-kyselyn-pakolliset-kysymysryhmat :? :*
 SELECT kkr.kysymysryhmaid FROM kysely_kysymysryhma kkr
                                    JOIN kysymysryhma kr ON kkr.kysymysryhmaid = kr.kysymysryhmaid
-WHERE kkr.kyselyid = :kyselyid AND (kr.taustakysymykset = TRUE OR kr.valtakunnallinen = TRUE);
+WHERE kkr.kyselyid = :kyselyid AND (kr.taustakysymykset = TRUE
+                                    OR (kr.valtakunnallinen = TRUE AND kr.kategoria->>'lisattavissa_kyselyyn' IS NULL));
 
 -- :name samanniminen-kysely? :? :1
 SELECT TRUE FROM kysely

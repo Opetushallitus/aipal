@@ -114,7 +114,7 @@
 
     <div class="row"><br /></div>
 
-    <kysymysryhma-accordion kysymysryhmat="kysely.kysymysryhmat" kysymysten-poisto="true" is-julkaistu="isJulkaistu()"></kysymysryhma-accordion>
+    <kysymysryhma-accordion kysymysryhmat="kysely.kysymysryhmat" kysymysten-poisto="true" is-julkaistu="isJulkaistu()" is-poistettavissa="isPoistettavissa()"></kysymysryhma-accordion>
 
     <div class="alert alert-warning" ng-if="!validoiKysymysryhmat()">
       {{ 'kysely.taustakysymysryhma_puuttuu' | i18n }}

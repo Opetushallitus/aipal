@@ -74,14 +74,15 @@ WITH t AS (SELECT kk.kyselykertaid as id FROM kysely k JOIN kyselykerta kk ON k.
 UPDATE kyselykerta SET automaattinen = daterange(LOWER(automaattinen), :paattymis_pvm::DATE) FROM t WHERE t.id = kyselykertaid;
 
 -- :name hae-koulutustoimijan-kyselykerrat :? :*
-SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu, max(vs.luotuaika) AS viimeisin_vastaus,
-count(vt) AS vastaajatunnuksia, count(vs) AS vastaajia,
-coalesce(sum(vt.kohteiden_lkm) filter (where vt.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
-count(vs) filter (where vt.kaytettavissa) AS aktiivisia_vastaajia
+SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu,
+       (SELECT coalesce(sum(kohteiden_lkm),0) FROM vastaajatunnus v2 WHERE kyselykertaid = kk.kyselykertaid) AS vastaajatunnuksia,
+       coalesce(count(DISTINCT vs),0) AS vastaajia,
+       coalesce(sum(DISTINCT vt.kohteiden_lkm) FILTER (WHERE vt.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
+       count(DISTINCT vs) FILTER (WHERE vt.kaytettavissa) AS aktiivisia_vastaajia
 FROM kyselykerta kk
-JOIN kysely k ON kk.kyselyid = k.kyselyid
-LEFT JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
-LEFT JOIN vastaaja vs on vt.vastaajatunnusid = vs.vastaajatunnusid
+         JOIN kysely k ON kk.kyselyid = k.kyselyid
+         LEFT JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
+         LEFT JOIN vastaaja vs on vt.vastaajatunnusid = vs.vastaajatunnusid
 WHERE k.koulutustoimija = :koulutustoimija
 GROUP BY kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu;
 

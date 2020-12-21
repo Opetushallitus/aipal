@@ -88,16 +88,6 @@
         (lisaa-kysymysryhma! tx kyselyid ryhma))
       (assoc kyselydata :kyselyid (:kyselyid kyselyid)))))
 
-;(defn muokkaa-kyselya! [kyselydata]
-;  (auditlog/kysely-muokkaus! (:kyselyid kyselydata))
-;  (let [paivitettavat-kentat (if (= "julkaistu" (:tila kyselydata))
-;                               [:selite_fi :selite_sv :selite_en :uudelleenohjaus_url]
-;                               [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :tila :uudelleenohjaus_url :sivutettu :tyyppi])]
-;    (log/info (assoc (select-keys kyselydata paivitettavat-kentat) :muutettu_kayttaja (:oid *kayttaja*)))
-;    (jdbc/update! *db* :kysely
-;                  (assoc (select-keys kyselydata paivitettavat-kentat) :muutettu_kayttaja (:oid *kayttaja*))
-;                  ["kyselyid = ?" (:kyselyid kyselydata)])))
-
 (defn paivita-kysely! [kyselydata]
   (let [kyselyid (:kyselyid kyselydata)
         current-data (hae kyselyid)
