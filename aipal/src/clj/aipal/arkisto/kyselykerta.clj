@@ -13,59 +13,16 @@
 ;; European Union Public Licence for more details.
 
 (ns aipal.arkisto.kyselykerta
-  (:require [korma.core :as sql]
-            [aipal.arkisto.kysely-util :as kysely-util]
-            [oph.korma.common :refer [unique]]
-            [clojure.tools.logging :as log]
-            [aipal.integraatio.sql.korma :as taulut]
-            [aipal.auditlog :as auditlog]
+  (:require [oph.korma.common :refer [unique]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
-            [arvo.db.core :refer [*db*] :as db]))
-
-(defn hae-kaikki
-  "Hae kaikki koulutustoimijan kyselykerrat"
-  [koulutustoimija]
-  (sql/exec-raw [(str "WITH vastaajat AS (SELECT kyselykerta.kyselykertaid,
-                          count(vastaaja.vastaajaid) AS vastaajia,
-                          count(vastaaja.vastaajaid) filter (where vastaajatunnus_kaytettavissa.kaytettavissa) AS aktiivisia_vastaajia,
-                          max(vastaaja.luotuaika) AS viimeisin_vastaus
-                   FROM kyselykerta
-                   INNER JOIN kysely_organisaatio_view ON kyselykerta.kyselyid = kysely_organisaatio_view.kyselyid
-                   LEFT JOIN vastaajatunnus ON (vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid)
-                   LEFT JOIN vastaajatunnus_kaytettavissa ON (vastaajatunnus.vastaajatunnusid = vastaajatunnus_kaytettavissa.vastaajatunnusid)
-                   LEFT JOIN vastaaja ON (vastaaja.vastaajatunnusid = vastaajatunnus.vastaajatunnusid)
-                   WHERE (kysely_organisaatio_view.koulutustoimija = ?)
-                   GROUP BY kyselykerta.kyselykertaid)
-SELECT kyselykerta.kyselyid, kyselykerta.kyselykertaid, kyselykerta.nimi, kyselykerta.voimassa_alkupvm, kyselykerta.voimassa_loppupvm,
-       kyselykerta.lukittu, kyselykerta.luotuaika, kyselykerta_kaytettavissa.kaytettavissa,
-       vastaajat.vastaajia = 0 AS poistettavissa,
-       coalesce(sum(vastaajatunnus.kohteiden_lkm) filter (where vastaajatunnus_kaytettavissa.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
-       vastaajat.aktiivisia_vastaajia,
-       coalesce(sum(vastaajatunnus.kohteiden_lkm), 0) AS vastaajatunnuksia,
-       vastaajat.vastaajia,
-       vastaajat.viimeisin_vastaus
-FROM (((((kyselykerta
-     INNER JOIN kyselykerta_kaytettavissa ON (kyselykerta.kyselykertaid = kyselykerta_kaytettavissa.kyselykertaid))
-     INNER JOIN kysely ON (kysely.kyselyid = kyselykerta.kyselyid))
-     INNER JOIN kysely_organisaatio_view ON (kysely_organisaatio_view.kyselyid = kysely.kyselyid))
-     INNER JOIN vastaajat ON (vastaajat.kyselykertaid = kyselykerta.kyselykertaid)
-     LEFT JOIN vastaajatunnus ON (vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid))
-     LEFT JOIN vastaajatunnus_kaytettavissa ON (vastaajatunnus.vastaajatunnusid = vastaajatunnus_kaytettavissa.vastaajatunnusid))
-WHERE " (kysely-util/rajaa-kayttajalle-sallittuihin-kyselyihin-sql) "
-GROUP BY kyselykerta.kyselyid, kyselykerta.kyselykertaid, kyselykerta.nimi, kyselykerta.voimassa_alkupvm, kyselykerta.voimassa_loppupvm, kyselykerta.lukittu, kyselykerta.luotuaika,
-         kyselykerta_kaytettavissa.kaytettavissa, vastaajat.vastaajia, vastaajat.aktiivisia_vastaajia, vastaajat.viimeisin_vastaus
-ORDER BY kyselykerta.kyselykertaid ASC")
-                 [koulutustoimija koulutustoimija]]
-                :results))
+            [arvo.db.core :refer [*db*] :as db]
+            [clojure.java.jdbc :as jdbc]))
 
 (defn hae-koulutustoimijan-kyselykerrat [koulutustoimija]
   (db/hae-koulutustoimijan-kyselykerrat {:koulutustoimija koulutustoimija}))
 
 (defn poistettavissa? [id]
-  (empty?
-    (sql/select taulut/kyselykerta
-      (sql/join :inner :vastaaja (= :vastaaja.kyselykertaid :kyselykerta.kyselykertaid))
-      (sql/where {:kyselykerta.kyselykertaid id}))))
+  (= 0 (:vastaajia (db/laske-kyselykerran-vastaajat {:kyselykertaid id}))))
 
 (defn kysely-julkaistu? [kyselyid]
   (boolean (= "julkaistu" (:tila (db/hae-kysely {:kyselyid kyselyid})))))
@@ -74,113 +31,54 @@ ORDER BY kyselykerta.kyselykertaid ASC")
   (let [kyselykerta (db/hae-kyselykerta {:kyselykertaid kyselykertaid})]
     (kysely-julkaistu? (:kyselyid kyselykerta))))
 
-(defn lisaa!
-  [kyselyid kyselykerta-data]
-  (when kysely-julkaistu?
-    (let [kyselykerta (sql/insert taulut/kyselykerta
-                        (sql/values
-                          (assoc
-                            (merge (select-keys kyselykerta-data [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
-                                   {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)})
-                            :kyselyid kyselyid)))]
-      (auditlog/kyselykerta-luonti! (:kyselykertaid kyselykerta) kyselyid (:nimi kyselykerta-data))
-      kyselykerta)))
+(defn lisaa! [kyselyid kyselykerta-data]
+  (when (kysely-julkaistu? kyselyid)
+    (let [kyselykertaid (db/luo-kyselykerta! (merge kyselykerta-data
+                                                    {:kyselyid kyselyid
+                                                     :kayttaja (:oid *kayttaja*)
+                                                     :automaattinen nil
+                                                     :kategoria nil}))]
+      (first kyselykertaid))))
 
-;avop.fi
-(defn hae-nimella-ja-oppilaitoksella
-  "Hae kyselykerta nimella ja oppilaitoksella"
-  [kyselykertanimi oppilaitos]
-  (first (sql/select taulut/kyselykerta
-                     (sql/join :inner :kysely (= :kysely.kyselyid :kyselykerta.kyselyid))
-                     (sql/join :inner :oppilaitos (= :oppilaitos.koulutustoimija :kysely.koulutustoimija))
-                     (sql/fields :kyselykerta.kyselykertaid)
-                     (sql/where {:oppilaitos.oppilaitoskoodi (:oppilaitoskoodi oppilaitos) :kyselykerta.nimi kyselykertanimi :kyselykerta.lukittu false}))))
+(defn hae-automaatti-kyselykerta [oppilaitos kyselytyyppi tarkenne]
+  (db/hae-automaatti-kyselykerta (merge
+                                   {:oppilaitoskoodi oppilaitos :kyselytyyppi kyselytyyppi}
+                                   (when tarkenne {:tarkenne tarkenne}))))
 
 (defn hae-rekrykysely [oppilaitos vuosi]
   (first (db/hae-rekry-kyselykerta {:oppilaitoskoodi oppilaitos :vuosi vuosi})))
 
-;end avop.fi
 
-(defn hae-yksi
-  "Hae kyselykerta tunnuksella"
-  [kyselykertaid]
-  (->
-    (sql/select* taulut/kyselykerta)
-    (sql/fields :kyselyid :kyselykertaid :nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu :automaattinen)
-    (sql/where (= :kyselykertaid kyselykertaid))
-    sql/exec
-    first))
+(defn hae-yksi [kyselykertaid]
+  (db/hae-kyselykerta {:kyselykertaid kyselykertaid}))
 
 (defn paivita!
   [kyselykertaid kyselykertadata]
-  (auditlog/kyselykerta-muokkaus! kyselykertaid)
   (when (muokattavissa? kyselykertaid)
-    (sql/update taulut/kyselykerta
-      (sql/set-fields (assoc (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu])
-                             :muutettu_kayttaja (:oid *kayttaja*)))
-      (sql/where {:kyselykertaid kyselykertaid}))
+    (db/paivita-kyselykerta! (merge {:kayttaja (:oid *kayttaja*)})
+                             (select-keys kyselykertadata [:nimi :voimassa_alkupvm :voimassa_loppupvm :lukittu]))
     (assoc kyselykertadata :kyselykertaid kyselykertaid)))
-
-(defn kyselykertaid->kyselyid
-  [kyselykertaid]
-  (let [result (sql/select taulut/kyselykerta
-                 (sql/fields :kyselyid)
-                 (sql/where {:kyselykertaid kyselykertaid}))]
-    (-> result
-        first
-        :kyselyid)))
 
 (defn aseta-lukittu!
   [kyselykertaid lukitse]
-  (auditlog/kyselykerta-muokkaus! kyselykertaid (if lukitse :lukittu :avattu))
-  (sql/update :kyselykerta
-    (sql/set-fields {:lukittu lukitse :muutettu_kayttaja (:oid *kayttaja*)})
-    (sql/where {:kyselykertaid kyselykertaid}))
+  (db/set-kyselykerta-lukittu! {:kyselykertaid kyselykertaid :lukittu lukitse :kayttaja (:oid *kayttaja*)})
   (hae-yksi kyselykertaid))
 
 (defn poista! [id]
   {:pre [(poistettavissa? id)]}
-  (auditlog/kyselykerta-poisto! id)
-  (sql/delete taulut/vastaajatunnus
-              (sql/where {:kyselykertaid id}))
-  (sql/delete taulut/kyselykerta
-              (sql/where {:kyselykertaid id})))
+  (jdbc/with-db-transaction [tx *db*]
+    (db/poista-kyselykerran-tunnukset! {:kyselykertaid id})
+    (db/poista-kyselykerta! {:kyselykertaid id})))
 
-(defn hae-oppilaitostiedot
-  "Hakee valmistavan koulutuksen oppilaitokset"
-  [kyselykerta-where]
-  (sql/select taulut/kyselykerta
-    (sql/modifier "distinct")
-    (sql/join :inner taulut/vastaajatunnus (= :vastaajatunnus.kyselykertaid :kyselykerta.kyselykertaid))
-    (sql/join :inner taulut/oppilaitos (= :oppilaitos.oppilaitoskoodi :vastaajatunnus.valmistavan_koulutuksen_oppilaitos))
-    (sql/fields :oppilaitos.oppilaitoskoodi :oppilaitos.nimi_fi :oppilaitos.nimi_sv :oppilaitos.nimi_en)
-    (sql/where kyselykerta-where)))
-
-(defn hae-vastaustunnustiedot
-  "Hakee vastaustunnuksista tiedot kyselykerta taulun kautta"
-  [kyselykerta-where]
-  (let [oppilaitokset (hae-oppilaitostiedot kyselykerta-where)]
+(defn hae-kyselykerran-oppilaitokset [kyselykertaid]
+  (let [oppilaitokset (db/hae-kyselykerran-oppilaitokset {:kyselykertaid kyselykertaid})]
     (when oppilaitokset
       {:oppilaitokset oppilaitokset})))
 
-(defn hae-vastaustunnustiedot-kyselykerralta
-  "Hakee vastaustunnuksista tiedot kyselykerran pääavaimella"
-  [kyselykertaid]
-  (hae-vastaustunnustiedot {:kyselykerta.kyselykertaid kyselykertaid}))
+(defn hae-kyselyn-oppilaitokset [kyselyid]
+  (let [oppilaitokset (db/hae-kyselyn-oppilaitokset {:kyselyid kyselyid})]
+    (when oppilaitokset
+      {:oppilaitokset oppilaitokset})))
 
-(defn hae-vastaustunnustiedot-kyselylta
-  "Hakee vastaustunnuksista tiedot kyselyn pääavaimella"
-  [kyselyid]
-  (hae-vastaustunnustiedot {:kyselykerta.kyselyid kyselyid}))
-
-(defn samanniminen-kyselykerta?
-  "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kyselykerta."
-  [kyselykerta]
-  (boolean
-    (seq (sql/select taulut/kyselykerta
-           (sql/join :inner taulut/kysely (= :kyselykerta.kyselyid :kysely.kyselyid))
-           (sql/where {:kysely.koulutustoimija (sql/subselect taulut/kysely
-                                                 (sql/fields :koulutustoimija)
-                                                 (sql/where {:kyselyid (:kyselyid kyselykerta)}))})
-           (sql/where {:nimi (:nimi kyselykerta)})
-           (sql/where {:kyselykertaid [not= (:kyselykertaid kyselykerta)]})))))
+(defn samanniminen-kyselykerta? [kyselyid nimi]
+  (boolean (seq (db/samanniminen-kyselykerta? {:kyselyid kyselyid :nimi nimi}))))

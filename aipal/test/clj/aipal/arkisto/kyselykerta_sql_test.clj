@@ -24,12 +24,3 @@
    (lisaa-kyselykerta-ilman-vastaajia! kyselykerta (test-data/lisaa-kysely!)))
   ([kyselykerta kysely]
    (test-data/lisaa-kyselykerta! kyselykerta kysely)))
-
-;; Poistaminen poistaa kyselykerran.
-(deftest ^:integraatio poista-kyselykerta
-  (let [kysely                      (test-data/lisaa-kysely!)
-        [kyselykerta1 kyselykerta2] (test-data/lisaa-kyselykerrat! [{} {}] kysely)]
-    (poista! (:kyselykertaid kyselykerta1))
-    (let [kyselykerrat (set (map :kyselykertaid (hae-kaikki (:koulutustoimija kysely))))]
-      (is (not (contains? kyselykerrat (:kyselykertaid kyselykerta1))))
-      (is (contains? kyselykerrat (:kyselykertaid kyselykerta2))))))

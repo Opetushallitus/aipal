@@ -24,12 +24,12 @@
 (defroutes reitit
   (GET "/" []
     :kayttooikeus :katselu
-    (response-or-404 (arkisto/hae-kaikki (:aktiivinen-koulutustoimija *kayttaja*))))
+    (response-or-404 (arkisto/hae-koulutustoimijan-kyselykerrat (:aktiivinen-koulutustoimija *kayttaja*))))
 
   (GET "/:kyselykertaid/vastaustunnustiedot" []
-    :path-params [kyselykertaid :- s/Int]
-    :kayttooikeus [:katselu {:kyselykertaid kyselykertaid}]
-    (response-or-404 (arkisto/hae-vastaustunnustiedot-kyselykerralta kyselykertaid)))
+       :path-params [kyselykertaid :- s/Int]
+       :kayttooikeus [:katselu {:kyselykertaid kyselykertaid}]
+       (response-or-404 (arkisto/hae-kyselykerran-oppilaitokset kyselykertaid)))
 
   (GET "/:kyselykertaid" []
     :path-params [kyselykertaid :- s/Int]
@@ -41,7 +41,7 @@
                   kyselykerta]
     :kayttooikeus [:kyselykerta {:kyselyid kyselyid}]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-         (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselyid kyselyid))
+         (if (arkisto/samanniminen-kyselykerta? kyselyid (:nimi kyselykerta))
            {:status 400
             :body "kyselykerta.samanniminen_kyselykerta"}
            (response-or-404 (arkisto/lisaa! kyselyid kyselykerta-parsittu)))))
@@ -51,7 +51,7 @@
     :body [kyselykerta s/Any]
     :kayttooikeus [:kyselykerta {:kyselykertaid kyselykertaid}]
     (let [kyselykerta-parsittu (paivita-arvot kyselykerta [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date)]
-      (if (arkisto/samanniminen-kyselykerta? (assoc kyselykerta :kyselykertaid kyselykertaid))
+      (if (arkisto/samanniminen-kyselykerta? (:kyselyid kyselykerta) (:nimi kyselykerta))
         {:status 400
          :body "kyselykerta.samanniminen_kyselykerta"}
         (response-or-404 (arkisto/paivita! kyselykertaid kyselykerta-parsittu)))))

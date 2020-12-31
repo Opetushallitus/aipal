@@ -146,15 +146,6 @@
   (auditlog/kysely-muokkaus! kyselyid)
   (db/poista-kyselyn-kysymysryhmat! {:kyselyid kyselyid}))
 
-
-;(defn paivita-kysymysryhmat! [kyselydata]
-;  (poista-kysymysryhmat (:kyselyid kyselydata))
-;  (poista-kysymykset! (:kyselyid kyselydata))
-;  (doseq [kysymysryhma (add-index :jarjestys (:kysymysryhmat kyselydata))]
-;    (assert (kysymysryhma-on-julkaistu? (:kysymysryhmaid kysymysryhma)))
-;    (lisaa-kysymysryhma! (:kyselyid kysely) kysymysryhma)))
-
-
 (defn hae-kyselyn-taustakysymysryhmaid [kyselyid]
   (-> (db/hae-kyselyn-taustakysymysryhmaid {:kyselyid kyselyid})
       first

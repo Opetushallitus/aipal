@@ -108,9 +108,9 @@
       {:status 403}))
 
   (GET "/:kyselyid/vastaustunnustiedot" []
-    :path-params [kyselyid :- s/Int]
-    :kayttooikeus [:katselu {:kyselyid kyselyid}]
-    (response-or-404 (kyselykerta-arkisto/hae-vastaustunnustiedot-kyselylta kyselyid)))
+       :path-params [kyselyid :- s/Int]
+       :kayttooikeus [:katselu {:kyselyid kyselyid}]
+       (response-or-404 (kyselykerta-arkisto/hae-kyselyn-oppilaitokset kyselyid)))
 
   (GET "/:kyselyid" []
     :path-params [kyselyid :- s/Int]

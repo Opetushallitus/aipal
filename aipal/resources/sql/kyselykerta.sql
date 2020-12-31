@@ -20,9 +20,11 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
 -- :name hae-automaatti-kyselykerta :? :1
 SELECT kk.kyselykertaid FROM kyselykerta kk
   JOIN kysely k on kk.kyselyid = k.kyselyid
-WHERE k.koulutustoimija = :koulutustoimija
-AND kk.automaattinen @> NOW()::DATE
-AND kk.kategoria ->> 'tarkenne' = :tarkenne
+  JOIN oppilaitos o ON k.koulutustoimija = o.koulutustoimija
+WHERE o.oppilaitoskoodi = :oppilaitoskoodi AND k.tyyppi = :kyselytyyppi
+AND kk.automaattinen @> now()::DATE
+  --~(if (:tarkenne params) "AND kk.kategoria ->> 'tarkenne' = :tarkenne")
+AND k.voimassa_alkupvm < now() AND (k.voimassa_loppupvm IS NULL OR k.voimassa_loppupvm >= now())
 AND k.tila = 'julkaistu' AND kk.lukittu = FALSE;
 
 -- :name hae-kyselykerta-nimella-ja-koulutustoimijalla :? :*
@@ -64,9 +66,16 @@ SELECT k.koulutustoimija FROM kyselykerta kk
 JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE kk.kyselykertaid = :kyselykertaid;
 
--- :name luo-kyselykerta! :! :n
-INSERT INTO kyselykerta (kyselyid, nimi, voimassa_alkupvm, luotu_kayttaja, muutettu_kayttaja, automaattinen, kategoria)
-VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :kayttaja, :kayttaja, :automaattinen::DATERANGE, :kategoria);
+-- :name luo-kyselykerta! :<!
+INSERT INTO kyselykerta (kyselyid, nimi, voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, automaattinen, kategoria)
+VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja, :automaattinen::DATERANGE, :kategoria)
+RETURNING kyselykertaid;
+
+-- :name paivita-kyselykerta! :! :n
+UPDATE kyselykerta SET
+    nimi = :nimi, voimassa_alkupvm = :voimassa_alkupvm, voimassa_loppupvm = :voimassa_loppupvm,
+    lukittu = :lukittu, muutettu_kayttaja = :kayttaja
+WHERE kyselykertaid = :kyselykertaid;
 
 -- :name paata-kyselykerrat! :! :n
 WITH t AS (SELECT kk.kyselykertaid as id FROM kysely k JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
@@ -92,5 +101,32 @@ SELECT * FROM kyselykerta WHERE kyselyid = :kyselyid;
 -- :name poista-kyselyn-kyselykerrat! :! :n
 DELETE FROM kyselykerta WHERE kyselyid = :kyselyid;
 
+--:name poista-kyselykerta! :! :n
+DELETE FROM kyselykerta WHERE kyselykertaid = :kyselykertaid;
+
 -- :name laske-kyselyn-kyselykerrat :? :1
 SELECT count(*) AS lkm FROM kyselykerta WHERE kyselyid = :kyselyid;
+
+-- :name laske-kyselykerran-vastaajat :? :1
+SELECT count(v) AS vastaajia FROM kyselykerta kk
+JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
+JOIN vastaaja v on vt.vastaajatunnusid = v.vastaajatunnusid
+WHERE kk.kyselykertaid = :kyselykertaid;
+
+-- :name set-kyselykerta-lukittu! :! :n
+UPDATE kyselykerta SET lukittu = :lukittu,
+                       muutettu_kayttaja = :kayttaja
+WHERE kyselykertaid = :kyselykertaid;
+
+-- :name hae-kyselykerran-oppilaitokset :? :*
+SELECT DISTINCT o.oppilaitoskoodi, o.nimi_fi, o.nimi_sv, o.nimi_en
+FROM kyselykerta kk
+JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
+JOIN oppilaitos o on vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
+WHERE kk.kyselykertaid = :kyselykertaid;
+
+-- :name samanniminen-kyselykerta? :? :*
+SELECT 1 AS samanniminen FROM kysely k
+JOIN kyselykerta kk ON kk.kyselyid = k.kyselyid
+WHERE k.koulutustoimija IN (SELECT koulutustoimija FROM kysely WHERE kyselyid = :kyselyid)
+AND kk.nimi = :nimi;

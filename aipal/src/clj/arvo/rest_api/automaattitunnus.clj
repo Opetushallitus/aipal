@@ -25,11 +25,13 @@
    :hankintakoulutuksen_toteuttaja (s/maybe s/Str)
    :request_id s/Str})
 
-(s/defschema Korkeakoulu-tunnus
+(s/defschema Automaattitunnus
   {:oppilaitos s/Str
    :koulutus s/Str
    :kunta s/Str
    :kieli s/Str
+   :kyselytyyppi s/Str
+   (s/optional-key :tarkenne) s/Str
    (s/optional-key :koulutusmuoto) s/Int})
 
 (s/defschema Tunnus-status
@@ -68,10 +70,10 @@
          tunnus))
 
 (defn palaute-tunnus
-  [{:keys [oppilaitos koulutus kunta kieli koulutusmuoto kyselykerran_nimi]}]
-  (let [ent_oppilaitos (oppilaitos/hae oppilaitos)
+  [{:keys [oppilaitoskoodi koulutus kunta kieli koulutusmuoto kyselytyyppi tarkenne]}]
+  (let [ent_oppilaitos (oppilaitos/hae oppilaitoskoodi)
         ent_tutkinto (tutkinto/hae koulutus)
-        kyselykerta-id (kyselykerta/hae-nimella-ja-oppilaitoksella kyselykerran_nimi ent_oppilaitos)]
+        kyselykerta-id (kyselykerta/hae-automaatti-kyselykerta oppilaitoskoodi kyselytyyppi tarkenne)]
     (automaatti-vastaajatunnus :palaute
       {:kieli kieli
        :toimipaikka nil

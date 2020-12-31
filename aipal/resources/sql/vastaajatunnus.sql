@@ -71,6 +71,9 @@ UPDATE vastaajatunnus SET lukittu = :lukittu WHERE vastaajatunnusid = :vastaajat
 -- :name poista-vastaajatunnus! :! :n
 DELETE FROM vastaajatunnus WHERE vastaajatunnusid = :vastaajatunnusid;
 
+-- :name poista-kyselykerran-tunnukset! :! :n
+DELETE FROM vastaajatunnus WHERE kyselykertaid = :kyselykertaid;
+
 -- :name muokkaa-vastaajien-maaraa! :! :n
 UPDATE vastaajatunnus SET kohteiden_lkm = :vastaajia WHERE vastaajatunnusid = :vastaajatunnusid;
 

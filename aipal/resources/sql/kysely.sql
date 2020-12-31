@@ -148,3 +148,11 @@ SELECT kkr.kysymysryhmaid FROM kysely_kysymysryhma kkr
 JOIN kysymysryhma k on kkr.kysymysryhmaid = k.kysymysryhmaid
 WHERE k.valtakunnallinen = TRUE AND k.taustakysymykset = TRUE
 AND kkr.kyselyid = :kyselyid
+
+-- :name hae-kyselyn-oppilaitokset :? :*
+SELECT DISTINCT o.oppilaitoskoodi, o.nimi_fi, o.nimi_sv, o.nimi_en
+FROM kysely k
+         JOIN kyselykerta kk ON kk.kyselyid = k.kyselyid
+         JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
+         JOIN oppilaitos o on vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
+WHERE k.kyselyid = :kyselyid;
