@@ -73,7 +73,9 @@
   [{:keys [oppilaitoskoodi koulutus kunta kieli koulutusmuoto kyselytyyppi tarkenne]}]
   (let [ent_oppilaitos (oppilaitos/hae oppilaitoskoodi)
         ent_tutkinto (tutkinto/hae koulutus)
-        kyselykerta-id (kyselykerta/hae-automaatti-kyselykerta (:koulutustoimija ent_oppilaitos) kyselytyyppi tarkenne)]
+        _ (log/info "Haetaan automaattikyselykerta:" (:koulutustoimija ent_oppilaitos) kyselytyyppi tarkenne)
+        kyselykerta-id (kyselykerta/hae-automaatti-kyselykerta (:koulutustoimija ent_oppilaitos) kyselytyyppi tarkenne)
+        _ (log/info "Automaattikyselykerta: " kyselykerta-id)]
     (automaatti-vastaajatunnus :palaute
       {:kieli kieli
        :toimipaikka nil
@@ -81,7 +83,7 @@
        :tutkinto (ent_tutkinto :tutkintotunnus)
        :kunta kunta
        :koulutusmuoto koulutusmuoto
-       :kyselykertaid (kyselykerta-id :kyselykertaid)})))
+       :kyselykertaid (:kyselykertaid kyselykerta-id)})))
 
 
 (defn rekry-tunnus [tunnus]
