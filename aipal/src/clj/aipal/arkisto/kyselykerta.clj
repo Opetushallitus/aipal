@@ -40,9 +40,9 @@
                                                      :kategoria nil}))]
       (first kyselykertaid))))
 
-(defn hae-automaatti-kyselykerta [oppilaitos kyselytyyppi tarkenne]
+(defn hae-automaatti-kyselykerta [koulutustoimija kyselytyyppi tarkenne]
   (db/hae-automaatti-kyselykerta (merge
-                                   {:oppilaitoskoodi oppilaitos :kyselytyyppi kyselytyyppi}
+                                   {:koulutustoimija koulutustoimija :kyselytyyppi kyselytyyppi}
                                    (when tarkenne {:tarkenne tarkenne}))))
 
 (defn hae-rekrykysely [oppilaitos vuosi]

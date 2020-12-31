@@ -20,18 +20,19 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
 -- :name hae-automaatti-kyselykerta :? :1
 SELECT kk.kyselykertaid FROM kyselykerta kk
   JOIN kysely k on kk.kyselyid = k.kyselyid
-  JOIN oppilaitos o ON k.koulutustoimija = o.koulutustoimija
-WHERE o.oppilaitoskoodi = :oppilaitoskoodi AND k.tyyppi = :kyselytyyppi
+WHERE k.koulutustoimija = :koulutustoimija AND k.tyyppi = :kyselytyyppi
 AND kk.automaattinen @> now()::DATE
   --~(if (:tarkenne params) "AND kk.kategoria ->> 'tarkenne' = :tarkenne")
-AND k.voimassa_alkupvm < now() AND (k.voimassa_loppupvm IS NULL OR k.voimassa_loppupvm >= now())
+AND k.voimassa_alkupvm <= now() AND (k.voimassa_loppupvm IS NULL OR k.voimassa_loppupvm >= now())
 AND k.tila = 'julkaistu' AND kk.lukittu = FALSE;
 
--- :name hae-kyselykerta-nimella-ja-koulutustoimijalla :? :*
-SELECT * FROM kyselykerta kk
-JOIN kysely k on kk.kyselyid = k.kyselyid
-WHERE kk.nimi = :nimi
-AND k.koulutustoimija = :koulutustoimija;
+-- :name hae-amispalaute-kyselykerta :? :1
+SELECT kk.kyselykertaid FROM kyselykerta kk
+                                 JOIN kysely k on kk.kyselyid = k.kyselyid
+WHERE k.koulutustoimija = :koulutustoimija
+  AND kk.automaattinen @> NOW()::DATE
+  AND kk.kategoria ->> 'tarkenne' = :tarkenne
+  AND k.tila = 'julkaistu' AND kk.lukittu = FALSE;
 
 -- :name hae-kyselyn-tutkinnot :? :*
 SELECT DISTINCT t.tutkintotunnus, t.nimi_fi, t.nimi_sv, t.nimi_en

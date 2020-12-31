@@ -73,7 +73,7 @@
   [{:keys [oppilaitoskoodi koulutus kunta kieli koulutusmuoto kyselytyyppi tarkenne]}]
   (let [ent_oppilaitos (oppilaitos/hae oppilaitoskoodi)
         ent_tutkinto (tutkinto/hae koulutus)
-        kyselykerta-id (kyselykerta/hae-automaatti-kyselykerta oppilaitoskoodi kyselytyyppi tarkenne)]
+        kyselykerta-id (kyselykerta/hae-automaatti-kyselykerta (:koulutustoimija ent_oppilaitos) kyselytyyppi tarkenne)]
     (automaatti-vastaajatunnus :palaute
       {:kieli kieli
        :toimipaikka nil
@@ -97,9 +97,7 @@
 
 (defn amispalaute-tunnus [data]
  (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
-       kyselykertaid (:kyselykertaid (db/hae-automaatti-kyselykerta
-                                       {:koulutustoimija koulutustoimija
-                                        :tarkenne (:kyselyn_tyyppi data)}))
+       kyselykertaid (:kyselykertaid (kyselykerta/hae-automaatti-kyselykerta koulutustoimija "amispalaute" (:kyselyn_tyyppi data)))
        alkupvm (:vastaamisajan_alkupvm data)]
    (automaatti-vastaajatunnus :amispalaute
      {:kyselykertaid kyselykertaid
