@@ -131,3 +131,6 @@ SELECT 1 AS samanniminen FROM kysely k
 JOIN kyselykerta kk ON kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija IN (SELECT koulutustoimija FROM kysely WHERE kyselyid = :kyselyid)
 AND kk.nimi = :nimi;
+
+-- :name get-now :? :1
+SELECT now() AS current_stamp;
