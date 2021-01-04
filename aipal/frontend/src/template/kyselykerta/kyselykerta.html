@@ -53,11 +53,10 @@
     <tallenna formi-validi="kyselykertaForm.$valid" ng-click="tallenna()" teksti="{{i18n.yleiset.tallenna}}"
               icon="fa fa-save" ng-if="muokkaustila" class="e2e-tallenna-kyselykerta"></tallenna>
 </form>
-
 <div ng-if="!uusi">
     <h2>{{'vastaajatunnus.lista' | i18n}} <ohje tunniste="kyselykerran_vastaajatunnukset"></ohje></h2>
     <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()"
-            ng-if="muokkaustila && !kysely.automatisoitu" >
+            ng-if="muokkaustila && !kysely.automatisoitu && kyselykerta.automaattinen === null" >
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>

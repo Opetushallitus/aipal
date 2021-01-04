@@ -27,8 +27,7 @@ SELECT *, k.kaytettavissa,
                            JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
                            JOIN vastaaja v on kk.kyselykertaid = vt.kyselykertaid
                   WHERE kk.kyselyid = k.kyselyid) AS poistettavissa,
-       (EXISTS (SELECT 1 FROM amispalaute_automatisointi a WHERE a.voimassa_alkaen < now() AND a.koulutustoimija = k.koulutustoimija))
-           OR (k.kategoria->>'automatisointi_tunniste' IS NOT NULL) AS automatisoitu
+       (EXISTS (SELECT 1 FROM amispalaute_automatisointi a WHERE a.voimassa_alkaen < now() AND a.koulutustoimija = k.koulutustoimija)) AS automatisoitu
        FROM kysely k WHERE kyselyid = :kyselyid;
 
 -- :name hae-kyselyt :? :*
@@ -45,8 +44,7 @@ SELECT k.kyselyid, k.nimi_fi, k.nimi_sv, k.nimi_en, k.voimassa_alkupvm, k.voimas
        (SELECT CASE WHEN k.tila = 'luonnos' THEN 'luonnos'
                     WHEN k.kaytettavissa OR now() < k.voimassa_alkupvm THEN 'julkaistu'
                     ELSE 'suljettu' END) AS sijainti,
-       (EXISTS(SELECT 1 FROM amispalaute_automatisointi a WHERE a.voimassa_alkaen < now() AND a.koulutustoimija = k.koulutustoimija))
-           OR (k.kategoria->>'automatisointi_tunniste' IS NOT NULL) AS automatisoitu
+       (EXISTS(SELECT 1 FROM amispalaute_automatisointi a WHERE a.voimassa_alkaen < now() AND a.koulutustoimija = k.koulutustoimija))  AS automatisoitu
 FROM kysely k
 WHERE k.koulutustoimija = :koulutustoimija
 ORDER BY k.kyselyid;

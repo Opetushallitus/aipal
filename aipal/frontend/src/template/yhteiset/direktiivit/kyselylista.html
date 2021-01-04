@@ -124,7 +124,8 @@
           </auth>
           <auth roolit="['OPL-VASTUUKAYTTAJA','OPL-KYSELYKERTAKAYTTAJA']">
             <span ng-show="kyselykerta.poistettavissa && !kysely.automatisoitu">
-              <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)" ng-if="kyselykerta.poistettavissa">
+              <button class="btn btn-primary btn-sm pull-left" ng-click="poistaKyselykerta(kyselykerta)"
+                      ng-if="kyselykerta.poistettavissa && (kyselykerta.automaattinen === null)">
                 {{ 'kyselykerta.poista' | i18n }}&nbsp;
                 <span class="fa fa-trash"></span>
               </button>

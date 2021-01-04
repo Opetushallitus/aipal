@@ -1,5 +1,9 @@
 -- :name hae-kyselykerta :? :1
-SELECT * FROM kyselykerta WHERE kyselykertaid = :kyselykertaid;
+SELECT kk.*,
+       NOT EXISTS (SELECT 1 FROM vastaajatunnus vt
+                    JOIN vastaaja v ON vt.vastaajatunnusid = v.vastaajatunnusid
+                    WHERE vt.kyselykertaid = kk.kyselykertaid) AS poistettavissa
+FROM kyselykerta kk WHERE kyselykertaid = :kyselykertaid;
 
 -- :name hae-palaute-kyselykerta :? :*
 SELECT kk.kyselykertaid FROM kyselykerta kk
@@ -84,11 +88,13 @@ WITH t AS (SELECT kk.kyselykertaid as id FROM kysely k JOIN kyselykerta kk ON k.
 UPDATE kyselykerta SET automaattinen = daterange(LOWER(automaattinen), :paattymis_pvm::DATE) FROM t WHERE t.id = kyselykertaid;
 
 -- :name hae-koulutustoimijan-kyselykerrat :? :*
-SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu,
+SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu, kk.automaattinen,
        (SELECT coalesce(sum(kohteiden_lkm),0) FROM vastaajatunnus v2 WHERE kyselykertaid = kk.kyselykertaid) AS vastaajatunnuksia,
        coalesce(count(DISTINCT vs),0) AS vastaajia,
        coalesce(sum(DISTINCT vt.kohteiden_lkm) FILTER (WHERE vt.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
-       count(DISTINCT vs) FILTER (WHERE vt.kaytettavissa) AS aktiivisia_vastaajia
+       count(DISTINCT vs) FILTER (WHERE vt.kaytettavissa) AS aktiivisia_vastaajia,
+       count(vt) = 0 AS poistettavissa,
+       max(vs.luotuaika) AS viimeisin_vastaus
 FROM kyselykerta kk
          JOIN kysely k ON kk.kyselyid = k.kyselyid
          LEFT JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
@@ -97,7 +103,11 @@ WHERE k.koulutustoimija = :koulutustoimija
 GROUP BY kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu;
 
 -- :name hae-kyselyn-kyselykerrat :? :*
-SELECT * FROM kyselykerta WHERE kyselyid = :kyselyid;
+SELECT kk.*,
+NOT EXISTS (SELECT 1 FROM vastaajatunnus vt
+    JOIN vastaaja v ON vt.vastaajatunnusid = v.vastaajatunnusid
+    WHERE vt.kyselykertaid = kk.kyselykertaid) AS poistettavissa
+FROM kyselykerta kk WHERE kyselyid = :kyselyid;
 
 -- :name poista-kyselyn-kyselykerrat! :! :n
 DELETE FROM kyselykerta WHERE kyselyid = :kyselyid;
@@ -131,6 +141,3 @@ SELECT 1 AS samanniminen FROM kysely k
 JOIN kyselykerta kk ON kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija IN (SELECT koulutustoimija FROM kysely WHERE kyselyid = :kyselyid)
 AND kk.nimi = :nimi;
-
--- :name get-now :? :1
-SELECT now() AS current_stamp;
