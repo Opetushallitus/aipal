@@ -72,12 +72,11 @@
         :headers (get-cache-headers vseq-muokattu)}
        {:status 304}))))
 
-(defn response-or-404
-  ([data]
+(defn response-or-404 [data]
    (if (nil? data)
      {:status 404}
      {:status 200
-      :body data})))
+      :body data}))
 
 (defn file-download-response
   ([data filename content-type]

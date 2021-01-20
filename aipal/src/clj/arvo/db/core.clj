@@ -6,7 +6,8 @@
             [clojure.java.jdbc :as jdbc]
             [cheshire.core :refer [parse-string generate-string]]
             [clj-time.coerce :as c]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [clojure.tools.logging :as log])
   (:import (org.postgresql.jdbc4 Jdbc4Array)
            (org.postgresql.util PGobject)
            (java.sql Timestamp Date PreparedStatement)
@@ -30,6 +31,7 @@
 ;a version of bind-connection that loads all sql resources
 (defmacro bind-connection [conn]
   (let [filenames query-resources
+        _ (log/info "Loaded sql resources:" filenames)
         options?  (map? (first filenames))
         options   (if options? (first filenames) {})
         filenames (if options? (rest filenames) filenames)]

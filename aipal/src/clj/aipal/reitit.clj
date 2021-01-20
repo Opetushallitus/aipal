@@ -31,7 +31,7 @@
             aipal.rest-api.tutkinto
             aipal.rest-api.tutkintotyyppi
             aipal.rest-api.koulutustoimija
-            aipal.rest-api.tiedote
+            arvo.rest-api.tiedote
             arvo.rest-api.export
             arvo.rest-api.move
             [compojure.api.middleware :as mw]
@@ -85,7 +85,7 @@
     (context "/api/public/uraseuranta" [] :no-doc true :tags ["uraseuranta"] (arvo.rest-api.uraseuranta/uraseuranta-reitit asetukset))
     (context "/api/public/move" [] :no-doc true :tags ["move"] (arvo.rest-api.move/move-reitit asetukset))
     (context "/api/public/koodisto" [] :no-doc true :tags ["koodisto"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.koodisto/reitit)
-    (context "/api/tiedote" [] :no-doc true :tags ["tiedote"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.tiedote/reitit)
+    (context "/api/tiedote" [] :no-doc true :tags ["tiedote"] :middleware [wrap-tarkasta-csrf-token] arvo.rest-api.tiedote/reitit)
     (context "/api/csv" [] :no-doc true :tags ["csv"] aipal.rest-api.raportti.kysely/csv)
     (context "/api/export/v1" [] :tags ["export"] :middleware [#(wrap-authentication :export %)] arvo.rest-api.export/v1)
     (context "/api/public/luovastaajatunnus" [] :no-doc true :tags ["vastaajatunnus"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.automaattitunnus/kyselyynohjaus-v1)
