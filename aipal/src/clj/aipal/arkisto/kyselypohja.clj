@@ -31,52 +31,45 @@
 
 (def muokattavat-kentat [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :voimassa_alkupvm :voimassa_loppupvm :valtakunnallinen])
 
-(defn tallenna-kyselypohjan-kysymysryhmat! [kyselypohjaid kysymysryhmat]
+(def kyselypohja-defaults (zipmap muokattavat-kentat (repeat nil)))
+
+(defn tallenna-kyselypohjan-kysymysryhmat! [tx kyselypohjaid kysymysryhmat]
   (auditlog/kyselypohja-muokkaus! kyselypohjaid)
   (db/poista-kyselypohjan-kysymysryhmat! {:kyselypohjaid kyselypohjaid})
   (doseq [[index kysymysryhma] (map-indexed vector kysymysryhmat)]
-    (db/tallenna-kyselypohjan-kysymysryhma! {:kyselypohjaid kyselypohjaid
-                                             :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
-                                             :luotu_kayttaja (:oid *kayttaja*)
-                                             :muutettu_kayttaja (:oid *kayttaja*)
-                                             :jarjestys index})))
+    (db/tallenna-kyselypohjan-kysymysryhma! tx {:kyselypohjaid kyselypohjaid
+                                                :kysymysryhmaid (:kysymysryhmaid kysymysryhma)
+                                                :kayttaja (:oid *kayttaja*)
+                                                :jarjestys index})))
 
 (defn tallenna-kyselypohja! [kyselypohjaid kyselypohja]
-  (auditlog/kyselypohja-muokkaus! kyselypohjaid)
-  (tallenna-kyselypohjan-kysymysryhmat! kyselypohjaid (:kysymysryhmat kyselypohja))
-  (db/tallenna-kyselypohja! (assoc (select-keys kyselypohja muokattavat-kentat) :muutettu_kayttaja (:oid *kayttaja*)))
-  kyselypohja)
+  (jdbc/with-db-transaction [tx *db*]
+    (tallenna-kyselypohjan-kysymysryhmat! tx kyselypohjaid (:kysymysryhmat kyselypohja))
+    (db/tallenna-kyselypohja! (merge (select-keys kyselypohja muokattavat-kentat) {:kyselypohjaid kyselypohjaid :kayttaja (:oid *kayttaja*)}))
+    kyselypohja))
 
 (defn luo-kyselypohja!
   [kyselypohja]
-  (let [luotu-kyselypohja (db/luo-kyselypohja!
-                           (merge (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))
-                                  {:luotu_kayttaja (:oid *kayttaja*) :muutettu_kayttaja (:oid *kayttaja*)}))
-        _ (log/info "Luotu kyselypohja: "luotu-kyselypohja)]
-    (auditlog/kyselypohja-luonti! (:kyselypohjaid luotu-kyselypohja) (:nimi_fi kyselypohja))
-    (tallenna-kyselypohjan-kysymysryhmat! (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
-    luotu-kyselypohja))
-(defn lisaa-kyselypohja! [kyselypohja]
-  (db/luo-kyselypohja!
-    (merge (select-keys kyselypohja muokattavat-kentat)
-           {:luotu_kayttaja (:oid *kayttaja*)
-            :muutettu_kayttaja (:oid *kayttaja*)
-            :koulutustoimija (:aktiivinen-koulutustoimija *kayttaja*)})))
+  (jdbc/with-db-transaction [tx *db*]
+    (let [luotu-kyselypohja (first (db/luo-kyselypohja! tx
+                                    (merge
+                                      kyselypohja-defaults
+                                      (select-keys kyselypohja (conj muokattavat-kentat :koulutustoimija))
+                                      {:kayttaja (:oid *kayttaja*)})))]
+      (tallenna-kyselypohjan-kysymysryhmat! tx (:kyselypohjaid luotu-kyselypohja) (:kysymysryhmat kyselypohja))
+      luotu-kyselypohja)))
 
 (defn ^:private aseta-kyselypohjan-tila! [kyselypohjaid tila]
-  (db/aseta-kyselypohjan-tila! {:kyselypohjaid kyselypohjaid :tila tila :muutettu_kayttaja (:oid *kayttaja*)})
+  (db/aseta-kyselypohjan-tila! {:kyselypohjaid kyselypohjaid :tila tila :kayttaja (:oid *kayttaja*)})
   (hae-kyselypohja kyselypohjaid))
 
 (defn julkaise-kyselypohja! [kyselypohjaid]
-  (auditlog/kyselypohja-muokkaus! kyselypohjaid :julkaistu)
   (aseta-kyselypohjan-tila! kyselypohjaid "julkaistu"))
 
 (defn palauta-kyselypohja-luonnokseksi! [kyselypohjaid]
-  (auditlog/kyselypohja-muokkaus! kyselypohjaid :luonnos)
   (aseta-kyselypohjan-tila! kyselypohjaid "luonnos"))
 
 (defn sulje-kyselypohja! [kyselypohjaid]
-  (auditlog/kyselypohja-muokkaus! kyselypohjaid :suljettu)
   (aseta-kyselypohjan-tila! kyselypohjaid "suljettu"))
 
 (defn poista-kyselypohja! [kyselypohjaid]

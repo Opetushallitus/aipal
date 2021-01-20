@@ -21,7 +21,7 @@ UPDATE kyselypohja SET valtakunnallinen = :valtakunnallinen, voimassa_alkupvm = 
   nimi_fi = :nimi_fi, nimi_sv = :nimi_sv, nimi_en = :nimi_en, selite_fi = :selite_fi, selite_en = :selite_en, muutettu_kayttaja = :kayttaja
 WHERE kyselypohjaid = :kyselypohjaid;
 
--- :name luo-kyselypohja! :! :<!
+-- :name luo-kyselypohja! :<!
 INSERT INTO kyselypohja (valtakunnallinen, voimassa_alkupvm, voimassa_loppupvm, nimi_fi, nimi_sv, nimi_en,
 selite_fi, selite_sv, selite_en, koulutustoimija, luotu_kayttaja, muutettu_kayttaja)
 VALUES (:valtakunnallinen, :voimassa_alkupvm, :voimassa_loppupvm, :nimi_fi, :nimi_sv, :nimi_en,
@@ -29,7 +29,7 @@ VALUES (:valtakunnallinen, :voimassa_alkupvm, :voimassa_loppupvm, :nimi_fi, :nim
 RETURNING kyselypohjaid;
 
 -- :name aseta-kyselypohjan-tila! :! :n
-UPDATE kyselypohja SET tila = :tila, muutettu_kayttaja = :muutettu_kayttaja WHERE kyselypohjaid = :kyselypohjaid;
+UPDATE kyselypohja SET tila = :tila, muutettu_kayttaja = :kayttaja WHERE kyselypohjaid = :kyselypohjaid;
 
 -- :name poista-kyselypohja! :! :n
 DELETE FROM kyselypohja WHERE kyselypohjaid = :kyselypohjaid;

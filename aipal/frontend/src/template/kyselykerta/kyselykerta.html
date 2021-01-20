@@ -60,7 +60,8 @@
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
-    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 'amispalaute' && laajennettuOppisopimuskoulutus && !kysely.automatisoitu"
+    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 'amispalaute' && laajennettuOppisopimuskoulutus &&
+                                                                                !kysely.automatisoitu && kyselykerta.automaattinen === null"
             title="{{'vastaajatunnus.luonti_laajennettu_tooltip' | i18n}}">
         {{'vastaajatunnus.luonti_laajennettu' | i18n }} &nbsp;
         <span class="fa fa-plus"></span>

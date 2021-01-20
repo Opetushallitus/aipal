@@ -91,7 +91,13 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
         resolve: {
           isJulkaistu: function() {
             return $scope.kyselypohja.tila === 'julkaistu';
-          }}
+          },
+          kyselytyyppi: function() {
+            return null;
+          },
+        isPohja: function () {
+            return true;
+        }}
       });
       modalInstance.result.then(function (kysymysryhmaid) {
         Kysymysryhma.hae(kysymysryhmaid)
@@ -162,6 +168,11 @@ angular.module('kyselypohja.kyselypohjaui', ['ngRoute'])
       // watch tarvitaan koska form asetetaan vasta controllerin jälkeen
       tallennusMuistutus.muistutaTallennuksestaPoistuttaessaFormilta(form);
     });
+
+    $scope.isJulkaistu = function () {
+      console.log("KP: " + JSON.stringify($scope.kyselypohja))
+      return  $scope.kyselypohja && $scope.kyselypohja.tila === 'julkaistu';
+    };
 
     if ($routeParams.kyselypohjaid) {
       Kyselypohja.hae($routeParams.kyselypohjaid).then(function(resp) {

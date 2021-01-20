@@ -147,14 +147,6 @@
                 :kuvaus_fi :kuvaus_sv :kuvaus_en
                 :taustakysymykset :valtakunnallinen :tila)))
 
-(def kysymys-select
-  (->
-    (sql/select* taulut/kysymys)
-    (sql/fields :kysymys.kysymysid :kysymys.kysymys_fi :kysymys.kysymys_sv :kysymys.kysymys_en :kysymys.luotuaika
-                :kysymys.poistettava :kysymys.pakollinen :kysymys.vastaustyyppi :kysymys.eos_vastaus_sallittu
-                :kysymys.max_vastaus :kysymys.monivalinta_max :kysymys.jarjestys)
-    (sql/order :kysymys.jarjestys)))
-
 (defn taydenna-monivalintakysymys
   [monivalintakysymys]
   (let [kysymysid (:kysymysid monivalintakysymys)]
@@ -377,16 +369,13 @@
   (auditlog/kysymys-monivalinnat-poisto! kysymysid)
   (db/poista-monivalintavaihtoehdot! {:kysymysidt kysymysid}))
 
-(defn poista-jatkokysymys!
-  [kysymysid]
-  (auditlog/kysymys-poisto! kysymysid)
+(defn poista-jatkokysymys! [kysymysid]
   (db/poista-jatkokysymykset! {:kysymysidt kysymysid}))
 
 (defn poista-kysymys! [kysymys]
   (when (= "monivalinta" (:vastaustyyppi kysymys))
     (poista-kysymyksen-monivalintavaihtoehdot! (:kysymysid kysymys)))
   (poista-jatkokysymys! (:kysymysid kysymys))
-  (auditlog/kysymys-poisto! (:kysymysid kysymys))
   (db/poista-kysymykset! {:kysymysidt (:kysymysid kysymys)})
   (:kysymysid kysymys))
 

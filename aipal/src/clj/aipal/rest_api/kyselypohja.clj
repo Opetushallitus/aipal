@@ -105,11 +105,11 @@
   (POST "/lisaa-tiedostosta" []
         :body [kyselypohja s/Any]
         :kayttooikeus :kyselypohja
-    (let [tallennettu-pohja (arkisto/lisaa-kyselypohja! kyselypohja)
+    (let [kysymysryhmat (doall (map lisaa-kysymysryhma! (:kysymysryhmat kyselypohja)))
+          tallennettu-pohja (arkisto/luo-kyselypohja! kyselypohja)
           kyselypohjaid (:kyselypohjaid tallennettu-pohja)
-          kysymysryhmat (doall (map lisaa-kysymysryhma! (:kysymysryhmat kyselypohja)))
           kysymysryhmaidt (map :kysymysryhmaid kysymysryhmat)]
-      (arkisto/tallenna-kyselypohjan-kysymysryhmat! kyselypohjaid kysymysryhmat)
+      (arkisto/tallenna-kyselypohjan-kysymysryhmat! nil kyselypohjaid kysymysryhmat)
       (doseq [kysymysryhmaid kysymysryhmaidt]
         (kysymysryhma-arkisto/julkaise! kysymysryhmaid))
       (response-or-404 (assoc tallennettu-pohja :kysymysryhmat kysymysryhmat)))))

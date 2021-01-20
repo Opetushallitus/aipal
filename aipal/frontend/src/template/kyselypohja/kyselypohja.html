@@ -57,29 +57,6 @@
     </div>
   </div>
 
-  <!--
-  <h3>{{i18n.yleiset.voimassa}}</h3>
-
-  <pvm-valitsin
-          otsikko="{{i18n.yleiset.alkaen}}"
-          oletus-pvm="kyselypohja.voimassa_alkupvm"
-          valittu-pvm="kyselypohja.voimassa_alkupvm"
-          min-pvm="'2000-01-01'"
-          max-pvm="kyselypohja.voimassa_loppupvm"
-          ng-model="kyselypohja.voimassa_alkupvm"
-          pakollinen="true">
-  </pvm-valitsin>
-  <pvm-valitsin
-          otsikko="{{i18n.yleiset.asti}}"
-          oletus-pvm="kyselypohja.voimassa_loppupvm"
-          valittu-pvm="kyselypohja.voimassa_loppupvm"
-          min-pvm="kyselypohja.voimassa_alkupvm"
-          max-pvm="'2099-12-31'"
-          ng-model="kyselypohja.voimassa_loppupvm"
-          pakollinen="false">
-  </pvm-valitsin>
-  -->
-
   <div class="row"><br /></div>
 
   <div>
@@ -89,7 +66,7 @@
     </button>
   </div>
 
-  <kysymysryhma-accordion kysymysryhmat="kyselypohja.kysymysryhmat" kysymysten-poisto="false"></kysymysryhma-accordion>
+  <kysymysryhma-accordion kysymysryhmat="kyselypohja.kysymysryhmat" kysymysten-poisto="true" is-julkaistu="kyselypohja.tila === 'julkaistu'" is-poistettavissa="true" is-pohja="true"></kysymysryhma-accordion>
 
   <button class="btn btn-primary pull-left" ng-disabled="!kyselypohjaForm.$valid" ng-click="tallenna()">
     {{'i18n.yleiset.tallenna'| i18n}}&nbsp;<span class="fa fa-save"></span>
