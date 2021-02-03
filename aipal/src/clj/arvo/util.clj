@@ -1,5 +1,7 @@
 (ns arvo.util
-  (:require [aipal.asetukset :refer [asetukset]]))
+  (:require [aipal.asetukset :refer [asetukset]]
+            [ring.util.http-response :as response]
+            [ring.util.http-status :as status]))
 
 (defn in? [coll elem]
   (some #(= elem %) coll))
@@ -15,9 +17,8 @@
                     (apply str))))
 
 (defn api-response [body]
-  {:status 200
-   :body body
-   :headers {"Content-Type" "application/json; charset=utf-8"}})
+  (-> (response/ok body)
+      (response/content-type "application/json; charset=utf-8")))
 
 (defn paginated-response [data key page-length api-url params]
   (let [next-id (when (= page-length (count data)) (-> data last key))
@@ -26,7 +27,13 @@
     (if (some? data)
       (api-response {:data data
                      :pagination {:next_url (if next-id next-url nil)}})
-      {:status 404})))
+      {:status status/not-found})))
 
 (defn add-index [key coll]
   (map #(assoc %1 key %2) coll (range)))
+
+(defn on-validation-error [message]
+  (let [body {:status status/bad-request
+              :detail message}]
+    (-> (response/bad-request body)
+        (response/content-type "application/json"))))
