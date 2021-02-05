@@ -5,6 +5,19 @@
             [clojure.tools.logging :as log])
   (:import java.util.Base64))
 
+(defn generate-password [n]
+  (let [chars-between #(map char (range (int %1) (inc (int %2))))
+        chars (concat (chars-between \0 \9)
+                      (chars-between \a \z)
+                      (chars-between \A \Z))]
+    (apply str (take n (repeatedly #(rand-nth chars))))))
+
+(defn generate-credentials [entries]
+  (let [passwords (->> entries
+                      (map #(assoc % :password (generate-password 16)))
+                      (map #(assoc % :encrypted (hashers/encrypt (:password %)))))]
+    passwords))
+
 (defn parse-credentials [request]
   (when-let [auth-header (get-in request [:headers "authorization"])]
     (let [decoder (Base64/getMimeDecoder)
@@ -18,7 +31,8 @@
           (catch IllegalArgumentException _))))))
 
 (defn check-credentials [credentials]
-  (let [saved-credentials (db/hae-api-kayttaja {:tunnus (first credentials)})]
+  (let [saved-credentials (db/hae-api-kayttaja {:tunnus (first credentials)})
+        _ (log/info "Saved credentials:" saved-credentials)]
     (when (hashers/check (second credentials) (:salasana saved-credentials))
       saved-credentials)))
 
@@ -26,7 +40,9 @@
   [required-right handler]
   (fn [request]
     (let [credentials (parse-credentials request)
-          api-user (check-credentials credentials)]
+          _ (log/info "Parsed credentials: " credentials)
+          api-user (check-credentials credentials)
+          _ (log/info "API User: " api-user)]
       (if (and api-user (get-in api-user [:oikeudet required-right]))
         (handler (merge request (select-keys api-user [:organisaatio :oikeudet])))
         {:status 401

@@ -20,11 +20,18 @@
     (db/luo-kyselykerta! tx {:kyselyid kyselyid :nimi (:kyselykerta_nimi kuvaus) :kayttaja "JARJESTELMA"
                              :automaattinen (format "[%s,%s]" (:automatisointi_voimassa_alkupvm kuvaus)
                                                               (:automatisointi_voimassa_loppupvm kuvaus))
-                             :kategoria (:kyselykerta_kategoria kuvaus) :voimassa_alkupvm (:voimassa_alkupvm kuvaus)})
+                             :kategoria (:kyselykerta_kategoria kuvaus)
+                             :voimassa_alkupvm (:voimassa_alkupvm kuvaus)
+                             :voimassa_loppupvm (:voimassa_loppupvm kuvaus)})
     kyselyid))
 
+(defn hae-koulutustoimijat [kuvaus]
+  (case (:kyselytyyppi kuvaus)
+    "rekrykysely" (db/hae-automaattikysely-korkeakoulut kuvaus)
+    (db/hae-automaattikysely-koulutustoimijat kuvaus)))
+
 (defn luo-kyselyt! [kuvaus tx]
-  (let [koulutustoimijat (db/hae-automaattikysely-koulutustoimijat tx kuvaus)
+  (let [koulutustoimijat (hae-koulutustoimijat kuvaus)
         _ (log/info "Luodaan automaattikyselyt ("(:tunniste kuvaus)")" (count koulutustoimijat) "koulutustoimijalle")]
     (doseq[k koulutustoimijat]
       (luo-kysely! k kuvaus tx))))

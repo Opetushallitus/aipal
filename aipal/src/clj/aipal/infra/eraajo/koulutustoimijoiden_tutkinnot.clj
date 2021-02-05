@@ -30,7 +30,7 @@
                                                  :tutkintotunnus tutkinto
                                                  :alkupvm (:alkupvm koulutustoimija)
                                                  :loppupvm (:loppupvm koulutustoimija)
-                                                 :laaja_oppisopimuskoulutus (if (= "1" (:laajaOppisopimuskoulutus koulutustoimija)) true false)})))
+                                                 :laaja_oppisopimuskoulutus (= "1" (:laajaOppisopimuskoulutus koulutustoimija))})))
 
     (log/info "Koulutustoimijoiden tutkintojen päivitys Oivasta valmis")))
 

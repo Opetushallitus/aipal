@@ -32,3 +32,25 @@ SELECT * FROM amispalaute_automatisointi WHERE koulutustoimija = :koulutustoimij
 -- :name lisaa-automatisointiin! :! :1
 INSERT INTO amispalaute_automatisointi (koulutustoimija, voimassa_alkaen, lahde)
 VALUES (:koulutustoimija, now(), :lahde) ON CONFLICT DO NOTHING;
+
+-- :name hae-automaattikysely-korkeakoulut :? :*
+SELECT DISTINCT kt.ytunnus FROM koulutustoimija kt
+ JOIN oppilaitos o on kt.ytunnus = o.koulutustoimija
+ JOIN oppilaitostyyppi_tutkintotyyppi ot ON o.oppilaitostyyppi = ot.oppilaitostyyppi
+WHERE kt.lakkautuspaiva IS NULL
+ AND o.lakkautuspaiva IS NULL
+AND NOT EXISTS (SELECT 1 FROM kysely k
+    WHERE k.kategoria->>'automatisointi_tunniste' = :tunniste
+    AND k.koulutustoimija = kt.ytunnus);
+
+-- :name hae-automaattikysely-koulutustoimijat :? :*
+SELECT ytunnus, nimi_fi FROM koulutustoimija kt
+-- löytyy aiempi halutun tyyppinen kysely
+WHERE EXISTS (SELECT 1 FROM kysely k WHERE k.koulutustoimija = kt.ytunnus AND k.tyyppi = :kyselytyyppi)
+-- muttei löydy voimassaolevaa automaattisesti luotua
+  AND NOT EXISTS (
+        SELECT 1
+        FROM kysely k
+        WHERE k.kategoria->>'automatisointi_tunniste' = :tunniste
+          AND koulutustoimija != kt.ytunnus
+    );

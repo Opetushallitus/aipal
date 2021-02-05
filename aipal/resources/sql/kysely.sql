@@ -91,18 +91,6 @@ INSERT INTO kysely_kysymys (kyselyid, kysymysid, luotu_kayttaja, muutettu_kaytta
 SELECT :kyselyid, kysymysid, :kayttaja, :kayttaja FROM kysymys
 WHERE kysymysryhmaid IN (SELECT kysymysryhmaid FROM kysely_kysymysryhma WHERE kyselyid = :kyselyid);
 
--- :name hae-automaattikysely-koulutustoimijat :? :*
-SELECT ytunnus, nimi_fi FROM koulutustoimija kt
--- löytyy aiempi halutun tyyppinen kysely
-WHERE EXISTS (SELECT 1 FROM kysely k WHERE k.koulutustoimija = kt.ytunnus AND k.tyyppi = :kyselytyyppi)
--- muttei löydy voimassaolevaa automaattisesti luotua
-AND NOT EXISTS (
-    SELECT 1
-    FROM kysely k
-    WHERE k.kategoria->>'automatisointi_tunniste' = :tunniste
-    AND koulutustoimija != ytunnus
-);
-
 -- :name hae-automaattikysely-data :? :*
 SELECT * FROM automaattikysely WHERE tunniste IN (SELECT MAX(tunniste) FROM automaattikysely GROUP BY LEFT(tunniste, -4));
 
