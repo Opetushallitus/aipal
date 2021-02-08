@@ -210,8 +210,8 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
 
     $scope.tallenna = function() {
       apu.poistaYlimaaraisetKentat($scope.aktiivinenKysymys);
-      // Kategorian pitää olla jsonia
-      // $scope.aktiivinenKysymys.kategoria = JSON.stringify($scope.aktiivinenKysymys.kategoria);
+      // Metatietojenpitää olla jsonia
+      // $scope.aktiivinenKysymys.metatiedot = JSON.stringify($scope.aktiivinenKysymys.metatiedot);
       $scope.aktiivinenKysymys.muokattava = false;
       $scope.aktiivinenKysymys.uusi = false;
       $scope.muokkaustila = false;
@@ -283,7 +283,7 @@ angular.module('kysymysryhma.kysymysryhmaui', ['ngRoute',
         $scope.aktiivinenKysymys.selite_fi = '';
         $scope.aktiivinenKysymys.selite_sv = '';
         $scope.aktiivinenKysymys.selite_en = '';
-        $scope.aktiivinenKysymys.kategoria = {};
+        $scope.aktiivinenKysymys.metatiedot = {};
       }
     };
 

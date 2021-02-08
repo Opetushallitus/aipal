@@ -33,7 +33,7 @@ SELECT *, k.kaytettavissa,
 -- :name hae-kyselyt :? :*
 SELECT k.kyselyid, k.nimi_fi, k.nimi_sv, k.nimi_en, k.voimassa_alkupvm, k.voimassa_loppupvm,
        k.tila, k.kaytettavissa, k.uudelleenohjaus_url, k.sivutettu, k.koulutustoimija,
-       k.kategoria,
+       k.metatiedot,
        NOT EXISTS(SELECT 1
                   FROM kyselykerta kk
                            JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
@@ -61,9 +61,9 @@ WHERE kyselyid = :kyselyid;
 
 -- :name luo-kysely! :<!
 INSERT INTO kysely (koulutustoimija, voimassa_alkupvm, voimassa_loppupvm, nimi_fi, nimi_sv, nimi_en, selite_fi, selite_sv, selite_en, kyselypohjaid, tyyppi, tila,
-                    kategoria, uudelleenohjaus_url, luotu_kayttaja, muutettu_kayttaja, muutettuaika, luotuaika)
+                    metatiedot, uudelleenohjaus_url, luotu_kayttaja, muutettu_kayttaja, muutettuaika, luotuaika)
 VALUES (:koulutustoimija, :voimassa_alkupvm, :voimassa_loppupvm, :nimi_fi, :nimi_sv, :nimi_en, :selite_fi, :selite_sv, :selite_en, :kyselypohjaid, :tyyppi, :tila,
-        :kategoria, :uudelleenohjaus_url, :kayttaja, :kayttaja, now(), now())
+        :metatiedot, :uudelleenohjaus_url, :kayttaja, :kayttaja, now(), now())
 RETURNING kyselyid;
 
 -- :name muokkaa-kyselya! :<!
@@ -122,7 +122,7 @@ DELETE FROM kysely WHERE kyselyid = :kyselyid;
 SELECT kkr.kysymysryhmaid FROM kysely_kysymysryhma kkr
                                    JOIN kysymysryhma kr ON kkr.kysymysryhmaid = kr.kysymysryhmaid
 WHERE kkr.kyselyid = :kyselyid AND (kr.taustakysymykset = TRUE
-                                    OR (kr.valtakunnallinen = TRUE AND kr.kategoria->>'lisattavissa_kyselyyn' IS NULL));
+                                    OR (kr.valtakunnallinen = TRUE AND kr.metatiedot->>'lisattavissa_kyselyyn' IS NULL));
 
 -- :name samanniminen-kysely? :? :1
 SELECT TRUE FROM kysely

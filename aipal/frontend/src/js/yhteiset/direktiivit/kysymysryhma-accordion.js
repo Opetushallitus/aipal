@@ -35,14 +35,12 @@ angular.module('yhteiset.direktiivit.kysymysryhma-accordion', [])
 
         $scope.isMuokattavissa = function (kysymysryhma) {
 
-          const kategoria_ok = _.get(kysymysryhma, ['kategoria', 'lisattavissa_kyselyyn'], null) !== null;
+          const metatiedot_ok = _.get(kysymysryhma, ['metatiedot', 'lisattavissa_kyselyyn'], null) !== null;
           const tyyppi_ok = (!kysymysryhma.valtakunnallinen && !kysymysryhma.taustakysymykset)
-
-          console.log("Kategoria: " + kategoria_ok + " Tyyppi: " + tyyppi_ok + " Poistettavissa: " + $scope.isPoistettavissa + " Julkaistu:" + $scope.isJulkaistu)
 
           if($scope.isPohja){
             return !$scope.isJulkaistu;
-          } else return $scope.isPoistettavissa && (tyyppi_ok || kategoria_ok)
+          } else return $scope.isPoistettavissa && (tyyppi_ok || metatiedot_ok)
         };
 
         var jarjesta = function() {

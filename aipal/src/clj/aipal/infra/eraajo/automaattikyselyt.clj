@@ -11,16 +11,16 @@
   (let [kyselyid (:kyselyid (first (db/luo-kysely! tx (merge kuvaus {:tila "julkaistu" :koulutustoimija (:ytunnus koulutustoimija)
                                                                      :kayttaja "JARJESTELMA" :tyyppi (:kyselytyyppi kuvaus)
                                                                      :uudelleenohjaus_url nil
-                                                                     :kategoria (merge (:kysely_kategoria kuvaus)
-                                                                                       {:automatisointi_tunniste (:tunniste kuvaus)
-                                                                                        :esikatselu_tunniste (random-hash)})}))))]
+                                                                     :metatiedot (merge (:kysely_metatiedot kuvaus)
+                                                                                        {:automatisointi_tunniste (:tunniste kuvaus)
+                                                                                         :esikatselu_tunniste (random-hash)})}))))]
     (db/liita-kyselyn-kyselypohja! tx {:kyselyid kyselyid :kyselypohjaid (:kyselypohjaid kuvaus) :kayttaja "JARJESTELMA"})
     (db/liita-kyselyn-kysymykset! tx {:kyselyid kyselyid :kayttaja "JARJESTELMA"})
     ;(db/paata-kyselykerrat! tx {:tyyppi (:kyselytyyppi kuvaus) :koulutustoimija (:ytunnus koulutustoimija) :paattymis_pvm (get-rahoituskauden-loppu (:kyselytyyppi kuvaus))})
     (db/luo-kyselykerta! tx {:kyselyid kyselyid :nimi (:kyselykerta_nimi kuvaus) :kayttaja "JARJESTELMA"
                              :automaattinen (format "[%s,%s]" (:automatisointi_voimassa_alkupvm kuvaus)
                                                               (:automatisointi_voimassa_loppupvm kuvaus))
-                             :kategoria (:kyselykerta_kategoria kuvaus)
+                             :metatiedot (:kyselykerta_metatiedot kuvaus)
                              :voimassa_alkupvm (:voimassa_alkupvm kuvaus)
                              :voimassa_loppupvm (:voimassa_loppupvm kuvaus)})
     kyselyid))

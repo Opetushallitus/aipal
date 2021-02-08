@@ -29,7 +29,7 @@
                         :monivalinta_max
                         :rajoite
                         :jarjestys
-                        :kategoria]))
+                        :metatiedot]))
 
 (defn valitse-vaihtoehdon-kentat [vaihtoehto]
   (select-keys vaihtoehto [:jarjestys

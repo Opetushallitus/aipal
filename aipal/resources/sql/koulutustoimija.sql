@@ -40,7 +40,7 @@ SELECT DISTINCT kt.ytunnus FROM koulutustoimija kt
 WHERE kt.lakkautuspaiva IS NULL
  AND o.lakkautuspaiva IS NULL
 AND NOT EXISTS (SELECT 1 FROM kysely k
-    WHERE k.kategoria->>'automatisointi_tunniste' = :tunniste
+    WHERE k.metatiedot->>'automatisointi_tunniste' = :tunniste
     AND k.koulutustoimija = kt.ytunnus);
 
 -- :name hae-automaattikysely-koulutustoimijat :? :*
@@ -51,6 +51,6 @@ WHERE EXISTS (SELECT 1 FROM kysely k WHERE k.koulutustoimija = kt.ytunnus AND k.
   AND NOT EXISTS (
         SELECT 1
         FROM kysely k
-        WHERE k.kategoria->>'automatisointi_tunniste' = :tunniste
+        WHERE k.metatiedot->>'automatisointi_tunniste' = :tunniste
           AND koulutustoimija != kt.ytunnus
     );

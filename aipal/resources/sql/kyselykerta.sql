@@ -18,7 +18,7 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
   JOIN oppilaitos o ON k.koulutustoimija = o.koulutustoimija
   WHERE o.oppilaitoskoodi = :oppilaitoskoodi AND k.tyyppi = 'rekrykysely'
     AND kk.automaattinen @> NOW()::DATE
-  AND (kk.kategoria ->'vuosi')::TEXT::INTEGER = :vuosi
+  AND (kk.metatiedot ->'vuosi')::TEXT::INTEGER = :vuosi
   AND kk.lukittu = FALSE;
 
 -- :name hae-automaatti-kyselykerta :? :1
@@ -26,7 +26,7 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
   JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija = :koulutustoimija AND k.tyyppi = :kyselytyyppi
 AND kk.automaattinen @> now()::DATE
-  --~(if (:tarkenne params) "AND kk.kategoria ->> 'tarkenne' = :tarkenne")
+  --~(if (:tarkenne params) "AND kk.metatiedot ->> 'tarkenne' = :tarkenne")
 AND k.voimassa_alkupvm <= now() AND (k.voimassa_loppupvm IS NULL OR k.voimassa_loppupvm >= now())
 AND k.tila = 'julkaistu' AND kk.lukittu = FALSE;
 
@@ -35,7 +35,7 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
                                  JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija = :koulutustoimija
   AND kk.automaattinen @> NOW()::DATE
-  AND kk.kategoria ->> 'tarkenne' = :tarkenne
+  AND kk.metatiedot ->> 'tarkenne' = :tarkenne
   AND k.tila = 'julkaistu' AND kk.lukittu = FALSE;
 
 -- :name hae-kyselyn-tutkinnot :? :*
@@ -72,8 +72,8 @@ JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE kk.kyselykertaid = :kyselykertaid;
 
 -- :name luo-kyselykerta! :<!
-INSERT INTO kyselykerta (kyselyid, nimi, voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, automaattinen, kategoria)
-VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja, :automaattinen::DATERANGE, :kategoria)
+INSERT INTO kyselykerta (kyselyid, nimi, voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, automaattinen, metatiedot)
+VALUES (:kyselyid, :nimi, :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja, :automaattinen::DATERANGE, :metatiedot)
 RETURNING kyselykertaid;
 
 -- :name paivita-kyselykerta! :! :n

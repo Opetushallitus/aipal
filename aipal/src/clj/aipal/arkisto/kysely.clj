@@ -24,7 +24,7 @@
             [oph.common.util.util :refer [map-by]])
   (:import (java.security MessageDigest)))
 
-(def kysely-kentat [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kyselypohjaid :kategoria :uudelleenohjaus_url :tyyppi])
+(def kysely-kentat [:nimi_fi :nimi_sv :nimi_en :selite_fi :selite_sv :selite_en :kyselypohjaid :metatiedot :uudelleenohjaus_url :tyyppi])
 
 (def kysely-defaults (zipmap kysely-kentat (repeat nil)))
 
@@ -77,8 +77,8 @@
 
 
 (defn format-kysely [kyselydata]
-  (let [kategoria (merge (:kategoria kyselydata) {:esikatselu_tunniste (random-hash)})]
-    (merge kysely-defaults kyselydata {:kategoria kategoria} {:kayttaja (:oid *kayttaja*)})))
+  (let [metatiedot (merge (:metatiedot kyselydata) {:esikatselu_tunniste (random-hash)})]
+    (merge kysely-defaults kyselydata {:metatiedot metatiedot :kayttaja (:oid *kayttaja*)})))
 
 (defn lisaa! [kyselydata]
   (jdbc/with-db-transaction [tx *db*]

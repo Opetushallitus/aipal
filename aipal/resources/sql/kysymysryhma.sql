@@ -18,11 +18,11 @@ DELETE FROM kysymysryhma WHERE kysymysryhmaid = :kysymysryhmaid;
 -- :name lisaa-kysymys! :<!
 INSERT INTO kysymys (pakollinen, poistettava, vastaustyyppi, kysymysryhmaid, kysymys_fi, kysymys_sv, kysymys_en,
                      selite_fi, selite_sv, selite_en,
-                     jarjestys, monivalinta_max, max_vastaus, eos_vastaus_sallittu, luotu_kayttaja, muutettu_kayttaja, kategoria,
+                     jarjestys, monivalinta_max, max_vastaus, eos_vastaus_sallittu, luotu_kayttaja, muutettu_kayttaja, metatiedot,
                      luotuaika, muutettuaika, jatkokysymys)
     VALUES (:pakollinen, :poistettava, :vastaustyyppi, :kysymysryhmaid, :kysymys_fi, :kysymys_sv, :kysymys_en,
             :selite_fi, :selite_sv, :selite_en,
-            :jarjestys, :monivalinta_max, :max_vastaus, :eos_vastaus_sallittu, :kayttaja, :kayttaja, :kategoria,
+            :jarjestys, :monivalinta_max, :max_vastaus, :eos_vastaus_sallittu, :kayttaja, :kayttaja, :metatiedot,
             now(), now(), :jatkokysymys)
     RETURNING kysymysid;
 

@@ -37,7 +37,7 @@
                                                     {:kyselyid kyselyid
                                                      :kayttaja (:oid *kayttaja*)
                                                      :automaattinen nil
-                                                     :kategoria nil}))]
+                                                     :metatiedot nil}))]
       (first kyselykertaid))))
 
 (defn hae-automaatti-kyselykerta [koulutustoimija kyselytyyppi tarkenne]

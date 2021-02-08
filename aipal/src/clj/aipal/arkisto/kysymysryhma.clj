@@ -46,7 +46,7 @@
        vain-voimassaolevat (sql/where {:kysymysryhma.tila "julkaistu"}))
      (sql/fields :kysymysryhma.kysymysryhmaid :kysymysryhma.nimi_fi :kysymysryhma.nimi_sv :kysymysryhma.nimi_en
                  :kysymysryhma.selite_fi :kysymysryhma.selite_sv :kysymysryhma.selite_en :kysymysryhma.valtakunnallinen :kysymysryhma.taustakysymykset
-                 :kysymysryhma.tila :kysymysryhma.kuvaus_fi :kysymysryhma.kuvaus_sv :kysymysryhma.kuvaus_en :kysymysryhma.kategoria
+                 :kysymysryhma.tila :kysymysryhma.kuvaus_fi :kysymysryhma.kuvaus_sv :kysymysryhma.kuvaus_en :kysymysryhma.metatiedot
                  [(sql/subselect taulut/kysymys
                     (sql/aggregate (count :*) :lkm)
                     (sql/where {:kysymys.kysymysryhmaid :kysymysryhma.kysymysryhmaid})) :kysymyksien_lkm]
@@ -112,7 +112,7 @@
                      :jatkokysymys false
                      :rajoite nil
                      :jarjestys nil
-                     :kategoria {}})
+                     :metatiedot {}})
 
 
 (defn lisaa-kysymys! [kysymys-data kysymysryhmaid]
@@ -285,7 +285,7 @@
   ([kyselyid]
    (->
      (sql/select* taulut/kysymysryhma)
-     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :kategoria)
+     (sql/fields :kysymysryhmaid :nimi_fi :nimi_sv :nimi_en :kuvaus_fi :kuvaus_sv :kuvaus_en :tila :valtakunnallinen :taustakysymykset :metatiedot)
      (sql/with taulut/kysymys
        (sql/fields :kysymysid :kysymys_fi :kysymys_sv :kysymys_en :poistettava :pakollinen :vastaustyyppi :monivalinta_max :eos_vastaus_sallittu :jatkokysymys :jarjestys :kysymysryhmaid :max_vastaus
                    [:kysymys_jatkokysymys.kysymysid :jatkokysymys_kysymysid]

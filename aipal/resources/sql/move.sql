@@ -24,7 +24,7 @@ WHERE oppilaitostyyppi IN ('11','12','19')
 -- :name hae-move-kyselykerta :? :*
 SELECT kk.kyselykertaid FROM kysely k
 JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
-WHERE k.tyyppi = 'move' AND k.kategoria->>'automatisointi_tunniste' = :tunniste
+WHERE k.tyyppi = 'move' AND k.metatiedot->>'automatisointi_tunniste' = :tunniste
 AND kk.automaattinen @> NOW()::DATE;
 
 -- :name lisaa-move-tunnus! :! :n

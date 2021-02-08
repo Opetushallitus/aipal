@@ -362,8 +362,8 @@ angular.module('kysely.kyselyui', ['rest.kysely', 'rest.kyselypohja',
         if($scope.isPohja) {
           return true;
         }
-        else if(kr.kategoria !== null && kr.kategoria.lisattavissa_kyselyyn === kyselytyyppi){
-          return kr.kategoria.lisattavissa_kyselyyn === kyselytyyppi;
+        else if(kr.metatiedot !== null && kr.metatiedot.lisattavissa_kyselyyn === kyselytyyppi){
+          return kr.metatiedot.lisattavissa_kyselyyn === kyselytyyppi;
         }
         else return !kr.valtakunnallinen;
       });

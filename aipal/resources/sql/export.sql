@@ -2,12 +2,12 @@
 SELECT k.koulutustoimija, k.tyyppi,
   k.kyselyid, k.nimi_fi AS kysely_fi, k.nimi_sv AS kysely_sv, k.nimi_en AS kysely_en,
   to_char(k.voimassa_alkupvm, 'YYYY-MM-DD') AS kysely_voimassa_alkupvm, to_char(k.voimassa_loppupvm, 'YYYY-MM-DD')AS kysely_voimassa_loppupvm, k.tila AS kysely_tila,
-  kk.kyselykertaid, kk.nimi AS kyselykerta, kk.kategoria->>'vuosi' AS kyselykerta_vuosi,
-  kp.kyselypohjaid, kp.nimi_fi AS kyselypohja_nimi, kp.kategoria->>'tarkenne' AS kyselypohja_tarkenne
+  kk.kyselykertaid, kk.nimi AS kyselykerta, kk.metatiedot->>'vuosi' AS kyselykerta_vuosi,
+  kp.kyselypohjaid, kp.nimi_fi AS kyselypohja_nimi, kp.metatiedot->>'tarkenne' AS kyselypohja_tarkenne
 FROM kyselykerta kk
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN kyselypohja kp ON k.kyselypohjaid = kp.kyselypohjaid
-WHERE coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
+WHERE coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 AND (k.koulutustoimija = :koulutustoimija
      --~(if (:vipunen params) "OR TRUE")
     )
@@ -32,7 +32,7 @@ FROM vastaus v
          JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE k.tila != 'luonnos'
   AND k.tyyppi IN (:v*:kyselytyypit)
-  AND coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
+  AND coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 --~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
 --~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
 --~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
@@ -42,7 +42,7 @@ ORDER BY v.vastausid ASC LIMIT :pagelength;
 
 
 -- :name export-kysymykset :? :*
-SELECT DISTINCT k.kysymysid, k.vastaustyyppi, k.kysymys_fi, k.kysymys_sv, k.kysymys_en, k.kategoria, k.jatkokysymys,
+SELECT DISTINCT k.kysymysid, k.vastaustyyppi, k.kysymys_fi, k.kysymys_sv, k.kysymys_en, k.metatiedot AS kategoria, k.jatkokysymys,
   kjk.kysymysid AS jatkokysymys_kysymysid, k.jarjestys,
   kr.kysymysryhmaid, kr.nimi_fi AS kysymysryhma_fi, kr.nimi_sv AS kysymysryhma_sv, kr.nimi_en AS kysymysryhma_en,
   kr.valtakunnallinen
@@ -68,7 +68,7 @@ FROM vastaaja v
 JOIN vastaajatunnus vt ON v.vastaajatunnusid = vt.vastaajatunnusid
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k on kk.kyselyid = k.kyselyid
-WHERE coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
+WHERE coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 AND(k.koulutustoimija = :koulutustoimija
       --~(if (:vipunen params) "OR TRUE")
 )
@@ -93,7 +93,7 @@ FROM kyselykerta kk
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
 LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
-AND coalesce((kk.kategoria->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
+AND coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 --~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
 GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto', kuukausi
 ORDER BY kk.kyselykertaid, vt.taustatiedot->>'tutkinto';

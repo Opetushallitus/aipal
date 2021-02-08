@@ -21,7 +21,7 @@
 
       <div class="panel-tools-content">
         <auth roolit="['OPL-VASTUUKAYTTAJA']" ng-if="['luonnos', 'julkaistu'].indexOf(kysely.tila) !== -1">
-          <a ng-href={{getVastausBaseUrl()}}/e/{{kysely.kategoria.esikatselu_tunniste}} class="btn btn-primary pull-left" target="_blank" rel="noopener noreferrer">
+          <a ng-href={{getVastausBaseUrl()}}/e/{{kysely.metatiedot.esikatselu_tunniste}} class="btn btn-primary pull-left" target="_blank" rel="noopener noreferrer">
             {{ 'kysely.esikatsele' | i18n }}&nbsp;
             <span class="fa fa-search"></span>
           </a>

@@ -175,7 +175,7 @@
   (filter #(not= (:vastaustyyppi %) "valiotsikko") kysymykset))
 
 (defn poista-raportoimattomat [kysymykset]
-  (filter #(not= false (-> % :kategoria :raportointi :csv)) kysymykset))
+  (filter #(not= false (-> % :metatiedot :raportointi :csv)) kysymykset))
 
 (defn hae-kysymykset [kyselyid]
   (->> (hae-kyselyn-kysymykset kyselyid)
@@ -291,7 +291,7 @@
   (= 0 (:numerovalinta (first (filter #(= kysymysid (:kysymysid %)) vastaukset)))))
 
 (defn filter-not-allowed [kyselytyyppi kysymykset vastaukset]
-  (let [lupakysymys (:kysymysid (first (filter #(= "tietojen_luovutus" (-> % :kategoria :taustakysymyksen_tyyppi)) kysymykset)))]
+  (let [lupakysymys (:kysymysid (first (filter #(= "tietojen_luovutus" (-> % :metatiedot :taustakysymyksen_tyyppi)) kysymykset)))]
     (if (and lupakysymys (some #{"amk-uraseuranta"} #{kyselytyyppi}))
       (filter #(luovutuslupa % lupakysymys) vastaukset)
       vastaukset)))
