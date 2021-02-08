@@ -40,9 +40,7 @@
   [required-right handler]
   (fn [request]
     (let [credentials (parse-credentials request)
-          _ (log/info "Parsed credentials: " credentials)
-          api-user (check-credentials credentials)
-          _ (log/info "API User: " api-user)]
+          api-user (check-credentials credentials)]
       (if (and api-user (get-in api-user [:oikeudet required-right]))
         (handler (merge request (select-keys api-user [:organisaatio :oikeudet])))
         {:status 401
