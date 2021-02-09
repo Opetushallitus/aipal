@@ -1,4 +1,5 @@
 ALTER TABLE vastaajatunnus ADD COLUMN valmistavan_koulutuksen_jarjestaja varchar(10);
+--;;
 
 CREATE MATERIALIZED VIEW vipunen_view
  AS SELECT kysely.koulutustoimija,
@@ -53,8 +54,10 @@ CREATE MATERIALIZED VIEW vipunen_view
      JOIN kyselykerta ON vastaajatunnus.kyselykertaid = kyselykerta.kyselykertaid
      JOIN kysely ON kyselykerta.kyselyid = kysely.kyselyid
   WHERE kysymys.vastaustyyppi::text <> 'vapaateksti'::text AND vastaus.vastausaika > '2018-01-01'::date;
+--;;
 
 CREATE INDEX vipunen_vastausaika_idx ON vipunen_view(vastausaika);
+--;;
 
 -- This allows changing view owner using list of possible users.
 CREATE OR REPLACE FUNCTION set_view_owner(_view text, _user text)
@@ -64,6 +67,7 @@ BEGIN
    EXECUTE format('ALTER MATERIALIZED VIEW %I OWNER TO %I', _view, _user);
 END
 $func$ LANGUAGE plpgsql;
+--;;
 
 do $$
 begin

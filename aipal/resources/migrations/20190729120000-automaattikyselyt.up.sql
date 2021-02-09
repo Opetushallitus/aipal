@@ -13,9 +13,12 @@ CREATE TABLE automaattikysely(
     selite_en TEXT,
     automatisointi_voimassa_loppupvm DATE
 );
+--;;
 
 ALTER TABLE automaattikysely ADD CONSTRAINT automaattikysely_nimi CHECK
     (COALESCE(nimi_fi, nimi_sv, nimi_en) IS NOT NULL);
+--;;
 
 ALTER TABLE kysely ADD COLUMN kategoria JSONB;
+--;;
 
