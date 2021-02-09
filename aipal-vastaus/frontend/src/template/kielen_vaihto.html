@@ -1,6 +1,0 @@
-<ul class="kielen-vaihto">
-  <li ng-repeat="k in vaihtoehdot" ng-class="{valittu: kieli === k.tunnus, 'ei-valittu': kieli !== k.tunnus}">
-    <a ng-if="kieli !== k.tunnus" ng-click="asetaKieli(k.tunnus)" ng-bind="i18n.yleiset[k.teksti]"></a>
-    <span ng-if="kieli === k.tunnus" ng-bind="i18n.yleiset[k.teksti]"></span>
-  </li>
-</ul>
