@@ -1,20 +1,27 @@
 -- Toimipaikat pitää nollata koska ei voida olla varmoja onko uudelle primary keylle tullut duplikaatteja
 truncate toimipaikka;
+--;;
 alter table toimipaikka add unique (toimipaikkakoodi);
+--;;
 alter table kysely
     add column toimipaikka character varying(7),
     add constraint kysely_toimipaikka_fk foreign key (toimipaikka) references toimipaikka(toimipaikkakoodi);
+--;;
 alter table kysymysryhma
     add column toimipaikka character varying(7),
     add constraint kysymysryhma_toimipaikka_fk foreign key (toimipaikka) references toimipaikka(toimipaikkakoodi);
+--;;
 alter table kyselypohja
     add column toimipaikka character varying(7),
     add constraint kyselypohja_toimipaikka_fk foreign key (toimipaikka) references toimipaikka(toimipaikkakoodi);
+--;;
 alter table vastaajatunnus
     add column valmistavan_koulutuksen_toimipaikka character varying(10),
     add constraint vastaajatunnus_valmistavan_koulutuksen_toimipaikka_fkey foreign key (valmistavan_koulutuksen_toimipaikka) references toimipaikka(toimipaikkakoodi);
+--;;
 
 drop view kysely_organisaatio_view;
+--;;
 create view kysely_organisaatio_view
 AS
  SELECT k.kyselyid,
@@ -38,9 +45,12 @@ UNION ALL
     k.toimipaikka
    FROM kysely k
   WHERE k.koulutustoimija IS NOT NULL;
+--;;
 grant select on kysely_organisaatio_view to PUBLIC;
+--;;
 
 drop view kysymysryhma_organisaatio_view;
+--;;
 create view kysymysryhma_organisaatio_view
 AS
  SELECT kr.kysymysryhmaid,
@@ -67,9 +77,12 @@ UNION ALL
     kr.valtakunnallinen
    FROM kysymysryhma kr
   WHERE kr.koulutustoimija IS NOT NULL OR kr.valtakunnallinen = true;
+--;;
 grant select on kysymysryhma_organisaatio_view to PUBLIC;
+--;;
 
 drop view kyselypohja_organisaatio_view;
+--;;
 create view kyselypohja_organisaatio_view
 AS
  SELECT kp.kyselypohjaid,
@@ -96,7 +109,9 @@ UNION ALL
     kp.valtakunnallinen
    FROM kyselypohja kp
   WHERE kp.koulutustoimija IS NOT NULL OR kp.valtakunnallinen = true;
+--;;
 grant select on kyselypohja_organisaatio_view to PUBLIC;
+--;;
 
 create view kayttotilasto_view
 AS
@@ -121,10 +136,14 @@ AS
      JOIN kysely_organisaatio_view kov ON kov.kyselyid = kt.kyselyid
   GROUP BY kov.koulutustoimija, kov.oppilaitos, kov.toimipaikka, vt.tutkintotunnus, kt.kyselyid, k.nimi_fi
   ORDER BY kov.koulutustoimija, kov.oppilaitos, vt.tutkintotunnus, kt.kyselyid;
+--;;
 grant select on kayttotilasto_view to PUBLIC;
+--;;
 
 -- Haetaan kaikki organisaatiot uudestaan
 truncate organisaatiopalvelu_log;
+--;;
 -- Tämän pk vaihdon voi tehdä vasta kun duplikaattitoimipaikkakoodit on siivottu
 alter table toimipaikka drop constraint toimipaikka_pkey;
+--;;
 alter table toimipaikka add primary key (toimipaikkakoodi);

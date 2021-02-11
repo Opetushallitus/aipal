@@ -1,1 +1,0 @@
-ALTER TABLE kyselykerta ADD COLUMN metadata JSON;

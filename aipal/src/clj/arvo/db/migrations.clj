@@ -10,8 +10,10 @@
   (log/info "Ajetaan kantamigraatiot" args)
   (let [db-conf (:db @asetukset)
         config {:store :database
+                :init-script "init.sql"
                 :db {:connection-uri (str "jdbc:postgresql://" (:host db-conf)
                                           "/"(:name db-conf)"?user="(:migration-user db-conf)"&password=" (:migration-password db-conf))}}]
+    (when (empty? (migratus/completed-list config)) (migratus/init config))
     (case (first args)
       "migrate"
       (if (> (count args) 1)

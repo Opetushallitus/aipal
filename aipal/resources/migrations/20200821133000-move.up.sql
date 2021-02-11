@@ -1,28 +1,41 @@
 ALTER TABLE vastaajatunnus ALTER COLUMN kohteiden_lkm DROP NOT NULL;
+--;;
 
 INSERT INTO kyselytyyppi(id, nimi_fi, nimi_sv, nimi_en) VALUES ('move','Move!', 'Move!', 'Move!');
+--;;
 
 INSERT INTO kyselytyyppi_kentat(kentta_id, kentta_fi, kentta_sv, kentta_en, raportointi, kyselytyyppi)
 VALUES ('koulu', 'Koulu','koulu','koulu', '{"vipunen": false}', 'move');
+--;;
 
 INSERT INTO kyselytyyppi_kentat(kentta_id, kentta_fi, kentta_sv, kentta_en, raportointi, kyselytyyppi)
 VALUES ('kunta', 'Kunta','kunta','kunta', '{"vipunen": false}', 'move');
+--;;
 
 INSERT INTO kyselytyyppi_kentat(kentta_id, kentta_fi, kentta_sv, kentta_en, raportointi, kyselytyyppi)
 VALUES ('maakunta', 'Maakunta','maakunta','maakunta', '{"vipunen": false}', 'move');
+--;;
 
 INSERT INTO kyselytyyppi_kentat(kentta_id, kentta_fi, kentta_sv, kentta_en, raportointi, kyselytyyppi)
 VALUES ('maakunta', 'Maakunta','maakunta','maakunta', '{"vipunen": false}', 'move');
+--;;
 
 ALTER TABLE vastaus ALTER COLUMN numerovalinta TYPE DECIMAL;
+--;;
 
 ALTER TABLE kysymys_jatkokysymys ADD COLUMN nakyvissa BOOLEAN DEFAULT TRUE;
+--;;
 
 ALTER TABLE vastaaja DROP COLUMN vastannut;
+--;;
 -- ALTER TABLE kysymysryhma DROP COLUMN oppilaitos;
+--;;
 ALTER TABLE kysymysryhma DROP COLUMN voimassa_alkupvm;
+--;;
 ALTER TABLE kysymysryhma DROP COLUMN voimassa_loppupvm;
-ALTER TABLE kysymysryhma DROP COLUMN ntm_kysymykset;
+--;;
+-- ALTER TABLE kysymysryhma DROP COLUMN ntm_kysymykset;
+--;;
 
 CREATE TABLE email_log (
     id SERIAL PRIMARY KEY,
@@ -32,6 +45,7 @@ CREATE TABLE email_log (
     taustatiedot JSONB,
     status TEXT
 );
+--;;
 
 CREATE OR REPLACE FUNCTION jakauma_sfunc(jakauma NUMERIC[], arvo NUMERIC) RETURNS NUMERIC[] AS $$
 BEGIN
@@ -45,6 +59,7 @@ BEGIN
     RETURN jakauma;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
+--;;
 
 CREATE OR REPLACE FUNCTION jakauma_ffunc(jakauma NUMERIC[]) RETURNS NUMERIC[] AS $$
 DECLARE
@@ -58,8 +73,9 @@ BEGIN
     RETURN jakauma;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
-
+--;;
 DROP AGGREGATE IF EXISTS jakauma(NUMERIC);
+--;;
 CREATE AGGREGATE jakauma(NUMERIC) (
     SFUNC = jakauma_sfunc,
     FINALFUNC = jakauma_ffunc,

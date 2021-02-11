@@ -8,7 +8,7 @@
             [clj-time.coerce :as c]
             [clojure.java.io :as io]
             [clojure.tools.logging :as log])
-  (:import (org.postgresql.jdbc4 Jdbc4Array)
+  (:import (org.postgresql.jdbc PgArray)
            (org.postgresql.util PGobject)
            (java.sql Timestamp Date PreparedStatement)
            (clojure.lang IPersistentVector IPersistentMap)))
@@ -58,7 +58,7 @@
   ;java.sql.Timestamp
   ;(result-set-read-column [v _ _] (c/from-sql-time v))
 
-  Jdbc4Array
+  PgArray
   (result-set-read-column [v _ _] (vec (.getArray v)))
 
   PGobject
