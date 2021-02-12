@@ -2,6 +2,9 @@
   (:import [java.sql.BatchUpdateException])
   (:require [compojure.api.sweet :refer :all]
             [schema.core :as s]
+            [ring.util.http-status :as status]
+            [ring.util.http-response :as response]
+            [arvo.util :refer [on-validation-error]]
             [aipal.arkisto.vastaajatunnus :as vastaajatunnus]
             [aipal.arkisto.oppilaitos :as oppilaitos]
             [aipal.arkisto.tutkinto :as tutkinto]
@@ -16,13 +19,13 @@
 
 (s/defschema Amispalaute-tunnus
   {:vastaamisajan_alkupvm s/Str ;ISO formaatti
-   :kyselyn_tyyppi s/Str
+   :kyselyn_tyyppi s/Str  ;kyselykerran metatieto tarkenne
    :tutkintotunnus s/Str ;6 merkkiä
-   :tutkinnon_suorituskieli s/Str ;fi, sv, en
+   :tutkinnon_suorituskieli (s/enum "fi" "sv" "en")
    :koulutustoimija_oid s/Str ;organisaatio-oid
-   :oppilaitos_oid s/Str ;organisaatio-oid
-   :toimipiste_oid (s/maybe s/Str) ;organisaatio-oid
-   :hankintakoulutuksen_toteuttaja (s/maybe s/Str)
+   (s/optional-key :oppilaitos_oid) (s/maybe s/Str) ;organisaatio-oid
+   (s/optional-key :toimipiste_oid) (s/maybe s/Str) ;organisaatio-oid
+   (s/optional-key :hankintakoulutuksen_toteuttaja) (s/maybe s/Str)
    :request_id s/Str})
 
 (s/defschema Automaattitunnus
@@ -37,18 +40,6 @@
 (s/defschema Tunnus-status
   {})
 
-
-(defn on-validation-error [message]
-    {:status 400
-      :headers {"Content-Type" "application/json"}
-      :body {:status 400
-              :detail message}})
-
-(defn on-403 [request]
-  {:status  403
-   :headers {"Content-Type" "application/json"}
-   :body   {:status 403
-            :detail  (str "Access to " (:uri request) " is forbidden")}})
 
 (def palaute-voimassaolo (time/months 6))
 (def amispalaute-voimassaolo (time/days 30))
@@ -77,13 +68,13 @@
         kyselykerta-id (kyselykerta/hae-automaatti-kyselykerta (:koulutustoimija ent_oppilaitos) kyselytyyppi tarkenne)
         _ (log/info "Automaattikyselykerta: " kyselykerta-id)]
     (automaatti-vastaajatunnus :palaute
-      {:kieli kieli
-       :toimipaikka nil
-       :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
-       :tutkinto (ent_tutkinto :tutkintotunnus)
-       :kunta kunta
-       :koulutusmuoto koulutusmuoto
-       :kyselykertaid (:kyselykertaid kyselykerta-id)})))
+                               {:kieli kieli
+                                :toimipaikka nil
+                                :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
+                                :tutkinto (ent_tutkinto :tutkintotunnus)
+                                :kunta kunta
+                                :koulutusmuoto koulutusmuoto
+                                :kyselykertaid (:kyselykertaid kyselykerta-id)})))
 
 
 (defn rekry-tunnus [tunnus]
@@ -91,33 +82,33 @@
         ent_oppilaitos (oppilaitos/hae oppilaitos)
         kyselykerta-id (kyselykerta/hae-rekrykysely oppilaitos vuosi)]
     (automaatti-vastaajatunnus :rekry
-      {:kyselykertaid (:kyselykertaid kyselykerta-id)
-       :henkilonumero henkilonumero
-       :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
-       :kieli "fi"
-       :tutkinto nil})))
+                               {:kyselykertaid (:kyselykertaid kyselykerta-id)
+                                :henkilonumero henkilonumero
+                                :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
+                                :kieli "fi"
+                                :tutkinto nil})))
 
 (defn amispalaute-tunnus [data]
- (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
-       kyselykertaid (:kyselykertaid (kyselykerta/hae-automaatti-kyselykerta koulutustoimija "amispalaute" (:kyselyn_tyyppi data)))
-       alkupvm (:vastaamisajan_alkupvm data)]
-   (automaatti-vastaajatunnus :amispalaute
-     {:kyselykertaid kyselykertaid
-      :voimassa_alkupvm (when alkupvm (f/parse (f/formatters :date) alkupvm))
-      :koulutustoimija koulutustoimija
-      :kieli (:tutkinnon_suorituskieli data)
-      :toimipaikka (:toimipaikkakoodi (db/hae-oidilla {:taulu "toimipaikka" :oid (:toimipiste_oid data)}))
-      :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
-      :tutkinto (:tutkintotunnus data)
-      :hankintakoulutuksen_toteuttaja (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija":oid (:hankintakoulutuksen_toteuttaja data)}))
-      :tarkenne (:kyselyn_tyyppi data)})))
+  (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
+        kyselykertaid (:kyselykertaid (kyselykerta/hae-automaatti-kyselykerta koulutustoimija "amispalaute" (:kyselyn_tyyppi data)))
+        alkupvm (:vastaamisajan_alkupvm data)]
+    (automaatti-vastaajatunnus :amispalaute
+                               {:kyselykertaid kyselykertaid
+                                :voimassa_alkupvm (when alkupvm (f/parse (f/formatters :date) alkupvm))
+                                :koulutustoimija koulutustoimija
+                                :kieli (:tutkinnon_suorituskieli data)
+                                :toimipaikka (:toimipaikkakoodi (db/hae-oidilla {:taulu "toimipaikka" :oid (:toimipiste_oid data)}))
+                                :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
+                                :tutkinto (:tutkintotunnus data)
+                                :hankintakoulutuksen_toteuttaja (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija":oid (:hankintakoulutuksen_toteuttaja data)}))
+                                :tarkenne (:kyselyn_tyyppi data)})))
 
 (defn handle-error
   ([error request-id]
    (log/error "Virhe vastaajatunnuksen luonnissa: "
               (if request-id (str "request-id " request-id " - ") "")
               (:msg error))
-   {:status 404 :body error})
+   (response/not-found error))
   ([error]
    (handle-error error nil)))
 
@@ -146,48 +137,53 @@
 
 (defroutes kyselyynohjaus-v1
   (POST "/" []
-    :body [avopdata s/Any]
-    (try
-      (let [vastaajatunnus (palaute-tunnus avopdata)]
-        (lisaa-kyselyynohjaus! vastaajatunnus))
-      (catch java.lang.AssertionError e1
-        (log/error e1 "Mandatory fields missing")
-        (on-validation-error (format "Mandatory fields are missing or not found")))
-      (catch Exception e2
-        (log/error e2 "Unexpected error")
-        (on-validation-error (format "Unexpected error: %s" (.getMessage e2))))))
+        :body [avopdata s/Any]
+        (try
+          (let [vastaajatunnus (palaute-tunnus avopdata)]
+            (lisaa-kyselyynohjaus! vastaajatunnus))
+          (catch java.lang.AssertionError e1
+            (log/error e1 "Mandatory fields missing")
+            (on-validation-error (format "Mandatory fields are missing or not found")))
+          (catch Exception e2
+            (log/error e2 "Unexpected error")
+            (on-validation-error (format "Unexpected error: %s" (.getMessage e2))))))
   (POST "/rekry" []
-    :body [rekrydata s/Any]
-    (try
-      (let [vastaajatunnus (rekry-tunnus rekrydata)]
-        (lisaa-kyselyynohjaus! vastaajatunnus))
-      (catch java.lang.AssertionError e1
-        (log/error e1 "Mandatory fields missing")
-        (on-validation-error (format "Mandatory fields are missing or not found")))
-      (catch Exception e2
-        (log/error e2 "Unexpected error")
-        (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))))))
+        :body [rekrydata s/Any]
+        (try
+          (let [vastaajatunnus (rekry-tunnus rekrydata)]
+            (lisaa-kyselyynohjaus! vastaajatunnus))
+          (catch java.lang.AssertionError e1
+            (log/error e1 "Mandatory fields missing")
+            (on-validation-error (format "Mandatory fields are missing or not found")))
+          (catch Exception e2
+            (log/error e2 "Unexpected error")
+            (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))))))
 
 (defroutes ehoks-v1
   (POST "/" []
-    :body [data Amispalaute-tunnus]
-    :return s/Any
-    :summary "Kyselylinkin luominen"
-    :description (str "Päivämäärät ovat ISO-formaatin mukaisia. Suorituskieli on fi, sv tai en. Tutkintotunnus
+        :body [data Amispalaute-tunnus]
+        :responses {status/ok {:schema {:kysely_linkki s/Str :voimassa_loppupvm org.joda.time.DateTime}}
+                    status/not-found {:schema {:ei-kyselykertaa s/Any} :description "Kyselykertaa ei ole olemassa"}}
+        :summary "Kyselylinkin luominen"
+        :description (str "Päivämäärät ovat ISO-formaatin mukaisia. Suorituskieli on fi, sv tai en. Tutkintotunnus
         on opintopolun koulutus koodiston 6 numeroinen koodi.")
-    (let [tunnus (amispalaute-tunnus data)]
-      (log/info "Luodaan automaattitunnus, request-id:" (:request_id data))
-      (when (:kyselykertaid tunnus ) (lisaa-amispalaute-automatisointi! tunnus))
-      (lisaa-automaattitunnus! tunnus (:request_id data))))
+        (let [tunnus (amispalaute-tunnus data)]
+          (log/info "Luodaan automaattitunnus, request-id:" (:request_id data))
+          (when (:kyselykertaid tunnus ) (lisaa-amispalaute-automatisointi! tunnus))
+          (lisaa-automaattitunnus! tunnus (:request_id data))))
   (GET "/status/:tunnus" []
-    :path-params [tunnus :- s/Str]
-    (let [status (db/vastaajatunnus-status {:tunnus tunnus})]
-      (api-response (dissoc status :vastaajatunnusid))))
+       :path-params [tunnus :- s/Str]
+       :return (s/maybe {:tunnus s/Str :voimassa_loppupvm org.joda.time.DateTime :vastattu s/Bool})
+       :summary "Kyselylinkin tila"
+       (let [status (db/vastaajatunnus-status {:tunnus tunnus})]
+         (api-response (dissoc status :vastaajatunnusid))))
   (DELETE "/:tunnus" []
-    :path-params [tunnus :- s/Str]
-    (let [status (db/vastaajatunnus-status {:tunnus tunnus})]
-      (if-not (:vastattu status)
-        (do (db/poista-vastaajatunnus! {:vastaajatunnusid (:vastaajatunnusid status)})
-            (api-response "Tunnus poistettu"))
-        {:status 404 :body "Tunnuksella on jo vastauksia"}))))
-
+          :path-params [tunnus :- s/Str]
+          :responses {status/ok {:schema s/Str :description "Tunnus poistettu"}
+                      status/not-found {:schema s/Str :description "Tunnuksella on jo vastauksia"}}
+          :summary "Poista kyselylinkki"
+          (let [status (db/vastaajatunnus-status {:tunnus tunnus})]
+            (if-not (:vastattu status)
+              (do (db/poista-vastaajatunnus! {:vastaajatunnusid (:vastaajatunnusid status)})
+                (api-response "Tunnus poistettu"))
+              (response/not-found "Tunnuksella on jo vastauksia")))))

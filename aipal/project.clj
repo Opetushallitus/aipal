@@ -40,7 +40,7 @@
                  [org.postgresql/postgresql "42.2.18.jre7"]
                  [org.slf4j/slf4j-api "1.7.16"]
                  [peridot "0.4.3"]
-                 [prismatic/schema "1.0.5"]
+                 [prismatic/schema "1.1.12"]
                  [org.clojure/tools.reader "1.3.2"]
                  [ring/ring-core "1.7.1"]
                  [ring/ring-headers "0.3.0"]
