@@ -35,10 +35,11 @@ WHERE k.tila != 'luonnos'
   AND coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 --~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
 --~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
+--~(if (:kyselyid params) "AND k.kyselyid = :kyselyid")
 --~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
 --~(if (:vipunen params) "AND kys.vastaustyyppi != 'vapaateksti'")
 --~(if (:since params) "AND v.vastausid > :since")
-ORDER BY v.vastausid ASC LIMIT :pagelength;
+ORDER BY v.vastausid LIMIT :pagelength;
 
 
 -- :name export-kysymykset :? :*
@@ -54,12 +55,13 @@ JOIN kysely kys ON kkr.kyselyid = kys.kyselyid
 -- TODO: Vapaatekstien ja omien kysymysten rajaus pois tarvittaessa (vipunen)
 WHERE kr.tila != 'luonnos'
 AND kys.tyyppi IN (:v*:kyselytyypit)
+--~(if (:kyselyid params) "AND kys.kyselyid = :kyselyid")
 AND (kys.koulutustoimija = :koulutustoimija
-    --~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
+--~(if (:vipunen params) "OR k.valtakunnallinen = TRUE")
 );
 
 -- :name export-taustatiedot :? :*
-SELECT v.vastaajaid,vt.vastaajatunnusid, vt.tunnus AS vastaajatunnus,
+SELECT v.vastaajaid,vt.vastaajatunnusid, kk.kyselykertaid, vt.tunnus AS vastaajatunnus,
   to_char(vt.voimassa_alkupvm, 'YYYY-MM-DD') AS vastaajatunnus_alkupvm,
   to_char(vt.voimassa_loppupvm, 'YYYY-MM-DD') AS vastaajatunnus_loppupvm,
   vt.valmistavan_koulutuksen_oppilaitos AS oppilaitos, vt.suorituskieli,
@@ -70,9 +72,10 @@ JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k on kk.kyselyid = k.kyselyid
 WHERE coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 AND(k.koulutustoimija = :koulutustoimija
-      --~(if (:vipunen params) "OR TRUE")
+--~(if (:vipunen params) "OR TRUE")
 )
 AND k.tyyppi IN (:v*:kyselytyypit)
+--~(if (:kyselyid params) "AND k.kyselyid = :kyselyid")
 --~(if (:since params) "AND v.vastaajaid > :since")
 ORDER BY v.vastaajaid ASC LIMIT :pagelength;
 
@@ -83,6 +86,7 @@ JOIN kysely k on kkr.kyselyid = k.kyselyid
 WHERE (k.koulutustoimija = :koulutustoimija
 --~(if (:vipunen params) "OR TRUE")
 )
+--~(if (:kyselyid params) "AND kkr.kyselyid = :kyselyid")
 AND k.tyyppi IN (:v*:kyselytyypit);
 
 -- :name export-luodut-tunnukset :? :*
@@ -95,8 +99,24 @@ LEFT JOIN vastaajatunnus vt ON kk.kyselykertaid = vt.kyselykertaid
 LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
 AND coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
 --~(if-not (:vipunen params) "AND k.koulutustoimija = :koulutustoimija")
+--~(if (:kyselyid params) "AND k.kyselyid = :kyselyid")
 GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto', kuukausi
 ORDER BY kk.kyselykertaid, vt.taustatiedot->>'tutkinto';
+
+-- :name export-monivalintavaihtoehdot :? :*
+SELECT m.kysymysid, m.jarjestys, m.teksti_fi, m.teksti_sv, m.teksti_en
+FROM kysely k
+JOIN kysely_kysymysryhma kkr ON k.kyselyid = kkr.kyselyid
+JOIN kysymysryhma kr ON kkr.kysymysryhmaid = kr.kysymysryhmaid
+JOIN kysymys kys ON kkr.kysymysryhmaid = kys.kysymysryhmaid
+JOIN monivalintavaihtoehto m on kys.kysymysid = m.kysymysid
+WHERE k.tyyppi IN (:v*:kyselytyypit)
+AND (
+k.koulutustoimija = :koulutustoimija
+--~(if (:vipunen params) "OR kr.valtakunnallinen = TRUE")
+)
+--~(if (:kyselyid params) "AND k.kyselyid = :kyselyid")
+;
 
 -- :name hae-api-kayttaja :? :1
 SELECT * FROM api_kayttajat WHERE tunnus = :tunnus;
