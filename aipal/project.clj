@@ -37,7 +37,7 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [org.jasig.cas.client/cas-client-core "3.2.1"]
-                 [org.postgresql/postgresql "42.2.18.jre7"]
+                 [org.postgresql/postgresql "42.2.18"]
                  [org.slf4j/slf4j-api "1.7.16"]
                  [peridot "0.4.3"]
                  [prismatic/schema "1.1.12"]
@@ -73,7 +73,7 @@
   :source-paths ["src/clj"]
   :jvm-opts ["-Duser.timezone=UTC"]
   :java-source-paths ["src/java"]
-  :javac-options ["-target" "1.7" "-source" "1.7"]
+  :javac-options ["-target" "1.8" "-source" "1.8"]
   :test-paths ["test/clj"]
   :test-selectors {:default  (complement (some-fn :integraatio :performance))
                    :integraatio (complement (some-fn :performance))
