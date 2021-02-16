@@ -34,6 +34,7 @@
             arvo.rest-api.tiedote
             arvo.rest-api.export
             arvo.rest-api.move
+            arvo.rest-api.admin
             [compojure.api.middleware :as mw]
             [arvo.auth.api :refer [wrap-authentication]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]))
@@ -92,4 +93,5 @@
     (context "/api/public/luovastaajatunnus" [] :no-doc true :tags ["vastaajatunnus"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.automaattitunnus/kyselyynohjaus-v1)
     (context "/api/public/henkilo" [] :no-doc true :tags ["henkilooidit"] :middleware [#(wrap-authentication :kyselyynohjaus %)] arvo.rest-api.henkilo/hae-kaikki-oidit)
     (context "/api/vastauslinkki/v1" [] :tags ["vastauslinkki"] :middleware [#(wrap-authentication :ehoks_tunnukset %)] arvo.rest-api.automaattitunnus/ehoks-v1)
+    (context "/api/admin" [] :no-doc true :tags ["admin"] :middleware [#(wrap-authentication :admin %)] arvo.rest-api.admin/admin-routes)
     (r/not-found "Not found")))

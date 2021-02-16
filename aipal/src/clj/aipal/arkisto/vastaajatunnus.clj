@@ -106,6 +106,7 @@
                    :voimassa_alkupvm
                    :voimassa_loppupvm
                    :kohteiden_lkm
+                   :metatiedot
                    :valmistavan_koulutuksen_oppilaitos])
 
 (def legacy-props [:toimipaikka :kunta :koulutusmuoto :kieli :tutkinto])
@@ -113,6 +114,7 @@
 (defn vastaajatunnus-base-data [vastaajatunnus tunnus]
   (-> vastaajatunnus
       (assoc :tunnus tunnus)
+      (assoc :metatiedot nil)
       (select-keys (concat common-props legacy-props))))
 
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))

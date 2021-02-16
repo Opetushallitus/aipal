@@ -18,11 +18,11 @@ ORDER BY ktk.id;
 
 
 -- :name lisaa-vastaajatunnus! :<!
-INSERT INTO vastaajatunnus (tunnus, kyselykertaid, suorituskieli, tutkintotunnus, taustatiedot,
+INSERT INTO vastaajatunnus (tunnus, kyselykertaid, suorituskieli, tutkintotunnus, taustatiedot, metatiedot,
                           kohteiden_lkm,
                           valmistavan_koulutuksen_oppilaitos,
                           voimassa_alkupvm, voimassa_loppupvm, luotu_kayttaja, muutettu_kayttaja, luotuaika, muutettuaika)
-VALUES (:tunnus, :kyselykertaid, :kieli, :tutkinto, :taustatiedot,
+VALUES (:tunnus, :kyselykertaid, :kieli, :tutkinto, :taustatiedot, :metatiedot,
       :kohteiden_lkm, :valmistavan_koulutuksen_oppilaitos,
       :voimassa_alkupvm, :voimassa_loppupvm, :kayttaja, :kayttaja, now(), now())
 RETURNING vastaajatunnusid;
