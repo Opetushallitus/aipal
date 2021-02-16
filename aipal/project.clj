@@ -32,12 +32,12 @@
                  [buddy/buddy-hashers "1.3.0"]
                  [org.clojars.noidi/clj-cas-client "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1" :exclusions [ring]]
                  [org.clojars.pntblnk/clj-ldap "0.0.9"]
-                 [org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojure "1.10.2"]
                  [org.clojure/core.cache "0.6.4"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [org.jasig.cas.client/cas-client-core "3.2.1"]
-                 [org.postgresql/postgresql "42.2.18.jre7"]
+                 [org.postgresql/postgresql "42.2.18"]
                  [org.slf4j/slf4j-api "1.7.16"]
                  [peridot "0.4.3"]
                  [prismatic/schema "1.1.12"]
@@ -59,6 +59,7 @@
 
   :plugins [[test2junit "1.0.1"]
             [codox "0.8.12"]
+            [lein-ancient "0.6.15"]
             [jonase/eastwood "0.2.3"]]
   :profiles {:dev {:source-paths ["dev"]
                    :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006"]
@@ -73,7 +74,7 @@
   :source-paths ["src/clj"]
   :jvm-opts ["-Duser.timezone=UTC"]
   :java-source-paths ["src/java"]
-  :javac-options ["-target" "1.7" "-source" "1.7"]
+  :javac-options ["-target" "1.8" "-source" "1.8"]
   :test-paths ["test/clj"]
   :test-selectors {:default  (complement (some-fn :integraatio :performance))
                    :integraatio (complement (some-fn :performance))

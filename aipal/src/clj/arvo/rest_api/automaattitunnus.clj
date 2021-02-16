@@ -1,5 +1,4 @@
 (ns arvo.rest-api.automaattitunnus
-  (:import [java.sql.BatchUpdateException])
   (:require [compojure.api.sweet :refer :all]
             [schema.core :as s]
             [ring.util.http-status :as status]
