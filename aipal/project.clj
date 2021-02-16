@@ -32,7 +32,7 @@
                  [buddy/buddy-hashers "1.3.0"]
                  [org.clojars.noidi/clj-cas-client "0.0.6-4ae43963cb458579a3813f9dda4fba52ad4d9607-ring-1.2.1" :exclusions [ring]]
                  [org.clojars.pntblnk/clj-ldap "0.0.9"]
-                 [org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojure "1.10.2"]
                  [org.clojure/core.cache "0.6.4"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.clojure/core.match "0.3.0-alpha4"]
@@ -59,6 +59,7 @@
 
   :plugins [[test2junit "1.0.1"]
             [codox "0.8.12"]
+            [lein-ancient "0.6.15"]
             [jonase/eastwood "0.2.3"]]
   :profiles {:dev {:source-paths ["dev"]
                    :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006"]
