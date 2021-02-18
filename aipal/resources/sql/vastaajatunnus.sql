@@ -34,6 +34,11 @@ valmistavan_koulutuksen_oppilaitos = :oppilaitos,
 taustatiedot = :taustatiedot
 WHERE tunnus = :vastaajatunnus;
 
+-- :name paivita-metatiedot! :! :n
+UPDATE vastaajatunnus
+SET metatiedot = COALESCE(metatiedot || :metatiedot, :metatiedot), muutettu_kayttaja = :kayttaja
+WHERE tunnus = :tunnus AND luotu_kayttaja = :kayttaja;
+
 -- :name hae-viimeisin-tutkinto :? :*
 SELECT t.* FROM vastaajatunnus vt
 JOIN tutkinto t ON t.tutkintotunnus = vt.tutkintotunnus
@@ -44,7 +49,7 @@ ORDER BY vt.luotuaika DESC;
 
 -- :name hae-vastaajatunnus :? :*
 SELECT vt.vastaajatunnusid, vt.kyselykertaid, vt.tutkintotunnus, vt.tunnus, vt.lukittu, vt.luotu_kayttaja, vt.muutettu_kayttaja,
-       vt.luotuaika, vt.muutettuaika, vt.valmistavan_koulutuksen_oppilaitos,
+       vt.luotuaika, vt.muutettuaika, vt.valmistavan_koulutuksen_oppilaitos, vt.metatiedot,
        vt.suorituskieli, vt.kunta, vt.taustatiedot, vt.voimassa_alkupvm, vt.voimassa_loppupvm, vt.kohteiden_lkm, vt.kaytettavissa,
 t.nimi_fi, t.nimi_sv, t.nimi_en, kaytettavissa(vt) AS kaytettavissa, (vt.taustatiedot ->> 'koulutusmuoto') AS koulutusmuoto,
 COALESCE(COALESCE(vt.voimassa_loppupvm, kk.voimassa_loppupvm, k.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE) AS muokattavissa,

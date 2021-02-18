@@ -114,7 +114,6 @@
 (defn vastaajatunnus-base-data [vastaajatunnus tunnus]
   (-> vastaajatunnus
       (assoc :tunnus tunnus)
-      (assoc :metatiedot nil)
       (select-keys (concat common-props legacy-props))))
 
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
@@ -142,8 +141,9 @@
               tallennettava-tunnus (-> base-data
                                        (assoc :taustatiedot taustatiedot)
                                        (update :voimassa_alkupvm to-sql-date)
-                                       (update :voimassa_loppupvm to-sql-date))
-              vastaajatunnusid (:vastaajatunnusid (db/lisaa-vastaajatunnus! (assoc tallennettava-tunnus :kayttaja (:oid *kayttaja*))))]
+                                       (update :voimassa_loppupvm to-sql-date)
+                                       (assoc :kayttaja (:oid *kayttaja*)))
+              vastaajatunnusid (:vastaajatunnusid (db/lisaa-vastaajatunnus! tallennettava-tunnus))]
           (hae (:kyselykertaid tallennettava-tunnus) vastaajatunnusid))))))
 
 (defn lisaa-automaattitunnus! [vastaajatunnus]

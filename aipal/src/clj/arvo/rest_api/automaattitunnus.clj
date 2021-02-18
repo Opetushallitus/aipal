@@ -16,6 +16,9 @@
             [aipal.asetukset :refer [asetukset]]
             [clj-time.format :as f]))
 
+(s/defschema Vastaajatunnus-metatiedot
+  {(s/optional-key :tila) (s/enum "success" "failure" "bounced")})
+
 (s/defschema Amispalaute-tunnus
   {:vastaamisajan_alkupvm s/Str ;ISO formaatti
    :kyselyn_tyyppi s/Str  ;kyselykerran metatieto tarkenne
@@ -25,7 +28,8 @@
    (s/optional-key :oppilaitos_oid) (s/maybe s/Str) ;organisaatio-oid
    (s/optional-key :toimipiste_oid) (s/maybe s/Str) ;organisaatio-oid
    (s/optional-key :hankintakoulutuksen_toteuttaja) (s/maybe s/Str)
-   :request_id s/Str})
+   :request_id s/Str,
+   (s/optional-key :metatiedot) Vastaajatunnus-metatiedot})
 
 (s/defschema Automaattitunnus
   {:oppilaitos s/Str
@@ -35,10 +39,6 @@
    :kyselytyyppi s/Str
    (s/optional-key :tarkenne) s/Str
    (s/optional-key :koulutusmuoto) s/Int})
-
-(s/defschema Tunnus-status
-  {})
-
 
 (def palaute-voimassaolo (time/months 6))
 (def amispalaute-voimassaolo (time/days 30))
@@ -100,7 +100,20 @@
                                 :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
                                 :tutkinto (:tutkintotunnus data)
                                 :hankintakoulutuksen_toteuttaja (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija":oid (:hankintakoulutuksen_toteuttaja data)}))
-                                :tarkenne (:kyselyn_tyyppi data)})))
+                                :tarkenne (:kyselyn_tyyppi data)
+                                :metatiedot (:metatiedot data)})))
+
+(defonce sallitut-metatiedot [:tila])
+
+(defn paivita-metatiedot [tunnus metatiedot]
+  (let [paivitettavat-metatiedot (select-keys metatiedot sallitut-metatiedot)
+        paivitettava-vastaajatunnus {:metatiedot paivitettavat-metatiedot
+                                     :tunnus tunnus
+                                     :kayttaja aipal.infra.kayttaja.vakiot/integraatio-uid}
+        rivia-paivitetty (db/paivita-metatiedot! paivitettava-vastaajatunnus)]
+    (if (not= rivia-paivitetty 0)
+      (api-response paivitettavat-metatiedot)
+      (response/not-found "Ei vastaajatunnusta integraatiokäyttäjälle"))))
 
 (defn handle-error
   ([error request-id]
@@ -170,6 +183,14 @@
           (log/info "Luodaan automaattitunnus, request-id:" (:request_id data))
           (when (:kyselykertaid tunnus ) (lisaa-amispalaute-automatisointi! tunnus))
           (lisaa-automaattitunnus! tunnus (:request_id data))))
+  (PATCH "/:tunnus/metatiedot" []
+         :path-params [tunnus :- s/Str]
+         :body [metatiedot Vastaajatunnus-metatiedot]
+         :responses {status/ok {:schema Vastaajatunnus-metatiedot}
+                     status/not-found {:schema s/Str :description "Ei vastaajatunnusta integraatiokäyttäjälle"}}
+         :summary "Metatietojen päivitys"
+         :description "Päivitä vastaajatunnuksen valitut metatiedot. Ei voi käyttää metatietokentän poistamiseen."
+         (paivita-metatiedot tunnus metatiedot))
   (GET "/status/:tunnus" []
        :path-params [tunnus :- s/Str]
        :return (s/maybe {:tunnus s/Str :voimassa_loppupvm org.joda.time.DateTime :vastattu s/Bool})
