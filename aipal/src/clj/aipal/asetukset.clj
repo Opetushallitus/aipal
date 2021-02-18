@@ -82,7 +82,7 @@
    :cas-auth-server {:url "https://virkailija.testiopintopolku.fi/cas"
                      :unsafe-https true
                      :enabled false}
-   :vastaus-base-url "http://127.0.0.1:8083"
+   :vastaus-base-url "http://localhost:8088"
    :avopfi-shared-secret "secret"
    :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
    :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
