@@ -260,13 +260,9 @@
 
 (defn luo-vastaajan-vastausrivit [[_ answers] kysymykset taustatieto-fields choices selitteet lang]
   (let [formatted-answers (map #(format-vastaus % selitteet lang) answers)
-        taustatiedot (select-values-or-nil (first formatted-answers) taustatieto-fields)
-        taustakysymysten-vastaukset (->> kysymykset
-                                         (filter :taustakysymys)
-                                         (map #(hae-vastaus % answers choices lang)))]
+        taustatiedot (select-values-or-nil (first formatted-answers) taustatieto-fields)]
     (->> kysymykset
-         (filter (complement :taustakysymys))
-         (map #(concat taustatiedot taustakysymysten-vastaukset
+         (map #(concat taustatiedot
                        [(translate-field "kysymysryhma" lang %) (translate-field "kysymys" lang %)
                         (hae-vastaus % answers choices lang)])))))
 
@@ -326,20 +322,15 @@
         translations (luo-käännökset taustatiedot lang)
         vastaukset (filter-not-allowed kyselytyyppi kysymykset (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid})))
         monivalintavaihtoehdot (hae-monivalinnat kysymykset)
-        taustakysymykset (->> kysymykset
-                              (filter :taustakysymys)
-                              (sort-by :jarjestys)
-                              (map #(translate-field "kysymys" lang %)))
-        header (create-header-row-single taustatieto-fields taustakysymykset translations)
+        header (create-header-row-single taustatieto-fields translations)
         vastausrivit (mapcat #(luo-vastaajan-vastausrivit % kysymykset taustatieto-fields monivalintavaihtoehdot selitteet lang) vastaukset)]
     (csv-response kyselyid lang (create-csv (cons header vastausrivit)))))
 
 (defn vastaajatunnus-url [tunnus]
   (str (:vastaus-base-url @asetukset) "/" (:tunnus tunnus)))
 
-(defn create-header-row-single [taustatieto-fields taustakysymykset translations]
+(defn create-header-row-single [taustatieto-fields translations]
   (concat (map #(get translations %) taustatieto-fields)
-          taustakysymykset
           (map #(get translations %) [:kysymysryhma :kysymys :vastaus])))
 
 (defn format-tunnus [tunnus selitteet lang]
