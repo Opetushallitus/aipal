@@ -114,6 +114,7 @@
 (defn vastaajatunnus-base-data [vastaajatunnus tunnus]
   (-> vastaajatunnus
       (assoc :tunnus tunnus)
+      (assoc :metatiedot vastaajatunnus)
       (select-keys (concat common-props legacy-props))))
 
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
@@ -137,6 +138,7 @@
     (doall
       (for [tunnus (get-vastaajatunnukset (:tunnusten-lkm vastaajatunnus))]
         (let [base-data (vastaajatunnus-base-data vastaajatunnus tunnus)
+              _ (log/info "BASEDATA" base-data)
               taustatiedot (format-taustatiedot kyselytyypin_kentat vastaajatunnus)
               tallennettava-tunnus (-> base-data
                                        (assoc :taustatiedot taustatiedot)
