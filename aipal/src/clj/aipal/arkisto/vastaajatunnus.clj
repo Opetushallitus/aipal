@@ -138,7 +138,6 @@
     (doall
       (for [tunnus (get-vastaajatunnukset (:tunnusten-lkm vastaajatunnus))]
         (let [base-data (vastaajatunnus-base-data vastaajatunnus tunnus)
-              _ (log/info "BASEDATA" base-data)
               taustatiedot (format-taustatiedot kyselytyypin_kentat vastaajatunnus)
               tallennettava-tunnus (-> base-data
                                        (assoc :taustatiedot taustatiedot)
