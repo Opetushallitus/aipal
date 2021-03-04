@@ -175,7 +175,7 @@
   (POST "/" []
         :body [data Amispalaute-tunnus]
         :responses {status/ok {:schema {:kysely_linkki s/Str :voimassa_loppupvm org.joda.time.DateTime}}
-                    status/not-found {:schema {:ei-kyselykertaa s/Any} :description "Kyselykertaa ei ole olemassa"}}
+                    status/not-found {:schema {:error s/Str :msg s/Str} :description "Kyselykertaa ei ole olemassa"}}
         :summary "Kyselylinkin luominen"
         :description (str "Päivämäärät ovat ISO-formaatin mukaisia. Suorituskieli on fi, sv tai en. Tutkintotunnus
         on opintopolun koulutus koodiston 6 numeroinen koodi.")

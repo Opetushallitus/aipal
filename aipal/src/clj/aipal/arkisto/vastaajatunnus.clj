@@ -114,7 +114,7 @@
 (defn vastaajatunnus-base-data [vastaajatunnus tunnus]
   (-> vastaajatunnus
       (assoc :tunnus tunnus)
-      (assoc :metatiedot vastaajatunnus)
+      (assoc :metatiedot (:metatiedot vastaajatunnus))
       (select-keys (concat common-props legacy-props))))
 
 (def ^:private common-and-legacy-props (vec (concat common-props legacy-props)))
