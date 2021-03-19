@@ -7,7 +7,7 @@
             [oph.common.util.util :refer [map-by some-value]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [jarjestelma-oid integraatio-uid]]
-            [aipal.toimiala.kayttajaroolit :refer [ldap-ryhma->rooli roolijarjestys]]
+            [aipal.toimiala.kayttajaroolit :refer [kayttooikeus->rooli roolijarjestys]]
             [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.arkisto.kayttajaoikeus :as kayttajaoikeus-arkisto]
             [aipal.infra.kayttaja.sql :refer [with-sql-kayttaja]]
@@ -46,11 +46,16 @@
       (with-sql-kayttaja (:oid k)
                        (f)))))
 
+(defn paivita-oikeudet [oid->ytunnus kayttooikeudet]
+  (for [kayttooikeus kayttooikeudet]
+    {:kayttooikeus (:oikeus kayttooikeus)
+     :organisaatio (oid->ytunnus (:organisaatioOid kayttooikeus))}))
+
 (defn with-kayttaja* [uid impersonoitu-oid vaihdettu-organisaatio rooli f]
   (log/debug "Yritetään autentikoida käyttäjä" uid)
   (if-let [k (db/hae-voimassaoleva-kayttaja {:uid uid :voimassaolo (:kayttooikeus-tarkistusvali @asetukset)})]
     (let [aktiivinen-oid (or impersonoitu-oid (:oid k))
-          roolit (db/hae-voimassaolevat-roolit {:kayttajaOid aktiivinen-oid})]
+          roolit (kayttajaoikeus-arkisto/hae-roolit aktiivinen-oid)]
       (autentikoi-kayttaja (assoc k :roolit roolit) impersonoitu-oid vaihdettu-organisaatio rooli f))
     (autentikoi-kayttaja (hae-kayttaja-kayttoikeuspalvelusta uid impersonoitu-oid) impersonoitu-oid vaihdettu-organisaatio rooli f)))
 
@@ -63,7 +68,9 @@
   (log/info "Yritetään hakea Käyttöoikeuspalvelusta käyttäjä" uid)
   (with-kayttaja integraatio-uid nil nil
     (let [oid->ytunnus (into {} (map (juxt :oid :ytunnus) (db/hae-oid->ytunnus)))
-          kayttaja (kayttooikeuspalvelu/kayttaja uid ldap-ryhma->rooli oid->ytunnus)]
+          k (kayttooikeuspalvelu/kayttaja uid)
+          roolit (paivita-oikeudet oid->ytunnus (:oikeudet k))
+          kayttaja (assoc k :roolit roolit)]
       (if (:voimassa kayttaja)
         (kayttajaoikeus-arkisto/paivita-kayttaja! kayttaja impersonoitu-oid)
         (do (db/passivoi-kayttaja! {:uid uid})

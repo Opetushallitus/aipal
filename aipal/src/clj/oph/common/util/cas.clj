@@ -3,8 +3,7 @@
             [again.core :as again]
             [clojure.tools.logging :as log]
             [aipal.asetukset :refer [asetukset]]
-            [oph.common.util.util :refer [oletus-header]]
-            [cheshire.core :as cheshire]))
+            [oph.common.util.util :refer [oletus-header]]))
 
 (def kirjautumistila
   (atom {:cs (clj-http.cookies/cookie-store)
@@ -22,7 +21,7 @@
 (defn ^:private hae-service-ticket [url palvelu-url unsafe-https]
   (let [{:keys [status body]} (http/post url
                                          (oletus-header {:form-params {:service palvelu-url}
-                                                        :insecure? unsafe-https}))]
+                                                         :insecure? unsafe-https}))]
     (if (= status 200)
       body
       (throw (RuntimeException. "Service ticketin pyytäminen CASilta epäonnistui")))))
@@ -56,7 +55,7 @@
             (do
               (log/info "Uusitaan TGT")
               (swap! kirjautumistila assoc :tgt (hae-ticket-granting-url cas-url user password unsafe-https))))]
-        (uusi-service-ticket palvelu-url unsafe-https prequel-url status)))
+       (uusi-service-ticket palvelu-url unsafe-https prequel-url status)))
 (defmethod tiketit-uusiva-kirjautuminen :success [state])
 (defmethod tiketit-uusiva-kirjautuminen :failure [state]
   (log/error "Pyyntö epäonnistui tikettien uusimisesta huolimatta" state))
@@ -70,7 +69,7 @@
         ::again/strategy     [100 100]
         ::again/user-context (atom {:palvelu palvelu})}
         ; 302 halutaan tulkita tässä virheeksi (ohjaus kirjautumissivulle). 2xx ja 4xx hyväksytään.
-       (http/request (oletus-header (assoc options :cookie-store (:cs @kirjautumistila) :redirect-strategy :none :unexceptional-status #(or (<= 200 % 299) (<= 400 % 499)) ))))
+       (http/request (oletus-header (assoc options :cookie-store (:cs @kirjautumistila) :redirect-strategy :none :unexceptional-status #(or (<= 200 % 299) (<= 400 % 499))))))
       (http/request (oletus-header options)))))
 
 (defn get-with-cas-auth

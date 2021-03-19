@@ -98,12 +98,12 @@ describe('AipalController', function() {
     $httpBackend
     .whenGET(/api\/kayttaja.*/)
     .respond(200, {impersonoitu_kayttaja: '',
-                   aktiivinen_rooli: {rooli: 'OPL-VASTUUKAYTTAJA',
+                   aktiivinen_rooli: {rooli: 'VASTUUKAYTTAJA',
                                       koulutustoimija_fi: 'KT fi'},
                    roolit: [{}, {}]});
     alustaController();
     $httpBackend.flush();
-    expect($scope.rooli_koulutustoimija).toEqual('i18n(roolit.rooli.OPL-VASTUUKAYTTAJA) / KT fi');
+    expect($scope.rooli_koulutustoimija).toEqual('i18n(roolit.rooli.VASTUUKAYTTAJA) / KT fi');
   });
 
 });

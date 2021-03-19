@@ -10,8 +10,7 @@
             [clj-time.format :as f]
             [aipal.asetukset :refer [asetukset]]
             [arvo.util :refer [in?]]
-            [aipal.integraatio.koodistopalvelu :refer [hae-kunnat]]
-            [clojure.tools.logging :as log]))
+            [aipal.integraatio.koodistopalvelu :refer [hae-kunnat]]))
 
 (def default-translations {:fi {:vastaajatunnus "Vastaajatunnus"
                                 :vastausaika "Vastausaika"
@@ -300,11 +299,9 @@
         translations (luo-käännökset taustatiedot lang)
         vastaukset (filter-not-allowed kyselytyyppi kysymykset
                                        (group-by :vastaajaid (db/hae-vastaukset {:kyselyid kyselyid})))
-        _ (println vastaukset)
         monivalintavaihtoehdot (hae-monivalinnat kysymykset)
         selitteet (hae-selitteet kyselyid)
         template (create-row-template kysymykset)
-        _ (println template)
         header (create-header-row taustatieto-fields kysymykset lang translations)
         vastausrivit (map #(luo-vastausrivi template lang
                                             taustatieto-fields

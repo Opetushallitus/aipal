@@ -1,6 +1,6 @@
 <div class="hidden-print" lataus-indikaattori metodi-id="raportinMuodostus" viesti="{{'raportti.muodostetaan' | i18n}}"
      virheviesti="{{'raportti.muodostus_epaonnistui' | i18n}}" yrita-uudelleen="muodostaKyselyraportti(raportti)">
-    <auth roolit="['OPL-VASTUUKAYTTAJA']">
+    <auth roolit="['VASTUUKAYTTAJA']">
         <a class="btn btn-primary" ng-href="api/csv/kysely/{{raportti.kyselyid}}?lang={{raportti.kieli}}" ng-disabled="!raporttiValidi(raportti)">
             {{ 'raportit.muodosta_csv' | i18n }}
             <span class="fa fa-file-excel-o"></span>

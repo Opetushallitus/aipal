@@ -6,10 +6,10 @@
 
 (def role->rights
   {"YLLAPITAJA" [:yllapitaja :kysymysryhma :kyselypohja :kysely :kyselykerta :vastaajatunnus :katselu]
-   "OPL-VASTUUKAYTTAJA" [:kysymysryhma :kyselypohja :kysely :kyselykerta :vastaajatunnus :katselu]
-   "OPL-KYSELYKERTAKAYTTAJA" [:kyselykerta :vastaajatunnus :katselu]
-   "OPL-KAYTTAJA" [:vastaajatunnus :katselu]
-   "OPL-KATSELIJA" [:katselu]})
+   "VASTUUKAYTTAJA" [:kysymysryhma :kyselypohja :kysely :kyselykerta :vastaajatunnus :katselu]
+   "KYSELYKERTAKAYTTAJA" [:kyselykerta :vastaajatunnus :katselu]
+   "KAYTTAJA" [:vastaajatunnus :katselu]
+   "KATSELIJA" [:katselu]})
 
 (defn valtakunnallinen-organization [fn context]
   (let [data (fn context)]

@@ -79,23 +79,6 @@
                            :voimassa_alkupvm  alkupvm
                            :voimassa_loppupvm loppupvm})))
 
-(defn ^:integration-api poista-kaikki-koulutustoimijoiden-tutkinnot!
-  []
-  (sql/delete taulut/koulutustoimija_ja_tutkinto))
-
-(defn ^:integration-api poista-koulutustoimijat-ilman-oppilaitoksia-ja-kayttajia! []
-  (try
-    (sql/delete taulut/koulutustoimija
-                (sql/where (and (sql/sqlfn "not exists" (sql/subselect taulut/oppilaitos
-                                                                                 (sql/where {:oppilaitos.koulutustoimija :koulutustoimija.ytunnus})))
-                                (sql/sqlfn "not exists" (sql/subselect taulut/rooli_organisaatio
-                                                                                 (sql/where {:rooli_organisaatio.organisaatio :koulutustoimija.ytunnus})))
-                                (sql/sqlfn "not exists" (sql/subselect taulut/koulutustoimija_ja_tutkinto
-                                                                                 (sql/where {:koulutustoimija_ja_tutkinto.koulutustoimija :koulutustoimija.ytunnus})))
-                                {:koulutustoimija.ytunnus [not= (:ytunnus oph-koulutustoimija)]})))
-    (catch Exception e
-      (log/error "Koulutustoimijoiden poisto epäonnistui:" (.getMessage e))))) ;; Ei poisteta ylläpitäjä-käyttäjän koulutustoimijaa
-
 (defn ^:integration-api aseta-kaikki-vanhentuneiksi!
   []
   (sql/update taulut/koulutustoimija

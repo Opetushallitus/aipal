@@ -58,10 +58,9 @@
   (db/hae-kysely {:kyselyid kyselyid}))
 
 (defn hae-kyselytyypit []
-  (let [kyselytyypit (db/hae-kyselytyypit)]
-    (if (yllapitaja?)
-      kyselytyypit
-      (filter #(not= (:id %) "move") kyselytyypit))))
+  (let [kyselytyypit (db/hae-kyselytyypit)
+        kayttajan-kyselytyypit (-> *kayttaja* :aktiivinen-rooli :kyselytyypit)]
+    (filter #(some #{(:id %)} kayttajan-kyselytyypit) kyselytyypit)))
 
 (defn lisaa-kysymysryhma! [tx kyselyid kysymysryhma]
   (db/lisaa-kyselyn-kysymysryhma! tx (merge kysymysryhma {:kyselyid kyselyid :kayttaja (:oid *kayttaja*)}))
@@ -169,12 +168,6 @@
 (defn hae-kyselyn-kysymykset [kyselyid]
   (->> (db/hae-kyselyn-kysymysryhmat {:kyselyid kyselyid})
        (map hae-kysymysryhman-kysymykset)))
-
-;(defn paivita-kyselyn-kysymysryhmat [kyselyid kysymysryhmat]
-;  (poista-kysymysryhmat! kyselyid)
-;  (poista-kysymykset! kyselyid)
-;  (doseq [ryhma (add-index :jarjestys kysymysryhmat)]
-;    (lisaa-kysymysryhma! kyselyid ryhma)))
 
 (defn samanniminen-kysely?
   "Palauttaa true jos samalla koulutustoimijalla on jo samanniminen kysely."

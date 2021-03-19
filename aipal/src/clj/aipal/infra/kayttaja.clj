@@ -14,5 +14,5 @@
 
 (defn vastuukayttaja? []
   (kayttajalla-on-jokin-rooleista?
-    #{"OPL-VASTUUKAYTTAJA"}))
+    #{"VASTUUKAYTTAJA"}))
 

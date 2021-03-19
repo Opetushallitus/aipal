@@ -89,8 +89,6 @@
 
 (defentity koulutustoimija_ja_tutkinto)
 
-(defentity kayttajarooli)
-
 (defentity tiedote)
 
 (defentity organisaatiopalvelu_log

@@ -25,7 +25,7 @@ angular.module('yhteiset.palvelut.kayttooikeudet', ['ngResource'])
       oikeudet.then(function(data){
         yllapitaja = false;
         impersonoitu = false;
-        vastuukayttaja = data.aktiivinen_rooli.rooli === 'OPL-VASTUUKAYTTAJA';
+        vastuukayttaja = data.aktiivinen_rooli.rooli === 'VASTUUKAYTTAJA';
 
         laajennettu = data.laajennettu;
 

@@ -22,21 +22,18 @@ WHERE oid = :kayttajaOid;
 INSERT INTO kayttaja (oid, uid, etunimi, sukunimi, voimassa)
     VALUES (:kayttajaOid, :uid, :etunimi, :sukunimi, TRUE );
 
---:name hae-rooli :? :1
-SELECT * FROM rooli_organisaatio WHERE kayttaja = :kayttaja AND rooli = :rooli AND :organisaatio = :organisaatio;
-
 --:name hae-roolit :? :*
-SELECT * FROM rooli_organisaatio WHERE kayttaja = :kayttaja;
+SELECT organisaatio, kayttooikeus FROM rooli_organisaatio WHERE kayttaja = :kayttaja;
 
 --:name aseta-roolin-tila! :! :n
 UPDATE rooli_organisaatio SET voimassa = :voimassa
-WHERE kayttaja = :kayttaja AND rooli = :rooli AND organisaatio = :organisaatio;
+WHERE kayttaja = :kayttaja AND kayttooikeus = :kayttooikeus AND organisaatio = :organisaatio;
 
 --:name lisaa-rooli! :! :n
-INSERT INTO rooli_organisaatio (kayttaja, rooli, organisaatio, voimassa) VALUES (:kayttaja, :rooli, :organisaatio, TRUE);
+INSERT INTO rooli_organisaatio (kayttaja, kayttooikeus, organisaatio, voimassa) VALUES (:kayttaja, :kayttooikeus, :organisaatio, TRUE);
 
 -- :name hae-voimassaolevat-roolit :? :*
-SELECT ro.rooli, ro.organisaatio, ro.rooli_organisaatio_id,
+SELECT ro.kayttooikeus, ro.organisaatio, ro.rooli_organisaatio_id,
 k.nimi_fi AS koulutustoimija_fi, k.nimi_sv AS koulutustoimija_sv, k.nimi_en AS koulutustoimija_en
 FROM rooli_organisaatio ro
 JOIN koulutustoimija k on ro.organisaatio = k.ytunnus

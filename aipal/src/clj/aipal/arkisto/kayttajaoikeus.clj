@@ -1,27 +1,20 @@
-;; Copyright (c) 2013 The Finnish National Board of Education - Opetushallitus
-;;
-;; This program is free software:  Licensed under the EUPL, Version 1.1 or - as
-;; soon as they will be approved by the European Commission - subsequent versions
-;; of the EUPL (the "Licence");
-;;
-;; You may not use this work except in compliance with the Licence.
-;; You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; European Union Public Licence for more details.
-
 (ns aipal.arkisto.kayttajaoikeus
   (:require [aipal.arkisto.kayttaja :as kayttaja-arkisto]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
             [arvo.db.core :refer [*db*] :as db]
             [clojure.java.jdbc :as jdbc]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [aipal.toimiala.kayttajaroolit :refer [kayttooikeus->rooli roolijarjestys]]))
 
-(defn hae-roolit [oid]
-  (db/hae-voimassaolevat-roolit {:kayttajaOid oid}))
+(defn hae-roolit
+  ([tx oid]
+   (let [kayttooikeudet (db/hae-voimassaolevat-roolit tx {:kayttajaOid oid})]
+     (->> kayttooikeudet
+          (map #(merge % (kayttooikeus->rooli (:kayttooikeus %)))))))
+  ([oid]
+   (jdbc/with-db-transaction [tx *db*]
+     (hae-roolit tx oid))))
 
 (defn hae-oikeudet
   ([oid]
@@ -36,7 +29,6 @@
 
 (defn paivita-roolit! [tx k impersonoitu-oid]
   (let [vanhat-roolit (->> (db/hae-roolit tx {:kayttaja (:oid k)})
-                          (map #(select-keys % [:rooli :organisaatio]))
                           (into #{}))
         poistuneet-roolit (set/difference
                               vanhat-roolit
@@ -47,7 +39,7 @@
       (if (contains? vanhat-roolit (select-keys r [:rooli :organisaatio]))
         (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa true}))
         (db/lisaa-rooli! tx (assoc r :kayttaja (:oid k)))))
-    (db/hae-voimassaolevat-roolit tx {:kayttajaOid (or impersonoitu-oid (:oid k))})))
+    (hae-roolit (or impersonoitu-oid (:oid k)))))
 
 
 (defn paivita-kayttaja! [k impersonoitu-oid]

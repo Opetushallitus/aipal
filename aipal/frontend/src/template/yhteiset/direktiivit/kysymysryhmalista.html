@@ -13,19 +13,19 @@
     <td>{{ k | lokalisoiKentta:'nimi' }}</td>
     <td>{{ k | lokalisoiKentta:'selite' }}</td>
     <td class="actions nowrap">
-      <auth roolit="['OPL-VASTUUKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja() || !k.valtakunnallinen)">
+      <auth roolit="['VASTUUKAYTTAJA']"  ng-if="k.tila === 'luonnos' && (yllapitaja() || !k.valtakunnallinen)">
         <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}" class="e2e-muokkaa-kysymysryhmaa">
           <span class="fa fa-pencil"></span>
         </a>
       </auth>
-      <auth roolit="['OPL-VASTUUKAYTTAJA']"  ng-if="yllapitaja() || !k.valtakunnallinen">
+      <auth roolit="['VASTUUKAYTTAJA']"  ng-if="yllapitaja() || !k.valtakunnallinen">
         <a ng-href="#/kysymysryhmat/kysymysryhma/{{k.kysymysryhmaid}}/kopioi" class="btn btn-default btn-sm e2e-kopioi-kysymysryhma">
           {{ 'kysymysryhma.kopioi' | i18n }}&nbsp;
           <span class="fa fa-copy"></span>
         </a>
       </auth>
       &nbsp;&nbsp;
-      <auth roolit="['OPL-VASTUUKAYTTAJA']"  ng-if="yllapitaja() || !k.valtakunnallinen">
+      <auth roolit="['VASTUUKAYTTAJA']"  ng-if="yllapitaja() || !k.valtakunnallinen">
         <button class="btn btn-primary btn-sm e2e-julkaise-kysymysryhma" ng-click="julkaiseKysymysryhmaModal(k)" ng-disabled="k.kysymyksien_lkm === 0" ng-if="k.tila === 'luonnos'">
           {{ 'yleiset.julkaise' | i18n }}&nbsp;
           <span class="fa fa-share"></span>
