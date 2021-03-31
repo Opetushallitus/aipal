@@ -288,6 +288,7 @@ Koodin arvo laitetaan arvokentta-avaimen alle."
      (log/info "Päivitetään muut koodistot")
      (paivita-koodisto! asetukset "maatjavaltiot2")
      (paivita-koodisto! asetukset "kunta")
+     (paivita-koodisto! asetukset "tutkinnonosat")
      (log/info "Muiden koodistojen päivitys valmis"))
     (catch org.postgresql.util.PSQLException e
       (log/error e "Tutkintojen päivitys koodistopalvelusta epäonnistui"))))

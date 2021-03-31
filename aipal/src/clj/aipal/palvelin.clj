@@ -82,7 +82,7 @@
   #{"/api-docs" "/swagger.json" "/fi/swagger.json"})
 
 (def external-service-api
-  #{"/api/vipunen" "/api/export" "/api/vastauslinkki" "/api/admin"})
+  #{"/api/vipunen" "/api/export" "/api/vastauslinkki" "/api/admin" "/api/tyoelamapalaute"})
 
 (def public-api
   "Public API methods, not authenticated using CAS"

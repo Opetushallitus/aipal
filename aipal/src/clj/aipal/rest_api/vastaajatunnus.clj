@@ -76,7 +76,7 @@
     (let [vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
       (if (and (zero? vastaajat) (vastaajatunnus/tunnus-poistettavissa? kyselykertaid vastaajatunnusid))
         (do
-          (vastaajatunnus/poista! kyselykertaid vastaajatunnusid)
+          (vastaajatunnus/poista! vastaajatunnusid)
           {:status 204})
         {:status 403})))
 

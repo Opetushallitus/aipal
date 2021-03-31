@@ -23,7 +23,7 @@
 
 (defn ^:integration-api paivita-koodistot! [asetukset]
   (with-kayttaja integraatio-uid nil nil
-                 (koodisto/paivita-koodistot! asetukset)))
+    (koodisto/paivita-koodistot! asetukset)))
 
 ;; Cloverage ei tykkää `defrecord`eja generoivista makroista, joten hoidetaan
 ;; `defjob`:n homma käsin.

@@ -31,7 +31,7 @@
 
 (defn luo-osio-tunnukset [kyselykertaid osiot]
   (jdbc/with-db-transaction [tx *db*]
-    (let [kohteet (map :koulutustoimija (db/hae-ammatilliset-koulutustoimijat))]
+    (let [kohteet (map :ytunnus (db/hae-ammatilliset-koulutustoimijat))]
       (doseq [koulutustoimija kohteet]
         (luo-tunnukset tx koulutustoimija kyselykertaid osiot))
       "ok")))

@@ -111,3 +111,11 @@ JOIN vastaajatunnus vt ON v.vastaajatunnusid = vt.vastaajatunnusid
 JOIN tutkinto t ON vt.taustatiedot->>'tutkinto' = t.tutkintotunnus
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 WHERE kk.kyselyid = :kyselyid;
+
+--:name lisaa-nippu! :! :n
+INSERT INTO nippu (tunniste, kyselyid, voimassa_alkupvm, voimassa_loppupvm, taustatiedot)
+VALUES (:tunniste, :kyselyid, :voimassa_alkupvm, :voimassa_loppupvm, :taustatiedot);
+
+--:name liita-tunnukset-nippuun! :! :n
+UPDATE vastaajatunnus SET metatiedot = coalesce(metatiedot, '{}') || jsonb_build_object('nippu', :tunniste)
+WHERE tunnus IN (:v*:tunnukset);

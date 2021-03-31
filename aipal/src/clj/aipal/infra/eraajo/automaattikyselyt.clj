@@ -28,6 +28,7 @@
 (defn hae-koulutustoimijat [kuvaus]
   (case (:kyselytyyppi kuvaus)
     "rekrykysely" (db/hae-automaattikysely-korkeakoulut kuvaus)
+    "tyoelamapalaute" (db/hae-ammatilliset-koulutustoimijat kuvaus)
     (db/hae-automaattikysely-koulutustoimijat kuvaus)))
 
 (defn luo-kyselyt! [kuvaus tx]

@@ -21,11 +21,9 @@
             [aipal.infra.kayttaja.vaihto :refer [with-kayttaja]]
             [aipal.infra.kayttaja :refer [*kayttaja*]]
             [aipal.infra.kayttaja.vakiot :refer [integraatio-uid]]
-            [aipal.auditlog :as auditlog]
             [arvo.db.core :refer [*db*] :as db]
             [clojure.java.jdbc :as jdbc]
             [clj-time.coerce :refer [to-sql-date]]))
-
 
 (def errors {:ei-kyselykertaa {:error "ei-kyselykertaa" :msg "Ei kyselykertaa annetuille tiedoille"}})
 
@@ -178,12 +176,10 @@
   (str (count taustatieto-seq)))
 
 (defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
-  (auditlog/vastaajatunnus-muokkaus! vastaajatunnusid kyselykertaid lukitse)
   (db/lukitse-vastaajatunnus! {:vastaajatunnusid vastaajatunnusid :lukittu lukitse})
   (hae kyselykertaid vastaajatunnusid))
 
-(defn poista! [kyselykertaid vastaajatunnusid]
-  (auditlog/vastaajatunnus-poisto! vastaajatunnusid kyselykertaid)
+(defn poista! [vastaajatunnusid]
   (db/poista-vastaajatunnus! {:vastaajatunnusid vastaajatunnusid}))
 
 (defn laske-vastaajat [vastaajatunnusid]
@@ -197,3 +193,14 @@
   [kyselykertaid vastaajatunnusid lukumaara]
   (db/muokkaa-vastaajien-maaraa! {:vastaajatunnusid vastaajatunnusid :vastaajia lukumaara})
   (hae kyselykertaid vastaajatunnusid))
+
+(defn lisaa-amispalaute-automatisointi! [tunnus]
+  (db/lisaa-automatisointiin! {:koulutustoimija (:koulutustoimija tunnus)
+                               :lahde "EHOKS"}))
+
+(defn niputa-tunnukset [data]
+  (jdbc/with-db-transaction [tx *db*]
+    (do
+      (db/lisaa-nippu! tx data)
+      (db/liita-tunnukset-nippuun! tx data)
+      data)))

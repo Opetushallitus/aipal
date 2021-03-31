@@ -1,5 +1,5 @@
 (ns aipal.arkisto.vastaajatunnus-test
-    (:require [aipal.arkisto.vastaajatunnus :refer :all])
+    (:require [arvo.db.vastaajatunnus :refer :all])
     (:use clojure.test))
 
 (deftest tunnukset-ovat-keskenaan-yksilollisia

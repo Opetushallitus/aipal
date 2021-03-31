@@ -22,8 +22,8 @@ SELECT kk.kyselykertaid FROM kyselykerta kk
   AND kk.lukittu = FALSE;
 
 -- :name hae-automaatti-kyselykerta :? :1
-SELECT kk.kyselykertaid FROM kyselykerta kk
-  JOIN kysely k on kk.kyselyid = k.kyselyid
+SELECT kk.kyselykertaid, kk.kyselyid FROM kyselykerta kk
+  JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija = :koulutustoimija AND k.tyyppi = :kyselytyyppi
 AND kk.automaattinen @> now()::DATE
   --~(if (:tarkenne params) "AND kk.metatiedot ->> 'tarkenne' = :tarkenne")

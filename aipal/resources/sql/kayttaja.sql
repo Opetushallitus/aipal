@@ -42,7 +42,7 @@ AND ro.voimassa = TRUE;
 
 -- :name hae-impersonoitavat-kayttajat :? :*
 SELECT oid, uid, etunimi, sukunimi FROM kayttaja
-WHERE NOT EXISTS (SELECT rooli_organisaatio_id FROM rooli_organisaatio WHERE kayttaja = oid AND rooli = 'YLLAPITAJA')
+WHERE NOT EXISTS (SELECT rooli_organisaatio_id FROM rooli_organisaatio WHERE kayttaja = oid AND kayttooikeus = 'YLLAPITAJA')
 AND oid NOT IN ('JARJESTELMA', 'KONVERSIO', 'INTEGRAATIO', 'VASTAAJA')
 AND voimassa = TRUE;
 
