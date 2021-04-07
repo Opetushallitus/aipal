@@ -125,3 +125,9 @@
   (let [nippu (nippu data)]
     (vastaajatunnus/niputa-tunnukset nippu)
     nippu))
+
+(defn paivita-metatiedot [tunnus paivitettavat-metatiedot]
+  (let [paivitettava-vastaajatunnus {:metatiedot paivitettavat-metatiedot
+                                     :tunnus tunnus
+                                     :kayttaja aipal.infra.kayttaja.vakiot/integraatio-uid}]
+    (db/paivita-metatiedot! paivitettava-vastaajatunnus)))

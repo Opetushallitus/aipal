@@ -29,14 +29,14 @@
 
 (defn paivita-roolit! [tx k impersonoitu-oid]
   (let [vanhat-roolit (->> (db/hae-roolit tx {:kayttaja (:oid k)})
-                          (into #{}))
+                           (into #{}))
         poistuneet-roolit (set/difference
                               vanhat-roolit
-                              (into #{} (map #(select-keys % [:rooli :organisaatio]) (:roolit k))))]
+                              (into #{} (map #(select-keys % [:kayttooikeus :organisaatio]) (:roolit k))))]
     (doseq [r poistuneet-roolit]
       (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa false})))
     (doseq [r (:roolit k)]
-      (if (contains? vanhat-roolit (select-keys r [:rooli :organisaatio]))
+      (if (contains? vanhat-roolit (select-keys r [:kayttooikeus :organisaatio]))
         (db/aseta-roolin-tila! tx (merge r {:kayttaja (:oid k) :voimassa true}))
         (db/lisaa-rooli! tx (assoc r :kayttaja (:oid k)))))
     (hae-roolit (or impersonoitu-oid (:oid k)))))

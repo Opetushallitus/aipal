@@ -66,6 +66,8 @@
         (log/error e2 "Unexpected error")
         (on-validation-error (format "Unexpected error: %s" (.getMessage e2)))))))
 
+(defonce sallitut-metatiedot [:tila])
+
 (defroutes ehoks-v1
   (POST "/" []
     :body [data Amispalaute-tunnus]
@@ -76,6 +78,18 @@
         on opintopolun koulutus koodiston 6 numeroinen koodi.")
     (let [tunnus (vt/lisaa-amispalaute-tunnus! data)]
       (vastauslinkki-response tunnus (:request_id data))))
+  (PATCH "/:tunnus/metatiedot" []
+    :path-params [tunnus :- s/Str]
+    :body [metatiedot Vastaajatunnus-metatiedot]
+    :responses {status/ok {:schema Vastaajatunnus-metatiedot}
+                status/not-found {:schema s/Str :description "Ei vastaajatunnusta integraatiokäyttäjälle"}}
+    :summary "Metatietojen päivitys"
+    :description "Päivitä vastaajatunnuksen valitut metatiedot. Ei voi käyttää metatietokentän poistamiseen."
+    (let [paivitettavat-metatiedot (select-keys metatiedot sallitut-metatiedot)
+          rivia-paivitetty (vt/paivita-metatiedot tunnus metatiedot)]
+      (if (not= rivia-paivitetty 0)
+        (api-response paivitettavat-metatiedot)
+        (response/not-found "Ei vastaajatunnusta integraatiokäyttäjälle"))))
   (GET "/status/:tunnus" []
     :path-params [tunnus :- s/Str]
     :return (s/maybe {:tunnus s/Str :voimassa_loppupvm org.joda.time.DateTime :vastattu s/Bool})
