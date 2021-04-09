@@ -15,6 +15,7 @@
 (ns aipal.rest-api.raportti.kyselykerta
   (:require [compojure.api.core :refer [GET POST]]
             [schema.core :as s]
+            [arvo.db.core :refer [*db*] :as db]
             aipal.compojure-util
             [aipal.rest-api.raportti.yhteinen :as yhteinen]
             [aipal.toimiala.raportti.yhdistaminen :as yhdistaminen]
@@ -31,9 +32,11 @@
 
 (defn muodosta-kyselykertaraportti
   [kyselykertaid parametrit asetukset]
-  (let [raportti (raportointi/ei-riittavasti-vastaajia
-                   (muodosta-raportti-parametreilla kyselykertaid parametrit)
-                   asetukset)
+  (let [kysely-tyyppi (:tyyppi (db/hae-kyselykerran-kysely-tyyppi {:kyselykertaid kyselykertaid}))
+        raportti (raportointi/ei-riittavasti-vastaajia
+                  (muodosta-raportti-parametreilla kyselykertaid parametrit)
+                  asetukset
+                  kysely-tyyppi)
         naytettavat (filter (comp nil? :virhe) [raportti])
         virheelliset (filter :virhe [raportti])
         yhteenveto (muodosta-yhteenveto kyselykertaid (paivita-parametrit parametrit))

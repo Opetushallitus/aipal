@@ -155,7 +155,7 @@
 
 (defn muodosta-raportit [parametrit asetukset]
   (let [kaikki-raportit (for [raportti (luo-raportit (yhteinen/korjaa-numero-avaimet parametrit))]
-                          (ei-riittavasti-vastaajia raportti asetukset))
+                          (ei-riittavasti-vastaajia raportti asetukset ""))
         naytettavat (filter (comp nil? :virhe) kaikki-raportit)
         virheelliset (filter :virhe kaikki-raportit)]
     (merge (when (seq naytettavat)

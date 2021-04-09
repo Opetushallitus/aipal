@@ -71,7 +71,8 @@ angular.module('raportti.raporttiui', ['ngRoute', 'rest.raportti', 'rest.tutkint
     $scope.raportti.tutkintorakennetaso = 'tutkinto';
     $scope.printgraphs = true;
     $scope.printfreetext = true;
-    $scope.kielet = ["fi", "sv", "en"]
+    $scope.kielet = ["fi", "sv", "en"];
+    $scope.raportti.vertailujakso_tyyppi = 'vastaus_vastausaika';
 
     $scope.$watch('raportti', function(uusi) {
       $scope.parametrit = JSON.stringify(uusi);

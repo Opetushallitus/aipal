@@ -266,10 +266,13 @@
                                  [(get-in tekstit [:raportit :liian_vahan_vastaajia]) (:vastaajien_lukumaara raportti)]])
       :delimiter \;)))
 
+(defonce sallitut-tyypit-ilman-vaadittuja-vastaajia ["tyoelamapalaute"])
+
 (defn ei-riittavasti-vastaajia
-  [raportti asetukset]
-  (let [vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
-    (if (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat)
+  [raportti asetukset kysely-tyyppi]
+  (let [nayta-kaikki (some #(= % kysely-tyyppi) sallitut-tyypit-ilman-vaadittuja-vastaajia)
+         vaaditut-vastaajat (:raportointi-minimivastaajat asetukset)]
+    (if (or nayta-kaikki (>= (:vastaajien_lukumaara raportti) vaaditut-vastaajat))
       raportti
       (assoc (dissoc raportti :raportti) :virhe "ei-riittavasti-vastaajia"))))
 

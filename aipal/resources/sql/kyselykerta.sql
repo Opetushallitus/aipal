@@ -141,3 +141,6 @@ SELECT 1 AS samanniminen FROM kysely k
 JOIN kyselykerta kk ON kk.kyselyid = k.kyselyid
 WHERE k.koulutustoimija IN (SELECT koulutustoimija FROM kysely WHERE kyselyid = :kyselyid)
 AND kk.nimi = :nimi;
+
+-- :name hae-kyselykerran-kysely-tyyppi :? :1
+SELECT k.tyyppi FROM kyselykerta kk JOIN kysely k ON k.kyselyid = kk.kyselyid WHERE kk.kyselykertaid = :kyselykertaid;

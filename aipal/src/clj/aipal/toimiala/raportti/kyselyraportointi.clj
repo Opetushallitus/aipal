@@ -15,6 +15,7 @@
 (ns aipal.toimiala.raportti.kyselyraportointi
   (:require [clj-time.core :as time]
             [korma.core :as sql]
+            [clojure.tools.logging :as log]
             [aipal.toimiala.raportti.taustakysymykset :refer :all]
             [aipal.toimiala.raportti.raportointi :as raportointi]
             [aipal.integraatio.sql.korma :as taulut]
@@ -54,8 +55,14 @@
     kyselykertaid (sql/where {:kyselykertaid kyselykertaid})
     suorituskieli (sql/where {:vastaajatunnus.suorituskieli suorituskieli})))
 
+(defn- vertailujakso-tyypin-mukaan [vertailujakson-tyyppi]
+  (case vertailujakson-tyyppi
+              "vastaus_vastausaika" :vastaaja.luotuaika
+              "vastaajatunnus_alkupvm" :vastaajatunnus.voimassa_alkupvm
+              :vastaaja.luotuaika))
+
 (defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
-  [{:keys [tutkinnot kyselyid vertailujakso_alkupvm vertailujakso_loppupvm] :as parametrit}]
+  [{:keys [tutkinnot kyselyid vertailujakso_alkupvm vertailujakso_loppupvm vertailujakso_tyyppi] :as parametrit}]
   (->
     (sql/select* :vastaajatunnus)
     (cond->
@@ -72,9 +79,9 @@
                 [(sql/subselect :vastaaja
                                 (sql/aggregate (count :*) :kohteiden_lkm)
                                 (sql/where (or (nil? vertailujakso_alkupvm)
-                                               (>= :vastaaja.luotuaika vertailujakso_alkupvm)))
+                                               (>= (vertailujakso-tyypin-mukaan vertailujakso_tyyppi) vertailujakso_alkupvm)))
                                 (sql/where (or (nil? vertailujakso_loppupvm)
-                                               (<= :vastaaja.luotuaika vertailujakso_loppupvm)))
+                                               (<= (vertailujakso-tyypin-mukaan vertailujakso_tyyppi) vertailujakso_loppupvm)))
                                 (sql/where {:vastaaja.vastaajatunnusid :vastaajatunnus.vastaajatunnusid})) :kohteiden_lkm])
     sql/exec
     (koulutustoimijat-hierarkiaksi parametrit)))
@@ -166,8 +173,12 @@
     sql/exec
     yhdista-valtakunnalliset-taustakysymysryhmat))
 
-(defn ^:private hae-vastaukset [{:keys [tutkinnot suorituskieli
-                                        jarjestavat_oppilaitokset vertailujakso_alkupvm vertailujakso_loppupvm]
+(defn ^:private hae-vastaukset [{:keys [tutkinnot
+                                        suorituskieli
+                                        jarjestavat_oppilaitokset
+                                        vertailujakso_alkupvm
+                                        vertailujakso_loppupvm
+                                        vertailujakso_tyyppi]
                                  :as parametrit}]
   (->
     (sql/select* :kyselykerta)
@@ -180,11 +191,12 @@
     (cond->
       (or tutkinnot
           suorituskieli
-          jarjestavat_oppilaitokset) (sql/join :inner :vastaajatunnus
-                                               (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
+          jarjestavat_oppilaitokset
+          (= vertailujakso_tyyppi "vastaajatunnus_alkupvm")) (sql/join :inner :vastaajatunnus
+                                                                       (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid))
       tutkinnot (rajaa-vastaajatunnukset-tutkintoihin tutkinnot)
-      vertailujakso_alkupvm (sql/where (>= :vastaus.vastausaika vertailujakso_alkupvm))
-      vertailujakso_loppupvm (sql/where (<= :vastaus.vastausaika vertailujakso_loppupvm)))
+      vertailujakso_alkupvm (sql/where (>= (vertailujakso-tyypin-mukaan vertailujakso_tyyppi) vertailujakso_alkupvm))
+      vertailujakso_loppupvm (sql/where (<= (vertailujakso-tyypin-mukaan vertailujakso_tyyppi) vertailujakso_loppupvm)))
     (yhteiset-rajaukset parametrit)
     (sql/fields :vastaus.kysymysid
                 [(sql/sqlfn array_agg :vastaus.vastaajaid) :vastaajat]

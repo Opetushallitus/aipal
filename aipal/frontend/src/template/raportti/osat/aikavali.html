@@ -1,5 +1,14 @@
 <h3>{{ 'raportit.aikavali' | i18n }}</h3>
 
+<label>
+    <input type="radio" ng-model="raportti.vertailujakso_tyyppi" value="vastaus_vastausaika"/>
+    {{ 'raportit.vastaus_vastausaika' | i18n }}
+</label>
+<label>
+    <input type="radio" ng-model="raportti.vertailujakso_tyyppi" value="vastaajatunnus_alkupvm"/>
+    {{ 'raportit.vastaajatunnus_alkupvm' | i18n }}
+</label>
+
 <pvm-valitsin
         otsikko="{{i18n.raportit.vertailujakso_alkaa}}"
         oletus-pvm="raportti.vertailujakso_alkupvm"

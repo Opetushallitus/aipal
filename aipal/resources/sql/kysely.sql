@@ -142,3 +142,6 @@ FROM kysely k
          JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
          JOIN oppilaitos o on vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
 WHERE k.kyselyid = :kyselyid;
+
+-- :name hae-kysely-tyyppi :? :1
+SELECT tyyppi FROM kysely WHERE kyselyid = :kyselyid;

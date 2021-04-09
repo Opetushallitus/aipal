@@ -15,6 +15,7 @@
 (ns aipal.rest-api.raportti.kysely
   (:require [compojure.api.core :refer [GET POST defroutes]]
             [schema.core :as s]
+            [arvo.db.core :refer [*db*] :as db]
             aipal.compojure-util
             [aipal.rest-api.i18n :as i18n]
             [aipal.rest-api.raportti.yhteinen :as yhteinen]
@@ -75,10 +76,11 @@
     (muodosta-kyselyn-tutkintojen-raportit-parametreilla kyselyid parametrit)))
 
 (defn muodosta-kyselyraportti [kyselyid parametrit asetukset]
-  (let [raportit (muodosta-raportit-parametreilla kyselyid parametrit)
+  (let [kysely-tyyppi (:tyyppi (db/hae-kysely-tyyppi {:kyselyid kyselyid}))
+        raportit (muodosta-raportit-parametreilla kyselyid parametrit)
         kaikki-raportit (for [raportti raportit
                               :when raportti]
-                          (ei-riittavasti-vastaajia raportti asetukset))
+                          (ei-riittavasti-vastaajia raportti asetukset kysely-tyyppi))
         naytettavat (filter (comp nil? :virhe) kaikki-raportit)
         virheelliset (filter :virhe kaikki-raportit)
         yhteenveto (muodosta-yhteenveto kyselyid (paivita-parametrit parametrit))]
