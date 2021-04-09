@@ -141,6 +141,7 @@
                            (replace-control-chars (:vapaateksti (first answers))))
          ["kylla_ei_valinta"] (:vaihtoehto (first answers))
          ["luku"] (:numerovalinta (first answers))
+         ["alasvetovalikko"] (:numerovalinta (first answers))
          :else ""))
 
 (defn get-answer [answers choices lang [key value]]
