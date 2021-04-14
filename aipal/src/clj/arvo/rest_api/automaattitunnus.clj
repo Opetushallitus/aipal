@@ -68,6 +68,13 @@
 
 (defonce sallitut-metatiedot [:tila])
 
+(defn poista-vastaajatunnus [tunnus]
+  (let [status (db/vastaajatunnus-status {:tunnus tunnus})]
+    (if-not (:vastattu status)
+      (do (db/poista-vastaajatunnus! {:vastaajatunnusid (:vastaajatunnusid status)})
+          (api-response "Tunnus poistettu"))
+      (response/not-found "Tunnuksella on jo vastauksia"))))
+
 (defroutes ehoks-v1
   (POST "/" []
     :body [data Amispalaute-tunnus]
@@ -101,22 +108,35 @@
     :responses {status/ok {:schema s/Str :description "Tunnus poistettu"}
                 status/not-found {:schema s/Str :description "Tunnuksella on jo vastauksia"}}
     :summary "Poista kyselylinkki"
-    (let [status (db/vastaajatunnus-status {:tunnus tunnus})]
-      (if-not (:vastattu status)
-        (do (db/poista-vastaajatunnus! {:vastaajatunnusid (:vastaajatunnusid status)})
-            (api-response "Tunnus poistettu"))
-        (response/not-found "Tunnuksella on jo vastauksia")))))
+    (poista-vastaajatunnus tunnus)))
 
 (defroutes tyoelamapalaute-v1
   (POST "/vastaajatunnus" []
     :body [data Tyoelamapalaute-tunnus]
     :responses {status/ok {:schema {:tunnus s/Str :voimassa_loppupvm org.joda.time.DateTime}}
-                status/not-found {:schema {:ei-kyselykertaa s/Any} :description "Kyselykertaa ei ole olemassa"}}
+                status/not-found {:schema {:error s/Str :msg s/Str}}}
     :summary "Yksittäisen vastaajatunnuksen luominen"
     (let [luotu-tunnus (vt/lisaa-tyoelamapalaute-tunnus! data)]
       (vastaajatunnus-response luotu-tunnus (:request-id data))))
-  (POST "/niputa" []
+  (DELETE "/vastaajatunnus/:tunnus" []
+    :path-params [tunnus :- s/Str]
+    :responses {status/ok {:schema s/Str :description "Tunnus poistettu"}
+                status/not-found {:schema s/Str :description "Tunnuksella on jo vastauksia"}}
+    :summary "Poista vastaajatunnus"
+    (poista-vastaajatunnus tunnus))
+  (POST "/nippu" []
     :body [data Nippulinkki]
-    :responses {status/ok {:schema {:nippulinkki s/Str :voimassa_loppupvm org.joda.time.DateTime}}}
+    :responses {status/ok {:schema {:nippulinkki s/Str :voimassa_loppupvm org.joda.time.DateTime}}
+                status/not-found {:schema {:errors [s/Str]}}}
     :summary "Yksittäisten linkkien niputus yhdeksi nipputunnukseksi"
-    (nippulinkki-response (vt/niputa-tunnukset! data))))
+    (let [nippu (vt/niputa-tunnukset! data)]
+      (if-not (:errors nippu)
+        (nippulinkki-response nippu)
+        (response/not-found {:errors (:errors nippu)}))))
+  (DELETE "/nippu/:tunniste" []
+    :path-params [tunniste :- s/Str]
+    :summary "Poista nippu"
+    (let [result (vt/poista-nippu tunniste)]
+      (if-not (:error result)
+        (api-response "Tunnus poistettu")
+        (response/not-found (:error result))))))

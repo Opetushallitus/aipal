@@ -119,3 +119,34 @@ VALUES (:tunniste, :kyselyid, :voimassa_alkupvm, :voimassa_loppupvm, :taustatied
 --:name liita-tunnukset-nippuun! :! :n
 UPDATE vastaajatunnus SET metatiedot = coalesce(metatiedot, '{}') || jsonb_build_object('nippu', :tunniste)
 WHERE tunnus IN (:v*:tunnukset);
+
+--:name hae-tunnukset :? :*
+SELECT vt.tunnus, vt.valmistavan_koulutuksen_oppilaitos, vt.taustatiedot, k.koulutustoimija FROM vastaajatunnus vt
+JOIN kyselykerta kk on vt.kyselykertaid = kk.kyselykertaid
+JOIN kysely k on kk.kyselyid = k.kyselyid
+WHERE tunnus IN (:v*:tunnukset);
+
+-- :name hae-kyselykerran-niput :? :*
+SELECT DISTINCT n.tunniste, n.kyselyid, n.voimassa_alkupvm, n.voimassa_loppupvm, n.taustatiedot,
+                count(vt) AS kohteiden_lkm, count(v) AS vastausten_lkm FROM nippu n
+JOIN kysely k ON n.kyselyid = k.kyselyid
+JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
+LEFT JOIN vastaajatunnus vt ON vt.metatiedot->>'nippu' = n.tunniste
+LEFT JOIN vastaaja v ON vt.vastaajatunnusid = v.vastaajatunnusid
+WHERE kk.kyselykertaid = :kyselykertaid
+GROUP BY n.tunniste, n.kyselyid, n.voimassa_alkupvm, n.kyselyid, n.tunniste, n.voimassa_loppupvm, n.taustatiedot;
+
+-- :name hae-nippu :? :1
+SELECT * FROM nippu WHERE tunniste = :tunniste;
+
+-- :name hae-nipun-tunnukset :? :*
+SELECT vt.*,
+       EXISTS(SELECT 1 FROM vastaaja v WHERE v.vastaajatunnusid = vt.vastaajatunnusid) AS vastattu
+       FROM vastaajatunnus vt
+WHERE vt.metatiedot->>'nippu' = :tunniste;
+
+-- :name poista-nippu! :! :n
+DELETE FROM nippu WHERE tunniste = :tunniste;
+
+-- :name poista-tunnukset-nipusta! :! :n
+UPDATE vastaajatunnus SET metatiedot = metatiedot - 'nippu' WHERE metatiedot->>'nippu' = :tunniste;

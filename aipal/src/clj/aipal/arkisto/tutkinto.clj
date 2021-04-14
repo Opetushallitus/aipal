@@ -83,6 +83,9 @@
 (defn hae-tutkinnon-jarjestajat [tutkintotunnus]
   (db/hae-tutkinnon-jarjestajat {:tutkintotunnus tutkintotunnus}))
 
+(defn hae-tutkinnon-osat []
+  (db/hae-koodiston-koodit {:koodistouri "tutkinnonosat"}))
+
 (defn tutkinnot-hierarkiaksi
   [tutkinnot]
   (let [opintoalatMap (group-by #(select-keys % [:opintoalatunnus :opintoala_nimi_fi :opintoala_nimi_sv :opintoala_nimi_en :koulutusalatunnus :koulutusala_nimi_fi :koulutusala_nimi_sv :koulutusala_nimi_en]) tutkinnot)

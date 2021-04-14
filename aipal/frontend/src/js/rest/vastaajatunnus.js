@@ -20,6 +20,9 @@ angular.module('rest.vastaajatunnus', ['ngResource'])
       hae: function(kyselykertaid, omat) {
         return $http.get('api/vastaajatunnus/' + kyselykertaid, {params: {nocache: Date.now(), omat: omat}});
       },
+      haeNiput: function(kyselykertaid) {
+        return $http.get('api/vastaajatunnus/' + kyselykertaid + '/niput', {params: {nocache: Date.now()}});
+      },
       luoUusia: function(kyselykertaid, vastaajatunnus) {
         return $http.post('api/vastaajatunnus/' + kyselykertaid, vastaajatunnus);
       },

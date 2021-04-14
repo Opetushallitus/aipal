@@ -3,7 +3,7 @@
 (def kyselytyypit {:amk        ["avop" "amk-uraseuranta" "rekrykysely"]
                    :yo         ["kandipalaute" "yo-uraseuranta" "rekrykysely"]
                    :amis       ["amispalaute" "tyoelamapalaute"]
-                   :yllapitaja ["itsearvionti" "ohjaus" "move"]})
+                   :yllapitaja ["itsearvionti" "ohjaus" "move" "tyoelamapalaute"]})
 
 (def yllapito-kyselytyypit (distinct (apply concat (vals kyselytyypit))))
 

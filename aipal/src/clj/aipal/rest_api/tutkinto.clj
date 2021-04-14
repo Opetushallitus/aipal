@@ -35,7 +35,7 @@
        :kayttooikeus :katselu
        :query-params [kyselytyyppi :- String]
        (let [y-tunnus (:aktiivinen-koulutustoimija *kayttaja*)]
-      (response-or-404 (tutkinto/hae-koulutustoimijan-voimassaolevat-tutkinnot y-tunnus kyselytyyppi))))
+         (response-or-404 (tutkinto/hae-koulutustoimijan-voimassaolevat-tutkinnot y-tunnus kyselytyyppi))))
   (GET "/koulutustoimija/:y-tunnus" []
        :kayttooikeus :katselu
        :path-params [y-tunnus :- String]
@@ -48,4 +48,7 @@
   (GET "/jarjestajat/:tutkintotunnus" []
     :path-params [tutkintotunnus :- String]
     :kayttooikeus :katselu
-    (response-or-404 (tutkinto/hae-tutkinnon-jarjestajat tutkintotunnus))))
+    (response-or-404 (tutkinto/hae-tutkinnon-jarjestajat tutkintotunnus)))
+  (GET "/tutkinnonosat" []
+    :kayttooikeus :katselu
+    (response-or-404 (tutkinto/hae-tutkinnon-osat))))

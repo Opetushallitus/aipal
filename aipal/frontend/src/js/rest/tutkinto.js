@@ -40,6 +40,9 @@ angular.module('rest.tutkinto', [])
       },
       haeKoulutustoimijanTutkinnot: function(ytunnus, kyselytyyppi) {
         return $http.get('api/tutkinto/koulutustoimija/'+ytunnus+'?kyselytyyppi='+kyselytyyppi, {params: {nocache: Date.now()}});
+      },
+      haeTutkinnonOsat: function () {
+        return $http.get('api/tutkinto/tutkinnonosat' , {params: {nocache: Date.now()}});
       }
     };
   }]);

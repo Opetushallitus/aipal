@@ -7,6 +7,9 @@ SELECT * FROM tutkinto WHERE tutkintotunnus = :tutkintotunnus;
 -- :name hae-koodiston-koodit :? :*
 SELECT * FROM koodi WHERE koodisto_uri = :koodistouri;
 
+--:name hae-koodiston-koodi :? :1
+SELECT * FROM koodi WHERE koodisto_uri = :koodistouri AND koodi_arvo = :koodi;
+
 -- :name lisaa-koodiston-koodi! :! :n
 INSERT INTO koodi (koodisto_uri, nimi_fi, nimi_sv, nimi_en, koodi_arvo, voimassa_alkupvm, voimassa_loppupvm)
     VALUES (:koodisto_uri, :nimi_fi, :nimi_sv, :nimi_en, :koodi_arvo, :voimassa_alkupvm, :voimassa_loppupvm);

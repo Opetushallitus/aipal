@@ -1,0 +1,131 @@
+<div class="modal-header">
+  <a class="pull-right" ng-click="cancel()">X</a>
+  <h4>{{i18n.vastaajatunnus.uusi_vastaajatunnus}}</h4>
+</div>
+
+<form name="tunnustenLuontiForm" role="form">
+
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="vastaajien_maara">{{i18n.vastaajatunnus.vastaajia}}</label>
+      <div class="row">
+        <div class="col-md-4">
+          <input id="vastaajien_maara" type="number" min="1" max="500" class="form-control"
+                 ng-model="vastaajatunnus.kohteiden_lkm" ng-required="true">
+        </div>
+      </div>
+    </div>
+
+    <label>
+      <input type="checkbox" class="e2e-vastaajatunnus-henkilokohtainen" ng-model="vastaajatunnus.henkilokohtainen">
+      <span>{{i18n.vastaajatunnus.henkilokohtainen}}</span>
+    </label>
+
+    <div class="form-group">
+      <label>{{i18n.yleiset.tutkinto}} *
+        <ui-select ng-if="tutkinnot.length>0" ng-model="vastaajatunnus.tutkinto" ng-disabled="disabled" ng-required="true" ng-change="haeTutkinnonJarjestajat()">
+          <ui-select-match allow-clear>{{$select.selected | lokalisoiTutkinto}}</ui-select-match>
+          <ui-select-choices repeat="tutkinto in tutkinnot | filter: $select.search | orderByLokalisoitu:'nimi'">
+            <div ng-bind-html="tutkinto | lokalisoiTutkinto | highlight: $select.search"></div>
+            <!--<div ng-if="tutkinto.voimassa_alkupvm || tutkinto.voimassa_loppupvm" style="margin-left: 1em"><small>{{'yleiset.voimassa' | i18n}} {{tutkinto.voimassa_alkupvm | voimassaoloAika:tutkinto.voimassa_loppupvm}}</small></div>-->
+            <div ng-if="tutkinto.siirtymaajan_loppupvm" style="margin-left: 1em"><small>{{'vastaajatunnus.siirtymaaika_loppuu' | i18n}} {{tutkinto.siirtymaajan_loppupvm | date}}</small></div>
+            <div ng-if="tutkinto.sopimus_alkupvm || tutkinto.sopimus_loppupvm"><small>{{'vastaajatunnus.sopimus' | i18n}}: {{tutkinto.sopimus_alkupvm | voimassaoloAika:tutkinto.sopimus_loppupvm}}</small></div>
+          </ui-select-choices>
+        </ui-select>
+      </label>
+      <span class="text-muted" ng-if="tutkinnot.length==0">{{i18n.vastaajatunnus.ei_tutkintoja}}</span>
+      <label>
+        <input type="checkbox" ng-model="haeKaikkiTutkinnot" ng-change="toggleHaeKaikkiTutkinnot()">
+        <span>{{'vastaajatunnus.nayta_lisaa_tutkintoja' | i18n}}</span>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>{{'yleiset.tutkinnon_suorituskieli' | i18n}} *
+        <select ng-required="true"
+                ng-model="vastaajatunnus.suorituskieli"
+                ng-options="kieli as kieli | enumArvo:'kieli' for kieli in kielet"
+                class="form-control">
+        </select>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>{{i18n.vastaajatunnus.koulutuksen_jarjestaja}} *
+        <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.koulutuksen_jarjestaja" ng-disabled="disabled" required="true">
+          <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+          <ui-select-choices rullaus="naytaLisaa()" repeat="koulutustoimija in koulutustoimijat | filter: $select.search | orderByLokalisoitu:'nimi' | limitTo: rullausrajoite">
+            <div ng-bind-html="koulutustoimija | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>{{i18n.vastaajatunnus.koulutuksen_jarjestava_oppilaitos}} *
+        <ui-select ng-model="vastaajatunnus.koulutuksen_jarjestaja_oppilaitos" ng-disabled="disabled" required="true">
+          <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+          <ui-select-choices repeat="oppilaitos in oppilaitokset | filter: $select.search | orderByLokalisoitu:'nimi'">
+            <div ng-bind-html="oppilaitos | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>{{i18n.vastaajatunnus.koulutuksen_jarjestava_toimipiste}}
+        <ui-select ng-model="vastaajatunnus.koulutuksen_toimipaikka" ng-disabled="disabled">
+          <ui-select-match allow-clear>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+          <ui-select-choices rullaus="naytaLisaa()" repeat="toimipaikka in toimipaikat | filter: $select.search | orderByLokalisoitu:'nimi'">
+            <div ng-bind-html="toimipaikka | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>{{i18n.vastaajatunnus.tutkinnon_osa}}
+        <ui-select ng-click="nollaaRajoite()" ng-model="vastaajatunnus.tutkinnon_osa" ng-disabled="disabled">
+          <ui-select-match>{{$select.selected | lokalisoiKentta:'nimi'}}</ui-select-match>
+          <ui-select-choices rullaus="naytaLisaa()" repeat="tutkinnonOsa in tutkinnonOsat | filter: $select.search | orderByLokalisoitu:'nimi' | limitTo: rullausrajoite">
+            <div ng-bind-html="tutkinnonOsa | lokalisoiKentta:'nimi' | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </label>
+    </div>
+
+    <div>
+      <h3>{{'kyselykerta.vastausaika' | i18n}}</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <pvm-valitsin
+                  otsikko="{{i18n.yleiset.alkaen}}"
+                  oletus-pvm="oletusalkupvm"
+                  valittu-pvm="vastaajatunnus.voimassa_alkupvm"
+                  min-pvm="oletusalkupvm"
+                  max-pvm="vastaajatunnus.voimassa_loppupvm"
+                  pakollinen="true">
+          </pvm-valitsin>
+        </div>
+
+        <div class="col-md-6">
+          <pvm-valitsin
+                  otsikko="{{i18n.yleiset.asti}}"
+                  oletus-pvm="oletusloppupvm"
+                  valittu-pvm="vastaajatunnus.voimassa_loppupvm"
+                  min-pvm="vastaajatunnus.voimassa_alkupvm"
+                  max-pvm="astiMaxLoppupvm"
+                  pakollinen="false">
+          </pvm-valitsin>
+        </div>
+      </div>
+    </div>
+    <small ng-if="menneisyydessa">
+      <span>{{ 'vastaajatunnus.menneisyydessa_selite' | i18n }}</span>
+    </small>
+  </div>
+
+  <div class="modal-footer e2e-vastaustunnusten-luonti-dialogi">
+    <small class="pull-right ">
+      <pakollisia-kenttia></pakollisia-kenttia>
+    </small>
+    <tallenna class="btn btn-primary pull-left" formi-validi="tunnustenLuontiForm.$valid && !menneisyydessa" teksti="{{i18n.vastaajatunnus.lisaa_vastaajatunnukset}}" ng-click="luoTunnuksia(vastaajatunnus)"></tallenna>
+    <button class="btn btn-default pull-left" ng-click="cancel()">{{i18n.yleiset.peruuta}}</button>
+  </div>
+
+</form>

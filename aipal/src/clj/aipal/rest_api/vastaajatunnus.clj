@@ -37,7 +37,8 @@
    :haun_numero (:haun_numero vastaajatunnus)
    :henkilonumero (:henkilonumero vastaajatunnus)
    :hankintakoulutuksen_toteuttaja (get-in vastaajatunnus [:hankintakoulutuksen_toteuttaja :ytunnus])
-   :tutkintomuoto (:tutkintomuoto vastaajatunnus)})
+   :tutkintomuoto (:tutkintomuoto vastaajatunnus)
+   :tutkinnon_osa (:koodi_arvo (:tutkinnon_osa vastaajatunnus))})
 
 (defroutes reitit
   (POST "/:kyselykertaid" []
@@ -85,6 +86,11 @@
     :query-params [{omat :- s/Bool false}]
     :kayttooikeus :katselu
     (response-or-404 (vastaajatunnus/hae-kyselykerralla kyselykertaid omat)))
+
+  (GET "/:kyselykertaid/niput" []
+    :path-params [kyselykertaid :- s/Int]
+    :kayttooikeus :katselu
+    (response-or-404 (vastaajatunnus/hae-niput kyselykertaid)))
 
   (GET "/:kyselykertaid/tutkinto" []
     :path-params [kyselykertaid :- s/Int]

@@ -18,27 +18,27 @@
    (s/optional-key :metatiedot)                     Vastaajatunnus-metatiedot})
 
 (s/defschema Tyoelamapalaute-tunnus
-  {:koulutustoimija_oid                       s/Str
-   :tyonantaja                                s/Str
-   :tyopaikka                                 s/Str
-   :tutkintotunnus                            s/Str
-   :tutkinnon_osa                             (s/maybe s/Str)
-   :tutkintonimike                            s/Str
-   :osaamisala                                s/Str
-   :tyopaikkajakson_alkupvm                   s/Str
-   :tyopaikkajakson_loppupvm                  s/Str
-   :sopimustyyppi                             s/Str
-   :vastaamisajan_alkupvm                     s/Str
-   (s/optional-key :oppilaitos_oid)           (s/maybe s/Str)
-   (s/optional-key :toimipiste_oid)           (s/maybe s/Str)
-   :request_id                                s/Str})
+  {:koulutustoimija_oid                        s/Str
+   :tyonantaja                                 s/Str
+   :tyopaikka                                  s/Str
+   :tutkintotunnus                             s/Str
+   (s/optional-key :tutkinnon_osa)             (s/maybe s/Str)
+   (s/optional-key :paikallinen_tutkinnon_osa) (s/maybe s/Str)
+   :tutkintonimike                             [s/Str]
+   :osaamisala                                 [s/Str]
+   :tyopaikkajakson_alkupvm                    s/Str
+   :tyopaikkajakson_loppupvm                   s/Str
+   :sopimustyyppi                              s/Str
+   :vastaamisajan_alkupvm                      s/Str
+   (s/optional-key :oppilaitos_oid)            (s/maybe s/Str)
+   (s/optional-key :toimipiste_oid)            (s/maybe s/Str)
+   :request_id                                 s/Str})
 
 (s/defschema Nippulinkki
   {:tunniste            s/Str
    :koulutustoimija_oid s/Str
-   :oppilaitos_oid      s/Str
+   :oppilaitos_oid      (s/maybe s/Str)
    :tutkintotunnus      s/Str
-   :tutkinnon_osa       (s/maybe s/Str)
    :tunnukset           [s/Str]
    :voimassa_alkupvm    s/Str
    :request_id          s/Str})

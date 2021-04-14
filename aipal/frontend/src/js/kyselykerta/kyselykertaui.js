@@ -62,7 +62,8 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         'itsearviointi': 'template/kysely/digikyvykkyys-tunnukset.html',
         'amispalaute': 'template/kysely/amis-tunnukset.html',
         'kandipalaute': 'template/kysely/palautekysely-tunnukset.html',
-        'amk-uraseuranta': 'template/kysely/uraseuranta-tunnukset.html'
+        'amk-uraseuranta': 'template/kysely/uraseuranta-tunnukset.html',
+        'tyoelamapalaute': 'template/kysely/tyoelamapalaute-tunnukset.html',
       };
 
       $scope.luoTunnuksiaDialogi = function (laajennettu) {
@@ -159,6 +160,16 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         });
       }
 
+      function haeNiput () {
+        Vastaajatunnus.haeNiput($routeParams.kyselykertaid)
+          .then(function (resp) {
+            if (resp.data) {
+              $scope.niput = resp.data;
+            }}).catch(function (e) {
+              console.error(e)
+        })
+      }
+
       $scope.toggleOmat = function(){
         $scope.vain_omat = !$scope.vain_omat;
         haeTunnukset();
@@ -194,6 +205,9 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
         $scope.vain_omat = kysely.tyyppi === 'amispalaute'
         if(!$scope.uusi){
           haeTunnukset();
+          if(kysely.tyyppi === 'tyoelamapalaute'){
+            haeNiput();
+          }
         }
       }).catch(function() {
         $location.url('/');
@@ -215,6 +229,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
       }
       else {
         $scope.tunnukset = [];
+        $scope.niput = []
         $scope.kyselykerta = {};
       }
 
@@ -310,6 +325,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
               laajennettu, Koulutustoimija) {
 
       $scope.tutkinnonJarjestajat = [];
+      $scope.tutkinnonOsat = [];
 
       $scope.vastaajatunnus = {
         henkilokohtainen: true,
@@ -385,6 +401,16 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
           $scope.tutkinnonJarjestajat = resp.data;
         }).catch(function (e) {
           console.error(e);
+        });
+      }
+
+      //Työelämäpalaute-pilotti
+      if(kyselytyyppi === 'tyoelamapalaute') {
+        Tutkinto.haeTutkinnonOsat().then(function(resp) {
+          console.log("Tutkinnon osat: " + resp.data.length)
+          $scope.tutkinnonOsat = resp.data
+        }).catch(function (e) {
+          console.error(e)
         });
       }
 

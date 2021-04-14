@@ -56,12 +56,13 @@
 <div ng-if="!uusi">
     <h2>{{'vastaajatunnus.lista' | i18n}} <ohje tunniste="kyselykerran_vastaajatunnukset"></ohje></h2>
     <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()"
-            ng-if="muokkaustila && !kysely.automatisoitu && kyselykerta.automaattinen === null" >
+            ng-if="muokkaustila && (!kysely.automatisoitu && kyselykerta.automaattinen === null) || kysely.tyyppi === 'tyoelamapalaute'" >
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>
-    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)" ng-if="muokkaustila && kysely.tyyppi === 'amispalaute' && laajennettuOppisopimuskoulutus &&
-                                                                                !kysely.automatisoitu && kyselykerta.automaattinen === null"
+    <button class="btn btn-primary" ng-click="luoTunnuksiaDialogi(true)"
+            ng-if="muokkaustila && kysely.tyyppi === 'amispalaute'
+            && laajennettuOppisopimuskoulutus && !kysely.automatisoitu && kyselykerta.automaattinen === null"
             title="{{'vastaajatunnus.luonti_laajennettu_tooltip' | i18n}}">
         {{'vastaajatunnus.luonti_laajennettu' | i18n }} &nbsp;
         <span class="fa fa-plus"></span>
@@ -90,7 +91,8 @@
 
     <div>
         <div class="well">
-        <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper ng-if="(kysely.tyyppi !== 'yo-uraseuranta') && (kysely.tyyppi !== 'amk-uraseuranta') ">
+        <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper
+               ng-if="(kysely.tyyppi !== 'yo-uraseuranta') && (kysely.tyyppi !== 'amk-uraseuranta') && (kysely.tyyppi !== 'tyoelamapalaute') ">
             <thead>
             <tr>
                 <th ts-criteria="tunnus">{{'i18n.vastaajatunnus.tunnus'|i18n}}</th>
@@ -126,7 +128,7 @@
                 <tr ng-repeat="tunnus in tunnukset"
                     ng-class="{lukittu: tunnus.lukittu, voimassa: tunnus.kaytettavissa && tunnus.kohteiden_lkm > tunnus.vastausten_lkm}"
                     ts-repeat>
-                    <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/{{tunnus.tunnus}}</td>
+                    <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/v/{{tunnus.tunnus}}</td>
                     <td>{{tunnus.luotuaika | date:'dd.MM.yyyy hh:mm:ss'}}</td>
                     <td>{{tunnus.voimassa_alkupvm | voimassaoloAika: tunnus.voimassa_loppupvm}}</td>
                     <td>
@@ -170,6 +172,54 @@
                 </tr>
             </tbody>
         </table>
+            <table class="table table-striped vastaajatunnus-taulukko" ts-wrapper
+                   ng-if="(kysely.tyyppi === 'tyoelamapalaute') ">
+                <thead>
+                <tr>
+                    <th ts-criteria="tunnus">{{'i18n.vastaajatunnus.nippulinkki'|i18n}}</th>
+                    <th ts-criteria="voimassa_alkupvm">{{'kyselykerta.vastausaika' | i18n}}</th>
+                    <th ts-criteria="tyonantaja">{{'vastaajatunnus.tyopaikka' | i18n}}</th>
+                    <th ts-criteria="tutkinto|lokalisoiKentta:'nimi'">{{'i18n.vastaajatunnus.tutkinto'|i18n}}</th>
+                    <th ts-criteria="vastausten_lkm">{{'i18n.vastaajatunnus.vastauksia'|i18n}}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        {{'vastaajatunnus.vastauksia'|i18n}}
+                    </td>
+                    <td>
+                        <strong>{{getVastaustenLkm()}} / {{getVastaajienLkm()}}</strong>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        {{'i18n.vastaajatunnus.vastausprosentti'|i18n}}
+                    </td>
+                    <td>
+                        <uib-progressbar value="getVastausProsentti() | number:0"><span>{{getVastausProsentti(rahoitusmuodot.rahoitusmuotoid) | number:0}}%</span></uib-progressbar>
+                    </td>
+                    <td></td>
+                </tr>
+                </tfoot>
+                <tbody>
+                <tr ng-repeat="nippu in niput"
+                    ng-class="{voimassa: nippu.kohteiden_lkm > nippu.vastausten_lkm}"
+                    ts-repeat>
+                    <td class="e2e-vastaajatunnus-url">{{vastausBaseUrl}}/n/{{nippu.tunniste}}</td>
+                    <td>{{nippu.voimassa_alkupvm | voimassaoloAika: nippu.voimassa_loppupvm}}</td>
+                    <td>
+                        <div>{{nippu.taustatiedot.tyonantaja}}</div>
+                        <div>{{nippu.taustatiedot.tyopaikka}}</div>
+                    </td>
+                    <td>{{nippu.tutkinto | lokalisoiKentta:'nimi'}}</td>
+                    <td>{{nippu.vastausten_lkm}} / {{nippu.kohteiden_lkm}}</td>
+                    <td class="nowrap actions"> </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

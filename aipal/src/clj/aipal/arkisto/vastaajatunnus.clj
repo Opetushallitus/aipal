@@ -204,3 +204,15 @@
       (db/lisaa-nippu! tx data)
       (db/liita-tunnukset-nippuun! tx data)
       data)))
+
+(defn taydenna-nippu [nippu]
+  (let [tutkinto (db/hae-tutkinto {:tutkintotunnus (get-in nippu [:taustatiedot :tutkinto])})]
+    (merge nippu {:tutkinto tutkinto})))
+
+(defn hae-niput [kyselykertaid]
+  (map taydenna-nippu (db/hae-kyselykerran-niput {:kyselykertaid kyselykertaid})))
+
+(defn poista-nippu [tunniste]
+  (jdbc/with-db-transaction [tx *db*]
+    (do (db/poista-tunnukset-nipusta! {:tunniste tunniste})
+        (db/poista-nippu! {:tunniste tunniste}))))
