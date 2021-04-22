@@ -55,11 +55,11 @@ t.nimi_fi, t.nimi_sv, t.nimi_en, kaytettavissa(vt) AS kaytettavissa, (vt.taustat
 COALESCE(COALESCE(vt.voimassa_loppupvm, kk.voimassa_loppupvm, k.voimassa_loppupvm) + 30 > CURRENT_DATE, TRUE) AS muokattavissa,
 (SELECT count(*) FROM vastaaja WHERE vastaajatunnusid = vt.vastaajatunnusid) AS vastausten_lkm,
 o.oppilaitoskoodi, o.nimi_fi AS oppilaitos_nimi_fi, o.nimi_sv AS oppilaitos_nimi_sv, o.nimi_en AS oppilaitos_nimi_en,
-tmp.toimipaikkakoodi, tmp.nimi_fi AS toimipaikka_nimi_fi, tmp.nimi_sv AS toimipaikka_nimi_sv, tmp.nimi_en AS toimipaikka_nimi_en
+tmp.toimipistekoodi, tmp.nimi_fi AS toimipiste_nimi_fi, tmp.nimi_sv AS toimipiste_nimi_sv, tmp.nimi_en AS toimipiste_nimi_en
 FROM vastaajatunnus vt
 LEFT JOIN tutkinto t ON vt.tutkintotunnus = t.tutkintotunnus
 LEFT JOIN oppilaitos o ON vt.valmistavan_koulutuksen_oppilaitos = o.oppilaitoskoodi
-LEFT JOIN toimipaikka tmp ON vt.taustatiedot->>'toimipaikka' = tmp.toimipaikkakoodi
+LEFT JOIN toimipiste tmp ON vt.taustatiedot->>'toimipiste' = tmp.toimipistekoodi
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE vt.kyselykertaid = :kyselykertaid

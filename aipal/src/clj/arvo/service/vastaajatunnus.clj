@@ -37,7 +37,7 @@
         _ (log/info "Automaattikyselykerta: " kyselykerta-id)]
     (automaatti-vastaajatunnus :palaute
                                {:kieli kieli
-                                :toimipaikka nil
+                                :toimipiste nil
                                 :valmistavan_koulutuksen_oppilaitos (get-in ent_oppilaitos [:oppilaitoskoodi])
                                 :tutkinto (ent_tutkinto :tutkintotunnus)
                                 :kunta kunta
@@ -65,7 +65,7 @@
                                 :voimassa_alkupvm (when alkupvm (f/parse (f/formatters :date) alkupvm))
                                 :koulutustoimija koulutustoimija
                                 :kieli (:tutkinnon_suorituskieli data)
-                                :toimipaikka (:toimipaikkakoodi (db/hae-oidilla {:taulu "toimipaikka" :oid (:toimipiste_oid data)}))
+                                :toimipiste (:toimipistekoodi (db/hae-oidilla {:taulu "toimipiste" :oid (:toimipiste_oid data)}))
                                 :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
                                 :tutkinto (:tutkintotunnus data)
                                 :osaamisala (:osaamisala data)
@@ -79,7 +79,7 @@
     (automaatti-vastaajatunnus :tyoelamapalaute
                                {:kyselykertaid kyselykertaid
                                 :koulutustoimija koulutustoimija
-                                :toimipaikka (:toimipaikkakoodi (db/hae-oidilla {:taulu "toimipaikka" :oid (:toimipiste_oid data)}))
+                                :toimipiste (:toimipistekoodi (db/hae-oidilla {:taulu "toimipiste" :oid (:toimipiste_oid data)}))
                                 :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
                                 :tutkinto (:tutkintotunnus data)
                                 :kieli "fi"

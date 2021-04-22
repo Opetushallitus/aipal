@@ -16,6 +16,10 @@
     (log/info "Export" type ":" params)
     params))
 
+(defn muunna-vastaajatiedot-v1-schemaan [taustatiedot]
+  "Säilytä v1 rajapinnan yhteensopivuus nimeämällä (taustatietojen) toimipiste->toimipaikka"
+  (update-in taustatiedot [:taustatiedot] clojure.set/rename-keys {:toimipiste :toimipaikka}))
+
 (s/defschema Pagination
   {(s/optional-key :next_url) (s/maybe s/Str)})
 
@@ -67,8 +71,10 @@
                       {limit :- s/Int nil}
                       {kyselyid :- s/Int nil}]
        (let [page-length (if limit (min limit (:api-page-length @asetukset)) (:api-page-length @asetukset))
-             sql-params (merge {:pagelength page-length :since since :kyselyid kyselyid}(export-params request "taustatiedot"))]
-         (paginated-response (db/export-taustatiedot sql-params) :vastaajaid page-length (str api-location "vastaajat") {:limit limit})))
+             sql-params (merge {:pagelength page-length :since since :kyselyid kyselyid}(export-params request "taustatiedot"))
+             vastaajatiedot (db/export-taustatiedot sql-params)
+             vastaajatiedot-v1-schema (map muunna-vastaajatiedot-v1-schemaan vastaajatiedot)]
+         (paginated-response vastaajatiedot-v1-schema :vastaajaid page-length (str api-location "vastaajat") {:limit limit})))
   (GET "/opiskeluoikeudet" [:as request]
        :summary "Vastaajatunnukset ja sen opiskeluoikeus"
        :description "Vastaajatunnuksen ja virran opiskeluoikeuden suhteet. Vain kyselyynohjauksen kautta vastanneet saavat tämän esim. HAKA."
