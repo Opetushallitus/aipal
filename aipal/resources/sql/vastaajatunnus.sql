@@ -104,7 +104,7 @@ GROUP BY vt.tunnus, kk.nimi, vt.voimassa_alkupvm, vt.kohteiden_lkm,
          t.tutkintotunnus, t.nimi_fi, t.nimi_sv, t.nimi_en;
 
 -- :name hae-kyselyn-vastaajat :? :*
-SELECT vt.tunnus, kk.nimi, vt.voimassa_alkupvm, v.luotuaika AS vastausaika, t.tutkintotunnus,
+SELECT vt.tunnus, kk.nimi, vt.voimassa_alkupvm, v.vastausaika, t.tutkintotunnus,
        t.nimi_fi AS tutkinto_fi, t.nimi_sv AS tutkinto_sv, t.nimi_en AS tutkinto_en
 FROM vastaaja v
 JOIN vastaajatunnus vt ON v.vastaajatunnusid = vt.vastaajatunnusid

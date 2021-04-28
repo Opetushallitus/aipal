@@ -80,8 +80,8 @@
 (defn ^:private raportti-query [rajaukset taustakysymysryhmaid alkupvm loppupvm koulutustoimijat oppilaitokset koulutusalatunnus opintoalatunnus tutkintotunnus tutkintotyyppi suorituskieli]
   (->
     (sql/select* [:vastaus :vastaus])
+   (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
     (cond->
-      (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi koulutustoimijat suorituskieli oppilaitokset) (sql/join :inner :vastaaja (= :vastaaja.vastaajaid :vastaus.vastaajaid))
       (or tutkintotunnus opintoalatunnus koulutusalatunnus tutkintotyyppi suorituskieli oppilaitokset) (sql/join :inner :vastaajatunnus
                                                                                                                  (and (= :vastaajatunnus.vastaajatunnusid :vastaaja.vastaajatunnusid)
                                                                                                                       (or (nil? tutkintotunnus) (= :vastaajatunnus.tutkintotunnus tutkintotunnus))))
@@ -98,8 +98,8 @@
       oppilaitokset (sql/where {:vastaajatunnus.valmistavan_koulutuksen_oppilaitos [in oppilaitokset]})
       suorituskieli (sql/where {:vastaajatunnus.suorituskieli suorituskieli}))
     (generoi-joinit (konvertoi-ehdot rajaukset))
-    (sql/where (or (nil? alkupvm) (>= :vastaus.vastausaika alkupvm)))
-    (sql/where (or (nil? loppupvm) (<= :vastaus.vastausaika loppupvm)))
+    (sql/where (or (nil? alkupvm) (>= :vastaaja.vastausaika alkupvm)))
+    (sql/where (or (nil? loppupvm) (<= :vastaaja.vastausaika loppupvm)))
     (sql/fields :vastaus.kysymysid
                 [(sql/sqlfn array_agg :vastaus.vastaajaid) :vastaajat]
                 [(sql/sqlfn avg :vastaus.numerovalinta) :keskiarvo]

@@ -16,7 +16,7 @@ AND k.tyyppi IN (:v*:kyselytyypit);
 -- :name export-vastaukset :? :*
 SELECT k.koulutustoimija, k.kyselyid, kk.kyselykertaid,
        v.vastaajaid, vt.vastaajatunnusid,
-       v.vastausid, v.kysymysid, to_char(v.vastausaika, 'YYYY-MM-DD') AS vastausaika, v.numerovalinta, v.vapaateksti, v.vaihtoehto,
+       v.vastausid, v.kysymysid, to_char(vs.vastausaika, 'YYYY-MM-DD') AS vastausaika, v.numerovalinta, v.vapaateksti, v.vaihtoehto,
        monivalintavaihtoehto.teksti_fi AS monivalintavaihtoehto_fi,
        monivalintavaihtoehto.teksti_sv AS monivalintavaihtoehto_sv,
        monivalintavaihtoehto.teksti_en AS monivalintavaihtoehto_en
@@ -33,8 +33,8 @@ FROM vastaus v
 WHERE k.tila != 'luonnos'
   AND k.tyyppi IN (:v*:kyselytyypit)
   AND coalesce((kk.metatiedot->>'ei_raportoida')::BOOLEAN, FALSE ) = FALSE
---~(if (:alkupvm params) "AND v.vastausaika >= :alkupvm::date")
---~(if (:loppupvm params) "AND v.vastausaika <= :loppupvm::date")
+--~(if (:alkupvm params) "AND vs.vastausaika >= :alkupvm::date")
+--~(if (:loppupvm params) "AND vs.vastausaika <= :loppupvm::date")
 --~(if (:kyselyid params) "AND k.kyselyid = :kyselyid")
 --~(if (:vipunen params) "AND kys.valtakunnallinen = TRUE" "AND k.koulutustoimija = :koulutustoimija")
 --~(if (:vipunen params) "AND kys.vastaustyyppi != 'vapaateksti'")

@@ -1,6 +1,6 @@
 -- :name hae-vastaukset :? :*
 SELECT v.vastausid, k.kysymysid, vs.vastaajaid,
-  v.vapaateksti, v.numerovalinta::int, v.vaihtoehto, v.en_osaa_sanoa, v.vastausaika,
+  v.vapaateksti, v.numerovalinta::int, v.vaihtoehto, v.en_osaa_sanoa, vs.vastausaika,
   vs.luotuaika AS vastaaja_luotuaika,
   vt.tunnus AS vastaajatunnus, vt.tutkintotunnus, vt.taustatiedot,
   k.kysymysryhmaid, k.vastaustyyppi, o.oppilaitoskoodi,

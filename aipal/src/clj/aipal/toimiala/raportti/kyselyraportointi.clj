@@ -57,9 +57,9 @@
 
 (defn- vertailujakso-tyypin-mukaan [vertailujakson-tyyppi]
   (case vertailujakson-tyyppi
-              "vastaus_vastausaika" :vastaaja.luotuaika
+              "vastaus_vastausaika" :vastaaja.vastausaika
               "vastaajatunnus_alkupvm" :vastaajatunnus.voimassa_alkupvm
-              :vastaaja.luotuaika))
+              :vastaaja.vastausaika))
 
 (defn hae-vastaajatunnusten-tiedot-koulutustoimijoittain
   [{:keys [tutkinnot kyselyid vertailujakso_alkupvm vertailujakso_loppupvm vertailujakso_tyyppi] :as parametrit}]

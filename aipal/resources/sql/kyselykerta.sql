@@ -94,7 +94,7 @@ SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_
        coalesce(sum(DISTINCT vt.kohteiden_lkm) FILTER (WHERE vt.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
        count(DISTINCT vs) FILTER (WHERE vt.kaytettavissa) AS aktiivisia_vastaajia,
        count(vt) = 0 AS poistettavissa,
-       max(vs.luotuaika) AS viimeisin_vastaus
+       max(vs.vastausaika) AS viimeisin_vastaus
 FROM kyselykerta kk
          JOIN kysely k ON kk.kyselyid = k.kyselyid
          LEFT JOIN vastaajatunnus vt on kk.kyselykertaid = vt.kyselykertaid
