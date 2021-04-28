@@ -149,7 +149,7 @@
                             </span>
                         </div>
                     </td>
-                    <td>{{tunnus.vastausten_lkm}} / {{tunnus.kohteiden_lkm}} <a ng-click="muokkaaVastaajienMaaraa(tunnus)" ng-if="tunnus.muokattavissa"><span class="fa fa-pencil"></span></a></td>
+                    <td>{{tunnus.vastausten_lkm}} / {{tunnus.kohteiden_lkm}} <a ng-click="muokkaaVastaajienMaaraa(tunnus)" ng-if="tunnus.muokattavissa && tunnus.kohteiden_lkm !== 1"><span class="fa fa-pencil"></span></a></td>
                     <td class="nowrap actions">
                         <span ng-if="tunnus.kohteiden_lkm > tunnus.vastausten_lkm">
                             <a ng-if="tunnus.vastausten_lkm === 0" ng-click="poistaTunnus(tunnus)">
