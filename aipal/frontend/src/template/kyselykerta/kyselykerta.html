@@ -57,8 +57,8 @@
     <h2>{{'vastaajatunnus.lista' | i18n}} <ohje tunniste="kyselykerran_vastaajatunnukset"></ohje></h2>
     <button class="btn btn-primary e2e-luo-vastaajatunnuksia" ng-click="luoTunnuksiaDialogi()"
             ng-if="muokkaustila &&
-            (!kysely.automatisoitu && kyselykerta.automaattinen === null) ||
-            (!(kyselykerta.automaattinen === null) && kysely.tyyppi === 'tyoelamapalaute')" >
+            ((!kysely.automatisoitu && kyselykerta.automaattinen === null) ||
+            (kyselykerta.automaattinen === null && kysely.tyyppi === 'tyoelamapalaute'))" >
         {{'vastaajatunnus.luonti' | i18n}}&nbsp;&nbsp;
         <span class="fa fa-plus"></span>
     </button>

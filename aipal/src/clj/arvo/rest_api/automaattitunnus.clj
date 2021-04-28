@@ -133,7 +133,7 @@
       (if-not (:errors nippu)
         (nippulinkki-response nippu)
         (do
-          (println "Virhe nipun luonnissa: " (:errors nippu))
+          (log/info "Virhe nipun luonnissa: " (:errors nippu))
           (response/not-found {:errors (:errors nippu)})))))
   (DELETE "/nippu/:tunniste" []
     :path-params [tunniste :- s/Str]
