@@ -96,12 +96,11 @@
 
 (defn nippu [data]
   (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
-        oppilaitos (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)})
         kyselyid (:kyselyid (kyselykerta/hae-automaatti-kyselykerta koulutustoimija "tyoelamapalaute" nil))
         alkupvm (f/parse (f/formatters :date) (:voimassa_alkupvm data))
-        taustatiedot {:oppilaitos (:oppilaitoskoodi oppilaitos)
-                      :tutkinto (:tutkintotunnus data)
-                      :tutkinnon_osa (:tutkinnon_osa data)}]
+        taustatiedot {:tutkinto (:tutkintotunnus data)
+                      :tyonantaja (:tyonantaja data)
+                      :tyopaikka (:tyopaikka data)}]
     (merge data {:kyselyid kyselyid :taustatiedot taustatiedot :koulutustoimija koulutustoimija}
                 (tunnus-voimassaolo :tyoelamapalaute alkupvm))))
 

@@ -132,7 +132,9 @@
     (let [nippu (vt/niputa-tunnukset! data)]
       (if-not (:errors nippu)
         (nippulinkki-response nippu)
-        (response/not-found {:errors (:errors nippu)}))))
+        (do
+          (println "Virhe nipun luonnissa: " (:errors nippu))
+          (response/not-found {:errors (:errors nippu)})))))
   (DELETE "/nippu/:tunniste" []
     :path-params [tunniste :- s/Str]
     :summary "Poista nippu"

@@ -37,8 +37,9 @@
 (s/defschema Nippulinkki
   {:tunniste            s/Str
    :koulutustoimija_oid s/Str
-   :oppilaitos_oid      (s/maybe s/Str)
    :tutkintotunnus      s/Str
+   :tyonantaja          s/Str
+   :tyopaikka           s/Str
    :tunnukset           [s/Str]
    :voimassa_alkupvm    s/Str
    :request_id          s/Str})
