@@ -52,11 +52,18 @@ FROM vastaajatunnus vt
   JOIN toimipiste t ON t.toimipistekoodi = vt.taustatiedot->>'toimipiste'
 WHERE kk.kyselyid = :kyselyid;
 
--- :name hae-kyselyn-koulutustoimijat :? :*
+-- :name hae-kyselyn-hankintakoulutuksen-toteuttajat :? :*
 SELECT DISTINCT kt.ytunnus, kt.nimi_fi, kt.nimi_sv, kt.nimi_en
 FROM vastaajatunnus vt
   JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
   JOIN koulutustoimija kt ON kt.ytunnus = vt.taustatiedot->>'hankintakoulutuksen_toteuttaja'
+WHERE kk.kyselyid = :kyselyid;
+
+-- :name hae-kyselyn-koulutustoimijat :? :*
+SELECT DISTINCT kt.ytunnus, kt.nimi_fi, kt.nimi_sv, kt.nimi_en
+FROM vastaajatunnus vt
+  JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
+  JOIN koulutustoimija kt ON kt.ytunnus = vt.taustatiedot->>'koulutustoimija'
 WHERE kk.kyselyid = :kyselyid;
 
 -- :name hae-kyselyn-koulutusalat :? :*
