@@ -31,8 +31,7 @@
           (catch IllegalArgumentException _))))))
 
 (defn check-credentials [credentials]
-  (let [saved-credentials (db/hae-api-kayttaja {:tunnus (first credentials)})
-        _ (log/info "Saved credentials:" saved-credentials)]
+  (let [saved-credentials (db/hae-api-kayttaja {:tunnus (first credentials)})]
     (when (hashers/check (second credentials) (:salasana saved-credentials))
       saved-credentials)))
 

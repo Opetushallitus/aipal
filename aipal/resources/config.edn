@@ -1,0 +1,43 @@
+{:server {:port 8082
+          :base-url "http://localhost:8082"}
+ :db {:maximum-pool-size 15
+      :minimum-pool-size 3
+      :host "localhost"
+      :port "5432"
+      :name "arvo_db"
+      :user "aipal_user"
+      :password "aipal"
+      :migration-user "aipal_adm"
+      :migration-password "aipal-adm"}
+ :cas-auth-server {:url "https://virkailija.testiopintopolku.fi/cas"
+                   :unsafe-https true
+                   :enabled false}
+ :vastaus-base-url "http://127.0.0.1:8083"
+ :organisaatiopalvelu {:url "https://virkailija.opintopolku.fi/organisaatio-service/rest/organisaatio/"}
+ :koodistopalvelu {:url "https://virkailija.opintopolku.fi/koodisto-service/rest/json/"}
+ :eraajo true
+ :oiva {:url "http://oiva.minedu.fi/api/export/koulutusluvat"
+        :user "tunnus"
+        :password "salasana"}
+ :kyselyynohjaus {:url "http://localhost:3000/api/export/v1/opiskeluoikeudet"
+                  :user "vipunen"
+                  :password "salasana"}
+ :development-mode false ; oletusarvoisesti ei olla kehitysmoodissa. Pitää erikseen kääntää päälle jos tarvitsee kehitysmoodia.
+ :ominaisuus {:koulutustoimijan_valtakunnalliset_raportit false}
+ :kayttooikeuspalvelu {:url "https://testi.virkailija.opintopolku.fi/kayttooikeus-service"
+                       :user "tunnus"
+                       :password "salasana"}
+ :oppijanumerorekisteri {:url "https://testi.virkailija.opintopolku.fi/oppijanumerorekisteri-service"
+                         :user "tunnus"
+                         :password "salasana"}
+ :basic-auth {:tunnus "testi" :salasana "kissa13"}
+ :raportointi-minimivastaajat 5
+ :kayttooikeus-tarkistusvali "6000d"
+ :logback {:properties-file "resources/logback.xml"}
+ :ajastus {:organisaatiopalvelu "0 25 15 ? * * *"
+           :kayttooikeuspalvelu "0 0 4 * * ?"
+           :koulutustoimijoiden-tutkinnot "0 34 15 ? * * *"
+           :raportointi "0 30 5 * * ?"
+           :tutkinnot "0 34 15 ? * * *"
+           :automaattikyselyt "0 10 8 ? * * *"}
+ :api-page-length 50000}

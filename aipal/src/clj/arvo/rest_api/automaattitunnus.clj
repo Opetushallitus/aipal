@@ -129,7 +129,8 @@
     :responses {status/ok {:schema {:nippulinkki s/Str :voimassa_loppupvm org.joda.time.DateTime}}
                 status/not-found {:schema {:errors [s/Str]}}}
     :summary "Yksittäisten linkkien niputus yhdeksi nipputunnukseksi"
-    (let [nippu (vt/niputa-tunnukset! data)]
+    (let [_ (log/info "Niputetaan tunnukset: " data)
+          nippu (vt/niputa-tunnukset! data)]
       (if-not (:errors nippu)
         (nippulinkki-response nippu)
         (do

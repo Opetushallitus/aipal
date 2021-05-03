@@ -107,8 +107,7 @@
 (defn lisaa-tyoelamapalaute-tunnus! [data]
   (log/info "Luodaan työelämäpalautteen tunnus, id:" (:request_id data))
   (let [tunnus (tyoelamapalaute-tunnus data)]
-    (try
-      (vastaajatunnus/lisaa-automaattitunnus! tunnus))))
+    (vastaajatunnus/lisaa-automaattitunnus! tunnus)))
 
 (defn lisaa-amispalaute-tunnus! [data]
   (log/info "Luodaan automaattitunnus, request-id:" (:request_id data))
@@ -139,7 +138,7 @@
 
 (defn niputa-tunnukset! [data]
   (let [nippu (nippu data)
-        tunnukset (db/hae-tunnukset data)
+        tunnukset (db/hae-niputettavat-tunnukset data)
         validation-result (validoi-nippu nippu tunnukset)]
     (if (every? :valid validation-result)
       (vastaajatunnus/niputa-tunnukset nippu)

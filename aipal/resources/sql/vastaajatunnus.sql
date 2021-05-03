@@ -120,11 +120,12 @@ VALUES (:tunniste, :kyselyid, :voimassa_alkupvm, :voimassa_loppupvm, :taustatied
 UPDATE vastaajatunnus SET metatiedot = coalesce(metatiedot, '{}') || jsonb_build_object('nippu', :tunniste)
 WHERE tunnus IN (:v*:tunnukset);
 
---:name hae-tunnukset :? :*
+--:name hae-niputettavat-tunnukset :? :*
 SELECT vt.tunnus, vt.valmistavan_koulutuksen_oppilaitos, vt.taustatiedot, k.koulutustoimija FROM vastaajatunnus vt
 JOIN kyselykerta kk on vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k on kk.kyselyid = k.kyselyid
-WHERE tunnus IN (:v*:tunnukset);
+WHERE vt.tunnus IN (:v*:tunnukset)
+AND vt.metatiedot->>'nippu' IS NULL;
 
 -- :name hae-kyselykerran-niput :? :*
 SELECT DISTINCT n.tunniste, n.kyselyid, n.voimassa_alkupvm, n.voimassa_loppupvm, n.taustatiedot,
