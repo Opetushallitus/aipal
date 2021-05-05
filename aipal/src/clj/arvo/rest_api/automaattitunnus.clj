@@ -29,8 +29,10 @@
 
 (defn vastaajatunnus-response [luotu-tunnus request-id]
   (if (:tunnus luotu-tunnus)
-    (api-response {:tunnus (:tunnus luotu-tunnus)
-                   :voimassa_loppupvm (f/unparse (f/formatters :date)(:voimassa_loppupvm luotu-tunnus))})
+    (do
+      (log/info "Luotu vastaajatunnus: " (:tunnus luotu-tunnus))
+      (api-response {:tunnus (:tunnus luotu-tunnus)
+                     :voimassa_loppupvm (f/unparse (f/formatters :date)(:voimassa_loppupvm luotu-tunnus))}))
     (handle-error (:error luotu-tunnus) request-id)))
 
 (defn nippulinkki-response [massatunnus]

@@ -52,7 +52,7 @@ WHERE EXISTS (SELECT 1 FROM kysely k WHERE k.koulutustoimija = kt.ytunnus AND k.
         SELECT 1
         FROM kysely k
         WHERE k.metatiedot->>'automatisointi_tunniste' = :tunniste
-          AND koulutustoimija != kt.ytunnus
+          AND koulutustoimija = kt.ytunnus
     );
 
 -- :name hae-ammatilliset-koulutustoimijat :?
