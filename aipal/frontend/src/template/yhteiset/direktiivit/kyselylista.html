@@ -8,7 +8,7 @@
         <span class="tilastot pull-right">
           {{ 'yleiset.vastaajia' | i18n }}: {{kysely.vastaajia}}/{{kysely.vastaajatunnuksia}}
           <span ng-if="kysely.vastaajatunnuksia > 0">({{kysely.vastaajia / kysely.vastaajatunnuksia * 100 | number:1}} %).</span><br/>
-          <span ng-if="kysely.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kysely.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
+          <span ng-if="kysely.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kysely.viimeisin_vastaus | date:'dd.MM.yyyy'}}</span>
         </span>
         <span class="tilastot" ng-if="kysely.tila === 'julkaistu'" ng-class="{tulevaisuudessa: kysely.tulevaisuudessa}">
           {{ 'yleiset.voimassa' | i18n }}: {{kysely.voimassa_alkupvm | voimassaoloAika: kysely.voimassa_loppupvm}}
