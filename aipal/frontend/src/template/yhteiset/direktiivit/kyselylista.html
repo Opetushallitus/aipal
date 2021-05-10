@@ -95,7 +95,7 @@
               <p class="tilastot">
                 {{ 'yleiset.vastaajia' | i18n }}: {{kyselykerta.vastaajia}}/{{kyselykerta.vastaajatunnuksia}}
                 <span ng-if="kyselykerta.vastaajatunnuksia > 0">({{kyselykerta.vastaajia / kyselykerta.vastaajatunnuksia * 100 | number:1}} %).</span><br/>
-                <span ng-if="kyselykerta.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kyselykerta.viimeisin_vastaus | date:'dd.MM.yyyy HH.mm'}}</span>
+                <span ng-if="kyselykerta.viimeisin_vastaus">{{ 'yleiset.viimeisin_vastaus' | i18n }} {{kyselykerta.viimeisin_vastaus | date:'dd.MM.yyyy'}}</span>
               </p>
               <span class="text-info" ng-if="kyselykerta.aktiivisia_vastaajatunnuksia > kyselykerta.aktiivisia_vastaajia"><span class="fa fa-info-circle"></span> {{ 'kyselykerta.kayttamattomia_vastaajatunnuksia' | i18n }}</span>
             </span>
