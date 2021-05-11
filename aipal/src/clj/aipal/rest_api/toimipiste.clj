@@ -12,13 +12,13 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.rest-api.toimipaikka
+(ns aipal.rest-api.toimipiste
   (:require [compojure.api.core :refer [defroutes GET]]
             aipal.compojure-util
-            [aipal.arkisto.toimipaikka :as toimipaikka]
+            [aipal.arkisto.toimipiste :as toimipiste]
             [oph.common.util.http-util :refer [response-or-404]]))
 
 (defroutes reitit
   (GET "/" [oppilaitos]
-    :kayttooikeus :katselu
-    (response-or-404 (toimipaikka/hae-oppilaitoksen-voimassaolevat-toimipaikat oppilaitos))))
+       :kayttooikeus :katselu
+       (response-or-404 (toimipiste/hae-oppilaitoksen-voimassaolevat-toimipisteet oppilaitos))))

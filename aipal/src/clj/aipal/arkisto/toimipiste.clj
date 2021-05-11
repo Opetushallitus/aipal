@@ -12,46 +12,40 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; European Union Public Licence for more details.
 
-(ns aipal.arkisto.toimipaikka
+(ns aipal.arkisto.toimipiste
   (:require [korma.core :as sql]
             [oph.korma.common :refer [select-unique-or-nil]]
             [aipal.integraatio.sql.korma :as taulut]))
 
 (defn ^:integration-api lisaa!
   [tiedot]
-  (sql/insert taulut/toimipaikka
+  (sql/insert taulut/toimipiste
     (sql/values tiedot)))
 
 (defn ^:integration-api paivita!
   [oid tiedot]
-  (sql/update taulut/toimipaikka
+  (sql/update taulut/toimipiste
     (sql/set-fields tiedot)
     (sql/where {:oid oid})))
 
 (defn ^:integration-api aseta-kaikki-vanhentuneiksi!
   []
-  (sql/update taulut/toimipaikka
+  (sql/update taulut/toimipiste
     (sql/set-fields {:voimassa false})))
 
 (defn hae-kaikki
   []
   (->
-    (sql/select* taulut/toimipaikka)
-    (sql/order :toimipaikkakoodi)
+    (sql/select* taulut/toimipiste)
+    (sql/order :toimipistekoodi)
     sql/exec))
 
 (defn ^:integration-api laske-voimassaolo! []
-  (sql/update taulut/toimipaikka
+  (sql/update taulut/toimipiste
     (sql/set-fields {:voimassa false})
     (sql/where {:lakkautuspaiva [< (sql/raw "current_date")]})))
 
-(defn ^:integration-api hae-oppilaitoksen-toimipaikat [oppilaitos]
-  (sql/select taulut/toimipaikka
-              (sql/fields :toimipaikkakoodi :oppilaitos :nimi_fi :nimi_sv :nimi_en :kunta)
-              (sql/where {:oppilaitos oppilaitos})))
-
-
-(defn hae-oppilaitoksen-voimassaolevat-toimipaikat [oppilaitos]
-  (sql/select taulut/toimipaikka
+(defn hae-oppilaitoksen-voimassaolevat-toimipisteet [oppilaitos]
+  (sql/select taulut/toimipiste
     (sql/where {:oppilaitos oppilaitos
                 :voimassa true})))

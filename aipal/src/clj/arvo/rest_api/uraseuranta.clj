@@ -23,7 +23,7 @@
 (defn uraseuranta-vastaajatunnus-defaults []
   {:taustatiedot nil
    :kohteiden_lkm 1
-   :toimipaikka nil
+   :toimipiste nil
    :voimassa_alkupvm (time/today)
    :voimassa_loppupvm nil
    :kayttaja "JARJESTELMA"})

@@ -45,12 +45,12 @@
       (dissoc :oppilaitoskoodi :oppilaitos_nimi_fi :oppilaitos_nimi_sv :oppilaitos_nimi_en)
       (assoc :valmistavan_koulutuksen_oppilaitos oppilaitos))))
 
-(defn ^:private erota-toimipaikka
+(defn ^:private erota-toimipiste
   [vastaajatunnus]
-  (let [toimipaikka (select-and-rename-keys vastaajatunnus [:toimipaikkakoodi [:toimipaikka_nimi_fi :nimi_fi] [:toimipaikka_nimi_sv :nimi_sv] [:toimipaikka_nimi_en :nimi_en]])]
+  (let [toimipiste (select-and-rename-keys vastaajatunnus [:toimipistekoodi [:toimipiste_nimi_fi :nimi_fi] [:toimipiste_nimi_sv :nimi_sv] [:toimipiste_nimi_en :nimi_en]])]
     (some-> vastaajatunnus
-            (dissoc :toimipaikkakoodi :toimipaikka_nimi_fi :toimipaikka_nimi_sv :toimipaikka_nimi_en)
-            (assoc :toimipaikka toimipaikka))))
+            (dissoc :toimipistekoodi :toimipiste_nimi_fi :toimipiste_nimi_sv :toimipiste_nimi_en)
+            (assoc :toimipiste toimipiste))))
 
 (defn yhdistä-taustatiedot [vastaajatunnus]
   (let [taustatiedot (:taustatieot vastaajatunnus)]
@@ -62,7 +62,7 @@
       yhdistä-taustatiedot
       erota-tutkinto
       erota-oppilaitos
-      erota-toimipaikka))
+      erota-toimipiste))
 
 (defn hae-kyselykerralla
   "Hae kyselykerran vastaajatunnukset"
@@ -107,7 +107,7 @@
                    :metatiedot
                    :valmistavan_koulutuksen_oppilaitos])
 
-(def legacy-props [:toimipaikka :kunta :koulutusmuoto :kieli :tutkinto])
+(def legacy-props [:toimipiste :kunta :koulutusmuoto :kieli :tutkinto])
 
 (defn vastaajatunnus-base-data [vastaajatunnus tunnus]
   (-> vastaajatunnus

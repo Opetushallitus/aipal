@@ -17,7 +17,7 @@
             aipal.rest-api.kysymysryhma
             aipal.rest-api.ohje
             aipal.rest-api.oppilaitos
-            aipal.rest-api.toimipaikka
+            aipal.rest-api.toimipiste
             aipal.rest-api.raportti.kysely
             aipal.rest-api.raportti.kyselykerta
             aipal.rest-api.raportti.valtakunnallinen
@@ -72,7 +72,7 @@
     (context "/api/kyselypohja" [] :no-doc true :tags ["kyselypohja"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.kyselypohja/reitit)
     (context "/api/ohje" [] :no-doc true :tags ["ohje"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.ohje/reitit)
     (context "/api/oppilaitos" [] :no-doc true :tags ["oppilaitos"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.oppilaitos/reitit)
-    (context "/api/toimipaikka" [] :no-doc true :tags ["toimipaikka"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.toimipaikka/reitit)
+    (context "/api/toimipiste" [] :no-doc true :tags ["toimipiste"] :middleware [wrap-tarkasta-csrf-token] aipal.rest-api.toimipiste/reitit)
     (context "/api/raportti/kysely" [] :no-doc true :tags ["raportti"] (aipal.rest-api.raportti.kysely/csv-reitit asetukset))
     (context "/api/raportti/kysely" [] :no-doc true :tags ["raportti"] :middleware [wrap-tarkasta-csrf-token] (aipal.rest-api.raportti.kysely/reitit asetukset))
     (context "/api/raportti/kyselykerta" [] :no-doc true :tags ["raportti"] (aipal.rest-api.raportti.kyselykerta/csv-reitit asetukset))

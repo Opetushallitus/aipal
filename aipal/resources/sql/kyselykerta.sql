@@ -46,10 +46,10 @@ FROM vastaajatunnus vt
 WHERE kk.kyselyid = :kyselyid;
 
 -- :name hae-kyselyn-toimipaikat :? :*
-SELECT DISTINCT t.toimipaikkakoodi, t.nimi_fi, t.nimi_sv, t.nimi_en
+SELECT DISTINCT t.toimipistekoodi, t.nimi_fi, t.nimi_sv, t.nimi_en
 FROM vastaajatunnus vt
   JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
-  JOIN toimipaikka t ON t.toimipaikkakoodi = vt.taustatiedot->>'toimipaikka'
+  JOIN toimipiste t ON t.toimipistekoodi = vt.taustatiedot->>'toimipiste'
 WHERE kk.kyselyid = :kyselyid;
 
 -- :name hae-kyselyn-koulutustoimijat :? :*

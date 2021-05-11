@@ -22,10 +22,6 @@ AND voimassa = TRUE;
 SELECT * FROM oppilaitos
 WHERE oppilaitoskoodi = :oppilaitoskoodi AND voimassa = TRUE;
 
--- :name hae-toimipaikka :? :*
-SELECT * FROM toimipaikka
-WHERE toimipaikkakoodi = :toimipaikkakoodi AND voimassa = TRUE;
-
 -- name amispalaute-automatisointi :? :1
 SELECT * FROM amispalaute_automatisointi WHERE koulutustoimija = :koulutustoimija;
 

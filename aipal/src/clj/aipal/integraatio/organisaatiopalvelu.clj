@@ -15,7 +15,7 @@
 (ns aipal.integraatio.organisaatiopalvelu
   (:require [aipal.arkisto.koulutustoimija :as koulutustoimija-arkisto]
             [aipal.arkisto.oppilaitos :as oppilaitos-arkisto]
-            [aipal.arkisto.toimipaikka :as toimipaikka-arkisto]
+            [aipal.arkisto.toimipiste :as toimipiste-arkisto]
             [aipal.arkisto.organisaatiopalvelu :as organisaatiopalvelu-arkisto]
             [clj-time.core :as time]
             [clj-time.format :as f]
@@ -145,7 +145,7 @@
    :voimassa (voimassa? koodi)
    :oppilaitostyyppi (:oppilaitostyyppi koodi)})
 
-(defn ^:private koodi->toimipaikka [koodi]
+(defn ^:private koodi->toimipiste [koodi]
   {:kunta (kunta koodi)
    :nimi_fi (nimi koodi)
    :nimi_sv (nimi-sv koodi)
@@ -157,7 +157,7 @@
    :postinumero (postinumero koodi)
    :postitoimipaikka (get-in koodi [:postiosoite :postitoimipaikka])
    :www_osoite (www-osoite koodi)
-   :toimipaikkakoodi (:toimipistekoodi koodi)
+   :toimipistekoodi (:toimipistekoodi koodi)
    :lakkautuspaiva (time-coerce/to-local-date (:lakkautusPvm koodi))
    :voimassa (voimassa? koodi)})
 
@@ -172,15 +172,15 @@
   (when oppilaitos
     (select-keys oppilaitos (conj yhteiset-kentat :oppilaitoskoodi :koulutustoimija :oppilaitostyyppi))))
 
-(defn ^:private toimipaikan-kentat [toimipaikka]
-  (when toimipaikka
-    (select-keys toimipaikka (conj yhteiset-kentat :toimipaikkakoodi :oppilaitos))))
+(defn ^:private toimipaikan-kentat [toimipiste]
+  (when toimipiste
+    (select-keys toimipiste (conj yhteiset-kentat :toimipistekoodi :oppilaitos))))
 
 (defn ^:private tyyppi [koodi]
   (cond
     (some #{"organisaatiotyyppi_01"} (:tyypit koodi)) :koulutustoimija
     (haluttu-tyyppi? koodi) :oppilaitos
-    (:toimipistekoodi koodi) :toimipaikka))
+    (:toimipistekoodi koodi) :toimipiste))
 
 (defn generoi-oid->y-tunnus [koulutustoimijat-oid->ytunnus oppilaitoskoodit]
   (loop [oid->ytunnus koulutustoimijat-oid->ytunnus
@@ -234,38 +234,38 @@
                                                   (oppilaitos-arkisto/paivita! oppilaitoskoodi uusi-oppilaitos)))))
   (oppilaitos-arkisto/laske-voimassaolo!))
 
-(defn ^:integration-api paivita-toimipaikat! [koodit]
+(defn ^:integration-api paivita-toimipisteet! [koodit]
   (let [oid->oppilaitostunnus (into {} (for [o (oppilaitos-arkisto/hae-kaikki)
                                              :when (:oid o)]
                                          [(:oid o) (:oppilaitoskoodi o)]))
-        toimipaikat (map-by :oid (toimipaikka-arkisto/hae-kaikki))]
+        toimipaikat (map-by :oid (toimipiste-arkisto/hae-kaikki))]
     (doseq [koodi (vals (map-by :oid koodit)) ;; Poistetaan duplikaatit. Voi kuitenkin olla useita samalla toimipistekoodilla (vaikkei pitäisi)
             ;; Poistetaan toimipaikat jotka eivät ole suoraan oppilaitoksen alla
             ;; Toimipaikalla on oltava oppilaitos
             :when (oid->oppilaitostunnus (:parentOid koodi))
             :let [oid (:oid koodi)
                   oppilaitoskoodi (oid->oppilaitostunnus (:parentOid koodi))
-                  vanha-toimipaikka (toimipaikan-kentat (get toimipaikat oid))
-                  uusi-toimipaikka (assoc (koodi->toimipaikka koodi)
+                  vanha-toimipiste (toimipaikan-kentat (get toimipaikat oid))
+                  uusi-toimipiste (assoc (koodi->toimipiste koodi)
                                           :oppilaitos oppilaitoskoodi)]]
       (cond
-        (nil? vanha-toimipaikka) (do
-                                   (log/info "Uusi toimipaikka: " (:oid uusi-toimipaikka))
-                                   (toimipaikka-arkisto/lisaa! uusi-toimipaikka))
-        (not= vanha-toimipaikka uusi-toimipaikka) (do
-                                                    (log/info "Muuttunut toimipaikka: " (:toimipaikkakoodi uusi-toimipaikka) (muutos vanha-toimipaikka uusi-toimipaikka))
-                                                    (toimipaikka-arkisto/paivita! oid uusi-toimipaikka)))))
-  (toimipaikka-arkisto/laske-voimassaolo!))
+        (nil? vanha-toimipiste) (do
+                                   (log/info "Uusi toimipiste: " (:oid uusi-toimipiste))
+                                   (toimipiste-arkisto/lisaa! uusi-toimipiste))
+        (not= vanha-toimipiste uusi-toimipiste) (do
+                                                    (log/info "Muuttunut toimipiste: " (:toimipistekoodi uusi-toimipiste) (muutos vanha-toimipiste uusi-toimipiste))
+                                                    (toimipiste-arkisto/paivita! oid uusi-toimipiste)))))
+  (toimipiste-arkisto/laske-voimassaolo!))
 
 (defn ^:integration-api ^:private paivita-haetut-organisaatiot! [koodit]
   (let [koodit-tyypeittain (group-by tyyppi koodit)
         koulutustoimijakoodit (:koulutustoimija koodit-tyypeittain)
         oppilaitoskoodit (:oppilaitos koodit-tyypeittain)
-        toimipaikkakoodit (:toimipaikka koodit-tyypeittain)]
+        toimipistekoodit (:toimipiste koodit-tyypeittain)]
     (log/info "Haettu muuttuneet organisaatiot," (count koodit) "kpl")
     (paivita-koulutustoimijat! koulutustoimijakoodit)
     (paivita-oppilaitokset! oppilaitoskoodit)
-    (paivita-toimipaikat! toimipaikkakoodit)))
+    (paivita-toimipisteet! toimipistekoodit)))
 
 (defn paivita-erassa [oids paivitys-funktio url]
   (let [oid-erat (partition-all 200 oids)]
@@ -279,7 +279,7 @@
         toimipiste-oidit (hae-oidit-tyypilla url "TOIMIPISTE")]
     (paivita-erassa koulutustoimija-oidit paivita-koulutustoimijat! url)
     (paivita-erassa oppilaitos-oidit paivita-oppilaitokset! url)
-    (paivita-erassa toimipiste-oidit paivita-toimipaikat! url)))
+    (paivita-erassa toimipiste-oidit paivita-toimipisteet! url)))
 
 (defn ^:integration-api paivita-organisaatiot!
   [asetukset]
@@ -296,7 +296,7 @@
         ;; ja tällä tavalla saadaan ne merkittyä vanhentuneiksi.
         (koulutustoimija-arkisto/aseta-kaikki-vanhentuneiksi!)
         (oppilaitos-arkisto/aseta-kaikki-vanhentuneiksi!)
-        (toimipaikka-arkisto/aseta-kaikki-vanhentuneiksi!))
+        (toimipiste-arkisto/aseta-kaikki-vanhentuneiksi!))
       (if viimeisin-paivitys
         (paivita-haetut-organisaatiot! koodit)
         (hae-ja-paivita-kaikki url))
