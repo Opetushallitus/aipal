@@ -64,7 +64,7 @@
                                 :tutkinto_selite "Name of degree"
                                 :hankintakoulutuksen_toteuttaja_selite "Name of provider (procured training)"
                                 :toimipiste_selite "Name of operational unit"
-                                :koulutustoimija_selite "TODO"
+                                :koulutustoimija_selite "Name of education provider"
                                 :koulutusalakoodi_selite "Field of education"
                                 :asuinkunta_koodi_selite "Municipality of residence"
                                 :opiskelupaikkakunta_koodi_selite "Municipality of education"
