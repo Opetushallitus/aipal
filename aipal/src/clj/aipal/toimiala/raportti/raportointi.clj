@@ -171,7 +171,8 @@
                   "arvosana4_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "asteikko5_1" (kasittele-asteikkokysymys kysymys vastaukset 5)
                   "arvosana6_ja_eos" (kasittele-asteikkokysymys kysymys vastaukset 7 :alku 0)
-                  "luku" (kasittele-asteikkokysymys kysymys vastaukset 5))
+                  "luku" (kasittele-asteikkokysymys kysymys vastaukset 5)
+                  "alasvetovalikko" nil)
         nps-luku (when (= "nps" (:vastaustyyppi kysymys))
                    (laske-nps-luku (:jakauma kysymys)))]
     (-> kysymys
