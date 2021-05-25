@@ -23,8 +23,9 @@
 
 (defn vastauslinkki-response [luotu-tunnus request-id]
   (if (:tunnus luotu-tunnus)
-    (api-response {:kysely_linkki (str (:vastaus-base-url @asetukset)"/"(:tunnus luotu-tunnus))
-                   :voimassa_loppupvm (f/unparse (f/formatters :date)(:voimassa_loppupvm luotu-tunnus))})
+    (api-response {:kysely_linkki (str (:vastaus-base-url @asetukset)"/v/"(:tunnus luotu-tunnus))
+                   :voimassa_loppupvm (f/unparse (f/formatters :date)(:voimassa_loppupvm luotu-tunnus))
+                   :tunnus (:tunnus luotu-tunnus)})
     (handle-error (:error luotu-tunnus) request-id)))
 
 (defn vastaajatunnus-response [luotu-tunnus request-id]
@@ -80,8 +81,8 @@
 (defroutes ehoks-v1
   (POST "/" []
     :body [data Amispalaute-tunnus]
-    :responses {status/ok {:schema {:kysely_linkki s/Str :voimassa_loppupvm org.joda.time.DateTime}}
-                status/not-found {:schema {:ei-kyselykertaa s/Any} :description "Kyselykertaa ei ole olemassa"}}
+    :responses {status/ok {:schema {:kysely_linkki s/Str :voimassa_loppupvm org.joda.time.DateTime :tunnus s/Str}}
+                status/not-found {:schema {:error s/Str :msg s/Str} :description "Kyselykertaa ei ole olemassa"}}
     :summary "Kyselylinkin luominen"
     :description (str "Päivämäärät ovat ISO-formaatin mukaisia. Suorituskieli on fi, sv tai en. Tutkintotunnus
         on opintopolun koulutus koodiston 6 numeroinen koodi.")
