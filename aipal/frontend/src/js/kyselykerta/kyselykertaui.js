@@ -541,7 +541,7 @@ angular.module('kyselykerta.kyselykertaui', ['yhteiset.palvelut.i18n', 'ui.boots
     function ($uibModalInstance, $scope, i18n, tunnus) {
       $scope.i18n = i18n;
 
-      $scope.minimi = Math.max(1, tunnus.vastausten_lkm);
+      $scope.minimi = Math.max(2, tunnus.vastausten_lkm);
       $scope.vastausten_lkm = tunnus.vastausten_lkm;
       $scope.kohteiden_lkm = tunnus.kohteiden_lkm;
 
