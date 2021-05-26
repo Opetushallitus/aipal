@@ -34,14 +34,22 @@
 ;; Tässä nimiavaruudessa viitataan "koodi"-sanalla koodistopalvelun palauttamaan tietorakenteeseen.
 ;; Jos koodi on muutettu Aipalin käyttämään muotoon, siihen viitataan ko. käsitteen nimellä, esim. "osatutkinto".
 
+(defn- kieli->rank [kieli ranks]
+  (case kieli
+    "FI" (:fi ranks)
+    "SV" (:sv ranks)
+    "EN" (:en ranks)
+    999))
+
 (defn koodi->kasite
   "Muuttaa koodistopalvelun koodin ohjelmassa käytettyyn muotoon.
 Koodin arvo laitetaan arvokentta-avaimen alle."
   [koodi arvokentta]
   (when koodi
-    (let [metadata_fi (first (filter #(= "FI" (:kieli %)) (:metadata koodi)))
-          metadata_sv (first (filter #(= "SV" (:kieli %)) (:metadata koodi)))
-          metadata_en (first (filter #(= "EN" (:kieli %)) (:metadata koodi)))]
+    (let [metadatat (:metadata koodi)
+          metadata_fi (first (sort-by #(kieli->rank (:kieli %) {:fi 1 :sv 2 :en 3}) < metadatat))
+          metadata_sv (first (sort-by #(kieli->rank (:kieli %) {:fi 2 :sv 1 :en 3}) < metadatat))
+          metadata_en (first (sort-by #(kieli->rank (:kieli %) {:fi 2 :sv 3 :en 1}) < metadatat))]
       {:nimi_fi (:nimi metadata_fi)
        :nimi_sv (:nimi metadata_sv)
        :nimi_en (:nimi metadata_en)
