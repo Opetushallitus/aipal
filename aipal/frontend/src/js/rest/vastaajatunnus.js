@@ -26,17 +26,17 @@ angular.module('rest.vastaajatunnus', ['ngResource'])
       luoUusia: function(kyselykertaid, vastaajatunnus) {
         return $http.post('api/vastaajatunnus/' + kyselykertaid, vastaajatunnus);
       },
-      lukitse: function(kyselykertaid, vastaajatunnusid, lukitse) {
-        return $http.post('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + vastaajatunnusid + '/lukitse', {lukitse: lukitse});
+      lukitse: function(kyselykertaid, tunnus, lukitse) {
+        return $http.post('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + tunnus + '/lukitse', {lukitse: lukitse});
       },
       haeViimeisinTutkinto: function(kyselykertaid) {
         return $http.get('api/vastaajatunnus/' + kyselykertaid + '/tutkinto', {params: {nocache: Date.now()}});
       },
-      muokkaaVastaajienLukumaaraa: function(kyselykertaid, vastaajatunnusid, lukumaara) {
-        return $http.post('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + vastaajatunnusid + '/muokkaa-lukumaaraa', {lukumaara: lukumaara});
+      muokkaaVastaajienLukumaaraa: function(kyselykertaid, tunnus, lukumaara) {
+        return $http.post('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + tunnus + '/muokkaa-lukumaaraa', {lukumaara: lukumaara});
       },
-      poista: function(kyselykertaid, vastaajatunnusid) {
-        return $http.delete('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + vastaajatunnusid);
+      poista: function(kyselykertaid, tunnus) {
+        return $http.delete('api/vastaajatunnus/' + kyselykertaid + '/tunnus/' + tunnus);
       }
     };
   }]);

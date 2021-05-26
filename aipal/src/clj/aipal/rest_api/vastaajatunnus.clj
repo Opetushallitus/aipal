@@ -50,34 +50,35 @@
                            (paivita-arvot [:voimassa_alkupvm :voimassa_loppupvm] parse-iso-date))]
       (response-or-404 (vastaajatunnus/lisaa! vastaajatunnus))))
 
-  (POST "/:kyselykertaid/tunnus/:vastaajatunnusid/lukitse" []
+  (POST "/:kyselykertaid/tunnus/:tunnus/lukitse" []
     :path-params [kyselykertaid :- s/Int
-                  vastaajatunnusid :- s/Int]
+                  tunnus :- s/Str]
     :body-params [lukitse :- Boolean]
     :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
-    (response-or-404 (vastaajatunnus/aseta-lukittu! kyselykertaid vastaajatunnusid lukitse)))
+    (response-or-404 (vastaajatunnus/aseta-lukittu! kyselykertaid tunnus lukitse)))
 
-  (POST "/:kyselykertaid/tunnus/:vastaajatunnusid/muokkaa-lukumaaraa" []
+  (POST "/:kyselykertaid/tunnus/:tunnus/muokkaa-lukumaaraa" []
     :path-params [kyselykertaid :- s/Int
-                  vastaajatunnusid :- s/Int]
+                  tunnus :- s/Str]
     :body-params [lukumaara :- s/Int]
     :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
-    (let [vastaajatunnus (vastaajatunnus/hae kyselykertaid vastaajatunnusid)
-          vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
+    (let [vastaajatunnus (vastaajatunnus/hae kyselykertaid tunnus)
+          vastaajat (vastaajatunnus/laske-vastaajat (:vastaajatunnusid vastaajatunnus))]
       (when-not (:muokattavissa vastaajatunnus)
         (throw (IllegalArgumentException. "Vastaajatunnus ei ole enää muokattavissa")))
       (if (and (pos? lukumaara) (>= lukumaara vastaajat))
-        (response-or-404 (vastaajatunnus/muokkaa-lukumaaraa! kyselykertaid vastaajatunnusid lukumaara))
+        (response-or-404 (vastaajatunnus/muokkaa-lukumaaraa! kyselykertaid tunnus lukumaara))
         {:status 403})))
 
-  (DELETE "/:kyselykertaid/tunnus/:vastaajatunnusid" []
+  (DELETE "/:kyselykertaid/tunnus/:tunnus" []
     :path-params [kyselykertaid :- s/Int
-                  vastaajatunnusid :- s/Int]
+                  tunnus :- s/Str]
     :kayttooikeus [:vastaajatunnus {:kyselykertaid kyselykertaid}]
-    (let [vastaajat (vastaajatunnus/laske-vastaajat vastaajatunnusid)]
-      (if (and (zero? vastaajat) (vastaajatunnus/tunnus-poistettavissa? kyselykertaid vastaajatunnusid))
+    (let [vastaajatunnus (vastaajatunnus/hae kyselykertaid tunnus)
+          vastaajat (vastaajatunnus/laske-vastaajat (:vastaajatunnusid vastaajatunnus))]
+      (if (and (zero? vastaajat) (vastaajatunnus/tunnus-poistettavissa? kyselykertaid tunnus))
         (do
-          (vastaajatunnus/poista! vastaajatunnusid)
+          (vastaajatunnus/poista! tunnus)
           {:status 204})
         {:status 403})))
 
