@@ -78,8 +78,8 @@
   (first
     (db/hae-viimeisin-tutkinto {:koulutustoimija koulutustoimija :kyselykertaid kyselykertaid})))
 
-(defn hae [kyselykertaid vastaajatunnusid]
-  (-> (db/hae-vastaajatunnus {:kyselykertaid kyselykertaid :vastaajatunnusid vastaajatunnusid})
+(defn hae [kyselykertaid tunnus]
+  (-> (db/hae-vastaajatunnus {:kyselykertaid kyselykertaid :tunnus tunnus})
     first
     format-vastaajatunnus))
 
@@ -141,9 +141,9 @@
                                        (assoc :taustatiedot taustatiedot)
                                        (update :voimassa_alkupvm to-sql-date)
                                        (update :voimassa_loppupvm to-sql-date)
-                                       (assoc :kayttaja (:oid *kayttaja*)))
-              vastaajatunnusid (:vastaajatunnusid (db/lisaa-vastaajatunnus! tallennettava-tunnus))]
-          (hae (:kyselykertaid tallennettava-tunnus) vastaajatunnusid))))))
+                                       (assoc :kayttaja (:oid *kayttaja*)))]
+          (db/lisaa-vastaajatunnus! tallennettava-tunnus)
+          (hae (:kyselykertaid tallennettava-tunnus) tunnus))))))
 
 (defn lisaa-automaattitunnus! [vastaajatunnus]
   (log/info "Lisätään tunnus:" vastaajatunnus)
@@ -175,24 +175,24 @@
                                                          :oppilaitoskoodi)}))))
   (str (count taustatieto-seq)))
 
-(defn aseta-lukittu! [kyselykertaid vastaajatunnusid lukitse]
-  (db/lukitse-vastaajatunnus! {:vastaajatunnusid vastaajatunnusid :lukittu lukitse})
-  (hae kyselykertaid vastaajatunnusid))
+(defn aseta-lukittu! [kyselykertaid tunnus lukitse]
+  (db/lukitse-vastaajatunnus! {:tunnus tunnus :lukittu lukitse})
+  (hae kyselykertaid tunnus))
 
-(defn poista! [vastaajatunnusid]
-  (db/poista-vastaajatunnus! {:vastaajatunnusid vastaajatunnusid}))
+(defn poista! [tunnus]
+  (db/poista-vastaajatunnus! {:tunnus tunnus}))
 
 (defn laske-vastaajat [vastaajatunnusid]
   (:count (db/vastaajien-lkm {:vastaajatunnusid vastaajatunnusid})))
 
-(defn tunnus-poistettavissa? [kyselykertaid vastaajatunnusid]
-  (let [tunnus (hae kyselykertaid vastaajatunnusid)]
+(defn tunnus-poistettavissa? [kyselykertaid tunnus]
+  (let [tunnus (hae kyselykertaid tunnus)]
     (not (contains? jarjestelma-kayttajat (:luotu_kayttaja tunnus)))))
 
 (defn muokkaa-lukumaaraa!
-  [kyselykertaid vastaajatunnusid lukumaara]
-  (db/muokkaa-vastaajien-maaraa! {:vastaajatunnusid vastaajatunnusid :vastaajia lukumaara})
-  (hae kyselykertaid vastaajatunnusid))
+  [kyselykertaid tunnus lukumaara]
+  (db/muokkaa-vastaajien-maaraa! {:tunnus tunnus :vastaajia lukumaara})
+  (hae kyselykertaid tunnus))
 
 (defn lisaa-amispalaute-automatisointi! [tunnus]
   (db/lisaa-automatisointiin! {:koulutustoimija (:koulutustoimija tunnus)

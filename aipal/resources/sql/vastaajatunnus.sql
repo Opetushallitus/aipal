@@ -63,7 +63,7 @@ LEFT JOIN toimipiste tmp ON vt.taustatiedot->>'toimipiste' = tmp.toimipistekoodi
 JOIN kyselykerta kk ON vt.kyselykertaid = kk.kyselykertaid
 JOIN kysely k ON kk.kyselyid = k.kyselyid
 WHERE vt.kyselykertaid = :kyselykertaid
---~ (if (:vastaajatunnusid params) "AND vastaajatunnusid = :vastaajatunnusid")
+--~ (if (:tunnus params) "AND tunnus = :tunnus")
 --~ (if (:oid params) "AND vt.luotu_kayttaja = :oid")
 ORDER BY vt.luotuaika DESC;
 
@@ -71,16 +71,16 @@ ORDER BY vt.luotuaika DESC;
 SELECT TRUE AS olemassa FROM vastaajatunnus WHERE tunnus = :vastaajatunnus;
 
 -- :name lukitse-vastaajatunnus! :! :n
-UPDATE vastaajatunnus SET lukittu = :lukittu WHERE vastaajatunnusid = :vastaajatunnusid;
+UPDATE vastaajatunnus SET lukittu = :lukittu WHERE tunnus = :tunnus;
 
 -- :name poista-vastaajatunnus! :! :n
-DELETE FROM vastaajatunnus WHERE vastaajatunnusid = :vastaajatunnusid;
+DELETE FROM vastaajatunnus WHERE tunnus = :tunnus;
 
 -- :name poista-kyselykerran-tunnukset! :! :n
 DELETE FROM vastaajatunnus WHERE kyselykertaid = :kyselykertaid;
 
 -- :name muokkaa-vastaajien-maaraa! :! :n
-UPDATE vastaajatunnus SET kohteiden_lkm = :vastaajia WHERE vastaajatunnusid = :vastaajatunnusid;
+UPDATE vastaajatunnus SET kohteiden_lkm = :vastaajia WHERE tunnus = :tunnus;
 
 -- :name vastaajien-lkm :? :1
 SELECT count(*) FROM vastaaja AS vastaajia WHERE vastaajatunnusid = :vastaajatunnusid;
