@@ -4,11 +4,13 @@
 (s/defschema Vastaajatunnus-metatiedot
   {(s/optional-key :tila) (s/enum "success" "failure" "bounced")})
 
+(def Kieli (s/constrained String #(= 2 (count %))))
+
 (s/defschema Amispalaute-tunnus
   {:vastaamisajan_alkupvm                           s/Str ;ISO formaatti
    :kyselyn_tyyppi                                  s/Str  ;kyselykerran metatieto tarkenne
    :tutkintotunnus                                  s/Str ;6 merkkiä
-   :tutkinnon_suorituskieli                         (s/enum "fi" "sv" "en")
+   :tutkinnon_suorituskieli                         Kieli
    :koulutustoimija_oid                             s/Str ;organisaatio-oid
    (s/optional-key :osaamisala)                     (s/maybe [s/Str])
    (s/optional-key :oppilaitos_oid)                 (s/maybe s/Str) ;organisaatio-oid
