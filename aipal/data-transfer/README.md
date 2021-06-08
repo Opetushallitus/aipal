@@ -23,7 +23,7 @@ Ota kopio kannasta.
 Aja tuotantodata äsken luotuun kannan kopioon.
 Huom. pg_restoren pitää olla sama versio kuin millä dumppi on otettu
 
-    pg_restore -d arvo_snap_20210226 -U arvo_snap_adm -c -O not_anon_dump
+    pg_restore -d arvo_snap_20210226 -U arvo_snap_adm -c -O not_anon_dump -h snaparvo.csc.fi
 
 ## Anonymisointi
 Anonymisoi tuotantodata. anonymisointi.sql löytyy tämän ohjeen kanssa samasta kansiosta. Tähän kannattaa varata aikaa 3-4h joten voi olla järkevää ajaa anonymisointi taustalla.
