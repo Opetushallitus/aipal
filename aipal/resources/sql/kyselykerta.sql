@@ -98,8 +98,6 @@ UPDATE kyselykerta SET automaattinen = daterange(LOWER(automaattinen), :paattymi
 SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu, kk.automaattinen,
        (SELECT coalesce(sum(kohteiden_lkm),0) FROM vastaajatunnus v2 WHERE kyselykertaid = kk.kyselykertaid) AS vastaajatunnuksia,
        coalesce(count(DISTINCT vs),0) AS vastaajia,
---       coalesce(sum(DISTINCT vt.kohteiden_lkm) FILTER (WHERE vt.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
---       count(DISTINCT vs) FILTER (WHERE vt.kaytettavissa) AS aktiivisia_vastaajia,
        count(vt) = 0 AS poistettavissa,
        max(vs.vastausaika) AS viimeisin_vastaus
 FROM kyselykerta kk
