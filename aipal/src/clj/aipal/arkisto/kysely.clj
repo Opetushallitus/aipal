@@ -17,6 +17,7 @@
             [aipal.infra.kayttaja :refer [yllapitaja? *kayttaja*]]
             [oph.common.util.util :refer [max-date]]
             [clojure.tools.logging :as log]
+            [clj-time.core :as time]
             [arvo.db.core :refer [*db*] :as db]
             [aipal.auditlog :as auditlog]
             [clojure.java.jdbc :as jdbc]
@@ -36,11 +37,17 @@
 (defn hae-kyselyt [koulutustoimija]
   (db/hae-kyselyt {:koulutustoimija koulutustoimija}))
 
-(defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat]
+(defn- yhdista-aktiiviset [kyselykerta aktiiviset-tunnukset]
+  (let [aktiivinen-tunnus (first (filter #(= (:kyselykertaid kyselykerta) (:kyselykertaid %)) aktiiviset-tunnukset))]
+    (assoc kyselykerta :aktiivisia_vastaajia (get aktiivinen-tunnus :aktiivisia_vastaajia 0)
+           :aktiivisia_vastaajatunnuksia (get aktiivinen-tunnus :aktiivisia_vastaajatunnuksia 0))))
+
+(defn ^:private yhdista-kyselykerrat-kyselyihin [kyselyt kyselykerrat aktiiviset-tunnukset]
   (let [kyselyid->kyselykerrat (group-by :kyselyid kyselykerrat)]
     (for [kysely kyselyt
-          :let [kyselyn-kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))]]
-      (assoc kysely :kyselykerrat kyselyn-kyselykerrat
+          :let [kyselyn-kyselykerrat (kyselyid->kyselykerrat (:kyselyid kysely))
+                kyselyn-kyselykerrat-aktiiviset (map #(yhdista-aktiiviset % aktiiviset-tunnukset) kyselyn-kyselykerrat)]]
+      (assoc kysely :kyselykerrat kyselyn-kyselykerrat-aktiiviset
                     :vastaajia (reduce + (map :vastaajia kyselyn-kyselykerrat))
                     :vastaajatunnuksia (reduce + (map :vastaajatunnuksia kyselyn-kyselykerrat))
                     :viimeisin_vastaus (reduce max-date nil (map :viimeisin_vastaus kyselyn-kyselykerrat))))))
@@ -48,11 +55,48 @@
 (defn hae-kysymysten-poistettavuus  [kysymysryhmaid]
   (map #(select-keys % [:kysymysid :poistettava]) (db/hae-kysymysryhman-kysymykset {:kysymysryhmaid kysymysryhmaid})))
 
+(defn valissa?
+  "Olettaa parametrien olevan date tyyppiä date-time muodossa. Tällöin loppupvm pitää lisätä päivä kun ei voida tehdä
+  yhtäsuuruusvertailua päivätasolla."
+  [alkupvm loppupvm]
+  (let [nyt (time/now)]
+    (and (or (nil? alkupvm) (time/after? nyt alkupvm))
+         (or (nil? loppupvm) (time/before? nyt (time/plus loppupvm (time/days 1)))))))
+
+(defn kysely-vastattavissa? [{:keys [kyselytila kyselyvoimassa_alkupvm kyselyvoimassa_loppupvm] :as tiedot}]
+    (and (= kyselytila "julkaistu")
+         (valissa? kyselyvoimassa_alkupvm kyselyvoimassa_loppupvm)))
+
+(defn kyselykerta-vastattavissa? [{:keys [kyselykertalukittu kyselykertavoimassa_alkupvm kyselykertavoimassa_loppupvm] :as tiedot}]
+  (and (not kyselykertalukittu)
+       (valissa? kyselykertavoimassa_alkupvm kyselykertavoimassa_loppupvm)))
+
+(defn vastaajatunnus-vastattavissa? [{:keys [vastaajatunnuslukittu vastaajatunnusvoimassa_alkupvm vastaajatunnusvoimassa_loppupvm]}]
+  (and (not vastaajatunnuslukittu)
+       (valissa? vastaajatunnusvoimassa_alkupvm vastaajatunnusvoimassa_loppupvm)))
+
+(def vastattavissa? (every-pred kysely-vastattavissa?
+                                   kyselykerta-vastattavissa?
+                                   vastaajatunnus-vastattavissa?))
+
+(defn- hae-aktiiviset-vastaukset
+  "Hakee koulutuksenjärjestäjän kyselykertojen aktiivisten (vastattavissa olevien) vastaajatunnusten ja vastausten
+  summan per aktiivinen kyselykerta. Mukaan tulee vain jos kysely, kyselykerta ja vastaajatunnus ovat aktiivisia."
+  [ytunnus]
+  (->> (db/hae-vastattavissa-tiedot {:ytunnus ytunnus})
+       (filter vastattavissa?)
+       (group-by :kyselykertaid)
+       (map (fn [[kyselykertaid aktiiviset]]
+              {:kyselykertaid kyselykertaid
+               :aktiivisia_vastaajatunnuksia (reduce + 0 (map :kohteiden_lkm aktiiviset))
+               :aktiivisia_vastaajia (reduce + 0 (map :vastaus_lkm aktiiviset))}))))
+
 (defn hae-kaikki
   [koulutustoimija]
   (let [kyselyt (hae-kyselyt koulutustoimija)
-        kyselykerrat (kyselykerta/hae-koulutustoimijan-kyselykerrat koulutustoimija)]
-    (yhdista-kyselykerrat-kyselyihin kyselyt kyselykerrat)))
+        kyselykerrat (kyselykerta/hae-koulutustoimijan-kyselykerrat koulutustoimija)
+        aktiiviset-vastaajatunnukset (hae-aktiiviset-vastaukset koulutustoimija)]
+    (yhdista-kyselykerrat-kyselyihin kyselyt kyselykerrat aktiiviset-vastaajatunnukset)))
 
 (defn hae [kyselyid]
   (db/hae-kysely {:kyselyid kyselyid}))

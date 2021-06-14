@@ -98,8 +98,6 @@ UPDATE kyselykerta SET automaattinen = daterange(LOWER(automaattinen), :paattymi
 SELECT kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu, kk.automaattinen,
        (SELECT coalesce(sum(kohteiden_lkm),0) FROM vastaajatunnus v2 WHERE kyselykertaid = kk.kyselykertaid) AS vastaajatunnuksia,
        coalesce(count(DISTINCT vs),0) AS vastaajia,
-       coalesce(sum(DISTINCT vt.kohteiden_lkm) FILTER (WHERE vt.kaytettavissa), 0) AS aktiivisia_vastaajatunnuksia,
-       count(DISTINCT vs) FILTER (WHERE vt.kaytettavissa) AS aktiivisia_vastaajia,
        count(vt) = 0 AS poistettavissa,
        max(vs.vastausaika) AS viimeisin_vastaus
 FROM kyselykerta kk
@@ -108,6 +106,17 @@ FROM kyselykerta kk
          LEFT JOIN vastaaja vs on vt.vastaajatunnusid = vs.vastaajatunnusid
 WHERE k.koulutustoimija = :koulutustoimija
 GROUP BY kk.kyselykertaid, kk.kyselyid, kk.nimi, kk.voimassa_alkupvm, kk.voimassa_loppupvm, kk.kaytettavissa, kk.luotuaika, kk.lukittu;
+
+-- :name hae-vastattavissa-tiedot :? :*
+SELECT k.tila AS kyselytila, k.voimassa_alkupvm AS kyselyvoimassa_alkupvm, k.voimassa_loppupvm AS kyselyvoimassa_loppupvm,
+       kk.kyselykertaid, kk.lukittu AS kyselykertalukittu, kk.voimassa_alkupvm AS kyselykertavoimassa_alkupvm, kk.voimassa_loppupvm AS kyselykertavoimassa_loppupvm,
+       vt.lukittu AS vastaajatunnuslukittu, vt.voimassa_alkupvm AS vastaajatunnusvoimassa_alkupvm, vt.voimassa_loppupvm AS vastaajatunnusvoimassa_loppupvm,
+       (SELECT count(*) FROM vastaaja WHERE vastaajatunnusid = vt.vastaajatunnusid) AS vastaus_lkm,
+       coalesce(vt.kohteiden_lkm, 0) AS kohteiden_lkm  -- for some reason there are null values
+FROM kysely k
+         JOIN kyselykerta kk ON k.kyselyid = kk.kyselyid
+         JOIN vastaajatunnus vt ON vt.kyselykertaid = kk.kyselykertaid
+WHERE k.koulutustoimija = :ytunnus;
 
 -- :name hae-kyselyn-kyselykerrat :? :*
 SELECT kk.*,
