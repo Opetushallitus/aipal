@@ -151,3 +151,7 @@ DELETE FROM nippu WHERE tunniste = :tunniste;
 
 -- :name poista-tunnukset-nipusta! :! :n
 UPDATE vastaajatunnus SET metatiedot = metatiedot - 'nippu' WHERE metatiedot->>'nippu' = :tunniste;
+
+-- :name paivita-nipun-metatiedot! :! :n
+UPDATE nippu SET metatiedot = COALESCE(metatiedot || :metatiedot, :metatiedot)
+WHERE tunniste = :tunniste;

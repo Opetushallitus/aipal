@@ -92,7 +92,8 @@
                                 :tyopaikkajakson_loppupvm (:tyopaikkajakson_loppupvm data)
                                 :sopimustyyppi (:sopimustyyppi data)
                                 :osaamisala (:osaamisala data)
-                                :tutkintonimike (:tutkintonimike data)})))
+                                :tutkintonimike (:tutkintonimike data)
+                                :metatiedot (:metatiedot data)})))
 
 (defn nippu [data]
   (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
@@ -157,3 +158,6 @@
                                      :tunnus tunnus
                                      :kayttaja aipal.infra.kayttaja.vakiot/integraatio-uid}]
     (db/paivita-metatiedot! paivitettava-vastaajatunnus)))
+
+(defn paivita-nipun-metatiedot [tunniste metatiedot]
+  (db/paivita-nipun-metatiedot! {:tunniste tunniste :metatiedot metatiedot}))

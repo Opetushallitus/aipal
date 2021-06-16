@@ -121,6 +121,7 @@
     :summary "Yksittäisen vastaajatunnuksen luominen"
     (let [luotu-tunnus (vt/lisaa-tyoelamapalaute-tunnus! data)]
       (vastaajatunnus-response luotu-tunnus (:request-id data))))
+
   (DELETE "/vastaajatunnus/:tunnus" []
     :path-params [tunnus :- s/Str]
     :responses {status/ok {:schema s/Str :description "Tunnus poistettu"}
@@ -139,6 +140,17 @@
         (do
           (log/info "Virhe nipun luonnissa: " (:errors nippu) "data:" data)
           (response/not-found {:errors (:errors nippu)})))))
+
+  (PATCH "/nippu/:tunniste/metatiedot" []
+    :path-params [tunniste :- s/Str]
+    :body [metatiedot Vastaajatunnus-metatiedot]
+    :summary "Nipun metatietojen päivitys"
+    (let [paivitettavat-metatiedot (select-keys metatiedot sallitut-metatiedot)
+          rivia-paivitetty (vt/paivita-nipun-metatiedot tunniste metatiedot)]
+      (if (not= rivia-paivitetty 0)
+        (api-response paivitettavat-metatiedot)
+        (response/not-found "Ei nippua integraatiokäyttäjälle"))))
+
   (DELETE "/nippu/:tunniste" []
     :path-params [tunniste :- s/Str]
     :summary "Poista nippu"

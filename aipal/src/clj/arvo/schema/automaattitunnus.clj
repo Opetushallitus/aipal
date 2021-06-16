@@ -34,6 +34,7 @@
    :vastaamisajan_alkupvm                      s/Str
    (s/optional-key :oppilaitos_oid)            (s/maybe s/Str)
    (s/optional-key :toimipiste_oid)            (s/maybe s/Str)
+   (s/optional-key :metatiedot)                (s/maybe {(s/optional-key :tila) s/Str})
    :request_id                                 s/Str})
 
 (s/defschema Nippulinkki

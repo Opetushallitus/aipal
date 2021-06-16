@@ -1,0 +1,1 @@
+ALTER TABLE nippu DROP COLUMN metatiedot;
