@@ -104,7 +104,7 @@ GROUP BY kk.kyselykertaid, o.oppilaitoskoodi, vt.taustatiedot->>'tutkinto', kuuk
 ORDER BY kk.kyselykertaid, vt.taustatiedot->>'tutkinto';
 
 -- :name export-monivalintavaihtoehdot :? :*
-SELECT m.kysymysid, m.jarjestys, m.teksti_fi, m.teksti_sv, m.teksti_en
+SELECT DISTINCT m.kysymysid, m.jarjestys, m.teksti_fi, m.teksti_sv, m.teksti_en
 FROM kysely k
 JOIN kysely_kysymysryhma kkr ON k.kyselyid = kkr.kyselyid
 JOIN kysymysryhma kr ON kkr.kysymysryhmaid = kr.kysymysryhmaid
@@ -116,7 +116,7 @@ k.koulutustoimija = :koulutustoimija
 --~(if (:vipunen params) "OR kr.valtakunnallinen = TRUE")
 )
 --~(if (:kyselyid params) "AND k.kyselyid = :kyselyid")
-;
+ORDER BY m.kysymysid, m.jarjestys;
 
 -- :name hae-api-kayttaja :? :1
 SELECT * FROM api_kayttajat WHERE tunnus = :tunnus;
