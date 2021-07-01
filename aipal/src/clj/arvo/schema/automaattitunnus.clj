@@ -32,6 +32,9 @@
    :tyopaikkajakson_loppupvm                   s/Str
    :sopimustyyppi                              s/Str
    :vastaamisajan_alkupvm                      s/Str
+   (s/optional-key :vastaamisajan_loppupvm)    s/Str
+   (s/optional-key :tyopaikkajakson_kesto)     s/Int
+   (s/optional-key :osa_aikaisuus)             (s/maybe s/Int)
    (s/optional-key :oppilaitos_oid)            (s/maybe s/Str)
    (s/optional-key :toimipiste_oid)            (s/maybe s/Str)
    (s/optional-key :metatiedot)                (s/maybe {(s/optional-key :tila) s/Str})

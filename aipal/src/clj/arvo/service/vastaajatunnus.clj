@@ -11,13 +11,16 @@
 (def palaute-voimassaolo (time/months 6))
 (def amispalaute-voimassaolo (time/days 30))
 
-(defn tunnus-voimassaolo [tyyppi alkupvm]
-  {:voimassa_alkupvm (or alkupvm (time/today))
-   :voimassa_loppupvm (time/plus (or alkupvm (time/today))
-                                 (case tyyppi
-                                   :amispalaute amispalaute-voimassaolo
-                                   :tyoelamapalaute amispalaute-voimassaolo
-                                   palaute-voimassaolo))})
+(defn tunnus-voimassaolo [tyyppi alkupvm loppupvm]
+  (let [alkupvm (when alkupvm (f/parse (f/formatters :date) alkupvm))
+        loppupvm (when loppupvm (f/parse (f/formatters :date) loppupvm))
+        voimassa_alkupvm (or alkupvm (time/today))]
+    {:voimassa_alkupvm voimassa_alkupvm
+     :voimassa_loppupvm (or loppupvm (time/plus voimassa_alkupvm
+                                                (case tyyppi
+                                                  :amispalaute amispalaute-voimassaolo
+                                                  :tyoelamapalaute amispalaute-voimassaolo
+                                                  palaute-voimassaolo)))}))
 
 (def automaattitunnus-defaults
   {:tunnusten-lkm 1
@@ -25,7 +28,7 @@
 
 (defn automaatti-vastaajatunnus [tyyppi tunnus]
   (merge automaattitunnus-defaults
-         (tunnus-voimassaolo tyyppi (:voimassa_alkupvm tunnus))
+         (tunnus-voimassaolo tyyppi (:voimassa_alkupvm tunnus) (:voimassa_loppupvm tunnus))
          tunnus))
 
 (defn palaute-tunnus
@@ -62,7 +65,7 @@
         alkupvm (:vastaamisajan_alkupvm data)]
     (automaatti-vastaajatunnus :amispalaute
                                {:kyselykertaid kyselykertaid
-                                :voimassa_alkupvm (when alkupvm (f/parse (f/formatters :date) alkupvm))
+                                :voimassa_alkupvm alkupvm
                                 :koulutustoimija koulutustoimija
                                 :kieli (:tutkinnon_suorituskieli data)
                                 :toimipiste (:toimipistekoodi (db/hae-oidilla {:taulu "toimipiste" :oid (:toimipiste_oid data)}))
@@ -83,6 +86,8 @@
                                 :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))
                                 :tutkinto (:tutkintotunnus data)
                                 :kieli "fi"
+                                :voimassa_alkupvm (:vastaamisajan_alkupvm data)
+                                :voimassa_loppupvm (:vastaamisajan_loppupvm data)
                                 ;Työelämäpalaute
                                 :tyonantaja (:tyonantaja data)
                                 :tyopaikka (:tyopaikka data)
@@ -93,17 +98,18 @@
                                 :sopimustyyppi (:sopimustyyppi data)
                                 :osaamisala (:osaamisala data)
                                 :tutkintonimike (:tutkintonimike data)
-                                :metatiedot (:metatiedot data)})))
+                                :metatiedot (:metatiedot data)
+                                :tyopaikkajakson_kesto (:tyopaikkajakson_kesto data)
+                                :osa_aikaisuus (:osa_aikaisuus data)})))
 
 (defn nippu [data]
   (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
         kyselyid (:kyselyid (kyselykerta/hae-automaatti-kyselykerta koulutustoimija "tyoelamapalaute" nil))
-        alkupvm (f/parse (f/formatters :date) (:voimassa_alkupvm data))
         taustatiedot {:tutkinto (:tutkintotunnus data)
                       :tyonantaja (:tyonantaja data)
                       :tyopaikka (:tyopaikka data)}]
     (merge data {:kyselyid kyselyid :taustatiedot taustatiedot :koulutustoimija koulutustoimija}
-                (tunnus-voimassaolo :tyoelamapalaute alkupvm))))
+                (tunnus-voimassaolo :tyoelamapalaute (:voimassa_alkupvm data) (:voimassa_loppupvm data)))))
 
 (defn lisaa-tyoelamapalaute-tunnus! [data]
   (log/info "Luodaan työelämäpalautteen tunnus, id:" (:request_id data))
