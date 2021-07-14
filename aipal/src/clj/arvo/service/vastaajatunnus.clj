@@ -61,12 +61,13 @@
 
 (defn amispalaute-tunnus [data]
   (let [koulutustoimija (:ytunnus (db/hae-oidilla {:taulu "koulutustoimija" :oid (:koulutustoimija_oid data)}))
-        kyselykertaid (:kyselykertaid (kyselykerta/hae-automaatti-kyselykerta koulutustoimija "amispalaute" (:kyselyn_tyyppi data)))
-        alkupvm (:vastaamisajan_alkupvm data)]
+        kyselykertaid (:kyselykertaid (kyselykerta/hae-automaatti-kyselykerta koulutustoimija "amispalaute" (:kyselyn_tyyppi data)))]
     (automaatti-vastaajatunnus :amispalaute
                                {:kyselykertaid kyselykertaid
-                                :voimassa_alkupvm alkupvm
+                                :voimassa_alkupvm (:vastaamisajan_alkupvm data)
+                                :voimassa_loppupvm (:vastaamisajan_loppupvm data)
                                 :koulutustoimija koulutustoimija
+                                :heratepvm (:heratepvm data)
                                 :kieli (:tutkinnon_suorituskieli data)
                                 :toimipiste (:toimipistekoodi (db/hae-oidilla {:taulu "toimipiste" :oid (:toimipiste_oid data)}))
                                 :valmistavan_koulutuksen_oppilaitos (:oppilaitoskoodi (db/hae-oidilla {:taulu "oppilaitos" :oid (:oppilaitos_oid data)}))

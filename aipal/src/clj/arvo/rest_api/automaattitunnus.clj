@@ -121,6 +121,12 @@
     :summary "Yksittäisen vastaajatunnuksen luominen"
     (let [luotu-tunnus (vt/lisaa-tyoelamapalaute-tunnus! data)]
       (vastaajatunnus-response luotu-tunnus (:request-id data))))
+  (GET "/status/:tunniste" []
+    :path-params [tunniste :- s/Str]
+    :return (s/maybe {:tunniste s/Str :voimassa_loppupvm org.joda.time.DateTime :vastattu s/Bool})
+    :summary "Kyselylinkin tila"
+    (let [status (db/nippu-status {:tunniste tunniste})]
+      (api-response status)))
 
   (DELETE "/vastaajatunnus/:tunnus" []
     :path-params [tunnus :- s/Str]

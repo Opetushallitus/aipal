@@ -91,6 +91,15 @@ EXISTS(SELECT 1 FROM vastaaja v WHERE v.vastaajatunnusid = vt.vastaajatunnusid) 
 FROM vastaajatunnus vt
 WHERE vt.tunnus = :tunnus;
 
+-- :name nippu-status :? :1
+SELECT n.tunniste, n.voimassa_loppupvm,
+EXISTS (
+    SELECT 1 FROM vastaajatunnus vt
+    JOIN vastaaja v ON v.vastaajatunnusid = vt.vastaajatunnusid)
+AS vastattu
+FROM nippu n
+WHERE n.tunniste = :tunniste;
+
 -- :name hae-kyselyn-kohteet :? :*
 SELECT vt.tunnus, kk.nimi, vt.voimassa_alkupvm,
        vt.kohteiden_lkm, count(v) AS vastaajien_lkm,
